@@ -17,17 +17,17 @@
 ######################################################################
  
 TEMPLATE = app
-FORMS = gui/MainWindow.ui gui/PilotDetails.ui gui/ClientSelectionDialog.ui gui/ControllerDetails.ui gui/AirportDetails.ui gui/PreferencesDialog.ui
+FORMS = MainWindow.ui PilotDetails.ui ClientSelectionDialog.ui ControllerDetails.ui AirportDetails.ui PreferencesDialog.ui
 TARGET = 
-DEPENDPATH += ./src
-INCLUDEPATH += ./src
+DEPENDPATH += ./src ./gui
+INCLUDEPATH += ./src ./gui
 QT += network opengl
-#CONFIG += debug
-CONFIG += release
+CONFIG += debug
+#CONFIG += release
 
 mac {
 	ICON = gui/Dolomynum.icns
-	CONFIG += x86 ppc
+	#CONFIG += x86 ppc
 }
 
 win32 {
