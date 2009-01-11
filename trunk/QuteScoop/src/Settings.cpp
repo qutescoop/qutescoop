@@ -163,12 +163,12 @@ void Settings::setProxyPassword(QString password) {
 void Settings::applyProxySetting(QHttp *http) {
 	if(!useProxy() || http == 0)
 		return;
-	
+
 	QString user = Settings::proxyUser();
 	QString pass = Settings::proxyPassword();
 	if(user.isEmpty()) user = QString();
 	if(pass.isEmpty()) pass = QString();
-		
+
 	if(!proxyServer().isEmpty())
 		http->setProxy(proxyServer(), proxyPort(), user, pass);
 }
@@ -441,7 +441,7 @@ QColor Settings::gndBorderLineColor() {
 }
 
 void Settings::setGndBorderLineColor(const QColor& color) {
-	getSettings()->setValue("airportDisplay/gndBorderLineColor", color);	
+	getSettings()->setValue("airportDisplay/gndBorderLineColor", color);
 }
 
 double Settings::gndBorderLineStrength() {
@@ -544,7 +544,7 @@ void Settings::setTrackLineStrength(double value) {
 void Settings::getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom) {
 	if(xrot == 0 || yrot == 0 || zrot == 0 || zoom == 0)
 		return;
-	
+
 	*xrot = getSettings()->value("defaultMapPosition/xrot", *xrot).toDouble();
 	*yrot = getSettings()->value("defaultMapPosition/yrot", *yrot).toDouble();
 	// ignore zoom. we can't tilt the earth, xy2latlon would fuck up

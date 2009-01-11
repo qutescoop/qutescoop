@@ -45,7 +45,7 @@ HEADERS += GLWidget.h Window.h LineReader.h Client.h \
 			NavData.h AirportDetailsDeparturesModel.h \
 			PreferencesDialog.h Settings.h SearchResultModel.h \
 			MapObjectVisitor.h SearchVisitor.h Waypoint.h MetarModel.h Metar.h \
-			MetarSearchVisitor.h FriendsVisitor.h
+			MetarSearchVisitor.h FriendsVisitor.h Airac.h
 
 SOURCES += GLWidget.cpp QuteScoop.cpp Window.cpp LineReader.cpp \
 			Client.cpp FileReader.cpp FirReader.cpp Fir.cpp \
@@ -57,5 +57,5 @@ SOURCES += GLWidget.cpp QuteScoop.cpp Window.cpp LineReader.cpp \
 			AirportDetailsDeparturesModel.cpp \
 			PreferencesDialog.cpp Settings.cpp SearchResultModel.cpp \
 			SearchVisitor.cpp Waypoint.cpp MetarModel.cpp Metar.cpp \
-			MetarSearchVisitor.cpp FriendsVisitor.cpp
+			MetarSearchVisitor.cpp FriendsVisitor.cpp Airac.cpp
 			

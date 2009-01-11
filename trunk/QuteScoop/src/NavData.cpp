@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ NavData::NavData() {
 	loadAirports(Settings::dataDirectory() + "airports.dat");
 	loadFirs();
 	loadCountryCodes(Settings::dataDirectory() + "countrycodes.dat");
+	loadDatabase(Settings::navdataDirectory());
 }
 
 void NavData::loadAirports(const QString& filename) {
@@ -84,7 +85,7 @@ double NavData::distance(double lat1, double lon1, double lat2, double lon2) {
 	lon1 *= Pi180;
 	lat2 *= Pi180;
 	lon2 *= Pi180;
-	
+
 	double result = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon1-lon2));
 	return result * 60.0 / Pi180;
 }
@@ -92,16 +93,16 @@ double NavData::distance(double lat1, double lon1, double lat2, double lon2) {
 void NavData::distanceTo(double lat, double lon, double dist, double heading, double *latTo, double *lonTo) {
 	if(latTo == 0 || lonTo == 0)
 		return;
-	
+
 	lat *= Pi180;
 	lon *= Pi180;
 	heading = (360 - heading) * Pi180;
 	dist = dist / 60.0 * Pi180;
-	
+
 	double rlat = asin(sin(lat) * cos(dist) + cos(lat) * sin(dist) * cos(heading));
 	double dlon = atan2(sin(heading) * sin(dist) * cos(lat), cos(dist) - sin(lat) * sin(lat));
 	double rlon = fmod(lon - dlon + Pi, 2 * Pi ) - Pi;
-	
+
 	*latTo = rlat / Pi180;
 	*lonTo = rlon / Pi180;
 }
@@ -114,7 +115,7 @@ QList<Airport*> NavData::airportsAt(double lat, double lon, double maxDist) {
 			result.append(airports[i]);
 		}
 	}
-	
+
 	return result;
 }
 
@@ -122,9 +123,9 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 	QList<Airport*> airportList = airportMap.values();
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] != 0)
-			airportList[i]->resetWhazzupStatus();		
+			airportList[i]->resetWhazzupStatus();
 	}
-	
+
 	for(int i = 0; i < whazzupData.getPilots().size(); i++) {
 		Pilot *p = dynamic_cast<Pilot*>(whazzupData.getPilots()[i]);
 		if(p == 0) continue;
@@ -133,26 +134,26 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 		if(airportMap.contains(p->planDest) && airportMap[p->planDest] != 0)
 			airportMap[p->planDest]->addArrival(p);
 	}
-	
+
 	for(int i = 0; i < whazzupData.getControllers().size(); i++) {
 		Controller *c = dynamic_cast<Controller*>(whazzupData.getControllers()[i]);
-		
+
 		QString icao = c->getApproach();
 		if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
 			airportMap[icao]->addApproach(c);
 		}
-		
+
 		icao = c->getTower();
 		if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
 			airportMap[icao]->addTower(c);
 		}
-		
+
 		icao = c->getGround();
 		if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
 			airportMap[icao]->addGround(c);
 		}
 	}
-	
+
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] != 0)
 			airportList[i]->refreshAfterUpdate();
@@ -195,7 +196,7 @@ void NavData::greatCirclePlotTo(double lat1, double lon1,
 	lon1 *= Pi180;
 	lat2 *= Pi180;
 	lon2 *= Pi180;
-	
+
 	double d = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon1-lon2));
 
 	double A = sin((1-f) * d) / sin(d);
@@ -211,5 +212,9 @@ void NavData::greatCirclePlotTo(double lat1, double lon1,
 }
 
 void NavData::loadDatabase(const QString& directory) {
-	
+	if(directory.isEmpty()) {
+		return;
+	}
+
+	airac.load(directory);
 }

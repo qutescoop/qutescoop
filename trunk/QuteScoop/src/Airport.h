@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,52 +35,52 @@ public:
 	Airport();
 	Airport(const QStringList& list);
 	~Airport();
-	
+
 	virtual QString toolTip() const;
 	virtual void showDetailsDialog();
 	virtual QString mapLabel() const;
-	
+
 	virtual bool matches(const QRegExp& regex) const;
 
 	QString name;
 	QString city;
 	QString countryCode;
-	
+
 	void resetWhazzupStatus();
-	
+
 	bool isActive() { return active; };
-	
+
 	const QList<Controller*>& getTowers() const { return towers; };
 	const QList<Controller*>& getGrounds() const { return grounds; };
 	const QList<Controller*>& getApproaches() const { return approaches; };
-	
+
 	const QList<Pilot*>& getArrivals() const { return arrivals; };
 	const QList<Pilot*>& getDepartures() const { return departures; };
-	
+
 	QList<Controller*> getAllControllers() const;
-	
+
 	void addArrival(Pilot* client);
 	void addDeparture(Pilot* client);
-	
+
 	void addApproach(Controller* client);
 	void addTower(Controller* client);
 	void addGround(Controller* client);
-	
+
 	void toggleFlightLines();
 	void setDisplayFlightLines(bool show);
 	void refreshAfterUpdate();
-	
+
 	const GLuint& getAppDisplayList();
 	const GLuint& getAppBorderDisplayList();
 	const GLuint& getTwrDisplayList();
 	const GLuint& getGndDisplayList();
-	
+
 	Metar metar;
 
 private:
 	void createAppDisplayLists();
 	bool showFlightLines;
-		
+
 	bool active;
 	QList<Controller*> towers;
 	QList<Controller*> grounds;
@@ -88,7 +88,7 @@ private:
 
 	QList<Pilot*> arrivals;
 	QList<Pilot*> departures;
-	
+
 	GLuint appDisplayList;
 	GLuint appBorderDisplayList;
 	GLuint twrDisplayList;

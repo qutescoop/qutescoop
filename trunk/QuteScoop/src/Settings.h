@@ -32,55 +32,55 @@ class Settings
 public:
 	static void saveState(const QByteArray& state);
 	static QByteArray getSavedState();
-	
+
 	static void saveSize(const QSize& size);
 	static QSize getSavedSize();
-	
+
 	static void savePosition(const QPoint& pos);
 	static QPoint getSavedPosition();
-	
+
 	static int downloadInterval();
 	static void setDownloadInterval(int value);
-	
+
 	static bool downloadOnStartup();
 	static void setDownloadOnStartup(bool value);
-	
+
 	static bool downloadPeriodically();
 	static void setDownloadPeriodically(bool value);
-	
+
 	static bool useSupFile();
 	static void setUseSupFile(bool value);
-	
+
 	static int downloadNetwork();
 	static void setDownloadNetwork(int i);
 	static QString downloadNetworkName();
-	
+
 	static QString userDownloadLocation();
 	static void setUserDownloadLocation(const QString& location);
-	
+
 	static QString statusLocation();
 	static void setStatusLocation(const QString& location);
-	
+
 	static bool useProxy();
 	static void setUseProxy(bool value);
-	
+
 	static QString proxyServer();
 	static void setProxyServer(const QString& server);
-	
+
 	static int proxyPort();
 	static void setProxyPort(int value);
-	
+
 	static QString proxyUser();
 	static void setProxyUser(QString user);
 
 	static QString proxyPassword();
 	static void setProxyPassword(QString password);
-	
+
 	static void applyProxySetting(QHttp *http);
-	
+
 	static int timelineSeconds();
 	static void setTimelineSeconds(int value);
-	
+
 	static bool displaySmoothLines();
 	static void setDisplaySmoothLines(bool value);
 
@@ -89,19 +89,19 @@ public:
 
 	static QString navdataDirectory();
 	static void setNavdataDirectory(const QString& directory);
-	
+
 	static int metarDownloadInterval();
 	static void setMetarDownloadInterval(int minutes);
 
 	// Earth and Space settings ----------------------------
 	static void deleteEarthSpaceSettings();
-	
+
 	static QColor backgroundColor();
 	static void setBackgroundColor(const QColor& color);
 
 	static QColor globeColor();
 	static void setGlobeColor(const QColor& color);
-	
+
 	static QColor gridLineColor();
 	static void setGridLineColor(const QColor& color);
 
@@ -134,13 +134,13 @@ public:
 
 	static QColor firFillColor();
 	static void setFirFillColor(const QColor& color);
-	
+
 	static QFont firFont();
 	static void setFirFont(const QFont& font);
-	
+
 	// Airport Settings ----------------------------------
 	static void deleteAirportSettings();
-	
+
 	static QColor airportFontColor();
 	static void setAirportFontColor(const QColor& color);
 
@@ -152,102 +152,102 @@ public:
 
 	static QFont airportFont();
 	static void setAirportFont(const QFont& font);
-	
+
 	static QColor appBorderLineColor();
 	static void setAppBorderLineColor(const QColor& color);
-	
+
 	static double appBorderLineStrength();
 	static void setAppBorderLineStrength(double value);
-	
+
 	static QColor appCenterColor();
 	static void setAppCenterColor(const QColor& color);
-	
+
 	static QColor appMarginColor();
 	static void setAppMarginColor(const QColor& color);
 
 	static QColor twrMarginColor();
 	static void setTwrMarginColor(const QColor& color);
-	
+
 	static QColor twrCenterColor();
 	static void setTwrCenterColor(const QColor& color);
-	
+
 	static QColor gndBorderLineColor();
 	static void setGndBorderLineColor(const QColor& color);
-	
+
 	static double gndBorderLineStrength();
 	static void setGndBorderLineStrength(double value);
-	
+
 	static QColor gndFillColor();
 	static void setGndFillColor(const QColor& color);
-	
+
 	// Aircraft Settings -----------------------------------
 	static void deleteAircraftSettings();
-	
+
 	static QColor pilotFontColor();
 	static void setPilotFontColor(const QColor& color);
-	
+
 	static QFont pilotFont();
 	static void setPilotFont(const QFont& font);
-	
+
 	static QColor pilotDotColor();
 	static void setPilotDotColor(const QColor& color);
-	
+
 	static double pilotDotSize();
 	static void setPilotDotSize(double value);
-	
+
 	static QColor timeLineColor();
 	static void setTimeLineColor(const QColor& color);
-	
+
 	static QColor trackLineColor();
 	static void setTrackLineColor(const QColor& color);
-	
+
 	static double timeLineStrength();
 	static void setTimeLineStrength(double value);
-	
+
 	static double trackLineStrength();
 	static void setTrackLineStrength(double value);
 
 	static void setDashedTrackInFront(bool value);
 	static bool dashedTrackInFront();
-	
+
 	static bool checkForUpdates();
 	static void setCheckForUpdates(bool value);
-	
+
 	static bool sendVersionInformation();
 	static void setSendVersionInformation(bool value);
-	
+
 	static QString updateVersionNumber();
 	static void setUpdateVersionNumber(const QString& version);
-	
+
 	static void getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom);
 	static void setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom);
-	
+
 	static int maxLabels();
 	static void setMaxLabels(int maxLabels);
-	
+
 	static QStringList friends();
 	static void addFriend(const QString& friendId);
 	static void removeFriend(const QString& friendId);
-	
+
 	static bool resetOnNextStart();
 	static void setResetOnNextStart(bool value);
-	
+
 	enum VoiceType { NONE, TEAMSPEAK, VRC };
 	static VoiceType voiceType();
 	static void setVoiceType(VoiceType type);
-	
+
 	static QString voiceCallsign();
 	static void setVoiceCallsign(const QString& value);
-	
+
 	static QString voiceUser();
 	static void setVoiceUser(const QString& value);
-	
+
 	static QString voicePassword();
 	static void setVoicePassword(const QString& value);
-	
+
 	static QString dataDirectory();
 	static void setDataDirectory(const QString& value);
-	
+
 private:
 	static QSettings *getSettings();
 };
