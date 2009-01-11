@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 // VERSION_INT is used as QMainWindow::saveState() and restoreState()
 #define VERSION_INT         105
 
-#define VERSION_NUMBER "1.0.1"
+#define VERSION_NUMBER "1.0.2"
 #define VERSION_STRING QString("QuteScoop %1").arg(VERSION_NUMBER)
 
 // mathematical constants

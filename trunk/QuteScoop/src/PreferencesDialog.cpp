@@ -31,9 +31,7 @@ PreferencesDialog::PreferencesDialog():
 	settingsLoaded(false)
 {
 	setupUi(this);
-	
-	groupBoxDatabase->setVisible(false); // for the time being
-	
+
 	cbNetwork->addItems(QStringList() << "IVAO" << "VATSIM" << "User Defined Network");
 	cbDashedFrontAfter->addItems(QStringList() << "in front of" << "behind");
 	loadSettings();
@@ -49,33 +47,33 @@ void PreferencesDialog::loadSettings() {
 	editUserDefinedLocation->setText(Settings::userDownloadLocation());
 	editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
 	lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
-	
+
 	sbMaxTextLabels->setValue(Settings::maxLabels());
-	
+
 	bool b = Settings::useProxy();
 	cbUseProxy->setChecked(b);
 	editProxyServer->setEnabled(b); lblProxyServer->setEnabled(b);
 	editProxyPort->setEnabled(b); lblProxyPort->setEnabled(b);
 	editProxyUser->setEnabled(b); lblProxyUser->setEnabled(b);
 	editProxyPassword->setEnabled(b); lblProxyPassword->setEnabled(b);
-	
+
 	editProxyServer->setText(Settings::proxyServer());
 	editProxyPort->setText(QString("%1").arg(Settings::proxyPort()));
 	editProxyUser->setText(Settings::proxyUser());
 	editProxyPassword->setText(Settings::proxyPassword());
-	
+
 	cbReadSupFile->setChecked(Settings::useSupFile());
-	
+
 	spinBoxTimeline->setValue(Settings::timelineSeconds());
 	cbLineSmoothing->setChecked(Settings::displaySmoothLines());
 	cbDotSmoothing->setChecked(Settings::displaySmoothDots());
-	
+
 	editNavdir->setText(Settings::navdataDirectory());
-	
+
 	cbDashedFrontAfter->setCurrentIndex(0);
 	if(!Settings::dashedTrackInFront())
 		cbDashedFrontAfter->setCurrentIndex(1);
-	
+
 	// colors
 	QColor color = Settings::backgroundColor().dark();
 	pbBackgroundColor->setText(color.name());
@@ -108,7 +106,7 @@ void PreferencesDialog::loadSettings() {
 	color = Settings::firFillColor();
 	pbFirFillColor->setText(color.name());
 	pbFirFillColor->setPalette(QPalette(color));
-	
+
 	color = Settings::firFontColor();
 	pbFirFontColor->setText(color.name());
 	pbFirFontColor->setPalette(QPalette(color));
@@ -119,24 +117,24 @@ void PreferencesDialog::loadSettings() {
 	pbAirportFontColor->setText(color.name());
 	pbAirportFontColor->setPalette(QPalette(color));
 	pbAirportFont->setFont(Settings::airportFont());
-	
+
 	color = Settings::appBorderLineColor();
 	pbAppBorderLineColor->setText(color.name());
 	pbAppBorderLineColor->setPalette(QPalette(color));
 	sbAppBorderLineStrength->setValue(Settings::appBorderLineStrength());
-	
+
 	color = Settings::appCenterColor();
 	pbAppColorCenter->setText(color.name());
 	pbAppColorCenter->setPalette(QPalette(color));
-	
+
 	color = Settings::appMarginColor();
 	pbAppColorMargin->setText(color.name());
 	pbAppColorMargin->setPalette(QPalette(color));
-	
+
 	color = Settings::twrCenterColor();
 	pbTwrColorCenter->setText(color.name());
 	pbTwrColorCenter->setPalette(QPalette(color));
-	
+
 	color = Settings::twrMarginColor();
 	pbTwrColorMargin->setText(color.name());
 	pbTwrColorMargin->setPalette(QPalette(color));
@@ -145,10 +143,10 @@ void PreferencesDialog::loadSettings() {
 	pbGndBorderLineColor->setText(color.name());
 	pbGndBorderLineColor->setPalette(QPalette(color));
 	sbGndBorderLineStrength->setValue(Settings::gndBorderLineStrength());
-	
+
 	color = Settings::gndFillColor();
 	pbGndFillColor->setText(color.name());
-	pbGndFillColor->setPalette(QPalette(color));	
+	pbGndFillColor->setPalette(QPalette(color));
 
 	color = Settings::airportDotColor();
 	pbAirportDotColor->setText(color.name());
@@ -187,7 +185,7 @@ void PreferencesDialog::loadSettings() {
 	// updates + feedback
 	cbCheckForUpdates->setChecked(Settings::checkForUpdates());
 	cbSendVersionInfo->setChecked(Settings::sendVersionInformation());
-	
+
 	settingsLoaded = true;
 }
 
@@ -227,7 +225,7 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 	// event is triggered when combobox is being created, so ignore it until we're ready
 	if(!settingsLoaded)
 		return;
-	
+
 	Settings::setDownloadNetwork(index);
 
 	switch(index) {
@@ -241,7 +239,7 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 		Settings::setStatusLocation(editUserDefinedLocation->text());
 		break;
 	}
-	
+
 	editUserDefinedLocation->setEnabled(index == 2);
 	lbluserDefinedLocation->setEnabled(index == 2);
 }
@@ -304,7 +302,7 @@ void PreferencesDialog::on_browseNavdirButton_clicked() {
 	QString dir = dialog->directory().absolutePath();
 	editNavdir->setText(dir);
 	Settings::setNavdataDirectory(dir);
-	
+
 	delete dialog;
 }
 
