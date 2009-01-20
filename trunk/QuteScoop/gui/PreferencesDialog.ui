@@ -331,7 +331,7 @@
              <bool>true</bool>
             </property>
             <property name="text" >
-             <string>Send version number, platform and preferred netork to server</string>
+             <string>Send version number, platform and preferred network to server</string>
             </property>
             <property name="checked" >
              <bool>true</bool>
