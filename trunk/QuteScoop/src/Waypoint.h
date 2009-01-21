@@ -29,9 +29,9 @@ public:
 
 	double lat;
 	double lon;
-	QString name;
+	QString id;
 
-	bool isNull() const { return name.isNull(); };
+	bool isNull() const { return id.isNull(); };
 };
 
 #endif /*WAYPOINT_H_*/

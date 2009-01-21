@@ -24,6 +24,8 @@
 #include <QList>
 
 #include "Waypoint.h"
+#include "NavAid.h"
+#include "Airway.h"
 
 class Airac {
 public:
@@ -32,9 +34,20 @@ public:
 
 	void load(const QString& directory);
 
+	/**
+	 * Returns the waypoint with the given id closest to the given lat/lon.
+	 */
+	Waypoint* getWaypoint(const QString& id, float lat, float lon) const;
+
 private:
 	QHash<QString, QList<Waypoint*> > waypointMap;
+	QHash<QString, QList<NavAid*> > navaidMap;
+	QHash<QString, Airway*> airwayMap;
 
+	void readFixes(const QString& directory);
+	void readNavaids(const QString& directory);
+	void readAirways(const QString& directory);
+	void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name);
 };
 
 #endif /* AIRAC_H_ */

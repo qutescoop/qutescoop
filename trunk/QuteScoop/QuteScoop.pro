@@ -42,7 +42,7 @@ HEADERS += GLWidget.h Window.h LineReader.h Client.h \
 			ClientDetails.h Controller.h Pilot.h ClientSelectionWidget.h \
 			ControllerDetails.h MapObject.h AirportDetails.h \
 			AirportDetailsAtcModel.h AirportDetailsArrivalsModel.h \
-			NavData.h AirportDetailsDeparturesModel.h \
+			NavData.h AirportDetailsDeparturesModel.h Airway.h \
 			PreferencesDialog.h Settings.h SearchResultModel.h \
 			MapObjectVisitor.h SearchVisitor.h Waypoint.h MetarModel.h Metar.h \
 			MetarSearchVisitor.h FriendsVisitor.h Airac.h NavAid.h
@@ -53,7 +53,7 @@ SOURCES += GLWidget.cpp QuteScoop.cpp Window.cpp LineReader.cpp \
 			PilotDetails.cpp ClientDetails.cpp Controller.cpp Pilot.cpp \
 			ClientSelectionWidget.cpp ControllerDetails.cpp MapObject.cpp \
 			AirportDetails.cpp AirportDetailsAtcModel.cpp \
-			AirportDetailsArrivalsModel.cpp NavData.cpp \
+			AirportDetailsArrivalsModel.cpp NavData.cpp Airway.cpp \
 			AirportDetailsDeparturesModel.cpp NavAid.cpp \
 			PreferencesDialog.cpp Settings.cpp SearchResultModel.cpp \
 			SearchVisitor.cpp Waypoint.cpp MetarModel.cpp Metar.cpp \

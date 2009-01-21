@@ -16,19 +16,30 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include <QDebug>
+#include "Airway.h"
 
-#include "Waypoint.h"
+Airway::Airway(const QString& name, Type type, int base, int top) {
+	this->name = name;
+	this->type = type;
+	this->base = base;
+	this->top = top;
+}
 
-Waypoint::Waypoint(const QStringList& stringList)
-{
-	if(stringList.size() != 3)
+Airway::~Airway() {
+	// TODO Auto-generated destructor stub
+}
+
+void Airway::addSegment(Waypoint* from, Waypoint* to) {
+	if(waypoints.isEmpty()) {
+		waypoints.append(from);
+		waypoints.append(to);
 		return;
+	}
 
-	bool ok;
-	lat = stringList[0].toDouble(&ok);
-	if(!ok) return;
-	lon = stringList[1].toDouble(&ok);
-	if(!ok) return;
-	id = stringList[2];
+	for(int i = 0; i < waypoints.size(); i++) {
+		if(waypoints[i] == from) {
+			waypoints.insert(i+1, to);
+			return;
+		}
+	}
 }

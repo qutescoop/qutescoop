@@ -21,30 +21,30 @@
 
 #include "Waypoint.h"
 
-#define NAV_Unknown			0x0000
-#define NAV_Airport			0x0001
-#define NAV_NDB				0x0002
-#define NAV_VOR				0x0004
-#define NAV_ILS				0x0008
-#define NAV_Localizer		0x0010
-#define NAV_GlideSlope		0x0020
-#define NAV_OuterMarker		0x0040
-#define NAV_MiddleMarker	0x0080
-#define NAV_InnerMarker		0x0100
-#define NAV_Fix				0x0200
-#define NAV_DME				0x0400
-#define NAV_LatLon			0x0800
-
-
 class NavAid: public Waypoint {
 public:
 	NavAid(const QStringList& stringList);
 
+	enum Type {
+		NDB = 2,
+		VOR = 3,
+		ILS_LOC = 4,
+		LOC = 5,
+		GS = 6,
+		OM = 7,
+		MM = 8,
+		IM = 9,
+		DME_NO_FREQ = 12,
+		DME = 13
+	};
+
 private:
-	int type;
+	Type type;
 	int altitude;
 	int frequency;
-
+	int range;
+	float heading;
+	QString name;
 };
 
 #endif /* NAVAID_H_ */

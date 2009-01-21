@@ -24,7 +24,7 @@ NavAid::NavAid(const QStringList& stringList) {
 
 	bool ok;
 
-	type = stringList[0].toInt(&ok);
+	type = (Type)stringList[0].toInt(&ok);
 	if(!ok) return;
 	lat = stringList[1].toDouble(&ok);
 	if(!ok) return;
@@ -34,7 +34,15 @@ NavAid::NavAid(const QStringList& stringList) {
 	if(!ok) return;
 	frequency = stringList[4].toInt(&ok);
 	if(!ok) return;
-	name = stringList[7];
+	range = stringList[5].toInt(&ok);
+	if(!ok) return;
+	heading = stringList[6].toFloat(&ok);
+	if(!ok) return;
+	id = stringList[7];
 
+	for(int i = 8; i < stringList.size(); i++) {
+		name += stringList[i];
+		if(i > 8) name += " ";
+	}
 }
 

@@ -16,19 +16,31 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include <QDebug>
+#ifndef AIRWAY_H_
+#define AIRWAY_H_
 
+#include <QString>
+#include <QList>
 #include "Waypoint.h"
 
-Waypoint::Waypoint(const QStringList& stringList)
-{
-	if(stringList.size() != 3)
-		return;
+class Airway {
+public:
+	enum Type {
+		LOW = 1,
+		HIGH = 2
+	};
 
-	bool ok;
-	lat = stringList[0].toDouble(&ok);
-	if(!ok) return;
-	lon = stringList[1].toDouble(&ok);
-	if(!ok) return;
-	id = stringList[2];
-}
+	Airway(const QString& name, Type type, int base, int top);
+	virtual ~Airway();
+
+	void addSegment(Waypoint* from, Waypoint* to);
+
+private:
+	Type type;
+	int base;
+	int top;
+	QString name;
+	QList<Waypoint*> waypoints;
+};
+
+#endif /* AIRWAY_H_ */
