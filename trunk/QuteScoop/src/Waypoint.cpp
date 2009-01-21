@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,13 +16,15 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "Waypoint.h"
 
 Waypoint::Waypoint(const QStringList& stringList)
 {
 	if(stringList.size() != 3)
 		return;
-	
+
 	bool ok;
 	lat = stringList[0].toDouble(&ok);
 	if(!ok) return;

@@ -16,25 +16,35 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef AIRAC_H_
-#define AIRAC_H_
-
-#include <QHash>
-#include <QString>
-#include <QList>
+#ifndef NAVAID_H_
+#define NAVAID_H_
 
 #include "Waypoint.h"
 
-class Airac {
-public:
-	Airac();
-	virtual ~Airac();
+#define NAV_Unknown			0x0000
+#define NAV_Airport			0x0001
+#define NAV_NDB				0x0002
+#define NAV_VOR				0x0004
+#define NAV_ILS				0x0008
+#define NAV_Localizer		0x0010
+#define NAV_GlideSlope		0x0020
+#define NAV_OuterMarker		0x0040
+#define NAV_MiddleMarker	0x0080
+#define NAV_InnerMarker		0x0100
+#define NAV_Fix				0x0200
+#define NAV_DME				0x0400
+#define NAV_LatLon			0x0800
 
-	void load(const QString& directory);
+
+class NavAid: public Waypoint {
+public:
+	NavAid(const QStringList& stringList);
 
 private:
-	QHash<QString, QList<Waypoint*> > waypointMap;
+	int type;
+	int altitude;
+	int frequency;
 
 };
 
-#endif /* AIRAC_H_ */
+#endif /* NAVAID_H_ */

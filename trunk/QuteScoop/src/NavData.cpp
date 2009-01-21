@@ -41,7 +41,7 @@ void NavData::loadAirports(const QString& filename) {
 		if (line.isNull())
 			return;
 		Airport *airport = new Airport(line.split(':'));
-		if (!airport->isNull() && airport != 0)
+		if (airport != 0 && !airport->isNull())
 			airportMap[airport->label] = airport;
 	}
 }

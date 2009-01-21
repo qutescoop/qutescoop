@@ -16,7 +16,11 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "Airac.h"
+#include "FileReader.h"
+#include "Waypoint.h"
 
 Airac::Airac() {
 	// TODO Auto-generated constructor stub
@@ -29,4 +33,24 @@ Airac::~Airac() {
 
 void Airac::load(const QString& directory) {
 	// directory should contain navigation database files
+
+	// default data/earth_fix.dat
+
+	waypointMap.clear();
+	qDebug() << "Reading fixes from file" << (directory + "/default data/earth_fix.dat");
+	FileReader fr(directory + "/default data/earth_fix.dat");
+	while(!fr.atEnd()) {
+		QString line = fr.nextLine().trimmed();
+		if(line.isEmpty())
+			continue;
+
+		Waypoint *wp = new Waypoint(line.split(' ', QString::SkipEmptyParts));
+		if (wp == 0 || wp->isNull())
+			continue;
+
+		QList<Waypoint*> list = waypointMap[wp->name];
+		list.append(wp);
+		waypointMap[wp->name] = list;
+	}
+	qDebug() << "done loading waypoints:" << waypointMap.size() << "names";
 }

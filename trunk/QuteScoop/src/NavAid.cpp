@@ -16,25 +16,25 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef AIRAC_H_
-#define AIRAC_H_
+#include "NavAid.h"
 
-#include <QHash>
-#include <QString>
-#include <QList>
+NavAid::NavAid(const QStringList& stringList) {
+	if(stringList.size() < 9)
+		return;
 
-#include "Waypoint.h"
+	bool ok;
 
-class Airac {
-public:
-	Airac();
-	virtual ~Airac();
+	type = stringList[0].toInt(&ok);
+	if(!ok) return;
+	lat = stringList[1].toDouble(&ok);
+	if(!ok) return;
+	lon = stringList[2].toDouble(&ok);
+	if(!ok) return;
+	altitude = stringList[3].toInt(&ok);
+	if(!ok) return;
+	frequency = stringList[4].toInt(&ok);
+	if(!ok) return;
+	name = stringList[7];
 
-	void load(const QString& directory);
+}
 
-private:
-	QHash<QString, QList<Waypoint*> > waypointMap;
-
-};
-
-#endif /* AIRAC_H_ */

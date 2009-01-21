@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -24,12 +24,13 @@
 class Waypoint
 {
 public:
+	Waypoint() {};
 	Waypoint(const QStringList& stringList);
-	
+
 	double lat;
 	double lon;
 	QString name;
-	
+
 	bool isNull() const { return name.isNull(); };
 };
 
