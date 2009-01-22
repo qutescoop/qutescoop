@@ -39,6 +39,20 @@ public:
 	 */
 	Waypoint* getWaypoint(const QString& id, float lat, float lon) const;
 
+	/**
+	 * Returns a list of waypoints for the given planned route, starting at lat/lon.
+	 * Airways along the route will be replaced by the appropriate fixes along that
+	 * airway. lat/lon is being used as a hint and should be the position of the
+	 * departure airport.
+	 *
+	 * Input format can be:
+	 * 1. FIX - FIX - FIX
+	 * 2. FIX - Airway - FIX - Airway - FIX
+	 *
+	 * Unknown fixes and/or airways will be ignored.
+	 */
+	QList<Waypoint*> getWaypoints(const QStringList& flightplan, float lat, float lon) const;
+
 private:
 	QHash<QString, QList<Waypoint*> > waypointMap;
 	QHash<QString, QList<NavAid*> > navaidMap;
@@ -48,6 +62,9 @@ private:
 	void readNavaids(const QString& directory);
 	void readAirways(const QString& directory);
 	void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name);
+
+	Waypoint* getNextWaypoint(QStringList workingList, float lat, float lon) const;
+	QList<Waypoint*> expandAirway(const QString& startId, Airway* awy, const QString& endId) const;
 };
 
 #endif /* AIRAC_H_ */

@@ -43,3 +43,33 @@ void Airway::addSegment(Waypoint* from, Waypoint* to) {
 		}
 	}
 }
+
+Waypoint* Airway::getPoint(const QString& id) {
+	for(int i = 0; i < waypoints.size(); i++) {
+		if(waypoints[i]->id == id) {
+			return waypoints[i];
+		}
+	}
+	return 0;
+}
+
+
+QList<Waypoint*> Airway::expand(Waypoint* start, Waypoint* end) const {
+	QList<Waypoint*> result;
+
+	int startIndex = waypoints.indexOf(start);
+	int endIndex = waypoints.indexOf(end);
+	if(start < 0 || end < 0) return result;
+
+	if(startIndex > endIndex) {
+		int x = startIndex;
+		startIndex = endIndex;
+		endIndex = x;
+	}
+
+	for(int i = startIndex + 1; i <= endIndex; i++) {
+		result.append(waypoints[i]);
+	}
+
+	return result;
+}

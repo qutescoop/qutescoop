@@ -35,6 +35,18 @@ public:
 
 	void addSegment(Waypoint* from, Waypoint* to);
 
+	/**
+	 * Returns a list of all fixes along this airway from start
+	 * to end. The expanded list will not include the given start
+	 * point, but will include the given end point.
+	 */
+	QList<Waypoint*> expand(Waypoint* start, Waypoint* end) const;
+
+	/**
+	 * Returns the first waypoint on this airway with the given id
+	 */
+	Waypoint* getPoint(const QString& id);
+
 private:
 	Type type;
 	int base;

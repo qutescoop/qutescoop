@@ -80,6 +80,7 @@ void Airac::readNavaids(const QString& directory) {
 
 void Airac::readAirways(const QString& directory) {
 	bool ok;
+	int segments = 0;
 
 	qDebug() << "reading airways from file" << (directory + "/default data/earth_awy.dat") << "...";
 	FileReader fr(directory + "/default data/earth_awy.dat");
@@ -120,9 +121,10 @@ void Airac::readAirways(const QString& directory) {
 		QStringList names = list[9].split('-', QString::SkipEmptyParts);
 		for(int i = 0; i < names.size(); i++) {
 			addAirwaySegment(start, end, type, base, top, names[i]);
+			segments++;
 		}
 	}
-	qDebug() << "done loading airways:" << airwayMap.size() << "names";
+	qDebug() << "done loading airways:" << airwayMap.size() << "names," << segments << "segments";
 }
 
 Waypoint* Airac::getWaypoint(const QString& id, float lat, float lon) const {
@@ -157,4 +159,69 @@ void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, in
 		airwayMap[name] = awy;
 	}
 	awy->addSegment(from, to);
+}
+
+Waypoint* Airac::getNextWaypoint(QStringList workingList, float lat, float lon) const {
+	Waypoint* result = 0;
+	while(!workingList.isEmpty() && result == 0) {
+		QString id = workingList.first();
+		workingList.removeFirst();
+		result = getWaypoint(id, lat, lon);
+	}
+	return result;
+}
+
+QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, float lat, float lon) const {
+	QList<Waypoint*> result;
+	if(plan.isEmpty()) return result;
+
+	QStringList workingList = plan;
+
+	// find a starting point
+	Waypoint* currPoint = getNextWaypoint(workingList, lat, lon);
+	if(currPoint == 0) return result;
+
+	result.append(currPoint);
+	float myLat = currPoint->lat;
+	float myLon = currPoint->lon;
+
+	while(!workingList.isEmpty()) {
+		QString id = workingList.first();
+		workingList.removeFirst();
+		Airway *awy = airwayMap[id];
+		if(awy != 0) {
+			// have airway - next should be a waypoint
+			id = workingList.first();
+			Waypoint* wp = getWaypoint(id, myLat, myLon);
+			if(wp != 0) {
+				// next is a waypoint - expand airway
+				result += expandAirway(currPoint->id, awy, id);
+				wp = result.last();
+				myLat = wp->lat;
+				myLon = wp->lon;
+				continue;
+			}
+		}
+		currPoint = getNextWaypoint(workingList, myLat, myLon);
+		if(currPoint == 0) return result;
+		result.append(currPoint);
+		myLat = currPoint->lat;
+		myLon = currPoint->lon;
+	}
+
+	return result;
+}
+
+QList<Waypoint*> Airac::expandAirway(const QString& startId, Airway* awy, const QString& endId) const {
+	QList<Waypoint*> result;
+
+	Waypoint* start = awy->getPoint(startId);
+	if(start == 0) return result;
+
+	Waypoint* end = awy->getPoint(endId);
+	if(end == 0) return result;
+
+	result += awy->expand(start, end);
+
+	return result;
 }
