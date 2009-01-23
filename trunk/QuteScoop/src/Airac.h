@@ -37,7 +37,7 @@ public:
 	/**
 	 * Returns the waypoint with the given id closest to the given lat/lon.
 	 */
-	Waypoint* getWaypoint(const QString& id, float lat, float lon) const;
+	Waypoint* getWaypoint(const QString& id, float lat, float lon, double maxDist = 2000.0) const;
 
 	/**
 	 * Returns a list of waypoints for the given planned route, starting at lat/lon.
@@ -63,8 +63,7 @@ private:
 	void readAirways(const QString& directory);
 	void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name);
 
-	Waypoint* getNextWaypoint(QStringList workingList, float lat, float lon) const;
-	QList<Waypoint*> expandAirway(const QString& startId, Airway* awy, const QString& endId) const;
+	Waypoint* getNextWaypoint(QStringList& workingList, float lat, float lon) const;
 };
 
 #endif /* AIRAC_H_ */

@@ -20,6 +20,54 @@
 #include "helpers.h"
 #include "Window.h"
 
+//#define RUN_TEST
+
+#ifdef RUN_TEST
+#include <QDebug>
+#include "Settings.h"
+#include "Airac.h"
+#include "NavData.h"
+
+int runTest() {
+	int i;
+	NavData *navData = NavData::getInstance();
+	const Airac airac = navData->getAirac();
+
+	QString dep = "EDDN";
+	QString dst = "LOWS";
+	QString plan = "AKANU UL603 MUN DCT SBG";
+	//QString plan = "AKANU TEGBA RENLO LUPOX TITIG MUN SBG";
+
+	Airport* apDep = navData->airports()[dep];
+	Airport* apDst = navData->airports()[dst];
+	if(apDep == 0) qDebug() << "dep airport not found:" << dep;
+	if(apDst == 0) qDebug() << "dst airport not found:" << dst;
+
+	QList<Waypoint*> points = airac.getWaypoints(plan.split(' '), apDep->lat, apDep->lon);
+
+	qDebug() << "-------------------------------------------";
+	qDebug() << "Plan: " << dep << plan << dst;
+	qDebug() << "resolved to" << points.size() << "waypoints";
+	qDebug() << "-------------------------------------------";
+	qDebug() << "Departure:" << apDep->name;
+	float lat = apDep->lat;
+	float lon = apDep->lon;
+	for(i = 0; i < points.size(); i++) {
+		double d = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
+		double h = NavData::courseTo(lat, lon, points[i]->lat, points[i]->lon);
+		qDebug() << "HDG" << h << "DST" << d << "nm to" << points[i]->id;
+		lat = points[i]->lat;
+		lon = points[i]->lon;
+	}
+	double d = NavData::distance(lat, lon, apDst->lat, apDst->lon);
+	double h = NavData::courseTo(lat, lon, apDst->lat, apDst->lon);
+	qDebug() << "HDG" << h << "DST" << d << "nm to" << apDst->name;
+	qDebug() << "-------------------------------------------";
+
+	return 0;
+}
+#endif
+
 int main(int argc, char *argv[]) {
 
 	QCoreApplication::setOrganizationName("QuteScoop");
@@ -28,9 +76,13 @@ int main(int argc, char *argv[]) {
 
 	QApplication app(argc, argv);
 
+#ifndef RUN_TEST
 	Window *window = Window::getInstance();
 	window->show();
 	return app.exec();
+#else
+	return runTest();
+#endif
 }
 
 QString lat2str(double lat) {

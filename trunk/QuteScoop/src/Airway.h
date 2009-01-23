@@ -40,18 +40,26 @@ public:
 	 * to end. The expanded list will not include the given start
 	 * point, but will include the given end point.
 	 */
-	QList<Waypoint*> expand(Waypoint* start, Waypoint* end) const;
+	QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
 
-	/**
-	 * Returns the first waypoint on this airway with the given id
-	 */
-	Waypoint* getPoint(const QString& id);
+	void sort();
 
 private:
+	int getIndex(const QString& id) const;
+
+	class Segment {
+	public:
+		Segment(Waypoint *from, Waypoint *to);
+		bool operator==(const Segment& other) const;
+		Waypoint *from;
+		Waypoint *to;
+	};
+
 	Type type;
 	int base;
 	int top;
 	QString name;
+	QList<Segment> *segments;
 	QList<Waypoint*> waypoints;
 };
 

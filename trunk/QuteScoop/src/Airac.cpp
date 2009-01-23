@@ -98,7 +98,7 @@ void Airac::readAirways(const QString& directory) {
 		float lon = list[2].toFloat(&ok);
 		if(!ok) continue;
 
-		Waypoint *start = getWaypoint(id, lat, lon);
+		Waypoint *start = getWaypoint(id, lat, lon, 0.5);
 		if(start == 0) continue;
 
 		id = list[3];
@@ -107,7 +107,7 @@ void Airac::readAirways(const QString& directory) {
 		lon = list[5].toFloat(&ok);
 		if(!ok) continue;
 
-		Waypoint *end = getWaypoint(id, lat, lon);
+		Waypoint *end = getWaypoint(id, lat, lon, 0.5);
 		if(end == 0) continue;
 
 		Airway::Type type = (Airway::Type)list[6].toInt(&ok);
@@ -124,27 +124,41 @@ void Airac::readAirways(const QString& directory) {
 			segments++;
 		}
 	}
+
+	qDebug() << "sorting airways...";
+
+	QHash<QString, Airway*>::iterator iter;
+	for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
+		iter.value()->sort();
+	}
+
 	qDebug() << "done loading airways:" << airwayMap.size() << "names," << segments << "segments";
 }
 
-Waypoint* Airac::getWaypoint(const QString& id, float lat, float lon) const {
+Waypoint* Airac::getWaypoint(const QString& id, float lat, float lon, double maxDist) const {
 	Waypoint *result = 0;
 	double minDist = 99999;
-
-	QList<Waypoint*> points = waypointMap[id];
-	for(int i = 0; i < points.size() && minDist > 0; i++) {
-		double d = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
-		if(d < minDist) {
-			result = points[i];
-			minDist = d;
-		}
-	}
 
 	QList<NavAid*> navs = navaidMap[id];
 	for(int i = 0; i < navs.size() && minDist > 0; i++) {
 		double d = NavData::distance(lat, lon, navs[i]->lat, navs[i]->lon);
-		if(d < minDist) {
+		if(d > maxDist) {
+			continue;
+		}
+		if(d <= minDist) {
 			result = navs[i];
+			minDist = d;
+		}
+	}
+
+	QList<Waypoint*> points = waypointMap[id];
+	for(int i = 0; i < points.size() && minDist > 0; i++) {
+		double d = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
+		if(d > maxDist) {
+			continue;
+		}
+		if(d <= minDist) {
+			result = points[i];
 			minDist = d;
 		}
 	}
@@ -161,7 +175,7 @@ void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, in
 	awy->addSegment(from, to);
 }
 
-Waypoint* Airac::getNextWaypoint(QStringList workingList, float lat, float lon) const {
+Waypoint* Airac::getNextWaypoint(QStringList& workingList, float lat, float lon) const {
 	Waypoint* result = 0;
 	while(!workingList.isEmpty() && result == 0) {
 		QString id = workingList.first();
@@ -188,40 +202,33 @@ QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, float lat, float l
 	while(!workingList.isEmpty()) {
 		QString id = workingList.first();
 		workingList.removeFirst();
+
 		Airway *awy = airwayMap[id];
-		if(awy != 0) {
+		if(awy != 0 && !workingList.isEmpty()) {
 			// have airway - next should be a waypoint
-			id = workingList.first();
+			QString endId = workingList.first();
+			Waypoint* wp = getWaypoint(endId, myLat, myLon);
+			if(wp != 0) {
+				// next is a waypoint - expand airway
+				result += awy->expand(currPoint->id, wp->id);
+				currPoint = wp;
+				myLat = wp->lat;
+				myLon = wp->lon;
+				workingList.removeFirst();
+				continue;
+			}
+		} else if(awy == 0) {
 			Waypoint* wp = getWaypoint(id, myLat, myLon);
 			if(wp != 0) {
 				// next is a waypoint - expand airway
-				result += expandAirway(currPoint->id, awy, id);
-				wp = result.last();
+				result.append(wp);
+				currPoint = wp;
 				myLat = wp->lat;
 				myLon = wp->lon;
 				continue;
 			}
 		}
-		currPoint = getNextWaypoint(workingList, myLat, myLon);
-		if(currPoint == 0) return result;
-		result.append(currPoint);
-		myLat = currPoint->lat;
-		myLon = currPoint->lon;
 	}
-
-	return result;
-}
-
-QList<Waypoint*> Airac::expandAirway(const QString& startId, Airway* awy, const QString& endId) const {
-	QList<Waypoint*> result;
-
-	Waypoint* start = awy->getPoint(startId);
-	if(start == 0) return result;
-
-	Waypoint* end = awy->getPoint(endId);
-	if(end == 0) return result;
-
-	result += awy->expand(start, end);
 
 	return result;
 }

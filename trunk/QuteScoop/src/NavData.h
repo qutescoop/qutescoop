@@ -33,6 +33,8 @@ public:
 	const QHash<QString, Fir*>& firs() const;
 	QList<Airport*> airportsAt(double lat, double lon, double maxDist);
 
+	const Airac& getAirac() const { return airac; };
+
 	static double distance(double lat1, double lon1, double lat2, double lon2);
 	static void distanceTo(double lat, double lon, double dist, double heading, double *latTo, double *lonTo);
 	static double courseTo(double lat1, double lon1, double lat2, double lon2);

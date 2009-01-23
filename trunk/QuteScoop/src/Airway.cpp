@@ -16,60 +16,155 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "Airway.h"
+
+Airway::Segment::Segment(Waypoint* from, Waypoint* to) {
+	this->from = from;
+	this->to = to;
+}
+
+bool Airway::Segment::operator==(const Airway::Segment& other) const {
+	return (from == other.from || from == other.to) && (to == other.from || to == other.to);
+}
 
 Airway::Airway(const QString& name, Type type, int base, int top) {
 	this->name = name;
 	this->type = type;
 	this->base = base;
 	this->top = top;
+	segments = new QList<Segment>();
 }
 
 Airway::~Airway() {
-	// TODO Auto-generated destructor stub
+	if(segments != 0) {
+		delete segments;
+	}
 }
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
-	if(waypoints.isEmpty()) {
-		waypoints.append(from);
-		waypoints.append(to);
+	if(segments == 0) {
+		qDebug() << "cannot add segments on already sorted airway!";
 		return;
 	}
 
-	for(int i = 0; i < waypoints.size(); i++) {
-		if(waypoints[i] == from) {
-			waypoints.insert(i+1, to);
+	Segment newSegment(from, to);
+
+	// check if we already have this segment
+	for(int i = 0; i < segments->size(); i++) {
+		if((*segments)[i] == newSegment) {
 			return;
 		}
 	}
+
+	segments->append(newSegment);
 }
 
-Waypoint* Airway::getPoint(const QString& id) {
-	for(int i = 0; i < waypoints.size(); i++) {
-		if(waypoints[i]->id == id) {
-			return waypoints[i];
+void dump(const QList<Waypoint*> points) {
+	QString line;
+	for(int i = 0; i < points.size(); i++) {
+		line = line + points[i]->id + " - ";
+	}
+	qDebug() << line << "*";
+}
+
+void Airway::sort() {
+	if(segments == 0) {
+		qDebug() << "cannot sort already sorted airway!";
+		return;
+	}
+
+	if(segments->isEmpty()) {
+		delete segments;
+		segments = 0;
+		return;
+	}
+
+	Segment seg = segments->first();
+	segments->removeFirst();
+	waypoints.append(seg.from);
+	waypoints.append(seg.to);
+
+	bool nothingRemoved = false;
+	while(!segments->isEmpty() && !nothingRemoved) {
+		nothingRemoved = true;
+		for(int i = 0; i < segments->size() && nothingRemoved; i++) {
+			Waypoint *p = waypoints.last();
+			Segment s = (*segments)[i];
+
+			if(s.from == p) {
+				waypoints.append(s.to);
+				segments->removeAt(i);
+				nothingRemoved = false;
+				continue;
+			}
+			if(s.to == p) {
+				waypoints.append(s.from);
+				segments->removeAt(i);
+				nothingRemoved = false;
+				continue;
+			}
+
+			p = waypoints.first();
+			if(s.from == p) {
+				waypoints.prepend(s.to);
+				segments->removeAt(i);
+				nothingRemoved = false;
+				continue;
+			}
+			if(s.to == p) {
+				waypoints.prepend(s.from);
+				segments->removeAt(i);
+				nothingRemoved = false;
+				continue;
+			}
 		}
 	}
-	return 0;
+
+	if(!segments->isEmpty()) {
+		qDebug() << "there are still" << segments->size() << "segments left in airway" << name << "!";
+	}
+
+	if(name == "UL603")
+		dump(waypoints);
+
+	delete segments;
+	segments = 0;
 }
 
+int Airway::getIndex(const QString& id) const {
+	for(int i = 0; i < waypoints.size(); i++) {
+		if(waypoints[i]->id == id) {
+			return i;
+		}
+	}
+	return -1;
+}
 
-QList<Waypoint*> Airway::expand(Waypoint* start, Waypoint* end) const {
+QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) const {
 	QList<Waypoint*> result;
 
-	int startIndex = waypoints.indexOf(start);
-	int endIndex = waypoints.indexOf(end);
-	if(start < 0 || end < 0) return result;
+	int startIndex = getIndex(startId);
+	int endIndex = getIndex(endId);
 
+	if(startIndex < 0 || endIndex < 0) return result;
+
+	int direction = 1;
 	if(startIndex > endIndex) {
-		int x = startIndex;
-		startIndex = endIndex;
-		endIndex = x;
+		direction = -1;
 	}
 
-	for(int i = startIndex + 1; i <= endIndex; i++) {
-		result.append(waypoints[i]);
+	for(int i = startIndex; i != endIndex; i += direction) {
+		if(i != startIndex) {
+			// don't append first waypoint in list
+			result.append(waypoints[i]);
+		}
 	}
+	result.append(waypoints[endIndex]);
+
+	qDebug() << "expanded" << startId << name << endId << "to";
+	dump(result);
 
 	return result;
 }
