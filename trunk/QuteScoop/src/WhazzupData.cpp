@@ -39,9 +39,9 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 	whazzupVersion(0),
 	whazzupTime(QDateTime())
 {
-	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS};	
+	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS};
 	ParserState state = STATE_NONE;
-	
+
 	while(buffer->canReadLine()) {
 		QString line = QString(buffer->readLine()).trimmed();
 		if(line.isEmpty()) break;
@@ -55,10 +55,10 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 				state = STATE_SERVERS;
 			else
 				state = STATE_NONE;
-			
+
 			continue;
 		}
-		
+
 		switch(state) {
 		case STATE_NONE:
 		case STATE_SERVERS:
@@ -82,7 +82,7 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 				QStringList list = line.split(':');
 				if(list.size() < 4)
 					continue;
-	
+
 				if(list[3] == "PILOT") {
 					Pilot *p = new Pilot(list, this);
 					pilots[p->label] = p;
@@ -109,11 +109,11 @@ WhazzupData& WhazzupData::operator=(const WhazzupData& data) {
 void WhazzupData::assignFrom(const WhazzupData& data) {
 	if(this == &data)
 		return;
-	
+
 	connectedClients = data.connectedClients;
 	connectedServers = data.connectedServers;
 	whazzupTime = data.whazzupTime;
-	
+
 	pilots.clear();
 	QList<QString> callsigns = data.pilots.keys();
 	for(int i = 0; i < callsigns.size(); i++)
@@ -137,13 +137,13 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 	callsigns = data.pilots.keys();
 	for(int i = 0; i < callsigns.size(); i++) {
 		if(!pilots.contains(callsigns[i])) {
-			
+
 			// create a new copy of new pilot
 			Pilot *p = new Pilot(*data.pilots[callsigns[i]]);
 			pilots[p->label] = p;
-			
+
 		} else {
-			
+
 			// pilot already exists, assign values from data
 			bool showFrom = pilots[callsigns[i]]->displayLineFromDep;
 			bool showTo = pilots[callsigns[i]]->displayLineToDest;
@@ -151,23 +151,23 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 			double oldLat = pilots[callsigns[i]]->lat;
 			double oldLon = pilots[callsigns[i]]->lon;
 			QString oldDest = pilots[callsigns[i]]->planDest;
-			
+
 			*pilots[callsigns[i]] = *data.pilots[callsigns[i]];
 			pilots[callsigns[i]]->displayLineFromDep = showFrom;
 			pilots[callsigns[i]]->displayLineToDest = showTo;
 
 			if(pilots[callsigns[i]]->planDest != oldDest) {
-				// if flightplan (=destination) changed, clear the flight path				
+				// if flightplan (=destination) changed, clear the flight path
 				pilots[callsigns[i]]->oldPositions.clear();
-				
+
 			} else {
-				
+
 				double newLat = pilots[callsigns[i]]->lat;
 				double newLon = pilots[callsigns[i]]->lon;
 				if(!(oldLat == 0 && oldLon == 0) // dont add 0/0 to the waypoint list.
 					&& (oldLat != newLat || oldLon != newLon))
 						track.append(QPair<double, double>(oldLat, oldLon));
-				
+
 				pilots[callsigns[i]]->oldPositions = track;
 			}
 		}
@@ -199,13 +199,13 @@ void WhazzupData::updateControllersFrom(const WhazzupData& data) {
 void WhazzupData::updateFrom(const WhazzupData& data) {
 	if(this == &data)
 		return;
-	
+
 	if(data.isNull())
 		return;
-	
+
 	updatePilotsFrom(data);
 	updateControllersFrom(data);
-	
+
 	connectedClients = data.connectedClients;
 	connectedServers = data.connectedServers;
 	whazzupVersion = data.whazzupVersion;
@@ -227,13 +227,13 @@ WhazzupData::~WhazzupData() {
 QList<Controller*> WhazzupData::activeSectors() const {
 	QList<Controller*> result;
 	QHash<QString, Fir*> firs = NavData::getInstance()->firs();
-	
+
 	QList<Controller*> controllerList = controllers.values();
 	for(int i = 0; i < controllerList.size(); i++) {
 		QString icao = controllerList[i]->getCenter();
 		if(icao.isNull() || icao.isEmpty())
 			continue;
-		
+
 		while(!firs.contains(icao) && !icao.isEmpty()) {
 			int p = icao.lastIndexOf('_');
 			if(p == -1) {
@@ -252,7 +252,7 @@ QList<Controller*> WhazzupData::activeSectors() const {
 			result.append(controllerList[i]);
 		}
 	}
-	
+
 	return result;
 }
 

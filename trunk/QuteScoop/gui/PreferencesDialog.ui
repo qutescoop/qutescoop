@@ -570,7 +570,7 @@
           <item>
            <widget class="QLabel" name="label_5" >
             <property name="text" >
-             <string>Directory must contain the navigation database for &lt;strong>X-Plane 9.00 or later&lt;/strong> (&lt;a href="http://x-plane.org/home/robinp/#GetData">Download Here&lt;/a>)</string>
+             <string>Directory must contain the navigation database for &lt;strong>X-Plane 9.00 or later&lt;/strong> (Get it for free at &lt;a href="http://data.x-plane.com">data.x-plane.com&lt;/a>)</string>
             </property>
             <property name="wordWrap" >
              <bool>true</bool>

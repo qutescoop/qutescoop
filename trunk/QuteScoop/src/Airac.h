@@ -37,7 +37,7 @@ public:
 	/**
 	 * Returns the waypoint with the given id closest to the given lat/lon.
 	 */
-	Waypoint* getWaypoint(const QString& id, float lat, float lon, double maxDist = 2000.0) const;
+	Waypoint* getWaypoint(const QString& id, double lat, double lon, double maxDist = 2000.0) const;
 
 	/**
 	 * Returns a list of waypoints for the given planned route, starting at lat/lon.
@@ -51,7 +51,7 @@ public:
 	 *
 	 * Unknown fixes and/or airways will be ignored.
 	 */
-	QList<Waypoint*> getWaypoints(const QStringList& flightplan, float lat, float lon) const;
+	QList<Waypoint*> getWaypoints(const QStringList& flightplan, double lat, double lon) const;
 
 private:
 	QHash<QString, QList<Waypoint*> > waypointMap;
@@ -59,11 +59,13 @@ private:
 	QHash<QString, Airway*> airwayMap;
 
 	void readFixes(const QString& directory);
+	void addFix(Waypoint* fix);
+
 	void readNavaids(const QString& directory);
 	void readAirways(const QString& directory);
 	void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name);
 
-	Waypoint* getNextWaypoint(QStringList& workingList, float lat, float lon) const;
+	Waypoint* getNextWaypoint(QStringList& workingList, double lat, double lon) const;
 };
 
 #endif /* AIRAC_H_ */

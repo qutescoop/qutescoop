@@ -43,10 +43,16 @@ Airway::~Airway() {
 	}
 }
 
+#define DEBUG_AWY "A400F"
+
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	if(segments == 0) {
 		qDebug() << "cannot add segments on already sorted airway!";
 		return;
+	}
+
+	if(name == DEBUG_AWY) {
+		qDebug() << "seg+: " << from->id << to->id;
 	}
 
 	Segment newSegment(from, to);
@@ -64,9 +70,17 @@ void Airway::addSegment(Waypoint* from, Waypoint* to) {
 void dump(const QList<Waypoint*> points) {
 	QString line;
 	for(int i = 0; i < points.size(); i++) {
-		line = line + points[i]->id + " - ";
+		line += points[i]->id + " - ";
 	}
 	qDebug() << line << "*";
+}
+
+void Airway::dumpSegments() const {
+	QString line;
+	for(int i = 0; i < segments->size(); i++) {
+		line += (*segments)[i].from->id + "-" + (*segments)[i].to->id + " ";
+	}
+	qDebug() << name << "segments:" << line << "*";
 }
 
 void Airway::sort() {
@@ -81,6 +95,9 @@ void Airway::sort() {
 		return;
 	}
 
+	if(name == DEBUG_AWY)
+		dumpSegments();
+
 	Segment seg = segments->first();
 	segments->removeFirst();
 	waypoints.append(seg.from);
@@ -89,9 +106,10 @@ void Airway::sort() {
 	bool nothingRemoved = false;
 	while(!segments->isEmpty() && !nothingRemoved) {
 		nothingRemoved = true;
+
 		for(int i = 0; i < segments->size() && nothingRemoved; i++) {
-			Waypoint *p = waypoints.last();
 			Segment s = (*segments)[i];
+			Waypoint *p = waypoints.last();
 
 			if(s.from == p) {
 				waypoints.append(s.to);
@@ -124,9 +142,10 @@ void Airway::sort() {
 
 	if(!segments->isEmpty()) {
 		qDebug() << "there are still" << segments->size() << "segments left in airway" << name << "!";
+		dumpSegments();
 	}
 
-	if(name == "UL603")
+	if(name == DEBUG_AWY)
 		dump(waypoints);
 
 	delete segments;
@@ -162,9 +181,6 @@ QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) co
 		}
 	}
 	result.append(waypoints[endIndex]);
-
-	qDebug() << "expanded" << startId << name << endId << "to";
-	dump(result);
 
 	return result;
 }

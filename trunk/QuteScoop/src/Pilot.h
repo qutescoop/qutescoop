@@ -19,24 +19,27 @@
 #ifndef PILOT_H_
 #define PILOT_H_
 
+#include <QList>
+
 #include "Airport.h"
 #include "Client.h"
+#include "Waypoint.h"
 
 class Airport;
 
 class Pilot: public Client
-{	
+{
 public:
 	enum FlightStatus { BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING, GROUND_ARR, BLOCKED, CRASHED, BUSH };
-	
+
 	Pilot(const QStringList& stringList, const WhazzupData* whazzup);
 
 	virtual QString rank() const;
-	
-	void showDetailsDialog();	
+
+	void showDetailsDialog();
 	QString flightStatusString() const;
 	FlightStatus flightStatus() const;
-	
+
 	int altitude;
 	int groundspeed;
 	QString planAircraft;
@@ -56,17 +59,17 @@ public:
 	QString planAltAirport;
 	QString planRemarks;
 	QString planRoute;
-	
+
 	QString planAltAirport2; // IVAO only
 	QString planTypeOfFlight; // IVAO only
 	int pob; // IVAO only
-	
+
 	int trueHeading;
 	bool onGround; // IVAO only
-	
+
 	QString qnhInHg; // VATSIM only
 	QString qnhMb; // VATSIM only
-	
+
 	QString aircraftType() const;
 	Airport* depAirport() const;
 	Airport* destAirport() const;
@@ -75,18 +78,20 @@ public:
 	double distanceFromDeparture() const;
 	QString eta() const;
 	void positionInFuture(double *lat, double *lon, int seconds) const;
-	
+
 	void toggleDisplayPath();
 	void plotFlightPath() const;
+
+	bool displayLineFromDep, displayLineToDest;
+
+	QList<QPair<double, double> > oldPositions;
+
+private:
 	void plotPathToDest() const;
 	void plotPathFromDep() const;
-	
-	bool displayLineFromDep, displayLineToDest;
-	
-	QList<QPair<double, double> > oldPositions;
-	
-private:
+	void plotPlannedLine() const;
 	void plotPath(double lat1, double lon1, double lat2, double lon2) const;
+	QList<Waypoint*> resolveFlightplan() const;
 };
 
 #endif /*PILOT_H_*/

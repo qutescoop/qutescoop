@@ -61,6 +61,8 @@ private:
 	QString name;
 	QList<Segment> *segments;
 	QList<Waypoint*> waypoints;
+
+	void dumpSegments() const;
 };
 
 #endif /* AIRWAY_H_ */

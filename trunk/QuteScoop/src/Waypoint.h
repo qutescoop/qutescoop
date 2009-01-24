@@ -26,6 +26,7 @@ class Waypoint
 public:
 	Waypoint() {};
 	Waypoint(const QStringList& stringList);
+	Waypoint(const QString& id, double lat, double lon);
 
 	double lat;
 	double lon;

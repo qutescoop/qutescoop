@@ -286,6 +286,9 @@ void Pilot::plotFlightPath() const {
 
 	if(displayLineFromDep)
 		plotPathFromDep();
+
+	if(displayLineToDest || displayLineFromDep)
+		plotPlannedLine();
 }
 
 void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) const {
@@ -358,4 +361,39 @@ void Pilot::plotPathToDest() const {
 		VERTEX(dest->lat, dest->lon);
 	glEnd();
 	glLineStipple(1, 0xFFFF);
+}
+
+void Pilot::plotPlannedLine() const {
+	QList<Waypoint*> points = resolveFlightplan();
+
+	if(points.size() < 2)
+		return;
+
+	double currLat = points[0]->lat;
+	double currLon = points[0]->lon;
+
+	QColor lineCol = Settings::trackLineColor();
+	glColor4f(0, 255, 0, 255);
+
+	glLineWidth(1.5);
+	glBegin(GL_LINE_STRIP);
+
+		for(int i = 1; i < points.size(); i++) {
+			plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
+			currLat = points[i]->lat;
+			currLon = points[i]->lon;
+		}
+		VERTEX(currLat, currLon);
+
+	glEnd();
+}
+
+QList<Waypoint*> Pilot::resolveFlightplan() const {
+	QList<Waypoint*> result;
+
+	Airport *dep = depAirport();
+	if(dep == 0) return QList<Waypoint*>();
+
+	QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
+	return NavData::getInstance()->getAirac().getWaypoints(list, dep->lat, dep->lon);
 }

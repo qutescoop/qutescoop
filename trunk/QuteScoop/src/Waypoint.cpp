@@ -32,3 +32,9 @@ Waypoint::Waypoint(const QStringList& stringList)
 	if(!ok) return;
 	id = stringList[2];
 }
+
+Waypoint::Waypoint(const QString& id, double lat, double lon) {
+	this->id = id;
+	this->lat = lat;
+	this->lon = lon;
+}

@@ -47,7 +47,7 @@ Window::Window(QWidget *parent) :
 
 	if(Settings::resetOnNextStart())
 		QSettings().clear();
-	
+
 	QGLFormat fmt;
 	//fmt.setAlpha(false);
 	//fmt.setRgba(true);
@@ -59,12 +59,12 @@ Window::Window(QWidget *parent) :
 
 	clientSelection = new ClientSelectionWidget();
 	preferencesDialog = new PreferencesDialog();
-	
+
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
 	connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
-	
+
 	Whazzup *whazzup = Whazzup::getInstance();
 	connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
 	connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
@@ -72,24 +72,24 @@ Window::Window(QWidget *parent) :
 	connect(whazzup, SIGNAL(newData()), this, SLOT(whazzupDownloaded()));
 	connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
 	connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
-	
+
 	connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
-	
+
 	if(Settings::downloadOnStartup()) {
 		// download whazzup as soon as whazzup status download is complete
 		connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
 		whazzup->setStatusLocation(Settings::statusLocation());
 	}
-	
+
 	searchResult->setModel(&searchResultModel);
 	connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)), &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
 	connect(searchResult, SIGNAL(clicked(const QModelIndex&)), &searchResultModel, SLOT(modelClicked(const QModelIndex&)));
-	
+
 	metarSortModel = new QSortFilterProxyModel;
 	metarSortModel->setDynamicSortFilter(true);
 	metarSortModel->setSourceModel(&metarModel);
 	metarList->setModel(metarSortModel);
-		
+
 	connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
 	connect(metarList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
 	connect(metarList->header(), SIGNAL(sectionClicked(int)), metarList, SLOT(sortByColumn(int)));
@@ -104,11 +104,11 @@ Window::Window(QWidget *parent) :
 	connect(friendsList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(friendClicked(const QModelIndex&)));
 	connect(friendsList->header(), SIGNAL(sectionClicked(int)), metarList, SLOT(sortByColumn(int)));
 	metarList->sortByColumn(0, Qt::AscendingOrder);
-	
+
 	connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 	connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
 	connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
-	
+
 #ifndef Q_WS_MAC
 	actionZoomIn->setShortcut(QKeySequence("F11"));
 	actionZoomOut->setShortcut(QKeySequence("F12"));
@@ -117,26 +117,26 @@ Window::Window(QWidget *parent) :
 	connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
 	connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
 	connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
-	
+
 	connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
 	connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
 	connect(metarDecoderDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDecoderDockMoved(Qt::DockWidgetArea)));
 	metarDecoderDock->hide();
-	
+
 	connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
 	friendsDock->hide();
-	
+
 	versionChecker = 0;
 	versionBuffer = 0;
 	if(Settings::checkForUpdates())
 		checkForUpdates();
-	
+
 	// restore saved states
 	glWidget->restorePosition();
-	if(restoreState(Settings::getSavedState(), VERSION_INT)) {	
+	if(restoreState(Settings::getSavedState(), VERSION_INT)) {
 		QSize savedSize = Settings::getSavedSize();
 		if(!savedSize.isNull()) resize(savedSize);
-		
+
 		QPoint savedPos = Settings::getSavedPosition();
 		if(!savedPos.isNull()) move(savedPos);
 	}
@@ -153,7 +153,7 @@ void Window::toggleFullscreen() {
 }
 
 void Window::about() {
-	
+
 	const QString gpl(
 "<small><a href='http://www.qutescoop.org'>QuteScoop</a> - Display FSD network status<br>\
 Copyright (C) 2007-2008 Martin Domig <a href='mailto:martin@domig.net'>martin@domig.net</a>\
@@ -170,7 +170,7 @@ GNU General Public License for more details.\
 <p>\
 You should have received a copy of the GNU General Public License \
 along with this program.  If not, see <a href='http://www.gnu.org/licenses/'>www.gnu.org/licenses</a>.</small>");
-    
+
 	QMessageBox::about(this, tr("About QuteScoop"),
 			"<font size=\"+1\">" + VERSION_STRING + "</font><br><br>" + gpl);
 }
@@ -180,36 +180,36 @@ void Window::networkMessage(QString message) {
 }
 
 void Window::downloadError(QString message) {
-	QMessageBox::critical(this, tr("Download Failed"), 
+	QMessageBox::critical(this, tr("Download Failed"),
 			tr("Data download failed:") +
 			QString("<br><br><strong>%1</strong>").arg(message));
 }
 
 void Window::whazzupDownloaded() {
 	const WhazzupData data = Whazzup::getInstance()->whazzupData();
-	
+
 	QString msg = QString(tr("%1: %2 clients")).arg(Settings::downloadNetworkName()).arg(data.clients());
 	msg += ", " + data.timestamp().toString("yyyy/MM/dd HH:mm:ss") + " UTC";
 	statusbar->showMessage(msg);
 	clientSelection->clearClients();
 	clientSelection->close();
 	performSearch();
-	
+
 	AirportDetails::getInstance()->refresh();
 	PilotDetails::getInstance()->refresh();
 	ControllerDetails::getInstance()->refresh();
-	
+
 	refreshFriends();
-	
-	downloadWatchdog.stop();	
+
+	downloadWatchdog.stop();
 	if(Settings::downloadPeriodically())
 		downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
 }
 
-void Window::refreshFriends() {	
+void Window::refreshFriends() {
 	// update friends list
 	FriendsVisitor *visitor = new FriendsVisitor();
-	Whazzup::getInstance()->whazzupData().accept(visitor);	
+	Whazzup::getInstance()->whazzupData().accept(visitor);
 	friendsModel.setData(visitor->result());
 	delete visitor;
 	friendsList->reset();
@@ -221,7 +221,7 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
 		on_actionHideAllWindows_triggered();
 		return;
 	}
-	
+
 	if(objects.size() == 1) {
 		objects[0]->showDetailsDialog();
 	} else {
@@ -263,8 +263,8 @@ void Window::performSearch() {
 	searchTimer.stop();
 	SearchVisitor *visitor = new SearchVisitor(searchEdit->text());
 	NavData::getInstance()->accept(visitor);
-	Whazzup::getInstance()->whazzupData().accept(visitor);	
-	
+	Whazzup::getInstance()->whazzupData().accept(visitor);
+
 	searchResultModel.setData(visitor->result());
 	delete visitor;
 
@@ -275,9 +275,9 @@ void Window::closeEvent(QCloseEvent *event) {
 	Settings::saveState(saveState(VERSION_INT));
 	Settings::saveSize(size());
 	Settings::savePosition(pos());
-	
+
 	on_actionHideAllWindows_triggered();
-	
+
 	QMainWindow::closeEvent(event);
 }
 
@@ -286,10 +286,10 @@ void Window::on_actionHideAllWindows_triggered() {
 	ControllerDetails::getInstance()->close();
 	AirportDetails::getInstance()->close();
 	preferencesDialog->close();
-	
+
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
-	
+
 	clientSelection->close();
 }
 
@@ -300,7 +300,7 @@ void Window::on_actionClearAllFlightPaths_triggered() {
 			airports[i]->setDisplayFlightLines(false);
 		}
 	}
-	
+
 	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
 	for(int i = 0; i < pilots.size(); i++) {
 		pilots[i]->displayLineFromDep = false;
@@ -319,7 +319,7 @@ void Window::on_actionDisplayAllFlightPaths_triggered() {
 			airports[i]->setDisplayFlightLines(true);
 		}
 	}
-	
+
 	// tell glWidget that there is new whazzup data (which is a lie)
 	// so it will refresh itself and clear the lines
 	glWidget->newWhazzupData();
@@ -347,11 +347,11 @@ void Window::updateMetars() {
 	metarTimer.stop();
 	MetarSearchVisitor *visitor = new MetarSearchVisitor(metarEdit->text());
 	NavData::getInstance()->accept(visitor); // search airports only
-	
+
 	metarModel.setData(visitor->airports());
 	delete visitor;
 
-	metarList->reset();	
+	metarList->reset();
 }
 
 void Window::friendClicked(const QModelIndex& index) {
@@ -389,7 +389,7 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
 		// set horizontal title bar
 		dock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
 		break;
-		
+
 	case Qt::TopDockWidgetArea:
 	case Qt::BottomDockWidgetArea:
 		// set vertical title bar
@@ -403,10 +403,10 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
 void Window::checkForUpdates() {
 	versionChecker = new QHttp(this);
 	connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
-	
+
 	QString downloadUrl = "http://www.qutescoop.org/version.txt";
 
-	if(Settings::sendVersionInformation()) {		
+	if(Settings::sendVersionInformation()) {
 		// append platform, version and preferred network information to the download link
 		QString urlArgs = QString("?%1&%2&").arg(VERSION_NUMBER).arg(Settings::downloadNetwork());
 		#ifdef Q_WS_WIN
@@ -420,13 +420,13 @@ void Window::checkForUpdates() {
 		#endif
 		downloadUrl += urlArgs;
 	}
-	
+
 	QUrl url(downloadUrl);
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
 	versionChecker->setHost(url.host(), url.port() != -1 ? url.port() : 80);
 	Settings::applyProxySetting(versionChecker);
-		
+
 	if (!url.userName().isEmpty())
 		versionChecker->setUser(url.userName(), url.password());
 
@@ -453,7 +453,7 @@ void Window::versionDownloaded(bool error) {
 							+ "<a href='http://www.qutescoop.org'>www.QuteScoop.org</a> for more information.<br><br>"
 							+ "You are using: " + VERSION_NUMBER + "<br>"
 							+ "New version is: " + newVersion);
-					
+
 					// remember that we told about new version
 					Settings::setUpdateVersionNumber(newVersion);
 				}

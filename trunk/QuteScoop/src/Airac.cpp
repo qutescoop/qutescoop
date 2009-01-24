@@ -38,6 +38,12 @@ void Airac::load(const QString& directory) {
 	readAirways(directory);
 }
 
+void Airac::addFix(Waypoint* fix) {
+	QList<Waypoint*> list = waypointMap[fix->id];
+	list.append(fix);
+	waypointMap[fix->id] = list;
+}
+
 void Airac::readFixes(const QString& directory) {
 	waypointMap.clear();
 	qDebug() << "reading fixes from file" << (directory + "/default data/earth_fix.dat") << "...";
@@ -51,9 +57,7 @@ void Airac::readFixes(const QString& directory) {
 		if (wp == 0 || wp->isNull())
 			continue;
 
-		QList<Waypoint*> list = waypointMap[wp->id];
-		list.append(wp);
-		waypointMap[wp->id] = list;
+		addFix(wp);
 	}
 	qDebug() << "done loading waypoints:" << waypointMap.size() << "names";
 }
@@ -90,25 +94,36 @@ void Airac::readAirways(const QString& directory) {
 			continue;
 
 		QStringList list = line.split(' ', QString::SkipEmptyParts);
-		if(list.size() != 10) continue;
+		if(list.size() != 10) {
+			qDebug() << "too short: skipping line" << line;
+			continue;
+		}
 
 		QString id = list[0];
-		float lat = list[1].toFloat(&ok);
+		double lat = list[1].toDouble(&ok);
 		if(!ok) continue;
-		float lon = list[2].toFloat(&ok);
+		double lon = list[2].toDouble(&ok);
 		if(!ok) continue;
 
-		Waypoint *start = getWaypoint(id, lat, lon, 0.5);
-		if(start == 0) continue;
+		Waypoint *start = getWaypoint(id, lat, lon, 1);
+		if(start == 0) {
+			start = new Waypoint(id, lat, lon);
+			addFix(start);
+			qDebug() << "added fix (start):" << start->id << start->lat << start->lon;
+		}
 
 		id = list[3];
-		lat = list[4].toFloat(&ok);
+		lat = list[4].toDouble(&ok);
 		if(!ok) continue;
-		lon = list[5].toFloat(&ok);
+		lon = list[5].toDouble(&ok);
 		if(!ok) continue;
 
-		Waypoint *end = getWaypoint(id, lat, lon, 0.5);
-		if(end == 0) continue;
+		Waypoint *end = getWaypoint(id, lat, lon, 1);
+		if(end == 0) {
+			end = new Waypoint(id, lat, lon);
+			addFix(end);
+			qDebug() << "added fix (end):" << end->id << end->lat << end->lon;
+		}
 
 		Airway::Type type = (Airway::Type)list[6].toInt(&ok);
 		if(!ok) continue;
@@ -135,7 +150,7 @@ void Airac::readAirways(const QString& directory) {
 	qDebug() << "done loading airways:" << airwayMap.size() << "names," << segments << "segments";
 }
 
-Waypoint* Airac::getWaypoint(const QString& id, float lat, float lon, double maxDist) const {
+Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double maxDist) const {
 	Waypoint *result = 0;
 	double minDist = 99999;
 
@@ -162,7 +177,6 @@ Waypoint* Airac::getWaypoint(const QString& id, float lat, float lon, double max
 			minDist = d;
 		}
 	}
-
 	return result;
 }
 
@@ -175,7 +189,7 @@ void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, in
 	awy->addSegment(from, to);
 }
 
-Waypoint* Airac::getNextWaypoint(QStringList& workingList, float lat, float lon) const {
+Waypoint* Airac::getNextWaypoint(QStringList& workingList, double lat, double lon) const {
 	Waypoint* result = 0;
 	while(!workingList.isEmpty() && result == 0) {
 		QString id = workingList.first();
@@ -185,7 +199,9 @@ Waypoint* Airac::getNextWaypoint(QStringList& workingList, float lat, float lon)
 	return result;
 }
 
-QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, float lat, float lon) const {
+void dump(QList<Waypoint*> list);
+
+QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, double lat, double lon) const {
 	QList<Waypoint*> result;
 	if(plan.isEmpty()) return result;
 
@@ -196,8 +212,8 @@ QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, float lat, float l
 	if(currPoint == 0) return result;
 
 	result.append(currPoint);
-	float myLat = currPoint->lat;
-	float myLon = currPoint->lon;
+	double myLat = currPoint->lat;
+	double myLon = currPoint->lon;
 
 	while(!workingList.isEmpty()) {
 		QString id = workingList.first();
@@ -229,6 +245,9 @@ QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, float lat, float l
 			}
 		}
 	}
+
+	qDebug() << "expanded" << plan << "to:";
+	dump(result);
 
 	return result;
 }
