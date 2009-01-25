@@ -319,6 +319,9 @@ void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) const {
 }
 
 void Pilot::plotPathFromDep() const {
+	if(Settings::trackLineStrength() == 0)
+		return;
+
 	Airport *dep = depAirport();
 	if(dep == 0) return; // dont know where to plot to - abort
 
@@ -346,6 +349,9 @@ void Pilot::plotPathFromDep() const {
 }
 
 void Pilot::plotPathToDest() const {
+	if(Settings::trackLineStrength() == 0)
+		return;
+
 	Airport *dest = destAirport();
 	if(dest == 0) return; // dont know where to plot to - abort
 
@@ -364,6 +370,9 @@ void Pilot::plotPathToDest() const {
 }
 
 void Pilot::plotPlannedLine() const {
+	if(Settings::planLineStrength() == 0)
+		return;
+
 	QList<Waypoint*> points = resolveFlightplan();
 
 	if(points.size() < 2)
@@ -372,11 +381,16 @@ void Pilot::plotPlannedLine() const {
 	double currLat = points[0]->lat;
 	double currLon = points[0]->lon;
 
-	QColor lineCol = Settings::trackLineColor();
-	glColor4f(0, 255, 0, 255);
+	QColor lineCol = Settings::planLineColor();
+	glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
 
-	glLineWidth(1.5);
+	glLineWidth(Settings::planLineStrength());
 	glBegin(GL_LINE_STRIP);
+
+		Airport* ap = depAirport();
+		if(ap != 0) {
+			VERTEX(ap->lat, ap->lon);
+		}
 
 		for(int i = 1; i < points.size(); i++) {
 			plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
@@ -384,6 +398,11 @@ void Pilot::plotPlannedLine() const {
 			currLon = points[i]->lon;
 		}
 		VERTEX(currLat, currLon);
+
+		ap = destAirport();
+		if(ap != 0) {
+			VERTEX(ap->lat, ap->lon);
+		}
 
 	glEnd();
 }

@@ -69,6 +69,9 @@ void PreferencesDialog::loadSettings() {
 	cbDotSmoothing->setChecked(Settings::displaySmoothDots());
 
 	editNavdir->setText(Settings::navdataDirectory());
+	editNavdir->setEnabled(Settings::useNavdata());
+	browseNavdirButton->setEnabled(Settings::useNavdata());
+	cbUseNavDatabase->setChecked(Settings::useNavdata());
 
 	cbDashedFrontAfter->setCurrentIndex(0);
 	if(!Settings::dashedTrackInFront())
@@ -174,6 +177,11 @@ void PreferencesDialog::loadSettings() {
 	pbTrackLineColor->setPalette(QPalette(color));
 	sbTrackLineStrength->setValue(Settings::trackLineStrength());
 
+	color = Settings::planLineColor();
+	pbPlanLineColor->setText(color.name());
+	pbPlanLineColor->setPalette(QPalette(color));
+	sbPlanLineStrength->setValue(Settings::planLineStrength());
+
 	// voice
 	editVoiceCallsign->setText(Settings::voiceCallsign());
 	editVoiceUser->setText(Settings::voiceUser());
@@ -199,6 +207,10 @@ void PreferencesDialog::on_spinBoxDownloadInterval_valueChanged(int value) {
 
 void PreferencesDialog::on_cbDownloadPeriodically_stateChanged(int state) {
 	Settings::setDownloadPeriodically(state == Qt::Checked);
+}
+
+void PreferencesDialog::on_cbUseNavDatabase_stateChanged(int state) {
+	Settings::setUseNavdata(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbResetConfiguration_stateChanged(int state) {
@@ -617,6 +629,21 @@ void PreferencesDialog::on_pbTrackLineColor_clicked() {
 
 void PreferencesDialog::on_sbTrackLineStrength_valueChanged(double value) {
 	Settings::setTrackLineStrength(value);
+}
+
+void PreferencesDialog::on_pbPlanLineColor_clicked() {
+	bool ok;
+	QRgb rgba = QColorDialog::getRgba(Settings::planLineColor().rgba(), &ok, this);
+	if(ok) {
+		QColor color = QColor::fromRgba(rgba);
+		pbPlanLineColor->setText(color.name());
+		pbPlanLineColor->setPalette(QPalette(color));
+		Settings::setPlanLineColor(color);
+	}
+}
+
+void PreferencesDialog::on_sbPlanLineStrength_valueChanged(double value) {
+	Settings::setPlanLineStrength(value);
 }
 
 void PreferencesDialog::on_buttonResetPilot_clicked() {

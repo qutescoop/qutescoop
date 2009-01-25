@@ -33,15 +33,12 @@ int runTest() {
 	NavData *navData = NavData::getInstance();
 	const Airac airac = navData->getAirac();
 
-	QString dep = "EDDN";
+	QString dep = "LOWI";
 	QString dst = "LOWS";
-	QString plan = "AKANU UL603 MUN DCT SBG";
-	//QString plan = "AKANU TEGBA RENLO LUPOX TITIG MUN SBG";
+	QString plan = "ERNAS T161 LEPSA";
 
 	Airport* apDep = navData->airports()[dep];
 	Airport* apDst = navData->airports()[dst];
-	if(apDep == 0) qDebug() << "dep airport not found:" << dep;
-	if(apDst == 0) qDebug() << "dst airport not found:" << dst;
 
 	QList<Waypoint*> points = airac.resolveFlightplan(plan.split(' '), apDep->lat, apDep->lon);
 

@@ -220,5 +220,7 @@ void NavData::loadDatabase(const QString& directory) {
 		return;
 	}
 
-	airac.load(directory);
+	if(Settings::useNavdata()) {
+		airac.load(directory);
+	}
 }

@@ -213,6 +213,14 @@ void Settings::setNavdataDirectory(const QString& directory) {
 	getSettings()->setValue("database/path", directory);
 }
 
+bool Settings::useNavdata() {
+	return getSettings()->value("database/use", true).toBool();
+}
+
+void Settings::setUseNavdata(bool value) {
+	getSettings()->setValue("database/use", value);
+}
+
 int Settings::metarDownloadInterval() {
 	return getSettings()->value("display/metarInterval", 10).toInt();
 }
@@ -517,6 +525,14 @@ void Settings::setTrackLineColor(const QColor& color) {
 	getSettings()->setValue("pilotDisplay/trackLineColor", color);
 }
 
+QColor Settings::planLineColor() {
+	return getSettings()->value("pilotDisplay/planLineColor", QColor::fromRgbF(0.0, 0.8, 0.0, 0.8)).value<QColor>();
+}
+
+void Settings::setPlanLineColor(const QColor& color) {
+	getSettings()->setValue("pilotDisplay/planLineColor", color);
+}
+
 void Settings::setDashedTrackInFront(bool value) {
 	getSettings()->setValue("pilotDisplay/dashedTrackInFront", value);
 }
@@ -539,6 +555,14 @@ double Settings::trackLineStrength() {
 
 void Settings::setTrackLineStrength(double value) {
 	getSettings()->setValue("pilotDisplay/trackLineStrength", value);
+}
+
+double Settings::planLineStrength() {
+	return getSettings()->value("pilotDisplay/planLineStrength", 0.9).toDouble();
+}
+
+void Settings::setPlanLineStrength(double value) {
+	getSettings()->setValue("pilotDisplay/planLineStrength", value);
 }
 
 void Settings::getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom) {

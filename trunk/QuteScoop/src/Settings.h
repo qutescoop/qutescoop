@@ -90,6 +90,9 @@ public:
 	static QString navdataDirectory();
 	static void setNavdataDirectory(const QString& directory);
 
+	static bool useNavdata();
+	static void setUseNavdata(bool value);
+
 	static int metarDownloadInterval();
 	static void setMetarDownloadInterval(int minutes);
 
@@ -201,11 +204,17 @@ public:
 	static QColor trackLineColor();
 	static void setTrackLineColor(const QColor& color);
 
+	static QColor planLineColor();
+	static void setPlanLineColor(const QColor& color);
+
 	static double timeLineStrength();
 	static void setTimeLineStrength(double value);
 
 	static double trackLineStrength();
 	static void setTrackLineStrength(double value);
+
+	static double planLineStrength();
+	static void setPlanLineStrength(double value);
 
 	static void setDashedTrackInFront(bool value);
 	static bool dashedTrackInFront();

@@ -95,7 +95,6 @@ void Airac::readAirways(const QString& directory) {
 
 		QStringList list = line.split(' ', QString::SkipEmptyParts);
 		if(list.size() < 10 || list.size() > 20) {
-			qDebug() << "skipping line" << line;
 			continue;
 		}
 
@@ -156,8 +155,9 @@ void Airac::readAirways(const QString& directory) {
 	for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
 		QList<Airway*>& list = iter.value();
 		QList<Airway*> sorted = list[0]->sort();
+
 		delete list[0];
-		list.removeAt(0);
+		list.clear();
 		list += sorted;
 	}
 
@@ -220,6 +220,9 @@ Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
 	Airway* result = 0;
 	for(int i = 0; i < list.size(); i++) {
 		Waypoint* wp = list[i]->getClosestPointTo(lat, lon);
+		if(wp == 0) {
+			continue;
+		}
 		double d = NavData::distance(lat, lon, wp->lat, wp->lon);
 		if(d == 0) {
 			return list[i];
@@ -253,6 +256,8 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 
 	QStringList workingList = plan;
 
+	qDebug() << "resolving" << plan;
+
 	// find a starting point
 	Waypoint* currPoint = getNextWaypoint(workingList, lat, lon);
 	if(currPoint == 0) return result;
@@ -260,44 +265,43 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 	result.append(currPoint);
 	double myLat = currPoint->lat;
 	double myLon = currPoint->lon;
+	bool wantAirway = true;
 
 	while(!workingList.isEmpty()) {
 		QString id = workingList.first();
 		workingList.removeFirst();
 
-		Airway *awy = getAirway(id, lat, lon);
+		Airway *awy = 0;
+		if(wantAirway) awy = getAirway(id, lat, lon);
 		if(awy != 0 && !workingList.isEmpty()) {
+			wantAirway = false;
 			// have airway - next should be a waypoint
 			QString endId = workingList.first();
 			Waypoint* wp = getWaypoint(endId, myLat, myLon);
 			if(wp != 0) {
-				// next is a waypoint - expand airway
 				result += awy->expand(currPoint->id, wp->id);
 				currPoint = wp;
 				myLat = wp->lat;
 				myLon = wp->lon;
 				workingList.removeFirst();
+				wantAirway = true;
 				continue;
 			}
 		} else if(awy == 0) {
+			wantAirway = false;
 			Waypoint* wp = getWaypoint(id, myLat, myLon);
 			if(wp != 0) {
-				// next is a waypoint - expand airway
 				result.append(wp);
 				currPoint = wp;
 				myLat = wp->lat;
 				myLon = wp->lon;
+				wantAirway = true;
 				continue;
 			}
 		}
 	}
 
-	QString debugStr = "resolved ";
-	for(int i = 0; i < plan.size(); i++) {
-		if(i > 0) debugStr += "-";
-		debugStr += plan[i];
-	}
-	debugStr += " to: ";
+	QString debugStr = "resolved to: ";
 	for(int i = 0; i < result.size(); i++) {
 		if(i>0) debugStr += "-";
 		debugStr += result[i]->id;

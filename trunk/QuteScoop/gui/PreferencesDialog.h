@@ -26,7 +26,7 @@
 class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
 {
 	Q_OBJECT
-	
+
 public:
 	PreferencesDialog();
 
@@ -37,7 +37,7 @@ private slots:
 	void on_cbDownloadOnStartup_stateChanged(int state);
 	void on_cbNetwork_currentIndexChanged(int index);
 	void on_editUserDefinedLocation_editingFinished();
-	
+
 	// proxy settings
 	void on_cbUseProxy_stateChanged(int state);
 	void on_editProxyServer_editingFinished();
@@ -55,9 +55,10 @@ private slots:
 	// navdata
 	void on_editNavdir_editingFinished();
 	void on_browseNavdirButton_clicked();
-	
+	void on_cbUseNavDatabase_stateChanged(int state);
+
 	void loadSettings();
-	
+
 	// earth and space
 	void on_pbBackgroundColor_clicked();
 	void on_pbGlobeColor_clicked();
@@ -68,7 +69,7 @@ private slots:
 	void on_pbCountryLineColor_clicked();
 	void on_sbCountryLineStrength_valueChanged(double value);
 	void on_buttonResetEarthSpace_clicked();
-	
+
 	// FIR
 	void on_pbFirBorderLineColor_clicked();
 	void on_sbFirBorderLineStrength_valueChanged(double value);
@@ -76,7 +77,7 @@ private slots:
 	void on_pbFirFont_clicked();
 	void on_pbFirFillColor_clicked();
 	void on_buttonResetFir_clicked();
-	
+
 	// Airport
 	void on_pbAirportDotColor_clicked();
 	void on_sbAirportDotSize_valueChanged(double value);
@@ -92,7 +93,7 @@ private slots:
 	void on_sbGndBorderLineStrength_valueChanged(double value);
 	void on_pbGndFillColor_clicked();
 	void on_buttonResetAirport_clicked();
-	
+
 	// Aircraft
 	void on_pbPilotFontColor_clicked();
 	void on_pbPilotFont_clicked();
@@ -102,9 +103,11 @@ private slots:
 	void on_sbTimeLineStrength_valueChanged(double value);
 	void on_pbTrackLineColor_clicked();
 	void on_sbTrackLineStrength_valueChanged(double value);
+	void on_pbPlanLineColor_clicked();
+	void on_sbPlanLineStrength_valueChanged(double value);
 	void on_buttonResetPilot_clicked();
 	void on_cbDashedFrontAfter_currentIndexChanged(int index);
-	
+
 	void on_cbResetConfiguration_stateChanged(int state);
 
 	// voice
@@ -114,14 +117,14 @@ private slots:
 	void on_editVoiceCallsign_editingFinished();
 	void on_editVoiceUser_editingFinished();
 	void on_editVoicePassword_editingFinished();
-	
+
 	// updates + feedback
 	void on_cbCheckForUpdates_stateChanged(int state);
 	void on_cbSendVersionInfo_stateChanged(int state);
-	
+
 private:
 	bool settingsLoaded;
-	
+
 };
 
 #endif /*PREFERENCESDIALOG_H_*/
