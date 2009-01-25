@@ -154,9 +154,9 @@ void Airac::readAirways(const QString& directory) {
 
 	QHash<QString, QList<Airway*> >::iterator iter;
 	for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
-		QList<Airway*> list = iter.value();
+		QList<Airway*>& list = iter.value();
 		QList<Airway*> sorted = list[0]->sort();
-		//delete list[0]; // TODO: calling this destructor crashes the airway database - find out why
+		delete list[0];
 		list.removeAt(0);
 		list += sorted;
 	}
@@ -291,6 +291,18 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 			}
 		}
 	}
+
+	QString debugStr = "resolved ";
+	for(int i = 0; i < plan.size(); i++) {
+		if(i > 0) debugStr += "-";
+		debugStr += plan[i];
+	}
+	debugStr += " to: ";
+	for(int i = 0; i < result.size(); i++) {
+		if(i>0) debugStr += "-";
+		debugStr += result[i]->id;
+	}
+	qDebug() << debugStr;
 
 	return result;
 }

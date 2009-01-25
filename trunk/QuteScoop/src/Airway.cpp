@@ -38,10 +38,10 @@ Airway::Airway(const QString& name, Type type, int base, int top) {
 }
 
 Airway::~Airway() {
-	qDebug() << __FILE__ << __LINE__ << __PRETTY_FUNCTION__;
+	// destructor
 }
 
-#define DEBUG_AWY "UL603"
+#define DEBUG_AWY ""
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	if(name == DEBUG_AWY) {
@@ -123,9 +123,6 @@ Airway* Airway::createFromSegments() {
 		}
 	}
 
-	if(name == DEBUG_AWY)
-		result->dumpWaypoints();
-
 	return result;
 }
 
@@ -144,6 +141,8 @@ QList<Airway*> Airway::sort() {
 		awy = createFromSegments();
 		if(awy != 0) {
 			result.append(awy);
+			if(name == DEBUG_AWY)
+				awy->dumpWaypoints();
 		}
 	} while(awy != 0);
 

@@ -20,7 +20,7 @@
 #include "helpers.h"
 #include "Window.h"
 
-#define RUN_TEST
+//#define RUN_TEST
 
 #ifdef RUN_TEST
 #include <QDebug>
