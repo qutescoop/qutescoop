@@ -51,7 +51,7 @@ public:
 	 *
 	 * Unknown fixes and/or airways will be ignored.
 	 */
-	QList<Waypoint*> getWaypoints(const QStringList& flightplan, double lat, double lon) const;
+	QList<Waypoint*> resolveFlightplan(const QStringList& flightplan, double lat, double lon) const;
 
 private:
 	QHash<QString, QList<Waypoint*> > waypointMap;

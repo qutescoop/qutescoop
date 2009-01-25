@@ -94,8 +94,8 @@ void Airac::readAirways(const QString& directory) {
 			continue;
 
 		QStringList list = line.split(' ', QString::SkipEmptyParts);
-		if(list.size() != 10) {
-			qDebug() << "too short: skipping line" << line;
+		if(list.size() < 10 || list.size() > 20) {
+			qDebug() << "skipping line" << line;
 			continue;
 		}
 
@@ -109,7 +109,6 @@ void Airac::readAirways(const QString& directory) {
 		if(start == 0) {
 			start = new Waypoint(id, lat, lon);
 			addFix(start);
-			qDebug() << "added fix (start):" << start->id << start->lat << start->lon;
 		}
 
 		id = list[3];
@@ -122,7 +121,6 @@ void Airac::readAirways(const QString& directory) {
 		if(end == 0) {
 			end = new Waypoint(id, lat, lon);
 			addFix(end);
-			qDebug() << "added fix (end):" << end->id << end->lat << end->lon;
 		}
 
 		Airway::Type type = (Airway::Type)list[6].toInt(&ok);
@@ -133,7 +131,19 @@ void Airac::readAirways(const QString& directory) {
 		int top = list[8].toInt(&ok);
 		if(!ok) continue;
 
-		QStringList names = list[9].split('-', QString::SkipEmptyParts);
+		QStringList names;
+		if(list.size() > 10) {
+			//handle airways with spaces (!) in the name
+			QString glue;
+			for(int i = 9; i < list.size(); i++) {
+				if(i > 9) glue += " ";
+				glue += list[i];
+			}
+			names = glue.split('-', QString::SkipEmptyParts);
+		} else {
+			names = list[9].split('-', QString::SkipEmptyParts);
+		}
+
 		for(int i = 0; i < names.size(); i++) {
 			addAirwaySegment(start, end, type, base, top, names[i]);
 			segments++;
@@ -201,7 +211,7 @@ Waypoint* Airac::getNextWaypoint(QStringList& workingList, double lat, double lo
 
 void dump(QList<Waypoint*> list);
 
-QList<Waypoint*> Airac::getWaypoints(const QStringList& plan, double lat, double lon) const {
+QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, double lon) const {
 	QList<Waypoint*> result;
 	if(plan.isEmpty()) return result;
 

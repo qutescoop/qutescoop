@@ -395,5 +395,5 @@ QList<Waypoint*> Pilot::resolveFlightplan() const {
 	if(dep == 0) return QList<Waypoint*>();
 
 	QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
-	return NavData::getInstance()->getAirac().getWaypoints(list, dep->lat, dep->lon);
+	return NavData::getInstance()->getAirac().resolveFlightplan(list, dep->lat, dep->lon);
 }

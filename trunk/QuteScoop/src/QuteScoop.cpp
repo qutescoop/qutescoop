@@ -43,7 +43,7 @@ int runTest() {
 	if(apDep == 0) qDebug() << "dep airport not found:" << dep;
 	if(apDst == 0) qDebug() << "dst airport not found:" << dst;
 
-	QList<Waypoint*> points = airac.getWaypoints(plan.split(' '), apDep->lat, apDep->lon);
+	QList<Waypoint*> points = airac.resolveFlightplan(plan.split(' '), apDep->lat, apDep->lon);
 
 	qDebug() << "-------------------------------------------";
 	qDebug() << "Plan: " << dep << plan << dst;
