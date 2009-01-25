@@ -20,19 +20,18 @@
 #define WAYPOINT_H_
 
 #include <QStringList>
+#include "MapObject.h"
 
-class Waypoint
+class Waypoint: public MapObject
 {
 public:
 	Waypoint() {};
 	Waypoint(const QStringList& stringList);
 	Waypoint(const QString& id, double lat, double lon);
 
-	double lat;
-	double lon;
-	QString id;
+	virtual QString mapLabel() const { return " " + label; }
 
-	bool isNull() const { return id.isNull(); };
+	virtual void showDetailsDialog() {};
 };
 
 #endif /*WAYPOINT_H_*/

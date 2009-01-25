@@ -34,6 +34,8 @@ public:
 
 	void load(const QString& directory);
 
+	bool isEmpty() const { return waypointMap.isEmpty(); }
+
 	/**
 	 * Returns the waypoint with the given id closest to the given lat/lon.
 	 */
@@ -55,10 +57,13 @@ public:
 
 	Airway* getAirway(const QString& name, double lat, double lon) const;
 
+	const QList<Waypoint*>& getAllWaypoints() const { return allWaypoints; }
+
 private:
 	QHash<QString, QList<Waypoint*> > waypointMap;
 	QHash<QString, QList<NavAid*> > navaidMap;
 	QHash<QString, QList<Airway*> > airwayMap;
+	QList<Waypoint*> allWaypoints;
 
 	void readFixes(const QString& directory);
 	void addFix(Waypoint* fix);

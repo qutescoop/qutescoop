@@ -36,7 +36,7 @@ class GLWidget : public QGLWidget
 public:
     GLWidget(QGLFormat format, QWidget *parent = 0);
     ~GLWidget();
-    
+
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
@@ -46,12 +46,12 @@ public slots:
 	void rightClick(const QPoint& pos);
 	void zoomIn();
 	void zoomOut();
-	
+
 	void rememberPosition();
 	void restorePosition();
-	
+
 	void displayAllFirs(bool value);
-	
+
 	/**
 	 * Return a list of all clients at given lat/lon, within radius miles
 	 */
@@ -59,7 +59,7 @@ public slots:
 
 signals:
 	void mapClicked(int x, int y, QPoint absolutePos);
-    
+
 protected:
 	void initializeGL();
 	void paintGL();
@@ -78,7 +78,7 @@ private:
 
 	void determineActiveSectors();
 	void updateAirports();
-	
+
 	/**
 	 * Convert mouse coordinatex (x/y) into lat/lon on the globe.
 	 * Returns false if the mouse is not on the globe (but pointing on space),
@@ -87,7 +87,7 @@ private:
 	bool mouse2latlon(int x, int y, double& lat, double& lon) const;
 
 	GLuint orbList;
-	void createOrbList();	
+	void createOrbList();
 	GLuint coastlineList;
 	void createCoastlineList();
 	GLuint gridlinesList;
@@ -98,19 +98,25 @@ private:
 	void createPilotsList();
 	GLuint airportsList;
 	void createAirportsList();
-	
+
+	GLuint fixesList;
+	void createFixesList();
+
 	GLuint firPolygonsList;
 	GLuint airportControllersList;
 	GLuint firPolygonBorderLinesList;
 	GLuint appBorderLinesList;
 	void prepareDisplayLists();
-	
+
 	QList<Controller*> firsToDraw;
-	
+
 	double pilotLabelZoomTreshold;
 	double airportLabelZoomTreshold;
 	double controllerLabelZoomTreshold;
-	
+
+	double fixZoomTreshold;
+	double fixLabelZoomTreshold;
+
 	double xRot;
 	double yRot;
 	double zRot;
@@ -118,9 +124,9 @@ private:
 	double aspectRatio;
 	QPoint lastPos;
 	QPoint mouseDownPos;
-	
+
 	bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
-	
+
 	class FontRectangle {
 	public:
 		FontRectangle(QRectF rectangle, MapObject *mapObject): _rect(rectangle), _object(mapObject) {}
@@ -132,10 +138,10 @@ private:
 	};
 	QList<FontRectangle> fontRectangles;
 	bool shouldDrawLabel(const FontRectangle& rect);
-	
+
 	void renderLabels();
 	void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
-	
+
 	bool allFirsDisplayed;
 };
 

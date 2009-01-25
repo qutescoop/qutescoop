@@ -30,6 +30,7 @@
 #include "Whazzup.h"
 #include "NavData.h"
 #include "Settings.h"
+#include "Waypoint.h"
 
 #include <QDebug>
 
@@ -45,17 +46,20 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	airportsList = 0;
 
 	setMouseTracking(true);
-	
+
 	pilotLabelZoomTreshold = 0.5;
 	airportLabelZoomTreshold = 0.5;
 	controllerLabelZoomTreshold = 3;
-	
+
 	firPolygonsList = 0;
 	airportControllersList = 0;
 	firPolygonBorderLinesList = 0;
 	appBorderLinesList = 0;
-	
+
 	allFirsDisplayed = false;
+
+	fixZoomTreshold = 0.1;
+	fixLabelZoomTreshold = fixZoomTreshold / 4;
 }
 
 GLWidget::~GLWidget() {
@@ -65,7 +69,7 @@ GLWidget::~GLWidget() {
 	glDeleteLists(gridlinesList, 1);
 	glDeleteLists(countriesList, 1);
 	glDeleteLists(pilotsList, 1);
-	
+
 	QList<Airport*> airportList = NavData::getInstance()->airports().values();
 	for (int i = 0; i < airportList.size(); i++) {
 		delete airportList[i];
@@ -96,7 +100,7 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
 }
 
 void GLWidget::prepareDisplayLists() {
-	
+
 	// FIR polygons
 	if(firPolygonsList == 0)
 		firPolygonsList = glGenLists(1);
@@ -104,15 +108,15 @@ void GLWidget::prepareDisplayLists() {
 	// make sure all the lists are there to avoid nested glNewList calls
 	for(int i = 0; i < firsToDraw.size(); i++) {
 		Fir *f = firsToDraw[i]->fir;
-		if(f == 0) continue;		
+		if(f == 0) continue;
 		f->getPolygon();
 	}
-	
+
 	// create a list of lists
 	glNewList(firPolygonsList, GL_COMPILE);
 		for(int i = 0; i < firsToDraw.size(); i++) {
 			Fir *f = firsToDraw[i]->fir;
-			if(f == 0) continue;		
+			if(f == 0) continue;
 			glCallList(f->getPolygon());
 		}
 	glEndList();
@@ -125,34 +129,34 @@ void GLWidget::prepareDisplayLists() {
 	QList<Airport*> airportList = NavData::getInstance()->airports().values();
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] == 0) continue;
-		if(!airportList[i]->getApproaches().isEmpty()) 
+		if(!airportList[i]->getApproaches().isEmpty())
 			airportList[i]->getAppDisplayList();
-		if(!airportList[i]->getTowers().isEmpty()) 
+		if(!airportList[i]->getTowers().isEmpty())
 			airportList[i]->getTwrDisplayList();
-		if(!airportList[i]->getGrounds().isEmpty()) 
+		if(!airportList[i]->getGrounds().isEmpty())
 			airportList[i]->getGndDisplayList();
 	}
-	
+
 	// create a list of lists
 	glNewList(airportControllersList, GL_COMPILE);
 		// Approaches
 		for(int i = 0; i < airportList.size(); i++) {
 			if(airportList[i] == 0) continue;
-			if(!airportList[i]->getApproaches().isEmpty()) 
+			if(!airportList[i]->getApproaches().isEmpty())
 				glCallList(airportList[i]->getAppDisplayList());
 		}
-		
+
 		// Towers
 		for(int i = 0; i < airportList.size(); i++) {
 			if(airportList[i] == 0) continue;
-			if(!airportList[i]->getTowers().isEmpty()) 
+			if(!airportList[i]->getTowers().isEmpty())
 				glCallList(airportList[i]->getTwrDisplayList());
 		}
-		
+
 		// Grounds
 		for(int i = 0; i < airportList.size(); i++) {
 			if(airportList[i] == 0) continue;
-			if(!airportList[i]->getGrounds().isEmpty()) 
+			if(!airportList[i]->getGrounds().isEmpty())
 				glCallList(airportList[i]->getGndDisplayList());
 		}
 	glEndList();
@@ -165,18 +169,18 @@ void GLWidget::prepareDisplayLists() {
 		// first, make sure all lists are there
 		for(int i = 0; i < firsToDraw.size(); i++) {
 			Fir *f = firsToDraw[i]->fir;
-			if(f == 0) continue;		
+			if(f == 0) continue;
 			f->getBorderLine();
 		}
 
 		glNewList(firPolygonBorderLinesList, GL_COMPILE);
 			for(int i = 0; i < firsToDraw.size(); i++) {
 				Fir *f = firsToDraw[i]->fir;
-				if(f == 0) continue;		
+				if(f == 0) continue;
 				glCallList(f->getBorderLine());
 			}
 		glEndList();
-	
+
 	} else {
 		// display ALL fir borders
 		QList<Fir*> firs = NavData::getInstance()->firs().values();
@@ -184,7 +188,7 @@ void GLWidget::prepareDisplayLists() {
 			if(firs[i] == 0) continue;
 			firs[i]->getBorderLine();
 		}
-		
+
 		glNewList(firPolygonBorderLinesList, GL_COMPILE);
 			for(int i = 0; i < firs.size(); i++) {
 				if(firs[i] == 0) continue;
@@ -199,14 +203,14 @@ void GLWidget::prepareDisplayLists() {
 		appBorderLinesList = glGenLists(1);
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] == 0) continue;
-		if(!airportList[i]->getApproaches().isEmpty()) 
+		if(!airportList[i]->getApproaches().isEmpty())
 			airportList[i]->getAppBorderDisplayList();
 	}
 
 	glNewList(appBorderLinesList, GL_COMPILE);
 		for(int i = 0; i < airportList.size(); i++) {
 			if(airportList[i] == 0) continue;
-			if(!airportList[i]->getApproaches().isEmpty()) 
+			if(!airportList[i]->getApproaches().isEmpty())
 				glCallList(airportList[i]->getAppBorderDisplayList());
 		}
 	glEndList();
@@ -215,11 +219,11 @@ void GLWidget::prepareDisplayLists() {
 void GLWidget::newWhazzupData() {
 	updateAirports();
 	firsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
-	
+
 	createPilotsList();
 	createAirportsList();
 	prepareDisplayLists();
-	
+
 	updateGL();
 }
 
@@ -238,7 +242,7 @@ void GLWidget::initializeGL() {
 	if(Settings::displaySmoothLines()) {
 		glEnable(GL_LINE_SMOOTH);
 	}
-	
+
 	glEnable(GL_BLEND);
 	glEnable(GL_LINE_STIPPLE);
 	glEnable(GL_TEXTURE_2D);
@@ -253,7 +257,7 @@ void GLWidget::paintGL() {
 	glRotated(zRot, 0.0, 0.0, 1.0);
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
+
 	glCallList(orbList);
 	glCallList(gridlinesList);
 
@@ -262,13 +266,16 @@ void GLWidget::paintGL() {
 
 	glCallList(countriesList);
 	glCallList(coastlineList);
-	
+
 	glCallList(firPolygonBorderLinesList);
 	glCallList(appBorderLinesList);
-	
+
 	glCallList(airportsList);
 	glCallList(pilotsList);
-	
+
+	if(zoom < fixZoomTreshold)
+		glCallList(fixesList);
+
 	renderLabels();
 }
 
@@ -299,7 +306,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
 	QToolTip::hideText();
-		
+
 	if(mouseDownPos == event->pos()) {
 		emit mapClicked(event->x(), event->y(), event->globalPos());
 	}
@@ -309,14 +316,14 @@ void GLWidget::handleRotation(QMouseEvent *event) {
 	const double zoomFactor = zoom / 10;
 
 	double dx = (event->x() - lastPos.x()) * zoomFactor / aspectRatio;
-	
+
 	// compensate for longitude differences, but only if xRot < 95¡
 	// otherwise we get a division by (almost) zero, crashing the application
 	const double limit = cos(80 * Pi180);
 	double xfactor = cos(xRot * Pi180);
 	if(fabs(xfactor) > limit)
 		dx /= xfactor;
-	
+
 	double dy = (-event->y() + lastPos.y()) * zoomFactor;
 
 	if (event->buttons() & Qt::LeftButton) {
@@ -326,7 +333,7 @@ void GLWidget::handleRotation(QMouseEvent *event) {
 		normalizeAngle(&yRot);
 		updateGL();
 	}
-	
+
 	lastPos = event->pos();
 }
 
@@ -350,7 +357,7 @@ void GLWidget::zoomOut() {
 
 void GLWidget::wheelEvent(QWheelEvent* event) {
 	QToolTip::hideText();
-	
+
 	if(event->delta() < 0) {
 		zoomOut();
 	} else {
@@ -383,7 +390,7 @@ void GLWidget::createCoastlineList() {
 	// coastlines
 	qglColor(Settings::coastLineColor());
 	glLineWidth(Settings::coastLineStrength());
-	
+
 	LineReader lineReader(Settings::dataDirectory() + "coastline.dat");
 	QList<QPair<double, double> > line = lineReader.readLine();
 	while (!line.isEmpty()) {
@@ -426,14 +433,14 @@ void GLWidget::createGridlinesList() {
 
 void GLWidget::createPilotsList() {
 	makeCurrent();
-	
+
 	if(pilotsList == 0)
 		pilotsList = glGenLists(1);
 
 	glNewList(pilotsList, GL_COMPILE);
-	
+
 	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
-	
+
 	// aircraft dots
 	glPointSize(Settings::pilotDotSize());
 	glBegin(GL_POINTS);
@@ -461,13 +468,13 @@ void GLWidget::createPilotsList() {
 		}
 		glEnd();
 	}
-	
+
 	// flight paths
 	for (int i = 0; i < pilots.size(); i++) {
 		const Pilot *p = pilots[i];
 		p->plotFlightPath();
 	}
-	
+
 	glEndList();
 }
 
@@ -496,7 +503,7 @@ bool GLWidget::pointIsVisible(double lat, double lon, int *px, int *py) const {
 	// create a feedback buffer
 	GLfloat buffer[6];
 	glFeedbackBuffer(6, GL_3D, buffer);
-	
+
 	// set to feedback mode
 	glRenderMode(GL_FEEDBACK);
 	// send a point to GL
@@ -504,7 +511,7 @@ bool GLWidget::pointIsVisible(double lat, double lon, int *px, int *py) const {
 	VERTEX(lat, lon);
 	glEnd();
 	int size = glRenderMode(GL_RENDER);
-	
+
 	// if the feedback buffer size is zero, the point was clipped
 	if(size > 0) {
 		if(px != 0) *px = (int)buffer[1];
@@ -515,12 +522,12 @@ bool GLWidget::pointIsVisible(double lat, double lon, int *px, int *py) const {
 
 void GLWidget::renderLabels() {
 	fontRectangles.clear();
-	
+
 	// FIR labels
 	QList<MapObject*> objects;
 	for(int i = 0; i < firsToDraw.size(); i++) objects.append(firsToDraw[i]);
 	renderLabels(objects, Settings::firFont(), controllerLabelZoomTreshold, Settings::firFontColor());
-	
+
 	// Airport labels
 	objects.clear();
 	QList<Airport*> airportList = NavData::getInstance()->airports().values();
@@ -535,6 +542,13 @@ void GLWidget::renderLabels() {
 	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getPilots().size(); i++)
 		objects.append(Whazzup::getInstance()->whazzupData().getPilots()[i]);
 	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
+
+	// Fix labels
+	objects.clear();
+	const QList<Waypoint*>& waypoints = NavData::getInstance()->getAirac().getAllWaypoints();
+	for(int i = 0; i < waypoints.size(); i++)
+		objects.append(waypoints[i]);
+	renderLabels(objects, Settings::pilotFont(), fixLabelZoomTreshold, Settings::pilotFontColor());
 }
 
 bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
@@ -548,12 +562,12 @@ bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
 void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color) {
 	if(zoom > zoomTreshold)
 		return; // don't draw if too far away
-	
+
 	int maxLabels = Settings::maxLabels();
 	double alpha = (zoomTreshold - zoom) / zoomTreshold * 1.5;
 	if(alpha > 1) alpha = 1; if(alpha < 0) alpha = 0;
 	color.setAlphaF(alpha);
-	
+
 	QFontMetricsF fontMetrics(font, this);
 	qglColor(color);
 	for (int i = 0; i < objects.size() && fontRectangles.size() < maxLabels; i++) {
@@ -565,7 +579,7 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 			QString text = o->mapLabel();
 			if(text.endsWith("_CTR")) // hack to make _CTR labels smaller
 				text = text.left(text.length() - 4);
-			
+
 			QRectF rect = fontMetrics.boundingRect(text);
 			rect.moveTo(x, y - rect.height());
 			FontRectangle fontRect = FontRectangle(rect, o);
@@ -598,11 +612,53 @@ void GLWidget::createCountriesList() {
 	glEndList();
 }
 
+#define TRIANGLE_SIZE 0.01
+
+void GLWidget::createFixesList() {
+	fixesList = glGenLists(1);
+
+	glNewList(fixesList, GL_COMPILE);
+	// fixes
+	qglColor(Settings::countryLineColor());
+	glLineWidth(Settings::countryLineStrength());
+
+	const Airac& airac = NavData::getInstance()->getAirac();
+	const QList<Waypoint*>& fixes = airac.getAllWaypoints();
+
+
+	double sin30 = 0.5;
+	double cos30 = 0.8660254037;
+	double tri_c = TRIANGLE_SIZE;
+	double tri_a = tri_c * cos30;
+	double tri_b = tri_c * sin30;
+
+	glBegin(GL_TRIANGLES);
+	QList<Waypoint*>::const_iterator iter = fixes.begin();
+	while(iter != fixes.end()) {
+		double lat = (*iter)->lat;
+		double lon = (*iter)->lon;
+		double circle_distort = cos(lat * Pi180);
+		double tri_b_c = tri_b * circle_distort;
+
+		VERTEX(lat - tri_b_c, lon - tri_a);
+		VERTEX(lat - tri_b_c, lon + tri_a);
+		VERTEX(lat + tri_c * circle_distort, lon);
+		++iter;
+	}
+	glEnd();
+
+	glEndList();
+}
+
 void GLWidget::createObjects() {
 	createOrbList();
 	createCoastlineList();
 	createGridlinesList();
 	createCountriesList();
+
+	if(!NavData::getInstance()->getAirac().isEmpty()) {
+		createFixesList();
+	}
 }
 
 void GLWidget::normalizeAngle(double *angle) const {
@@ -624,12 +680,12 @@ bool GLWidget::mouse2latlon(int x, int y, double& lat, double& lon) const {
 	double zs = sqrt(1 - (xs*xs) - (ys*ys)); // As the radius of globe is 1
 	if(!(zs <= 0) && !(zs > 0))
 		return false; // z is NaN - mouse is not on globe
-	
+
 	// the formulae use in fact three angles - fi, theta, psi
 	// in our case, due to the fact that we rotate the globe only around a single axis,
 	// we have fi = pi/2 and psi = 0. Therefore the only equation remaining:
 	double theta = xRot * Pi180;
-	
+
 	// Determine x0 y0 z0 (the new Cartesian coordinates after derotation)
 	double x0 = ys * sin(theta) - zs * cos(theta);
 	double y0 = ys * cos(theta) + zs * sin(theta);
@@ -653,7 +709,7 @@ bool GLWidget::mouse2latlon(int x, int y, double& lat, double& lon) const {
 
 void GLWidget::rightClick(const QPoint& pos) {
 	mouseDownPos = QPoint(); // make sure that we don't handle mouse-up for this right-click
-	
+
 	QList<MapObject*> objects = objectsAt(pos.x(), pos.y());
 	int countRelevant = 0;
 	Pilot *pilot = 0;
@@ -666,7 +722,7 @@ void GLWidget::rightClick(const QPoint& pos) {
 			pilot = p;
 			countRelevant++;
 		}
-		
+
 		Airport *a = dynamic_cast<Airport*>(objects[i]);
 		if(a != 0) {
 			if(airport != 0)
@@ -674,11 +730,11 @@ void GLWidget::rightClick(const QPoint& pos) {
 			airport = a;
 			countRelevant++;
 		}
-		
+
 		if(countRelevant > 1) return; // area too crowded
 	}
 	if(countRelevant != 1) return; // ambiguous search result
-		
+
 	if(airport != 0) {
 		airport->toggleFlightLines();
 		createPilotsList();
@@ -718,22 +774,22 @@ bool GLWidget::event(QEvent *event) {
 
 QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 	QList<MapObject*> result;
-	
+
 	// scan text labels
 	for(int i = 0; i < fontRectangles.size(); i++) {
 		if(fontRectangles[i].rect().contains(x, y))
 			result.append(fontRectangles[i].object());
 	}
-	
+
 	double lat, lon;
 	bool onGlobe = mouse2latlon(x, y, lat, lon);
 	if(!onGlobe)
 		return result;
-	
+
 	if(radius == 0) radius = 30*zoom;
 	double radiusDeg = Nm2Deg(radius);
 	radiusDeg *= radiusDeg;
-		
+
 	QList<Airport*> airportList = NavData::getInstance()->airports().values();
 	for (int i = 0; i < airportList.size(); i++) {
 		Airport* a = airportList[i];
@@ -774,7 +830,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 			result.append(p);
 		}
 	}
-	
+
 	result += observers;
 	return result;
 }

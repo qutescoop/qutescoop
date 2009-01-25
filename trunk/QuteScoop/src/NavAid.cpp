@@ -38,7 +38,7 @@ NavAid::NavAid(const QStringList& stringList) {
 	if(!ok) return;
 	heading = stringList[6].toFloat(&ok);
 	if(!ok) return;
-	id = stringList[7];
+	label = stringList[7];
 
 	for(int i = 8; i < stringList.size(); i++) {
 		name += stringList[i];

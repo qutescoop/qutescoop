@@ -45,7 +45,7 @@ Airway::~Airway() {
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	if(name == DEBUG_AWY) {
-		qDebug() << "seg+: " << from->id << to->id;
+		qDebug() << "seg+: " << from->label << to->label;
 	}
 
 	Segment newSegment(from, to);
@@ -63,7 +63,7 @@ void Airway::addSegment(Waypoint* from, Waypoint* to) {
 void Airway::dumpWaypoints() const {
 	QString line;
 	for(int i = 0; i < waypoints.size(); i++) {
-		line += waypoints[i]->id + " - ";
+		line += waypoints[i]->label + " - ";
 	}
 	qDebug() << line << "*";
 }
@@ -71,7 +71,7 @@ void Airway::dumpWaypoints() const {
 void Airway::dumpSegments() const {
 	QString line;
 	for(int i = 0; i < segments.size(); i++) {
-		line += segments[i].from->id + "-" + segments[i].to->id + " ";
+		line += segments[i].from->label + "-" + segments[i].to->label + " ";
 	}
 	qDebug() << name << "segments:" << line << "*";
 }
@@ -151,7 +151,7 @@ QList<Airway*> Airway::sort() {
 
 int Airway::getIndex(const QString& id) const {
 	for(int i = 0; i < waypoints.size(); i++) {
-		if(waypoints[i]->id == id) {
+		if(waypoints[i]->label == id) {
 			return i;
 		}
 	}

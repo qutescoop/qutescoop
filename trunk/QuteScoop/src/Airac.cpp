@@ -36,12 +36,17 @@ void Airac::load(const QString& directory) {
 	readFixes(directory);
 	readNavaids(directory);
 	readAirways(directory);
+
+	QHash<QString, QList<Waypoint*> >::const_iterator iter = waypointMap.begin();
+	while(iter != waypointMap.end()) {
+		allWaypoints += iter.value();
+		++iter;
+	}
 }
 
 void Airac::addFix(Waypoint* fix) {
-	QList<Waypoint*> list = waypointMap[fix->id];
+	QList<Waypoint*>& list = waypointMap[fix->label];
 	list.append(fix);
-	waypointMap[fix->id] = list;
 }
 
 void Airac::readFixes(const QString& directory) {
@@ -75,9 +80,9 @@ void Airac::readNavaids(const QString& directory) {
 		if (nav == 0 || nav->isNull())
 			continue;
 
-		QList<NavAid*> list = navaidMap[nav->id];
+		QList<NavAid*> list = navaidMap[nav->label];
 		list.append(nav);
-		navaidMap[nav->id] = list;
+		navaidMap[nav->label] = list;
 	}
 	qDebug() << "done loading navaids:" << navaidMap.size() << "names";
 }
@@ -279,7 +284,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 			QString endId = workingList.first();
 			Waypoint* wp = getWaypoint(endId, myLat, myLon);
 			if(wp != 0) {
-				result += awy->expand(currPoint->id, wp->id);
+				result += awy->expand(currPoint->label, wp->label);
 				currPoint = wp;
 				myLat = wp->lat;
 				myLon = wp->lon;
@@ -304,7 +309,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 	QString debugStr = "resolved to: ";
 	for(int i = 0; i < result.size(); i++) {
 		if(i>0) debugStr += "-";
-		debugStr += result[i]->id;
+		debugStr += result[i]->label;
 	}
 	qDebug() << debugStr;
 
