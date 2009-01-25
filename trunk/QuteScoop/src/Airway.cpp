@@ -35,23 +35,15 @@ Airway::Airway(const QString& name, Type type, int base, int top) {
 	this->type = type;
 	this->base = base;
 	this->top = top;
-	segments = new QList<Segment>();
 }
 
 Airway::~Airway() {
-	if(segments != 0) {
-		delete segments;
-	}
+	qDebug() << __FILE__ << __LINE__ << __PRETTY_FUNCTION__;
 }
 
-#define DEBUG_AWY "A400F"
+#define DEBUG_AWY "UL603"
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
-	if(segments == 0) {
-		qDebug() << "cannot add segments on already sorted airway!";
-		return;
-	}
-
 	if(name == DEBUG_AWY) {
 		qDebug() << "seg+: " << from->id << to->id;
 	}
@@ -59,98 +51,103 @@ void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	Segment newSegment(from, to);
 
 	// check if we already have this segment
-	for(int i = 0; i < segments->size(); i++) {
-		if((*segments)[i] == newSegment) {
+	for(int i = 0; i < segments.size(); i++) {
+		if(segments[i] == newSegment) {
 			return;
 		}
 	}
 
-	segments->append(newSegment);
+	segments.append(newSegment);
 }
 
-void dump(const QList<Waypoint*> points) {
+void Airway::dumpWaypoints() const {
 	QString line;
-	for(int i = 0; i < points.size(); i++) {
-		line += points[i]->id + " - ";
+	for(int i = 0; i < waypoints.size(); i++) {
+		line += waypoints[i]->id + " - ";
 	}
 	qDebug() << line << "*";
 }
 
 void Airway::dumpSegments() const {
 	QString line;
-	for(int i = 0; i < segments->size(); i++) {
-		line += (*segments)[i].from->id + "-" + (*segments)[i].to->id + " ";
+	for(int i = 0; i < segments.size(); i++) {
+		line += segments[i].from->id + "-" + segments[i].to->id + " ";
 	}
 	qDebug() << name << "segments:" << line << "*";
 }
 
-void Airway::sort() {
-	if(segments == 0) {
-		qDebug() << "cannot sort already sorted airway!";
-		return;
-	}
+Airway* Airway::createFromSegments() {
+	if(segments.isEmpty())
+		return 0;
 
-	if(segments->isEmpty()) {
-		delete segments;
-		segments = 0;
-		return;
-	}
-
-	if(name == DEBUG_AWY)
-		dumpSegments();
-
-	Segment seg = segments->first();
-	segments->removeFirst();
-	waypoints.append(seg.from);
-	waypoints.append(seg.to);
+	Airway* result = new Airway(name, type, base, top);
+	Segment seg = segments.first();
+	segments.removeFirst();
+	result->waypoints.append(seg.from);
+	result->waypoints.append(seg.to);
 
 	bool nothingRemoved = false;
-	while(!segments->isEmpty() && !nothingRemoved) {
+	while(!segments.isEmpty() && !nothingRemoved) {
 		nothingRemoved = true;
 
-		for(int i = 0; i < segments->size() && nothingRemoved; i++) {
-			Segment s = (*segments)[i];
-			Waypoint *p = waypoints.last();
+		for(int i = 0; i < segments.size() && nothingRemoved; i++) {
+			Segment s = segments[i];
+			Waypoint *p = result->waypoints.last();
 
 			if(s.from == p) {
-				waypoints.append(s.to);
-				segments->removeAt(i);
+				result->waypoints.append(s.to);
+				segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 			if(s.to == p) {
-				waypoints.append(s.from);
-				segments->removeAt(i);
+				result->waypoints.append(s.from);
+				segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 
-			p = waypoints.first();
+			p = result->waypoints.first();
 			if(s.from == p) {
-				waypoints.prepend(s.to);
-				segments->removeAt(i);
+				result->waypoints.prepend(s.to);
+				segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 			if(s.to == p) {
-				waypoints.prepend(s.from);
-				segments->removeAt(i);
+				result->waypoints.prepend(s.from);
+				segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 		}
 	}
 
-	if(!segments->isEmpty()) {
-		qDebug() << "there are still" << segments->size() << "segments left in airway" << name << "!";
-		dumpSegments();
+	if(name == DEBUG_AWY)
+		result->dumpWaypoints();
+
+	return result;
+}
+
+QList<Airway*> Airway::sort() {
+	QList<Airway*> result;
+
+	if(segments.isEmpty()) {
+		return result;
 	}
 
 	if(name == DEBUG_AWY)
-		dump(waypoints);
+		dumpSegments();
 
-	delete segments;
-	segments = 0;
+	Airway *awy = 0;
+	do {
+		awy = createFromSegments();
+		if(awy != 0) {
+			result.append(awy);
+		}
+	} while(awy != 0);
+
+	return result;
 }
 
 int Airway::getIndex(const QString& id) const {
