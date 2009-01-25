@@ -1,6 +1,8 @@
-QuteScoop Changelog - Version 1.0.2
+QuteScoop Changelog - Version 1.0.2 alpha
 
-* ...
+* Loading of navigation database in the XPlane 9 format. This is a free
+  database that can be downloaded from http://data.x-plane.com
+* Plotting of flight route according to the filed flight plan
 
 QuteScoop Changelog - Version 1.0.1
 
