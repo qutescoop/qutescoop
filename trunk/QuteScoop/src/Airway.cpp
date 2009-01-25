@@ -18,6 +18,7 @@
 
 #include <QDebug>
 
+#include "NavData.h"
 #include "Airway.h"
 
 Airway::Segment::Segment(Waypoint* from, Waypoint* to) {
@@ -182,5 +183,21 @@ QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) co
 	}
 	result.append(waypoints[endIndex]);
 
+	return result;
+}
+
+Waypoint* Airway::getClosestPointTo(double lat, double lon) const {
+	Waypoint* result = 0;
+	double minDist = 9999;
+	for(int i = 0; i < waypoints.size(); i++) {
+		double d = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
+		if(d == 0) {
+			return waypoints[i];
+		}
+		if(d < minDist) {
+			minDist = d;
+			result = waypoints[i];
+		}
+	}
 	return result;
 }

@@ -53,10 +53,12 @@ public:
 	 */
 	QList<Waypoint*> resolveFlightplan(const QStringList& flightplan, double lat, double lon) const;
 
+	Airway* getAirway(const QString& name, double lat, double lon) const;
+
 private:
 	QHash<QString, QList<Waypoint*> > waypointMap;
 	QHash<QString, QList<NavAid*> > navaidMap;
-	QHash<QString, Airway*> airwayMap;
+	QHash<QString, QList<Airway*> > airwayMap;
 
 	void readFixes(const QString& directory);
 	void addFix(Waypoint* fix);
@@ -65,6 +67,7 @@ private:
 	void readAirways(const QString& directory);
 	void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name);
 
+	Airway* getAirway(const QString& name, Airway::Type type, int base, int top);
 	Waypoint* getNextWaypoint(QStringList& workingList, double lat, double lon) const;
 };
 

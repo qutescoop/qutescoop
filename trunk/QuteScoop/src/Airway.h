@@ -29,6 +29,10 @@ public:
 		LOW = 1,
 		HIGH = 2
 	};
+	Type type;
+	int base;
+	int top;
+	QString name;
 
 	Airway(const QString& name, Type type, int base, int top);
 	virtual ~Airway();
@@ -41,6 +45,8 @@ public:
 	 * point, but will include the given end point.
 	 */
 	QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
+
+	Waypoint* getClosestPointTo(double lat, double lon) const;
 
 	void sort();
 
@@ -55,10 +61,6 @@ private:
 		Waypoint *to;
 	};
 
-	Type type;
-	int base;
-	int top;
-	QString name;
 	QList<Segment> *segments;
 	QList<Waypoint*> waypoints;
 

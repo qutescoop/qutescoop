@@ -152,9 +152,10 @@ void Airac::readAirways(const QString& directory) {
 
 	qDebug() << "sorting airways...";
 
-	QHash<QString, Airway*>::iterator iter;
+	QHash<QString, QList<Airway*> >::iterator iter;
 	for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
-		iter.value()->sort();
+		QList<Airway*> list = iter.value();
+		list[0]->sort();
 	}
 
 	qDebug() << "done loading airways:" << airwayMap.size() << "names," << segments << "segments";
@@ -190,12 +191,46 @@ Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double m
 	return result;
 }
 
-void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name) {
-	Airway* awy = airwayMap[name];
-	if(awy == 0) {
-		awy = new Airway(name, type, base, top);
-		airwayMap[name] = awy;
+Airway* Airac::getAirway(const QString& name, Airway::Type type, int base, int top) {
+	QList<Airway*> list = airwayMap[name];
+	for(int i = 0; i < list.size(); i++) {
+		if(list[i]->type == type) {
+			return list[i];
+		}
 	}
+	Airway* awy = new Airway(name, type, base, top);
+	list.append(awy);
+	airwayMap[name] = list;
+	return awy;
+}
+
+Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
+	QList<Airway*> list = airwayMap[name];
+	if(list.isEmpty()) {
+		return 0;
+	}
+	if(list.size() == 1) {
+		return list[0];
+	}
+
+	double minDist = 9999;
+	Airway* result = 0;
+	for(int i = 0; i < list.size(); i++) {
+		Waypoint* wp = list[i]->getClosestPointTo(lat, lon);
+		double d = NavData::distance(lat, lon, wp->lat, wp->lon);
+		if(d == 0) {
+			return list[i];
+		}
+		if(d < minDist) {
+			minDist = d;
+			result = list[i];
+		}
+	}
+	return result;
+}
+
+void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name) {
+	Airway* awy = getAirway(name, type, base, top);
 	awy->addSegment(from, to);
 }
 
@@ -229,7 +264,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 		QString id = workingList.first();
 		workingList.removeFirst();
 
-		Airway *awy = airwayMap[id];
+		Airway *awy = getAirway(id, lat, lon);
 		if(awy != 0 && !workingList.isEmpty()) {
 			// have airway - next should be a waypoint
 			QString endId = workingList.first();
