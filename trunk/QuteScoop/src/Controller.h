@@ -35,29 +35,31 @@ public:
 	bool isObserver() const { return facilityType == 0; };
 	bool isStaff() const { return facilityType == 1; };
 	bool isATC() const { return facilityType >= 2; };
-	
+
 	QString toolTip() const;
-	
+
 	QString facilityString() const;
-	
+
+	virtual QString mapLabel() const;
+
 	virtual QString rank() const;
-	
+
 	QString getCenter();
 	QString getApproach() const;
 	QString getTower() const;
 	QString getGround() const;
-	
+
 	QString frequency;
 	int facilityType;
 	int visualRange;
 	QString atisMessage;
 	QDateTime timeLastAtisReceived;
-	
+
 	QString voiceServer;
 	QString voiceLink() const;
-	
+
 	Fir *fir;
-	
+
 private:
 	bool couldBeAtcCallsign() const;
 };

@@ -30,7 +30,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 	visualRange = getField(stringList, 19).toInt();
 	atisMessage = getField(stringList, 35);
 	timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
-	
+
 	QStringList atisLines = atisMessage.split("^§");
 	if(atisLines.size() >= 1) {
 		voiceServer = atisLines[0];
@@ -41,7 +41,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 		}
 		atisMessage = atis;
 	}
-	
+
 	fir = 0;
 }
 
@@ -62,18 +62,18 @@ QString Controller::facilityString() const {
 QString Controller::getCenter() {
 	if(!isATC())
 		return QString();
-	
+
 	QStringList segments = label.split('_');
 
 	// allow only _FSS* and _CTR*
 	if(!segments.last().startsWith("CTR") && !segments.last().startsWith("FSS"))
 		return QString();
 	segments.removeLast();
-	
+
 	// ignore _T* and _X* positions
 	if(segments.last().startsWith("T") || segments.last().startsWith("X"))
 		return QString();
-	
+
 	// now create LOVV_N from LOVV and N, then return it
 	QString result = segments.first();
 	segments.removeFirst();
@@ -81,7 +81,7 @@ QString Controller::getCenter() {
 		result += "_" + segments.first();
 		segments.removeFirst();
 	}
-	
+
 	if(NavData::getInstance()->firs().contains(result)) {
 		Fir *f = NavData::getInstance()->firs()[result];
 		lat = f->lat(); // fix my coordinates so that user can find me on the map
@@ -99,9 +99,9 @@ QString Controller::getApproach() const {
 	if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
 		if(list.first().length() == 3)
 			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-		return list.first();		
+		return list.first();
 	}
-	
+
 	return QString();
 }
 
@@ -114,9 +114,9 @@ QString Controller::getTower() const {
 	if(list.last().startsWith("TWR")) {
 		if(list.first().length() == 3)
 			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-		return list.first();		
+		return list.first();
 	}
-	
+
 	return QString();
 }
 
@@ -129,13 +129,13 @@ QString Controller::getGround() const {
 	if(list.size() == 3 &&
 			(list[1].startsWith("X") || list[1].startsWith("T")))
 		return QString();
-	
+
 	if(list.last().startsWith("GND")) {
 		if(list.first().length() == 3)
 			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-		return list.first();		
+		return list.first();
 	}
-	
+
 	return QString();
 }
 
@@ -148,7 +148,7 @@ bool Controller::couldBeAtcCallsign() const {
 	if(list.size() == 4 && // ignore XXXX_X_N_CTR
 			(list[2].startsWith("X") || list[2].startsWith("T")))
 		return false;
-	
+
 	return true;
 }
 
@@ -208,6 +208,12 @@ QString Controller::toolTip() const {
 	return result;
 }
 
+QString Controller::mapLabel() const {
+	if(label.endsWith("_CTR")) // hack to make _CTR labels smaller
+		return label.left(label.length() - 4);
+	return label;
+}
+
 QString Controller::voiceLink() const {
 	switch(Settings::voiceType()) {
 		case Settings::TEAMSPEAK: {
@@ -224,7 +230,7 @@ QString Controller::voiceLink() const {
 			// should return something like vrc://server?user=user ...
 			// ...or something else that can be passed to system(). See ControllerDetails.cpp on how this is used
 			return QString();
-			
+
 		case Settings::NONE:
 		default:
 			return QString();

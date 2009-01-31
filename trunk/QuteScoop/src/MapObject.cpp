@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -30,7 +30,7 @@ MapObject::MapObject(const MapObject& obj):
 {
 	if(this == &obj)
 		return;
-	
+
 	lat = obj.lat;
 	lon = obj.lon;
 	label = obj.label;
@@ -39,7 +39,7 @@ MapObject::MapObject(const MapObject& obj):
 MapObject& MapObject::operator=(const MapObject& obj) {
 	if(this == &obj)
 		return *this;
-	
+
 	lat = obj.lat;
 	lon = obj.lon;
 	label = obj.label;

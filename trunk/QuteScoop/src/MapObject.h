@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,21 +29,21 @@ class ClientDetails;
 class MapObject: public QObject
 {
 	Q_OBJECT
-	
+
 public:
 	MapObject();
 	MapObject(const MapObject& obj);
 	MapObject& operator=(const MapObject& obj);
 	virtual ~MapObject();
-	
+
 	virtual bool matches(const QRegExp& regex) const;
 	virtual QString mapLabel() const { return label; }
-	
+
 	bool isNull() const { return label.isNull(); }
 
 	virtual QString toolTip() const { return label; }
 	virtual void showDetailsDialog() = 0;
-	
+
 	double lat, lon;
 	QString label;
 };

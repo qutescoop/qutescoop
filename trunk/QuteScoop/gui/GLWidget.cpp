@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	allFirsDisplayed = false;
 
 	fixZoomTreshold = 0.1;
-	fixLabelZoomTreshold = fixZoomTreshold / 4;
+	fixLabelZoomTreshold = fixZoomTreshold / 3;
 }
 
 GLWidget::~GLWidget() {
@@ -276,6 +276,9 @@ void GLWidget::paintGL() {
 	if(zoom < fixZoomTreshold)
 		glCallList(fixesList);
 
+	if(zoom < fixLabelZoomTreshold)
+		glCallList(fixesLabelList);
+
 	renderLabels();
 }
 
@@ -317,7 +320,7 @@ void GLWidget::handleRotation(QMouseEvent *event) {
 
 	double dx = (event->x() - lastPos.x()) * zoomFactor / aspectRatio;
 
-	// compensate for longitude differences, but only if xRot < 95¡
+	// compensate for longitude differences, but only if xRot < 80¡
 	// otherwise we get a division by (almost) zero, crashing the application
 	const double limit = cos(80 * Pi180);
 	double xfactor = cos(xRot * Pi180);
@@ -577,9 +580,6 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 		int x, y;
 		if(pointIsVisible(o->lat, o->lon, &x, &y)) {
 			QString text = o->mapLabel();
-			if(text.endsWith("_CTR")) // hack to make _CTR labels smaller
-				text = text.left(text.length() - 4);
-
 			QRectF rect = fontMetrics.boundingRect(text);
 			rect.moveTo(x, y - rect.height());
 			FontRectangle fontRect = FontRectangle(rect, o);
