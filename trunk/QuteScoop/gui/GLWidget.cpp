@@ -59,7 +59,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	allFirsDisplayed = false;
 
 	fixZoomTreshold = 0.1;
-	fixLabelZoomTreshold = fixZoomTreshold / 3;
 }
 
 GLWidget::~GLWidget() {
@@ -275,9 +274,6 @@ void GLWidget::paintGL() {
 
 	if(zoom < fixZoomTreshold)
 		glCallList(fixesList);
-
-	if(zoom < fixLabelZoomTreshold)
-		glCallList(fixesLabelList);
 
 	renderLabels();
 }
@@ -545,13 +541,6 @@ void GLWidget::renderLabels() {
 	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getPilots().size(); i++)
 		objects.append(Whazzup::getInstance()->whazzupData().getPilots()[i]);
 	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
-
-	// Fix labels
-	objects.clear();
-	const QList<Waypoint*>& waypoints = NavData::getInstance()->getAirac().getAllWaypoints();
-	for(int i = 0; i < waypoints.size(); i++)
-		objects.append(waypoints[i]);
-	renderLabels(objects, Settings::pilotFont(), fixLabelZoomTreshold, Settings::pilotFontColor());
 }
 
 bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {

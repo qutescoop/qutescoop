@@ -115,7 +115,6 @@ private:
 	double controllerLabelZoomTreshold;
 
 	double fixZoomTreshold;
-	double fixLabelZoomTreshold;
 
 	double xRot;
 	double yRot;

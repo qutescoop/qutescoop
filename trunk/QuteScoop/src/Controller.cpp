@@ -71,7 +71,9 @@ QString Controller::getCenter() {
 	segments.removeLast();
 
 	// ignore _T* and _X* positions
-	if(segments.last().startsWith("T") || segments.last().startsWith("X"))
+	if(segments.last().startsWith("T_") || segments.last().startsWith("T1_")
+			|| segments.last().startsWith("T2_") || segments.last().startsWith("T3_") ||
+			segments.last().startsWith("X"))
 		return QString();
 
 	// now create LOVV_N from LOVV and N, then return it
