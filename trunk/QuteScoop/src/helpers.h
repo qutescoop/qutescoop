@@ -27,7 +27,7 @@
 // VERSION_INT is used as QMainWindow::saveState() and restoreState()
 #define VERSION_INT         105
 
-#define VERSION_NUMBER "1.0.2 alpha"
+#define VERSION_NUMBER "1.0.2"
 #define VERSION_STRING QString("QuteScoop %1").arg(VERSION_NUMBER)
 
 // mathematical constants

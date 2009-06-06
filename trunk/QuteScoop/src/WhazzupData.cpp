@@ -44,7 +44,8 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 
 	while(buffer->canReadLine()) {
 		QString line = QString(buffer->readLine()).trimmed();
-		if(line.isEmpty()) break;
+		if(line.isEmpty())
+			continue;
 
 		if(line.startsWith('!')) {
 			if(line.startsWith("!CLIENTS"))

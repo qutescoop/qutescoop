@@ -21,7 +21,7 @@
 ######################################################################
 #!/bin/sh
 
-QTDIR="/usr/local/Trolltech/Qt-4.3.2"
+QTDIR="/usr/local/Trolltech/Qt-4.4.3"
 FRAMEWORKS="QtCore QtGui QtNetwork QtOpenGL"
 
 rm -rf Qutescoop.app/Contents/Frameworks

@@ -22,12 +22,12 @@ TARGET =
 DEPENDPATH += ./src ./gui
 INCLUDEPATH += ./src ./gui
 QT += network opengl
-CONFIG += debug
-#CONFIG += release
+#CONFIG += debug
+CONFIG += release
 
 mac {
 	ICON = gui/Dolomynum.icns
-	#CONFIG += x86 ppc
+	CONFIG += x86 ppc
 }
 
 win32 {

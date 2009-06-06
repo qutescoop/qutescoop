@@ -1,8 +1,14 @@
 QuteScoop Changelog - Version 1.0.2 alpha
 
+* Fixed a VATSIM display bug introduced by a new blank line. Patch was
+  submitted by Jonas Eberle - thanks!
+
+QuteScoop Changelog - Version 1.0.2 alpha
+
 * Loading of navigation database in the XPlane 9 format. This is a free
   database that can be downloaded from http://data.x-plane.com
 * Plotting of flight route according to the filed flight plan
+* No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are filtered.
 
 QuteScoop Changelog - Version 1.0.1
 
