@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>PreferencesDialog</class>
  <widget class="QDialog" name="PreferencesDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>546</width>
+    <height>735</height>
+   </rect>
+  </property>
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
@@ -576,6 +584,12 @@
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
            </spacer>
           </item>
           <item row="2" column="0">
@@ -602,6 +616,12 @@
            <spacer name="horizontalSpacer_2">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
             </property>
            </spacer>
           </item>
@@ -1965,7 +1985,7 @@
    <hints>
     <hint type="sourcelabel">
      <x>535</x>
-     <y>684</y>
+     <y>724</y>
     </hint>
     <hint type="destinationlabel">
      <x>258</x>
@@ -2140,12 +2160,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>392</y>
+     <x>119</x>
+     <y>382</y>
     </hint>
     <hint type="destinationlabel">
-     <x>256</x>
-     <y>392</y>
+     <x>293</x>
+     <y>407</y>
     </hint>
    </hints>
   </connection>
@@ -2156,12 +2176,44 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>392</y>
+     <x>119</x>
+     <y>382</y>
     </hint>
     <hint type="destinationlabel">
-     <x>256</x>
-     <y>428</y>
+     <x>293</x>
+     <y>443</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbUseNavDatabase</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>editNavdir</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>299</x>
+     <y>277</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbUseNavDatabase</sender>
+   <signal>clicked(bool)</signal>
+   <receiver>browseNavdirButton</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>276</x>
+     <y>244</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>476</x>
+     <y>277</y>
     </hint>
    </hints>
   </connection>
