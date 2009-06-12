@@ -278,7 +278,7 @@ QString Airport::mapLabel() const {
 
 	if(Settings::filterTraffic()) { // Airport traffic filtered
 		int numFilteredArrivals = 0;
-		for (int i; i<arrivals.length ();i++){
+		for (int i=0; i < arrivals.length(); i++){
 			if(
 			   	(arrivals[i]->distanceToDestination() < Settings::filterDistance()) 
 			   	|| 
@@ -291,8 +291,8 @@ QString Airport::mapLabel() const {
 		else result += QString("%1/").arg(numFilteredArrivals);
 
 		int numFilteredDepartures = 0;
-		for (int i; i<departures.length ();i++){
-			if(departures[i]->distanceFromDeparture()<Settings::filterDistance()) {
+		for (int i=0; i < departures.length(); i++){
+			if(departures[i]->distanceFromDeparture() < Settings::filterDistance()) {
 				numFilteredDepartures++;
 			}
 		}
