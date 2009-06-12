@@ -316,7 +316,7 @@ void GLWidget::handleRotation(QMouseEvent *event) {
 
 	double dx = (event->x() - lastPos.x()) * zoomFactor / aspectRatio;
 
-	// compensate for longitude differences, but only if xRot < 80ก
+	// compensate for longitude differences, but only if xRot < 80ยก
 	// otherwise we get a division by (almost) zero, crashing the application
 	const double limit = cos(80 * Pi180);
 	double xfactor = cos(xRot * Pi180);
