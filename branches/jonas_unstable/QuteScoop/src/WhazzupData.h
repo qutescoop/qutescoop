@@ -43,7 +43,8 @@ public:
 	void updateFrom(const WhazzupData& data);
 	
 	QList<Controller*> activeSectors() const;
-	QList<Pilot*> getPilots() const { return pilots.values(); }
+	QList<Pilot*> getPilots() const;
+	QList<Pilot*> getActivePilots() const;
 	QList<Controller*> getControllers() const { return controllers.values(); }
 	
 	Pilot* getPilot(const QString& callsign) const { return pilots[callsign]; }

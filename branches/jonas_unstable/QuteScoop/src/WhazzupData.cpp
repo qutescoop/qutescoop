@@ -39,14 +39,16 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 	whazzupVersion(0),
 	whazzupTime(QDateTime())
 {
-	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS};
+	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_PREFILE};
 	ParserState state = STATE_NONE;
-
 	while(buffer->canReadLine()) {
 		QString line = QString(buffer->readLine()).trimmed();
 		if(line.isEmpty())
 			continue;
 
+		if(line.startsWith(';'))  // comments
+			continue;
+	
 		if(line.startsWith('!')) {
 			if(line.startsWith("!CLIENTS"))
 				state = STATE_CLIENTS;
@@ -54,6 +56,8 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 				state = STATE_GENERAL;
 			else if(line.startsWith("!SERVERS"))
 				state = STATE_SERVERS;
+			else if(line.startsWith("!PREFILE"))
+				state = STATE_PREFILE;
 			else
 				state = STATE_NONE;
 
@@ -92,6 +96,14 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 					Controller *c = new Controller(list, this);
 					controllers[c->label] = c;
 				}
+			}
+			break;
+		case STATE_PREFILE: {
+				//qDebug() << "PREFILE";
+				QStringList list = line.split(':');
+				//qDebug() << list;
+				Pilot *p = new Pilot(list, this);
+				pilots[p->label] = p;
 			}
 			break;
 		}
@@ -254,6 +266,21 @@ QList<Controller*> WhazzupData::activeSectors() const {
 		}
 	}
 
+	return result;
+}
+
+QList<Pilot*> WhazzupData::getPilots() const { 
+	return pilots.values(); 
+}
+
+QList<Pilot*> WhazzupData::getActivePilots() const { // exclude prefiled flights
+	QList<Pilot*> result = pilots.values();
+	for (int i = 0; i < result.size(); i++) {
+		if (result[i]->flightStatus() == Pilot::PREFILED) {
+			result.removeAt(i);
+			i--;
+		}
+	}
 	return result;
 }
 

@@ -70,9 +70,21 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
 		case 2: return p->displayName(); break;
 		case 3: if(p->destAirport() != 0) return p->destAirport()->toolTip(); break;
 		case 4: return p->waypoints().first(); break;
-		case 5: return p->altitude; break;
-		case 6: return p->groundspeed; break;
-		case 7: return (int)p->distanceFromDeparture(); break;
+		case 5: {
+				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+				else return p->altitude; 
+			}
+			break;
+		case 6: {
+				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+				else return p->groundspeed; 
+			}
+			break;
+		case 7: {
+				if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0,p->planDeptime.length()-2) + ":" + p->planDeptime.right(2);
+				else return (int)p->distanceFromDeparture(); 
+			}
+			break;
 		}
 	}
 	

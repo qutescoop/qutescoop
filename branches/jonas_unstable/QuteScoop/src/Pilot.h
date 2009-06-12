@@ -30,7 +30,7 @@ class Airport;
 class Pilot: public Client
 {
 public:
-	enum FlightStatus { BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING, GROUND_ARR, BLOCKED, CRASHED, BUSH };
+	enum FlightStatus { BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING, GROUND_ARR, BLOCKED, CRASHED, BUSH, PREFILED };
 
 	Pilot(const QStringList& stringList, const WhazzupData* whazzup);
 
@@ -76,7 +76,8 @@ public:
 	QStringList waypoints() const;
 	double distanceToDestination() const;
 	double distanceFromDeparture() const;
-	QString eta() const;
+	QString ete() const;
+	//QString eta() const;
 	void positionInFuture(double *lat, double *lon, int seconds) const;
 
 	void toggleDisplayPath();

@@ -120,6 +120,7 @@ Pilot::FlightStatus Pilot::flightStatus() const {
 	// ARRIVING: flying, arriving
 	// GROUND_ARR: !flying, speed > 0, arriving
 	// BLOCKED: !flying, speed = 0, arriving
+	// PREFILED: !flying, lat=0, lon=0
 
 	if(!flying && groundspeed == 0 && departing)
 		return BOARDING;
@@ -133,6 +134,8 @@ Pilot::FlightStatus Pilot::flightStatus() const {
 		return ARRIVING;
 	if(!flying && groundspeed > 0 && arriving)
 		return GROUND_ARR;
+	if(!flying && lat == 0 && lon == 0) // must be before BLOCKED
+		return PREFILED;
 	if(!flying && groundspeed == 0 && arriving)
 		return BLOCKED;
 	return CRASHED;
@@ -140,36 +143,38 @@ Pilot::FlightStatus Pilot::flightStatus() const {
 
 QString Pilot::flightStatusString() const {
 	switch(flightStatus()) {
-	case BOARDING: return "Boarding";
-	case GROUND_DEP: return "Taxi to runway";
-	case DEPARTING: return "Departing";
-	case ARRIVING: return "Arriving";
-	case GROUND_ARR: return "Taxi to gate";
-	case BLOCKED: return "Blocked at gate";
-	case CRASHED: return "Crashed";
-	case BUSH: return "Bush pilot";
+		case BOARDING: return "Boarding";
+		case GROUND_DEP: return "Taxi to runway";
+		case DEPARTING: return "Departing";
+		case ARRIVING: return "Arriving";
+		case GROUND_ARR: return "Taxi to gate";
+		case BLOCKED: return "Blocked at gate";
+		case CRASHED: return "Crashed";
+		case BUSH: return "Bush pilot";
 
-	case EN_ROUTE: {
-			Airport *dep = depAirport();
-			Airport *dst = destAirport();
-			if(dst == 0)
-				return "En route";
+		case EN_ROUTE: {
+				Airport *dep = depAirport();
+				Airport *dst = destAirport();
+				if(dst == 0)
+					return "En route";
 
-			QString result = "En route";
-			if(dep != 0) {
-				// calculate %done
-				int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
-				if(total_dist > 0) {
-					int dist_done = (int)NavData::distance(lat, lon, dep->lat, dep->lon);
-					result += QString(" (%1%)").arg(dist_done * 100 / total_dist);
+				QString result = "En route";
+				if(dep != 0) {
+					// calculate %done
+					int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
+					if(total_dist > 0) {
+						int dist_done = (int)NavData::distance(lat, lon, dep->lat, dep->lon);
+						result += QString(" (%1%)").arg(dist_done * 100 / total_dist);
+					}
 				}
-			}
 
-			// add ETA
-			result += " ETA " + eta();
+				// add ETA
+				result += " ETE " + ete();
 
-			return result;
+				return result;
 		}
+		case PREFILED: return QString("Prefiled (ETD %1:%2)").arg(planDeptime.mid(0, planDeptime.length()-2)).arg(planDeptime.right(2));
+	
 	}
 
 	return "Unknown";
@@ -236,8 +241,24 @@ double Pilot::distanceToDestination() const {
 	return NavData::distance(lat, lon, dest->lat, dest->lon);
 }
 
-QString Pilot::eta() const {
+QString Pilot::ete() const { // Estimated Time Enroute
 	FlightStatus status = flightStatus();
+	if(status == PREFILED) {
+		int hoursPlanDeptime = planDeptime.mid(0, planDeptime.length()-2).toInt(); // we could have "1500" or "400" in planDeptime
+		int minutesPlanDeptime = planDeptime.right(2).toInt();
+		int etdMins = hoursPlanDeptime * 60 + minutesPlanDeptime;
+		int etaMins = etdMins + planHrsEnroute * 60 + planMinEnroute;
+		QTime eta = QTime((etaMins/60) % 24, etaMins % 60);
+
+/*		QTime etd = QTime(hoursPlanDeptime, minutesPlanDeptime);
+		QTime eta = etd + QTime(planHrsEnroute, planMinEnroute);*/
+		int secondsRemaining = QTime::currentTime().secsTo(eta);
+		int minutesRemaining = (secondsRemaining / 60);
+		int hoursRemaining = secondsRemaining / 3600;
+		QTime result = QTime(hoursRemaining % 24, minutesRemaining % 60, secondsRemaining % 60);
+		return result.toString("HH:mm");
+	}
+	
 	if(!(status == DEPARTING || status == EN_ROUTE || status == ARRIVING))
 		return QString();
 

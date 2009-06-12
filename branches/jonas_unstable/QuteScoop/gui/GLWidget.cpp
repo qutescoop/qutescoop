@@ -438,7 +438,7 @@ void GLWidget::createPilotsList() {
 
 	glNewList(pilotsList, GL_COMPILE);
 
-	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
+	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getActivePilots();
 
 	// aircraft dots
 	glPointSize(Settings::pilotDotSize());
@@ -538,8 +538,8 @@ void GLWidget::renderLabels() {
 
 	// Pilot labels
 	objects.clear();
-	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getPilots().size(); i++)
-		objects.append(Whazzup::getInstance()->whazzupData().getPilots()[i]);
+	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getActivePilots().size(); i++)
+		objects.append(Whazzup::getInstance()->whazzupData().getActivePilots()[i]);
 	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
 }
 
@@ -809,7 +809,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 		}
 	}
 
-	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
+	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getActivePilots();
 	for(int i = 0; i < pilots.size(); i++) {
 		Pilot *p = pilots[i];
 		double x = p->lat - lat;

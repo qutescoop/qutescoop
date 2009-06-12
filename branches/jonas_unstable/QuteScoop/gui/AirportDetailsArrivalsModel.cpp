@@ -61,7 +61,7 @@ QVariant AirportDetailsArrivalsModel::headerData(int section,
 		return QString("Dist");
 		break;
 	case 8:
-		return QString("ETA");
+		return QString("Expected"); 
 		break;
 	}
 
@@ -94,18 +94,24 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
 		case 4:
 			return p->waypoints().last();
 			break;
-		case 5:
-			return p->altitude;
+		case 5: {
+				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+				else return p->altitude; 
+			}
 			break;
-		case 6:
-			return p->groundspeed;
+		case 6: {
+				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+				else return p->groundspeed; 
+			}
 			break;
-		case 7:
-			return (int)p->distanceToDestination();
+		case 7: {
+				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+				else return (int)p->distanceToDestination(); 
+			}
 			break;
 		case 8: {
-			if(!p->eta().isEmpty())
-				return p->eta();
+			if(!p->ete().isEmpty())
+				return p->ete();
 			return QString("n/a");
 		}
 			break;

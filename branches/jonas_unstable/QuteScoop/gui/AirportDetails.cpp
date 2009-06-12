@@ -69,7 +69,7 @@ AirportDetails::AirportDetails():
 	connect(treeDepartures, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(departureSelected(const QModelIndex&)));
 	
 	treeArrivals->sortByColumn(8, Qt::AscendingOrder);
-	treeDepartures->sortByColumn(0, Qt::AscendingOrder);
+	treeDepartures->sortByColumn(7, Qt::AscendingOrder);
 	
 	refresh();
 }
@@ -90,7 +90,9 @@ void AirportDetails::refresh(Airport* newAirport) {
 	lblLocation->setText(QString("%1 %2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
 	
 	arrivalsModel.setClients(airport->getArrivals());
+	treeArrivals->sortByColumn(8, Qt::AscendingOrder);
 	departuresModel.setClients(airport->getDepartures());
+	treeDepartures->sortByColumn(7, Qt::AscendingOrder);
 	
 	groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->getArrivals().size()));
 	groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));

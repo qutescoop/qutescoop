@@ -53,7 +53,11 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	// Pilot Information
 	QString pilotInfo = QString("<strong>PILOT: %1</strong><br>").arg(pilot->displayName(true));
 	pilotInfo += pilot->detailInformation() + "<br>";
-	pilotInfo += QString("On %3 for %4").arg(pilot->server).arg(pilot->onlineTime());
+	if (pilot->server == "")
+		pilotInfo += QString("not connected");
+	else
+		pilotInfo += QString("On %3 for %4").arg(pilot->server).arg(pilot->onlineTime());
+
 	QString software = pilot->clientInformation();
 	if(!software.isEmpty()) pilotInfo += ", " + software;
 	lblPilotInfo->setText(pilotInfo);

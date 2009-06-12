@@ -68,6 +68,8 @@ QString Client::getField(const QStringList& list, int index) {
 }
 
 QString Client::onlineTime() const {
+	if (timeConnected.isNull()) 
+		return QString("not connected");
 	int secondsOnline = timeConnected.secsTo(QDateTime::currentDateTime().toUTC());
 	int minutesOnline = secondsOnline / 60;
 	int hoursOnline = secondsOnline / 3600;
