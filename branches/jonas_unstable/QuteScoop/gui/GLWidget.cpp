@@ -299,8 +299,6 @@ void GLWidget::resetZoom() {
 void GLWidget::mousePressEvent(QMouseEvent *event) {
 	QToolTip::hideText();
 	lastPos = mouseDownPos = event->pos();
-	if(event->button() == Qt::RightButton)
-		lastPos = mouseDownPos = QPoint();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
@@ -325,13 +323,13 @@ void GLWidget::handleRotation(QMouseEvent *event) {
 
 	double dy = (-event->y() + lastPos.y()) * zoomFactor;
 
-	if (event->buttons() & Qt::LeftButton) {
-		xRot = xRot + dy;
-		yRot = yRot + dx;
-		normalizeAngle(&xRot);
-		normalizeAngle(&yRot);
-		updateGL();
-	}
+    if ((event->buttons() & Qt::LeftButton) || (event->buttons() & Qt::RightButton)) {
+        xRot = xRot + dy;
+        yRot = yRot + dx;
+        normalizeAngle(&xRot);
+        normalizeAngle(&yRot);
+        updateGL();
+    }
 
 	lastPos = event->pos();
 }
