@@ -46,7 +46,7 @@ AirportDetails::AirportDetails():
 	treeAtc->setModel(&atcModel);
 	treeAtc->header()->setResizeMode(QHeaderView::ResizeToContents);
 	connect(treeAtc->header(), SIGNAL(sectionClicked(int)), treeAtc, SLOT(sortByColumn(int)));
-	connect(treeAtc, SIGNAL(doubleClicked(const QModelIndex&)), &atcModel, SLOT(modelSelected(const QModelIndex&)));
+    connect(treeAtc, SIGNAL(clicked(const QModelIndex&)), &atcModel, SLOT(modelSelected(const QModelIndex&)));
 
 	// arrivals
 	arrivalsSortModel = new QSortFilterProxyModel;
@@ -56,7 +56,7 @@ AirportDetails::AirportDetails():
 	
 	treeArrivals->header()->setResizeMode(QHeaderView::ResizeToContents);
 	connect(treeArrivals->header(), SIGNAL(sectionClicked(int)), treeArrivals, SLOT(sortByColumn(int)));
-	connect(treeArrivals, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(arrivalSelected(const QModelIndex&)));
+    connect(treeArrivals, SIGNAL(clicked(const QModelIndex&)), this, SLOT(arrivalSelected(const QModelIndex&)));
 
 	// departures
 	departuresSortModel = new QSortFilterProxyModel;
@@ -66,7 +66,7 @@ AirportDetails::AirportDetails():
 
 	treeDepartures->header()->setResizeMode(QHeaderView::ResizeToContents);
 	connect(treeDepartures->header(), SIGNAL(sectionClicked(int)), treeDepartures, SLOT(sortByColumn(int)));
-	connect(treeDepartures, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(departureSelected(const QModelIndex&)));
+    connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)), this, SLOT(departureSelected(const QModelIndex&)));
 	
 	treeArrivals->sortByColumn(8, Qt::AscendingOrder);
 	treeDepartures->sortByColumn(7, Qt::AscendingOrder);
