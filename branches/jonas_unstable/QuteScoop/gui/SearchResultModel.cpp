@@ -38,7 +38,7 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 	if(role == Qt::DisplayRole) {
 		MapObject* o = content[index.row()];
 		switch(index.column()) {
-		case 0: return o->toolTip(); break;
+            case 0: return o->toolTip(); break;
 		}
 	}
 	
@@ -74,13 +74,13 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 	return QString("%1 Results").arg(content.size());
 }
 
-void SearchResultModel::modelDoubleClicked(const QModelIndex& index) {
-	content[index.row()]->showDetailsDialog();
+void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center
+    double lat = content[index.row()]->lat;
+    double lon = content[index.row()]->lon;
+
+    Window::getInstance()->showOnMap(lat, lon);
 }
 
-void SearchResultModel::modelClicked(const QModelIndex& index) {
-	double lat = content[index.row()]->lat;
-	double lon = content[index.row()]->lon;
-	
-	Window::getInstance()->showOnMap(lat, lon);
+void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the Details, as is the case on the map
+    content[index.row()]->showDetailsDialog();
 }
