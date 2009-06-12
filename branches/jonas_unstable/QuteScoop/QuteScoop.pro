@@ -22,7 +22,7 @@ TARGET =
 DEPENDPATH += ./src ./gui
 INCLUDEPATH += ./src ./gui
 QT += network opengl
-#CONFIG += debug
+CONFIG += debug
 CONFIG += release
 
 mac {
