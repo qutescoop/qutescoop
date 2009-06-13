@@ -44,8 +44,10 @@ public slots:
 	void newWhazzupData();
 	void setMapPosition(double lat, double lon, double newZoom);
 	void rightClick(const QPoint& pos);
-	void zoomIn();
-	void zoomOut();
+	void zoomIn()  { return zoomIn(1);  }
+	void zoomOut() { return zoomOut(1); }
+	void zoomIn(int factor);
+	void zoomOut(int factor);
 
 	void rememberPosition();
 	void restorePosition();
@@ -64,6 +66,7 @@ protected:
 	void initializeGL();
 	void paintGL();
 	void resizeGL(int width, int height);
+	void mouseDoubleClickEvent(QMouseEvent *event);
 	void mousePressEvent(QMouseEvent *event);
 	void mouseReleaseEvent(QMouseEvent *event);
 	void mouseMoveEvent(QMouseEvent *event);

@@ -296,6 +296,14 @@ void GLWidget::resetZoom() {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
+	QToolTip::hideText();
+    
+    double lat, lon;
+    mouse2latlon(event->x(), event->y(), lat, lon);
+    setMapPosition(lat, lon, zoom);
+}
+
 void GLWidget::mousePressEvent(QMouseEvent *event) {
 	QToolTip::hideText();
 	lastPos = mouseDownPos = event->pos();
@@ -340,26 +348,27 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 	}
 }
 
-void GLWidget::zoomIn() {
-	zoom -= zoom * 0.1f;
+void GLWidget::zoomIn(int factor) {
+	zoom -= zoom * 0.1f * factor;
 	resetZoom();
 	updateGL();
 }
 
-void GLWidget::zoomOut() {
-	zoom += zoom * 0.1f;
+void GLWidget::zoomOut(int factor) {
+	zoom += zoom * 0.1f * factor;
 	resetZoom();
 	updateGL();
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event) {
 	QToolTip::hideText();
-
-	if(event->delta() < 0) {
-		zoomOut();
-	} else {
-		zoomIn();
-	}
+    if(event->orientation() == Qt::Vertical) {
+        if(event->delta() < 0) {
+            zoomOut(-event->delta() / 100);
+        } else {
+            zoomIn(event->delta() / 100);
+        }
+    }
 }
 
 void GLWidget::createOrbList() {
