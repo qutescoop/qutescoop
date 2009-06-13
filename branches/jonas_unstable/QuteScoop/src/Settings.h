@@ -268,6 +268,9 @@ public:
 	static QString dataDirectory();
 	static void setDataDirectory(const QString& value);
 
+    static QString bookingsLocation();
+	static void setBookingsLocation(const QString& value);
+
 private:
 	static QSettings *getSettings();
 };

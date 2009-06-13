@@ -661,11 +661,11 @@ void Settings::setResetOnNextStart(bool value) {
 
 
 QString Settings::dataDirectory() {
-#ifdef Q_WS_X11
-	return getSettings()->value("general/dataDirectory", "/usr/share/qutescoop/data/").toString();
-#else
+//#ifdef Q_WS_X11 // removed for convenience
+//	return getSettings()->value("general/dataDirectory", "/usr/share/qutescoop/data/").toString();
+//#else
 	return getSettings()->value("general/dataDirectory", "data/").toString();
-#endif
+//#endif
 }
 
 void Settings::setDataDirectory(const QString& value) {
@@ -702,4 +702,12 @@ QString Settings::voicePassword() {
 
 void Settings::setVoicePassword(const QString& value) {
 	getSettings()->setValue("voice/password", value);
+}
+
+QString Settings::bookingsLocation() {
+	return getSettings()->value("download/atcBookingsLocation", "http://vatbook.euroutepro.com/servinfo.asp").toString();
+}
+
+void Settings::setBookingsLocation(const QString& value) {
+	getSettings()->setValue("download/atcBookingsLocation", value);
 }
