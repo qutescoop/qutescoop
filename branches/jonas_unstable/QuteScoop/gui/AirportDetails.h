@@ -48,6 +48,7 @@ private:
 	AirportDetailsArrivalsModel arrivalsModel;
 	AirportDetailsDeparturesModel departuresModel;
 	Airport* airport;
+	QSortFilterProxyModel *atcSortModel;
 	QSortFilterProxyModel *arrivalsSortModel;
 	QSortFilterProxyModel *departuresSortModel;
 };

@@ -34,15 +34,16 @@ QVariant AirportDetailsDeparturesModel::headerData(int section, enum Qt::Orienta
     
 	// orientation is Qt::Horizontal
 	switch(section) {
-	case 0: return QString("Callsign"); break;
-	case 1: return QString("Type"); break;
-	case 2: return QString("Name"); break;
-	case 3: return QString("Outbound To"); break;
-	case 4: return QString("Via"); break;
-	case 5: return QString("Alt"); break;
-	case 6: return QString("Speed"); break;
-	case 7: return QString("Dist"); break;
-	}
+        case 0: return QString("Callsign"); break;
+        case 1: return QString("Type"); break;
+        case 2: return QString("Name"); break;
+        case 3: return QString("Outbound To"); break;
+        case 4: return QString("Via"); break;
+        case 5: return QString("Alt"); break;
+        case 6: return QString("Speed"); break;
+        case 7: return QString("Dist"); break;
+        case 8: return QString("Status"); break;
+    }
 	
 	return QVariant();
 }
@@ -52,7 +53,7 @@ int AirportDetailsDeparturesModel::rowCount(const QModelIndex &parent) const {
 }
 
 int AirportDetailsDeparturesModel::columnCount(const QModelIndex &parent) const {
-	return 8;
+	return 9;
 }
 
 QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role) const {
@@ -65,28 +66,30 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
 	if(role == Qt::DisplayRole) {
 		Pilot* p = pilots[index.row()];
 		switch(index.column()) {
-		case 0: return p->label; break;
-		case 1: return p->aircraftType(); break;
-		case 2: return p->displayName(); break;
-		case 3: if(p->destAirport() != 0) return p->destAirport()->toolTip(); break;
-		case 4: return p->waypoints().first(); break;
-		case 5: {
-				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-				else return p->altitude; 
-			}
-			break;
-		case 6: {
-				if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-				else return p->groundspeed; 
-			}
-			break;
-		case 7: {
-				if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0,p->planDeptime.length()-2) + ":" + p->planDeptime.right(2);
-				else return (int)p->distanceFromDeparture(); 
-			}
-			break;
-		}
-	}
+            case 0: 
+                return p->label; break;
+            case 1: 
+                return p->aircraftType(); break;
+            case 2: 
+                return p->displayName(); break;
+            case 3: 
+                if(p->destAirport() != 0) return p->destAirport()->toolTip(); break;
+            case 4: 
+                return p->waypoints().first(); break;
+            case 5:
+                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+                else return p->altitude; break;
+            case 6:
+                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
+                else return p->groundspeed; break;
+            case 7:
+                if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
+                else return (int)p->distanceFromDeparture(); break;
+            case 8: 
+                return p->flightStatusString().split("(")[0]; // we do only want a short string, not the details
+                break;
+        }
+    }
 	
 	return QVariant();
 }

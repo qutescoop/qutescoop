@@ -43,9 +43,14 @@ AirportDetails::AirportDetails():
 	connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
 
 	// ATC list
-	treeAtc->setModel(&atcModel);
-	treeAtc->header()->setResizeMode(QHeaderView::ResizeToContents);
-	connect(treeAtc->header(), SIGNAL(sectionClicked(int)), treeAtc, SLOT(sortByColumn(int)));
+	atcSortModel = new QSortFilterProxyModel;
+	atcSortModel->setDynamicSortFilter(true);
+	atcSortModel->setSourceModel(&atcModel);
+	treeAtc->setModel(atcSortModel);
+
+    treeAtc->header()->setResizeMode(QHeaderView::Interactive);
+
+    connect(treeAtc->header(), SIGNAL(sectionClicked(int)), treeAtc, SLOT(sortByColumn(int)));
     connect(treeAtc, SIGNAL(clicked(const QModelIndex&)), &atcModel, SLOT(modelSelected(const QModelIndex&)));
 
 	// arrivals
@@ -54,8 +59,9 @@ AirportDetails::AirportDetails():
 	arrivalsSortModel->setSourceModel(&arrivalsModel);
 	treeArrivals->setModel(arrivalsSortModel);
 	
-	treeArrivals->header()->setResizeMode(QHeaderView::ResizeToContents);
-	connect(treeArrivals->header(), SIGNAL(sectionClicked(int)), treeArrivals, SLOT(sortByColumn(int)));
+    treeArrivals->header()->setResizeMode(QHeaderView::Interactive);
+
+    connect(treeArrivals->header(), SIGNAL(sectionClicked(int)), treeArrivals, SLOT(sortByColumn(int)));
     connect(treeArrivals, SIGNAL(clicked(const QModelIndex&)), this, SLOT(arrivalSelected(const QModelIndex&)));
 
 	// departures
@@ -64,14 +70,12 @@ AirportDetails::AirportDetails():
 	departuresSortModel->setSourceModel(&departuresModel);
 	treeDepartures->setModel(departuresSortModel);
 
-	treeDepartures->header()->setResizeMode(QHeaderView::ResizeToContents);
-	connect(treeDepartures->header(), SIGNAL(sectionClicked(int)), treeDepartures, SLOT(sortByColumn(int)));
+    treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
+	
+    connect(treeDepartures->header(), SIGNAL(sectionClicked(int)), treeDepartures, SLOT(sortByColumn(int)));
     connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)), this, SLOT(departureSelected(const QModelIndex&)));
-	
-	treeArrivals->sortByColumn(8, Qt::AscendingOrder);
-	treeDepartures->sortByColumn(7, Qt::AscendingOrder);
-	
-	refresh();
+
+    refresh();
 }
 
 void AirportDetails::refresh(Airport* newAirport) {
@@ -89,11 +93,17 @@ void AirportDetails::refresh(Airport* newAirport) {
 	lblCountry->setText(QString("%1 (%2)").arg(airport->countryCode).arg(NavData::getInstance()->countryName(airport->countryCode)));
 	lblLocation->setText(QString("%1 %2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
 	
+    // arrivals
 	arrivalsModel.setClients(airport->getArrivals());
-	treeArrivals->sortByColumn(8, Qt::AscendingOrder);
-	departuresModel.setClients(airport->getDepartures());
-	treeDepartures->sortByColumn(7, Qt::AscendingOrder);
+    treeArrivals->sortByColumn(8, Qt::AscendingOrder);
+    treeArrivals->header()->resizeSections(QHeaderView::ResizeToContents);
 	
+    // departures
+    departuresModel.setClients(airport->getDepartures());
+    treeDepartures->sortByColumn(7, Qt::AscendingOrder);
+    treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
+	
+    // set titles
 	groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->getArrivals().size()));
 	groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
 
@@ -112,6 +122,8 @@ void AirportDetails::refresh(Airport* newAirport) {
 	}
 	
 	atcModel.setClients(atcContent);
+    treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+    treeAtc->sortByColumn(0, Qt::AscendingOrder);
 }
 
 void AirportDetails::arrivalSelected(const QModelIndex& index) {
