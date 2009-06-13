@@ -1904,6 +1904,7 @@
   </layout>
  </widget>
  <tabstops>
+  <tabstop>tabWidget</tabstop>
   <tabstop>cbDownloadPeriodically</tabstop>
   <tabstop>spinBoxDownloadInterval</tabstop>
   <tabstop>cbNetwork</tabstop>
@@ -1922,15 +1923,36 @@
   <tabstop>editVoiceCallsign</tabstop>
   <tabstop>editVoiceUser</tabstop>
   <tabstop>editVoicePassword</tabstop>
-  <tabstop>cbResetConfiguration</tabstop>
   <tabstop>cbUseNavDatabase</tabstop>
   <tabstop>editNavdir</tabstop>
   <tabstop>browseNavdirButton</tabstop>
+  <tabstop>cbFilterTraffic</tabstop>
+  <tabstop>spFilterDistance</tabstop>
+  <tabstop>spFilterArriving</tabstop>
+  <tabstop>cbResetConfiguration</tabstop>
+  <tabstop>cbLineSmoothing</tabstop>
+  <tabstop>cbDotSmoothing</tabstop>
+  <tabstop>sbMaxTextLabels</tabstop>
+  <tabstop>pbBackgroundColor</tabstop>
+  <tabstop>pbGlobeColor</tabstop>
+  <tabstop>pbGridLineColor</tabstop>
+  <tabstop>sbGridLineStrength</tabstop>
+  <tabstop>pbCoastLineColor</tabstop>
+  <tabstop>sbCoastLineStrength</tabstop>
+  <tabstop>pbCountryLineColor</tabstop>
+  <tabstop>sbCountryLineStrength</tabstop>
+  <tabstop>buttonResetEarthSpace</tabstop>
+  <tabstop>pbFirBorderLineColor</tabstop>
+  <tabstop>sbFirBorderLineStrength</tabstop>
+  <tabstop>pbFirFontColor</tabstop>
+  <tabstop>pbFirFont</tabstop>
   <tabstop>pbFirFillColor</tabstop>
   <tabstop>cbReadSupFile</tabstop>
   <tabstop>buttonResetFir</tabstop>
   <tabstop>pbAirportFontColor</tabstop>
   <tabstop>pbAirportFont</tabstop>
+  <tabstop>pbAirportDotColor</tabstop>
+  <tabstop>sbAirportDotSize</tabstop>
   <tabstop>pbAppBorderLineColor</tabstop>
   <tabstop>sbAppBorderLineStrength</tabstop>
   <tabstop>pbAppColorCenter</tabstop>
@@ -1939,6 +1961,7 @@
   <tabstop>pbTwrColorMargin</tabstop>
   <tabstop>pbGndBorderLineColor</tabstop>
   <tabstop>sbGndBorderLineStrength</tabstop>
+  <tabstop>pbGndFillColor</tabstop>
   <tabstop>buttonResetAirport</tabstop>
   <tabstop>pbPilotFontColor</tabstop>
   <tabstop>pbPilotFont</tabstop>
@@ -1949,31 +1972,11 @@
   <tabstop>sbTimeLineStrength</tabstop>
   <tabstop>pbTrackLineColor</tabstop>
   <tabstop>sbTrackLineStrength</tabstop>
-  <tabstop>buttonResetPilot</tabstop>
-  <tabstop>pushButtonClose</tabstop>
-  <tabstop>tabWidget</tabstop>
-  <tabstop>pbBackgroundColor</tabstop>
-  <tabstop>cbLineSmoothing</tabstop>
-  <tabstop>cbDotSmoothing</tabstop>
-  <tabstop>sbMaxTextLabels</tabstop>
-  <tabstop>sbGridLineStrength</tabstop>
-  <tabstop>sbCountryLineStrength</tabstop>
-  <tabstop>pbGndFillColor</tabstop>
-  <tabstop>pbAirportDotColor</tabstop>
-  <tabstop>sbAirportDotSize</tabstop>
-  <tabstop>cbDashedFrontAfter</tabstop>
   <tabstop>pbPlanLineColor</tabstop>
   <tabstop>sbPlanLineStrength</tabstop>
-  <tabstop>pbGlobeColor</tabstop>
-  <tabstop>pbGridLineColor</tabstop>
-  <tabstop>pbCoastLineColor</tabstop>
-  <tabstop>sbCoastLineStrength</tabstop>
-  <tabstop>pbCountryLineColor</tabstop>
-  <tabstop>buttonResetEarthSpace</tabstop>
-  <tabstop>sbFirBorderLineStrength</tabstop>
-  <tabstop>pbFirFontColor</tabstop>
-  <tabstop>pbFirFont</tabstop>
-  <tabstop>pbFirBorderLineColor</tabstop>
+  <tabstop>cbDashedFrontAfter</tabstop>
+  <tabstop>buttonResetPilot</tabstop>
+  <tabstop>pushButtonClose</tabstop>
  </tabstops>
  <resources/>
  <connections>
