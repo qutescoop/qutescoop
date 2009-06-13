@@ -58,12 +58,19 @@ Window::Window(QWidget *parent) :
 	setCentralWidget(glWidget);
 
 	clientSelection = new ClientSelectionWidget();
-	preferencesDialog = new PreferencesDialog();
+    preferencesDialog = new PreferencesDialog();
+    planFlightDialog = new PlanFlightDialog();
+    
+    statusbar->addWidget(lblStatus, 5);
+    statusbar->addPermanentWidget(progressBar, 3);
+    setProgressBar(0);
+    lblStatus->setText("");
 
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
-	connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
+    connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
+    connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
 
 	Whazzup *whazzup = Whazzup::getInstance();
 	connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
@@ -190,7 +197,7 @@ void Window::whazzupDownloaded() {
 
 	QString msg = QString(tr("%1: %2 clients")).arg(Settings::downloadNetworkName()).arg(data.clients());
 	msg += ", " + data.timestamp().toString("yyyy/MM/dd HH:mm:ss") + " UTC";
-	statusbar->showMessage(msg);
+	setStatusText(msg);
 	clientSelection->clearClients();
 	clientSelection->close();
 	performSearch();
@@ -246,6 +253,13 @@ void Window::openPreferences() {
 	preferencesDialog->setFocus();
 }
 
+void Window::openPlanFlight() {
+    planFlightDialog->show();
+    planFlightDialog->raise();
+    planFlightDialog->activateWindow();
+    planFlightDialog->setFocus();
+}
+
 void Window::on_searchEdit_textChanged(const QString& text) {
 	if(text.length() < 2) {
 		searchTimer.stop();
@@ -286,7 +300,8 @@ void Window::on_actionHideAllWindows_triggered() {
 	PilotDetails::getInstance()->close();
 	ControllerDetails::getInstance()->close();
 	AirportDetails::getInstance()->close();
-	preferencesDialog->close();
+    preferencesDialog->close();
+    planFlightDialog->close();
 
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
@@ -478,4 +493,23 @@ void Window::downloadWatchdogTriggered() {
 	QMessageBox::warning(this, tr("Data Download Failed"),
 			QString("I failed to download network data for a while. I don't know the cause, but restarting the program usually fixes the problem.")
 		);
+}
+
+void Window::setStatusText(QString text) {
+    lblStatus->setText(text);
+}
+
+void Window::setProgressBar(bool isVisible) {
+    progressBar->setVisible(isVisible);
+}
+
+void Window::setProgressBar(int prog, int tot) {
+    progressBar->setVisible(true);
+    if (tot == 0) {
+        progressBar->setFormat("%p b");
+        progressBar->setValue(prog);
+    } else {
+        progressBar->setFormat("%p%");
+        progressBar->setValue(100 * prog / tot);
+    }
 }

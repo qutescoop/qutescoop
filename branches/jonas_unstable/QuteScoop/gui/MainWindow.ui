@@ -13,7 +13,37 @@
   <property name="windowTitle">
    <string>QuteScoop</string>
   </property>
-  <widget class="QWidget" name="centralwidget"/>
+  <property name="dockNestingEnabled">
+   <bool>true</bool>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="lblStatus">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>550</y>
+      <width>111</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>StatusBar Label</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>570</y>
+      <width>121</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>0</number>
+    </property>
+   </widget>
+  </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
@@ -23,7 +53,13 @@
      <height>29</height>
     </rect>
    </property>
+   <property name="statusTip">
+    <string notr="true"/>
+   </property>
    <widget class="QMenu" name="menuQutescoop">
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>&amp;QuteScoop</string>
     </property>
@@ -35,6 +71,9 @@
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuView">
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>&amp;View</string>
     </property>
@@ -53,8 +92,18 @@
     <addaction name="actionRememberPosition"/>
     <addaction name="actionDisplayAllFirs"/>
    </widget>
+   <widget class="QMenu" name="menuPlan_Flight">
+    <property name="statusTip">
+     <string notr="true"/>
+    </property>
+    <property name="title">
+     <string>&amp;Plan</string>
+    </property>
+    <addaction name="actionPlanFlight"/>
+   </widget>
    <addaction name="menuQutescoop"/>
    <addaction name="menuView"/>
+   <addaction name="menuPlan_Flight"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="searchDock">
@@ -118,6 +167,12 @@
        <property name="itemsExpandable">
         <bool>false</bool>
        </property>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -402,6 +457,11 @@ p, li { white-space: pre-wrap; }
     <string>Display All Sector &amp;Boundaries</string>
    </property>
   </action>
+  <action name="actionPlanFlight">
+   <property name="text">
+    <string>&amp;Flight</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
@@ -429,7 +489,7 @@ p, li { white-space: pre-wrap; }
    <hints>
     <hint type="sourcelabel">
      <x>139</x>
-     <y>312</y>
+     <y>189</y>
     </hint>
     <hint type="destinationlabel">
      <x>-1</x>
@@ -449,7 +509,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>139</x>
-     <y>312</y>
+     <y>189</y>
     </hint>
    </hints>
   </connection>
@@ -465,7 +525,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>131</x>
-     <y>450</y>
+     <y>356</y>
     </hint>
    </hints>
   </connection>
@@ -480,8 +540,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>476</x>
-     <y>302</y>
+     <x>287</x>
+     <y>622</y>
     </hint>
    </hints>
   </connection>

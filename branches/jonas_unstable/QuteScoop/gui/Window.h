@@ -27,6 +27,7 @@
 #include "Whazzup.h"
 #include "ClientSelectionWidget.h"
 #include "PreferencesDialog.h"
+#include "PlanFlightDialog.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
 
@@ -36,6 +37,9 @@ Q_OBJECT
 
 public:
 	static Window* getInstance();
+    void setStatusText(QString text);
+    void setProgressBar(int prog, int tot);
+    void setProgressBar(bool isVisible);
 	
 public slots:
 	void showOnMap(double lat, double lon);
@@ -49,8 +53,9 @@ private slots:
 	void toggleFullscreen();
 	void whazzupDownloaded();
 	void mapClicked(int x, int y, QPoint absolutePos);
-	void openPreferences();
-	
+    void openPreferences();
+    void openPlanFlight();
+
 	void on_searchEdit_textChanged(const QString& text);
 	void on_actionClearAllFlightPaths_triggered();
 	void on_actionDisplayAllFlightPaths_triggered();
@@ -75,7 +80,6 @@ private slots:
 	void on_actionHideAllWindows_triggered();
 	
 	void downloadWatchdogTriggered();
-	
 protected:
 	virtual void closeEvent(QCloseEvent *event);
 	
@@ -90,8 +94,9 @@ private:
 
 	GLWidget *glWidget;
 	ClientSelectionWidget *clientSelection;
-	PreferencesDialog *preferencesDialog;
-	
+    PreferencesDialog *preferencesDialog;
+    PlanFlightDialog *planFlightDialog;
+
 	SearchResultModel searchResultModel, friendsModel;
 	MetarModel metarModel;
 	QTimer searchTimer, metarTimer;
