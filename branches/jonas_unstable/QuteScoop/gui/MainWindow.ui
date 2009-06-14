@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>QuteScoop</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+  </property>
   <property name="dockNestingEnabled">
    <bool>true</bool>
   </property>
@@ -67,6 +71,7 @@
     <addaction name="actionAboutQt"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
+    <addaction name="separator"/>
     <addaction name="actionDownload"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -80,19 +85,21 @@
     <addaction name="actionShowFriendsDock"/>
     <addaction name="actionShowSearch"/>
     <addaction name="actionShowMetars"/>
+    <addaction name="actionHideAllWindows"/>
+    <addaction name="separator"/>
     <addaction name="actionClearAllFlightPaths"/>
     <addaction name="actionDisplayAllFlightPaths"/>
-    <addaction name="actionHideAllWindows"/>
     <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
     <addaction name="separator"/>
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
-    <addaction name="actionRememberPosition"/>
     <addaction name="actionDisplayAllFirs"/>
+    <addaction name="separator"/>
+    <addaction name="actionRememberPosition"/>
    </widget>
-   <widget class="QMenu" name="menuPlan_Flight">
+   <widget class="QMenu" name="menuPlan">
     <property name="statusTip">
      <string notr="true"/>
     </property>
@@ -100,84 +107,13 @@
      <string>&amp;Plan</string>
     </property>
     <addaction name="actionPlanFlight"/>
+    <addaction name="actionBookedATC"/>
    </widget>
    <addaction name="menuQutescoop"/>
    <addaction name="menuView"/>
-   <addaction name="menuPlan_Flight"/>
+   <addaction name="menuPlan"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="QDockWidget" name="searchDock">
-   <property name="maximumSize">
-    <size>
-     <width>524287</width>
-     <height>524287</height>
-    </size>
-   </property>
-   <property name="allowedAreas">
-    <set>Qt::AllDockWidgetAreas</set>
-   </property>
-   <property name="windowTitle">
-    <string>Search</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout">
-     <property name="spacing">
-      <number>2</number>
-     </property>
-     <property name="margin">
-      <number>4</number>
-     </property>
-     <item>
-      <layout class="QHBoxLayout">
-       <property name="spacing">
-        <number>4</number>
-       </property>
-       <property name="margin">
-        <number>4</number>
-       </property>
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Search:</string>
-         </property>
-         <property name="buddy">
-          <cstring>searchEdit</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLineEdit" name="searchEdit"/>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QTreeView" name="searchResult">
-       <property name="editTriggers">
-        <set>QAbstractItemView::AllEditTriggers</set>
-       </property>
-       <property name="rootIsDecorated">
-        <bool>false</bool>
-       </property>
-       <property name="uniformRowHeights">
-        <bool>true</bool>
-       </property>
-       <property name="itemsExpandable">
-        <bool>false</bool>
-       </property>
-       <attribute name="headerShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
-       <attribute name="headerShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="metarDock">
    <property name="windowTitle">
     <string>METAR</string>
@@ -303,6 +239,75 @@ p, li { white-space: pre-wrap; }
        <property name="sortingEnabled">
         <bool>true</bool>
        </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="searchDock">
+   <property name="maximumSize">
+    <size>
+     <width>524287</width>
+     <height>524287</height>
+    </size>
+   </property>
+   <property name="allowedAreas">
+    <set>Qt::AllDockWidgetAreas</set>
+   </property>
+   <property name="windowTitle">
+    <string>Search</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents">
+    <layout class="QVBoxLayout">
+     <property name="spacing">
+      <number>2</number>
+     </property>
+     <property name="margin">
+      <number>4</number>
+     </property>
+     <item>
+      <layout class="QHBoxLayout">
+       <property name="spacing">
+        <number>4</number>
+       </property>
+       <property name="margin">
+        <number>4</number>
+       </property>
+       <item>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Search:</string>
+         </property>
+         <property name="buddy">
+          <cstring>searchEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="searchEdit"/>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QTreeView" name="searchResult">
+       <property name="editTriggers">
+        <set>QAbstractItemView::AllEditTriggers</set>
+       </property>
+       <property name="rootIsDecorated">
+        <bool>false</bool>
+       </property>
+       <property name="uniformRowHeights">
+        <bool>true</bool>
+       </property>
+       <property name="itemsExpandable">
+        <bool>false</bool>
+       </property>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -462,8 +467,15 @@ p, li { white-space: pre-wrap; }
     <string>&amp;Flight</string>
    </property>
   </action>
+  <action name="actionBookedATC">
+   <property name="text">
+    <string>Find Booked &amp;ATC</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>actionQuit</sender>

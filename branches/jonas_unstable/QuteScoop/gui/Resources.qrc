@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/icons" >
+        <file>qutescoop.png</file>
+    </qresource>
+</RCC>
