@@ -36,9 +36,11 @@ Whazzup* Whazzup::getInstance() {
 Whazzup::Whazzup() {
 	statusDownloader = new QHttp;
 	whazzupDownloader = new QHttp;
+	bookingsDownloader = new QHttp;
 
 	statusBuffer = 0;
 	whazzupBuffer = 0;
+	bookingsBuffer = 0;
 	connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
 	
 	// init random seed to switch between URLs
@@ -158,6 +160,7 @@ void Whazzup::download() {
 	}
 	whazzupDownloader = new QHttp(this);
 	connect(whazzupDownloader, SIGNAL(done(bool)), this, SLOT(whazzupDownloaded(bool)));
+	connect(whazzupDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(whazzupDownloading(int,int)));
 	Settings::applyProxySetting(whazzupDownloader);
 	
 	whazzupDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
@@ -170,6 +173,10 @@ void Whazzup::download() {
 	whazzupBuffer = new QBuffer;
 	whazzupBuffer->open(QBuffer::ReadWrite);
 	whazzupDownloader->get(querystr, whazzupBuffer);
+}
+
+void Whazzup::whazzupDownloading(int prog, int tot) {
+    qDebug() << prog << tot;
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
@@ -189,10 +196,65 @@ void Whazzup::whazzupDownloaded(bool error) {
 	}
 	
 	whazzupBuffer->seek(0);
-	WhazzupData newWhazzupData(whazzupBuffer);
+	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::GENERAL);
 	if(!newWhazzupData.isNull()) {
 		data.updateFrom(newWhazzupData);
 		emit newData();
+	}
+
+    if (data.isVatsim()) downloadBookings(); // get ATC Bookings if network is VATSIM
+}
+
+void Whazzup::downloadBookings() {
+	QUrl url("http://vatbook.euroutepro.com/servinfo.asp");
+	QFileInfo fileInfo(url.path());
+	QString fileName = fileInfo.fileName();
+
+   	qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
+
+	if(bookingsDownloader != 0) {
+		bookingsDownloader->abort();
+		delete bookingsDownloader;
+	}
+	bookingsDownloader = new QHttp(this);
+	connect(bookingsDownloader, SIGNAL(done(bool)), this, SLOT(bookingsDownloaded(bool)));
+	connect(bookingsDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(bookingsDownloading(int,int)));
+	Settings::applyProxySetting(bookingsDownloader);
+	
+	bookingsDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
+	if (!url.userName().isEmpty())
+		bookingsDownloader->setUser(url.userName(), url.password());
+
+	QString querystr = url.path() + "?" + url.encodedQuery();
+	if(bookingsBuffer != 0) delete bookingsBuffer;
+	bookingsBuffer = new QBuffer;
+	bookingsBuffer->open(QBuffer::ReadWrite);
+	bookingsDownloader->get(querystr, bookingsBuffer);
+}
+
+void Whazzup::bookingsDownloading(int prog, int tot) {
+    qDebug() << prog << tot;
+}
+
+void Whazzup::bookingsDownloaded(bool error) {
+    qDebug() << "bDownloaded";
+	if(bookingsBuffer == 0)
+		return;
+	
+	if(bookingsBuffer->data().isEmpty()) {
+		return;
+	}
+	
+	if(error) {
+		emit downloadError(bookingsDownloader->errorString());
+		return;
+	}
+	
+	bookingsBuffer->seek(0);
+	WhazzupData newWhazzupData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
+	if(!newWhazzupData.isNull()) {
+		//data.updateFrom(newWhazzupData);
+		//emit newData();
 	}
 }
 

@@ -27,13 +27,16 @@
 
 class Pilot;
 class Controller;
+class BookedController;
 class Client;
 
 class WhazzupData
 {
 public:
+    enum WhazzupType { GENERAL, ATCBOOKINGS };
+        
 	WhazzupData();
-	WhazzupData(QBuffer* buffer);
+	WhazzupData(QBuffer* buffer, WhazzupType type);
 	~WhazzupData();
 
 	// copy constructor and assignment operator
@@ -46,6 +49,7 @@ public:
 	QList<Pilot*> getPilots() const;
 	QList<Pilot*> getActivePilots() const;
 	QList<Controller*> getControllers() const { return controllers.values(); }
+	QList<BookedController*> getBookedControllers() const { return bookedcontrollers; }
 	
 	Pilot* getPilot(const QString& callsign) const { return pilots[callsign]; }
 	Controller* getController(const QString& callsign) const { return controllers[callsign]; }
@@ -67,13 +71,16 @@ private:
 	
 	void updatePilotsFrom(const WhazzupData& data);
 	void updateControllersFrom(const WhazzupData& data);
+	void updateBookedControllersFrom(const WhazzupData& data);
 	
 	QHash<QString, Pilot*> pilots;
 	QHash<QString, Controller*> controllers;
+	QList<BookedController*> bookedcontrollers;
 	int connectedClients;
 	int connectedServers;
 	int whazzupVersion;
 	QDateTime whazzupTime;
+    WhazzupType datatype;
 };
 
 #endif /*WHAZZUPDATA_H_*/

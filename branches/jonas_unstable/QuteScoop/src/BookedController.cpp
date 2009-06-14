@@ -16,36 +16,33 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "Controller.h"
+#include "BookedController.h"
 #include "ControllerDetails.h"
 #include "Window.h"
 #include "NavData.h"
 #include "Settings.h"
 
-Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
+BookedController::BookedController(const QStringList& stringList, const WhazzupData* whazzup):
 	Client(stringList, whazzup)
 {
-	frequency = getField(stringList, 4);
-	facilityType = getField(stringList, 18).toInt();
-	visualRange = getField(stringList, 19).toInt();
-	atisMessage = getField(stringList, 35);
-	timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
-
-	QStringList atisLines = atisMessage.split("^§");
-	if(atisLines.size() >= 1) {
-		voiceServer = atisLines[0];
-		QString atis = "";
-		for(int i = 1; i < atisLines.size(); i++) {
-			if(i > 1) atis += "<br>";
-			atis += atisLines[i];
-		}
-		atisMessage = atis;
-	}
-
-	fir = 0;
+    qDebug() << stringList;
+    
+    //frequency = getField(stringList, 4);
+	facilityType = 10; //fixme
+	//visualRange = getField(stringList, 19).toInt();
+	//atisMessage = getField(stringList, 35);
+	//timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
+	//voiceServer = atisLines[0];
+	//atisMessage
+    fir = 0;
+    server = "";
+	timeFrom = getField(stringList, 14);
+	date = getField(stringList, 16);
+    //always some miracle "1" here: getField(stringList, 19);
+	timeTo = getField(stringList, 17);
 }
 
-QString Controller::facilityString() const {
+QString BookedController::facilityString() const {
 	switch(facilityType) {
 	case 0: return "Observer";
 	case 1: return "Staff";
@@ -59,7 +56,7 @@ QString Controller::facilityString() const {
 	return QString();
 }
 
-QString Controller::getCenter() {
+QString BookedController::getCenter() {
 	if(!isATC())
 		return QString();
 
@@ -92,7 +89,7 @@ QString Controller::getCenter() {
 	return result;
 }
 
-QString Controller::getApproach() const {
+QString BookedController::getApproach() const {
 	if(!isATC())
 		return QString();
 
@@ -107,7 +104,7 @@ QString Controller::getApproach() const {
 	return QString();
 }
 
-QString Controller::getTower() const {
+QString BookedController::getTower() const {
 	if(!isATC())
 		return QString();
 
@@ -122,7 +119,7 @@ QString Controller::getTower() const {
 	return QString();
 }
 
-QString Controller::getGround() const {
+QString BookedController::getGround() const {
 	if(!isATC())
 		return QString();
 
@@ -141,7 +138,7 @@ QString Controller::getGround() const {
 	return QString();
 }
 
-bool Controller::couldBeAtcCallsign() const {
+bool BookedController::couldBeAtcCallsign() const {
 	QStringList list = label.split('_');
 	if(list.size() > 4 || list.size() <= 1) return false; // ignore XXXX_A_B_C_D_CTR and bogus
 	if(list.size() == 3 && // ignore LOVV_T_CTR and LOVV_X_CTR
@@ -154,17 +151,17 @@ bool Controller::couldBeAtcCallsign() const {
 	return true;
 }
 
-void Controller::showDetailsDialog() {
+void BookedController::showDetailsDialog() {
 	ControllerDetails *infoDialog = ControllerDetails::getInstance();
 
-	infoDialog->refresh(this);
+	infoDialog->refresh(dynamic_cast<Controller *>(this));
 	infoDialog->show();
 	infoDialog->raise();
 	infoDialog->activateWindow();
 	infoDialog->setFocus();
 }
 
-QString Controller::rank() const {
+QString BookedController::rank() const {
 	if(network == VATSIM) {
 		switch(rating) {
 		case 0:
@@ -198,7 +195,7 @@ QString Controller::rank() const {
 	}
 }
 
-QString Controller::toolTip() const {
+QString BookedController::toolTip() const {
 	QString r = rank();
 	QString result = label + " (";
 	if(!isObserver() && !frequency.isEmpty()) {
@@ -210,31 +207,24 @@ QString Controller::toolTip() const {
 	return result;
 }
 
-QString Controller::mapLabel() const {
+QString BookedController::mapLabel() const {
 	if(label.endsWith("_CTR")) // hack to make _CTR labels smaller
 		return label.left(label.length() - 4);
 	return label;
 }
 
-QString Controller::voiceLink() const {
-	switch(Settings::voiceType()) {
-		case Settings::TEAMSPEAK: {
-			QStringList serverChannel = voiceServer.split('/');
-			return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
-				.arg(serverChannel.first())
-				.arg(Settings::voiceCallsign())
-				.arg(Settings::voiceUser()).arg(Settings::voicePassword())
-				.arg(serverChannel.last());
-		}
+QDateTime BookedController::starts() const {
+    return QDateTime(
+            QDate::fromString(date, QString("yyyymmdd")), 
+            QTime::fromString(timeFrom, QString("hhmm")),
+            Qt::UTC
+            );
+}
 
-		case Settings::VRC:
-			// insert something useful here - I dont know how vatsim voice works.
-			// should return something like vrc://server?user=user ...
-			// ...or something else that can be passed to system(). See ControllerDetails.cpp on how this is used
-			return QString();
-
-		case Settings::NONE:
-		default:
-			return QString();
-	}
+QDateTime BookedController::ends() const {
+    return QDateTime(
+            QDate::fromString(date, QString("yyyymmdd")), 
+            QTime::fromString(timeTo, QString("hhmm")), 
+            Qt::UTC
+            );
 }

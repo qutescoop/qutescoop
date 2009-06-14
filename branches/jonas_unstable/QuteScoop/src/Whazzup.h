@@ -58,12 +58,17 @@ public slots:
 	
 private slots:
 	void statusDownloaded(bool error);
+	void whazzupDownloading(int prog, int tot);
+	void bookingsDownloading(int prog, int tot);
 	void whazzupDownloaded(bool error);
+	void bookingsDownloaded(bool error);
 		
 private:
 	Whazzup();
 	virtual ~Whazzup();
-	
+
+  	void downloadBookings();
+
 	WhazzupData data;
 
 	QHttp *statusDownloader;
@@ -71,6 +76,9 @@ private:
 	
 	QHttp *whazzupDownloader;
 	QBuffer *whazzupBuffer;
+
+    QHttp *bookingsDownloader;
+	QBuffer *bookingsBuffer;
 	
 	QStringList urls;
 	QStringList gzurls;

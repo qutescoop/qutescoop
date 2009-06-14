@@ -23,6 +23,7 @@
 #include "Fir.h"
 #include "Pilot.h"
 #include "Controller.h"
+#include "BookedController.h"
 #include "NavData.h"
 
 WhazzupData::WhazzupData():
@@ -33,11 +34,12 @@ WhazzupData::WhazzupData():
 {
 }
 
-WhazzupData::WhazzupData(QBuffer* buffer):
+WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 	connectedClients(0),
 	connectedServers(0),
 	whazzupVersion(0),
-	whazzupTime(QDateTime())
+	whazzupTime(QDateTime()),
+    datatype(GENERAL)
 {
 	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_PREFILE};
 	ParserState state = STATE_NONE;
@@ -93,15 +95,18 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 					pilots[p->label] = p;
 				}
 				else if(list[3] == "ATC") {
-					Controller *c = new Controller(list, this);
-					controllers[c->label] = c;
+                    if (type == WhazzupData::GENERAL) {
+                        Controller *c = new Controller(list, this);
+                        controllers[c->label] = c;
+                    } else if (type == WhazzupData::ATCBOOKINGS) {
+                        BookedController *bc = new BookedController(list, this);
+                        bookedcontrollers.append(bc);
+                    }
 				}
 			}
 			break;
 		case STATE_PREFILE: {
-				//qDebug() << "PREFILE";
 				QStringList list = line.split(':');
-				//qDebug() << list;
 				Pilot *p = new Pilot(list, this);
 				pilots[p->label] = p;
 			}
@@ -123,19 +128,23 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
 	if(this == &data)
 		return;
 
-	connectedClients = data.connectedClients;
-	connectedServers = data.connectedServers;
-	whazzupTime = data.whazzupTime;
-
-	pilots.clear();
-	QList<QString> callsigns = data.pilots.keys();
-	for(int i = 0; i < callsigns.size(); i++)
-		pilots[callsigns[i]] = new Pilot(*data.pilots[callsigns[i]]);
-
-	controllers.clear();
-	callsigns = data.controllers.keys();
-	for(int i = 0; i < callsigns.size(); i++)
-		controllers[callsigns[i]] = new Controller(*data.controllers[callsigns[i]]);
+    if (data.datatype == GENERAL) {
+        connectedClients = data.connectedClients;
+        connectedServers = data.connectedServers;
+        whazzupTime = data.whazzupTime;
+    
+        pilots.clear();
+        QList<QString> callsigns = data.pilots.keys();
+        for(int i = 0; i < callsigns.size(); i++)
+            pilots[callsigns[i]] = new Pilot(*data.pilots[callsigns[i]]);
+    
+        controllers.clear();
+        callsigns = data.controllers.keys();
+        for(int i = 0; i < callsigns.size(); i++)
+            controllers[callsigns[i]] = new Controller(*data.controllers[callsigns[i]]);
+    } else if (data.datatype == ATCBOOKINGS) {
+        bookedcontrollers = data.bookedcontrollers;
+    }
 }
 
 void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
@@ -209,20 +218,28 @@ void WhazzupData::updateControllersFrom(const WhazzupData& data) {
 	}
 }
 
+void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
+    bookedcontrollers = data.bookedcontrollers;
+}
+
 void WhazzupData::updateFrom(const WhazzupData& data) {
 	if(this == &data)
 		return;
 
 	if(data.isNull())
 		return;
-
-	updatePilotsFrom(data);
-	updateControllersFrom(data);
-
-	connectedClients = data.connectedClients;
-	connectedServers = data.connectedServers;
-	whazzupVersion = data.whazzupVersion;
-	whazzupTime = data.whazzupTime;
+    
+    if (data.datatype == GENERAL) {
+        updatePilotsFrom(data);
+        updateControllersFrom(data);
+    
+        connectedClients = data.connectedClients;
+        connectedServers = data.connectedServers;
+        whazzupVersion = data.whazzupVersion;
+        whazzupTime = data.whazzupTime;
+    } else if (data.datatype == ATCBOOKINGS) {
+        updateBookedControllersFrom(data);
+    }
 }
 
 WhazzupData::~WhazzupData() {
