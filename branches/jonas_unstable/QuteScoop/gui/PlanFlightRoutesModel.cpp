@@ -17,6 +17,8 @@
  **************************************************************************/
 
 #include "PlanFlightRoutesModel.h"
+#include <QtCore>
+#include <QIcon>
 
 void PlanFlightRoutesModel::setClients(const QList<Route*>& newroutes) {
     routes.clear(); 
@@ -51,6 +53,18 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
 	
 	if(index.row() >= routes.size())
 		return QVariant();
+    
+    if(role == Qt::DecorationRole) {
+		Route* r = routes[index.row()];
+		switch(index.column()) {
+        case 0:
+            if (r->provider == "generated")
+                return QIcon(":/icons/qutescoop.png");
+            else if (r->provider == "vroute")
+                return QIcon(":/routeproviders/images/vroute.png");
+            break;
+        }
+    }
 	
 	if(role == Qt::DisplayRole) {
 		Route* r = routes[index.row()];
@@ -61,7 +75,11 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
 		case 3: return r->minFl; break;
 		case 4: return r->maxFl; break;
 		case 5: return r->comments; break;
-		case 6: return r->lastChange; break;
+		case 6: 
+            QDateTime lastChange = QDateTime::fromString(r->lastChange, "yyyyMMddhhmmss");
+            if (lastChange.isValid()) return lastChange.date();
+            else return r->lastChange;
+            break;
 		}
 	}
 	
