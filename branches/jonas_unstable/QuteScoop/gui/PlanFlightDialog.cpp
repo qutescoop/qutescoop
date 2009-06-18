@@ -68,7 +68,7 @@ void PlanFlightDialog::requestGenerated() {
     }
         
     QList<Route*> newroutes;
-  /*  for (int i=0; i<10; i++) {    
+    for (int i=0; i<3; i++) {    
         QStringList sl = QStringList();
         sl.append("generated");
         sl.append(QString("%1").arg(1000 + i));
@@ -76,14 +76,14 @@ void PlanFlightDialog::requestGenerated() {
         sl.append(edDest->text());
         sl.append(QString("%1").arg(180 - i*10));
         sl.append(QString("%1").arg(180 + i*10));
-        sl.append("AETSCH DCT UPPS");
+        sl.append("AETSCH DCT UPPS DCT HOPPLA");
         sl.append("n/a");
         sl.append("just a test");
         
         Route *r = new Route(sl);
         newroutes.append(r);
     }
-    */
+    
     lblGeneratedStatus->setText(QString("%1 route%2")
                                 .arg(newroutes.size())
                                 .arg(newroutes.size() == 1 ? "s": ""));
@@ -98,8 +98,11 @@ void PlanFlightDialog::requestVroute() {
     QString vr = QString("http://data.vroute.net/internal/query.php");  
     QString airacCycle("0906");
     
-    QString authCode("");
-    if (authCode == "") lblVrouteStatus->setText(QString("auth code unavailable. add it in the source"));
+    QString authCode(""); // add it manually - we need to find some way to manage that...
+    if (authCode == "") {
+        lblVrouteStatus->setText(QString("auth code unavailable. add it in the source"));
+        return;
+    }
         
     QUrl url(vr);
     url.addQueryItem(QString("auth_code"), authCode);
