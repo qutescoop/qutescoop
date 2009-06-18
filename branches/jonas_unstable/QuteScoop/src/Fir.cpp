@@ -51,7 +51,7 @@ void Fir::compileDisplayLists() {
 	// filled polygon
 	polygon = glGenLists(1);
 	glNewList(polygon, GL_COMPILE);
-	QColor color = Settings::firFillColor().rgba();
+	QColor color = Settings::firFillColor();// was: .rgba(); // fixes a transparency bug for me - please test
 	glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
 	Tessellator().tessellate(_points);
 	glEndList();

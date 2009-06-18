@@ -19,97 +19,112 @@ FORMS = gui/MainWindow.ui \
     gui/ControllerDetails.ui \
     gui/AirportDetails.ui \
     gui/PreferencesDialog.ui \
-    gui/PlanFlightDialog.ui
+    gui/PlanFlightDialog.ui \
+    gui/BookedAtcDialog.ui
 TARGET = 
 DEPENDPATH += ./src \
     ./gui
 INCLUDEPATH += ./src \
     ./gui
 QT += network \
-    opengl
+    opengl \
+    xml
 CONFIG += debug
-CONFIG += release
+# CONFIG += release
+CONFIG += warn_off
+
 mac { 
     ICON = gui/Dolomynum.icns
     CONFIG += x86 \
         ppc
 }
 win32:RC_FILE = gui/windowsicon.rc
-
-# CONFIG += console
 # Input
-HEADERS += GLWidget.h \
-    Window.h \
+HEADERS += WhazzupData.h \
+    Whazzup.h \
+    Waypoint.h \
+    Tessellator.h \
+    Settings.h \
+    Pilot.h \
+    NavData.h \
+    NavAid.h \
+    Metar.h \
+    MapObject.h \
     LineReader.h \
-    Client.h \
-    FileReader.h \
+    helpers.h \
     FirReader.h \
     Fir.h \
-    Tessellator.h \
-    Airport.h \
-    Whazzup.h \
-    WhazzupData.h \
-    PilotDetails.h \
-    ClientDetails.h \
+    FileReader.h \
     Controller.h \
-    Pilot.h \
-    ClientSelectionWidget.h \
+    Client.h \
+    BookedController.h \
+    Airway.h \
+    Airport.h \
+    Airac.h \
+    Window.h \
+    SearchVisitor.h \
+    SearchResultModel.h \
+    PreferencesDialog.h \
+    PlanFlightDialog.h \
+    PilotDetails.h \
+    MetarSearchVisitor.h \
+    MetarModel.h \
+    MapObjectVisitor.h \
+    GLWidget.h \
+    FriendsVisitor.h \
     ControllerDetails.h \
-    MapObject.h \
-    AirportDetails.h \
+    ClientSelectionWidget.h \
+    ClientDetails.h \
+    BookedAtcDialogModel.h \
+    BookedAtcDialog.h \
+    AirportDetailsDeparturesModel.h \
     AirportDetailsAtcModel.h \
     AirportDetailsArrivalsModel.h \
-    NavData.h \
-    AirportDetailsDeparturesModel.h \
-    Airway.h \
-    PreferencesDialog.h \
-    Settings.h \
-    SearchResultModel.h \
-    MapObjectVisitor.h \
-    SearchVisitor.h \
-    Waypoint.h \
-    MetarModel.h \
-    Metar.h \
-    MetarSearchVisitor.h \
-    FriendsVisitor.h \
-    Airac.h \
-    NavAid.h \
-    gui/PlanFlightDialog.h
-SOURCES += GLWidget.cpp \
+    AirportDetails.h \
+    src/Route.h \
+    gui/PlanFlightRoutesModel.h \
+    gui/BookedAtcSortFilter.h
+SOURCES += WhazzupData.cpp \
+    Whazzup.cpp \
+    Waypoint.cpp \
+    Tessellator.cpp \
+    Settings.cpp \
     QuteScoop.cpp \
-    Window.cpp \
+    Pilot.cpp \
+    NavData.cpp \
+    NavAid.cpp \
+    Metar.cpp \
+    MapObject.cpp \
     LineReader.cpp \
-    Client.cpp \
-    FileReader.cpp \
     FirReader.cpp \
     Fir.cpp \
-    Tessellator.cpp \
-    Airport.cpp \
-    Whazzup.cpp \
-    WhazzupData.cpp \
-    PilotDetails.cpp \
-    ClientDetails.cpp \
+    FileReader.cpp \
     Controller.cpp \
-    Pilot.cpp \
-    ClientSelectionWidget.cpp \
+    Client.cpp \
+    BookedController.cpp \
+    Airway.cpp \
+    Airport.cpp \
+    Airac.cpp \
+    Window.cpp \
+    SearchVisitor.cpp \
+    SearchResultModel.cpp \
+    PreferencesDialog.cpp \
+    PlanFlightDialog.cpp \
+    PilotDetails.cpp \
+    MetarSearchVisitor.cpp \
+    MetarModel.cpp \
+    GLWidget.cpp \
+    FriendsVisitor.cpp \
     ControllerDetails.cpp \
-    MapObject.cpp \
-    AirportDetails.cpp \
+    ClientSelectionWidget.cpp \
+    ClientDetails.cpp \
+    BookedAtcDialogModel.cpp \
+    BookedAtcDialog.cpp \
+    AirportDetailsDeparturesModel.cpp \
     AirportDetailsAtcModel.cpp \
     AirportDetailsArrivalsModel.cpp \
-    NavData.cpp \
-    Airway.cpp \
-    AirportDetailsDeparturesModel.cpp \
-    NavAid.cpp \
-    PreferencesDialog.cpp \
-    Settings.cpp \
-    SearchResultModel.cpp \
-    SearchVisitor.cpp \
-    Waypoint.cpp \
-    MetarModel.cpp \
-    Metar.cpp \
-    MetarSearchVisitor.cpp \
-    FriendsVisitor.cpp \
-    Airac.cpp \
-    gui/PlanFlightDialog.cpp
-OTHER_FILES += 
+    AirportDetails.cpp \
+    src/Route.cpp \
+    gui/PlanFlightRoutesModel.cpp \
+    gui/BookedAtcSortFilter.cpp
+RESOURCES += Resources.qrc

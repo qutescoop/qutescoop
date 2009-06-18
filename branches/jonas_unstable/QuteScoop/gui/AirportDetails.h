@@ -38,6 +38,7 @@ public:
 	void refresh(Airport* airport = 0);
 
 private slots:
+	void atcSelected(const QModelIndex& index);
 	void arrivalSelected(const QModelIndex& index);
 	void departureSelected(const QModelIndex& index);
 	

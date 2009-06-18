@@ -24,6 +24,7 @@
 
 #include "Settings.h"
 #include "Whazzup.h"
+#include "Window.h"
 
 Whazzup *whazzupInstance = 0;
 
@@ -57,6 +58,8 @@ Whazzup::~Whazzup() {
 }
 
 void Whazzup::setStatusLocation(const QString& statusLocation) {
+    qDebug() << "Downloading network status from" << statusLocation;
+    
 	QUrl url(statusLocation);
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
@@ -148,11 +151,12 @@ void Whazzup::download() {
 	int index = rand() % urls.size();
 	QString fileLocation = urls[index];
 	
-	qDebug() << "Downloading whazzup from" << fileLocation;
-	
 	QUrl url(fileLocation);
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
+
+   	Window::getInstance()->setStatusText(QString("Downloading whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)));
+    qDebug() << "Downloading whazzup from" << fileLocation;
 
 	if(whazzupDownloader != 0) {
 		whazzupDownloader->abort();
@@ -176,10 +180,11 @@ void Whazzup::download() {
 }
 
 void Whazzup::whazzupDownloading(int prog, int tot) {
-    qDebug() << prog << tot;
+    Window::getInstance()->setProgressBar(prog, tot);
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
+    Window::getInstance()->setProgressBar(false);
 	if(whazzupBuffer == 0)
 		return;
 	
@@ -196,13 +201,18 @@ void Whazzup::whazzupDownloaded(bool error) {
 	}
 	
 	whazzupBuffer->seek(0);
-	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::GENERAL);
+	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
 	if(!newWhazzupData.isNull()) {
 		data.updateFrom(newWhazzupData);
 		emit newData();
 	}
 
-    if (data.isVatsim()) downloadBookings(); // get ATC Bookings if network is VATSIM
+    if (data.isVatsim()) {// get ATC Bookings if network is VATSIM
+        downloadBookings(); 
+        Window::getInstance()->setEnableBookedAtc(true);
+    } else {
+        Window::getInstance()->setEnableBookedAtc(false);
+    }
 }
 
 void Whazzup::downloadBookings() {
@@ -210,6 +220,7 @@ void Whazzup::downloadBookings() {
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
 
+	Window::getInstance()->setStatusText(QString("Downloading ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
    	qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
 
 	if(bookingsDownloader != 0) {
@@ -233,11 +244,11 @@ void Whazzup::downloadBookings() {
 }
 
 void Whazzup::bookingsDownloading(int prog, int tot) {
-    qDebug() << prog << tot;
+    Window::getInstance()->setProgressBar(prog, tot);
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
-    qDebug() << "bDownloaded";
+    Window::getInstance()->setProgressBar(false);
 	if(bookingsBuffer == 0)
 		return;
 	
@@ -246,15 +257,16 @@ void Whazzup::bookingsDownloaded(bool error) {
 	}
 	
 	if(error) {
+        Window::getInstance()->setEnableBookedAtc(false);
 		emit downloadError(bookingsDownloader->errorString());
 		return;
 	}
 	
 	bookingsBuffer->seek(0);
-	WhazzupData newWhazzupData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
-	if(!newWhazzupData.isNull()) {
-		//data.updateFrom(newWhazzupData);
-		//emit newData();
+	WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
+	if(!newBookingsData.isNull()) {
+		data.updateFrom(newBookingsData);
+		emit newData();
 	}
 }
 

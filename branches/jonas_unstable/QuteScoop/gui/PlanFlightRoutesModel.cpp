@@ -16,14 +16,15 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "AirportDetailsAtcModel.h"
+#include "PlanFlightRoutesModel.h"
 
-void AirportDetailsAtcModel::setClients(const QList<Controller*>& controllers) {
-	this->controllers = controllers;
+void PlanFlightRoutesModel::setClients(const QList<Route*>& newroutes) {
+    routes.clear(); 
+	routes.append(newroutes); //fixme - dunno know if this is good style
 	reset();
 }
 
-QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
+QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
     if (role != Qt::DisplayRole)
         return QVariant();
 
@@ -32,37 +33,41 @@ QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation or
     
 	// orientation is Qt::Horizontal
 	switch(section) {
-	case 0: return QString("Callsign"); break;
-	case 1: return QString("Freq"); break;
-	case 2: return QString("Facility"); break;
-	case 3: return QString("Name"); break;
-	case 4: return QString("Rank"); break;
+	case 0: return QString("Provider"); break;
+	case 1: return QString("Route"); break;
+	case 2: return QString("Dist"); break;
+	case 3: return QString("FL>"); break;
+	case 4: return QString("FL<"); break;
+	case 5: return QString("Remarks"); break;
+	case 6: return QString("Last changed"); break;
 	}
 	
 	return QVariant();
 }
 
-QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const {
+QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
 	if(!index.isValid())
 		return QVariant();
 	
-	if(index.row() >= controllers.size())
+	if(index.row() >= routes.size())
 		return QVariant();
 	
 	if(role == Qt::DisplayRole) {
-		Controller* c = controllers[index.row()];
+		Route* r = routes[index.row()];
 		switch(index.column()) {
-		case 0: return c->label; break;
-		case 1: return c->frequency.toDouble() > 199 ? QVariant(): c->frequency; break; //sort out observers without prim freq
-		case 2: return c->facilityString(); break;
-		case 3: return c->realName; break;
-		case 4: return c->rank(); break;
+		case 0: return r->provider; break;
+		case 1: return r->flightPlan; break;
+		case 2: return r->routeDistance; break;
+		case 3: return r->minFl; break;
+		case 4: return r->maxFl; break;
+		case 5: return r->comments; break;
+		case 6: return r->lastChange; break;
 		}
 	}
 	
 	return QVariant();
 }
 
-void AirportDetailsAtcModel::modelSelected(const QModelIndex& index) {
-	controllers[index.row()]->showDetailsDialog();
+void PlanFlightRoutesModel::modelSelected(const QModelIndex& index) {
+	//routes[index.row()]->showDetailsDialog();
 }

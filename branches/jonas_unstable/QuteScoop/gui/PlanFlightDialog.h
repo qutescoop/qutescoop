@@ -23,12 +23,14 @@
 #include <QList>
 #include <QHttp>
 #include <QBuffer>
+#include <QSortFilterProxyModel>
 
 #include <QtCore>
 
 #include <QtGui/QDialog>
 
 #include "ui_PlanFlightDialog.h"
+#include "PlanFlightRoutesModel.h"
 
 class PlanFlightDialog : public QDialog, private Ui::PlanFlightDialog {
     Q_OBJECT
@@ -43,11 +45,22 @@ signals:
     void fpDownloaded();
 
 private slots:
+    void on_edDest_textChanged(QString str);
+    void on_edDep_textChanged(QString str);
+    void on_buttonRequest_clicked();
     void fpDownloaded(bool error);
+	void fpDownloading(int prog, int tot);
 
 private:
+    void requestGenerated();
+    void requestVroute();
+    
     QHttp *fpDownloader;
     QBuffer *fpBuffer;
+    QList<Route*> routes;
+    
+    PlanFlightRoutesModel routesModel;
+    QSortFilterProxyModel *routesSortModel;
 };
 
 #endif // PLANFLIGHTDIALOG_H

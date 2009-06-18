@@ -21,7 +21,6 @@
 #include "NavData.h"
 
 #include <QRegExp>
-#include <QDebug>
 
 Metar::Metar(const QString& encStr)
 {

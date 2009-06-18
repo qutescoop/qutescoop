@@ -32,8 +32,6 @@
 #include "Settings.h"
 #include "Waypoint.h"
 
-#include <QDebug>
-
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	QGLWidget(fmt, parent) {
 	xRot = 0;
@@ -364,9 +362,17 @@ void GLWidget::wheelEvent(QWheelEvent* event) {
 	QToolTip::hideText();
     if(event->orientation() == Qt::Vertical) {
         if(event->delta() < 0) {
-            zoomOut(-event->delta() / 100);
+            if (event->delta() < -800) {
+                zoomOut(8);
+            } else {
+                zoomOut(-event->delta() / 100);
+            }
         } else {
-            zoomIn(event->delta() / 100);
+            if (event->delta() > 800) {
+                zoomIn(8);
+            } else {
+                zoomIn(event->delta() / 100);
+            }
         }
     }
 }

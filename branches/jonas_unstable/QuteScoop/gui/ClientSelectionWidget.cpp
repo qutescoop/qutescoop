@@ -16,7 +16,6 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include <QDebug>
 #include <QFocusEvent>
 #include <QListWidgetItem>
 #include "ClientSelectionWidget.h"

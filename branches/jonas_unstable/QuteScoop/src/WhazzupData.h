@@ -33,7 +33,7 @@ class Client;
 class WhazzupData
 {
 public:
-    enum WhazzupType { GENERAL, ATCBOOKINGS };
+    enum WhazzupType { WHAZZUP, ATCBOOKINGS, UNIFIED };
         
 	WhazzupData();
 	WhazzupData(QBuffer* buffer, WhazzupType type);
@@ -80,7 +80,7 @@ private:
 	int connectedServers;
 	int whazzupVersion;
 	QDateTime whazzupTime;
-    WhazzupType datatype;
+    WhazzupType dataType;
 };
 
 #endif /*WHAZZUPDATA_H_*/

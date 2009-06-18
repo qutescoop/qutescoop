@@ -16,46 +16,32 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "ClientDetails.h"
-#include "Settings.h"
-#include "Client.h"
-#include "Window.h"
+#ifndef PLANFLIGHTSROUTEMODEL_H_
+#define PLANFLIGHTSROUTEMODEL_H_
 
-#include <QTimer>
+#include <QAbstractTableModel>
+#include <QList>
+#include "Route.h"
 
-ClientDetails::ClientDetails():
-	QDialog(Window::getInstance())
-{
-	setModal(false);
-}
+class PlanFlightRoutesModel : public QAbstractTableModel {
+	Q_OBJECT
 
-void ClientDetails::setMapObject(MapObject *object) {
-	lat = object->lat;
-	lon = object->lon;
-	Client *c = dynamic_cast<Client*>(object);
-	if(c != 0) {
-		userId = c->userId;
-		callsign = c->label;
-	} else {
-		userId = QString();
-		callsign = QString();
-	}
-}
+public:
+	PlanFlightRoutesModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
 
-void ClientDetails::showOnMap() {
-	emit showOnMap(lat, lon);
-}
+	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const { return routes.count(); }
+	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const { return 7; } 
+	
+	virtual QVariant data(const QModelIndex &index, int role) const;
+	virtual QVariant headerData(int section, Qt::Orientation orientation,
+	                         int role = Qt::DisplayRole) const;
+	
+public slots:
+	void setClients(const QList<Route*>& routes);
+	void modelSelected(const QModelIndex& index);
 
-void ClientDetails::friendClicked() {
-	if(!userId.isEmpty()) {
-		QStringList friends = Settings::friends();
-		if(friends.contains(userId)) {
-			// was friend, remove it
-			Settings::removeFriend(userId);
-		} else {
-			// new friend
-			Settings::addFriend(userId);
-		}
-	}
-	Window::getInstance()->refreshFriends();
-}
+private:
+	QList<Route*> routes;
+};
+
+#endif

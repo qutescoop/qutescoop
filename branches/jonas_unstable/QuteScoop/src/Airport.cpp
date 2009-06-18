@@ -24,7 +24,6 @@
 #include "Settings.h"
 
 #include <QList>
-#include <QDebug>
 
 Airport::Airport() {
 	appDisplayList = 0;

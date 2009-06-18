@@ -13,12 +13,13 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <layout class="QVBoxLayout">
-   <property name="margin">
-    <number>0</number>
-   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+  </property>
+  <layout class="QVBoxLayout" name="_2">
    <item>
-    <layout class="QHBoxLayout">
+    <layout class="QHBoxLayout" name="_3">
      <item>
       <widget class="QGroupBox" name="groupBox_4">
        <property name="sizePolicy">
@@ -278,7 +279,7 @@
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <layout class="QHBoxLayout" name="_4">
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
        <property name="text">
@@ -293,12 +294,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btnClose">
-       <property name="text">
-        <string>Close</string>
-       </property>
-       <property name="shortcut">
-        <string>Esc</string>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Close</set>
        </property>
       </widget>
      </item>
@@ -311,26 +309,11 @@
   <tabstop>treeArrivals</tabstop>
   <tabstop>treeDepartures</tabstop>
   <tabstop>buttonShowOnMap</tabstop>
-  <tabstop>btnClose</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
-  <connection>
-   <sender>btnClose</sender>
-   <signal>clicked()</signal>
-   <receiver>AirportDetails</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>469</x>
-     <y>604</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>316</x>
-     <y>316</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonShowOnMap</sender>
    <signal>clicked()</signal>
@@ -338,12 +321,28 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>180</x>
-     <y>547</y>
+     <x>105</x>
+     <y>581</y>
     </hint>
     <hint type="destinationlabel">
      <x>361</x>
      <y>281</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>AirportDetails</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>776</x>
+     <y>565</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>742</x>
+     <y>343</y>
     </hint>
    </hints>
   </connection>

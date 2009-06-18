@@ -166,7 +166,7 @@ void Airac::readAirways(const QString& directory) {
 		list += sorted;
 	}
 
-	qDebug() << "done loading airways:" << airwayMap.size() << "names," << segments << "segments";
+	qDebug() << "done ...loading airways:" << airwayMap.size() << "names," << segments << "segments";
 }
 
 Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double maxDist) const {

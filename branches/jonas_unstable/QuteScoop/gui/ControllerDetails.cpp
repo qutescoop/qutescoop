@@ -16,7 +16,6 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include <QDebug>
 #include <QMessageBox>
 
 #include "ControllerDetails.h"
@@ -71,7 +70,7 @@ void ControllerDetails::refresh(Controller *newController) {
 		.arg(controller->voiceServer);
 	lblStationInformatoin->setText(stationInfo);
 
-	lblAtis->setText(controller->atisMessage);
+    lblAtis->setText(controller->atisMessage.split("^$").join("\n"));
 	
 	if(controller->isFriend())
 		buttonAddFriend->setText("Remove Friend");

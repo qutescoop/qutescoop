@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Preferences</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -1877,25 +1881,9 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
-      <spacer>
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pushButtonClose">
-       <property name="text">
-        <string>Close</string>
-       </property>
-       <property name="default">
-        <bool>false</bool>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Close</set>
        </property>
       </widget>
      </item>
@@ -1976,26 +1964,11 @@
   <tabstop>sbPlanLineStrength</tabstop>
   <tabstop>cbDashedFrontAfter</tabstop>
   <tabstop>buttonResetPilot</tabstop>
-  <tabstop>pushButtonClose</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
-  <connection>
-   <sender>pushButtonClose</sender>
-   <signal>clicked()</signal>
-   <receiver>PreferencesDialog</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>535</x>
-     <y>724</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>258</x>
-     <y>236</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>cbUseProxy</sender>
    <signal>clicked(bool)</signal>
@@ -2164,11 +2137,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>119</x>
-     <y>382</y>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
-     <x>293</x>
-     <y>407</y>
+     <x>119</x>
+     <y>284</y>
     </hint>
    </hints>
   </connection>
@@ -2180,11 +2153,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>119</x>
-     <y>382</y>
+     <y>284</y>
     </hint>
     <hint type="destinationlabel">
-     <x>293</x>
-     <y>443</y>
+     <x>119</x>
+     <y>284</y>
     </hint>
    </hints>
   </connection>
@@ -2195,12 +2168,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>276</x>
-     <y>244</y>
+     <x>119</x>
+     <y>182</y>
     </hint>
     <hint type="destinationlabel">
-     <x>299</x>
-     <y>277</y>
+     <x>119</x>
+     <y>182</y>
     </hint>
    </hints>
   </connection>
@@ -2211,12 +2184,28 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>276</x>
-     <y>244</y>
+     <x>119</x>
+     <y>182</y>
     </hint>
     <hint type="destinationlabel">
-     <x>476</x>
-     <y>277</y>
+     <x>119</x>
+     <y>182</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>PreferencesDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>494</x>
+     <y>709</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>540</x>
+     <y>670</y>
     </hint>
    </hints>
   </connection>

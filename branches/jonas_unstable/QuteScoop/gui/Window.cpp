@@ -60,6 +60,7 @@ Window::Window(QWidget *parent) :
 	clientSelection = new ClientSelectionWidget();
     preferencesDialog = new PreferencesDialog();
     planFlightDialog = new PlanFlightDialog();
+    bookedAtcDialog = new BookedAtcDialog();
     
     statusbar->addWidget(lblStatus, 5);
     statusbar->addPermanentWidget(progressBar, 3);
@@ -71,6 +72,7 @@ Window::Window(QWidget *parent) :
 	connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
     connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
     connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
+    connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
 
 	Whazzup *whazzup = Whazzup::getInstance();
 	connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
@@ -79,6 +81,8 @@ Window::Window(QWidget *parent) :
 	connect(whazzup, SIGNAL(newData()), this, SLOT(whazzupDownloaded()));
 	connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
 	connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
+	connect(planFlightDialog, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
+	connect(planFlightDialog, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
 
 	connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
 
@@ -91,6 +95,8 @@ Window::Window(QWidget *parent) :
 	searchResult->setModel(&searchResultModel);
 	connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)), &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
 	connect(searchResult, SIGNAL(clicked(const QModelIndex&)), &searchResultModel, SLOT(modelClicked(const QModelIndex&)));
+	connect(searchResult->header(), SIGNAL(sectionClicked(int)), searchResult, SLOT(sortByColumn(int)));
+	searchResult->sortByColumn(0, Qt::AscendingOrder);
 
 	metarSortModel = new QSortFilterProxyModel;
 	metarSortModel->setDynamicSortFilter(true);
@@ -100,7 +106,7 @@ Window::Window(QWidget *parent) :
 	connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
 	connect(metarList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
 	connect(metarList->header(), SIGNAL(sectionClicked(int)), metarList, SLOT(sortByColumn(int)));
-	metarList->sortByColumn(0, Qt::AscendingOrder);
+	metarList->sortByColumn(0, metarSortModel->sortOrder());
 
 	friendsSortModel = new QSortFilterProxyModel;
 	friendsSortModel->setDynamicSortFilter(true);
@@ -109,8 +115,8 @@ Window::Window(QWidget *parent) :
 
 	connect(friendsList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(friendDoubleClicked(const QModelIndex&)));
 	connect(friendsList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(friendClicked(const QModelIndex&)));
-	connect(friendsList->header(), SIGNAL(sectionClicked(int)), metarList, SLOT(sortByColumn(int)));
-	metarList->sortByColumn(0, Qt::AscendingOrder);
+	connect(friendsList->header(), SIGNAL(sectionClicked(int)), friendsList, SLOT(sortByColumn(int)));
+	metarList->sortByColumn(0, friendsSortModel->sortOrder());
 
 	connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 	connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
@@ -193,7 +199,7 @@ void Window::downloadError(QString message) {
 }
 
 void Window::whazzupDownloaded() {
-	const WhazzupData data = Whazzup::getInstance()->whazzupData();
+	const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
 	QString msg = QString(tr("%1: %2 clients")).arg(Settings::downloadNetworkName()).arg(data.clients());
 	msg += ", " + data.timestamp().toString("yyyy/MM/dd HH:mm:ss") + " UTC";
@@ -205,6 +211,7 @@ void Window::whazzupDownloaded() {
 	AirportDetails::getInstance()->refresh();
 	PilotDetails::getInstance()->refresh();
 	ControllerDetails::getInstance()->refresh();
+    bookedAtcDialog->refresh();
 
 	refreshFriends();
 
@@ -260,6 +267,13 @@ void Window::openPlanFlight() {
     planFlightDialog->setFocus();
 }
 
+void Window::openBookedAtc() {
+    bookedAtcDialog->show();
+    bookedAtcDialog->raise();
+    bookedAtcDialog->activateWindow();
+    bookedAtcDialog->setFocus();
+}
+
 void Window::on_searchEdit_textChanged(const QString& text) {
 	if(text.length() < 2) {
 		searchTimer.stop();
@@ -302,6 +316,7 @@ void Window::on_actionHideAllWindows_triggered() {
 	AirportDetails::getInstance()->close();
     preferencesDialog->close();
     planFlightDialog->close();
+    bookedAtcDialog->close();
 
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
@@ -504,12 +519,20 @@ void Window::setProgressBar(bool isVisible) {
 }
 
 void Window::setProgressBar(int prog, int tot) {
-    progressBar->setVisible(true);
-    if (tot == 0) {
-        progressBar->setFormat("%p b");
-        progressBar->setValue(prog);
+    if (prog == tot) {
+        progressBar->setVisible(false);
     } else {
-        progressBar->setFormat("%p%");
-        progressBar->setValue(100 * prog / tot);
+        progressBar->setVisible(true);
+        if (tot == 0) {
+            progressBar->setFormat(QString("%1 bytes").arg(prog));
+            progressBar->setValue(0);
+        } else {
+            progressBar->setFormat("%p%");
+            progressBar->setValue(100 * prog / tot);
+        }
     }
+}
+
+void Window::setEnableBookedAtc(bool enable) {
+    actionBookedAtc->setEnabled(enable);
 }

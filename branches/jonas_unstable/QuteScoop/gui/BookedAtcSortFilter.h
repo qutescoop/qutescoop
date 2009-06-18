@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,23 +16,25 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "Waypoint.h"
+#ifndef BOOKEDATCSORTFILTER_H
+#define BOOKEDATCSORTFILTER_H
 
-Waypoint::Waypoint(const QStringList& stringList)
-{
-	if(stringList.size() != 3)
-		return;
+#include <QSortFilterProxyModel>
+#include <QtCore>
 
-	bool ok;
-	lat = stringList[0].toDouble(&ok);
-	if(!ok) return;
-	lon = stringList[1].toDouble(&ok);
-	if(!ok) return;
-	label = stringList[2];
-}
+class BookedAtcSortFilter : public QSortFilterProxyModel {
 
-Waypoint::Waypoint(const QString& id, double lat, double lon) {
-	this->label = id;
-	this->lat = lat;
-	this->lon = lon;
-}
+public:
+    BookedAtcSortFilter(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
+    void setDateTimeRange(QDateTime& dtfrom, QDateTime& dtto);
+    //Q_PROPERTY(QDateTime range READ range WRITE setRange);
+
+protected:
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    
+private:
+    QDateTime from;
+    QDateTime to;
+};
+
+#endif // BOOKEDATCSORTFILTER_H

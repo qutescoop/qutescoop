@@ -31,7 +31,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 	atisMessage = getField(stringList, 35);
 	timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
 
-	QStringList atisLines = atisMessage.split("^§");
+	QStringList atisLines = atisMessage.split(QString::fromUtf8("^§")); // needed due to source encoded in UTF8 - found after some headache...
 	if(atisLines.size() >= 1) {
 		voiceServer = atisLines[0];
 		QString atis = "";
@@ -42,7 +42,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 		atisMessage = atis;
 	}
 
-	fir = 0;
+    fir = 0;
 }
 
 QString Controller::facilityString() const {

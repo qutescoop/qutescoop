@@ -18,7 +18,6 @@
 
 #include "PreferencesDialog.h"
 
-#include <QDebug>
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QFontDialog>

@@ -16,7 +16,6 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include <QDebug>
 #include "SearchVisitor.h"
 
 SearchVisitor::SearchVisitor(const QString& searchStr) {

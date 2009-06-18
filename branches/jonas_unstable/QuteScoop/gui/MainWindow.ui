@@ -107,7 +107,7 @@
      <string>&amp;Plan</string>
     </property>
     <addaction name="actionPlanFlight"/>
-    <addaction name="actionBookedATC"/>
+    <addaction name="actionBookedAtc"/>
    </widget>
    <addaction name="menuQutescoop"/>
    <addaction name="menuView"/>
@@ -464,12 +464,12 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionPlanFlight">
    <property name="text">
-    <string>&amp;Flight</string>
+    <string>&amp;Routes</string>
    </property>
   </action>
-  <action name="actionBookedATC">
+  <action name="actionBookedAtc">
    <property name="text">
-    <string>Find Booked &amp;ATC</string>
+    <string>Booked &amp;ATC</string>
    </property>
   </action>
  </widget>

@@ -28,6 +28,7 @@
 #include "ClientSelectionWidget.h"
 #include "PreferencesDialog.h"
 #include "PlanFlightDialog.h"
+#include "BookedAtcDialog.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
 
@@ -40,6 +41,7 @@ public:
     void setStatusText(QString text);
     void setProgressBar(int prog, int tot);
     void setProgressBar(bool isVisible);
+    void setEnableBookedAtc(bool enable);
 	
 public slots:
 	void showOnMap(double lat, double lon);
@@ -55,6 +57,7 @@ private slots:
 	void mapClicked(int x, int y, QPoint absolutePos);
     void openPreferences();
     void openPlanFlight();
+    void openBookedAtc();
 
 	void on_searchEdit_textChanged(const QString& text);
 	void on_actionClearAllFlightPaths_triggered();
@@ -96,6 +99,7 @@ private:
 	ClientSelectionWidget *clientSelection;
     PreferencesDialog *preferencesDialog;
     PlanFlightDialog *planFlightDialog;
+    BookedAtcDialog *bookedAtcDialog;
 
 	SearchResultModel searchResultModel, friendsModel;
 	MetarModel metarModel;

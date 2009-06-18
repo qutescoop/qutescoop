@@ -20,7 +20,7 @@
 #include "Whazzup.h"
 
 #include <QSettings>
-#include <QDebug>
+#include <QApplication>
 
 QSettings *settings_instance = 0;
 
@@ -664,7 +664,7 @@ QString Settings::dataDirectory() {
 //#ifdef Q_WS_X11 // removed for convenience
 //	return getSettings()->value("general/dataDirectory", "/usr/share/qutescoop/data/").toString();
 //#else
-	return getSettings()->value("general/dataDirectory", "data/").toString();
+	return getSettings()->value("general/dataDirectory", QCoreApplication::applicationDirPath() + "/data/").toString();
 //#endif
 }
 

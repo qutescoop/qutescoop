@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,23 +16,22 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "Waypoint.h"
+#include "Route.h"
 
-Waypoint::Waypoint(const QStringList& stringList)
+Route::Route(const QStringList& sl)
 {
-	if(stringList.size() != 3)
-		return;
-
-	bool ok;
-	lat = stringList[0].toDouble(&ok);
-	if(!ok) return;
-	lon = stringList[1].toDouble(&ok);
-	if(!ok) return;
-	label = stringList[2];
+    provider = sl[0];
+    routeDistance = sl[1];
+    dep = sl[2];
+    dest = sl[3];
+    minFl = sl[4];
+    maxFl = sl[5];
+    flightPlan = sl[6];
+    lastChange = sl[7];
+    comments = sl[8];
+    airacCycle = QString();
 }
 
-Waypoint::Waypoint(const QString& id, double lat, double lon) {
-	this->label = id;
-	this->lat = lat;
-	this->lon = lon;
+Route::~Route()
+{
 }

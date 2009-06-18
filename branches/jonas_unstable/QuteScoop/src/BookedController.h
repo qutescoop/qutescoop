@@ -48,6 +48,7 @@ public:
 	QString getApproach() const;
 	QString getTower() const;
 	QString getGround() const;
+	QString getDelivery() const;
 
 	QString frequency;
 	int facilityType;
@@ -59,6 +60,11 @@ public:
 	QString voiceLink() const { return QString(); }
     
     // Booking values
+    QString countryCode;
+    QString link;
+    int bookingType;
+    QString bookingInfoStr;
+
     QString timeFrom;
     QString timeTo;
     QString date;

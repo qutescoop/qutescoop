@@ -19,7 +19,6 @@
 #include "AirportDetailsArrivalsModel.h"
 
 #include <QtAlgorithms>
-#include <QDebug>
 
 void AirportDetailsArrivalsModel::setClients(const QList<Pilot*>& pilots) {
 	this->pilots = pilots;
@@ -64,9 +63,19 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
 
 	if (index.row() >= pilots.size())
 		return QVariant();
+	
+    Pilot* p = pilots[index.row()];
+	
+    if(role == Qt::FontRole) {
+        if (p->flightStatus() == Pilot::PREFILED) {
+            QFont result;
+            result.setItalic(true);
+            return result;
+        }
+		return QFont();
+	}
 
 	if (role == Qt::DisplayRole) {
-		Pilot* p = pilots[index.row()];
 		switch (index.column()) {
             case 0:
                 return p->label; break;

@@ -16,8 +16,6 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include <QDebug>
-
 #include "FirReader.h"
 #include "FileReader.h"
 #include "Settings.h"

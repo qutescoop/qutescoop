@@ -30,7 +30,8 @@ WhazzupData::WhazzupData():
 	connectedClients(0),
 	connectedServers(0),
 	whazzupVersion(0),
-	whazzupTime(QDateTime())
+	whazzupTime(QDateTime()),
+    dataType(UNIFIED)
 {
 }
 
@@ -38,10 +39,10 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 	connectedClients(0),
 	connectedServers(0),
 	whazzupVersion(0),
-	whazzupTime(QDateTime()),
-    datatype(GENERAL)
-{
-	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_PREFILE};
+	whazzupTime(QDateTime())
+{        
+    dataType = type;
+    enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_PREFILE};
 	ParserState state = STATE_NONE;
 	while(buffer->canReadLine()) {
 		QString line = QString(buffer->readLine()).trimmed();
@@ -74,15 +75,15 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 				QStringList list = line.split('=');
 				if(list.size() != 2)
 					continue;
-
-				if(line.startsWith("CONNECTED CLIENTS"))
+				if(line.startsWith("CONNECTED CLIENTS")) {
 					connectedClients = list[1].trimmed().toInt();
-				else if(line.startsWith("CONNECTED SERVERS"))
-					connectedServers= list[1].trimmed().toInt();
-				else if(line.startsWith("UPDATE"))
+                } else if(line.startsWith("CONNECTED SERVERS")) {
+					connectedServers = list[1].trimmed().toInt();
+                } else if(line.startsWith("UPDATE")) {
 					whazzupTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
-				else if(line.startsWith("VERSION"))
+                } else if(line.startsWith("VERSION")) {
 					whazzupVersion = list[1].trimmed().toInt();
+                }
 			}
 			break;
 		case STATE_CLIENTS: {
@@ -91,14 +92,16 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 					continue;
 
 				if(list[3] == "PILOT") {
-					Pilot *p = new Pilot(list, this);
-					pilots[p->label] = p;
+					if (type == WHAZZUP) {
+                        Pilot *p = new Pilot(list, this);
+                        pilots[p->label] = p;
+                    }
 				}
 				else if(list[3] == "ATC") {
-                    if (type == WhazzupData::GENERAL) {
+                    if (type == WHAZZUP) {
                         Controller *c = new Controller(list, this);
                         controllers[c->label] = c;
-                    } else if (type == WhazzupData::ATCBOOKINGS) {
+                    } else if (type == ATCBOOKINGS) {
                         BookedController *bc = new BookedController(list, this);
                         bookedcontrollers.append(bc);
                     }
@@ -106,9 +109,11 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 			}
 			break;
 		case STATE_PREFILE: {
-				QStringList list = line.split(':');
-				Pilot *p = new Pilot(list, this);
-				pilots[p->label] = p;
+				if (type == WHAZZUP) {
+                    QStringList list = line.split(':');
+                    Pilot *p = new Pilot(list, this);
+    				pilots[p->label] = p;
+                }
 			}
 			break;
 		}
@@ -128,7 +133,7 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
 	if(this == &data)
 		return;
 
-    if (data.datatype == GENERAL) {
+    if (data.dataType == WHAZZUP) {
         connectedClients = data.connectedClients;
         connectedServers = data.connectedServers;
         whazzupTime = data.whazzupTime;
@@ -142,7 +147,9 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         callsigns = data.controllers.keys();
         for(int i = 0; i < callsigns.size(); i++)
             controllers[callsigns[i]] = new Controller(*data.controllers[callsigns[i]]);
-    } else if (data.datatype == ATCBOOKINGS) {
+        
+        if (!data.isVatsim()) bookedcontrollers.clear();
+    } else if (data.dataType == ATCBOOKINGS) {
         bookedcontrollers = data.bookedcontrollers;
     }
 }
@@ -229,7 +236,7 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
 	if(data.isNull())
 		return;
     
-    if (data.datatype == GENERAL) {
+    if (data.dataType == WHAZZUP) {
         updatePilotsFrom(data);
         updateControllersFrom(data);
     
@@ -237,7 +244,9 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         connectedServers = data.connectedServers;
         whazzupVersion = data.whazzupVersion;
         whazzupTime = data.whazzupTime;
-    } else if (data.datatype == ATCBOOKINGS) {
+        
+        if (!data.isVatsim()) bookedcontrollers.clear();       
+    } else if (data.dataType == ATCBOOKINGS) {
         updateBookedControllersFrom(data);
     }
 }

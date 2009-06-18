@@ -16,23 +16,32 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "Waypoint.h"
+#ifndef BOOKEDATCDIALOG_H
+#define BOOKEDATCDIALOG_H
 
-Waypoint::Waypoint(const QStringList& stringList)
-{
-	if(stringList.size() != 3)
-		return;
+#include <QSortFilterProxyModel>
 
-	bool ok;
-	lat = stringList[0].toDouble(&ok);
-	if(!ok) return;
-	lon = stringList[1].toDouble(&ok);
-	if(!ok) return;
-	label = stringList[2];
-}
+#include "BookedAtcDialogModel.h"
+#include "BookedAtcSortFilter.h"
+#include "ui_BookedAtcDialog.h"
 
-Waypoint::Waypoint(const QString& id, double lat, double lon) {
-	this->label = id;
-	this->lat = lat;
-	this->lon = lon;
-}
+class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
+    Q_OBJECT
+public:
+    BookedAtcDialog();
+	static BookedAtcDialog *getInstance();
+    void refresh();
+    
+private:
+    BookedAtcModel bookedAtcModel;
+	BookedAtcSortFilter *bookedAtcSortModel;
+	//QSortFilterProxyModel *bookedAtcSortModel;
+
+private slots:
+    void on_dateFilter_dateChanged(QDate date);
+    void on_timeFilter_timeChanged(QTime date);
+    void on_spinHours_valueChanged(int val);
+    void on_editFilter_textChanged(QString str);
+};
+
+#endif // BOOKEDATCDIALOG_H

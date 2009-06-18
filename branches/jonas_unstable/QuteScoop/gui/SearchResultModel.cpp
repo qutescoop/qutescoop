@@ -41,17 +41,25 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
             case 0: return o->toolTip(); break;
 		}
 	}
-	
-	if(role == Qt::FontRole) {
+
+    if(role == Qt::FontRole) {
+		QFont result;
+        //prefiled italic
+        if(dynamic_cast<Pilot*>(content[index.row()])) {
+            Pilot *p = dynamic_cast<Pilot*>(content[index.row()]);
+            if(p->flightStatus() == Pilot::PREFILED) {
+				result.setItalic(true);
+            }
+        }
+        
+        //friends bold
 		Client *c = dynamic_cast<Client*>(content[index.row()]);
 		if(c != 0) {
 			if(c->isFriend()) {
-				QFont result;
 				result.setBold(true);
-				return result;
 			}
 		}
-		return QFont();
+		return result;
 	}
 	
 	return QVariant();

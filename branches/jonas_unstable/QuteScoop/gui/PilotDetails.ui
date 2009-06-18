@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>AUA325</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <widget class="QGroupBox" name="groupBox">
@@ -244,12 +248,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="buttonClose">
-       <property name="text">
-        <string>Close</string>
-       </property>
-       <property name="shortcut">
-        <string>Esc</string>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Close</set>
        </property>
       </widget>
      </item>
@@ -262,26 +263,11 @@
   <tabstop>buttonDest</tabstop>
   <tabstop>buttonShowOnMap</tabstop>
   <tabstop>buttonAddFriend</tabstop>
-  <tabstop>buttonClose</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
-  <connection>
-   <sender>buttonClose</sender>
-   <signal>clicked()</signal>
-   <receiver>PilotDetails</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>176</x>
-     <y>485</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>176</x>
-     <y>252</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>buttonShowOnMap</sender>
    <signal>clicked()</signal>
@@ -289,12 +275,28 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>88</x>
-     <y>503</y>
+     <x>94</x>
+     <y>602</y>
     </hint>
     <hint type="destinationlabel">
      <x>177</x>
      <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>PilotDetails</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>331</x>
+     <y>583</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>294</x>
+     <y>523</y>
     </hint>
    </hints>
   </connection>

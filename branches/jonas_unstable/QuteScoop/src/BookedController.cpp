@@ -25,21 +25,67 @@
 BookedController::BookedController(const QStringList& stringList, const WhazzupData* whazzup):
 	Client(stringList, whazzup)
 {
-    qDebug() << stringList;
-    
-    //frequency = getField(stringList, 4);
-	facilityType = 10; //fixme
-	//visualRange = getField(stringList, 19).toInt();
-	//atisMessage = getField(stringList, 35);
-	//timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
-	//voiceServer = atisLines[0];
-	//atisMessage
     fir = 0;
-    server = "";
-	timeFrom = getField(stringList, 14);
+
+    // extra booking values
+	bookingType = getField(stringList, 4).toInt();
+    timeTo = getField(stringList, 14);
 	date = getField(stringList, 16);
-    //always some miracle "1" here: getField(stringList, 19);
-	timeTo = getField(stringList, 17);
+    //always some miracle "1" here: getField(stringList, 19); ??
+	link = getField(stringList, 35);
+	timeFrom = getField(stringList, 37);
+
+    // computed values
+    switch (bookingType) {
+        case 0:  bookingInfoStr = link; break;
+        case 1:  bookingInfoStr = QString("Event: %1").arg(link); break;
+        case 10: bookingInfoStr = QString("Training"); break;
+    }
+    if (label.right(5) == "_ATIS") facilityType = 2; // dont know who wants to book it, but well...
+    else if (label.right(4) == "_DEL") {
+        if (NavData::getInstance()->airports().contains(this->getDelivery())) {
+            countryCode = NavData::getInstance()->airports()[this->getDelivery()]->countryCode;
+        }
+        facilityType = 3; 
+    }
+    else if (label.right(4) == "_GND") {
+        if (NavData::getInstance()->airports().contains(this->getGround())) {
+            countryCode = NavData::getInstance()->airports()[this->getGround()]->countryCode;
+        }
+        facilityType = 3; 
+    }
+    else if (label.right(4) == "_TWR") {
+        facilityType = 4; 
+        if (NavData::getInstance()->airports().contains(this->getTower())) {
+            countryCode = NavData::getInstance()->airports()[this->getTower()]->countryCode;
+        }
+    }
+    else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
+        facilityType = 5; 
+        if (NavData::getInstance()->airports().contains(this->getApproach())) {
+            countryCode = NavData::getInstance()->airports()[this->getApproach()]->countryCode;
+        }
+    }
+    else if (label.right(4) == "_CTR") {
+        facilityType = 6; 
+        if (NavData::getInstance()->firs().contains(this->getCenter())) {
+            countryCode = NavData::getInstance()->firs()[this->getCenter()]->countryCode();
+        }
+    }
+    else if (label.right(4) == "_FSS") {
+        facilityType = 7; 
+        if (NavData::getInstance()->firs().contains(this->getCenter())) {
+            countryCode = NavData::getInstance()->firs()[this->getCenter()]->countryCode();
+        }
+    }
+
+    //some unapplicable data for a booked controller, but we might need it once to cast BookedController -> Controller
+    frequency = "";
+	visualRange = -1; 
+	atisMessage = "";
+	timeLastAtisReceived = QDateTime();
+	voiceServer = "";
+    server = "";
 }
 
 QString BookedController::facilityString() const {
@@ -138,6 +184,25 @@ QString BookedController::getGround() const {
 	return QString();
 }
 
+QString BookedController::getDelivery() const {
+	if(!isATC())
+		return QString();
+
+	QStringList list = label.split('_');
+	if(list.size() > 3) return QString();
+	if(list.size() == 3 &&
+			(list[1].startsWith("X") || list[1].startsWith("T")))
+		return QString();
+
+	if(list.last().startsWith("DEL")) {
+		if(list.first().length() == 3)
+			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+		return list.first();
+	}
+
+	return QString();
+}
+
 bool BookedController::couldBeAtcCallsign() const {
 	QStringList list = label.split('_');
 	if(list.size() > 4 || list.size() <= 1) return false; // ignore XXXX_A_B_C_D_CTR and bogus
@@ -152,13 +217,7 @@ bool BookedController::couldBeAtcCallsign() const {
 }
 
 void BookedController::showDetailsDialog() {
-	ControllerDetails *infoDialog = ControllerDetails::getInstance();
-
-	infoDialog->refresh(dynamic_cast<Controller *>(this));
-	infoDialog->show();
-	infoDialog->raise();
-	infoDialog->activateWindow();
-	infoDialog->setFocus();
+    //not applicable
 }
 
 QString BookedController::rank() const {
@@ -215,7 +274,7 @@ QString BookedController::mapLabel() const {
 
 QDateTime BookedController::starts() const {
     return QDateTime(
-            QDate::fromString(date, QString("yyyymmdd")), 
+            QDate::fromString(date, QString("yyyyMMdd")), 
             QTime::fromString(timeFrom, QString("hhmm")),
             Qt::UTC
             );
@@ -223,7 +282,7 @@ QDateTime BookedController::starts() const {
 
 QDateTime BookedController::ends() const {
     return QDateTime(
-            QDate::fromString(date, QString("yyyymmdd")), 
+            QDate::fromString(date, QString("yyyyMMdd")), 
             QTime::fromString(timeTo, QString("hhmm")), 
             Qt::UTC
             );

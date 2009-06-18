@@ -2,4 +2,7 @@
     <qresource prefix="/icons" >
         <file>qutescoop.png</file>
     </qresource>
+    <qresource prefix="/routeproviders" >
+        <file>images/vroute.png</file>
+    </qresource>
 </RCC>
