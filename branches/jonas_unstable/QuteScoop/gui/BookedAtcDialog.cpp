@@ -57,7 +57,7 @@ BookedAtcDialog::BookedAtcDialog() :
 void BookedAtcDialog::refresh() {
     bookedAtcModel.setClients(Whazzup::getInstance()->whazzupData().getBookedControllers());
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
-    treeBookedAtc->sortByColumn(0, Qt::AscendingOrder); 
+    bookedAtcSortModel->invalidate();
 }
 
 void BookedAtcDialog::on_editFilter_textChanged(QString searchStr)
