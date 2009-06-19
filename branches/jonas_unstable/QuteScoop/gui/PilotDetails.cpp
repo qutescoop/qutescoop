@@ -68,7 +68,9 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	// Aircraft Information
 	QString aircraftInfo = QString("Aircraft: <strong>%1</strong><br>").arg(pilot->planAircraft);
 	aircraftInfo += QString("Altitude: <strong>%1</strong> feet<br>").arg(pilot->altitude);
-	aircraftInfo += QString("Ground Speed: <strong>%1</strong> kts").arg(pilot->groundspeed);
+	aircraftInfo += QString("Ground Speed: <strong>%1</strong> kts <i>(filed: %2 kts)</i>")
+                    .arg(pilot->groundspeed)
+                    .arg(pilot->planTAS);
 	lblAircraftInfo->setText(aircraftInfo);
 	
 	// flight status
