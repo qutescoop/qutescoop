@@ -17,9 +17,6 @@
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
-  <property name="dockNestingEnabled">
-   <bool>true</bool>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="lblStatus">
     <property name="geometry">
@@ -185,9 +182,6 @@
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
-       <attribute name="headerShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
       </widget>
      </item>
     </layout>
@@ -320,9 +314,6 @@ p, li { white-space: pre-wrap; }
        <property name="sortingEnabled">
         <bool>false</bool>
        </property>
-       <attribute name="headerShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
