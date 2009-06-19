@@ -73,9 +73,7 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             return result;
         }
 		return QFont();
-	}
-
-	if (role == Qt::DisplayRole) {
+	} else if (role == Qt::DisplayRole) {
 		switch (index.column()) {
             case 0:
                 return p->label; break;
@@ -88,17 +86,16 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 4:
                 return p->waypoints().last(); break;
             case 5:
-                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-                else return p->altitude; break;
+                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
             case 6:
-                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-                else return p->groundspeed; break;
+                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
             case 7:
                 if(p->flightStatus() == Pilot::PREFILED) return "n/a";
                 else return (int)p->distanceToDestination(); break;
             case 8:
-                if(!p->ete().isEmpty()) return p->ete();
-                else return QString("n/a"); break;
+                if (p->flightStatus() == Pilot::GROUND_ARR | p->flightStatus() == Pilot::BLOCKED) return "--:--";
+                else if(!p->ete().isEmpty()) return p->ete();
+                else return "n/a"; break;
             case 9:
                 return p->flightStatusString().split("(")[0]; // we do only want a short string, not the details
                 break;
