@@ -68,6 +68,7 @@ AirportDetails::AirportDetails():
 	departuresSortModel = new QSortFilterProxyModel;
 	departuresSortModel->setDynamicSortFilter(true);
 	departuresSortModel->setSourceModel(&departuresModel);
+    departuresSortModel->sort(7, Qt::AscendingOrder);
 	treeDepartures->setModel(departuresSortModel);
     treeDepartures->sortByColumn(7, Qt::AscendingOrder);
     treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
@@ -95,12 +96,12 @@ void AirportDetails::refresh(Airport* newAirport) {
 	
     // arrivals
 	arrivalsModel.setClients(airport->getArrivals());
-    treeArrivals->sortByColumn(arrivalsSortModel->sortColumn(), arrivalsSortModel->sortOrder());
+    arrivalsSortModel->invalidate();
     treeArrivals->header()->resizeSections(QHeaderView::ResizeToContents);
 	
     // departures
     departuresModel.setClients(airport->getDepartures());
-    treeDepartures->sortByColumn(departuresSortModel->sortColumn(), departuresSortModel->sortOrder());
+    departuresSortModel->invalidate();
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 	
     // set titles
@@ -127,8 +128,8 @@ void AirportDetails::refresh(Airport* newAirport) {
     //}
 	
 	atcModel.setClients(atcContent);
-    treeAtc->sortByColumn(atcSortModel->sortColumn(), atcSortModel->sortOrder());
-    treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+    atcSortModel->invalidate();
+    treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);    
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {
