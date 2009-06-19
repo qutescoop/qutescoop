@@ -21,8 +21,7 @@
 #include <QIcon>
 
 void PlanFlightRoutesModel::setClients(const QList<Route*>& newroutes) {
-    routes.clear(); 
-	routes.append(newroutes); //fixme - dunno know if this is good style
+    routes = newroutes; 
 	reset();
 }
 
