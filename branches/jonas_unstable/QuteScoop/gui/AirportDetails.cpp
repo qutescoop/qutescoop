@@ -91,16 +91,16 @@ void AirportDetails::refresh(Airport* newAirport) {
 	lblName->setText(airport->name);
 	
 	QLocale locale(airport->countryCode.toLower());
-    float utcDev = airport->lon/180*12; // lets estimate the local time
-    QString lt = QDateTime::currentDateTime().toUTC().addSecs((int)utcDev*3600).time().toString("HH:mm");
+    int utcDev = (int) (airport->lon/180*12 + 0.5); // lets estimate the deviation from UTC and round that
+    QString lt = QDateTime::currentDateTime().toUTC().addSecs(utcDev*3600).time().toString("HH:mm");
 	lblCountry->setText(QString("%1 (%2)")
                         .arg(airport->countryCode)
                         .arg(NavData::getInstance()->countryName(airport->countryCode)));
 	lblLocation->setText(QString("%1 %2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
     lblTime->setText(QString("local time %1, UTC %2%3")
                         .arg(lt)
-                        .arg((int) utcDev < 0 ? "": "+") // just a plus sign
-                        .arg((int) utcDev));
+                        .arg(utcDev < 0 ? "": "+") // just a plus sign
+                        .arg(utcDev));
 
 	
     // arrivals
