@@ -47,6 +47,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 
 	pilotLabelZoomTreshold = 0.5;
 	airportLabelZoomTreshold = 0.5;
+	inactiveAirportLabelZoomTreshold = 0.3;
 	controllerLabelZoomTreshold = 3;
 
 	firPolygonsList = 0;
@@ -229,6 +230,11 @@ void GLWidget::displayAllFirs(bool value) {
 	newWhazzupData();
 }
 
+void GLWidget::showInactiveAirports(bool value) {
+	Settings::setShowInactiveAirports(value);
+	newWhazzupData();
+}
+
 void GLWidget::initializeGL() {
 	qglClearColor(Settings::backgroundColor().dark());
 	createObjects();
@@ -268,9 +274,11 @@ void GLWidget::paintGL() {
 	glCallList(appBorderLinesList);
 
 	glCallList(airportsList);
+    if(Settings::showInactiveAirports())
+    	glCallList(airportsInactiveList);
 	glCallList(pilotsList);
 
-	if(zoom < fixZoomTreshold)
+	if(zoom < fixZoomTreshold && Settings::showFixes())
 		glCallList(fixesList);
 
 	renderLabels();
@@ -360,19 +368,18 @@ void GLWidget::zoomOut(int factor) {
 
 void GLWidget::wheelEvent(QWheelEvent* event) {
 	QToolTip::hideText();
-    if(event->orientation() == Qt::Vertical) {
-        if(event->delta() < 0) {
-            if (event->delta() < -800) {
-                zoomOut(8);
-            } else {
-                zoomOut(-event->delta() / 100);
-            }
+    //if(event->orientation() == Qt::Vertical) {
+    if(event->delta() < 0) {
+        if (event->delta() < -800) {
+            zoomOut(8);
         } else {
-            if (event->delta() > 800) {
-                zoomIn(8);
-            } else {
-                zoomIn(event->delta() / 100);
-            }
+            zoomOut(-event->delta() / 100);
+        }
+    } else {
+        if (event->delta() > 800) {
+            zoomIn(8);
+        } else {
+            zoomIn(event->delta() / 100);
         }
     }
 }
@@ -494,16 +501,30 @@ void GLWidget::createAirportsList() {
 	makeCurrent();
 	if(airportsList == 0)
 		airportsList = glGenLists(1);
+	QList<Airport*> airportList = NavData::getInstance()->airports().values();
 
 	glNewList(airportsList, GL_COMPILE);
 	glPointSize(Settings::airportDotSize());
 	qglColor(Settings::airportDotColor());
 	glBegin(GL_POINTS);
-	QList<Airport*> airportList = NavData::getInstance()->airports().values();
 	for (int i = 0; i < airportList.size(); i++) {
 		Airport *a = airportList[i];
 		if(a == 0) continue;
 		if(a->isActive()) {
+			VERTEX(a->lat, a->lon);
+		}
+	}
+	glEnd();
+	glEndList();
+
+	glNewList(airportsInactiveList, GL_COMPILE);
+	glPointSize(Settings::inactiveAirportDotSize());
+	qglColor(Settings::inactiveAirportDotColor());
+	glBegin(GL_POINTS);
+	for (int i = 0; i < airportList.size(); i++) {
+		Airport *a = airportList[i];
+		if(a == 0) continue;
+		if(!a->isActive()) {
 			VERTEX(a->lat, a->lon);
 		}
 	}
@@ -548,6 +569,14 @@ void GLWidget::renderLabels() {
 		if(airportList[i]->isActive()) objects.append(airportList[i]);
 	}
 	renderLabels(objects, Settings::airportFont(), airportLabelZoomTreshold, Settings::airportFontColor());
+	if(Settings::showInactiveAirports()) { // + inactive labels
+        objects.clear();
+        for(int i = 0; i < airportList.size(); i++) {
+            if(airportList[i] == 0) continue;
+            if(!airportList[i]->isActive()) objects.append(airportList[i]);
+        }
+    	renderLabels(objects, Settings::inactiveAirportFont(), inactiveAirportLabelZoomTreshold, Settings::inactiveAirportFontColor());
+    }
 
 	// Pilot labels
 	objects.clear();
@@ -580,13 +609,18 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 		if(o == 0) continue;
 
 		int x, y;
-		if(pointIsVisible(o->lat, o->lon, &x, &y)) {
+        double lat = o->lat;
+        double lon = o->lon;
+		if(pointIsVisible(lat, lon, &x, &y)) {
 			QString text = o->mapLabel();
 			QRectF rect = fontMetrics.boundingRect(text);
-			rect.moveTo(x, y - rect.height());
+            int drawX, drawY; 
+            drawX = x - rect.width() / 2; // center horizontally
+            drawY = y - 5; // above dot
+			rect.moveTo(drawX, drawY - rect.height());
 			FontRectangle fontRect = FontRectangle(rect, o);
-			if(shouldDrawLabel(fontRect)) {
-				renderText(x, y, text, font);
+			if(shouldDrawLabel(fontRect)) { // should be some priorisation code here for: 1) firs, 2) active airports, 3) pilots, 4) inactive airports
+				renderText(drawX, drawY, text, font);
 				fontRectangles.append(fontRect);
 			}
 		}

@@ -91,7 +91,7 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
                 return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
             case 7:
                 if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-                else return (int)p->distanceToDestination(); break;
+                else return (p->distanceToDestination() < 3? 0: (int)p->distanceToDestination()); break;
             case 8:
                 if (p->flightStatus() == Pilot::GROUND_ARR | p->flightStatus() == Pilot::BLOCKED) return "--:--";
                 else if(!p->ete().isEmpty()) return p->ete();

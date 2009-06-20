@@ -53,6 +53,7 @@ public slots:
 	void restorePosition();
 
 	void displayAllFirs(bool value);
+	void showInactiveAirports(bool value);
 
 	/**
 	 * Return a list of all clients at given lat/lon, within radius miles
@@ -100,6 +101,7 @@ private:
 	GLuint pilotsList;
 	void createPilotsList();
 	GLuint airportsList;
+	GLuint airportsInactiveList;
 	void createAirportsList();
 
 	GLuint fixesList;
@@ -115,6 +117,7 @@ private:
 
 	double pilotLabelZoomTreshold;
 	double airportLabelZoomTreshold;
+	double inactiveAirportLabelZoomTreshold;
 	double controllerLabelZoomTreshold;
 
 	double fixZoomTreshold;

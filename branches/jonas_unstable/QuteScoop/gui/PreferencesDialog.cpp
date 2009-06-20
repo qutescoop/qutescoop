@@ -71,6 +71,7 @@ void PreferencesDialog::loadSettings() {
 	editNavdir->setEnabled(Settings::useNavdata());
 	browseNavdirButton->setEnabled(Settings::useNavdata());
 	cbUseNavDatabase->setChecked(Settings::useNavdata());
+	cbShowFixes->setChecked(Settings::showFixes());
 
 	cbDashedFrontAfter->setCurrentIndex(0);
 	if(!Settings::dashedTrackInFront())
@@ -123,7 +124,12 @@ void PreferencesDialog::loadSettings() {
 	spFilterArriving->setEnabled(Settings::filterTraffic());
 	
 	// airport settings
-	color = Settings::airportFontColor();
+	color = Settings::inactiveAirportFontColor();
+	pbInactAirportFontColor->setText(color.name());
+	pbInactAirportFontColor->setPalette(QPalette(color));
+	pbInactAirportFont->setFont(Settings::inactiveAirportFont());
+
+    color = Settings::airportFontColor();
 	pbAirportFontColor->setText(color.name());
 	pbAirportFontColor->setPalette(QPalette(color));
 	pbAirportFont->setFont(Settings::airportFont());
@@ -162,6 +168,11 @@ void PreferencesDialog::loadSettings() {
 	pbAirportDotColor->setText(color.name());
 	pbAirportDotColor->setPalette(QPalette(color));
 	sbAirportDotSize->setValue(Settings::airportDotSize());
+
+   	color = Settings::inactiveAirportDotColor();
+	pbInactAirportDotColor->setText(color.name());
+	pbInactAirportDotColor->setPalette(QPalette(color));
+	sbInactAirportDotSize->setValue(Settings::inactiveAirportDotSize());
 
 	// pilot settings
 	color = Settings::pilotFontColor();
@@ -700,4 +711,48 @@ void PreferencesDialog::on_rbVRC_clicked(bool value) {
 	if(value) {
 		Settings::setVoiceType(Settings::VRC);
 	}
+}
+
+void PreferencesDialog::on_cbShowFixes_toggled(bool checked)
+{
+    Settings::setShowFixes(checked);
+}
+
+void PreferencesDialog::on_pbInactAirportFontColor_clicked()
+{
+	bool ok;
+	QRgb rgba = QColorDialog::getRgba(Settings::inactiveAirportFontColor().rgba(), &ok, this);
+	if(ok) {
+		QColor color = QColor::fromRgba(rgba);
+		pbInactAirportFontColor->setText(color.name());
+		pbInactAirportFontColor->setPalette(QPalette(color));
+		Settings::setInactiveAirportFontColor(color);
+	}
+}
+
+void PreferencesDialog::on_pbInactAirportFont_clicked()
+{
+	bool ok;
+	QFont font = QFontDialog::getFont(&ok, Settings::inactiveAirportFont(), this);
+	if(ok) {
+		pbInactAirportFont->setFont(font);
+		Settings::setInactiveAirportFont(font);
+	}
+}
+
+void PreferencesDialog::on_pbInactAirportDotColor_clicked() 
+{
+	bool ok;
+	QRgb rgba = QColorDialog::getRgba(Settings::inactiveAirportDotColor().rgba(), &ok, this);
+	if(ok) {
+		QColor color = QColor::fromRgba(rgba);
+		pbInactAirportDotColor->setText(color.name());
+		pbInactAirportDotColor->setPalette(QPalette(color));
+		Settings::setInactiveAirportDotColor(color);
+	}
+}
+
+void PreferencesDialog::on_sbInactAirportDotSize_valueChanged(double value)
+{
+	Settings::setInactiveAirportDotSize(value);    
 }

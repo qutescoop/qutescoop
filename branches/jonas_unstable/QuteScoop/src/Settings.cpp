@@ -247,6 +247,15 @@ void Settings::setUseNavdata(bool value) {
 	getSettings()->setValue("database/use", value);
 }
 
+bool Settings::showFixes() {
+    bool a = getSettings()->value("database/showfixes", true).toBool();
+	return getSettings()->value("database/showfixes", true).toBool();
+}
+
+void Settings::setShowFixes(bool value) {
+	getSettings()->setValue("database/showfixes", value);
+}
+
 int Settings::metarDownloadInterval() {
 	return getSettings()->value("display/metarInterval", 10).toInt();
 }
@@ -420,6 +429,50 @@ QFont Settings::airportFont() {
 
 void Settings::setAirportFont(const QFont& font) {
 	getSettings()->setValue("airportDisplay/font", font);
+}
+
+QColor Settings::inactiveAirportFontColor() {
+	return getSettings()->value("airportDisplay/inactiveFontColor", QColor::fromRgbF(0.1, 0.6, 0.1, 1)).value<QColor>();
+}
+
+void Settings::setInactiveAirportFontColor(const QColor& color) {
+	getSettings()->setValue("airportDisplay/inactiveFontColor", color);
+}
+
+QColor Settings::inactiveAirportDotColor() {
+	return getSettings()->value("airportDisplay/inactiveDotColor", QColor::fromRgbF(0.3, 0.3, 0.3, 1)).value<QColor>();
+}
+
+void Settings::setInactiveAirportDotColor(const QColor& color) {
+	getSettings()->setValue("airportDisplay/inactiveDotColor", color);
+}
+
+double Settings::inactiveAirportDotSize() {
+	return getSettings()->value("airportDisplay/inactiveDotSizer", 0.2).toDouble();
+}
+
+void Settings::setInactiveAirportDotSize(double value) {
+	getSettings()->setValue("airportDisplay/inactiveDotSizer", value);
+}
+
+QFont Settings::inactiveAirportFont() {
+	QFont defaultResult;
+	defaultResult.setPixelSize(8);
+	QFont result = getSettings()->value("airportDisplay/inactiveFont", defaultResult).value<QFont>();
+	result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
+	return result;
+}
+
+void Settings::setInactiveAirportFont(const QFont& font) {
+	getSettings()->setValue("airportDisplay/inactiveFont", font);
+}
+
+bool Settings::showInactiveAirports() {
+	return getSettings()->value("airportDisplay/showInactive", true).toBool();
+}
+
+void Settings::setShowInactiveAirports(const bool& value) {
+	getSettings()->setValue("airportDisplay/showInactive", value);
 }
 
 QColor Settings::appBorderLineColor() {

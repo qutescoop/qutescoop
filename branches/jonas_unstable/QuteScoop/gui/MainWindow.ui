@@ -99,6 +99,7 @@
     <addaction name="actionZoomOut"/>
     <addaction name="separator"/>
     <addaction name="actionDisplayAllFirs"/>
+    <addaction name="actionShowInactiveAirports"/>
     <addaction name="separator"/>
     <addaction name="actionRememberPosition"/>
    </widget>
@@ -479,6 +480,14 @@ p, li { white-space: pre-wrap; }
   <action name="actionBookedAtc">
    <property name="text">
     <string>Booked &amp;ATC</string>
+   </property>
+  </action>
+  <action name="actionShowInactiveAirports">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Show Inactive Airports</string>
    </property>
   </action>
  </widget>

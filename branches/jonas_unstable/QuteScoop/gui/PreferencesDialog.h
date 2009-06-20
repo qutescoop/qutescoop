@@ -32,7 +32,12 @@ public:
 
 private slots:
 	// download settings
-	void on_spinBoxDownloadInterval_valueChanged(int value);
+	void on_sbInactAirportDotSize_valueChanged(double value);
+    void on_pbInactAirportDotColor_clicked();
+    void on_pbInactAirportFont_clicked();
+    void on_pbInactAirportFontColor_clicked();
+    void on_cbShowFixes_toggled(bool checked);
+    void on_spinBoxDownloadInterval_valueChanged(int value);
 	void on_cbDownloadPeriodically_stateChanged(int state);
 	void on_cbDownloadOnStartup_stateChanged(int state);
 	void on_cbNetwork_currentIndexChanged(int index);

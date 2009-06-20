@@ -130,6 +130,8 @@ Window::Window(QWidget *parent) :
 	connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
 	connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
 	connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
+	connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
+    actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
 
 	connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
 	connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));

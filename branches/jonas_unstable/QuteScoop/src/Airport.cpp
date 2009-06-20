@@ -273,9 +273,10 @@ bool Airport::matches(const QRegExp& regex) const {
 }
 
 QString Airport::mapLabel() const {
-	QString result = label + " ";
-
-	if(Settings::filterTraffic()) { // Airport traffic filtered
+	QString result = label;
+    if(!this->active) {
+        
+    } else if(Settings::filterTraffic()) { // Airport traffic filtered
 		int numFilteredArrivals = 0;
 		for (int i=0; i < arrivals.length(); i++){
 			if(
@@ -287,7 +288,7 @@ QString Airport::mapLabel() const {
 			}
 		}
 		if(!numFilteredArrivals) result += "-/";
-		else result += QString("%1/").arg(numFilteredArrivals);
+		else result += QString(" %1/").arg(numFilteredArrivals);
 
 		int numFilteredDepartures = 0;
 		for (int i=0; i < departures.length(); i++){
@@ -299,7 +300,7 @@ QString Airport::mapLabel() const {
 		else result += QString("%1").arg(numFilteredDepartures);
 	} else { // Airport traffic not filtered (standard)
 		if(arrivals.isEmpty()) result += "-/";
-		else result += QString("%1/").arg(arrivals.size());
+		else result += QString(" %1/").arg(arrivals.size());
 		
 		if(departures.isEmpty()) result += "-";
 		else result += QString("%1").arg(departures.size());

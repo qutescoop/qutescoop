@@ -132,7 +132,7 @@ QString Controller::getGround() const {
 			(list[1].startsWith("X") || list[1].startsWith("T")))
 		return QString();
 
-	if(list.last().startsWith("GND")) {
+	if(list.last().startsWith("GND") || list.last().startsWith("DEL")) {
 		if(list.first().length() == 3)
 			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
 		return list.first();

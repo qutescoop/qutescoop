@@ -38,6 +38,7 @@ bool BookedAtcSortFilter::filterAcceptsRow(int source_row, const QModelIndex& so
     } else {
         return(QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent));    
     }
+    return (false);
 }
 
 void BookedAtcSortFilter::setDateTimeRange(QDateTime& dtfrom, QDateTime& dtto) {
