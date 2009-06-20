@@ -47,15 +47,41 @@ Window::Window(QWidget *parent) :
 
 	if(Settings::resetOnNextStart())
 		QSettings().clear();
-
+    
+    QSettings* settings = new QSettings();
 	QGLFormat fmt;
-	//fmt.setAlpha(false);
+	fmt.setDirectRendering(settings->value("gl/directrendering", fmt.defaultFormat().directRendering()).toBool());
+	fmt.setDoubleBuffer(settings->value("gl/doublebuffer", fmt.defaultFormat().doubleBuffer()).toBool());
+	fmt.setStencil(settings->value("gl/stencilbuffer", fmt.defaultFormat().stencil()).toBool());
+	fmt.setStencilBufferSize(settings->value("gl/stencilsize", fmt.defaultFormat().stencilBufferSize()).toInt());
+	fmt.setDepth(settings->value("gl/depthbuffer", fmt.defaultFormat().depth()).toBool());
+	fmt.setDepthBufferSize(settings->value("gl/depthsize", fmt.defaultFormat().depthBufferSize()).toInt());
+	fmt.setAlpha(settings->value("gl/alphabuffer", fmt.defaultFormat().alpha()).toBool());
+	fmt.setAlphaBufferSize(settings->value("gl/alphasize", fmt.defaultFormat().alphaBufferSize()).toInt());
+	fmt.setSampleBuffers(settings->value("gl/samplebuffers", fmt.defaultFormat().sampleBuffers()).toBool());
+	fmt.setSamples(settings->value("gl/samples", fmt.defaultFormat().samples()).toInt());
+	fmt.setAccum(settings->value("gl/accumbuffer", fmt.defaultFormat().accum()).toBool());
+	fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
 	//fmt.setRgba(true);
-	//fmt.setDoubleBuffer(true);
-	//fmt.setDepth(true);
-	//fmt.setStencil(false);
 	glWidget = new GLWidget(fmt);
 	setCentralWidget(glWidget);
+    qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
+            << "version: " << glWidget->format().openGLVersionFlags()
+            << "; Options from QuteScoop-Config:"
+            << "gl/directrendering" << glWidget->format().directRendering()
+            << "gl/doublebuffer" << glWidget->format().doubleBuffer()
+            << "gl/stencilbuffer" << glWidget->format().stencil()
+            << "gl/stencilsize" << glWidget->format().stencilBufferSize()
+            << "gl/depthbuffer" << glWidget->format().depth()
+            << "gl/depthsize" << glWidget->format().depthBufferSize()
+            << "gl/alphabuffer" << glWidget->format().alpha()
+            << "gl/alphasize" << glWidget->format().alphaBufferSize()
+            << "gl/samplebuffers" << glWidget->format().sampleBuffers()
+            << "gl/samples" << glWidget->format().samples()
+            << "gl/accumbuffer" << glWidget->format().accum()
+            << "gl/accumsize" << glWidget->format().accumBufferSize();
+            
+            
 
 	clientSelection = new ClientSelectionWidget();
     preferencesDialog = new PreferencesDialog();
@@ -139,7 +165,6 @@ Window::Window(QWidget *parent) :
 	metarDecoderDock->hide();
 
 	connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
-	friendsDock->hide();
 
 	versionChecker = 0;
 	versionBuffer = 0;

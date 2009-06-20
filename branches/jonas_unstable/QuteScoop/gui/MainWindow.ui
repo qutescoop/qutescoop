@@ -18,38 +18,44 @@
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="lblStatus">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>550</y>
-      <width>111</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>StatusBar Label</string>
-    </property>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>570</y>
-      <width>121</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>200</width>
-      <height>16777215</height>
-     </size>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-   </widget>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="title">
+       <string>GroupBox</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QLabel" name="label_3">
+         <property name="text">
+          <string>TextLabel</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="lblStatus">
+      <property name="text">
+       <string>StatusBar Label</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="maximumSize">
+       <size>
+        <width>200</width>
+        <height>16777215</height>
+       </size>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -85,9 +91,9 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="actionShowFriendsDock"/>
     <addaction name="actionShowSearch"/>
     <addaction name="actionShowMetars"/>
+    <addaction name="actionShowFriendsDock"/>
     <addaction name="actionHideAllWindows"/>
     <addaction name="separator"/>
     <addaction name="actionClearAllFlightPaths"/>
@@ -134,7 +140,7 @@
       <number>4</number>
      </property>
      <item>
-      <layout class="QHBoxLayout">
+      <layout class="QHBoxLayout" name="_2">
        <property name="spacing">
         <number>4</number>
        </property>
@@ -196,7 +202,7 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_3">
-    <layout class="QVBoxLayout">
+    <layout class="QVBoxLayout" name="_3">
      <property name="margin">
       <number>4</number>
      </property>
@@ -228,7 +234,7 @@ p, li { white-space: pre-wrap; }
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
-    <layout class="QVBoxLayout">
+    <layout class="QVBoxLayout" name="_4">
      <property name="margin">
       <number>4</number>
      </property>
@@ -268,7 +274,7 @@ p, li { white-space: pre-wrap; }
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents">
-    <layout class="QVBoxLayout">
+    <layout class="QVBoxLayout" name="_5">
      <property name="spacing">
       <number>2</number>
      </property>
@@ -276,7 +282,7 @@ p, li { white-space: pre-wrap; }
       <number>4</number>
      </property>
      <item>
-      <layout class="QHBoxLayout">
+      <layout class="QHBoxLayout" name="_6">
        <property name="spacing">
         <number>4</number>
        </property>
@@ -364,11 +370,8 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionShowSearch">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Show &amp;Search Dock</string>
@@ -411,11 +414,8 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionShowMetars">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="checked">
-    <bool>true</bool>
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>Show &amp;Metar Dock</string>
@@ -454,9 +454,6 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionShowFriendsDock">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>Show &amp;Friends Dock</string>
    </property>
@@ -512,98 +509,50 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>searchDock</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>actionShowSearch</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>139</x>
-     <y>189</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>actionShowSearch</sender>
-   <signal>toggled(bool)</signal>
+   <signal>triggered()</signal>
    <receiver>searchDock</receiver>
-   <slot>setVisible(bool)</slot>
+   <slot>show()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>139</x>
-     <y>189</y>
+     <x>143</x>
+     <y>542</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>actionShowMetars</sender>
-   <signal>toggled(bool)</signal>
+   <signal>triggered()</signal>
    <receiver>metarDock</receiver>
-   <slot>setVisible(bool)</slot>
+   <slot>show()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>131</x>
-     <y>356</y>
+     <x>143</x>
+     <y>109</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>actionShowFriendsDock</sender>
-   <signal>toggled(bool)</signal>
+   <signal>triggered()</signal>
    <receiver>friendsDock</receiver>
-   <slot>setVisible(bool)</slot>
+   <slot>show()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>-1</x>
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>287</x>
-     <y>622</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>metarDock</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>actionShowMetars</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>145</x>
-     <y>248</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>friendsDock</sender>
-   <signal>visibilityChanged(bool)</signal>
-   <receiver>actionShowFriendsDock</receiver>
-   <slot>setChecked(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>145</x>
-     <y>506</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>-1</x>
-     <y>-1</y>
+     <x>143</x>
+     <y>392</y>
     </hint>
    </hints>
   </connection>
