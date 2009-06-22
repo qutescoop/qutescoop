@@ -14,7 +14,7 @@
    <string>Booked ATC</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -94,17 +94,14 @@
        <property name="wrapping">
         <bool>true</bool>
        </property>
-       <property name="calendarPopup">
-        <bool>true</bool>
-       </property>
        <property name="timeSpec">
         <enum>Qt::UTC</enum>
        </property>
        <property name="time">
         <time>
-         <hour>0</hour>
-         <minute>0</minute>
-         <second>0</second>
+         <hour>22</hour>
+         <minute>59</minute>
+         <second>59</second>
         </time>
        </property>
       </widget>
@@ -155,9 +152,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

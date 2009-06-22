@@ -32,16 +32,16 @@ public:
 	static BookedAtcDialog *getInstance();
     void refresh();
     
-private:
-    BookedAtcModel bookedAtcModel;
-	BookedAtcSortFilter *bookedAtcSortModel;
-	//QSortFilterProxyModel *bookedAtcSortModel;
-
 private slots:
+    void modelSelected(const QModelIndex& index);
     void on_dateFilter_dateChanged(QDate date);
     void on_timeFilter_timeChanged(QTime date);
     void on_spinHours_valueChanged(int val);
     void on_editFilter_textChanged(QString str);
+
+private:
+    BookedAtcDialogModel bookedAtcModel;
+	BookedAtcSortFilter *bookedAtcSortModel;
 };
 
 #endif // BOOKEDATCDIALOG_H

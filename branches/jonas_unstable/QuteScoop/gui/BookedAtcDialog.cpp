@@ -55,7 +55,7 @@ BookedAtcDialog::BookedAtcDialog() :
 }
 
 void BookedAtcDialog::refresh() {
-    bookedAtcModel.setClients(Whazzup::getInstance()->whazzupData().getBookedControllers());
+    bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
     bookedAtcSortModel->invalidate();
 }
@@ -104,4 +104,8 @@ void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
     QDateTime to = from.addSecs(spinHours->value() * 3600);
     bookedAtcSortModel->setDateTimeRange(from, to);
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+}
+
+void BookedAtcDialog::modelSelected(const QModelIndex& index) {
+	bookedAtcModel.modelSelected(bookedAtcSortModel->mapToSource(index));
 }
