@@ -248,17 +248,26 @@ EDXA:Achmer:Achmer:DE:52.377:7.914
 EDXB:Heide-Busum:Heide:DE:54.153:8.902
 EDXC:Schleswig-Kropp:Schleswig-Kropp:DE:54.425:9.54
 EDXE:Eschendorf:Rheine:DE:52.276:7.491
-EDXF:Flensburg-Schaferhaus:Flensburg:DE:54.772:9.378
+EDXF:Schaferhaus:Flensburg:DE:54.772:9.378
 EDXG:Melle-Gronegau:Melle-Gronegau:DE:52.201:8.378
 EDXI:Neinburg-Holzbalge:Nienburg-Holzbalge:DE:52.71:9.162
 EDXL:Barssel:Barssel:DE:53.164:7.793
 EDXM:St Michaelisdonn:St Michaelisdonn:DE:53.978:9.143
 EDXN:Nordholz Spieka:Nordholz-Spieka:DE:53.767:8.644
 EDXO:St Peter-Ording:St Peter-Ording:DE:54.309:8.687
-EDXR:Rendsburg Schachtholm:Rendsburg:DE:54.221:9.601
+EDXR:Schachtholm:Rendsburg:DE:54.221:9.601
 EDXW:Westerland-Sylt:Westerland-Sylt:DE:54.913:8.34
 EDXY:Wyk Auf Fohr:Wyk Auf Fohr:DE:54.685:8.532
 EDZE:Essen:Essen:DE:51.4:6.966
+EDEQ:Muhlhausen:Muhlhausen:DE:51.217:10.55
+EDFY:Elz:Elz:DE:50.433:8.02
+EDGU:Unterschupf:Unterschupf:DE:49.655:9.683
+EDNB:Arnbruck:Arnbruck:DE:49.117:12.983
+EDNM:Bruck:Nittenau:DE:49.217:12.3
+EDNV:Vogtareuth:Vogtareuth:DE:47.933:12.2
+EDPB:Bad Ditzenbach:Bad Ditzenbach:DE:48.567:9.733
+EDPQ:Oberpfalz:Schmidgaden:DE:49.417:12.083
+EDSZ:Zepfenhan:Rottweil:DE:48.183:8.717
 EEKA:Kardla:Kardla:EE:58.991:22.831
 EEKE:Kuressaare:Kuressaare:EE:58.23:22.509
 EEPU:Parnu:Parnu:EE:58.419:24.473
@@ -366,6 +375,7 @@ EGCW:Welshpool:Welshpool:GB:52.629:-3.152
 EGDB:Plymouth:Plymouth:GB:50.35:-4.116
 EGDC:Chivenor:Chivenor:GB:51.087:-4.15
 EGDG:St Mawgan:St Mawgan:GB:50.44:-4.996
+EGHQ:Newquay:Cornwall:GB:50.44:-4.996
 EGDJ:Upavon:Upavon:GB:51.286:-1.782
 EGDK:Kemble RAF:Kemble:GB:51.667:-2.05
 EGDL:Lyneham:Lyneham:GB:51.505:-1.994
@@ -500,7 +510,7 @@ EGTC:Cranfield:Cranfield:GB:52.072:-0.617
 EGTD:Dunsfold:Dunsfold:GB:51.117:-0.536
 EGTE:Exeter:Exeter:GB:50.734:-3.414
 EGTF:Fairoaks:Fairoaks:GB:51.348:-0.559
-EGTG:Bristol:Filton:GB:51.519:-2.591
+EGTG:Filton:Bristol:GB:51.519:-2.591
 EGTH:Hatfield:Hatfie:GB:51.765:-0.252
 EGTI:Leavesden:Leaves:GB:51.688:-0.417
 EGTK:Kidlington:Oxford:GB:51.837:-1.32
@@ -1075,7 +1085,7 @@ LEPP:Pamplona:Pamplona:ES:42.77:-1.646
 LEPR:Palma del Rio:Cordoba:ES:37.431:-5.124
 LEPZ:Pozuelos de Calatrava:Ciudad Real:ES:38.546:-4.112
 LERI:Alcantarilla:Murcia:ES:37.95:-1.233
-LERJ:Logroño:Logroño:ES:42.271:-2.185
+LERJ:Logroño:Logroño:ES:42.453:-2.3
 LERM:Robledillo De Mohernando:Guadalajara:ES:40.858:-3.248
 LERO:Rozas:Lugo:ES:43.07:-7.284
 LERS:Reus:Reus:ES:41.147:1.167
@@ -1264,7 +1274,7 @@ LFKB:Poretta:Bastia:FR:42.554:9.483
 LFKC:St Catherine:Calvi:FR:42.531:8.793
 LFKD:Sollieres:Sollieres:FR:45.256:6.014
 LFKF:Sud Corse:Figari:FR:41.5:9.098
-LFKJ:Campo Dell Oro:Ajaccio:FR:41.924:8.803
+LFKJ:Napoleon Bonaparte:Ajaccio:FR:41.924:8.803
 LFKO:Tavaria:Propriano:FR:41.66:8.89
 LFKS:Solenzara:Solenzara:FR:41.924:9.406
 LFKT:Corte:Corte:FR:42.294:9.193
@@ -1511,28 +1521,57 @@ LGTS:Makedonia:Thessaloniki:GR:40.52:22.971
 LGTT:Tatoi:Dekelia:GR:38.109:23.784
 LGVO:Volos:Volos:GR:39.383:22.917
 LGZA:Zakinthos:Zakinthos:GR:37.751:20.884
-LHBC:Bekescsaba:Bekescsaba:HU:46.683:21.166
-LHBP:Ferihegy:Budapest:HU:47.437:19.256
-LHDC:Debrecen:Debrecen:HU:47.489:21.615
-LHFM:Fertoszentmiklos:Fertoszentmiklos:HU:47.583:16.845
-LHGD:Godollo:Godollo:HU:47.57:19.339
-LHKA:Kalocsa:Kalocsa:HU:46.55:18.93
-LHKE:Kecskemet:Kecskemet:HU:46.917:19.749
-LHMC:Miskolc:Miskolc:HU:48.083:20.766
-LHNY:Nyiregyhaza:Nyiregyhaza:HU:47.984:21.692
-LHOY:Ocseny:Ocseny:HU:46.304:18.769
+BAJA:Baja:Baja:HU:46.148:19.043
+LH0A:Kunmadaras:Kunmadaras:HU:47.386:20.783
+LHB3:Bony:Gyorszentivan:HU:47.667:17.785
+LHB4:Papkutapuszta:Papkutapuszta:HU:46.876:18.038
+LHB5:Sarospatak:Sarospatak:HU:48.317:21.590
+LHBA:Balassagyarmat:Balassagyarmat:HU:48.076:19.313
+LHBC:Bekescsaba:Bekescsaba:HU:46.683:21.163
+LHBP:Ferihegy:Budapest:HU:47.439:19.262
+LHBV:Banreve:Banreve:HU:48.283:20.367
+LHCV:Csakvar:Csakvar:HU:47.354:18.433
+LHDC:Debrecen:Debrecen:HU:47.489:21.616
+LHDV:Dunaujvaros:Dunaujvaros:HU:46.893:18.917
+LHEC:Ersekcsanad:Ersekcsanad:HU:46.250:18.928
+LHEM:Esztergom:Esztergom:HU:47.762:18.734
+LHER:Eger:Eger:HU:47.905:20.409
+LHF1:Fehergyarmat:Fehergyarmat:HU:47.983:22.483
+LHFM:Fertoszentmiklos:Fertoszentmiklos:HU:47.584:16.845
+LHGD:Godollo:Godollo:HU:47.574:19.333
+LHGR:Gyuro:Gyuro:HU:47.391:18.757
+LHGY:Pipishegy:Gyongyos:HU:47.813:19.977
+LHHH:Harmashatarhegy:Harmashatarhegy:HU:47.552:18.976
+LHHO:Hajduszoboszlo:Hajduszoboszlo:HU:47.459:21.395
+LHHY:Harkany:Harkany:HU:45.917:18.217
+LHJK:Jakabszallas:Jakabszallas:HU:46.748:19.606
+LHKA:Kalocsa:Kalocsa:HU:46.554:18.944
+LHKD:Kecsked:Kecsked:HU:47.517:18.325
+LHKE:Kecskemet:Kecskemet:HU:46.917:19.750
+LHKV:Kaposujlak:Kaposujlak:HU:46.388:17.734
+LHKK:Kiskunlachaza:Kiskunlachaza:HU:47.176:19.076
+LHMC:Miskolc:Miskolc:HU:48.139:20.795
+LHMK:Mezokovesd:Mezokovesd:HU:47.819:20.644
+LHNK:Nagykanizsa:Nagykanizsa:HU:46.438:16.951
+LHNY:Nyiregyhaza:Nyiregyhaza:HU:47.983:21.694
+LHOY:Ocseny:Ocseny:HU:46.312:18.764
 LHPA:Papa:Papa:HU:47.364:17.501
-LHPP:Pogany:Pecs:HU:46.1:18.233
-LHPR:Per:Gyor:HU:47.624:17.795
-LHSA:Szentkiralyszabadja:Szentkiralyszabadja:HU:47.078:17.968
-LHSK:Kiliti:Siofok:HU:46.857:18.096
+LHPD:Pusztacsalad:Pusztacsalad:HU:47.506:16.900
+LHPP:Pogany:Pecs:HU:45.989:18.243
+LHPR:Per:Gyor:HU:47.624:17.814
+LHSA:Szentkiralyszabadja:Szentkiralyszabadja:HU:47.078:17.970
+LHSK:Kiliti:Siofok:HU:46.858:18.096
 LHSM:Balaton:Sarmellek:HU:46.686:17.159
-LHSN:Szolnok:Szolnok:HU:47.123:20.235
-LHSY:Szombathely:Szombathely:HU:47.267:16.633
-LHTA:Kaland:Taszar:HU:46.393:17.917
+LHSN:Szolnok:Szolnok:HU:47.123:20.236
+LHSS:Szandaszolos:Szolnok:HU:47.117:20.217
+LHSY:Szombathely:Szombathely:HU:47.280:16.625
+LHSZ:Szentes:Szentes:HU:46.612:20.284
+LHTA:Kaland:Taszar:HU:46.393:17.919
 LHTL:Tokol:Tokol:HU:47.346:18.981
-LHUD:Szeged:Szeged:HU:46.249:20.091
-LHZA:Zalaegerszeg:Zalaegerszeg:HU:46.898:16.867
+LHUD:Szeged:Szeged:HU:46.251:20.089
+LHZA:Andrashida:Zalaegerszeg:HU:46.879:16.791
+Z12D:Borgond:Borgond:HU:47.123:18.502
+Z12E:Foldes:Foldes:HU:47.287:21.398
 LIBA:Amendola:Amendola:IT:41.541:15.718
 LIBC:Crotone:Crotone:IT:38.997:17.08
 LIBD:Palese Macchie:Bari:IT:41.138:16.761
@@ -1838,7 +1877,7 @@ LOLU:Gmunden:Gmunden:AT:47.951:13.867
 LOLW:Wels:Wels:AT:48.183:14.041
 LOSM:Mauterndorf:Mauterndorf:AT:47.126:13.691
 LOWG:Graz:Graz:AT:46.991:15.44
-LOWI:Kranebitten:Innsbruck:AT:47.26:11.344
+LOWI:Innsbruck:Innsbruck:AT:47.26:11.344
 LOWK:Klagenfurt:Klagenfurt:AT:46.642:14.338
 LOWL:Linz:Linz:AT:48.233:14.188
 LOWS:Salzburg:Salzburg:AT:47.793:13.004
@@ -1894,10 +1933,10 @@ LQSA:Sarajevo:Sarajevo:BA:43.824:18.331
 LQTZ:Tuzla:Tuzla:BA:44.459:18.725
 LRAR:Arad:Arad:RO:46.176:21.262
 LRBC:Bacau:Bacau:RO:46.522:26.91
-LRBM:Baia Mare:Baia-Mare:RO:47.658:23.47
+LRBM:Baia Mare:Baia Mare:RO:47.658:23.47
 LRBS:Baneasa:Bucharest:RO:44.503:26.102
 LRCK:M Kogalniceanu:Constanta:RO:44.362:28.488
-LRCL:Someseni:Cluj-Napoca:RO:46.785:23.686
+LRCL:Someseni:Cluj Napoca:RO:46.785:23.686
 LRCS:Caransebes:Caransebes:RO:45.42:22.253
 LRCT:Campia Turzii:Campia Turzii:RO:46.502:23.886
 LRCV:Craiova:Craiova:RO:44.318:23.889
@@ -2027,6 +2066,7 @@ LYBT:Batajnica:Batajnica:YU:44.935:20.258
 LYNI:Nis:Nis:YU:43.337:21.854
 LYPG:Podgorica:Podgorica:YU:42.359:19.252
 LYPR:Pristina:Pristina:YU:42.573:21.036
+BKPR:Pristina:Pristina:YU:42.573:21.036
 LYTI:Podgorica-Golubovci:Podgorica-Golubovci:YU:42.367:19.25
 LYTV:Tivat:Tivat:YU:42.405:18.723
 LYVR:Vrsac:Vrsac:YU:45.147:21.31
@@ -2103,6 +2143,7 @@ UELL:Cul'Man:Cul'Man:RU:56.913:124.912
 UERP:Polyarny:Polyarny:RU:66.4:112.03
 UERR:Mirny:Mirny:RU:62.535:114.039
 UGEE:Zvartnots:Yerevan:AM:40.148:44.397
+UDYZ:Zvartnots:Yerevan:AM:40.148:44.397
 UGEL:Shirak:Gyumri:AM:40.752:43.86
 UGGG:Novo Alexeyevka:Tbilisi:GE:41.669:44.955
 UGMM:Muhrani:Muhrani:GE:41.933:44.583
@@ -2490,7 +2531,7 @@ SADQ:Quilmes:Quilmes:AR:-34.715:-58.238
 SADS:Aeroclub Argentino:San Justo:AR:-34.733:-58.6
 SADZ:Matanza:Matanza:AR:-34.737:-58.499
 SAEL:Elizalde:Elizalde:AR:-34.953:-57.969
-SAEZ:Ezeiza:Buenos Aires:AR:-34.822:-58.536
+SAEZ:Ezeiza:Buenos Aires:AR:-34.824:-58.529
 SAHC:Chos Malal:Chos Malal:AR:-37.445:-70.222
 SAHS:Rincon de los Sauces:Rincon de los Sauces:AR:-37.391:-68.904
 SAHZ:Zapala:Zapala:AR:-38.976:-70.114
@@ -2721,6 +2762,7 @@ SBUF:Paulo Afonso:Paulo Afonso:BR:-9.401:-38.251
 SBUG:Uruguaiana:Uruguaiana:BR:-29.782:-57.038
 SBUL:Uberlandia:Uberlandia:BR:-18.883:-48.226
 SBUR:Uberaba:Uberaba:BR:-19.765:-47.965
+SBXU:Uberaba:Uberaba:BR:-19.765:-47.965
 SBVG:Varginha:Varginha:BR:-21.59:-45.473
 SBVH:Vilhena:Vilhena:BR:-12.694:-60.098
 SBVT:Goiabeiras:Vitoria:BR:-20.258:-40.286
@@ -2736,7 +2778,7 @@ SBWR:Brasilia:Brasilia:BR:-15.863:-47.913
 SBWU:Bauru:Bauru:BR:-22.345:-49.054
 SBWQ:Boa Vista:Boa Vista:BR:2.846:-60.69
 SBWG:Campo Grande:Campo Grande:BR:-20.469:-54.672
-SBWD:Campos:Campos:BR:-21.698:-41.302
+SBWD:Enchova:Enchova:BR:-21.698:-41.302
 SBWC:Corumba:Corumba:BR:-19.012:-57.673
 SBWT:Curitiba:Curitiba:BR:-25.528:-49.176
 SBWY:Cuiaba:Cuiaba:BR:-15.653:-56.117
@@ -2744,7 +2786,7 @@ SBWN:Manaus:Manaus:BR:-3.039:-60.05
 SBWI:Foz Do Iguacu:Foz Do Iguacu:BR:-25.596:-54.487
 SBXF:Florianopolis:Florianopolis:BR:-27.67:-48.547
 SBWZ:Fortaleza:Fortaleza:BR:-3.776:-38.533
-SBWJ:Rio De Janeiro:Rio De Janeiro:BR:-22.809:-43.244
+SBWJ:Rio:Rio:BR:-22.809:-43.244
 SBWL:Ilheus:Ilheus:BR:-14.816:-39.033
 SBXO:Londrina:Londrina:BR:-23.334:-51.13
 SBWE:Macae:Macae:BR:-22.343:-41.766
@@ -3026,7 +3068,6 @@ SSSB:Sao Borja:Sao Borja:BR:-28.653:-56.033
 SSUM:Umuarama:Umuarama:BR:-23.799:-53.314
 SSZW:Ponta Grossa:Ponta Grossa:BR:-25.188:-50.144
 SBCX:Campo dos Bugres:Caxias do Sul:BR:-29.12:-51.11
-SSKT:Aeroclube de SC:São José:BR:-27.37:-48.4
 SUAA:Angel S. Adami:Montevideo:UY:-34.789:-56.265
 SUAG:Artigas:Artigas:UY:-30.399:-56.511
 SUCA:Colonia:Colonia:UY:-34.456:-57.771
@@ -4141,28 +4182,28 @@ FZWC:Gandajika:Gandajika:CD:-6.733:23.95
 FZWR:Kisengwa:Kisengwa:CD:-6.017:25.883
 FZWS:Lubao:Lubao:CD:-5.3:25.733
 FZWT:Tunta:Kabinda:CD:-6.117:24.333
-GAAO:Ansongo:Ansongo:NE:15.7:0.5
-GABD:Bandiagara:Bandiagara:NE:14.333:-3.6
-GABF:Bafoulabe:Bafoulabe:NE:13.8:-10.85
-GABG:Bougouni:Bougouni:SN:11.45:-7.517
-GABR:Bourem:Bourem:NE:17.033:-0.4
+GAAO:Ansongo:Ansongo:ML:15.7:0.5
+GABD:Bandiagara:Bandiagara:ML:14.333:-3.6
+GABF:Bafoulabe:Bafoulabe:ML:13.8:-10.85
+GABG:Bougouni:Bougouni:ML:11.45:-7.517
+GABR:Bourem:Bourem:ML:17.033:-0.4
 GABS:Bamako Senou:Bamako:ML:12.534:-7.95
-GADZ:Douentza:Douentza:NE:15:-2.917
-GAGM:Goundam:Goundam:NE:16.35:-3.6
+GADZ:Douentza:Douentza:ML:15:-2.917
+GAGM:Goundam:Goundam:ML:16.35:-3.6
 GAGO:Korogoussou:Gao:ML:16.248:-0.006
-GAKA:Kenieba:Kenieba:SN:12.833:-11.25
-GAKL:Kidal:Kidal:NE:18.433:1.417
-GAKN:Kolokani:Kolokani:SN:13.533:-8.05
-GAKO:Koutiala:Koutiala:SN:12.35:-5.433
-GAKT:Kita:Kita:SN:13.067:-9.483
+GAKA:Kenieba:Kenieba:ML:12.833:-11.25
+GAKL:Kidal:Kidal:ML:18.433:1.417
+GAKN:Kolokani:Kolokani:ML:13.533:-8.05
+GAKO:Koutiala:Koutiala:ML:12.35:-5.433
+GAKT:Kita:Kita:ML:13.067:-9.483
 GAKY:Kayes:Kayes:ML:14.481:-11.404
-GAMA:Markala:Markala:SN:13.7:-6.067
+GAMA:Markala:Markala:ML:13.7:-6.067
 GAMB:Barbe:Mopti:ML:14.513:-4.08
-GANK:Keibane:Nara:SN:15.233:-7.267
+GANK:Keibane:Nara:ML:15.233:-7.267
 GASK:Sikasso:Sikasso:ML:11.333:-5.7
-GATB:Tombouctou:Tombouctou:NE:16.73:-3.008
+GATB:Tombouctou:Tombouctou:ML:16.73:-3.008
 GATS:Tessalit:Tessalit:ML:20.243:0.977
-GAYE:Yelimane:Yelimane:SN:15.133:-10.567
+GAYE:Yelimane:Yelimane:ML:15.133:-10.567
 GBYD:Yundum:Banjul:GM:13.338:-16.652
 GCCA:Canarias:Canarias:ES:28.453:-13.864
 GCFV:Fuerteventura:Fuerteventura:ES:28.453:-13.864
@@ -4338,7 +4379,8 @@ HCMR:Galcaio:Galcaio:SO:6.767:47.433
 HCMS:Scusciuban:Scusciuban:SO:10.3:50.233
 HCMU:Erigavo:Erigavo:SO:10.635:47.383
 HCMV:Burao:Burao:SO:9.5:45.567
-HDAM:Ambouli:Djibouti:DJ:11.547:43.159
+HDAM:Ambouli:Djibouti:DJ:11.547:43.16
+HDTJ:Tadjourah:Tadjourah:DJ:11.78:42.9
 HEAR:El Arish:El Arish:EG:31.073:33.836
 HEAT:Asyut:Asyut:EG:27.046:31.012
 HEAX:Alexandria:Alexandria:EG:31.184:29.949
@@ -4547,7 +4589,7 @@ VCCW:Wirawila:Wirawila:LK:6.254:81.235
 VDBG:Battambang:Battambang:KH:59:0
 VDKH:Kampong Chhnang West:Kampong Chhnang West:KH:12.255:104.564
 VDPP:Pochentong:Phnom Penh:KH:11.546:104.844
-VDSR:Angkor Wat:Siem Reap:KH:60:0
+VDSR:Angkor Wat:Siem Reap:KH:13.41:103.81
 VDST:Stung Treng:Streung:KH:13.532:106.014
 VDSV:Sihanukville:Sihanukville:KH:33:0
 VEAT:Agartala:Agartala:IN:23.889:91.241
@@ -4707,7 +4749,7 @@ VTBJ:Phetchaburi:Phetchaburi:TH:13.15:100.066
 VTBK:Kamphaeng Saen:Nakhon Pathon:TH:14.102:99.917
 VTBL:Khok Kathiam:Lop Buri:TH:14.874:100.663
 VTBP:Prachuap Khiri Khan:Prachuap Khiri Khan:TH:11.788:99.805
-VTBS:Suvarnabhumi:Bangkok:TH:13.687069:100.738800
+VTBS:Chon Buri:Chon Buri:TH:13.367:100.983
 VTBU:Utaphao:Rayong:TH:12.68:101.005
 VTBW:Watthana Nakhon:Watthana Nakhon:TH:13.769:102.315
 VTCB:Chiang Kham:Chiangkham:TH:19.5:100.285
@@ -4958,6 +5000,7 @@ WRLT:Santan:Santan:ID:-0.093:117.439
 WRRA:Selaparang:Mataram:ID:-8.562:116.099
 WRRB:Muhammad Salahuddin:Bima:ID:-8.541:118.69
 WRRR:Bali:Den Pasar:ID:-8.748:115.169
+WADD:Bali:Den Pasar:ID:-8.748:115.169
 WRRS:Sumbawa Besar:Sumbawa:ID:-8.488:117.415
 WRRT:Waikabubak:Tambolaka:ID:-9.41:119.246
 WRRW:Mau Hau:Waingapu:ID:-9.668:120.299
@@ -5219,6 +5262,7 @@ OIHH:Hamadan:Hamadan:IR:34.869:48.552
 OIHR:Arak:Arak:IR:34.137:49.842
 OIHS:Nogeh:Hamadan:IR:35.214:48.658
 OIID:Doshan:Tehran:IR:35.703:51.475
+OIIE:Imam Khomeini:Tehran:IR:35.41:51.15
 OIIG:Ghale:Tehran:IR:35.645:51.381
 OIII:Mehrabad:Tehran:IR:35.689:51.313
 OIIK:Ghazvin:Ghazvin:IR:36.241:50.048
@@ -5349,6 +5393,7 @@ ORAQ:Al Qaim AB:Al Qaim:IQ:34.266:41.162
 ORAT:Al Taqaddum AB:Al Taqaddum:IQ:33.338:43.597
 ORBD:Balad Southeast:Balad:IQ:33.94:44.362
 ORBI:Baghdad:Baghdad:IQ:33.262:44.234
+ORBS:Baghdad:Baghdad:IQ:33.262:44.234
 ORBM:Mosul:Mosul:IQ:36.306:43.147
 ORBR:Bashur:Bashur:IQ:36.534:44.34
 ORER:Erbil Northwest:Erbil\:IQ:36.232:43.966
@@ -7022,6 +7067,7 @@ KOQU:North Kingstown-Quonset State:North Kingstown:US:41.597:-71.412
 KORB:Orr Regl:Orr:US:48.016:-92.856
 KORC:Orange City:Orange City:US:42.99:-96.063
 KORD:O'Hare:Chicago:US:41.979:-87.905
+CHI:Chicago:Chicago:US:41.979:-87.905
 KORE:Orange Muni:Orange:US:42.57:-72.289
 KORF:Norfolk:Norfolk:US:36.895:-76.201
 KORG:Orange Co:Orange:US:30.069:-93.801
@@ -8088,7 +8134,7 @@ YMBU:Maryborough:Maryborough:AU:-37.033:143.709
 YMCO:Mallacoota:Mallacoota:AU:-37.599:149.721
 YMCT:Millicent:Millicent:AU:-37.584:140.366
 YMEK:Meekatharra:Meekatharra:AU:-26.612:118.548
-YMEN:Melbourne/ Essendon:Melbourne/ Essendon:AU:-37.728:144.902
+YMEN:Essendon:Melbourne:AU:-37.728:144.902
 YMER:Merimbula:Merimbula:AU:-36.909:149.901
 YMES:East Sale:East Sale:AU:-38.099:147.149
 YMHB:Hobart:Hobart:AU:-42.836:147.51
@@ -8096,6 +8142,7 @@ YMIA:Mildura:Mildura:AU:-34.229:142.086
 YMLT:Launceston:Launceston:AU:-41.545:147.214
 YMMB:Moorabbin:Melbourne:AU:-37.976:145.102
 YMML:Melbourne:Melbourne:AU:-37.673:144.843
+ML:Melbourne:Melbourne:AU:-37.673:144.843
 YMNE:Mount Keith:Mount Keith:AU:-27.286:120.555
 YMNG:Mangalore:Mangalore:AU:-36.888:145.184
 YMOG:Mount Magnet:Mount Magnet:AU:-28.116:117.842
@@ -8417,17 +8464,12 @@ KSWD:Seward:Seward:US:60.117:-149.45
 KYAK:Yakutat:Yakutat:US:59.503:-139.66
 KMKK:Kaunakakai:Kaunakakai:US:21.153:-157.096
 KSJU:Luis Munoz Marin Int:San Juan:PR:18.439:-66.002
-WPDB:Covalima:Suai:TL:-9.303:125.287
-
-AYMS:Misima:Bwagaoia:PG:-10.692:152.833
-KHND:Henderson:Las Vegas:US:35.973:-115.134
-MMJA:Xalapa:Lencero:MX:19.481:-96.807
-MUTD:Alberto Delgado:Trinidad:CU:21.788:-79.997
-MDCZ:Constanza:Constanza:DO:18.900:-70.717
-TJVQ:Antonio Rivera Rodriguez:Isla de Vieques:PR:18.135:-65.494
-WAWW:Woltermon-Ginsidi:Kendari:ID:-4.084:122.413
-SKPD:Obando:Puerto Inirida:CO:3.511:-67.542
-SWXU:Xapuri:Xapuri:BR:-10.664:-68.486
-FN0B:Matala:Matala:AO:-14.728:15.014
-DN0C:Owerri Imo:Owerri Imo:NG:5.427:7.206
-GMAA:Inezgane:Inezgane:MA:30.381:-9.546
+FLWC:West Three:West Three:ZM:-13.350:26.583
+VNST:Simikot:Simikot:NP:29.9711:81.8189
+LIAP:L'Aquila Preturo:L'Aquila Preturo:IT:42.3799:13.3092
+BGQQ:Qaanaaq:Qaanaaq:GL:77.4886:-69.3887
+ZSWZ:Wenzhou:Wenzhou:CN:27.912:120.852
+BIHK:Holmavik:Holmavik:IS:65.6957:-21.6961
+SNPE:Penedo:Penedo:BR:-10.2672:-36.5669
+SNED:Canavieiras:Canavieiras:BR:-15.6800:-38.9489
+SDNY:Nova Iguacu:Nova Iguacu:BR:-22.7467:-43.4647
