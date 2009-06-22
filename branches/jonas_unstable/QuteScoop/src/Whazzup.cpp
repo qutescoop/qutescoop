@@ -184,7 +184,8 @@ void Whazzup::whazzupDownloading(int prog, int tot) {
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
-    qDebug() << "whazzup downloaded";
+    Window::getInstance()->setStatusText(QString());
+    qDebug() << "whazzup downloaded" << whazzupBuffer->size() << "byte";
     Window::getInstance()->setProgressBar(false);
 	if(whazzupBuffer == 0)
 		return;
@@ -203,6 +204,7 @@ void Whazzup::whazzupDownloaded(bool error) {
 	
 	whazzupBuffer->seek(0);
 	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
+    whazzupBuffer->close();
 	if(!newWhazzupData.isNull()) {
 		data.updateFrom(newWhazzupData);
 		emit newData();
@@ -239,7 +241,8 @@ void Whazzup::downloadBookings() {
 
 	QString querystr = url.path() + "?" + url.encodedQuery();
 
-	if(bookingsBuffer != 0) delete bookingsBuffer;
+    if(bookingsBuffer != 0)
+        delete bookingsBuffer;
 	bookingsBuffer = new QBuffer;
 	bookingsBuffer->open(QBuffer::ReadWrite);
 	bookingsDownloader->get(querystr, bookingsBuffer);
@@ -250,7 +253,8 @@ void Whazzup::bookingsDownloading(int prog, int tot) {
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
-    qDebug() << "bookings downloaded";
+    Window::getInstance()->setStatusText(QString());
+    qDebug() << "bookings downloaded" << bookingsBuffer->size() << "byte";
     Window::getInstance()->setProgressBar(false);
 	if(bookingsBuffer == 0)
 		return;
@@ -264,10 +268,10 @@ void Whazzup::bookingsDownloaded(bool error) {
 		emit downloadError(bookingsDownloader->errorString());
 		return;
 	}
-	
-	bookingsBuffer->seek(0);
+    bookingsBuffer->seek(0);
 	WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
-	if(!newBookingsData.isNull()) {
+    bookingsBuffer->close();
+    if(!newBookingsData.isNull()) {
 		data.updateFrom(newBookingsData);
 		emit newData();
 	}

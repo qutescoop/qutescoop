@@ -107,7 +107,8 @@ void PlanFlightDialog::requestVroute() {
         
     QUrl url(vr);
     url.addQueryItem(QString("auth_code"), authCode);
-    url.addQueryItem(QString("cycle"), edCycle->text().trimmed()); // defaults to the last freely available (0701)
+    if(!edCycle->text().trimmed().isEmpty())
+        url.addQueryItem(QString("cycle"), edCycle->text().trimmed()); // defaults to the last freely available (0701)
     url.addQueryItem(QString("type"), QString("query"));
     url.addQueryItem(QString("level"),QString("0")); // details level, so far only 0 supported
     url.addQueryItem(QString("dep"), edDep->text().trimmed());

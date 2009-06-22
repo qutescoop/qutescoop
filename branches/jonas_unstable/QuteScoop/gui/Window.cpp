@@ -145,7 +145,7 @@ Window::Window(QWidget *parent) :
 	connect(friendsList->header(), SIGNAL(sectionClicked(int)), friendsList, SLOT(sortByColumn(int)));
 	metarList->sortByColumn(0, friendsSortModel->sortOrder());
 
-	connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
+    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 	connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
 	connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
@@ -187,6 +187,8 @@ Window::Window(QWidget *parent) :
     datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
     timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
     framePredict->hide();
+    warpTimer.stop();
+    connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
 }
 
 void Window::toggleFullscreen() {
@@ -235,19 +237,33 @@ void Window::downloadError(QString message) {
 void Window::whazzupDownloaded() {
 	const WhazzupData &data = Whazzup::getInstance()->whazzupData();
     
-    QString msg = QString(tr("%1%2%3 - %4 UTC: %5 clients"))
+    QString msg = QString(tr("%1%2 - %4 UTC: %5 clients"))
                   .arg(Settings::downloadNetworkName())
-                  .arg(Whazzup::getInstance()->getPredictedTime().isValid()? " - you have been  W A R P E D": "")
                   .arg(Whazzup::getInstance()->getPredictedTime().isValid()
-                       ? QString(" (based on whazzup from %1 and bookings from %2)")
-                            .arg(Whazzup::getInstance()->realWhazzupData().timestamp().toString("MM/dd HH:mm:ss"))
-                            .arg(Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().toString("MM/dd HH:mm:ss"))
-                       : "")
+                       ? " - you are <b>W A R P E D</b>"
+                       : ""
+                       )
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.timestamp().time().toString())
                         : data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss"))
                   .arg(data.clients());
 	setStatusText(msg);
+
+    msg = QString("WhazzUp %1, Bookings %2")
+                  .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+                        ? QString("today %1").arg(data.timestamp().time().toString())
+                        : (data.timestamp().isValid()
+                           ? data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           : "not downloaded")
+                        )
+                  .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+                        ? QString("today %1").arg(data.bookingsTimestamp().time().toString())
+                        : (data.bookingsTimestamp().isValid()
+                           ? data.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           : "not downloaded")
+                        );
+    lblWarpInfo->setText(msg);
+
 	clientSelection->clearClients();
 	clientSelection->close();
 	performSearch();
@@ -581,9 +597,10 @@ void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
 }
 
-void Window::on_pbPredict_clicked()
+void Window::performWarp()
 {
-    Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));   
+    warpTimer.stop();
+    Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
 }
 
 void Window::on_actionPredict_triggered()
@@ -595,4 +612,26 @@ void Window::on_tbDisablePredict_clicked()
 {
     Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
     framePredict->hide();
+}
+
+void Window::on_datePredictTime_dateChanged(QDate date)
+{
+    warpTimer.stop();
+    warpTimer.start(400);
+}
+
+void Window::on_timePredictTime_timeChanged(QTime date)
+{
+    warpTimer.stop();
+    warpTimer.start(400);
+}
+
+void Window::on_tbAddHrs_clicked()
+{
+    timePredictTime->setTime(timePredictTime->time().addSecs(3600));
+}
+
+void Window::on_tbSubHrs_clicked()
+{
+    timePredictTime->setTime(timePredictTime->time().addSecs(-3600));
 }

@@ -49,9 +49,12 @@ public slots:
 	void refreshFriends();
 
 private slots:	
+    void on_tbSubHrs_clicked();
+    void on_tbAddHrs_clicked();
+    void on_timePredictTime_timeChanged(QTime date);
+    void on_datePredictTime_dateChanged(QDate date);
     void on_tbDisablePredict_clicked();
     void on_actionPredict_triggered();
-    void on_pbPredict_clicked();
     void about();
 	void networkMessage(QString message);
 	void downloadError(QString message);
@@ -85,7 +88,9 @@ private slots:
 	void on_actionRememberPosition_triggered();
 	void on_actionHideAllWindows_triggered();
 	
-	void downloadWatchdogTriggered();
+    void performWarp();
+
+    void downloadWatchdogTriggered();
 protected:
 	virtual void closeEvent(QCloseEvent *event);
 	
@@ -106,7 +111,7 @@ private:
 
 	SearchResultModel searchResultModel, friendsModel;
 	MetarModel metarModel;
-	QTimer searchTimer, metarTimer;
+    QTimer searchTimer, metarTimer, warpTimer;
 	QTimer downloadWatchdog;
 	QSortFilterProxyModel *metarSortModel, *friendsSortModel;
 	
