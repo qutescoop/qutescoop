@@ -65,6 +65,10 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 		qnhInHg = getField(stringList, 39); // VATSIM only
 		qnhMb = getField(stringList, 40); // VATSIM only
 	}
+    // day of flight
+    dayOfFlight = whazzup->timestamp().date();
+    if(QTime::fromString(planDeptime, "HHmm") < whazzup->timestamp().time())
+        dayOfFlight.addDays(1);
 
 	// anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
 	if(planRoute.count('/') > 4)
@@ -241,34 +245,34 @@ double Pilot::distanceToDestination() const {
 }
 
 QString Pilot::ete() const { // Estimated Time Enroute
-	FlightStatus status = flightStatus();
-	if(status == PREFILED || status == BOARDING || status == GROUND_DEP) {
-		int hoursPlanDeptime = planDeptime.mid(0, planDeptime.length()-2).toInt(); // we could have "1500" or "400" in planDeptime
-		int minutesPlanDeptime = planDeptime.right(2).toInt();
-		int etdMins = hoursPlanDeptime * 60 + minutesPlanDeptime;
-		int etaMins = etdMins + planHrsEnroute * 60 + planMinEnroute;
-		QTime eta = QTime((etaMins/60) % 24, etaMins % 60);
+    FlightStatus status = flightStatus();
+    if(status == PREFILED || status == BOARDING || status == GROUND_DEP) {
+        int hoursPlanDeptime = planDeptime.mid(0, planDeptime.length()-2).toInt(); // we could have "1500" or "400" in planDeptime
+        int minutesPlanDeptime = planDeptime.right(2).toInt();
+        int etdMins = hoursPlanDeptime * 60 + minutesPlanDeptime;
+        int etaMins = etdMins + planHrsEnroute * 60 + planMinEnroute;
+        QTime eta = QTime((etaMins/60) % 24, etaMins % 60);
 /*		QTime etd = QTime(hoursPlanDeptime, minutesPlanDeptime);
-		QTime eta = etd + QTime(planHrsEnroute, planMinEnroute);*/
+        QTime eta = etd + QTime(planHrsEnroute, planMinEnroute);*/
 
         int secondsRemaining = QDateTime::currentDateTime().toUTC().time().secsTo(eta);
-		int minutesRemaining = (secondsRemaining / 60);
-		int hoursRemaining = secondsRemaining / 3600;
-		QTime result = QTime(hoursRemaining % 24, minutesRemaining % 60, secondsRemaining % 60);
-		return result.toString("HH:mm");
+        int minutesRemaining = (secondsRemaining / 60);
+        int hoursRemaining = secondsRemaining / 3600;
+        QTime result = QTime(hoursRemaining % 24, minutesRemaining % 60, secondsRemaining % 60);
+        return result.toString("HH:mm");
     } else if(status == DEPARTING) { // try to calculate with flightplanned speed
         int secondsRemaining;
-        if(planTAS.toInt() == 0 && groundspeed == 0) 
+        if(planTAS.toInt() == 0 && groundspeed == 0)
             return QString();
         else if(planTAS.toInt() != 0) // normal
-            secondsRemaining = (int)(distanceToDestination() * 3600) / planTAS.toInt(); 
+            secondsRemaining = (int)(distanceToDestination() * 3600) / planTAS.toInt();
         else if(groundspeed != 0) // no TAS in flightplan
             secondsRemaining = (int)(distanceToDestination() * 3600) / groundspeed;
         int minutesRemaining = (secondsRemaining / 60);
         int hoursRemaining = secondsRemaining / 3600;
         QTime result = QTime(hoursRemaining % 24, minutesRemaining % 60, secondsRemaining % 60);
-        return result.toString("HH:mm");        
-	} else if(status == EN_ROUTE || status == ARRIVING) {
+        return result.toString("HH:mm");
+    } else if(status == EN_ROUTE || status == ARRIVING) {
         if(groundspeed == 0) return QString();
         int secondsRemaining = (int)(distanceToDestination() * 3600) / groundspeed;
         int minutesRemaining = (secondsRemaining / 60);
@@ -276,7 +280,7 @@ QString Pilot::ete() const { // Estimated Time Enroute
         QTime result = QTime(hoursRemaining, minutesRemaining % 60, secondsRemaining % 60);
         return result.toString("HH:mm");
     } else
-		return QString();
+        return QString();
 }
 
 QStringList Pilot::waypoints() const {

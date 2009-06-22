@@ -19,16 +19,106 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
     <item>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>GroupBox</string>
+     <widget class="QFrame" name="framePredict">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="leftMargin">
+        <number>1</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>1</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
        <item>
         <widget class="QLabel" name="label_3">
+         <property name="font">
+          <font>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
          <property name="text">
-          <string>TextLabel</string>
+          <string>Time Warp: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDateEdit" name="datePredictTime">
+         <property name="calendarPopup">
+          <bool>true</bool>
+         </property>
+         <property name="timeSpec">
+          <enum>Qt::UTC</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTimeEdit" name="timePredictTime">
+         <property name="wrapping">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pbPredict">
+         <property name="text">
+          <string>Warp</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="tbDisablePredict">
+         <property name="text">
+          <string>DeWarp</string>
+         </property>
+         <property name="toolButtonStyle">
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
+         <property name="arrowType">
+          <enum>Qt::UpArrow</enum>
          </property>
         </widget>
        </item>
@@ -117,6 +207,8 @@
      <string>&amp;Plan</string>
     </property>
     <addaction name="actionPlanFlight"/>
+    <addaction name="separator"/>
+    <addaction name="actionPredict"/>
     <addaction name="actionBookedAtc"/>
    </widget>
    <addaction name="menuQutescoop"/>
@@ -476,7 +568,10 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionBookedAtc">
    <property name="text">
-    <string>Booked &amp;ATC</string>
+    <string>List Booked &amp;ATC</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F8</string>
    </property>
   </action>
   <action name="actionShowInactiveAirports">
@@ -485,6 +580,18 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>Show Inactive Airports</string>
+   </property>
+  </action>
+  <action name="actionPredict">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Time Warp</string>
+   </property>
+   <property name="shortcut">
+    <string>F8</string>
    </property>
   </action>
  </widget>

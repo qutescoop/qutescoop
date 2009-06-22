@@ -160,31 +160,6 @@ void Settings::setProxyPassword(QString password) {
 	getSettings()->setValue("proxy/password", password);
 }
 
-// Airport traffic
-bool Settings::filterTraffic() {
-	return getSettings()->value("airportTraffic/filterTraffic", false).toBool();
-}
-
-void Settings::setFilterTraffic(bool v) {
-	getSettings()->setValue("airportTraffic/filterTraffic", v);
-}
-
-int Settings::filterDistance() {
-	return getSettings()->value("airportTraffic/filterDistance", 50).toInt();
-}
-
-void Settings::setFilterDistance(int v) {
-	getSettings()->setValue("airportTraffic/filterDistance", v);
-}
-
-double Settings::filterArriving() {
-	return getSettings()->value("airportTraffic/filterArriving", 1.0).toDouble();
-}
-
-void Settings::setFilterArriving(double v) {
-	getSettings()->setValue("airportTraffic/filterArriving", v);
-}
-//
 
 void Settings::applyProxySetting(QHttp *http) {
 	if(!useProxy() || http == 0)
@@ -342,6 +317,7 @@ void Settings::deleteFirSettings() {
 	settings.remove("");
 	settings.endGroup();
 }
+
 
 QColor Settings::firBorderLineColor() {
 	return getSettings()->value("firDisplay/borderLineColor", QColor::fromRgbF(1.0, 0.0, 0.0, 1)).value<QColor>();
@@ -764,3 +740,67 @@ QString Settings::bookingsLocation() {
 void Settings::setBookingsLocation(const QString& value) {
 	getSettings()->setValue("download/atcBookingsLocation", value);
 }
+
+// Airport traffic
+void Settings::deleteAirportTrafficSettings() {
+	QSettings settings;
+	settings.beginGroup("airportTraffic");
+	settings.remove("");
+	settings.endGroup();
+}
+
+bool Settings::filterTraffic() {
+	return getSettings()->value("airportTraffic/filterTraffic", false).toBool();
+}
+
+void Settings::setFilterTraffic(bool v) {
+	getSettings()->setValue("airportTraffic/filterTraffic", v);
+}
+
+int Settings::filterDistance() {
+	return getSettings()->value("airportTraffic/filterDistance", 50).toInt();
+}
+
+void Settings::setFilterDistance(int v) {
+	getSettings()->setValue("airportTraffic/filterDistance", v);
+}
+
+double Settings::filterArriving() {
+	return getSettings()->value("airportTraffic/filterArriving", 1.0).toDouble();
+}
+
+void Settings::setFilterArriving(double v) {
+	getSettings()->setValue("airportTraffic/filterArriving", v);
+}
+// airport congestion
+bool Settings::showAirportCongestion() {
+	return getSettings()->value("airportTraffic/showCongestion", true).toBool();
+}
+void Settings::setAirportCongestion(bool value) {
+	getSettings()->setValue("airportTraffic/showCongestion", value);
+}
+
+int Settings::airportCongestionMinimum() {
+	return getSettings()->value("airportTraffic/minimumMovements", 5).toInt();
+}
+
+void Settings::setAirportCongestionMinimum(int value) {
+	getSettings()->setValue("airportTraffic/minimumMovements", value);
+}
+
+QColor Settings::airportCongestionBorderLineColor() {
+	return getSettings()->value("airportTraffic/borderLineColor", QColor::fromRgbF(1.0, 0.0, 0.0, 0.5)).value<QColor>();
+}
+
+void Settings::setAirportCongestionBorderLineColor(const QColor& color) {
+	getSettings()->setValue("airportTraffic/borderLineColor", color);
+}
+
+double Settings::airportCongestionBorderLineStrength() {
+	return getSettings()->value("airportTraffic/borderLineStrength", 1.5).toDouble();
+}
+
+void Settings::setAirportCongestionBorderLineStrength(double value) {
+	getSettings()->setValue("airportTraffic/borderLineStrength", value);
+}
+// ---------------------

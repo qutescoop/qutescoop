@@ -111,6 +111,7 @@ private:
 	GLuint airportControllersList;
 	GLuint firPolygonBorderLinesList;
 	GLuint appBorderLinesList;
+	GLuint congestionsList;
 	void prepareDisplayLists();
 
 	QList<Controller*> firsToDraw;
@@ -119,6 +120,8 @@ private:
 	double airportLabelZoomTreshold;
 	double inactiveAirportLabelZoomTreshold;
 	double controllerLabelZoomTreshold;
+
+    double inactiveAirportDotZoomTreshold;
 
 	double fixZoomTreshold;
 
@@ -133,13 +136,13 @@ private:
 	bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
 
 	class FontRectangle {
-	public:
-		FontRectangle(QRectF rectangle, MapObject *mapObject): _rect(rectangle), _object(mapObject) {}
-		const QRectF& rect() const { return _rect; }
-		MapObject* object() const { return _object; }
-	private:
-		QRectF _rect;
-		MapObject *_object;
+        public:
+            FontRectangle(QRectF rectangle, MapObject *mapObject): _rect(rectangle), _object(mapObject) {}
+            const QRectF& rect() const { return _rect; }
+            MapObject* object() const { return _object; }
+        private:
+            QRectF _rect;
+            MapObject *_object;
 	};
 	QList<FontRectangle> fontRectangles;
 	bool shouldDrawLabel(const FontRectangle& rect);

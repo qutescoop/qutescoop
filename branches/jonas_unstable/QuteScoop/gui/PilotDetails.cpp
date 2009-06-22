@@ -91,10 +91,15 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	lblRoute->setText(pilot->planRoute);
 	lblRemarks->setText(pilot->planRemarks);
 	
-	if(pilot->isFriend())
+    // check if we know userId
+    buttonAddFriend->setDisabled(pilot->userId.isEmpty());
+    if(pilot->isFriend())
 		buttonAddFriend->setText("Remove Friend");
 	else
 		buttonAddFriend->setText("Add Friend");
+
+    // check if we know position
+    buttonShowOnMap->setDisabled(pilot->lon > 90);
 }
 
 void PilotDetails::on_buttonDest_clicked() {

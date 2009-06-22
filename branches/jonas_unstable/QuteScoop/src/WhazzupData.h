@@ -37,6 +37,7 @@ public:
         
 	WhazzupData();
 	WhazzupData(QBuffer* buffer, WhazzupType type);
+	WhazzupData(const QDateTime predictTime, const WhazzupData& data); // predict whazzup data
 	~WhazzupData();
 
 	// copy constructor and assignment operator
@@ -58,6 +59,7 @@ public:
 	int servers() const { return connectedServers; }
 	int version() const { return whazzupVersion; }
 	const QDateTime& timestamp() const { return whazzupTime; }
+	const QDateTime& bookingsTimestamp() const { return bookingsTime; }
 	
 	bool isIvao() const { return whazzupVersion == 4; }
 	bool isVatsim() const { return whazzupVersion == 8; }
@@ -80,6 +82,7 @@ private:
 	int connectedServers;
 	int whazzupVersion;
 	QDateTime whazzupTime;
+	QDateTime bookingsTime;
     WhazzupType dataType;
 };
 

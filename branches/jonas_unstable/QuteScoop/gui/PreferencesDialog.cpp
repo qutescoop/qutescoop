@@ -119,10 +119,13 @@ void PreferencesDialog::loadSettings() {
 	cbFilterTraffic->setChecked(Settings::filterTraffic());
 	spFilterDistance->setValue(Settings::filterDistance());
 	spFilterArriving->setValue(Settings::filterArriving());
-		//enable SpinButtons
-	spFilterDistance->setEnabled(Settings::filterTraffic());
-	spFilterArriving->setEnabled(Settings::filterTraffic());
-	
+    cbShowCongestion->setChecked(Settings::showAirportCongestion());
+    sbCongestionBorderLineStrength->setValue(Settings::airportCongestionBorderLineStrength());
+	color = Settings::airportCongestionBorderLineColor();
+    pbCongestionBorderLineColor->setText(color.name());
+    pbCongestionBorderLineColor->setPalette(QPalette(color));
+	sbCongestionMinimum->setValue(Settings::airportCongestionMinimum());
+    
 	// airport settings
 	color = Settings::inactiveAirportFontColor();
 	pbInactAirportFontColor->setText(color.name());
@@ -755,4 +758,32 @@ void PreferencesDialog::on_pbInactAirportDotColor_clicked()
 void PreferencesDialog::on_sbInactAirportDotSize_valueChanged(double value)
 {
 	Settings::setInactiveAirportDotSize(value);    
+}
+
+void PreferencesDialog::on_cbShowCongestion_clicked(bool checked)
+{
+    Settings::setAirportCongestion(checked);
+}
+
+void PreferencesDialog::on_pbCongestionBorderLineColor_clicked()
+{
+	bool ok;
+	QRgb rgba = QColorDialog::getRgba(Settings::airportCongestionBorderLineColor().rgba(), &ok, this);
+	if(ok) {
+		QColor color = QColor::fromRgba(rgba);
+		pbCongestionBorderLineColor->setText(color.name());
+		pbCongestionBorderLineColor->setPalette(QPalette(color));
+		Settings::setAirportCongestionBorderLineColor(color);
+	}
+}
+
+void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double value)
+{
+    Settings::setAirportCongestionBorderLineStrength(value);
+}
+
+void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
+{
+	Settings::deleteAirportTrafficSettings();
+	loadSettings();
 }

@@ -46,14 +46,16 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	setMouseTracking(true);
 
 	pilotLabelZoomTreshold = 0.5;
-	airportLabelZoomTreshold = 0.5;
-	inactiveAirportLabelZoomTreshold = 0.3;
+	airportLabelZoomTreshold = 1;
+	inactiveAirportDotZoomTreshold = 0.15;
+	inactiveAirportLabelZoomTreshold = 0.08;
 	controllerLabelZoomTreshold = 3;
 
 	firPolygonsList = 0;
 	airportControllersList = 0;
 	firPolygonBorderLinesList = 0;
 	appBorderLinesList = 0;
+    congestionsList = 0;
 
 	allFirsDisplayed = false;
 
@@ -170,14 +172,16 @@ void GLWidget::prepareDisplayLists() {
 			if(f == 0) continue;
 			f->getBorderLine();
 		}
-
-		glNewList(firPolygonBorderLinesList, GL_COMPILE);
-			for(int i = 0; i < firsToDraw.size(); i++) {
-				Fir *f = firsToDraw[i]->fir;
-				if(f == 0) continue;
-				glCallList(f->getBorderLine());
-			}
-		glEndList();
+        
+        if(Settings::firBorderLineStrength() > 0) {
+            glNewList(firPolygonBorderLinesList, GL_COMPILE);
+                for(int i = 0; i < firsToDraw.size(); i++) {
+                    Fir *f = firsToDraw[i]->fir;
+                    if(f == 0) continue;
+                    glCallList(f->getBorderLine());
+                }
+            glEndList();
+        }
 
 	} else {
 		// display ALL fir borders
@@ -199,19 +203,22 @@ void GLWidget::prepareDisplayLists() {
 	// APP border lines
 	if(appBorderLinesList == 0)
 		appBorderLinesList = glGenLists(1);
-	for(int i = 0; i < airportList.size(); i++) {
+    
+ 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] == 0) continue;
 		if(!airportList[i]->getApproaches().isEmpty())
 			airportList[i]->getAppBorderDisplayList();
 	}
 
-	glNewList(appBorderLinesList, GL_COMPILE);
-		for(int i = 0; i < airportList.size(); i++) {
-			if(airportList[i] == 0) continue;
-			if(!airportList[i]->getApproaches().isEmpty())
-				glCallList(airportList[i]->getAppBorderDisplayList());
-		}
-	glEndList();
+    if(Settings::appBorderLineStrength() > 0) {
+        glNewList(appBorderLinesList, GL_COMPILE);
+            for(int i = 0; i < airportList.size(); i++) {
+                if(airportList[i] == 0) continue;
+                if(!airportList[i]->getApproaches().isEmpty())
+                    glCallList(airportList[i]->getAppBorderDisplayList());
+            }
+        glEndList();
+    }
 }
 
 void GLWidget::newWhazzupData() {
@@ -272,11 +279,16 @@ void GLWidget::paintGL() {
 
 	glCallList(firPolygonBorderLinesList);
 	glCallList(appBorderLinesList);
+    
+    if(Settings::showAirportCongestion()) 
+        glCallList(congestionsList);
 
 	glCallList(airportsList);
-    if(Settings::showInactiveAirports())
+
+    glCallList(pilotsList);
+
+    if(Settings::showInactiveAirports() && zoom < inactiveAirportDotZoomTreshold)
     	glCallList(airportsInactiveList);
-	glCallList(pilotsList);
 
 	if(zoom < fixZoomTreshold && Settings::showFixes())
 		glCallList(fixesList);
@@ -305,6 +317,8 @@ void GLWidget::resetZoom() {
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
 	QToolTip::hideText();
     
+    lastPos = mouseDownPos = QPoint(); // fake to disallow mapClicked()
+
     double lat, lon;
     mouse2latlon(event->x(), event->y(), lat, lon);
     setMapPosition(lat, lon, zoom);
@@ -516,20 +530,53 @@ void GLWidget::createAirportsList() {
 	}
 	glEnd();
 	glEndList();
-
-	glNewList(airportsInactiveList, GL_COMPILE);
-	glPointSize(Settings::inactiveAirportDotSize());
-	qglColor(Settings::inactiveAirportDotColor());
-	glBegin(GL_POINTS);
-	for (int i = 0; i < airportList.size(); i++) {
-		Airport *a = airportList[i];
-		if(a == 0) continue;
-		if(!a->isActive()) {
-			VERTEX(a->lat, a->lon);
-		}
-	}
-	glEnd();
-	glEndList();
+    
+	if(airportsInactiveList == 0)
+		airportsInactiveList = glGenLists(1);
+    glNewList(airportsInactiveList, GL_COMPILE);
+    if(Settings::showInactiveAirports()) {
+        glPointSize(Settings::inactiveAirportDotSize());
+        qglColor(Settings::inactiveAirportDotColor());
+        glBegin(GL_POINTS);
+        for (int i = 0; i < airportList.size(); i++) {
+            Airport *a = airportList[i];
+            if(a == 0) continue;
+            if(!a->isActive()) {
+                VERTEX(a->lat, a->lon);
+            }
+        }
+        glEnd();
+    }
+    glEndList();
+    
+    // airport congestion based on filtered traffic    
+	if(congestionsList == 0)
+		congestionsList = glGenLists(1);
+    glNewList(congestionsList, GL_COMPILE);
+    if(Settings::showAirportCongestion()) {
+        QColor borderLine = Settings::airportCongestionBorderLineColor();
+        glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
+        glLineWidth(Settings::airportCongestionBorderLineStrength());
+        for(int i = 0; i < airportList.size(); i++) {
+            if(airportList[i] == 0) continue;
+            if(!airportList[i]->isActive()) continue;
+            int congested = airportList[i]->numFilteredArrivals() + airportList[i]->numFilteredDepartures();
+            if(congested < 5) continue;
+            GLdouble circle_distort = cos(airportList[i]->lat * Pi180);
+            QList<QPair<double, double> > points;
+            for(int h = 0; h <= 360; h += 10) {		
+                double x = airportList[i]->lat + Nm2Deg(congested*5) * circle_distort *cos(h * Pi180); 
+                double y = airportList[i]->lon + Nm2Deg(congested*5) * sin(h * Pi180);
+                points.append(QPair<double, double>(x, y));
+            }
+            glBegin(GL_LINE_LOOP);
+            for (int h = 0; h < points.size(); h++) {
+                VERTEX(points[h].first, points[h].second);
+            }
+            glEnd();
+        }
+    }
+    glEndList();
 }
 
 bool GLWidget::pointIsVisible(double lat, double lon, int *px, int *py) const {
@@ -563,13 +610,21 @@ void GLWidget::renderLabels() {
 
 	// Airport labels
 	objects.clear();
-	QList<Airport*> airportList = NavData::getInstance()->airports().values();
+	QList<Airport*> airportList = NavData::getInstance()->airportsTrafficSorted(); //fixme: ordered by congestion, big airport's labels will always be drawn first
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] == 0) continue;
 		if(airportList[i]->isActive()) objects.append(airportList[i]);
 	}
 	renderLabels(objects, Settings::airportFont(), airportLabelZoomTreshold, Settings::airportFontColor());
-	if(Settings::showInactiveAirports()) { // + inactive labels
+
+    // Pilot labels
+	objects.clear();
+	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getActivePilots().size(); i++)
+		objects.append(Whazzup::getInstance()->whazzupData().getActivePilots()[i]);
+	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
+	
+    // Inactive airports
+    if(Settings::showInactiveAirports()) { // + inactive labels
         objects.clear();
         for(int i = 0; i < airportList.size(); i++) {
             if(airportList[i] == 0) continue;
@@ -577,17 +632,17 @@ void GLWidget::renderLabels() {
         }
     	renderLabels(objects, Settings::inactiveAirportFont(), inactiveAirportLabelZoomTreshold, Settings::inactiveAirportFontColor());
     }
-
-	// Pilot labels
-	objects.clear();
-	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getActivePilots().size(); i++)
-		objects.append(Whazzup::getInstance()->whazzupData().getActivePilots()[i]);
-	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
 }
 
 bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
+    int shrinkCheckRectByFactor = 1.5; // be less conservative in edge overlap-checking
 	for(int i = 0; i < fontRectangles.size(); i++) {
-		if(rect.rect().intersects(fontRectangles[i].rect()))
+        QRectF checkrect = fontRectangles[i].rect();
+        checkrect.setWidth(checkrect.width() / shrinkCheckRectByFactor); // make them smaller to allow a tiny bit of intersect 
+        checkrect.setHeight(checkrect.height() / shrinkCheckRectByFactor); 
+        checkrect.moveCenter(fontRectangles[i].rect().center());
+
+        if(rect.rect().intersects(checkrect))
 			return false;
 	}
 	return true;
@@ -616,11 +671,12 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 			QRectF rect = fontMetrics.boundingRect(text);
             int drawX, drawY; 
             drawX = x - rect.width() / 2; // center horizontally
-            drawY = y - 5; // above dot
-			rect.moveTo(drawX, drawY - rect.height());
+            drawY = y - rect.height() - 5; // some px above dot
+			rect.moveTo(drawX, drawY);
+        	
 			FontRectangle fontRect = FontRectangle(rect, o);
-			if(shouldDrawLabel(fontRect)) { // should be some priorisation code here for: 1) firs, 2) active airports, 3) pilots, 4) inactive airports
-				renderText(drawX, drawY, text, font);
+			if(shouldDrawLabel(fontRect)) { 
+				renderText(drawX, drawY + rect.height(), text, font);
 				fontRectangles.append(fontRect);
 			}
 		}

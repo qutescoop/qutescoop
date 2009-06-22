@@ -49,7 +49,10 @@ public slots:
 	void refreshFriends();
 
 private slots:	
-	void about();
+    void on_tbDisablePredict_clicked();
+    void on_actionPredict_triggered();
+    void on_pbPredict_clicked();
+    void about();
 	void networkMessage(QString message);
 	void downloadError(QString message);
 	void toggleFullscreen();

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>546</width>
-    <height>813</height>
+    <width>602</width>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,27 +28,12 @@
        <string>Network</string>
       </attribute>
       <layout class="QVBoxLayout">
-       <property name="leftMargin">
-        <number>12</number>
-       </property>
-       <property name="rightMargin">
-        <number>12</number>
-       </property>
-       <property name="bottomMargin">
-        <number>12</number>
-       </property>
        <item>
         <widget class="QGroupBox" name="groupBoxDownload">
          <property name="title">
           <string>Download Data</string>
          </property>
          <layout class="QGridLayout">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
           <item row="0" column="1">
            <widget class="QSpinBox" name="spinBoxDownloadInterval">
             <property name="suffix">
@@ -154,12 +139,6 @@
           <string>Proxy Settings</string>
          </property>
          <layout class="QGridLayout">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
           <item row="0" column="0" colspan="5">
            <widget class="QCheckBox" name="cbUseProxy">
             <property name="text">
@@ -345,12 +324,6 @@
           <string>Voice Settings</string>
          </property>
          <layout class="QGridLayout" name="_2">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
           <item row="0" column="0" colspan="3">
            <layout class="QHBoxLayout" name="_3">
             <item>
@@ -489,12 +462,6 @@
           <string>Navigation Database</string>
          </property>
          <layout class="QVBoxLayout" name="_4">
-          <property name="spacing">
-           <number>6</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
           <item>
            <widget class="QCheckBox" name="cbUseNavDatabase">
             <property name="text">
@@ -544,120 +511,25 @@
           </item>
           <item>
            <widget class="QLabel" name="label_5">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="text">
-             <string>Directory must contain the navigation database for &lt;strong&gt;X-Plane 9.00 or later&lt;/strong&gt; (Get it for free at &lt;a href=&quot;http://data.x-plane.com&quot;&gt;data.x-plane.com&lt;/a&gt;)</string>
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Directory must contain the navigation database for &lt;span style=&quot; font-weight:600;&quot;&gt;X-Plane 9.00 or later&lt;/span&gt; &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(Get it for free at &lt;a href=&quot;http://data.x-plane.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;data.x-plane.com&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
             </property>
             <property name="openExternalLinks">
              <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxAirportTraffic">
-         <property name="title">
-          <string>Airport traffic</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout">
-          <item row="0" column="0">
-           <widget class="QCheckBox" name="cbFilterTraffic">
-            <property name="text">
-             <string>Count only planes </string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="spFilterDistance">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="suffix">
-             <string> nm</string>
-            </property>
-            <property name="prefix">
-             <string/>
-            </property>
-            <property name="maximum">
-             <number>9999</number>
-            </property>
-            <property name="singleStep">
-             <number>5</number>
-            </property>
-            <property name="value">
-             <number>50</number>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_50">
-            <property name="text">
-             <string>or arriving in less than</string>
-            </property>
-            <property name="buddy">
-             <cstring>spFilterArriving</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_49">
-            <property name="text">
-             <string>around airport</string>
-            </property>
-            <property name="buddy">
-             <cstring>spFilterDistance</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>0</width>
-              <height>0</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="2" column="1">
-           <widget class="QDoubleSpinBox" name="spFilterArriving">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="prefix">
-             <string/>
-            </property>
-            <property name="suffix">
-             <string> hours</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -698,29 +570,17 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="displayTab">
+     <widget class="QWidget" name="display1Tab">
       <attribute name="title">
-       <string>Display 1</string>
+       <string>Display (General)</string>
       </attribute>
-      <layout class="QVBoxLayout">
-       <property name="leftMargin">
-        <number>12</number>
-       </property>
-       <property name="rightMargin">
-        <number>12</number>
-       </property>
-       <property name="bottomMargin">
-        <number>12</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_8">
        <item>
         <widget class="QGroupBox" name="groupBoxDisplayGeneral">
          <property name="title">
           <string>General Settings</string>
          </property>
          <layout class="QVBoxLayout">
-          <property name="margin">
-           <number>6</number>
-          </property>
           <item>
            <widget class="QCheckBox" name="cbLineSmoothing">
             <property name="text">
@@ -755,6 +615,9 @@
             </item>
             <item>
              <widget class="QSpinBox" name="sbMaxTextLabels">
+              <property name="accelerated">
+               <bool>true</bool>
+              </property>
               <property name="maximum">
                <number>9999</number>
               </property>
@@ -800,372 +663,217 @@
           <string>Earth and Space</string>
          </property>
          <layout class="QGridLayout">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string>Background Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbBackgroundColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pbBackgroundColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Background</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_7">
-            <property name="text">
-             <string>Globe Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbGlobeColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pbGlobeColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Globe</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_8">
-            <property name="text">
-             <string>Grid Line Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbGridLineColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pbGridLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Grid Lines</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <widget class="QLabel" name="label_9">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbGridLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_10">
-            <property name="text">
-             <string>Coast Line Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbCoastLineColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QPushButton" name="pbCoastLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Coast Lines</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="2">
-           <widget class="QLabel" name="label_11">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbCoastLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QDoubleSpinBox" name="sbCoastLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>0.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>2.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_12">
-            <property name="text">
-             <string>Country Line Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbCountryLineColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pbCountryLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Country Lines</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_13">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbCountryLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QPushButton" name="buttonResetEarthSpace">
-            <property name="text">
-             <string>Reset</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="3">
-           <widget class="QDoubleSpinBox" name="sbGridLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>0.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QDoubleSpinBox" name="sbCountryLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>0.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="groupBoxFirs">
-         <property name="title">
-          <string>FIRs</string>
-         </property>
-         <layout class="QGridLayout">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_14">
-            <property name="text">
-             <string>Border Line Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbFirBorderLineColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pbFirBorderLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Border Line</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="2">
-           <widget class="QLabel" name="label_15">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbFirBorderLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QDoubleSpinBox" name="sbFirBorderLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="minimum">
-             <double>0.000000000000000</double>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_17">
-            <property name="text">
-             <string>Font Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbFirFontColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pbFirFontColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Font Color</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
+           <layout class="QGridLayout" name="gridLayout_8">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Background Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbBackgroundColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pbBackgroundColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Background</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_7">
+              <property name="text">
+               <string>Globe Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbGlobeColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_8">
+              <property name="text">
+               <string>Grid Line Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbGridLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_10">
+              <property name="text">
+               <string>Coast Line Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbCoastLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_12">
+              <property name="text">
+               <string>Country Line Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbCountryLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pbGlobeColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Globe</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="pbGridLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Grid Lines</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="pbCoastLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Coast Lines</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QPushButton" name="pbCountryLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Country Lines</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="label_13">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbCountryLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLabel" name="label_11">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbCoastLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_9">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbGridLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QDoubleSpinBox" name="sbGridLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QDoubleSpinBox" name="sbCoastLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>2.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="3">
+             <widget class="QDoubleSpinBox" name="sbCountryLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item row="1" column="2">
-           <widget class="QLabel" name="label_18">
-            <property name="text">
-             <string>Font</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbFirFont</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pbFirFont">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>LOVV_CTR</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_16">
-            <property name="text">
-             <string>Fill Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbFirFillColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="pbFirFillColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>Fill Color</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="3">
-           <widget class="QCheckBox" name="cbReadSupFile">
-            <property name="text">
-             <string>Display FIR boundaries for VATSIM (use firdisplay.sup)</string>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="3">
-           <widget class="QPushButton" name="buttonResetFir">
+           <widget class="QPushButton" name="buttonResetEarthSpace">
             <property name="text">
              <string>Reset</string>
             </property>
@@ -1189,466 +897,866 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tabAirportsPilots">
+     <widget class="QWidget" name="display2Tab">
       <attribute name="title">
-       <string>Display 2</string>
+       <string>Display (Activity 1)</string>
       </attribute>
-      <layout class="QVBoxLayout">
-       <property name="leftMargin">
-        <number>12</number>
-       </property>
-       <property name="rightMargin">
-        <number>12</number>
-       </property>
-       <property name="bottomMargin">
-        <number>12</number>
-       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QGroupBox" name="groupBoxAirports">
          <property name="title">
           <string>Airports</string>
          </property>
-         <layout class="QGridLayout">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
-          <item row="11" column="0">
-           <widget class="QLabel" name="label_21">
-            <property name="text">
-             <string>App Border Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbAppBorderLineColor</cstring>
-            </property>
-           </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <item>
+           <layout class="QGridLayout" name="gridLayout_3">
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_52">
+              <property name="text">
+               <string>Font Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbInactAirportFontColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_55">
+              <property name="text">
+               <string>Dot Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbInactAirportDotColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_51">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Inactive Airports</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="pbInactAirportFontColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QPushButton" name="pbInactAirportDotColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_53">
+              <property name="text">
+               <string>Font</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbInactAirportFont</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLabel" name="label_54">
+              <property name="text">
+               <string>Dot Size</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbInactAirportDotSize</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QPushButton" name="pbInactAirportFont">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>LOWG</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="3">
+             <widget class="QDoubleSpinBox" name="sbInactAirportDotSize">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="label_56">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Active Airports</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_19">
+              <property name="text">
+               <string>Font Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAirportFontColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QPushButton" name="pbAirportFontColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Font</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAirportFont</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="3">
+             <widget class="QPushButton" name="pbAirportFont">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>LOWI 11/14</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_38">
+              <property name="text">
+               <string>Dot Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAirportDotColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QPushButton" name="pbAirportDotColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="3">
+             <widget class="QDoubleSpinBox" name="sbAirportDotSize">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="2">
+             <widget class="QLabel" name="label_39">
+              <property name="text">
+               <string>Dot Size</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbAirportDotSize</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_21">
+              <property name="text">
+               <string>App Border Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAppBorderLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QPushButton" name="pbAppBorderLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="2">
+             <widget class="QLabel" name="label_22">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbAppBorderLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="3">
+             <widget class="QDoubleSpinBox" name="sbAppBorderLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_23">
+              <property name="text">
+               <string>App Color Center</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAppColorCenter</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <widget class="QPushButton" name="pbAppColorCenter">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="2">
+             <widget class="QLabel" name="label_24">
+              <property name="text">
+               <string>App Color Margin</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAppColorMargin</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="3">
+             <widget class="QPushButton" name="pbAppColorMargin">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QLabel" name="label_25">
+              <property name="text">
+               <string>Twr Color Center</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbTwrColorCenter</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="1">
+             <widget class="QPushButton" name="pbTwrColorCenter">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="2">
+             <widget class="QLabel" name="label_26">
+              <property name="text">
+               <string>Twr Color Margin</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbTwrColorMargin</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="3">
+             <widget class="QPushButton" name="pbTwrColorMargin">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="0">
+             <widget class="QLabel" name="label_27">
+              <property name="text">
+               <string>Gnd Border Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbGndBorderLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="1">
+             <widget class="QPushButton" name="pbGndBorderLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="2">
+             <widget class="QLabel" name="label_28">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbGndBorderLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="10" column="3">
+             <widget class="QDoubleSpinBox" name="sbGndBorderLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="0">
+             <widget class="QLabel" name="label_37">
+              <property name="text">
+               <string>Gnd Fill Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbGndFillColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="1">
+             <widget class="QPushButton" name="pbGndFillColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="11" column="1">
-           <widget class="QPushButton" name="pbAppBorderLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="2">
-           <widget class="QLabel" name="label_22">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbAppBorderLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="11" column="3">
-           <widget class="QDoubleSpinBox" name="sbAppBorderLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="0">
-           <widget class="QLabel" name="label_23">
-            <property name="text">
-             <string>App Color Center</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbAppColorCenter</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="1">
-           <widget class="QPushButton" name="pbAppColorCenter">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="2">
-           <widget class="QLabel" name="label_24">
-            <property name="text">
-             <string>App Color Margin</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbAppColorMargin</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="12" column="3">
-           <widget class="QPushButton" name="pbAppColorMargin">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="0">
-           <widget class="QLabel" name="label_25">
-            <property name="text">
-             <string>Twr Color Center</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbTwrColorCenter</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="1">
-           <widget class="QPushButton" name="pbTwrColorCenter">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="2">
-           <widget class="QLabel" name="label_26">
-            <property name="text">
-             <string>Twr Color Margin</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbTwrColorMargin</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="13" column="3">
-           <widget class="QPushButton" name="pbTwrColorMargin">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="14" column="0">
-           <widget class="QLabel" name="label_27">
-            <property name="text">
-             <string>Gnd Border Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbGndBorderLineColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="14" column="1">
-           <widget class="QPushButton" name="pbGndBorderLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="14" column="2">
-           <widget class="QLabel" name="label_28">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbGndBorderLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="14" column="3">
-           <widget class="QDoubleSpinBox" name="sbGndBorderLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>0.000000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="15" column="0">
-           <widget class="QLabel" name="label_37">
-            <property name="text">
-             <string>Gnd Fill Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbGndFillColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="15" column="1">
-           <widget class="QPushButton" name="pbGndFillColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="15" column="3">
+          <item>
            <widget class="QPushButton" name="buttonResetAirport">
             <property name="text">
              <string>Reset</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="2">
-           <widget class="QLabel" name="label_54">
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBoxAirportTraffic">
+         <property name="title">
+          <string>Airport traffic</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <layout class="QGridLayout" name="gridLayout">
+            <item row="0" column="0">
+             <widget class="QCheckBox" name="cbFilterTraffic">
+              <property name="text">
+               <string>Count only planes </string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QSpinBox" name="spFilterDistance">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="suffix">
+               <string> nm</string>
+              </property>
+              <property name="prefix">
+               <string/>
+              </property>
+              <property name="maximum">
+               <number>9999</number>
+              </property>
+              <property name="singleStep">
+               <number>5</number>
+              </property>
+              <property name="value">
+               <number>50</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_49">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>around airport 
+or arriving in </string>
+              </property>
+              <property name="buddy">
+               <cstring>spFilterDistance</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="3">
+             <widget class="QDoubleSpinBox" name="spFilterArriving">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="prefix">
+               <string>&lt; </string>
+              </property>
+              <property name="suffix">
+               <string> hours</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="cbShowCongestion">
+              <property name="text">
+               <string>Show airport congestion for 
+airports with at least</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QSpinBox" name="sbCongestionMinimum">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="suffix">
+               <string> movements</string>
+              </property>
+              <property name="minimum">
+               <number>1</number>
+              </property>
+              <property name="value">
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <spacer name="horizontalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_57">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>(applies the filter above)</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_4">
+            <item row="0" column="1">
+             <widget class="QLabel" name="label_59">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Congestion Border: </string>
+              </property>
+              <property name="buddy">
+               <cstring>pbAppBorderLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QPushButton" name="pbCongestionBorderLineColor">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QDoubleSpinBox" name="sbCongestionBorderLineStrength">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonResetAirportTraffic">
             <property name="text">
-             <string>Dot Size</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbInactAirportDotSize</cstring>
+             <string>Reset</string>
             </property>
            </widget>
           </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_55">
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="display3Tab">
+      <attribute name="title">
+       <string>Display (Activity 2)</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_7">
+       <item>
+        <widget class="QGroupBox" name="groupBoxFirs">
+         <property name="title">
+          <string>FIRs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <layout class="QGridLayout" name="gridLayout_5">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>Border Line Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirBorderLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pbFirBorderLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Border Line</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_17">
+              <property name="text">
+               <string>Font Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirFontColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pbFirFontColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Font Color</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_16">
+              <property name="text">
+               <string>Fill Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirFillColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="pbFirFillColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Fill Color</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_15">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbFirBorderLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QDoubleSpinBox" name="sbFirBorderLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_18">
+              <property name="text">
+               <string>Font</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirFont</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QPushButton" name="pbFirFont">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>LOVV_CTR</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="cbReadSupFile">
             <property name="text">
-             <string>Dot Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbInactAirportDotColor</cstring>
+             <string>Display FIR boundaries for VATSIM (use firdisplay.sup)</string>
             </property>
            </widget>
           </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label_52">
+          <item>
+           <widget class="QPushButton" name="buttonResetFir">
             <property name="text">
-             <string>Font Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbInactAirportFontColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_53">
-            <property name="text">
-             <string>Font</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbInactAirportFont</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_51">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Inactive Airports</string>
-            </property>
-           </widget>
-          </item>
-          <item row="8" column="0">
-           <widget class="QLabel" name="label_56">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>Active Airports</string>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="0">
-           <widget class="QLabel" name="label_19">
-            <property name="text">
-             <string>Font Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbAirportFontColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="0">
-           <widget class="QLabel" name="label_38">
-            <property name="text">
-             <string>Dot Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbAirportDotColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="1">
-           <widget class="QPushButton" name="pbAirportDotColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="1">
-           <widget class="QPushButton" name="pbAirportFontColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="3">
-           <widget class="QDoubleSpinBox" name="sbAirportDotSize">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="3">
-           <widget class="QPushButton" name="pbAirportFont">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>LOWI 11/14</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="10" column="2">
-           <widget class="QLabel" name="label_39">
-            <property name="text">
-             <string>Dot Size</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbAirportDotSize</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="2">
-           <widget class="QLabel" name="label_20">
-            <property name="text">
-             <string>Font</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbAirportFont</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pbInactAirportFontColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QPushButton" name="pbInactAirportDotColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QPushButton" name="pbInactAirportFont">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>LOWG</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QDoubleSpinBox" name="sbInactAirportDotSize">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
+             <string>Reset</string>
             </property>
            </widget>
           </item>
@@ -1660,110 +1768,115 @@
          <property name="title">
           <string>Pilots</string>
          </property>
-         <layout class="QGridLayout">
-          <property name="verticalSpacing">
-           <number>4</number>
-          </property>
-          <property name="margin">
-           <number>6</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QLabel" name="label_30">
-            <property name="text">
-             <string>Pilot Font Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbPilotFontColor</cstring>
+         <layout class="QVBoxLayout" name="verticalLayout_6">
+          <item>
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_30">
+              <property name="text">
+               <string>Pilot Font Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbPilotFontColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pbPilotFontColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_29">
+              <property name="text">
+               <string>Font</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbPilotFont</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QPushButton" name="pbPilotFont">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>DGF042</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_31">
+              <property name="text">
+               <string>Pilot Dot Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbPilotDotColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pbPilotDotColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_32">
+              <property name="text">
+               <string>Dot Size</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbPilotDotSize</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QDoubleSpinBox" name="sbPilotDotSize">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QPushButton" name="pbPilotFontColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2">
-           <widget class="QLabel" name="label_29">
-            <property name="text">
-             <string>Font</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbPilotFont</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="pbPilotFont">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>DGF042</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_31">
-            <property name="text">
-             <string>Pilot Dot Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbPilotDotColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pbPilotDotColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_32">
-            <property name="text">
-             <string>Dot Size</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbPilotDotSize</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QDoubleSpinBox" name="sbPilotDotSize">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0" colspan="4">
-           <layout class="QHBoxLayout">
+          <item>
+           <layout class="QHBoxLayout" name="_8">
             <item>
              <widget class="QLabel" name="label_34">
               <property name="text">
@@ -1776,11 +1889,17 @@
             </item>
             <item>
              <widget class="QSpinBox" name="spinBoxTimeline">
+              <property name="specialValueText">
+               <string>no</string>
+              </property>
               <property name="suffix">
                <string> sec</string>
               </property>
               <property name="maximum">
                <number>600</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
               </property>
               <property name="value">
                <number>120</number>
@@ -1790,7 +1909,7 @@
             <item>
              <widget class="QLabel" name="label_33">
               <property name="text">
-               <string>Timeline for aircraft (set 0 to turn off)</string>
+               <string>Timeline for aircraft (0 to turn off)</string>
               </property>
               <property name="buddy">
                <cstring>spinBoxTimeline</cstring>
@@ -1812,120 +1931,160 @@
             </item>
            </layout>
           </item>
-          <item row="4" column="0">
-           <widget class="QLabel" name="label">
-            <property name="text">
-             <string>Time Line Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbTimeLineColor</cstring>
-            </property>
-           </widget>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Time Line Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbTimeLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pbTimeLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_35">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbTimeLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <widget class="QDoubleSpinBox" name="sbTimeLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_3">
+              <property name="text">
+               <string>Track Line Color</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbTrackLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pbTrackLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#c142ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="2">
+             <widget class="QLabel" name="label_36">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+              <property name="buddy">
+               <cstring>sbTrackLineStrength</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="3">
+             <widget class="QDoubleSpinBox" name="sbTrackLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_47">
+              <property name="text">
+               <string>Plan Line Color</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="pbPlanLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>#4444ff</string>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="2">
+             <widget class="QLabel" name="label_48">
+              <property name="text">
+               <string>Line Strength</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="3">
+             <widget class="QDoubleSpinBox" name="sbPlanLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
-          <item row="4" column="1">
-           <widget class="QPushButton" name="pbTimeLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="2">
-           <widget class="QLabel" name="label_35">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbTimeLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="4" column="3">
-           <widget class="QDoubleSpinBox" name="sbTimeLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="0">
-           <widget class="QLabel" name="label_3">
-            <property name="text">
-             <string>Track Line Color</string>
-            </property>
-            <property name="buddy">
-             <cstring>pbTrackLineColor</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="1">
-           <widget class="QPushButton" name="pbTrackLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#c142ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="2">
-           <widget class="QLabel" name="label_36">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-            <property name="buddy">
-             <cstring>sbTrackLineStrength</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="5" column="3">
-           <widget class="QDoubleSpinBox" name="sbTrackLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
-            </property>
-           </widget>
-          </item>
-          <item row="9" column="3">
-           <widget class="QPushButton" name="buttonResetPilot">
-            <property name="text">
-             <string>Reset</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="4">
-           <widget class="Line" name="line_4">
+          <item>
+           <widget class="Line" name="line">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
-          <item row="8" column="0" colspan="4">
-           <layout class="QHBoxLayout">
+          <item>
+           <layout class="QHBoxLayout" name="_9">
             <item>
              <widget class="QLabel" name="label_40">
               <property name="text">
@@ -1958,53 +2117,10 @@
             </item>
            </layout>
           </item>
-          <item row="7" column="0" colspan="4">
-           <widget class="Line" name="line">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="0">
-           <widget class="QLabel" name="label_47">
+          <item>
+           <widget class="QPushButton" name="buttonResetPilot">
             <property name="text">
-             <string>Plan Line Color</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="1">
-           <widget class="QPushButton" name="pbPlanLineColor">
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="text">
-             <string>#4444ff</string>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="2">
-           <widget class="QLabel" name="label_48">
-            <property name="text">
-             <string>Line Strength</string>
-            </property>
-           </widget>
-          </item>
-          <item row="6" column="3">
-           <widget class="QDoubleSpinBox" name="sbPlanLineStrength">
-            <property name="suffix">
-             <string> px</string>
-            </property>
-            <property name="decimals">
-             <number>1</number>
-            </property>
-            <property name="maximum">
-             <double>10.000000000000000</double>
-            </property>
-            <property name="singleStep">
-             <double>0.100000000000000</double>
+             <string>Reset</string>
             </property>
            </widget>
           </item>
@@ -2012,7 +2128,7 @@
         </widget>
        </item>
        <item>
-        <spacer>
+        <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -2031,6 +2147,18 @@
    <item>
     <layout class="QHBoxLayout">
      <item>
+      <widget class="QLabel" name="label_58">
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string>some settings require a restart, some a network update to take effect</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QDialogButtonBox" name="buttonBox">
        <property name="standardButtons">
         <set>QDialogButtonBox::Close</set>
@@ -2043,7 +2171,6 @@
  </widget>
  <tabstops>
   <tabstop>cbDownloadPeriodically</tabstop>
-  <tabstop>buttonResetPilot</tabstop>
   <tabstop>spinBoxDownloadInterval</tabstop>
   <tabstop>cbNetwork</tabstop>
   <tabstop>editUserDefinedLocation</tabstop>
@@ -2065,30 +2192,11 @@
   <tabstop>cbShowFixes</tabstop>
   <tabstop>editNavdir</tabstop>
   <tabstop>browseNavdirButton</tabstop>
-  <tabstop>cbFilterTraffic</tabstop>
-  <tabstop>spFilterDistance</tabstop>
-  <tabstop>spFilterArriving</tabstop>
   <tabstop>cbResetConfiguration</tabstop>
-  <tabstop>cbDashedFrontAfter</tabstop>
   <tabstop>cbLineSmoothing</tabstop>
   <tabstop>cbDotSmoothing</tabstop>
   <tabstop>sbMaxTextLabels</tabstop>
-  <tabstop>pbBackgroundColor</tabstop>
-  <tabstop>pbGlobeColor</tabstop>
-  <tabstop>pbGridLineColor</tabstop>
-  <tabstop>sbGridLineStrength</tabstop>
-  <tabstop>pbCoastLineColor</tabstop>
-  <tabstop>sbCoastLineStrength</tabstop>
-  <tabstop>pbCountryLineColor</tabstop>
-  <tabstop>sbCountryLineStrength</tabstop>
   <tabstop>buttonResetEarthSpace</tabstop>
-  <tabstop>pbFirBorderLineColor</tabstop>
-  <tabstop>sbFirBorderLineStrength</tabstop>
-  <tabstop>pbFirFontColor</tabstop>
-  <tabstop>pbFirFont</tabstop>
-  <tabstop>pbFirFillColor</tabstop>
-  <tabstop>cbReadSupFile</tabstop>
-  <tabstop>buttonResetFir</tabstop>
   <tabstop>pbInactAirportFontColor</tabstop>
   <tabstop>pbInactAirportFont</tabstop>
   <tabstop>pbInactAirportDotColor</tabstop>
@@ -2098,8 +2206,6 @@
   <tabstop>pbAirportDotColor</tabstop>
   <tabstop>sbAirportDotSize</tabstop>
   <tabstop>pbAppBorderLineColor</tabstop>
-  <tabstop>buttonBox</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>sbAppBorderLineStrength</tabstop>
   <tabstop>pbAppColorCenter</tabstop>
   <tabstop>pbAppColorMargin</tabstop>
@@ -2108,18 +2214,11 @@
   <tabstop>pbGndBorderLineColor</tabstop>
   <tabstop>sbGndBorderLineStrength</tabstop>
   <tabstop>pbGndFillColor</tabstop>
-  <tabstop>buttonResetAirport</tabstop>
-  <tabstop>pbPilotFontColor</tabstop>
-  <tabstop>pbPilotFont</tabstop>
-  <tabstop>pbPilotDotColor</tabstop>
-  <tabstop>sbPilotDotSize</tabstop>
   <tabstop>spinBoxTimeline</tabstop>
-  <tabstop>pbTimeLineColor</tabstop>
-  <tabstop>sbTimeLineStrength</tabstop>
-  <tabstop>pbTrackLineColor</tabstop>
-  <tabstop>sbTrackLineStrength</tabstop>
-  <tabstop>pbPlanLineColor</tabstop>
-  <tabstop>sbPlanLineStrength</tabstop>
+  <tabstop>cbDashedFrontAfter</tabstop>
+  <tabstop>buttonResetPilot</tabstop>
+  <tabstop>buttonBox</tabstop>
+  <tabstop>tabWidget</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>
@@ -2127,7 +2226,7 @@
  <connections>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>lblProxyServer</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2143,7 +2242,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>lblProxyUser</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2159,7 +2258,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>lblProxyPort</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2175,7 +2274,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>lblProxyPassword</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2191,7 +2290,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>editProxyServer</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2207,7 +2306,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>editProxyUser</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2223,7 +2322,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>editProxyPort</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2239,7 +2338,7 @@
   </connection>
   <connection>
    <sender>cbUseProxy</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>editProxyPassword</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
@@ -2286,66 +2385,34 @@
    </hints>
   </connection>
   <connection>
-   <sender>cbFilterTraffic</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>spFilterDistance</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>147</x>
-     <y>411</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>304</x>
-     <y>409</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbFilterTraffic</sender>
-   <signal>clicked(bool)</signal>
-   <receiver>spFilterArriving</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>147</x>
-     <y>411</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>304</x>
-     <y>445</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>cbUseNavDatabase</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>editNavdir</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
-     <y>246</y>
+     <x>119</x>
+     <y>251</y>
     </hint>
     <hint type="destinationlabel">
-     <x>282</x>
-     <y>309</y>
+     <x>119</x>
+     <y>251</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>cbUseNavDatabase</sender>
-   <signal>clicked(bool)</signal>
+   <signal>toggled(bool)</signal>
    <receiver>browseNavdirButton</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
-     <y>246</y>
+     <x>119</x>
+     <y>251</y>
     </hint>
     <hint type="destinationlabel">
-     <x>501</x>
-     <y>309</y>
+     <x>119</x>
+     <y>251</y>
     </hint>
    </hints>
   </connection>
@@ -2356,8 +2423,8 @@
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>494</x>
-     <y>709</y>
+     <x>591</x>
+     <y>758</y>
     </hint>
     <hint type="destinationlabel">
      <x>540</x>
@@ -2372,12 +2439,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>78</x>
-     <y>88</y>
+     <x>89</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>163</x>
-     <y>118</y>
+     <x>119</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -2388,12 +2455,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>61</x>
-     <y>86</y>
+     <x>72</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>172</x>
-     <y>153</y>
+     <x>119</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -2404,12 +2471,12 @@
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>43</x>
-     <y>92</y>
+     <x>54</x>
+     <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>218</x>
-     <y>186</y>
+     <x>119</x>
+     <y>80</y>
     </hint>
    </hints>
   </connection>
@@ -2424,8 +2491,136 @@
      <y>246</y>
     </hint>
     <hint type="destinationlabel">
-     <x>83</x>
-     <y>274</y>
+     <x>94</x>
+     <y>251</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionMinimum</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>176</x>
+     <y>602</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>280</x>
+     <y>597</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbFilterTraffic</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spFilterDistance</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>540</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>543</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbFilterTraffic</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>spFilterArriving</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>538</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>479</x>
+     <y>537</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pbCongestionBorderLineColor</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>126</x>
+     <y>594</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>485</x>
+     <y>648</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionBorderLineStrength</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>91</x>
+     <y>587</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>495</x>
+     <y>637</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbFilterTraffic</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_49</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>532</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>330</x>
+     <y>531</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_57</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>595</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>512</x>
+     <y>587</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_59</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>71</x>
+     <y>606</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>629</y>
     </hint>
    </hints>
   </connection>

@@ -31,11 +31,10 @@ public:
 	PreferencesDialog();
 
 private slots:
+    //
+	void loadSettings();
+    
 	// download settings
-	void on_sbInactAirportDotSize_valueChanged(double value);
-    void on_pbInactAirportDotColor_clicked();
-    void on_pbInactAirportFont_clicked();
-    void on_pbInactAirportFontColor_clicked();
     void on_cbShowFixes_toggled(bool checked);
     void on_spinBoxDownloadInterval_valueChanged(int value);
 	void on_cbDownloadPeriodically_stateChanged(int state);
@@ -51,9 +50,13 @@ private slots:
 	void on_editProxyPassword_editingFinished();
 	
 	// airport traffic settings
+    void on_buttonResetAirportTraffic_clicked();
 	void on_cbFilterTraffic_stateChanged(int state);
 	void on_spFilterDistance_valueChanged(int value);
 	void on_spFilterArriving_valueChanged(double value);
+    void on_sbCongestionBorderLineStrength_valueChanged(double value);
+    void on_pbCongestionBorderLineColor_clicked();
+    void on_cbShowCongestion_clicked(bool checked);
 	
 	// display
 	void on_spinBoxTimeline_valueChanged(int value);
@@ -67,9 +70,8 @@ private slots:
 	void on_browseNavdirButton_clicked();
 	void on_cbUseNavDatabase_stateChanged(int state);
 
-	void loadSettings();
-
 	// earth and space
+	void on_buttonResetEarthSpace_clicked();
 	void on_pbBackgroundColor_clicked();
 	void on_pbGlobeColor_clicked();
 	void on_pbGridLineColor_clicked();
@@ -78,17 +80,17 @@ private slots:
 	void on_sbCoastLineStrength_valueChanged(double value);
 	void on_pbCountryLineColor_clicked();
 	void on_sbCountryLineStrength_valueChanged(double value);
-	void on_buttonResetEarthSpace_clicked();
 
 	// FIR
+	void on_buttonResetFir_clicked();
 	void on_pbFirBorderLineColor_clicked();
 	void on_sbFirBorderLineStrength_valueChanged(double value);
 	void on_pbFirFontColor_clicked();
 	void on_pbFirFont_clicked();
 	void on_pbFirFillColor_clicked();
-	void on_buttonResetFir_clicked();
 
 	// Airport
+	void on_buttonResetAirport_clicked();
 	void on_pbAirportDotColor_clicked();
 	void on_sbAirportDotSize_valueChanged(double value);
 	void on_pbAirportFontColor_clicked();
@@ -102,9 +104,15 @@ private slots:
 	void on_pbGndBorderLineColor_clicked();
 	void on_sbGndBorderLineStrength_valueChanged(double value);
 	void on_pbGndFillColor_clicked();
-	void on_buttonResetAirport_clicked();
+    // (inactive airports)
+	void on_sbInactAirportDotSize_valueChanged(double value);
+    void on_pbInactAirportDotColor_clicked();
+    void on_pbInactAirportFont_clicked();
+    void on_pbInactAirportFontColor_clicked();
+
 
 	// Aircraft
+	void on_buttonResetPilot_clicked();
 	void on_pbPilotFontColor_clicked();
 	void on_pbPilotFont_clicked();
 	void on_pbPilotDotColor_clicked();
@@ -115,7 +123,6 @@ private slots:
 	void on_sbTrackLineStrength_valueChanged(double value);
 	void on_pbPlanLineColor_clicked();
 	void on_sbPlanLineStrength_valueChanged(double value);
-	void on_buttonResetPilot_clicked();
 	void on_cbDashedFrontAfter_currentIndexChanged(int index);
 
 	void on_cbResetConfiguration_stateChanged(int state);

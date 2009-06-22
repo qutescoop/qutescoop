@@ -167,7 +167,7 @@ void Controller::showDetailsDialog() {
 QString Controller::rank() const {
 	if(network == VATSIM) {
 		switch(rating) {
-		case 0:
+		case 0: return ""; break;
 		case 1: return "OBS"; break;
 		case 2: return "STU"; break;
 		case 3:

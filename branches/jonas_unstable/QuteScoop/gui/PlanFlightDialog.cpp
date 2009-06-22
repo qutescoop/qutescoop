@@ -67,7 +67,8 @@ void PlanFlightDialog::requestGenerated() {
         lblGeneratedStatus->setText(QString("bad request"));
         return;
     }
-        
+      
+    // add 3 bogus routes
     QList<Route*> newroutes;
     for (int i=0; i<3; i++) {    
         QStringList sl = QStringList();
@@ -98,7 +99,6 @@ void PlanFlightDialog::requestVroute() {
     lblVrouteStatus->setText(QString("request sent..."));
     QString vr = QString("http://data.vroute.net/internal/query.php");  
 
-    QString airacCycle("0906");    
     QString authCode("12f2c7fd6654be40037163242d87e86f"); //fixme // add it manually - we need to find some way to manage that...
     if (authCode == "") {
         lblVrouteStatus->setText(QString("auth code unavailable. add it in the source"));
@@ -107,7 +107,7 @@ void PlanFlightDialog::requestVroute() {
         
     QUrl url(vr);
     url.addQueryItem(QString("auth_code"), authCode);
-    url.addQueryItem(QString("cycle"), airacCycle); // defaults to the last freely available (0701)
+    url.addQueryItem(QString("cycle"), edCycle->text().trimmed()); // defaults to the last freely available (0701)
     url.addQueryItem(QString("type"), QString("query"));
     url.addQueryItem(QString("level"),QString("0")); // details level, so far only 0 supported
     url.addQueryItem(QString("dep"), edDep->text().trimmed());

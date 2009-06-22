@@ -42,11 +42,15 @@ public:
 	 */
 	void setStatusLocation(const QString& url);
 	
-	const WhazzupData& whazzupData() { return data; }
+	const WhazzupData& whazzupData() { return (predictedTime.isValid()? predictedData: data); } // we fake it when predicting a certain time
+    const WhazzupData& realWhazzupData() { return data; } // this is always the really downloaded thing
+    
+    void setPredictedTime(QDateTime predictedTime);
+    QDateTime getPredictedTime() const { return predictedTime; }
 	
 	QString getUserLink(const QString& id) const;
 	QString getAtisLink(const QString& id) const;
-	
+    
 signals:
 	void newData();
 	void networkMessage(QString message);
@@ -67,9 +71,12 @@ private:
 	Whazzup();
 	virtual ~Whazzup();
 
-  	void downloadBookings();
+    void downloadBookings();
 
-	WhazzupData data;
+    WhazzupData data;
+	WhazzupData predictedData;
+    
+    QDateTime predictedTime;
 
 	QHttp *statusDownloader;
 	QBuffer *statusBuffer;

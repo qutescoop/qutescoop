@@ -184,6 +184,7 @@ void Whazzup::whazzupDownloading(int prog, int tot) {
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
+    qDebug() << "whazzup downloaded";
     Window::getInstance()->setProgressBar(false);
 	if(whazzupBuffer == 0)
 		return;
@@ -216,7 +217,7 @@ void Whazzup::whazzupDownloaded(bool error) {
 }
 
 void Whazzup::downloadBookings() {
-	QUrl url("http://vatbook.euroutepro.com/servinfo.asp");
+	QUrl url(Settings::bookingsLocation());
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
 
@@ -237,6 +238,7 @@ void Whazzup::downloadBookings() {
 		bookingsDownloader->setUser(url.userName(), url.password());
 
 	QString querystr = url.path() + "?" + url.encodedQuery();
+
 	if(bookingsBuffer != 0) delete bookingsBuffer;
 	bookingsBuffer = new QBuffer;
 	bookingsBuffer->open(QBuffer::ReadWrite);
@@ -248,6 +250,7 @@ void Whazzup::bookingsDownloading(int prog, int tot) {
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
+    qDebug() << "bookings downloaded";
     Window::getInstance()->setProgressBar(false);
 	if(bookingsBuffer == 0)
 		return;
@@ -280,4 +283,10 @@ QString Whazzup::getAtisLink(const QString& id) const {
 	if(metarUrl.isEmpty())
 		return QString();
 	return metarUrl + "?id=" + id;
+}
+
+void Whazzup::setPredictedTime(QDateTime predictedTime) {
+    this->predictedTime = predictedTime;
+    predictedData = WhazzupData(predictedTime, data);
+    emit newData();
 }

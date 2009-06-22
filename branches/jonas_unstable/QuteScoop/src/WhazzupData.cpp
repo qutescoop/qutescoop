@@ -40,7 +40,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 	connectedServers(0),
 	whazzupVersion(0),
 	whazzupTime(QDateTime())
-{        
+{
     dataType = type;
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_PREFILE};
 	ParserState state = STATE_NONE;
@@ -51,7 +51,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 
 		if(line.startsWith(';'))  // comments
 			continue;
-	
+
 		if(line.startsWith('!')) {
 			if(line.startsWith("!CLIENTS"))
 				state = STATE_CLIENTS;
@@ -80,7 +80,10 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 } else if(line.startsWith("CONNECTED SERVERS")) {
 					connectedServers = list[1].trimmed().toInt();
                 } else if(line.startsWith("UPDATE")) {
-					whazzupTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
+                    if(type == WHAZZUP) 
+                        whazzupTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
+                    else if(type == ATCBOOKINGS) 
+                        bookingsTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
                 } else if(line.startsWith("VERSION")) {
 					whazzupVersion = list[1].trimmed().toInt();
                 }
@@ -118,6 +121,76 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 			break;
 		}
 	}
+}
+
+WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
+	connectedServers(0)
+{
+    whazzupVersion = data.whazzupVersion;
+    whazzupTime = predictTime;
+    dataType = WHAZZUP;
+    // so now lets fake some controllers
+    QList<BookedController*> bc = data.getBookedControllers();
+    for (int i=0; i<bc.size(); i++) {
+        if (bc[i] == 0) continue;
+        if (bc[i]->starts() <= predictTime && bc[i]->ends() >= predictTime) { // only ones booked for the selected time
+            QStringList sl;// = new QStringList();
+            for (int h=0; h<50; h++) sl.append(QString()); // build a QStringList with enough items
+
+            //userId = getField(stringList, 1);
+            sl[0]= bc[i]->label;
+            sl[2] = bc[i]->realName;
+            sl[18] = QString("%1").arg(bc[i]->facilityType);
+
+            //lat = getField(stringList, 5).toDouble();
+            //lon = getField(stringList, 6).toDouble();
+            sl[5] = QString("%1").arg(bc[i]->lat);
+            sl[6] = QString("%1").arg(bc[i]->lon);
+
+            //atisMessage = getField(stringList, 35);
+            sl[35] = QString::fromUtf8("^§BOOKED from %1 to %2 UTC^§%3")
+                     .arg(bc[i]->starts().toString("hh:mm"))
+                     .arg(bc[i]->ends().toString("hh:mm"))
+                     .arg(bc[i]->bookingInfoStr);
+
+            //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddhhmmss");
+            sl[37] = bc[i]->timeConnected.toString("yyyyMMddhhmmss");
+
+            //server = getField(stringList, 14);
+            sl[14] = "BOOKED SESSION"; 
+
+            // not applicable:
+            //frequency = getField(stringList, 4);
+            //visualRange = getField(stringList, 19).toInt();
+            //timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
+            //protrevision = getField(stringList, 15).toInt();
+            //rating = getField(stringList, 16).toInt();
+            
+            controllers[bc[i]->label] = new Controller(sl, this);
+        }
+    }
+
+    // now lets add some pilots - WIP
+    /*
+    QList<Pilot*> p = data.getPilots();
+    for (int i=0; i<p.size(); i++) {
+        if (p[i] == 0) continue;
+        
+        Pilot* np = new Pilot(*p[i]);
+        
+        // calculate position
+        if(np->eta() > predictTime)
+            continue;
+        double lat = np->lat;
+        double lon = np->lon;        
+        np->positionInFuture(&lat, &lon, data.timestamp().secsTo(predictTime));
+        np->lat = lat;
+        np->lon = lon;
+        
+        pilots[p[i]->label] = np;
+    }
+    */
+    connectedClients = controllers.size() + pilots.size();
 }
 
 WhazzupData::WhazzupData(const WhazzupData& data) {

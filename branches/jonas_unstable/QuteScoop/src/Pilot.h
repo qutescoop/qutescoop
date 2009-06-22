@@ -51,6 +51,7 @@ public:
 	QString planRevision;
 	QString planFlighttype;
 	QString planDeptime;
+    //QDateTime planDepDateTime() const;
 	QString planActtime;
 	int planHrsEnroute;
 	int planMinEnroute;
@@ -77,7 +78,7 @@ public:
 	double distanceToDestination() const;
 	double distanceFromDeparture() const;
 	QString ete() const;
-	//QString eta() const;
+    //QDateTime eta() const;
 	void positionInFuture(double *lat, double *lon, int seconds) const;
 
 	void toggleDisplayPath();
@@ -86,6 +87,8 @@ public:
 	bool displayLineFromDep, displayLineToDest;
 
 	QList<QPair<double, double> > oldPositions;
+
+    QDate dayOfFlight;
 
 private:
 	void plotPathToDest() const;
