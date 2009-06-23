@@ -16,6 +16,8 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "Whazzup.h"
 #include "Client.h"
 #include "Settings.h"

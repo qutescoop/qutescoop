@@ -31,6 +31,7 @@ WhazzupData::WhazzupData():
 	connectedServers(0),
 	whazzupVersion(0),
 	whazzupTime(QDateTime()),
+	bookingsTime(QDateTime()),
     dataType(UNIFIED)
 {
 }
@@ -39,7 +40,8 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 	connectedClients(0),
 	connectedServers(0),
 	whazzupVersion(0),
-	whazzupTime(QDateTime())
+    whazzupTime(QDateTime()),
+    bookingsTime(QDateTime())
 {
     dataType = type;
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_PREFILE};
@@ -79,11 +81,18 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 					connectedClients = list[1].trimmed().toInt();
                 } else if(line.startsWith("CONNECTED SERVERS")) {
 					connectedServers = list[1].trimmed().toInt();
+                } else if(line.startsWith("RELOAD")) {
+                    // maybe schedule reloading here
+                } else if(line.startsWith("BOOKING")) {
+                    // always "1" for bookings, but we select already by the whazzup location
                 } else if(line.startsWith("UPDATE")) {
-                    if(type == WHAZZUP) 
+                    if(type == WHAZZUP) {
                         whazzupTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
-                    else if(type == ATCBOOKINGS) 
+                        whazzupTime.setTimeSpec(Qt::UTC);
+                    } else if(type == ATCBOOKINGS) {
                         bookingsTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
+                        bookingsTime.setTimeSpec(Qt::UTC);
+                    }
                 } else if(line.startsWith("VERSION")) {
 					whazzupVersion = list[1].trimmed().toInt();
                 }
@@ -224,6 +233,7 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         if (!data.isVatsim()) bookedcontrollers.clear();
     } else if (data.dataType == ATCBOOKINGS) {
         bookedcontrollers = data.bookedcontrollers;
+        bookingsTime = data.bookingsTime;
     }
 }
 
@@ -315,12 +325,12 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
     
         connectedClients = data.connectedClients;
         connectedServers = data.connectedServers;
-        whazzupVersion = data.whazzupVersion;
+        whazzupVersion = data.whazzupVersion;        
         whazzupTime = data.whazzupTime;
-        
-        if (!data.isVatsim()) bookedcontrollers.clear();       
+        if (!data.isVatsim()) bookedcontrollers.clear();
     } else if (data.dataType == ATCBOOKINGS) {
         updateBookedControllersFrom(data);
+        bookingsTime = data.bookingsTime;
     }
 }
 
@@ -375,7 +385,8 @@ QList<Pilot*> WhazzupData::getPilots() const {
 QList<Pilot*> WhazzupData::getActivePilots() const { // exclude prefiled flights
 	QList<Pilot*> result = pilots.values();
 	for (int i = 0; i < result.size(); i++) {
-		if (result[i]->flightStatus() == Pilot::PREFILED) {
+		// remove those we do not want
+        if (result[i]->flightStatus() == Pilot::PREFILED || (result[i]->lat == 0 && result[i]->lon == 0) ) {
 			result.removeAt(i);
 			i--;
 		}

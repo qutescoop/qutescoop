@@ -187,7 +187,6 @@ void Whazzup::whazzupDownloading(int prog, int tot) {
 
 void Whazzup::whazzupDownloaded(bool error) {
     Window::getInstance()->setStatusText(QString());
-    qDebug() << "whazzup downloaded" << whazzupBuffer->size() << "byte";
     Window::getInstance()->setProgressBar(false);
 	if(whazzupBuffer == 0)
 		return;
@@ -203,8 +202,8 @@ void Whazzup::whazzupDownloaded(bool error) {
 		emit downloadError(statusDownloader->errorString());
 		return;
 	}
-	
-	whazzupBuffer->seek(0);
+    whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
+    whazzupBuffer->seek(0);
 	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
     whazzupBuffer->close();
 	if(!newWhazzupData.isNull()) {
@@ -230,7 +229,7 @@ void Whazzup::downloadBookings() {
 
 	if(bookingsDownloader != 0) {
 		bookingsDownloader->abort();
-//		delete bookingsDownloader;
+        delete bookingsDownloader;
 	}
 	bookingsDownloader = new QHttp(this);
 	connect(bookingsDownloader, SIGNAL(done(bool)), this, SLOT(bookingsDownloaded(bool)));
@@ -244,8 +243,7 @@ void Whazzup::downloadBookings() {
 	QString querystr = url.path() + "?" + url.encodedQuery();
 
     if(bookingsBuffer != 0)
-        bookingsBuffer->close();
-//        delete bookingsBuffer;
+        delete bookingsBuffer;
     bookingsBuffer = new QBuffer;
 	bookingsBuffer->open(QBuffer::ReadWrite);
 	bookingsDownloader->get(querystr, bookingsBuffer);
@@ -256,36 +254,30 @@ void Whazzup::bookingsDownloading(int prog, int tot) {
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
-    Window::getInstance()->setStatusText(QString());
-    qDebug() << "bookings downloaded";
     Window::getInstance()->setProgressBar(false);
-	if(bookingsBuffer == 0)
-		return;
-	
-	if(bookingsBuffer->data().isEmpty()) {
-		return;
+    if(bookingsBuffer == 0) {
+        emit newData(); // update statusbar
+        return;
+    }
+    bookingsBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
+    if(bookingsBuffer->data().isEmpty()) {
+        emit newData(); // update statusbar
+        return;
 	}
 	
 	if(error) {
         Window::getInstance()->setEnableBookedAtc(false);
 		emit downloadError(bookingsDownloader->errorString());
-		return;
+        emit newData(); // update statusbar
+        return;
 	}
 
-    // weird things here ------------
-    QBuffer* neu = new QBuffer;
-    QByteArray bookdata = bookingsBuffer->data();
-    neu->setData(bookdata);
-    //qDebug() << bookingsBuffer->seek(0);
-
-    // ------------------------------
-
-    WhazzupData newBookingsData(neu, WhazzupData::ATCBOOKINGS);
+    WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
     if(!newBookingsData.isNull()) {
 		data.updateFrom(newBookingsData);
-		emit newData();
 	}
+    emit newData(); // update statusbar
 }
 
 QString Whazzup::getUserLink(const QString& id) const {

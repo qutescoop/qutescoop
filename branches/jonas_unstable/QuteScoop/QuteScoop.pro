@@ -26,6 +26,9 @@ DEPENDPATH += ./src \
     ./gui
 INCLUDEPATH += ./src \
     ./gui
+MOC_DIR = temp
+UI_DIR = temp
+OBJECTS_DIR = temp
 QT += network \
     opengl \
     xml
@@ -83,7 +86,8 @@ HEADERS += WhazzupData.h \
     AirportDetails.h \
     src/Route.h \
     gui/PlanFlightRoutesModel.h \
-    gui/BookedAtcSortFilter.h
+    gui/BookedAtcSortFilter.h \
+    src/helpers.h
 SOURCES += WhazzupData.cpp \
     Whazzup.cpp \
     Waypoint.cpp \
@@ -128,3 +132,4 @@ SOURCES += WhazzupData.cpp \
     gui/PlanFlightRoutesModel.cpp \
     gui/BookedAtcSortFilter.cpp
 RESOURCES += Resources.qrc
+OTHERS += CHANGELOG

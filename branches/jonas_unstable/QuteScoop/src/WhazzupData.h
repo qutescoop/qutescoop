@@ -66,7 +66,7 @@ public:
 	
 	void accept(MapObjectVisitor *visitor) const;
 	
-	bool isNull() const { return whazzupTime.isNull(); }
+    bool isNull() const { return (whazzupTime.isNull() && bookingsTime.isNull()); }
 	
 private:
 	void assignFrom(const WhazzupData& data);

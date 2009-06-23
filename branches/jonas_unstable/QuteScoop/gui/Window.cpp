@@ -235,8 +235,8 @@ void Window::downloadError(QString message) {
 }
 
 void Window::whazzupDownloaded() {
-	const WhazzupData &data = Whazzup::getInstance()->whazzupData();
-    
+    const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
+
     QString msg = QString(tr("%1%2 - %4 UTC: %5 clients"))
                   .arg(Settings::downloadNetworkName())
                   .arg(Whazzup::getInstance()->getPredictedTime().isValid()
