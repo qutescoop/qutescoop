@@ -143,7 +143,7 @@ void Whazzup::download() {
 	
 	downloadTimer->stop();
 	
-	QTime now = QTime::currentTime();
+    QTime now = QTime::currentTime();
 	if(lastDownloadTime.secsTo(now) < 30)
 		return; // don't allow download intervals < 30 seconds
 	lastDownloadTime = now;
@@ -173,7 +173,9 @@ void Whazzup::download() {
 
 	QString querystr = url.path() + "?" + url.encodedQuery();
 	
-	if(whazzupBuffer != 0) delete whazzupBuffer;
+    if(whazzupBuffer != 0)
+        whazzupBuffer->close();
+        delete whazzupBuffer;
 	whazzupBuffer = new QBuffer;
 	whazzupBuffer->open(QBuffer::ReadWrite);
 	whazzupDownloader->get(querystr, whazzupBuffer);
@@ -228,7 +230,7 @@ void Whazzup::downloadBookings() {
 
 	if(bookingsDownloader != 0) {
 		bookingsDownloader->abort();
-		delete bookingsDownloader;
+//		delete bookingsDownloader;
 	}
 	bookingsDownloader = new QHttp(this);
 	connect(bookingsDownloader, SIGNAL(done(bool)), this, SLOT(bookingsDownloaded(bool)));
@@ -242,8 +244,9 @@ void Whazzup::downloadBookings() {
 	QString querystr = url.path() + "?" + url.encodedQuery();
 
     if(bookingsBuffer != 0)
-        delete bookingsBuffer;
-	bookingsBuffer = new QBuffer;
+        bookingsBuffer->close();
+//        delete bookingsBuffer;
+    bookingsBuffer = new QBuffer;
 	bookingsBuffer->open(QBuffer::ReadWrite);
 	bookingsDownloader->get(querystr, bookingsBuffer);
 }
@@ -254,7 +257,7 @@ void Whazzup::bookingsDownloading(int prog, int tot) {
 
 void Whazzup::bookingsDownloaded(bool error) {
     Window::getInstance()->setStatusText(QString());
-    qDebug() << "bookings downloaded" << bookingsBuffer->size() << "byte";
+    qDebug() << "bookings downloaded";
     Window::getInstance()->setProgressBar(false);
 	if(bookingsBuffer == 0)
 		return;
@@ -268,8 +271,16 @@ void Whazzup::bookingsDownloaded(bool error) {
 		emit downloadError(bookingsDownloader->errorString());
 		return;
 	}
-    bookingsBuffer->seek(0);
-	WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
+
+    // weird things here ------------
+    QBuffer* neu = new QBuffer;
+    QByteArray bookdata = bookingsBuffer->data();
+    neu->setData(bookdata);
+    //qDebug() << bookingsBuffer->seek(0);
+
+    // ------------------------------
+
+    WhazzupData newBookingsData(neu, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
     if(!newBookingsData.isNull()) {
 		data.updateFrom(newBookingsData);
