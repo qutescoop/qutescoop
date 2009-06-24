@@ -113,6 +113,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                     if (type == WHAZZUP) {
                         Controller *c = new Controller(list, this);
                         controllers[c->label] = c;
+                        qDebug() << c->label << c->facilityType;
                     } else if (type == ATCBOOKINGS) {
                         BookedController *bc = new BookedController(list, this);
                         bookedcontrollers.append(bc);

@@ -33,6 +33,7 @@ public:
     void refresh();
     
 private slots:
+    void on_tbPredict_clicked();
     void modelSelected(const QModelIndex& index);
     void on_dateFilter_dateChanged(QDate date);
     void on_timeFilter_timeChanged(QTime date);

@@ -49,8 +49,6 @@ public slots:
 	void refreshFriends();
 
 private slots:	
-    void on_tbSubHrs_clicked();
-    void on_tbAddHrs_clicked();
     void on_timePredictTime_timeChanged(QTime date);
     void on_datePredictTime_dateChanged(QDate date);
     void on_tbDisablePredict_clicked();

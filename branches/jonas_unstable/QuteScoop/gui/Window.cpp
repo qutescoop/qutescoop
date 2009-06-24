@@ -183,12 +183,16 @@ Window::Window(QWidget *parent) :
 	}
     
     // Forecast / Predict settings
-    datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date());
+    datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
     datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
     timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
     framePredict->hide();
     warpTimer.stop();
     connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
+
+    QFont font = lblWarpInfo->font();
+    font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
+    lblWarpInfo->setFont(font); //make it a bit smaller than standard text
 }
 
 void Window::toggleFullscreen() {
@@ -249,7 +253,7 @@ void Window::whazzupDownloaded() {
                   .arg(data.clients());
 	setStatusText(msg);
 
-    msg = QString("WhazzUp %1, Bookings %2")
+    msg = QString("got whazzup %1, bookings %2")
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.timestamp().time().toString())
                         : (data.timestamp().isValid()
@@ -263,6 +267,11 @@ void Window::whazzupDownloaded() {
                            : "not downloaded")
                         );
     lblWarpInfo->setText(msg);
+    if (Whazzup::getInstance()->getPredictedTime().isValid()) {
+        framePredict->show();
+        timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
+        datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
+    }
 
 	clientSelection->clearClients();
 	clientSelection->close();
@@ -624,14 +633,4 @@ void Window::on_timePredictTime_timeChanged(QTime date)
 {
     warpTimer.stop();
     warpTimer.start(400);
-}
-
-void Window::on_tbAddHrs_clicked()
-{
-    timePredictTime->setTime(timePredictTime->time().addSecs(3600));
-}
-
-void Window::on_tbSubHrs_clicked()
-{
-    timePredictTime->setTime(timePredictTime->time().addSecs(-3600));
 }

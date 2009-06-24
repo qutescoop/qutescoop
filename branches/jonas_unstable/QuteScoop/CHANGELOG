@@ -13,6 +13,7 @@ added:
 * Doubleclick to center map, right or left click to pan
 * Request routes from route providers. So far only vroute is integrated, 
   but we asked all other major route databases to join us
+* Show _FSS stations by faking the facilityType which is not reported correctly in WhazzUp data
 
 fixed:  
 * Docks restore correctly on window minimize/restore
