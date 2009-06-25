@@ -148,7 +148,9 @@
            <bool>false</bool>
           </property>
           <property name="text">
-           <string>generated (experimental)</string>
+           <string>generated 
+(experimental)
+(inactive)</string>
           </property>
           <property name="checked">
            <bool>false</bool>

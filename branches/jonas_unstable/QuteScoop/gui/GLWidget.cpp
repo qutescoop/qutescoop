@@ -92,10 +92,10 @@ QSize GLWidget::sizeHint() const {
 void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
 	xRot = 360 - lat;
 	yRot = 360 - lon;
-	normalizeAngle(&xRot);
-	normalizeAngle(&yRot);
-	zoom = newZoom;
-	resetZoom();
+    normalizeAngle(&xRot);
+    normalizeAngle(&yRot);
+    zoom = newZoom;
+    resetZoom();
 	updateGL();
 }
 
@@ -221,15 +221,17 @@ void GLWidget::prepareDisplayLists() {
     }
 }
 
-void GLWidget::newWhazzupData() {
-	updateAirports();
-	firsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
+void GLWidget::newWhazzupData(bool isNew) {
+    if(isNew) {
+        updateAirports();
+        firsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
 
-	createPilotsList();
-	createAirportsList();
-	prepareDisplayLists();
+        createPilotsList();
+        createAirportsList();
+        prepareDisplayLists();
 
-	updateGL();
+        updateGL();
+    }
 }
 
 void GLWidget::displayAllFirs(bool value) {
@@ -610,7 +612,7 @@ void GLWidget::renderLabels() {
 
 	// Airport labels
 	objects.clear();
-	QList<Airport*> airportList = NavData::getInstance()->airportsTrafficSorted(); //fixme: ordered by congestion, big airport's labels will always be drawn first
+    QList<Airport*> airportList = NavData::getInstance()->airportsTrafficSorted(); //ordered by congestion, big airport's labels will always be drawn first
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] == 0) continue;
 		if(airportList[i]->isActive()) objects.append(airportList[i]);

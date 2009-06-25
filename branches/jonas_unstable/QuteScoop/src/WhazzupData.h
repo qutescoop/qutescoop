@@ -33,7 +33,7 @@ class Client;
 class WhazzupData
 {
 public:
-    enum WhazzupType { WHAZZUP, ATCBOOKINGS, UNIFIED };
+    enum WhazzupType { NONE, WHAZZUP, ATCBOOKINGS, UNIFIED };
         
 	WhazzupData();
 	WhazzupData(QBuffer* buffer, WhazzupType type);
@@ -59,8 +59,10 @@ public:
 	int servers() const { return connectedServers; }
 	int version() const { return whazzupVersion; }
 	const QDateTime& timestamp() const { return whazzupTime; }
-	const QDateTime& bookingsTimestamp() const { return bookingsTime; }
-	
+    const QDateTime& bookingsTimestamp() const { return bookingsTime; }
+    const QDateTime& predictionBasedOnTimestamp() const { return predictionBasedOnTime; }
+    const QDateTime& predictionBasedOnBookingsTimestamp() const { return predictionBasedOnBookingsTime; }
+
 	bool isIvao() const { return whazzupVersion == 4; }
 	bool isVatsim() const { return whazzupVersion == 8; }
 	
@@ -82,7 +84,9 @@ private:
 	int connectedServers;
 	int whazzupVersion;
 	QDateTime whazzupTime;
-	QDateTime bookingsTime;
+    QDateTime bookingsTime;
+    QDateTime predictionBasedOnTime;
+    QDateTime predictionBasedOnBookingsTime;
     WhazzupType dataType;
 };
 

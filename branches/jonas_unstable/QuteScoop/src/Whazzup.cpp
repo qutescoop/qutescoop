@@ -155,7 +155,7 @@ void Whazzup::download() {
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
 
-   	Window::getInstance()->setStatusText(QString("Downloading whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)));
+    Window::getInstance()->setStatusText(QString("Updating whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)));
     qDebug() << "Downloading whazzup from" << fileLocation;
 
 	if(whazzupDownloader != 0) {
@@ -186,29 +186,39 @@ void Whazzup::whazzupDownloading(int prog, int tot) {
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
+    qDebug() << "Whazzup received";
     Window::getInstance()->setStatusText(QString());
     Window::getInstance()->setProgressBar(false);
-	if(whazzupBuffer == 0)
-		return;
+    if(whazzupBuffer == 0) {
+        emit newData(false); // update statusbar
+        return;
+    }
 	
 	if(Settings::downloadPeriodically())
 		downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
 
 	if(whazzupBuffer->data().isEmpty()) {
-		return;
+        emit newData(false); // update statusbar
+        return;
 	}
 	
 	if(error) {
 		emit downloadError(statusDownloader->errorString());
-		return;
+        emit newData(false); // update statusbar
+        return;
 	}
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
 	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
     whazzupBuffer->close();
 	if(!newWhazzupData.isNull()) {
-		data.updateFrom(newWhazzupData);
-		emit newData();
+        if(newWhazzupData.timestamp() != data.timestamp()) {
+            data.updateFrom(newWhazzupData);
+            qDebug() << "Whazzup updated" << data.timestamp().toString();
+            emit newData(true);
+        } else {
+            qDebug() << "We already have Whazzup with that Timestamp" << data.timestamp().toString();
+        }
 	}
 
     if (data.isVatsim()) {// get ATC Bookings if network is VATSIM
@@ -224,7 +234,7 @@ void Whazzup::downloadBookings() {
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
 
-	Window::getInstance()->setStatusText(QString("Downloading ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
+    Window::getInstance()->setStatusText(QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
    	qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
 
 	if(bookingsDownloader != 0) {
@@ -254,30 +264,36 @@ void Whazzup::bookingsDownloading(int prog, int tot) {
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
+    qDebug() << "Bookings received";
     Window::getInstance()->setProgressBar(false);
     if(bookingsBuffer == 0) {
-        emit newData(); // update statusbar
+        emit newData(false); // update statusbar
         return;
     }
     bookingsBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     if(bookingsBuffer->data().isEmpty()) {
-        emit newData(); // update statusbar
+        emit newData(false); // update statusbar
         return;
 	}
 	
 	if(error) {
         Window::getInstance()->setEnableBookedAtc(false);
 		emit downloadError(bookingsDownloader->errorString());
-        emit newData(); // update statusbar
+        emit newData(false); // update statusbar
         return;
 	}
 
     WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
     if(!newBookingsData.isNull()) {
-		data.updateFrom(newBookingsData);
-	}
-    emit newData(); // update statusbar
+        if(newBookingsData.bookingsTimestamp() != data.bookingsTimestamp()) {
+            data.updateFrom(newBookingsData);
+            qDebug() << "Bookings updated" << data.bookingsTimestamp().toString();
+            emit newData(true);
+        } else {
+            qDebug() << "We already have Bookings with that Timestamp" << data.bookingsTimestamp().toString();
+        }
+    }
 }
 
 QString Whazzup::getUserLink(const QString& id) const {
@@ -294,6 +310,8 @@ QString Whazzup::getAtisLink(const QString& id) const {
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
     this->predictedTime = predictedTime;
-    predictedData = WhazzupData(predictedTime, data);
-    emit newData();
+    WhazzupData newdata = WhazzupData(predictedTime, data);
+    predictedData.updateFrom(newdata);
+    qDebug() << "Time Warp completed" << predictedData.timestamp().toString();
+    emit newData(true);
 }

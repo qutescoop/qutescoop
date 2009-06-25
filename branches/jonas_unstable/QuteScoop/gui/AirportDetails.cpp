@@ -92,7 +92,7 @@ void AirportDetails::refresh(Airport* newAirport) {
 	
 	QLocale locale(airport->countryCode.toLower());
     int utcDev = (int) (airport->lon/180*12 + 0.5); // lets estimate the deviation from UTC and round that
-    QString lt = QDateTime::currentDateTime().toUTC().addSecs(utcDev*3600).time().toString("HH:mm");
+    QString lt = Whazzup::getInstance()->whazzupData().timestamp().addSecs(utcDev*3600).time().toString("HH:mm");
 	lblCountry->setText(QString("%1 (%2)")
                         .arg(airport->countryCode)
                         .arg(NavData::getInstance()->countryName(airport->countryCode)));
@@ -118,7 +118,11 @@ void AirportDetails::refresh(Airport* newAirport) {
 	groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
 
 	QList<Controller*> atcContent = airport->getAllControllers();
-	groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
+    Controller* atis = Whazzup::getInstance()->whazzupData().getController(airport->label + "_ATIS");
+    groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
+
+    if (atis != 0)
+        atcContent.append(atis);
 	
 	// observers
 	QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();

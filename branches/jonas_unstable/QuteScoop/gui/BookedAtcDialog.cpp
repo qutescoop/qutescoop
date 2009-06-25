@@ -68,12 +68,12 @@ void BookedAtcDialog::refresh() {
 
     const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
 
-    QString msg = QString("got bookings %1")
+    QString msg = QString("Bookings %1 updated")
                   .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.bookingsTimestamp().time().toString())
                         : (data.bookingsTimestamp().isValid()
                            ? data.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
-                           : "not downloaded")
+                           : "never")
                         );
     lblStatusInfo->setText(msg);
 }

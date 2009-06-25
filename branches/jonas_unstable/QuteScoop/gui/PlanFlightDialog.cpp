@@ -99,7 +99,10 @@ void PlanFlightDialog::requestVroute() {
     lblVrouteStatus->setText(QString("request sent..."));
     QString vr = QString("http://data.vroute.net/internal/query.php");  
 
-    QString authCode("12f2c7fd6654be40037163242d87e86f"); //fixme // add it manually - we need to find some way to manage that...
+    // Add it manually - we need to find some way to manage that this code is not abused
+    // Cause if it is - we are all blocked from vroute access!
+    QString authCode("12f2c7fd6654be40037163242d87e86f"); //fixme
+
     if (authCode == "") {
         lblVrouteStatus->setText(QString("auth code unavailable. add it in the source"));
         return;

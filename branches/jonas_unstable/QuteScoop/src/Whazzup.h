@@ -52,7 +52,7 @@ public:
 	QString getAtisLink(const QString& id) const;
     
 signals:
-	void newData();
+    void newData(bool isNew);
 	void networkMessage(QString message);
 	void downloadError(QString message);
 	void statusDownloaded();

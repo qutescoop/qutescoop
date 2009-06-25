@@ -19,6 +19,7 @@
 #include "AirportDetailsArrivalsModel.h"
 
 #include <QtAlgorithms>
+#include <QDebug>
 
 void AirportDetailsArrivalsModel::setClients(const QList<Pilot*>& pilots) {
 	this->pilots = pilots;
@@ -43,7 +44,8 @@ QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientati
         case 6: return QString("Speed"); break;
         case 7: return QString("Dist"); break;
         case 8: return QString("Expected"); break;
-        case 9: return QString("Status"); break;
+        case 9: return QString("Delay"); break;
+        case 10: return QString("Status"); break;
     }
 
 	return QVariant();
@@ -54,7 +56,7 @@ int AirportDetailsArrivalsModel::rowCount(const QModelIndex &parent) const {
 }
 
 int AirportDetailsArrivalsModel::columnCount(const QModelIndex &parent) const {
-	return 10;
+    return 11;
 }
 
 QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) const {
@@ -90,16 +92,26 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 6:
                 return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
             case 7:
-                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-                else return (p->distanceToDestination() < 3? 0: (int)p->distanceToDestination()); break;
-            case 8:
-                if (p->flightStatus() == Pilot::GROUND_ARR | p->flightStatus() == Pilot::BLOCKED) return "--:--";
-                else if(!p->ete().isEmpty()) return p->ete();
-                else return "n/a"; break;
-            case 9:
-                return p->flightStatusString().split("(")[0]; // we do only want a short string, not the details
+                if(p->flightStatus() == Pilot::PREFILED)
+                    return "n/a";
+                else
+                    return (p->distanceToDestination() < 3? 0: (int)p->distanceToDestination());
                 break;
-		}
+            case 8:
+                if (p->flightStatus() == Pilot::GROUND_ARR | p->flightStatus() == Pilot::BLOCKED)
+                    return "--:--";
+                else if(!p->ete().toString("H:mm").isEmpty())
+                    return p->ete().toString("H:mm");
+                else
+                    return "n/a";
+                break;
+            case 9:
+                return p->delayStr();
+                break;
+            case 10:
+                return p->flightStatusShortString();
+                break;
+        }
 	}
 
 	return QVariant();

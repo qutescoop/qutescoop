@@ -57,7 +57,7 @@ private slots:
 	void networkMessage(QString message);
 	void downloadError(QString message);
 	void toggleFullscreen();
-	void whazzupDownloaded();
+    void whazzupDownloaded(bool isNew = true);
 	void mapClicked(int x, int y, QPoint absolutePos);
     void openPreferences();
     void openPlanFlight();

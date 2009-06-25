@@ -44,5 +44,4 @@ const GLdouble Pi180 = Pi/180.0;
 
 QString lat2str(double lat);
 QString lon2str(double lon);
-
 #endif /*HELPERS_H_*/

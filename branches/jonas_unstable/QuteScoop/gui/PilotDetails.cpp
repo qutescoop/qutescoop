@@ -45,7 +45,10 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	} else {
 		pilot = Whazzup::getInstance()->whazzupData().getPilot(callsign);
 	}
-	if(pilot == 0) return;
+    if(pilot == 0) {
+        hide();
+        return;
+    }
 	setMapObject(pilot);
 
 	setWindowTitle(pilot->label);
@@ -68,28 +71,45 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	// Aircraft Information
 	QString aircraftInfo = QString("Aircraft: <strong>%1</strong><br>").arg(pilot->planAircraft);
 	aircraftInfo += QString("Altitude: <strong>%1</strong> feet<br>").arg(pilot->altitude);
-	aircraftInfo += QString("Ground Speed: <strong>%1</strong> kts <i>(filed: %2 kts)</i>")
-                    .arg(pilot->groundspeed)
-                    .arg(pilot->planTAS);
+    aircraftInfo += QString("Ground Speed: <strong>%1</strong> kts")
+                    .arg(pilot->groundspeed);
 	lblAircraftInfo->setText(aircraftInfo);
 	
 	// flight status
 	lblFlightStatus->setText(pilot->flightStatusString());
-	
-	QString depStr = pilot->planDep;
+
+    // flight plan
+    groupFp->setVisible(!pilot->planFlighttype.isEmpty()); // hide for Bush pilots
+    groupFp->setTitle(QString("Flight Plan (%1)")
+                      .arg(pilot->planFlighttype == "I"? "IFR"
+                  : (pilot->planFlighttype == "V"? "VFR": "")));
+
+    QString depStr = pilot->planDep;
 	Airport *airport = pilot->depAirport();
-	if(airport != 0) depStr = airport->toolTip();
-	buttonFrom->setText(depStr);
+    if(airport != 0) depStr = airport->toolTip();
+    lblDep->setText(depStr);
+
+    lblPlanEtd->setText(pilot->etd().toString("HH:mm"));
 	
 	QString destStr = pilot->planDest;
 	airport = pilot->destAirport();
-	if(airport != 0) destStr = airport->toolTip();
-	buttonDest->setText(destStr);
+    if(airport != 0) destStr = airport->toolTip();
+    lblDest->setText(destStr);
 
-	// do something about alternate here
-	
-	lblRoute->setText(pilot->planRoute);
-	lblRemarks->setText(pilot->planRemarks);
+    lblPlanEta->setText(pilot->etaPlan().toString("HH:mm"));
+
+    QString altStr = pilot->planAltAirport;
+    airport = pilot->altAirport();
+    if(airport != 0) altStr = airport->toolTip();
+    lblAlt->setText(altStr);
+
+    lblFuel->setText(QTime(pilot->planHrsFuel, pilot->planMinFuel).toString("H:mm"));
+    lblRoute->setText(pilot->planRoute);
+    lblPlanTas->setText(QString("N%1").arg(pilot->planTasInt()));
+    lblPlanFl->setText(QString("F%1").arg(pilot->defuckPlanAlt(pilot->planAlt)/100));
+    lblPlanEte->setText(QString("%1").arg(QTime(pilot->planHrsEnroute, pilot->planMinEnroute).toString("H:mm")));
+
+    lblRemarks->setText(pilot->planRemarks);
 	
     // check if we know userId
     buttonAddFriend->setDisabled(pilot->userId.isEmpty());
@@ -109,6 +129,14 @@ void PilotDetails::on_buttonDest_clicked() {
 	close();
 }
 
+void PilotDetails::on_buttonAlt_clicked()
+{
+    Airport *airport = pilot->altAirport();
+    if(airport != 0)
+        airport->showDetailsDialog();
+    close();
+}
+
 void PilotDetails::on_buttonFrom_clicked() {
 	Airport *airport = pilot->depAirport();
 	if(airport != 0)
@@ -120,3 +148,4 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 	friendClicked();
 	refresh();
 }
+

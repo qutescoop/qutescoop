@@ -90,7 +90,7 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
                 if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
                 else return (p->distanceFromDeparture() < 3? 0: (int)p->distanceFromDeparture()); break;
             case 8: 
-                return p->flightStatusString().split("(")[0]; // we do only want a short string, not the details
+                return p->flightStatusShortString();
                 break;
         }
     }

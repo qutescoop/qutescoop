@@ -41,7 +41,8 @@ public:
     QSize sizeHint() const;
 
 public slots:
-	void newWhazzupData();
+    void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
+                            // updating the statusbar as well - we do not want a full GL update here sometimes
 	void setMapPosition(double lat, double lon, double newZoom);
 	void rightClick(const QPoint& pos);
 	void zoomIn()  { return zoomIn(1);  }

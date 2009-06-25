@@ -141,9 +141,18 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 		if(p == 0) continue;
 		if(airportMap.contains(p->planDep) && airportMap[p->planDep] != 0)
 			airportMap[p->planDep]->addDeparture(p);
+        else if(p->flightStatus() == Pilot::BUSH) { // no flightplan yet?
+            QList<Airport*> aa = airportsAt(p->lat, p->lon, 3);
+            if(aa.size() != 0) {
+                if(aa[0] != 0) {
+                    airportMap[aa[0]->label]->addDeparture(p);
+                }
+            }
+        }
+
 		if(airportMap.contains(p->planDest) && airportMap[p->planDest] != 0)
 			airportMap[p->planDest]->addArrival(p);
-	}
+    }
 
 	for(int i = 0; i < whazzupData.getControllers().size(); i++) {
 		Controller *c = dynamic_cast<Controller*>(whazzupData.getControllers()[i]);

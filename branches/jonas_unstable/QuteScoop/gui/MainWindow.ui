@@ -84,6 +84,9 @@
        </item>
        <item>
         <widget class="QDateEdit" name="datePredictTime">
+         <property name="wrapping">
+          <bool>true</bool>
+         </property>
          <property name="calendarPopup">
           <bool>true</bool>
          </property>
@@ -183,8 +186,8 @@
     <addaction name="actionShowFriendsDock"/>
     <addaction name="actionHideAllWindows"/>
     <addaction name="separator"/>
-    <addaction name="actionClearAllFlightPaths"/>
     <addaction name="actionDisplayAllFlightPaths"/>
+    <addaction name="actionClearAllFlightPaths"/>
     <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
     <addaction name="separator"/>
