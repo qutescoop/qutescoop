@@ -68,6 +68,7 @@ AirportDetails::AirportDetails():
 	departuresSortModel = new QSortFilterProxyModel;
 	departuresSortModel->setDynamicSortFilter(true);
 	departuresSortModel->setSourceModel(&departuresModel);
+    departuresSortModel->sort(7, Qt::AscendingOrder);
 	treeDepartures->setModel(departuresSortModel);
     treeDepartures->sortByColumn(7, Qt::AscendingOrder);
     treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
@@ -90,17 +91,26 @@ void AirportDetails::refresh(Airport* newAirport) {
 	lblName->setText(airport->name);
 	
 	QLocale locale(airport->countryCode.toLower());
-	lblCountry->setText(QString("%1 (%2)").arg(airport->countryCode).arg(NavData::getInstance()->countryName(airport->countryCode)));
+    int utcDev = (int) (airport->lon/180*12 + 0.5); // lets estimate the deviation from UTC and round that
+    QString lt = Whazzup::getInstance()->whazzupData().timestamp().addSecs(utcDev*3600).time().toString("HH:mm");
+	lblCountry->setText(QString("%1 (%2)")
+                        .arg(airport->countryCode)
+                        .arg(NavData::getInstance()->countryName(airport->countryCode)));
 	lblLocation->setText(QString("%1 %2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
+    lblTime->setText(QString("local time %1, UTC %2%3")
+                        .arg(lt)
+                        .arg(utcDev < 0 ? "": "+") // just a plus sign
+                        .arg(utcDev));
+
 	
     // arrivals
 	arrivalsModel.setClients(airport->getArrivals());
-    treeArrivals->sortByColumn(arrivalsSortModel->sortColumn(), arrivalsSortModel->sortOrder());
+    arrivalsSortModel->invalidate();
     treeArrivals->header()->resizeSections(QHeaderView::ResizeToContents);
 	
     // departures
     departuresModel.setClients(airport->getDepartures());
-    treeDepartures->sortByColumn(departuresSortModel->sortColumn(), departuresSortModel->sortOrder());
+    departuresSortModel->invalidate();
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 	
     // set titles
@@ -108,7 +118,11 @@ void AirportDetails::refresh(Airport* newAirport) {
 	groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
 
 	QList<Controller*> atcContent = airport->getAllControllers();
-	groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
+    Controller* atis = Whazzup::getInstance()->whazzupData().getController(airport->label + "_ATIS");
+    groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
+
+    if (atis != 0)
+        atcContent.append(atis);
 	
 	// observers
 	QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();
@@ -127,8 +141,8 @@ void AirportDetails::refresh(Airport* newAirport) {
     //}
 	
 	atcModel.setClients(atcContent);
-    treeAtc->sortByColumn(atcSortModel->sortColumn(), atcSortModel->sortOrder());
-    treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+    atcSortModel->invalidate();
+    treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);    
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {

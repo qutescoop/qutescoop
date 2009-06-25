@@ -56,6 +56,9 @@ public:
 
 	const QList<Pilot*>& getArrivals() const { return arrivals; };
 	const QList<Pilot*>& getDepartures() const { return departures; };
+    
+    int numFilteredArrivals() const;
+    int numFilteredDepartures() const;
 
 	QList<Controller*> getAllControllers() const;
 

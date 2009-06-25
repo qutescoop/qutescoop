@@ -79,6 +79,8 @@ public:
 	static void applyProxySetting(QHttp *http);
 
 	// Airport traffic settings --------------------------------
+    static void deleteAirportTrafficSettings();
+    
 	static bool filterTraffic();
 	static void setFilterTraffic(bool v);
 
@@ -87,9 +89,22 @@ public:
 
 	static double filterArriving();
 	static void setFilterArriving(double v);
+    
+    // Airport congestion
+    static bool showAirportCongestion();
+    static void setAirportCongestion(bool v);
 
-	// -----------------------------------
-	static int timelineSeconds();
+    static int airportCongestionMinimum();
+    static void setAirportCongestionMinimum(int v);
+
+    static QColor airportCongestionBorderLineColor();
+	static void setAirportCongestionBorderLineColor(const QColor& color);
+
+	static double airportCongestionBorderLineStrength();
+	static void setAirportCongestionBorderLineStrength(double value);
+	// -----
+
+    static int timelineSeconds();
 	static void setTimelineSeconds(int value);
 
 	static bool displaySmoothLines();
@@ -103,6 +118,9 @@ public:
 
 	static bool useNavdata();
 	static void setUseNavdata(bool value);
+
+   	static bool showFixes();
+	static void setShowFixes(bool value);
 
 	static int metarDownloadInterval();
 	static void setMetarDownloadInterval(int minutes);
@@ -167,7 +185,22 @@ public:
 	static QFont airportFont();
 	static void setAirportFont(const QFont& font);
 
-	static QColor appBorderLineColor();
+    static bool showInactiveAirports();
+	static void setShowInactiveAirports(const bool& value);
+
+	static QColor inactiveAirportFontColor();
+	static void setInactiveAirportFontColor(const QColor& color);
+
+	static QColor inactiveAirportDotColor();
+	static void setInactiveAirportDotColor(const QColor& color);
+
+	static double inactiveAirportDotSize();
+	static void setInactiveAirportDotSize(double value);
+
+	static QFont inactiveAirportFont();
+	static void setInactiveAirportFont(const QFont& font);
+
+    static QColor appBorderLineColor();
 	static void setAppBorderLineColor(const QColor& color);
 
 	static double appBorderLineStrength();

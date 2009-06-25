@@ -272,11 +272,9 @@ bool Airport::matches(const QRegExp& regex) const {
 	return MapObject::matches(regex);
 }
 
-QString Airport::mapLabel() const {
-	QString result = label + " ";
-
-	if(Settings::filterTraffic()) { // Airport traffic filtered
-		int numFilteredArrivals = 0;
+int Airport::numFilteredArrivals() const {
+	int numFilteredArrivals = 0;
+    if(Settings::filterTraffic()) { // Airport traffic filtered
 		for (int i=0; i < arrivals.length(); i++){
 			if(
 			   	(arrivals[i]->distanceToDestination() < Settings::filterDistance()) 
@@ -286,26 +284,36 @@ QString Airport::mapLabel() const {
 				numFilteredArrivals++;
 			}
 		}
-		if(!numFilteredArrivals) result += "-/";
-		else result += QString("%1/").arg(numFilteredArrivals);
+    } else
+        return arrivals.size();
+    return numFilteredArrivals;
+}
 
-		int numFilteredDepartures = 0;
+int Airport::numFilteredDepartures() const {
+	int numFilteredDepartures = 0;
+    if(Settings::filterTraffic()) { // Airport traffic filtered
 		for (int i=0; i < departures.length(); i++){
 			if(departures[i]->distanceFromDeparture() < Settings::filterDistance()) {
 				numFilteredDepartures++;
 			}
 		}
-		if(!numFilteredDepartures) result += "-"; 
-		else result += QString("%1").arg(numFilteredDepartures);
-	} else { // Airport traffic not filtered (standard)
-		if(arrivals.isEmpty()) result += "-/";
-		else result += QString("%1/").arg(arrivals.size());
-		
-		if(departures.isEmpty()) result += "-";
-		else result += QString("%1").arg(departures.size());
-	}
+    } else
+        return departures.size();
+    return numFilteredDepartures;
+}
 
-	return result;
+QString Airport::mapLabel() const {
+	QString result = label;
+    if(!this->active) 
+        return label;
+
+    if(!numFilteredArrivals()) result += " -/";
+    else result += QString(" %1/").arg(numFilteredArrivals());
+    
+    if(!numFilteredDepartures()) result += "-"; 
+    else result += QString("%1").arg(numFilteredDepartures());
+
+    return result;
 }
 
 void Airport::toggleFlightLines() {

@@ -1,3 +1,29 @@
+QuteScoop Changelog - Version 1.0.3 jonas alpha
+changed:
+* Zoom accelerated if mouse wheel driver supports it
+* Increase max. value for shown labels (in preferences)
+
+added:
+* Show ATC bookings in list (VATSIM only so far)
+* Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
+* See prefiled flights in arrival and departure lists and in Time Warp on the map
+* OpenGL debug messages + ability to set OpenGL parameters through own config file
+* Show inactive airports when zoomed in
+* Filter airport traffic to only show traffic in the vicinity of airport (configurable)
+* Show rings of airport congestion around airports (configurable)
+* Doubleclick to center map, right or left drag to pan
+* Request routes from route providers. So far only vroute is integrated, 
+  but we asked all major route databases to join us
+* Show _FSS stations by faking the facilityType which is not reported correctly in WhazzUp data
+* Show delay as difference from filed arrival time to calculated ETA
+
+fixed:  
+* Docks restore correctly on window minimize/restore
+* Allow to disable border lines by setting strength to 0px
+* Always show map label of a busy airport in favor to a less busier one
+* Labels are less conservative in decluttering (allow a bit of overlap on the edges)
+* Preferences dialog fits on a 1280x800 screen
+
 QuteScoop Changelog - Version 1.0.2
 
 * Fixed a VATSIM display bug introduced by a new blank line. Patch was

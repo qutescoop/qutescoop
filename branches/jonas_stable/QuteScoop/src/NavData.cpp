@@ -17,6 +17,7 @@
  **************************************************************************/
 
 #include <math.h>
+#include <QDebug>
 
 #include "NavData.h"
 #include "FileReader.h"
@@ -35,6 +36,7 @@ NavData::NavData() {
 
 void NavData::loadAirports(const QString& filename) {
 	airportMap.clear();
+    airportsListTrafficSorted.clear();
 	FileReader fileReader(filename);
 	while (!fileReader.atEnd()) {
 		QString line = fileReader.nextLine();
@@ -74,6 +76,10 @@ NavData* NavData::getInstance() {
 
 const QHash<QString, Airport*>& NavData::airports() const {
 	return airportMap;
+}
+
+const QList<Airport*>& NavData::airportsTrafficSorted() const {
+	return airportsListTrafficSorted;
 }
 
 const QHash<QString, Fir*>& NavData::firs() const {
@@ -135,9 +141,18 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 		if(p == 0) continue;
 		if(airportMap.contains(p->planDep) && airportMap[p->planDep] != 0)
 			airportMap[p->planDep]->addDeparture(p);
+        else if(p->flightStatus() == Pilot::BUSH) { // no flightplan yet?
+            QList<Airport*> aa = airportsAt(p->lat, p->lon, 3);
+            if(aa.size() != 0) {
+                if(aa[0] != 0) {
+                    airportMap[aa[0]->label]->addDeparture(p);
+                }
+            }
+        }
+
 		if(airportMap.contains(p->planDest) && airportMap[p->planDest] != 0)
 			airportMap[p->planDest]->addArrival(p);
-	}
+    }
 
 	for(int i = 0; i < whazzupData.getControllers().size(); i++) {
 		Controller *c = dynamic_cast<Controller*>(whazzupData.getControllers()[i]);
@@ -157,10 +172,24 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 			airportMap[icao]->addGround(c);
 		}
 	}
-
+    
+    airportsListTrafficSorted.clear(); // we gonna fill it again here
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] != 0)
 			airportList[i]->refreshAfterUpdate();
+        
+        // fill them in the airportsTrafficSorted List - sorted descending
+        int congestion = airportList[i]->numFilteredArrivals() + airportList[i]->numFilteredDepartures(); // sort key
+        airportsListTrafficSorted.append(airportList[i]); 
+        if(congestion > 0) {
+            for(int h=0; h < airportsListTrafficSorted.size() - 1; h++) { // find the point to insert
+                if (airportsListTrafficSorted[h]->numFilteredArrivals() 
+                    + airportsListTrafficSorted[h]->numFilteredDepartures() < congestion) { // move inserted item before that one
+                        airportsListTrafficSorted.move(airportsListTrafficSorted.size() - 1, h);
+                        break;
+                }
+            }
+        }
 	}
 }
 

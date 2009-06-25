@@ -62,7 +62,7 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
 		return QVariant();
 
     Pilot* p = pilots[index.row()];
-	
+    	
     if(role == Qt::FontRole) {
         if (p->flightStatus() == Pilot::PREFILED) {
             QFont result;
@@ -70,9 +70,7 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
             return result;
         }
 		return QFont();
-	}
-	
-	if(role == Qt::DisplayRole) {
+	} else if(role == Qt::DisplayRole) {
 		switch(index.column()) {
             case 0: 
                 return p->label; break;
@@ -85,16 +83,14 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
             case 4: 
                 return p->waypoints().first(); break;
             case 5:
-                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-                else return p->altitude; break;
+                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
             case 6:
-                if(p->flightStatus() == Pilot::PREFILED) return "n/a";
-                else return p->groundspeed; break;
+                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
             case 7:
                 if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
-                else return (int)p->distanceFromDeparture(); break;
+                else return (p->distanceFromDeparture() < 3? 0: (int)p->distanceFromDeparture()); break;
             case 8: 
-                return p->flightStatusString().split("(")[0]; // we do only want a short string, not the details
+                return p->flightStatusShortString();
                 break;
         }
     }

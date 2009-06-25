@@ -58,13 +58,15 @@ void ControllerDetails::refresh(Controller *newController) {
 	QString details = controller->detailInformation();
 	if(!details.isEmpty()) controllerInfo += details + "<br>";
 	
-	controllerInfo += QString("On %3 for %4").arg(controller->server).arg(controller->onlineTime());
+	controllerInfo += QString("On %3 for %4")
+                      .arg(controller->server)
+                      .arg(controller->onlineTime());
 	QString software = controller->clientInformation();
 	if(!software.isEmpty()) controllerInfo += ", " + software;
 	lblControllerInfo->setText(controllerInfo);
 
 	QString stationInfo = controller->facilityString();
-	if(!controller->isObserver()) 
+	if(!controller->isObserver() && !controller->frequency.length() == 0) 
 		stationInfo += QString(" on frequency %1<br>Voice: %2")
 		.arg(controller->frequency)
 		.arg(controller->voiceServer);
@@ -79,6 +81,12 @@ void ControllerDetails::refresh(Controller *newController) {
 	
 	btnJoinChannel->setVisible(Settings::voiceType() != Settings::NONE);
 	btnJoinChannel->setEnabled(!controller->voiceLink().isEmpty());
+    
+    // check if we know UserId
+    buttonAddFriend->setDisabled(controller->userId.isEmpty());
+    
+    // check if we know position
+    buttonShowOnMap->setDisabled(controller->lon > 90);
 }
 
 void ControllerDetails::on_buttonAddFriend_clicked() {

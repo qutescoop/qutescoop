@@ -42,15 +42,21 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
         case 10: bookingInfoStr = QString("Training"); break;
     }
     if (label.right(5) == "_ATIS") facilityType = 2; // dont know who wants to book it, but well...
+    
+    // fixme: this does not seem to be the quickest method...
     else if (label.right(4) == "_DEL") {
         if (NavData::getInstance()->airports().contains(this->getDelivery())) {
             countryCode = NavData::getInstance()->airports()[this->getDelivery()]->countryCode;
+            lat = NavData::getInstance()->airports()[this->getDelivery()]->lat;
+            lon = NavData::getInstance()->airports()[this->getDelivery()]->lon;
         }
         facilityType = 3; 
     }
     else if (label.right(4) == "_GND") {
         if (NavData::getInstance()->airports().contains(this->getGround())) {
             countryCode = NavData::getInstance()->airports()[this->getGround()]->countryCode;
+            lat = NavData::getInstance()->airports()[this->getGround()]->lat;
+            lon = NavData::getInstance()->airports()[this->getGround()]->lon;
         }
         facilityType = 3; 
     }
@@ -58,27 +64,37 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
         facilityType = 4; 
         if (NavData::getInstance()->airports().contains(this->getTower())) {
             countryCode = NavData::getInstance()->airports()[this->getTower()]->countryCode;
+            lat = NavData::getInstance()->airports()[this->getTower()]->lat;
+            lon = NavData::getInstance()->airports()[this->getTower()]->lon;
         }
     }
     else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
         facilityType = 5; 
         if (NavData::getInstance()->airports().contains(this->getApproach())) {
             countryCode = NavData::getInstance()->airports()[this->getApproach()]->countryCode;
+            lat = NavData::getInstance()->airports()[this->getApproach()]->lat;
+            lon = NavData::getInstance()->airports()[this->getApproach()]->lon;
         }
     }
     else if (label.right(4) == "_CTR") {
         facilityType = 6; 
         if (NavData::getInstance()->firs().contains(this->getCenter())) {
             countryCode = NavData::getInstance()->firs()[this->getCenter()]->countryCode();
+            lat = NavData::getInstance()->firs()[this->getCenter()]->lat();
+            lon = NavData::getInstance()->firs()[this->getCenter()]->lon();
         }
     }
     else if (label.right(4) == "_FSS") {
         facilityType = 7; 
         if (NavData::getInstance()->firs().contains(this->getCenter())) {
             countryCode = NavData::getInstance()->firs()[this->getCenter()]->countryCode();
+            lat = NavData::getInstance()->firs()[this->getCenter()]->lat();
+            lon = NavData::getInstance()->firs()[this->getCenter()]->lon();
         }
     }
-
+    
+    timeConnected = starts();
+    
     //some unapplicable data for a booked controller, but we might need it once to cast BookedController -> Controller
     frequency = "";
 	visualRange = -1; 

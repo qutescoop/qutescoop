@@ -47,6 +47,7 @@ PlanFlightDialog::PlanFlightDialog():
 
     treeRoutes->setModel(routesSortModel);
     treeRoutes->header()->setResizeMode(QHeaderView::Interactive);
+    treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
     //connect(treeVroute, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
 }
@@ -66,7 +67,8 @@ void PlanFlightDialog::requestGenerated() {
         lblGeneratedStatus->setText(QString("bad request"));
         return;
     }
-        
+      
+    // add 3 bogus routes
     QList<Route*> newroutes;
     for (int i=0; i<3; i++) {    
         QStringList sl = QStringList();
@@ -86,19 +88,21 @@ void PlanFlightDialog::requestGenerated() {
     
     lblGeneratedStatus->setText(QString("%1 route%2")
                                 .arg(newroutes.size())
-                                .arg(newroutes.size() == 1 ? "s": ""));
+                                .arg(newroutes.size() == 1 ? "": "s"));
     routes.append(newroutes);
     routesModel.setClients(routes);
-    treeRoutes->sortByColumn(routesSortModel->sortColumn(), routesSortModel->sortOrder());
+    routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
 void PlanFlightDialog::requestVroute() {
     lblVrouteStatus->setText(QString("request sent..."));
     QString vr = QString("http://data.vroute.net/internal/query.php");  
-    QString airacCycle("0906");
-    
-    QString authCode(""); // add it manually - we need to find some way to manage that...
+
+    // Add it manually - we need to find some way to manage that this code is not abused
+    // Cause if it is - we are all blocked from vroute access!
+    QString authCode("12f2c7fd6654be40037163242d87e86f"); //fixme
+
     if (authCode == "") {
         lblVrouteStatus->setText(QString("auth code unavailable. add it in the source"));
         return;
@@ -106,9 +110,10 @@ void PlanFlightDialog::requestVroute() {
         
     QUrl url(vr);
     url.addQueryItem(QString("auth_code"), authCode);
-    url.addQueryItem(QString("cycle"), airacCycle);
+    if(!edCycle->text().trimmed().isEmpty())
+        url.addQueryItem(QString("cycle"), edCycle->text().trimmed()); // defaults to the last freely available (0701)
     url.addQueryItem(QString("type"), QString("query"));
-    url.addQueryItem(QString("level"),QString("0"));
+    url.addQueryItem(QString("level"),QString("0")); // details level, so far only 0 supported
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("arr"), edDest->text().trimmed());
 
@@ -146,6 +151,7 @@ void PlanFlightDialog::fpDownloaded(bool error) {
     }
     
     QList<Route*> newroutes;
+    QString msg;
 
     QDomDocument domdoc = QDomDocument();
     fpBuffer->seek(0);
@@ -155,28 +161,31 @@ void PlanFlightDialog::fpDownloaded(bool error) {
     QDomElement e = root.firstChildElement();
     while (!e.isNull()) {
         if (e.nodeName() == "result") {
+            if (e.firstChildElement("num_objects").text() != "")
+                msg = QString("%1 route%2")
+                        .arg(e.firstChildElement("num_objects").text())
+                        .arg(e.firstChildElement("num_objects").text() == "1" ? "": "s");
             if (e.firstChildElement("version").text() != "1")
-                lblVrouteStatus->setText(QString("unknown version: %1")
-                                        .arg(e.firstChildElement("version").text()));
+                msg = QString("unknown version: %1").arg(e.firstChildElement("version").text());
             if (e.firstChildElement("result_code").text() != "200") {
                 if (e.firstChildElement("result_code").text() == "400")
-                    lblVrouteStatus->setText(QString("bad request"));
+                    msg = (QString("bad request"));
                 else if (e.firstChildElement("result_code").text() == "403")
-                    lblVrouteStatus->setText(QString("unauthorized"));
+                    msg = (QString("unauthorized / maximum queries reached"));
                 else if (e.firstChildElement("result_code").text() == "404")
-                    lblVrouteStatus->setText(QString("flightplan not found / server error")); // should not be signaled for non-privileged queries (signals a server error)
+                    msg = (QString("flightplan not found / server error")); // should not be signaled for non-privileged queries (signals a server error)
                 else if (e.firstChildElement("result_code").text() == "405")
-                    lblVrouteStatus->setText(QString("method not allowed"));
+                    msg = (QString("method not allowed"));
                 else if (e.firstChildElement("result_code").text() == "500")
-                    lblVrouteStatus->setText(QString("internal database error"));
+                    msg = (QString("internal database error"));
                 else if (e.firstChildElement("result_code").text() == "501")
-                    lblVrouteStatus->setText(QString("level not implemented"));
+                    msg = (QString("level not implemented"));
                 else if (e.firstChildElement("result_code").text() == "503")
-                    lblVrouteStatus->setText(QString("too many queries from one IP - try later"));
+                    msg = (QString("allowed queries from one IP reached - try later"));
                 else if (e.firstChildElement("result_code").text() == "505")
-                    lblVrouteStatus->setText(QString("query mal-formed"));
+                    msg = (QString("query mal-formed"));
                 else 
-                    lblVrouteStatus->setText(QString("unknown error: #%1")
+                    msg = (QString("unknown error: #%1")
                                         .arg(e.firstChildElement("result_code").text()));
             }
         } else if (e.nodeName() == "flightplan") {
@@ -192,15 +201,17 @@ void PlanFlightDialog::fpDownloaded(bool error) {
             sl.append(e.firstChildElement("comments").text());
             Route *r = new Route(sl);
             newroutes.append(r);
+            msg = (QString("%1 route%2")
+                                .arg(newroutes.size())
+                                .arg(newroutes.size() == 1 ? "": "s"));
         }
         e = e.nextSiblingElement();
     }
-    lblGeneratedStatus->setText(QString("%1 route%2")
-                                .arg(newroutes.size())
-                                .arg(newroutes.size() == 1 ? "s": ""));
+    if (!msg.isEmpty()) lblVrouteStatus->setText(msg);
+
     routes.append(newroutes);
    	routesModel.setClients(routes);
-    treeRoutes->sortByColumn(routesSortModel->sortColumn(), routesSortModel->sortOrder());
+    routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
     
     delete fpBuffer;

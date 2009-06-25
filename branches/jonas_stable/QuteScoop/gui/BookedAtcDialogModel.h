@@ -23,11 +23,11 @@
 #include <QList>
 #include "BookedController.h"
 
-class BookedAtcModel : public QAbstractTableModel {
+class BookedAtcDialogModel : public QAbstractTableModel {
 	Q_OBJECT
 
 public:
-	BookedAtcModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
+	BookedAtcDialogModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
 
 	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;

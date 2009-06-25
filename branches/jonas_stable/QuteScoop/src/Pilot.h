@@ -37,8 +37,9 @@ public:
 	virtual QString rank() const;
 
 	void showDetailsDialog();
-	QString flightStatusString() const;
 	FlightStatus flightStatus() const;
+    QString flightStatusString() const;
+    QString flightStatusShortString() const;
 
 	int altitude;
 	int groundspeed;
@@ -51,6 +52,8 @@ public:
 	QString planRevision;
 	QString planFlighttype;
 	QString planDeptime;
+    QDate dayOfFlight;
+
 	QString planActtime;
 	int planHrsEnroute;
 	int planMinEnroute;
@@ -64,7 +67,7 @@ public:
 	QString planTypeOfFlight; // IVAO only
 	int pob; // IVAO only
 
-	int trueHeading;
+    double trueHeading;
 	bool onGround; // IVAO only
 
 	QString qnhInHg; // VATSIM only
@@ -72,12 +75,25 @@ public:
 
 	QString aircraftType() const;
 	Airport* depAirport() const;
-	Airport* destAirport() const;
-	QStringList waypoints() const;
+    Airport* destAirport() const;
+    Airport* altAirport() const;
+    QStringList waypoints() const;
 	double distanceToDestination() const;
 	double distanceFromDeparture() const;
-	QString ete() const;
-	//QString eta() const;
+
+    QDateTime etd() const; // Estimated Time of Departure
+    QDateTime eta() const; // Estimated Time of Arrival
+    QDateTime fixedEta; //ETA, written after creation as a workaround for Prediction (Warp) Mode
+    QTime ete() const; // Estimated Remaining Time Enroute
+    QDateTime etaPlan() const; // Estimated Time of Arrival as flightplanned
+    QString delayStr() const;
+
+    QDateTime whazzupTime; // need some local reference to that
+
+    int planTasInt() const; // defuck TAS for Mach numbers
+
+    int defuckPlanAlt(QString alt) const; // // returns an altitude from various flightplan strings
+
 	void positionInFuture(double *lat, double *lon, int seconds) const;
 
 	void toggleDisplayPath();
@@ -88,7 +104,7 @@ public:
 	QList<QPair<double, double> > oldPositions;
 
 private:
-	void plotPathToDest() const;
+    void plotPathToDest() const;
 	void plotPathFromDep() const;
 	void plotPlannedLine() const;
 	void plotPath(double lat1, double lon1, double lat2, double lon2) const;

@@ -20,6 +20,8 @@
 #include "BookedAtcDialogModel.h"
 #include "BookedAtcSortFilter.h"
 #include "Whazzup.h"
+#include "Window.h"
+#include "ui_MainWindow.h"
 
 BookedAtcDialog *bookedAtcDialog = 0;
 
@@ -51,13 +53,29 @@ BookedAtcDialog::BookedAtcDialog() :
     dateFilter->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
     //dateFilter->setMaximumDate(QDateTime::currentDateTime().date().addMonths(1));
     timeFilter->setTime(QDateTime::currentDateTime().toUTC().time());
+
+    QFont font = lblStatusInfo->font();
+    font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
+    lblStatusInfo->setFont(font); //make it a bit smaller than standard text
+
     refresh();
 }
 
 void BookedAtcDialog::refresh() {
-    bookedAtcModel.setClients(Whazzup::getInstance()->whazzupData().getBookedControllers());
+    bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
-    treeBookedAtc->sortByColumn(0, Qt::AscendingOrder); 
+    bookedAtcSortModel->invalidate();
+
+    const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
+
+    QString msg = QString("Bookings %1 updated")
+                  .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+                        ? QString("today %1").arg(data.bookingsTimestamp().time().toString())
+                        : (data.bookingsTimestamp().isValid()
+                           ? data.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           : "never")
+                        );
+    lblStatusInfo->setText(msg);
 }
 
 void BookedAtcDialog::on_editFilter_textChanged(QString searchStr)
@@ -104,4 +122,14 @@ void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
     QDateTime to = from.addSecs(spinHours->value() * 3600);
     bookedAtcSortModel->setDateTimeRange(from, to);
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+}
+
+void BookedAtcDialog::modelSelected(const QModelIndex& index) {
+	bookedAtcModel.modelSelected(bookedAtcSortModel->mapToSource(index));
+}
+
+void BookedAtcDialog::on_tbPredict_clicked()
+{
+    hide();
+    Whazzup::getInstance()->setPredictedTime(QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC));
 }

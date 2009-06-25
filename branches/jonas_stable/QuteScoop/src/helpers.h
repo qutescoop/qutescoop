@@ -25,9 +25,9 @@
 // version information
 
 // VERSION_INT is used as QMainWindow::saveState() and restoreState()
-#define VERSION_INT         105
+#define VERSION_INT         107
 
-#define VERSION_NUMBER "1.0.2"
+#define VERSION_NUMBER "1.0.3 alpha jonas 2"
 #define VERSION_STRING QString("QuteScoop %1").arg(VERSION_NUMBER)
 
 // mathematical constants
@@ -44,5 +44,4 @@ const GLdouble Pi180 = Pi/180.0;
 
 QString lat2str(double lat);
 QString lon2str(double lon);
-
 #endif /*HELPERS_H_*/

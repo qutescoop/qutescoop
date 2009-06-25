@@ -30,6 +30,7 @@ public:
 	static NavData* getInstance();
 
 	const QHash<QString, Airport*>& airports() const;
+	const QList<Airport*>& airportsTrafficSorted() const;
 	const QHash<QString, Fir*>& firs() const;
 	QList<Airport*> airportsAt(double lat, double lon, double maxDist);
 
@@ -57,6 +58,7 @@ private:
 	void loadCountryCodes(const QString& filename);
 
 	QHash<QString, Airport*> airportMap;
+	QList<Airport*> airportsListTrafficSorted; // holds airports sorted by congestion descending
 	QHash<QString, Fir*> firMap;
 	QHash<QString, QString> countryCodes;
 

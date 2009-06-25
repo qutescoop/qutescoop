@@ -31,7 +31,7 @@ public:
     Route(const QStringList& sl);
 	virtual ~Route();
 
-    QString provider, dep, dest, flightPlan, minFl, maxFl, lastChange, airacCycle, comments, routeDistance;
+    QString provider, dep, dest, flightPlan, minFl, maxFl, airacCycle, lastChange, comments, routeDistance;
     //RouteProvider provider;
 };
 

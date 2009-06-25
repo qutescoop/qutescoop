@@ -18,12 +18,12 @@
 
 #include "BookedAtcDialogModel.h"
 
-void BookedAtcModel::setClients(const QList<BookedController*>& controllers) {
+void BookedAtcDialogModel::setClients(const QList<BookedController*>& controllers) {
 	this->controllers = controllers;
 	reset();
 }
 
-QVariant BookedAtcModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
+QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
     if (role != Qt::DisplayRole)
         return QVariant();
 
@@ -45,7 +45,7 @@ QVariant BookedAtcModel::headerData(int section, enum Qt::Orientation orientatio
 	return QVariant();
 }
 
-QVariant BookedAtcModel::data(const QModelIndex &index, int role) const {
+QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
 	if(!index.isValid())
 		return QVariant();
 	
@@ -75,15 +75,15 @@ QVariant BookedAtcModel::data(const QModelIndex &index, int role) const {
 	return QVariant();
 }
 
-int BookedAtcModel::rowCount(const QModelIndex &parent) const { 
+int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const { 
     return controllers.count(); 
 }
 
-int BookedAtcModel::columnCount(const QModelIndex &parent) const { 
+int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const { 
     return 8; 
 } 
 
 
-void BookedAtcModel::modelSelected(const QModelIndex& index) {
+void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {
 	controllers[index.row()]->showDetailsDialog();
 }

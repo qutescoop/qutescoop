@@ -47,15 +47,49 @@ Window::Window(QWidget *parent) :
 
 	if(Settings::resetOnNextStart())
 		QSettings().clear();
-
+    
+    QSettings* settings = new QSettings();
 	QGLFormat fmt;
-	//fmt.setAlpha(false);
-	//fmt.setRgba(true);
-	//fmt.setDoubleBuffer(true);
-	//fmt.setDepth(true);
-	//fmt.setStencil(false);
+
+    // Can please somebody comment on which settings are useful and which
+    // should go to the preferences window? Thanks, jonas.
+	fmt.setDirectRendering(settings->value("gl/directrendering", fmt.defaultFormat().directRendering()).toBool());
+	fmt.setDoubleBuffer(settings->value("gl/doublebuffer", fmt.defaultFormat().doubleBuffer()).toBool());
+    fmt.setStencil(settings->value("gl/stencilbuffer", fmt.defaultFormat().stencil()).toBool());
+    if (fmt.defaultFormat().stencilBufferSize() > 0)
+        fmt.setStencilBufferSize(settings->value("gl/stencilsize", fmt.defaultFormat().stencilBufferSize()).toInt());
+	fmt.setDepth(settings->value("gl/depthbuffer", fmt.defaultFormat().depth()).toBool());
+    if (fmt.defaultFormat().depthBufferSize() > 0)
+        fmt.setDepthBufferSize(settings->value("gl/depthsize", fmt.defaultFormat().depthBufferSize()).toInt());
+	fmt.setAlpha(settings->value("gl/alphabuffer", fmt.defaultFormat().alpha()).toBool());
+    if (fmt.defaultFormat().alphaBufferSize() > 0)
+        fmt.setAlphaBufferSize(settings->value("gl/alphasize", fmt.defaultFormat().alphaBufferSize()).toInt());
+	fmt.setSampleBuffers(settings->value("gl/samplebuffers", fmt.defaultFormat().sampleBuffers()).toBool());
+    if (fmt.defaultFormat().samples() > 0)
+        fmt.setSamples(settings->value("gl/samples", fmt.defaultFormat().samples()).toInt());
+	fmt.setAccum(settings->value("gl/accumbuffer", fmt.defaultFormat().accum()).toBool());
+    if (fmt.defaultFormat().accumBufferSize() > 0)
+        fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
+    //fmt.setRgba(true);
 	glWidget = new GLWidget(fmt);
-	setCentralWidget(glWidget);
+    centralwidget->layout()->addWidget(glWidget);
+    qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
+            << "| version: " << glWidget->format().openGLVersionFlags()
+            << "\nOptions from QuteScoop-Config (add it to your config-file and report any findings):"
+            << "\ngl/directrendering" << glWidget->format().directRendering()
+            << "| gl/doublebuffer" << glWidget->format().doubleBuffer()
+            << "| gl/stencilbuffer" << glWidget->format().stencil()
+            << "| gl/stencilsize" << glWidget->format().stencilBufferSize()
+            << "\ngl/depthbuffer" << glWidget->format().depth()
+            << "| gl/depthsize" << glWidget->format().depthBufferSize()
+            << "| gl/alphabuffer" << glWidget->format().alpha()
+            << "| gl/alphasize" << glWidget->format().alphaBufferSize()
+            << "\ngl/samplebuffers" << glWidget->format().sampleBuffers()
+            << "| gl/samples" << glWidget->format().samples()
+            << "| gl/accumbuffer" << glWidget->format().accum()
+            << "| gl/accumsize" << glWidget->format().accumBufferSize();
+            
+            
 
 	clientSelection = new ClientSelectionWidget();
     preferencesDialog = new PreferencesDialog();
@@ -77,8 +111,8 @@ Window::Window(QWidget *parent) :
 	Whazzup *whazzup = Whazzup::getInstance();
 	connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
 	connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
-	connect(whazzup, SIGNAL(newData()), glWidget, SLOT(newWhazzupData()));
-	connect(whazzup, SIGNAL(newData()), this, SLOT(whazzupDownloaded()));
+    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+    connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 	connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
 	connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
 	connect(planFlightDialog, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
@@ -118,7 +152,7 @@ Window::Window(QWidget *parent) :
 	connect(friendsList->header(), SIGNAL(sectionClicked(int)), friendsList, SLOT(sortByColumn(int)));
 	metarList->sortByColumn(0, friendsSortModel->sortOrder());
 
-	connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
+    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 	connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
 	connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
@@ -130,6 +164,8 @@ Window::Window(QWidget *parent) :
 	connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
 	connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
 	connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
+	connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
+    actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
 
 	connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
 	connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
@@ -137,7 +173,6 @@ Window::Window(QWidget *parent) :
 	metarDecoderDock->hide();
 
 	connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
-	friendsDock->hide();
 
 	versionChecker = 0;
 	versionBuffer = 0;
@@ -153,6 +188,18 @@ Window::Window(QWidget *parent) :
 		QPoint savedPos = Settings::getSavedPosition();
 		if(!savedPos.isNull()) move(savedPos);
 	}
+    
+    // Forecast / Predict settings
+    datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+    datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
+    timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
+    framePredict->hide();
+    warpTimer.stop();
+    connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
+
+    QFont font = lblWarpInfo->font();
+    font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
+    lblWarpInfo->setFont(font); //make it a bit smaller than standard text
 }
 
 void Window::toggleFullscreen() {
@@ -198,23 +245,61 @@ void Window::downloadError(QString message) {
 			QString("<br><br><strong>%1</strong>").arg(message));
 }
 
-void Window::whazzupDownloaded() {
-	const WhazzupData &data = Whazzup::getInstance()->whazzupData();
+void Window::whazzupDownloaded(bool isNew) {
+    const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
+    const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
-	QString msg = QString(tr("%1: %2 clients")).arg(Settings::downloadNetworkName()).arg(data.clients());
-	msg += ", " + data.timestamp().toString("yyyy/MM/dd HH:mm:ss") + " UTC";
+    QString msg = QString(tr("%1%2 - %3 UTC: %4 clients"))
+                  .arg(Settings::downloadNetworkName())
+                  .arg(Whazzup::getInstance()->getPredictedTime().isValid()
+                       ? " - <b>W A R P E D</b>  to"
+                       : ""
+                       )
+                  .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+                        ? QString("today %1").arg(data.timestamp().time().toString())
+                        : data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss"))
+                  .arg(data.clients());
 	setStatusText(msg);
-	clientSelection->clearClients();
-	clientSelection->close();
-	performSearch();
 
-	AirportDetails::getInstance()->refresh();
-	PilotDetails::getInstance()->refresh();
-	ControllerDetails::getInstance()->refresh();
-    bookedAtcDialog->refresh();
+    msg = QString("Whazzup %1, bookings %2 updated")
+                  .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+                        ? QString("today %1").arg(realdata.timestamp().time().toString())
+                        : (realdata.timestamp().isValid()
+                           ? realdata.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           : "never")
+                        )
+                  .arg(realdata.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+                        ? QString("today %1").arg(realdata.bookingsTimestamp().time().toString())
+                        : (realdata.bookingsTimestamp().isValid()
+                           ? realdata.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           : "never")
+                        );
+    lblWarpInfo->setText(msg);
+    if (Whazzup::getInstance()->getPredictedTime().isValid()) {
+        framePredict->show();
+        timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
+        datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
+        if(isNew) {
+            // recalculate prediction on new data arrived
+            if(data.predictionBasedOnTimestamp() != realdata.timestamp()
+                || data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {
+                Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+            }
+        }
+    }
 
-	refreshFriends();
+    if(isNew) {
+        clientSelection->clearClients();
+        clientSelection->close();
+        performSearch();
 
+        AirportDetails::getInstance()->refresh();
+        PilotDetails::getInstance()->refresh();
+        ControllerDetails::getInstance()->refresh();
+        bookedAtcDialog->refresh();
+
+        refreshFriends();
+    }
 	downloadWatchdog.stop();
 	if(Settings::downloadPeriodically())
 		downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
@@ -314,9 +399,9 @@ void Window::on_actionHideAllWindows_triggered() {
 	PilotDetails::getInstance()->close();
 	ControllerDetails::getInstance()->close();
 	AirportDetails::getInstance()->close();
-    preferencesDialog->close();
-    planFlightDialog->close();
-    bookedAtcDialog->close();
+    //preferencesDialog->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
+    //planFlightDialog->close();
+    //bookedAtcDialog->close();
 
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
@@ -535,4 +620,37 @@ void Window::setProgressBar(int prog, int tot) {
 
 void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
+}
+
+void Window::performWarp()
+{
+    warpTimer.stop();
+    Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+}
+
+void Window::on_actionPredict_triggered()
+{
+    datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+    datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
+    timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
+                             .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
+    framePredict->show();
+}
+
+void Window::on_tbDisablePredict_clicked()
+{
+    Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
+    framePredict->hide();
+}
+
+void Window::on_datePredictTime_dateChanged(QDate date)
+{
+    warpTimer.stop();
+    warpTimer.start(1000);
+}
+
+void Window::on_timePredictTime_timeChanged(QTime date)
+{
+    warpTimer.stop();
+    warpTimer.start(1000);
 }

@@ -132,7 +132,7 @@ QString Controller::getGround() const {
 			(list[1].startsWith("X") || list[1].startsWith("T")))
 		return QString();
 
-	if(list.last().startsWith("GND")) {
+	if(list.last().startsWith("GND") || list.last().startsWith("DEL")) {
 		if(list.first().length() == 3)
 			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
 		return list.first();
@@ -167,7 +167,7 @@ void Controller::showDetailsDialog() {
 QString Controller::rank() const {
 	if(network == VATSIM) {
 		switch(rating) {
-		case 0:
+		case 0: return ""; break;
 		case 1: return "OBS"; break;
 		case 2: return "STU"; break;
 		case 3:

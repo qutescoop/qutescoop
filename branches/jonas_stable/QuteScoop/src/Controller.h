@@ -32,9 +32,8 @@ public:
 	Controller(const QStringList& stringList, const WhazzupData* whazzup);
 
 	void showDetailsDialog();
-	bool isObserver() const { return facilityType == 0; };
-	bool isStaff() const { return facilityType == 1; };
-	bool isATC() const { return facilityType >= 2; };
+    bool isObserver() const { return facilityType == 0; }
+    bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations (at least from VATSIM)
 
 	QString toolTip() const;
 
