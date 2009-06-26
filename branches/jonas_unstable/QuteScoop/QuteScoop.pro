@@ -34,7 +34,7 @@ QT += network \
     xml
 # CONFIG += debug
 # CONFIG += release
-CONFIG += warn_off
+#CONFIG += warn_off
 
 mac { 
     ICON = gui/Dolomynum.icns

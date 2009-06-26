@@ -17,6 +17,9 @@
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
   <layout class="QVBoxLayout">
    <item>
     <widget class="QTabWidget" name="tabWidget">
@@ -30,38 +33,34 @@
       <layout class="QVBoxLayout">
        <item>
         <widget class="QGroupBox" name="groupBoxDownload">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="title">
           <string>Download Data</string>
          </property>
          <layout class="QGridLayout">
-          <item row="0" column="1">
-           <widget class="QSpinBox" name="spinBoxDownloadInterval">
-            <property name="suffix">
-             <string> min</string>
-            </property>
-            <property name="minimum">
-             <number>1</number>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_2">
+          <item row="7" column="0" colspan="4">
+           <widget class="QCheckBox" name="cbDownloadOnStartup">
             <property name="text">
-             <string>Download Status from</string>
+             <string>Download Whazzup on Program Start</string>
             </property>
-            <property name="buddy">
-             <cstring>cbNetwork</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1" colspan="2">
-           <widget class="QComboBox" name="cbNetwork">
-            <property name="currentIndex">
-             <number>-1</number>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="5" column="1" colspan="3">
+           <widget class="QLineEdit" name="editUserDefinedLocation">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="text">
+             <string>http://www.network.com/status.txt</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
            <widget class="QLabel" name="lbluserDefinedLocation">
             <property name="enabled">
              <bool>false</bool>
@@ -74,61 +73,42 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1" colspan="3">
-           <widget class="QLineEdit" name="editUserDefinedLocation">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_2">
             <property name="text">
-             <string>http://www.network.com/status.txt</string>
+             <string>Download Status from</string>
+            </property>
+            <property name="buddy">
+             <cstring>cbNetwork</cstring>
             </property>
            </widget>
           </item>
-          <item row="3" column="0" colspan="4">
-           <widget class="QCheckBox" name="cbDownloadOnStartup">
-            <property name="text">
-             <string>Download Status on Program Start</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="2" colspan="2">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="0" column="0">
+          <item row="6" column="0">
            <widget class="QCheckBox" name="cbDownloadPeriodically">
             <property name="text">
-             <string>Download Status every</string>
+             <string>Download Whazzup every</string>
             </property>
             <property name="checked">
              <bool>true</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
+          <item row="6" column="1">
+           <widget class="QSpinBox" name="spinBoxDownloadInterval">
+            <property name="suffix">
+             <string> min</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
+            <property name="minimum">
+             <number>1</number>
             </property>
-           </spacer>
+           </widget>
+          </item>
+          <item row="4" column="1">
+           <widget class="QComboBox" name="cbNetwork">
+            <property name="currentIndex">
+             <number>-1</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -1607,7 +1587,7 @@ airports with at least</string>
       </layout>
       <zorder>groupBoxAirports</zorder>
       <zorder>groupBoxAirportTraffic</zorder>
-      <zorder></zorder>
+      <zorder>verticalSpacer_3</zorder>
      </widget>
      <widget class="QWidget" name="display3Tab">
       <attribute name="title">
@@ -2172,10 +2152,10 @@ airports with at least</string>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>cbDownloadPeriodically</tabstop>
-  <tabstop>spinBoxDownloadInterval</tabstop>
   <tabstop>cbNetwork</tabstop>
   <tabstop>editUserDefinedLocation</tabstop>
+  <tabstop>cbDownloadPeriodically</tabstop>
+  <tabstop>spinBoxDownloadInterval</tabstop>
   <tabstop>cbDownloadOnStartup</tabstop>
   <tabstop>cbUseProxy</tabstop>
   <tabstop>editProxyServer</tabstop>
@@ -2184,9 +2164,6 @@ airports with at least</string>
   <tabstop>editProxyPassword</tabstop>
   <tabstop>cbCheckForUpdates</tabstop>
   <tabstop>cbSendVersionInfo</tabstop>
-  <tabstop>rbNone</tabstop>
-  <tabstop>rbTeamSpeak</tabstop>
-  <tabstop>rbVRC</tabstop>
   <tabstop>editVoiceCallsign</tabstop>
   <tabstop>editVoiceUser</tabstop>
   <tabstop>editVoicePassword</tabstop>
@@ -2221,6 +2198,43 @@ airports with at least</string>
   <tabstop>buttonResetPilot</tabstop>
   <tabstop>buttonBox</tabstop>
   <tabstop>tabWidget</tabstop>
+  <tabstop>rbVRC</tabstop>
+  <tabstop>rbNone</tabstop>
+  <tabstop>rbTeamSpeak</tabstop>
+  <tabstop>pbBackgroundColor</tabstop>
+  <tabstop>pbGlobeColor</tabstop>
+  <tabstop>pbGridLineColor</tabstop>
+  <tabstop>pbCoastLineColor</tabstop>
+  <tabstop>pbCountryLineColor</tabstop>
+  <tabstop>sbGridLineStrength</tabstop>
+  <tabstop>sbCoastLineStrength</tabstop>
+  <tabstop>sbCountryLineStrength</tabstop>
+  <tabstop>buttonResetAirport</tabstop>
+  <tabstop>spFilterDistance</tabstop>
+  <tabstop>spFilterArriving</tabstop>
+  <tabstop>cbFilterTraffic</tabstop>
+  <tabstop>cbShowCongestion</tabstop>
+  <tabstop>sbCongestionMinimum</tabstop>
+  <tabstop>pbCongestionBorderLineColor</tabstop>
+  <tabstop>sbCongestionBorderLineStrength</tabstop>
+  <tabstop>buttonResetAirportTraffic</tabstop>
+  <tabstop>pbFirBorderLineColor</tabstop>
+  <tabstop>pbFirFontColor</tabstop>
+  <tabstop>pbFirFillColor</tabstop>
+  <tabstop>sbFirBorderLineStrength</tabstop>
+  <tabstop>pbFirFont</tabstop>
+  <tabstop>cbReadSupFile</tabstop>
+  <tabstop>buttonResetFir</tabstop>
+  <tabstop>pbPilotFontColor</tabstop>
+  <tabstop>pbPilotFont</tabstop>
+  <tabstop>pbPilotDotColor</tabstop>
+  <tabstop>sbPilotDotSize</tabstop>
+  <tabstop>pbTimeLineColor</tabstop>
+  <tabstop>sbTimeLineStrength</tabstop>
+  <tabstop>pbTrackLineColor</tabstop>
+  <tabstop>sbTrackLineStrength</tabstop>
+  <tabstop>pbPlanLineColor</tabstop>
+  <tabstop>sbPlanLineStrength</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>

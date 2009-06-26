@@ -134,23 +134,29 @@ void Whazzup::statusDownloaded(bool error) {
 	statusBuffer = 0;
 	lastDownloadTime = QTime();
 	
-	emit statusDownloaded();
+    qDebug() << "Got network status:" << urls.size() << "Whazzup URLs";
+
+    emit statusDownloaded();
 }
 
 void Whazzup::download() {
-	if(urls.size() == 0)
+    if(urls.size() == 0) {
+        qDebug() << "no Whazzup URLs available";
 		return;
+    }
 	
 	downloadTimer->stop();
 	
     QTime now = QTime::currentTime();
-	if(lastDownloadTime.secsTo(now) < 30)
+    if(lastDownloadTime.secsTo(now) < 30) {
+        qDebug() << "Whazzup already checked less than 30 seconds ago. Skipping.";
 		return; // don't allow download intervals < 30 seconds
+    }
 	lastDownloadTime = now;
 	
-	int index = rand() % urls.size();
+    int index = rand() % urls.size();
 	QString fileLocation = urls[index];
-	
+
 	QUrl url(fileLocation);
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();

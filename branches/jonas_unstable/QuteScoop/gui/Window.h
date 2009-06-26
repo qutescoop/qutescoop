@@ -124,7 +124,7 @@ private:
 	SearchResultModel searchResultModel, friendsModel;
 	MetarModel metarModel;
     QTimer searchTimer, metarTimer, warpTimer;
-	QTimer downloadWatchdog;
+    QTimer downloadWatchdog, downloadStatus;
 	QSortFilterProxyModel *metarSortModel, *friendsSortModel;
 	
 	QHttp *versionChecker;

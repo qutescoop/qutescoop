@@ -54,13 +54,16 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	setWindowTitle(pilot->label);
 	
 	// Pilot Information
-	QString pilotInfo = QString("<strong>PILOT: %1</strong><br>").arg(pilot->displayName(true));
-	pilotInfo += pilot->detailInformation() + "<br>";
-	if (pilot->server == "") {
+    QString pilotInfo = QString("<strong>PILOT: %1</strong>, %2")
+                        .arg(pilot->displayName(true))
+                        .arg(pilot->detailInformation());
+    if (pilot->server.isEmpty()) {
 		pilotInfo += QString("<i>Not connected (prefiled flight)</i>");
         buttonShowOnMap->setEnabled(false);
     } else {
-		pilotInfo += QString("On %3 for %4").arg(pilot->server).arg(pilot->onlineTime());
+        pilotInfo += QString("On %1 for %2")
+                     .arg(pilot->server)
+                     .arg(pilot->onlineTime());
         buttonShowOnMap->setEnabled(true);
     }
 
@@ -69,11 +72,9 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	lblPilotInfo->setText(pilotInfo);
 	
 	// Aircraft Information
-	QString aircraftInfo = QString("Aircraft: <strong>%1</strong><br>").arg(pilot->planAircraft);
-	aircraftInfo += QString("Altitude: <strong>%1</strong> feet<br>").arg(pilot->altitude);
-    aircraftInfo += QString("Ground Speed: <strong>%1</strong> kts")
-                    .arg(pilot->groundspeed);
-	lblAircraftInfo->setText(aircraftInfo);
+    lblAircraft->setText(QString("%1").arg(pilot->planAircraft));
+    lblAltitude->setText(QString("%1 ft").arg(pilot->altitude));
+    lblGroundspeed->setText(QString("%1 kts").arg(pilot->groundspeed));
 	
 	// flight status
 	lblFlightStatus->setText(pilot->flightStatusString());
@@ -120,32 +121,39 @@ void PilotDetails::refresh(Pilot *newPilot) {
 
     // check if we know position
     buttonShowOnMap->setDisabled(pilot->lon > 90);
+
+    // adjust window
+    //setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    //updateGeometry();
+    adjustSize();
 }
 
 void PilotDetails::on_buttonDest_clicked() {
 	Airport *airport = pilot->destAirport();
-	if(airport != 0)
+    if(airport != 0) {
 		airport->showDetailsDialog();
-	close();
+        close();
+    }
 }
 
 void PilotDetails::on_buttonAlt_clicked()
 {
     Airport *airport = pilot->altAirport();
-    if(airport != 0)
+    if(airport != 0) {
         airport->showDetailsDialog();
-    close();
+        close();
+    }
 }
 
 void PilotDetails::on_buttonFrom_clicked() {
 	Airport *airport = pilot->depAirport();
-	if(airport != 0)
+    if(airport != 0) {
 		airport->showDetailsDialog();
-	close();
+        close();
+    }
 }
 
 void PilotDetails::on_buttonAddFriend_clicked() {
 	friendClicked();
 	refresh();
 }
-

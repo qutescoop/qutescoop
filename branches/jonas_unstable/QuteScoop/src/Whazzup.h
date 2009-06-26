@@ -39,9 +39,7 @@ public:
 	
 	/**
 	 * Set the download location for whazzup status file
-	 */
-	void setStatusLocation(const QString& url);
-	
+	 */	
 	const WhazzupData& whazzupData() { return (predictedTime.isValid()? predictedData: data); } // we fake it when predicting a certain time
     const WhazzupData& realWhazzupData() { return data; } // this is always the really downloaded thing
     
@@ -59,7 +57,8 @@ signals:
 	
 public slots:
 	void download();
-	
+    void setStatusLocation(const QString& url);
+
 private slots:
 	void statusDownloaded(bool error);
 	void whazzupDownloading(int prog, int tot);

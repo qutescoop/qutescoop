@@ -71,7 +71,11 @@ Window::Window(QWidget *parent) :
     if (fmt.defaultFormat().accumBufferSize() > 0)
         fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
     //fmt.setRgba(true);
-	glWidget = new GLWidget(fmt);
+    glWidget = new GLWidget(fmt);
+    // have fun :)
+    //setAttribute(Qt::WA_TranslucentBackground, true);
+    //glWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+
     centralwidget->layout()->addWidget(glWidget);
     qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
             << "| version: " << glWidget->format().openGLVersionFlags()
@@ -120,11 +124,12 @@ Window::Window(QWidget *parent) :
 
 	connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
 
-	if(Settings::downloadOnStartup()) {
-		// download whazzup as soon as whazzup status download is complete
-		connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
-		whazzup->setStatusLocation(Settings::statusLocation());
-	}
+    if(Settings::downloadOnStartup()) {
+        // download whazzup as soon as whazzup status download is complete
+        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
+    }
+    // Always download status
+    whazzup->setStatusLocation(Settings::statusLocation());
 
 	searchResult->setModel(&searchResultModel);
 	connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)), &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
@@ -303,7 +308,7 @@ void Window::whazzupDownloaded(bool isNew) {
     }
 	downloadWatchdog.stop();
 	if(Settings::downloadPeriodically())
-		downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
+        downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
 }
 
 void Window::refreshFriends() {
@@ -592,8 +597,9 @@ void Window::updateMetarDecoder(const QString& airport, const QString& decodedTe
 void Window::downloadWatchdogTriggered() {
 	downloadWatchdog.stop();
 	QMessageBox::warning(this, tr("Data Download Failed"),
-			QString("I failed to download network data for a while. I don't know the cause, but restarting the program usually fixes the problem.")
+            QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.")
 		);
+    Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
 }
 
 void Window::setStatusText(QString text) {
