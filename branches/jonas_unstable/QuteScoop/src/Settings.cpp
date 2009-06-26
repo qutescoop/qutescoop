@@ -620,21 +620,21 @@ void Settings::setPlanLineStrength(double value) {
 	getSettings()->setValue("pilotDisplay/planLineStrength", value);
 }
 
-void Settings::getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom) {
+void Settings::getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom, int nr) {
 	if(xrot == 0 || yrot == 0 || zrot == 0 || zoom == 0)
 		return;
 
-	*xrot = getSettings()->value("defaultMapPosition/xrot", *xrot).toDouble();
-	*yrot = getSettings()->value("defaultMapPosition/yrot", *yrot).toDouble();
+    *xrot = getSettings()->value("defaultMapPosition/xrot" + QString("%1").arg(nr), *xrot).toDouble();
+    *yrot = getSettings()->value("defaultMapPosition/yrot" + QString("%1").arg(nr), *yrot).toDouble();
 	// ignore zoom. we can't tilt the earth, xy2latlon would fuck up
-	*zoom = getSettings()->value("defaultMapPosition/zoom", *zoom).toDouble();
+    *zoom = getSettings()->value("defaultMapPosition/zoom" + QString("%1").arg(nr), *zoom).toDouble();
 }
 
-void Settings::setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom) {
-	getSettings()->setValue("defaultMapPosition/xrot", xrot);
-	getSettings()->setValue("defaultMapPosition/yrot", yrot);
-	getSettings()->setValue("defaultMapPosition/zrot", zrot);
-	getSettings()->setValue("defaultMapPosition/zoom", zoom);
+void Settings::setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom, int nr) {
+    getSettings()->setValue("defaultMapPosition/xrot" + QString("%1").arg(nr), xrot);
+    getSettings()->setValue("defaultMapPosition/yrot" + QString("%1").arg(nr), yrot);
+    getSettings()->setValue("defaultMapPosition/zrot" + QString("%1").arg(nr), zrot);
+    getSettings()->setValue("defaultMapPosition/zoom" + QString("%1").arg(nr), zoom);
 }
 
 void Settings::saveState(const QByteArray& state) {

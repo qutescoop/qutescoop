@@ -156,10 +156,11 @@ Window::Window(QWidget *parent) :
 	connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
 	connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
-#ifndef Q_WS_MAC
-	actionZoomIn->setShortcut(QKeySequence("F11"));
-	actionZoomOut->setShortcut(QKeySequence("F12"));
-#endif
+//#ifndef Q_WS_MAC // lets use CTRL +/- which I think shuld work everywhere. No normal input characters, as these get trapped by the EditWidgets (Search etc.)
+    // F11 is Fullscreen on most Linux Displaymanagers
+    //actionZoomIn->setShortcut(QKeySequence("F11"));
+    //actionZoomOut->setShortcut(QKeySequence("F12"));
+//#endif
 
 	connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
 	connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
@@ -180,7 +181,7 @@ Window::Window(QWidget *parent) :
 		checkForUpdates();
 
 	// restore saved states
-	glWidget->restorePosition();
+    glWidget->restorePosition(1);
 	if(restoreState(Settings::getSavedState(), VERSION_INT)) {
 		QSize savedSize = Settings::getSavedSize();
 		if(!savedSize.isNull()) resize(savedSize);
@@ -579,7 +580,7 @@ void Window::versionDownloaded(bool error) {
 }
 
 void Window::on_actionRememberPosition_triggered() {
-	glWidget->rememberPosition();
+    glWidget->rememberPosition(1);
 }
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
@@ -630,11 +631,6 @@ void Window::performWarp()
 
 void Window::on_actionPredict_triggered()
 {
-    datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
-    datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
-    timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
-                             .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
-    framePredict->show();
 }
 
 void Window::on_tbDisablePredict_clicked()
@@ -653,4 +649,82 @@ void Window::on_timePredictTime_timeChanged(QTime date)
 {
     warpTimer.stop();
     warpTimer.start(1000);
+}
+
+void Window::on_actionPredict_toggled(bool value)
+{
+    if(value) {
+        datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+        datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
+        timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
+                                 .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
+        framePredict->show();
+    } else {
+        on_tbDisablePredict_clicked();
+    }
+}
+
+void Window::on_actionRecallMapPosition_triggered()
+{
+    glWidget->restorePosition(1);
+}
+
+void Window::on_actionRecallMapPosition7_triggered()
+{
+    glWidget->restorePosition(7);
+}
+
+void Window::on_actionRecallMapPosition6_triggered()
+{
+    glWidget->restorePosition(6);
+}
+
+void Window::on_actionRecallMapPosition5_triggered()
+{
+    glWidget->restorePosition(5);
+}
+
+void Window::on_actionRecallMapPosition4_triggered()
+{
+    glWidget->restorePosition(4);
+}
+
+void Window::on_actionRecallMapPosition3_triggered()
+{
+    glWidget->restorePosition(3);
+}
+
+void Window::on_actionRecallMapPosition2_triggered()
+{
+    glWidget->restorePosition(2);
+}
+
+void Window::on_actionRememberMapPosition7_triggered()
+{
+    glWidget->rememberPosition(7);
+}
+
+void Window::on_actionRememberMapPosition6_triggered()
+{
+    glWidget->rememberPosition(6);
+}
+
+void Window::on_actionRememberMapPosition5_triggered()
+{
+    glWidget->rememberPosition(5);
+}
+
+void Window::on_actionRememberMapPosition4_triggered()
+{
+    glWidget->rememberPosition(4);
+}
+
+void Window::on_actionRememberMapPosition3_triggered()
+{
+    glWidget->rememberPosition(3);
+}
+
+void Window::on_actionRememberMapPosition2_triggered()
+{
+    glWidget->rememberPosition(2);
 }

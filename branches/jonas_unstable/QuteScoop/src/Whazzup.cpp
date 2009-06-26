@@ -218,6 +218,7 @@ void Whazzup::whazzupDownloaded(bool error) {
             emit newData(true);
         } else {
             qDebug() << "We already have Whazzup with that Timestamp" << data.timestamp().toString();
+            emit newData(false);
         }
 	}
 
@@ -292,6 +293,7 @@ void Whazzup::bookingsDownloaded(bool error) {
             emit newData(true);
         } else {
             qDebug() << "We already have Bookings with that Timestamp" << data.bookingsTimestamp().toString();
+            emit newData(false);
         }
     }
 }

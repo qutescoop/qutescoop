@@ -50,8 +50,8 @@ public slots:
 	void zoomIn(int factor);
 	void zoomOut(int factor);
 
-	void rememberPosition();
-	void restorePosition();
+    void rememberPosition(int nr);
+    void restorePosition(int nr);
 
 	void displayAllFirs(bool value);
 	void showInactiveAirports(bool value);

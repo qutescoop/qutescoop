@@ -272,8 +272,8 @@ public:
 	static QString updateVersionNumber();
 	static void setUpdateVersionNumber(const QString& version);
 
-	static void getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom);
-	static void setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom);
+    static void getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom, int nr);
+    static void setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom, int nr);
 
 	static int maxLabels();
 	static void setMaxLabels(int maxLabels);

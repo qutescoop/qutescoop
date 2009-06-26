@@ -929,12 +929,12 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 	return result;
 }
 
-void GLWidget::rememberPosition() {
-	Settings::setRememberedMapPosition(xRot, yRot, zRot, zoom);
+void GLWidget::rememberPosition(int nr) {
+    Settings::setRememberedMapPosition(xRot, yRot, zRot, zoom, nr);
 }
 
-void GLWidget::restorePosition() {
-	Settings::getRememberedMapPosition(&xRot, &yRot, &zRot, &zoom);
+void GLWidget::restorePosition(int nr) {
+    Settings::getRememberedMapPosition(&xRot, &yRot, &zRot, &zoom, nr);
 	normalizeAngle(&xRot);
 	normalizeAngle(&yRot);
 	resetZoom();

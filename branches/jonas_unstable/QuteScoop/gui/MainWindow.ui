@@ -191,28 +191,62 @@
     <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
     <addaction name="separator"/>
-    <addaction name="actionZoomIn"/>
-    <addaction name="actionZoomOut"/>
-    <addaction name="separator"/>
     <addaction name="actionDisplayAllFirs"/>
     <addaction name="actionShowInactiveAirports"/>
-    <addaction name="separator"/>
-    <addaction name="actionRememberPosition"/>
    </widget>
    <widget class="QMenu" name="menuPlan">
     <property name="statusTip">
      <string notr="true"/>
     </property>
     <property name="title">
-     <string>&amp;Plan</string>
+     <string>Pla&amp;n</string>
     </property>
     <addaction name="actionPlanFlight"/>
     <addaction name="separator"/>
     <addaction name="actionPredict"/>
     <addaction name="actionBookedAtc"/>
    </widget>
+   <widget class="QMenu" name="menuPosition">
+    <property name="title">
+     <string>&amp;Position</string>
+    </property>
+    <widget class="QMenu" name="menuRemember">
+     <property name="title">
+      <string>Remember</string>
+     </property>
+     <addaction name="actionRemember_2"/>
+     <addaction name="separator"/>
+     <addaction name="actionRememberPosition"/>
+     <addaction name="actionRememberMapPosition2"/>
+     <addaction name="actionRememberMapPosition3"/>
+     <addaction name="actionRememberMapPosition4"/>
+     <addaction name="actionRememberMapPosition5"/>
+     <addaction name="actionRememberMapPosition6"/>
+     <addaction name="actionRememberMapPosition7"/>
+    </widget>
+    <widget class="QMenu" name="menuRecall">
+     <property name="title">
+      <string>Recall</string>
+     </property>
+     <addaction name="actionRecall_2"/>
+     <addaction name="separator"/>
+     <addaction name="actionRecallMapPosition"/>
+     <addaction name="actionRecallMapPosition2"/>
+     <addaction name="actionRecallMapPosition3"/>
+     <addaction name="actionRecallMapPosition4"/>
+     <addaction name="actionRecallMapPosition5"/>
+     <addaction name="actionRecallMapPosition6"/>
+     <addaction name="actionRecallMapPosition7"/>
+    </widget>
+    <addaction name="actionZoomIn"/>
+    <addaction name="actionZoomOut"/>
+    <addaction name="separator"/>
+    <addaction name="menuRemember"/>
+    <addaction name="menuRecall"/>
+   </widget>
    <addaction name="menuQutescoop"/>
    <addaction name="menuView"/>
+   <addaction name="menuPosition"/>
    <addaction name="menuPlan"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -545,7 +579,10 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberPosition">
    <property name="text">
-    <string>&amp;Remember Map Position</string>
+    <string>Default Map Position</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+1</string>
    </property>
   </action>
   <action name="actionHideAllWindows">
@@ -576,6 +613,9 @@ p, li { white-space: pre-wrap; }
    <property name="text">
     <string>&amp;Routes</string>
    </property>
+   <property name="shortcut">
+    <string>F9</string>
+   </property>
   </action>
   <action name="actionBookedAtc">
    <property name="text">
@@ -590,19 +630,141 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Show Inactive Airports</string>
+    <string>Show I&amp;nactive Airports</string>
    </property>
   </action>
   <action name="actionPredict">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
    </property>
    <property name="text">
     <string>&amp;Time Warp</string>
    </property>
    <property name="shortcut">
     <string>F8</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition">
+   <property name="text">
+    <string>Default Map Position</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+1</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition2">
+   <property name="text">
+    <string>Map Position 2</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+2</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition2">
+   <property name="text">
+    <string>Map Position 2</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+2</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition3">
+   <property name="text">
+    <string>Map Position 3</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+3</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition3">
+   <property name="text">
+    <string>Map Position 3</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+3</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition4">
+   <property name="text">
+    <string>Map Position 4</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+4</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition4">
+   <property name="text">
+    <string>Map Position 4</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+4</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition5">
+   <property name="text">
+    <string>Map Position 5</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+5</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition6">
+   <property name="text">
+    <string>Map Position 6</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+6</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition7">
+   <property name="text">
+    <string>Map Position 7</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+7</string>
+   </property>
+  </action>
+  <action name="actionRecall_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Recall</string>
+   </property>
+  </action>
+  <action name="actionRemember_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="text">
+    <string>Remember</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition5">
+   <property name="text">
+    <string>Map Position 5</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+5</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition6">
+   <property name="text">
+    <string>Map Position 6</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+6</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition7">
+   <property name="text">
+    <string>Map Position 7</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+7</string>
    </property>
   </action>
  </widget>

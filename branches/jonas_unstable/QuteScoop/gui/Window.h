@@ -49,6 +49,20 @@ public slots:
 	void refreshFriends();
 
 private slots:	
+    void on_actionRememberMapPosition2_triggered();
+    void on_actionRememberMapPosition3_triggered();
+    void on_actionRememberMapPosition4_triggered();
+    void on_actionRememberMapPosition5_triggered();
+    void on_actionRememberMapPosition6_triggered();
+    void on_actionRememberMapPosition7_triggered();
+    void on_actionRecallMapPosition2_triggered();
+    void on_actionRecallMapPosition3_triggered();
+    void on_actionRecallMapPosition4_triggered();
+    void on_actionRecallMapPosition5_triggered();
+    void on_actionRecallMapPosition6_triggered();
+    void on_actionRecallMapPosition7_triggered();
+    void on_actionRecallMapPosition_triggered();
+    void on_actionPredict_toggled(bool );
     void on_timePredictTime_timeChanged(QTime date);
     void on_datePredictTime_dateChanged(QDate date);
     void on_tbDisablePredict_clicked();

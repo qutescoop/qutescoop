@@ -7,6 +7,7 @@ added:
 * Show ATC bookings in list (VATSIM only so far)
 * Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
 * See prefiled flights in arrival and departure lists and in Time Warp on the map
+* Multiple Map Positions can now be remembered / recalled
 * OpenGL debug messages + ability to set OpenGL parameters through own config file
 * Show inactive airports when zoomed in
 * Filter airport traffic to only show traffic in the vicinity of airport (configurable)
@@ -23,6 +24,8 @@ fixed:
 * Always show map label of a busy airport in favor to a less busier one
 * Labels are less conservative in decluttering (allow a bit of overlap on the edges)
 * Preferences dialog fits on a 1280x800 screen
+* Data location on Unix/Linux: now in the program path (./data), not /usr/share
+* Set Zoom In/Out to CTRL+/- as F11 got obscured on Linux and was not applicable on Mac as well
 
 QuteScoop Changelog - Version 1.0.2
 
