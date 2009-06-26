@@ -223,7 +223,6 @@ void Settings::setUseNavdata(bool value) {
 }
 
 bool Settings::showFixes() {
-    bool a = getSettings()->value("database/showfixes", true).toBool();
 	return getSettings()->value("database/showfixes", true).toBool();
 }
 

@@ -2,6 +2,7 @@ QuteScoop Changelog - Version 1.0.3 jonas alpha
 changed:
 * Zoom accelerated if mouse wheel driver supports it
 * Increase max. value for shown labels (in preferences)
+* Try to reload the network status on Whazzup download error
 
 added:
 * Show ATC bookings in list (VATSIM only so far)
