@@ -238,6 +238,16 @@ void Settings::setMetarDownloadInterval(int minutes) {
 	getSettings()->setValue("download/metarInterval", minutes);
 }
 
+// OpenGL
+bool Settings::enableBlend() {
+    return getSettings()->value("gl/blend", true).toBool();
+}
+
+void Settings::setEnableBlend(bool value) {
+    getSettings()->setValue("gl/blend", value);
+}
+//------------------
+
 QColor Settings::backgroundColor() {
 	// the default value is the "Trolltech Purple"
 	return getSettings()->value("earthSpace/backgroundColor", QColor::fromCmykF(0.39, 0.39, 0.0, 0.0)).value<QColor>();

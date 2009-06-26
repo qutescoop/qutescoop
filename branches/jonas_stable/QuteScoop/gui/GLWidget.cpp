@@ -249,16 +249,17 @@ void GLWidget::initializeGL() {
 	createObjects();
 
 	if(Settings::displaySmoothDots()) {
-        glEnable(GL_POINT_SMOOTH);
+       glEnable(GL_POINT_SMOOTH);
     }
 	if(Settings::displaySmoothLines()) {
         glEnable(GL_LINE_SMOOTH);
         glEnable(GL_POLYGON_SMOOTH);
     }
-
-	glEnable(GL_BLEND);
-	glEnable(GL_LINE_STIPPLE);
-	glEnable(GL_TEXTURE_2D);
+    if(Settings::enableBlend()) {
+        glEnable(GL_BLEND);
+    }
+    glEnable(GL_LINE_STIPPLE);
+    glEnable(GL_TEXTURE_2D);
 }
 
 void GLWidget::paintGL() {

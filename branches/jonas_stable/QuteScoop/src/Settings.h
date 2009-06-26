@@ -125,6 +125,10 @@ public:
 	static int metarDownloadInterval();
 	static void setMetarDownloadInterval(int minutes);
 
+    //OpenGL settings
+    static bool enableBlend();
+    static void setEnableBlend(bool value);
+
 	// Earth and Space settings ----------------------------
 	static void deleteEarthSpaceSettings();
 

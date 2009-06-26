@@ -32,8 +32,11 @@ public:
 
 private slots:
     //
-	void loadSettings();
-    
+    void loadSettings();
+
+    // OpenGL settings
+    void on_cbBlend_toggled(bool checked);
+
 	// download settings
     void on_cbShowFixes_toggled(bool checked);
     void on_spinBoxDownloadInterval_valueChanged(int value);

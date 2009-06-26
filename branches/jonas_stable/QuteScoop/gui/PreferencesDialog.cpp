@@ -77,6 +77,9 @@ void PreferencesDialog::loadSettings() {
 	if(!Settings::dashedTrackInFront())
 		cbDashedFrontAfter->setCurrentIndex(1);
 
+    // OpenGL
+    cbBlend->setChecked(Settings::enableBlend());
+
 	// colors
 	QColor color = Settings::backgroundColor().dark();
 	pbBackgroundColor->setText(color.name());
@@ -786,4 +789,9 @@ void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
 {
 	Settings::deleteAirportTrafficSettings();
 	loadSettings();
+}
+
+void PreferencesDialog::on_cbBlend_toggled(bool checked)
+{
+    Settings::setEnableBlend(checked);
 }
