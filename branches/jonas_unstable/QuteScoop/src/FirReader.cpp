@@ -72,7 +72,8 @@ void FirReader::loadFirdisplay(QHash<QString, Fir*>& firs, const QString& filena
 			if(!workingFirId.isEmpty()) {
 				QList<QString> firIcaos = idIcaoMapping.values(workingFirId);
 				for(int i = 0; i < firIcaos.size(); i++) {
-					firs[firIcaos[i]]->setPointList(pointList);
+                    if(firs.contains(firIcaos[i])) { // be conservative as a segfault was reported on Mac OS
+                        firs[firIcaos[i]]->setPointList(pointList);
 				}
 			}
 			
