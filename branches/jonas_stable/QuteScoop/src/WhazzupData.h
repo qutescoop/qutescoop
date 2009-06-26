@@ -77,8 +77,9 @@ private:
 	void updateControllersFrom(const WhazzupData& data);
 	void updateBookedControllersFrom(const WhazzupData& data);
 	
-	QHash<QString, Pilot*> pilots;
-	QHash<QString, Controller*> controllers;
+    QHash<QString, Pilot*> pilots;
+    QHash<QString, Pilot*> activepilots;
+    QHash<QString, Controller*> controllers;
 	QList<BookedController*> bookedcontrollers;
 	int connectedClients;
 	int connectedServers;

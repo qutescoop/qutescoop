@@ -297,7 +297,7 @@ void GLWidget::paintGL() {
 	if(zoom < fixZoomTreshold && Settings::showFixes())
 		glCallList(fixesList);
 
-	renderLabels();
+    renderLabels();
 }
 
 void GLWidget::updateAirports() {
@@ -623,8 +623,9 @@ void GLWidget::renderLabels() {
 
     // Pilot labels
 	objects.clear();
-	for(int i = 0; i < Whazzup::getInstance()->whazzupData().getActivePilots().size(); i++)
-		objects.append(Whazzup::getInstance()->whazzupData().getActivePilots()[i]);
+    QList<Pilot*> activepilots = Whazzup::getInstance()->whazzupData().getActivePilots();
+    for(int i = 0; i < activepilots.size(); i++)
+        objects.append(activepilots[i]);
 	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
 	
     // Inactive airports

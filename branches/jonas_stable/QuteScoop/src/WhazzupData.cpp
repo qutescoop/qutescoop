@@ -107,6 +107,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 				if(list[3] == "PILOT") {
 					if (type == WHAZZUP) {
                         Pilot *p = new Pilot(list, this);
+                        activepilots[p->label] = p;
                         pilots[p->label] = p;
                     }
 				}
@@ -255,9 +256,10 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         np->trueHeading = trueHeading;
         np->groundspeed = groundspeed;
 
+        activepilots[np->label] = np;
         pilots[np->label] = np;
     }
-    connectedClients = controllers.size() + pilots.size();
+    connectedClients = controllers.size() + activepilots.size();
     qDebug() << "faked and inserted" << connectedClients << "clients for the Warp";
 }
 
@@ -282,9 +284,12 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         predictionBasedOnTime = data.predictionBasedOnTime;
 
         pilots.clear();
+        activepilots.clear();
         QList<QString> callsigns = data.pilots.keys();
         for(int i = 0; i < callsigns.size(); i++) {
             pilots[callsigns[i]] = new Pilot(*data.pilots[callsigns[i]]);
+            if(pilots[callsigns[i]]->flightStatus() != Pilot::PREFILED)
+                activepilots[callsigns[i]] = pilots[callsigns[i]];
         }
 
         controllers.clear();
@@ -312,24 +317,24 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
 }
 
 void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
-	QList<QString> callsigns = pilots.keys();
-	for(int i = 0; i < callsigns.size(); i++) {
-		if(!data.pilots.contains(callsigns[i])) {
-			// remove pilots that are no longer there
-			delete pilots[callsigns[i]];
-			pilots.remove(callsigns[i]);
-		}
-	}
-	callsigns = data.pilots.keys();
+    QList<QString> callsigns = pilots.keys();
+    for(int i = 0; i < callsigns.size(); i++) {
+        if(!data.pilots.contains(callsigns[i])) {
+            // remove pilots that are no longer there
+            delete pilots[callsigns[i]];
+            activepilots.remove(callsigns[i]);
+            pilots.remove(callsigns[i]);
+        }
+    }
+    callsigns = data.pilots.keys();
 	for(int i = 0; i < callsigns.size(); i++) {
 		if(!pilots.contains(callsigns[i])) {
-
 			// create a new copy of new pilot
 			Pilot *p = new Pilot(*data.pilots[callsigns[i]]);
 			pilots[p->label] = p;
-
+            if(p->flightStatus() != Pilot::PREFILED)
+                activepilots[p->label] = p;
 		} else {
-
 			// pilot already exists, assign values from data
 			bool showFrom = pilots[callsigns[i]]->displayLineFromDep;
 			bool showTo = pilots[callsigns[i]]->displayLineToDest;
@@ -339,15 +344,15 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 			QString oldDest = pilots[callsigns[i]]->planDest;
 
 			*pilots[callsigns[i]] = *data.pilots[callsigns[i]];
-			pilots[callsigns[i]]->displayLineFromDep = showFrom;
+            if(pilots[callsigns[i]]->flightStatus() != Pilot::PREFILED)
+                *activepilots[callsigns[i]] = *data.pilots[callsigns[i]];
+            pilots[callsigns[i]]->displayLineFromDep = showFrom;
 			pilots[callsigns[i]]->displayLineToDest = showTo;
 
 			if(pilots[callsigns[i]]->planDest != oldDest) {
 				// if flightplan (=destination) changed, clear the flight path
 				pilots[callsigns[i]]->oldPositions.clear();
-
 			} else {
-
 				double newLat = pilots[callsigns[i]]->lat;
 				double newLon = pilots[callsigns[i]]->lon;
 				if(!(oldLat == 0 && oldLon == 0) // dont add 0/0 to the waypoint list.
@@ -420,12 +425,13 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
 }
 
 WhazzupData::~WhazzupData() {
-	QList<QString> callsigns = pilots.keys();
-	for(int i = 0; i < callsigns.size(); i++)
-		delete pilots[callsigns[i]];
-	pilots.clear();
+    QList<QString> callsigns = pilots.keys();
+    for(int i = 0; i < callsigns.size(); i++)
+        delete pilots[callsigns[i]];
+    pilots.clear();
+    activepilots.clear();
 
-	callsigns = controllers.keys();
+    callsigns = controllers.keys();
     for(int i = 0; i < callsigns.size(); i++)
         delete controllers[callsigns[i]];
     controllers.clear();
@@ -470,15 +476,7 @@ QList<Pilot*> WhazzupData::getPilots() const {
 }
 
 QList<Pilot*> WhazzupData::getActivePilots() const {
-	QList<Pilot*> result = pilots.values();
-	for (int i = 0; i < result.size(); i++) {
-        // exclude prefiled flights
-        if (result[i]->flightStatus() == Pilot::PREFILED || (result[i]->lat == 0 && result[i]->lon == 0) ) {
-			result.removeAt(i);
-			i--;
-		}
-	}
-	return result;
+    return activepilots.values();
 }
 
 void WhazzupData::accept(MapObjectVisitor* visitor) const {
