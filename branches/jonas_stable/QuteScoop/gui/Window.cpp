@@ -72,9 +72,11 @@ Window::Window(QWidget *parent) :
         fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
     //fmt.setRgba(true);
     glWidget = new GLWidget(fmt);
+
     // have fun :)
     //setAttribute(Qt::WA_TranslucentBackground, true);
     //glWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+    setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
     centralwidget->layout()->addWidget(glWidget);
     qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
@@ -96,14 +98,13 @@ Window::Window(QWidget *parent) :
             
 
 	clientSelection = new ClientSelectionWidget();
-    preferencesDialog = new PreferencesDialog();
-    planFlightDialog = new PlanFlightDialog();
-    bookedAtcDialog = new BookedAtcDialog();
     
-    statusbar->addWidget(lblStatus, 5);
-    statusbar->addPermanentWidget(progressBar, 3);
     setProgressBar(0);
     lblStatus->setText("");
+    statusbar->addWidget(lblStatus, 5);
+    statusbar->addPermanentWidget(progressBar, 3);
+    statusbar->addPermanentWidget(tbZoomIn, 0);
+    statusbar->addPermanentWidget(tbZoomOut, 0);
 
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -119,8 +120,6 @@ Window::Window(QWidget *parent) :
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 	connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
 	connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
-	connect(planFlightDialog, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
-	connect(planFlightDialog, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
 
 	connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
 
@@ -168,8 +167,8 @@ Window::Window(QWidget *parent) :
 //#endif
 
 	connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
-	connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
-	connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
+    connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
+    connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
 	connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
 
@@ -196,7 +195,7 @@ Window::Window(QWidget *parent) :
 	}
     
     // Forecast / Predict settings
-    datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+    //datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
     datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
     timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
     framePredict->hide();
@@ -206,6 +205,8 @@ Window::Window(QWidget *parent) :
     QFont font = lblWarpInfo->font();
     font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
     lblWarpInfo->setFont(font); //make it a bit smaller than standard text
+
+    setEnableBookedAtc(Settings::downloadBookings());
 }
 
 void Window::toggleFullscreen() {
@@ -302,7 +303,7 @@ void Window::whazzupDownloaded(bool isNew) {
         AirportDetails::getInstance()->refresh();
         PilotDetails::getInstance()->refresh();
         ControllerDetails::getInstance()->refresh();
-        bookedAtcDialog->refresh();
+        if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
 
         refreshFriends();
     }
@@ -345,24 +346,24 @@ void Window::showOnMap(double lat, double lon) {
 }
 
 void Window::openPreferences() {
-	preferencesDialog->show();
-	preferencesDialog->raise();
-	preferencesDialog->activateWindow();
-	preferencesDialog->setFocus();
+    PreferencesDialog::getInstance()->show();
+    PreferencesDialog::getInstance()->raise();
+    PreferencesDialog::getInstance()->activateWindow();
+    PreferencesDialog::getInstance()->setFocus();
 }
 
 void Window::openPlanFlight() {
-    planFlightDialog->show();
-    planFlightDialog->raise();
-    planFlightDialog->activateWindow();
-    planFlightDialog->setFocus();
+    PlanFlightDialog::getInstance()->show();
+    PlanFlightDialog::getInstance()->raise();
+    PlanFlightDialog::getInstance()->activateWindow();
+    PlanFlightDialog::getInstance()->setFocus();
 }
 
 void Window::openBookedAtc() {
-    bookedAtcDialog->show();
-    bookedAtcDialog->raise();
-    bookedAtcDialog->activateWindow();
-    bookedAtcDialog->setFocus();
+    BookedAtcDialog::getInstance()->show();
+    BookedAtcDialog::getInstance()->raise();
+    BookedAtcDialog::getInstance()->activateWindow();
+    BookedAtcDialog::getInstance()->setFocus();
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
@@ -405,9 +406,9 @@ void Window::on_actionHideAllWindows_triggered() {
 	PilotDetails::getInstance()->close();
 	ControllerDetails::getInstance()->close();
 	AirportDetails::getInstance()->close();
-    //preferencesDialog->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
-    //planFlightDialog->close();
-    //bookedAtcDialog->close();
+    //PreferencesDialog::getInstance()->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
+    //PlanFlightDialog::getInstance()->close();
+    //BookedAtcDialog::getInstance()->close();
 
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
@@ -642,6 +643,7 @@ void Window::on_actionPredict_triggered()
 void Window::on_tbDisablePredict_clicked()
 {
     Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
+    actionPredict->setChecked(false);
     framePredict->hide();
 }
 
@@ -733,4 +735,39 @@ void Window::on_actionRememberMapPosition3_triggered()
 void Window::on_actionRememberMapPosition2_triggered()
 {
     glWidget->rememberPosition(2);
+}
+
+void Window::on_actionMoveLeft_triggered()
+{
+    glWidget->scrollBy(-1, 0);
+}
+
+void Window::on_actionMoveRight_triggered()
+{
+    glWidget->scrollBy(1, 0);
+}
+
+void Window::on_actionMoveUp_triggered()
+{
+    glWidget->scrollBy(0, -1);
+}
+
+void Window::on_actionMoveDown_triggered()
+{
+    glWidget->scrollBy(0, 1);
+}
+
+void Window::on_tbZoomIn_clicked()
+{
+    glWidget->zoomIn();
+}
+
+void Window::on_tbZoomOut_clicked()
+{
+    glWidget->zoomOut();
+}
+
+void Window::updateGLPilots() {
+    glWidget->createPilotsList();
+    glWidget->updateGL();
 }

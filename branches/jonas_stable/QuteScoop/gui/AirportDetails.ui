@@ -294,13 +294,23 @@
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
        <property name="text">
-        <string>Show on Map</string>
+        <string>Show on &amp;Map</string>
        </property>
        <property name="shortcut">
         <string>S</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="cbPlotRoutes">
+       <property name="toolTip">
+        <string>Also accessible by right click on the airport label.</string>
+       </property>
+       <property name="text">
+        <string>Plot &amp;Routes</string>
        </property>
       </widget>
      </item>

@@ -54,22 +54,19 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	setWindowTitle(pilot->label);
 	
 	// Pilot Information
-    QString pilotInfo = QString("<strong>PILOT: %1</strong>, %2")
+    lblPilotInfo->setText(QString("<strong>PILOT: %1</strong>, %2")
                         .arg(pilot->displayName(true))
-                        .arg(pilot->detailInformation());
+                        .arg(pilot->detailInformation()));
     if (pilot->server.isEmpty()) {
-		pilotInfo += QString("<i>Not connected (prefiled flight)</i>");
+        lblConnected->setText(QString("<i>Not connected (prefiled flight)</i>"));
         buttonShowOnMap->setEnabled(false);
     } else {
-        pilotInfo += QString("On %1 for %2")
+        lblConnected->setText(QString("On %1 for %2%3")
                      .arg(pilot->server)
-                     .arg(pilot->onlineTime());
+                     .arg(pilot->onlineTime())
+                     .arg(pilot->clientInformation().isEmpty()? "": ", "+ pilot->clientInformation()));
         buttonShowOnMap->setEnabled(true);
     }
-
-	QString software = pilot->clientInformation();
-	if(!software.isEmpty()) pilotInfo += ", " + software;
-	lblPilotInfo->setText(pilotInfo);
 	
 	// Aircraft Information
     lblAircraft->setText(QString("%1").arg(pilot->planAircraft));
@@ -81,9 +78,20 @@ void PilotDetails::refresh(Pilot *newPilot) {
 
     // flight plan
     groupFp->setVisible(!pilot->planFlighttype.isEmpty()); // hide for Bush pilots
+
+    QString fpTypeStr;
+    if (pilot->planFlighttype == "I")
+        fpTypeStr = "IFR";
+    else if (pilot->planFlighttype == "V")
+        fpTypeStr = "VFR";
+    else if (pilot->planFlighttype == "Y")
+        fpTypeStr = "IFR to VFR";
+    else if (pilot->planFlighttype == "Z")
+        fpTypeStr = "VFR to IFR";
+    else
+        fpTypeStr =  pilot->planFlighttype;
     groupFp->setTitle(QString("Flight Plan (%1)")
-                      .arg(pilot->planFlighttype == "I"? "IFR"
-                  : (pilot->planFlighttype == "V"? "VFR": "")));
+                      .arg(fpTypeStr));
 
     QString depStr = pilot->planDep;
 	Airport *airport = pilot->depAirport();
@@ -120,11 +128,11 @@ void PilotDetails::refresh(Pilot *newPilot) {
 		buttonAddFriend->setText("Add Friend");
 
     // check if we know position
-    buttonShowOnMap->setDisabled(pilot->lon > 90);
+    buttonShowOnMap->setDisabled(pilot->lon == 0.0 && pilot->lat == 0.0);
+
+    cbPlotRoute->setChecked(pilot->displayLineToDest);
 
     // adjust window
-    //setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-    //updateGeometry();
     adjustSize();
 }
 
@@ -156,4 +164,12 @@ void PilotDetails::on_buttonFrom_clicked() {
 void PilotDetails::on_buttonAddFriend_clicked() {
 	friendClicked();
 	refresh();
+}
+
+void PilotDetails::on_cbPlotRoute_toggled(bool checked)
+{
+    if (pilot->displayLineToDest != checked) {
+        pilot->toggleDisplayPath();
+        Window::getInstance()->updateGLPilots();
+    }
 }

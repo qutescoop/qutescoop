@@ -48,11 +48,12 @@ public:
 	
 	QList<Controller*> activeSectors() const;
 	QList<Pilot*> getPilots() const;
-	QList<Pilot*> getActivePilots() const;
-	QList<Controller*> getControllers() const { return controllers.values(); }
+    QList<Pilot*> getBookedPilots() const;
+    QList<Pilot*> getAllPilots() const;
+    QList<Controller*> getControllers() const { return controllers.values(); }
 	QList<BookedController*> getBookedControllers() const { return bookedcontrollers; }
 	
-	Pilot* getPilot(const QString& callsign) const { return pilots[callsign]; }
+    Pilot* getPilot(const QString& callsign) const { if(pilots[callsign] != 0) return pilots[callsign]; else return bookedpilots[callsign]; }
 	Controller* getController(const QString& callsign) const { return controllers[callsign]; }
 	
 	int clients() const { return connectedClients; }
@@ -78,7 +79,7 @@ private:
 	void updateBookedControllersFrom(const WhazzupData& data);
 	
     QHash<QString, Pilot*> pilots;
-    QHash<QString, Pilot*> activepilots;
+    QHash<QString, Pilot*> bookedpilots; // honestly, there could be same callsigns in the bookings, but it is easier like that (searching...)
     QHash<QString, Controller*> controllers;
 	QList<BookedController*> bookedcontrollers;
 	int connectedClients;

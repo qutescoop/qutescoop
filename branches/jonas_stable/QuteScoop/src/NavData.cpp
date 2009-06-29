@@ -136,8 +136,9 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 			airportList[i]->resetWhazzupStatus();
 	}
 
-	for(int i = 0; i < whazzupData.getPilots().size(); i++) {
-		Pilot *p = dynamic_cast<Pilot*>(whazzupData.getPilots()[i]);
+    QList<Pilot*> allpilots = whazzupData.getAllPilots();
+    for(int i = 0; i < allpilots.size(); i++) {
+        Pilot *p = allpilots[i];
 		if(p == 0) continue;
 		if(airportMap.contains(p->planDep) && airportMap[p->planDep] != 0)
 			airportMap[p->planDep]->addDeparture(p);

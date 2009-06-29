@@ -152,25 +152,25 @@ QString Pilot::flightStatusString() const {
     switch(flightStatus()) {
         case BOARDING:
             result = QString("Boarding");
-            result += ", ETE " + ete().toString("H:mm") + " hrs";
+            result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += ", Delay " + delayStr();
             return result;
         case GROUND_DEP:
             result = QString("Taxi to runway");
-            result += ", ETE " + ete().toString("H:mm") + " hrs";
+            result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += ", Delay " + delayStr();
             return result;
         case DEPARTING:
             result = QString("Departing");
-            result += ", ETE " + ete().toString("H:mm") + " hrs";
+            result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += ", Delay " + delayStr();
             return result;
         case ARRIVING:
             result = QString("Arriving");
-            result += ", ETE " + ete().toString("H:mm") + " hrs";
+            result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += ", Delay " + delayStr();
             return result;
@@ -200,7 +200,7 @@ QString Pilot::flightStatusString() const {
 						result += QString(" (%1%)").arg(dist_done * 100 / total_dist);
 					}
 				}
-                result += " ETE " + ete().toString("H:mm") + " hrs";
+                result += ", EET " + eet().toString("H:mm") + " hrs";
                 result += " ETA " + eta().toString("HH:mm") + " UTC";
                 result += ", Delay " + delayStr();
 				return result;
@@ -267,15 +267,21 @@ QString Pilot::aircraftType() const {
 }
 
 Airport* Pilot::depAirport() const {
-	return NavData::getInstance()->airports()[planDep];
+    if(NavData::getInstance()->airports().contains(planDep))
+        return NavData::getInstance()->airports()[planDep];
+    else return 0;
 }
 
 Airport* Pilot::destAirport() const {
-	return NavData::getInstance()->airports()[planDest];
+    if(NavData::getInstance()->airports().contains(planDest))
+        return NavData::getInstance()->airports()[planDest];
+    else return 0;
 }
 
 Airport* Pilot::altAirport() const {
-    return NavData::getInstance()->airports()[planAltAirport];
+    if(NavData::getInstance()->airports().contains(planAltAirport))
+        return NavData::getInstance()->airports()[planAltAirport];
+    else return 0;
 }
 
 double Pilot::distanceFromDeparture() const {
@@ -347,7 +353,7 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
     return QDateTime();
 }
 
-QTime Pilot::ete() const { // Estimated remaining Time Enroute
+QTime Pilot::eet() const { // Estimated Enroute Time remaining
     int secs = whazzupTime.secsTo(eta());
     QTime ret = QTime((secs / 3600) % 24, (secs / 60) % 60);
     return ret;
@@ -428,7 +434,7 @@ void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) const {
 	double d = NavData::distance(lat1, lon1, lat2, lon2);
 	if(d < 1) return; // less than 1 mile - not worth plotting
 
-	double fractionIncrement = 1 / (d / 30); // one dot every 30nm
+    double fractionIncrement = 30 / d; // one dot every 30nm
 	if(fractionIncrement > 1) fractionIncrement = 1;
 	double currentFraction = 0;
 

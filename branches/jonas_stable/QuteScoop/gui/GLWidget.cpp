@@ -336,7 +336,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
 	QToolTip::hideText();
 
-	if(mouseDownPos == event->pos()) {
+    if(mouseDownPos == event->pos() && event->button() == Qt::LeftButton) { // Left-Button needed on Windows explicitly
 		emit mapClicked(event->x(), event->y(), event->globalPos());
 	}
 }
@@ -372,14 +372,14 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 	}
 }
 
-void GLWidget::zoomIn(int factor) {
-	zoom -= zoom * 0.1f * factor;
+void GLWidget::zoomIn(double factor) {
+    zoom -= zoom * 0.2f * factor * Settings::zoomFactor();
 	resetZoom();
 	updateGL();
 }
 
-void GLWidget::zoomOut(int factor) {
-	zoom += zoom * 0.1f * factor;
+void GLWidget::zoomOut(double factor) {
+    zoom += zoom * 0.2f * factor * Settings::zoomFactor();
 	resetZoom();
 	updateGL();
 }
@@ -387,19 +387,10 @@ void GLWidget::zoomOut(int factor) {
 void GLWidget::wheelEvent(QWheelEvent* event) {
 	QToolTip::hideText();
     //if(event->orientation() == Qt::Vertical) {
-    if(event->delta() < 0) {
-        if (event->delta() < -800) {
-            zoomOut(8);
-        } else {
-            zoomOut(-event->delta() / 100);
-        }
-    } else {
-        if (event->delta() > 800) {
-            zoomIn(8);
-        } else {
-            zoomIn(event->delta() / 100);
-        }
+    if (abs(event->delta()) > Settings::wheelMax()) { // always recalibrate if bigger values are found
+        Settings::setWheelMax(abs(event->delta()));
     }
+    zoomIn((double) event->delta() / Settings::wheelMax());
 }
 
 void GLWidget::createOrbList() {
@@ -476,7 +467,7 @@ void GLWidget::createPilotsList() {
 
 	glNewList(pilotsList, GL_COMPILE);
 
-	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getActivePilots();
+    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
 
 	// aircraft dots
 	glPointSize(Settings::pilotDotSize());
@@ -565,7 +556,7 @@ void GLWidget::createAirportsList() {
             if(airportList[i] == 0) continue;
             if(!airportList[i]->isActive()) continue;
             int congested = airportList[i]->numFilteredArrivals() + airportList[i]->numFilteredDepartures();
-            if(congested < 5) continue;
+            if(congested < Settings::airportCongestionMinimum()) continue;
             GLdouble circle_distort = cos(airportList[i]->lat * Pi180);
             QList<QPair<double, double> > points;
             for(int h = 0; h <= 360; h += 10) {		
@@ -623,9 +614,10 @@ void GLWidget::renderLabels() {
 
     // Pilot labels
 	objects.clear();
-    QList<Pilot*> activepilots = Whazzup::getInstance()->whazzupData().getActivePilots();
-    for(int i = 0; i < activepilots.size(); i++)
-        objects.append(activepilots[i]);
+    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
+    for(int i = 0; i < pilots.size(); i++) {
+        objects.append(pilots[i]);
+    }
 	renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold, Settings::pilotFontColor());
 	
     // Inactive airports
@@ -636,6 +628,41 @@ void GLWidget::renderLabels() {
             if(!airportList[i]->isActive()) objects.append(airportList[i]);
         }
     	renderLabels(objects, Settings::inactiveAirportFont(), inactiveAirportLabelZoomTreshold, Settings::inactiveAirportFontColor());
+    }
+}
+
+void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color) {
+    if(zoom > zoomTreshold)
+        return; // don't draw if too far away
+
+    int maxLabels = Settings::maxLabels();
+    double alpha = (zoomTreshold - zoom) / zoomTreshold * 1.5;
+    if(alpha > 1) alpha = 1; if(alpha < 0) alpha = 0;
+    color.setAlphaF(alpha);
+
+    QFontMetricsF fontMetrics(font, this);
+    for (int i = 0; i < objects.size() && fontRectangles.size() < maxLabels; i++) {
+        MapObject *o = objects[i];
+        if(o == 0) continue;
+
+        int x, y;
+        double lat = o->lat;
+        double lon = o->lon;
+        if(pointIsVisible(lat, lon, &x, &y)) {
+            QString text = o->mapLabel();
+            QRectF rect = fontMetrics.boundingRect(text);
+            int drawX, drawY;
+            drawX = x - rect.width() / 2; // center horizontally
+            drawY = y - rect.height() - 5; // some px above dot
+            rect.moveTo(drawX, drawY);
+
+            FontRectangle fontRect = FontRectangle(rect, o);
+            if(shouldDrawLabel(fontRect)) {
+                qglColor(color);
+                renderText(drawX, drawY + rect.height(), text, font);
+                fontRectangles.append(fontRect);
+            }
+        }
     }
 }
 
@@ -651,41 +678,6 @@ bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
 			return false;
 	}
 	return true;
-}
-
-void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color) {
-	if(zoom > zoomTreshold)
-		return; // don't draw if too far away
-
-	int maxLabels = Settings::maxLabels();
-	double alpha = (zoomTreshold - zoom) / zoomTreshold * 1.5;
-	if(alpha > 1) alpha = 1; if(alpha < 0) alpha = 0;
-	color.setAlphaF(alpha);
-
-	QFontMetricsF fontMetrics(font, this);
-	qglColor(color);
-	for (int i = 0; i < objects.size() && fontRectangles.size() < maxLabels; i++) {
-		MapObject *o = objects[i];
-		if(o == 0) continue;
-
-		int x, y;
-        double lat = o->lat;
-        double lon = o->lon;
-		if(pointIsVisible(lat, lon, &x, &y)) {
-			QString text = o->mapLabel();
-			QRectF rect = fontMetrics.boundingRect(text);
-            int drawX, drawY; 
-            drawX = x - rect.width() / 2; // center horizontally
-            drawY = y - rect.height() - 5; // some px above dot
-			rect.moveTo(drawX, drawY);
-        	
-			FontRectangle fontRect = FontRectangle(rect, o);
-			if(shouldDrawLabel(fontRect)) { 
-				renderText(drawX, drawY + rect.height(), text, font);
-				fontRectangles.append(fontRect);
-			}
-		}
-	}
 }
 
 void GLWidget::createCountriesList() {
@@ -917,7 +909,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 		}
 	}
 
-	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getActivePilots();
+    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
 	for(int i = 0; i < pilots.size(); i++) {
 		Pilot *p = pilots[i];
 		double x = p->lat - lat;
@@ -942,4 +934,13 @@ void GLWidget::restorePosition(int nr) {
 	normalizeAngle(&yRot);
 	resetZoom();
 	updateGL();
+}
+
+void GLWidget::scrollBy(int moveByX, int moveByY) {
+    double lat, lon;
+    double fakeMousePosX = width() * (0.5 + (float) moveByX / 6);
+    double fakeMousePosY = height() * (0.5 + (float) moveByY / 6);
+    mouse2latlon(fakeMousePosX, fakeMousePosY, lat, lon);
+    setMapPosition(lat, lon, zoom);
+    updateGL();
 }

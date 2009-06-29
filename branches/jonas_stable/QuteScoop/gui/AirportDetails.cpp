@@ -157,3 +157,8 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 	departuresModel.modelSelected(departuresSortModel->mapToSource(index));
 }
 
+void AirportDetails::on_cbPlotRoutes_toggled(bool checked)
+{
+    airport->setDisplayFlightLines(checked);
+    Window::getInstance()->updateGLPilots();
+}

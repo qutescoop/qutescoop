@@ -50,6 +50,9 @@ PlanFlightDialog::PlanFlightDialog():
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
     //connect(treeVroute, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
+    connect(this, SIGNAL(networkMessage(QString)), Window::getInstance(), SLOT(networkMessage(QString)));
+    connect(this, SIGNAL(downloadError(QString)), Window::getInstance(), SLOT(downloadError(QString)));
+
 }
 
 void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected providers

@@ -107,7 +107,6 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 				if(list[3] == "PILOT") {
 					if (type == WHAZZUP) {
                         Pilot *p = new Pilot(list, this);
-                        activepilots[p->label] = p;
                         pilots[p->label] = p;
                     }
 				}
@@ -126,7 +125,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 				if (type == WHAZZUP) {
                     QStringList list = line.split(':');
                     Pilot *p = new Pilot(list, this);
-    				pilots[p->label] = p;
+                    bookedpilots[p->label] = p;
                 }
 			}
 			break;
@@ -190,11 +189,11 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         }
     }
 
-    QList<Pilot*> p = data.getPilots();
-    int altitude;
+    QList<Pilot*> p = data.getAllPilots();
+
     QDateTime startTime, endTime = QDateTime();
-    double lat, lon, startLat, startLon, endLat, endLon
-            , dist, groundspeed, enrouteHrs, trueHeading = 0.0;
+    double startLat, startLon, endLat, endLon = 0.0;
+    int altitude = 0;
 
     for (int i=0; i < p.size(); i++) {
         if (p[i] == 0)
@@ -207,7 +206,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             if (p[i]->flightStatus() == Pilot::PREFILED && p[i]->etd() > predictTime) { // we want prefiled before their departure as in non-Warped view
                 Pilot* np = new Pilot(*p[i]);
                 np->whazzupTime = QDateTime(predictTime);
-                pilots[np->label] = np; // just copy him over
+                bookedpilots[np->label] = np; // just copy him over
                 continue;
             }
             continue; // not on the map on the selected time
@@ -223,7 +222,6 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             endTime = p[i]->eta();
             endLat = p[i]->destAirport()->lat;
             endLon = p[i]->destAirport()->lon;
-            qDebug() << "pred " << p[i]->label << "PREFILED"; //fixme
         } else {
             startTime = data.timestamp();
             startLat = p[i]->lat;
@@ -233,19 +231,20 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             endLat = p[i]->destAirport()->lat;
             endLon = p[i]->destAirport()->lon;
         }
-        dist = NavData::distance(startLat, startLon, endLat, endLon);
-        enrouteHrs = ((double) startTime.secsTo(endTime)) / 3600.0;
-        if (enrouteHrs == 0) enrouteHrs = 0.1;
-        groundspeed = dist / enrouteHrs;
-        trueHeading = NavData::courseTo(startLat, startLon, endLat, endLon);
-
         // altitude
         if(p[i]->planAlt.toInt() != 0)
             altitude = p[i]->defuckPlanAlt(p[i]->planAlt);
 
-        // calculate position
-        double partdist = (double) groundspeed * ((double) startTime.secsTo(predictTime) / 3600.0);
-        NavData::distanceTo(startLat, startLon, partdist, trueHeading, &lat, &lon);
+        // position
+        double fraction = (double) startTime.secsTo(predictTime) / startTime.secsTo(endTime);
+        double lat, lon;
+        NavData::greatCirclePlotTo(startLat, startLon, endLat, endLon, fraction, &lat, &lon);
+
+        double dist = NavData::distance(startLat, startLon, endLat, endLon);
+        double enrouteHrs = ((double) startTime.secsTo(endTime)) / 3600.0;
+        if (enrouteHrs == 0) enrouteHrs = 0.1;
+        double groundspeed = dist / enrouteHrs;
+        double trueHeading = NavData::courseTo(lat, lon, endLat, endLon);
 
         // create Pilot instance and assign values
         Pilot* np = new Pilot(*p[i]);
@@ -256,10 +255,9 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         np->trueHeading = trueHeading;
         np->groundspeed = groundspeed;
 
-        activepilots[np->label] = np;
         pilots[np->label] = np;
     }
-    connectedClients = controllers.size() + activepilots.size();
+    connectedClients = controllers.size() + pilots.size();
     qDebug() << "faked and inserted" << connectedClients << "clients for the Warp";
 }
 
@@ -284,32 +282,29 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         predictionBasedOnTime = data.predictionBasedOnTime;
 
         pilots.clear();
-        activepilots.clear();
         QList<QString> callsigns = data.pilots.keys();
         for(int i = 0; i < callsigns.size(); i++) {
             pilots[callsigns[i]] = new Pilot(*data.pilots[callsigns[i]]);
-            if(pilots[callsigns[i]]->flightStatus() != Pilot::PREFILED)
-                activepilots[callsigns[i]] = pilots[callsigns[i]];
+        }
+
+        bookedpilots.clear();
+        callsigns = data.bookedpilots.keys();
+        for(int i = 0; i < callsigns.size(); i++) {
+            bookedpilots[callsigns[i]] = new Pilot(*data.bookedpilots[callsigns[i]]);
         }
 
         controllers.clear();
         callsigns = data.controllers.keys();
         for(int i = 0; i < callsigns.size(); i++)
             controllers[callsigns[i]] = new Controller(*data.controllers[callsigns[i]]);
-        
-        if (!data.isVatsim()) {
-            for(int i = 0; i < bookedcontrollers.size(); i++)
-                delete bookedcontrollers[i];
-            bookedcontrollers.clear();
-
-            bookingsTime = QDateTime();
-            predictionBasedOnBookingsTime = QDateTime();
-        }
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
         if(dataType == WHAZZUP) dataType = UNIFIED;
 
-        bookedcontrollers = data.bookedcontrollers;
+        bookedcontrollers.clear();
+        for (int i = 0; i < data.bookedcontrollers.size(); i++) {
+            bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
+        }
 
         bookingsTime = QDateTime(data.bookingsTime);
         predictionBasedOnBookingsTime = QDateTime(data.predictionBasedOnBookingsTime);
@@ -322,7 +317,6 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
         if(!data.pilots.contains(callsigns[i])) {
             // remove pilots that are no longer there
             delete pilots[callsigns[i]];
-            activepilots.remove(callsigns[i]);
             pilots.remove(callsigns[i]);
         }
     }
@@ -332,8 +326,6 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 			// create a new copy of new pilot
 			Pilot *p = new Pilot(*data.pilots[callsigns[i]]);
 			pilots[p->label] = p;
-            if(p->flightStatus() != Pilot::PREFILED)
-                activepilots[p->label] = p;
 		} else {
 			// pilot already exists, assign values from data
 			bool showFrom = pilots[callsigns[i]]->displayLineFromDep;
@@ -344,8 +336,6 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 			QString oldDest = pilots[callsigns[i]]->planDest;
 
 			*pilots[callsigns[i]] = *data.pilots[callsigns[i]];
-            if(pilots[callsigns[i]]->flightStatus() != Pilot::PREFILED)
-                *activepilots[callsigns[i]] = *data.pilots[callsigns[i]];
             pilots[callsigns[i]]->displayLineFromDep = showFrom;
 			pilots[callsigns[i]]->displayLineToDest = showTo;
 
@@ -363,6 +353,13 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 			}
 		}
 	}
+
+    bookedpilots.clear();
+    callsigns = data.bookedpilots.keys();
+    for(int i = 0; i < callsigns.size(); i++) {
+        Pilot *p = new Pilot(*data.bookedpilots[callsigns[i]]);
+        bookedpilots[p->label] = p;
+    }
 }
 
 void WhazzupData::updateControllersFrom(const WhazzupData& data) {
@@ -388,7 +385,10 @@ void WhazzupData::updateControllersFrom(const WhazzupData& data) {
 }
 
 void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
-    bookedcontrollers = data.bookedcontrollers;
+    bookedcontrollers.clear();
+    for (int i = 0; i < data.bookedcontrollers.size(); i++) {
+        bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
+    }
 }
 
 void WhazzupData::updateFrom(const WhazzupData& data) {
@@ -408,13 +408,6 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         whazzupVersion = data.whazzupVersion;        
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
-        if (!data.isVatsim()) {
-            for(int i = 0; i < bookedcontrollers.size(); i++)
-                delete bookedcontrollers[i];
-            bookedcontrollers.clear();
-            bookingsTime = QDateTime();
-            predictionBasedOnBookingsTime = QDateTime();
-        }
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
         if(dataType == WHAZZUP) dataType = UNIFIED;
@@ -429,13 +422,19 @@ WhazzupData::~WhazzupData() {
     for(int i = 0; i < callsigns.size(); i++)
         delete pilots[callsigns[i]];
     pilots.clear();
-    activepilots.clear();
+
+    callsigns = bookedpilots.keys();
+    for(int i = 0; i < callsigns.size(); i++)
+        delete bookedpilots[callsigns[i]];
+    bookedpilots.clear();
 
     callsigns = controllers.keys();
     for(int i = 0; i < callsigns.size(); i++)
         delete controllers[callsigns[i]];
     controllers.clear();
 
+    for(int i = 0; i < bookedcontrollers.size(); i++)
+        delete bookedcontrollers[i];
     bookedcontrollers.clear();
 }
 
@@ -475,13 +474,21 @@ QList<Pilot*> WhazzupData::getPilots() const {
 	return pilots.values(); 
 }
 
-QList<Pilot*> WhazzupData::getActivePilots() const {
-    return activepilots.values();
+QList<Pilot*> WhazzupData::getBookedPilots() const {
+    return bookedpilots.values();
+}
+
+QList<Pilot*> WhazzupData::getAllPilots() const {
+    QList<Pilot*> ap = bookedpilots.values();
+    ap.append(pilots.values());
+    return ap;
 }
 
 void WhazzupData::accept(MapObjectVisitor* visitor) const {
 	for(int i = 0; i < controllers.size(); i++)
 		visitor->visit(controllers.values()[i]);
-	for(int i = 0; i < pilots.size(); i++)
-		visitor->visit(pilots.values()[i]);
+    for(int i = 0; i < pilots.size(); i++)
+        visitor->visit(pilots.values()[i]);
+    for(int i = 0; i < bookedpilots.size(); i++)
+        visitor->visit(bookedpilots.values()[i]);
 }

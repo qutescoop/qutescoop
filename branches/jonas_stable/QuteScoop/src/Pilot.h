@@ -83,8 +83,8 @@ public:
 
     QDateTime etd() const; // Estimated Time of Departure
     QDateTime eta() const; // Estimated Time of Arrival
-    QDateTime fixedEta; //ETA, written after creation as a workaround for Prediction (Warp) Mode
-    QTime ete() const; // Estimated Remaining Time Enroute
+    //QDateTime fixedEta; // ETA, written after creation as a workaround for Prediction (Warp) Mode
+    QTime eet() const; // Estimated Enroute Time as remaining time to destination
     QDateTime etaPlan() const; // Estimated Time of Arrival as flightplanned
     QString delayStr() const;
 

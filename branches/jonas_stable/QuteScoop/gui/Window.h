@@ -42,13 +42,20 @@ public:
     void setProgressBar(int prog, int tot);
     void setProgressBar(bool isVisible);
     void setEnableBookedAtc(bool enable);
-	
+
 public slots:
 	void showOnMap(double lat, double lon);
 	void updateMetarDecoder(const QString& airport, const QString& decodedText);
 	void refreshFriends();
+    void updateGLPilots();
 
 private slots:	
+    void on_tbZoomOut_clicked();
+    void on_tbZoomIn_clicked();
+    void on_actionMoveDown_triggered();
+    void on_actionMoveUp_triggered();
+    void on_actionMoveRight_triggered();
+    void on_actionMoveLeft_triggered();
     void on_actionRememberMapPosition2_triggered();
     void on_actionRememberMapPosition3_triggered();
     void on_actionRememberMapPosition4_triggered();
@@ -117,14 +124,11 @@ private:
 
 	GLWidget *glWidget;
 	ClientSelectionWidget *clientSelection;
-    PreferencesDialog *preferencesDialog;
-    PlanFlightDialog *planFlightDialog;
-    BookedAtcDialog *bookedAtcDialog;
 
 	SearchResultModel searchResultModel, friendsModel;
 	MetarModel metarModel;
     QTimer searchTimer, metarTimer, warpTimer;
-    QTimer downloadWatchdog, downloadStatus;
+    QTimer downloadWatchdog;
 	QSortFilterProxyModel *metarSortModel, *friendsSortModel;
 	
 	QHttp *versionChecker;

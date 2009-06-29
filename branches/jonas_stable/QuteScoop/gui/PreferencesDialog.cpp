@@ -22,8 +22,18 @@
 #include <QColorDialog>
 #include <QFontDialog>
 
+#include "math.h"
+
 #include "Settings.h"
 #include "Window.h"
+
+PreferencesDialog *preferencesDialogInstance = 0;
+
+PreferencesDialog *PreferencesDialog::getInstance() {
+    if(preferencesDialogInstance == 0)
+        preferencesDialogInstance = new PreferencesDialog();
+    return preferencesDialogInstance;
+}
 
 PreferencesDialog::PreferencesDialog():
 	QDialog(),
@@ -46,6 +56,11 @@ void PreferencesDialog::loadSettings() {
 	editUserDefinedLocation->setText(Settings::userDownloadLocation());
 	editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
 	lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
+
+    cbDownloadBookings->setChecked(Settings::downloadBookings()); // must be after cbNetwork
+    editBookingsLocation->setText(Settings::bookingsLocation());
+    cbBookingsPeriodically->setChecked(Settings::bookingsPeriodically());
+    sbBookingsInterval->setValue(Settings::bookingsInterval());
 
 	sbMaxTextLabels->setValue(Settings::maxLabels());
 
@@ -213,12 +228,19 @@ void PreferencesDialog::loadSettings() {
 	rbNone->setChecked(Settings::voiceType() == Settings::NONE);
 	rbTeamSpeak->setChecked(Settings::voiceType() == Settings::TEAMSPEAK);
 	rbVRC->setChecked(Settings::voiceType() == Settings::VRC);
+    editVoiceCallsign->setEnabled(Settings::voiceType() == Settings::TEAMSPEAK);
+    editVoicePassword->setEnabled(Settings::voiceType() == Settings::TEAMSPEAK);
+    editVoiceUser->setEnabled(Settings::voiceType() == Settings::TEAMSPEAK);
 
 	// updates + feedback
 	cbCheckForUpdates->setChecked(Settings::checkForUpdates());
 	cbSendVersionInfo->setChecked(Settings::sendVersionInformation());
 
-	settingsLoaded = true;
+    // zooming
+    sbZoomFactor->setValue(Settings::zoomFactor());
+
+    // FINISHED
+    settingsLoaded = true;
 }
 
 // airport traffic settings
@@ -232,6 +254,11 @@ void PreferencesDialog::on_spFilterDistance_valueChanged(int value) {
 
 void PreferencesDialog::on_spFilterArriving_valueChanged(double value) {
 	Settings::setFilterArriving(value);
+}
+
+void PreferencesDialog::on_sbCongestionMinimum_valueChanged(int value)
+{
+    Settings::setAirportCongestionMinimum(value);
 }
 //
 
@@ -281,13 +308,16 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 	switch(index) {
 	case 0: // IVAO
 		Settings::setStatusLocation("http://www.ivao.aero/whazzup/status.txt");
+        cbDownloadBookings->setChecked(false);
 		break;
 	case 1: // VATSIM
 		Settings::setStatusLocation("http://www.vatsim.net/data/status.txt");
-		break;
+        cbDownloadBookings->setChecked(true);
+        break;
 	case 2: // user defined
 		Settings::setStatusLocation(editUserDefinedLocation->text());
-		break;
+        cbDownloadBookings->setChecked(false);
+        break;
 	}
 
 	editUserDefinedLocation->setEnabled(index == 2);
@@ -794,4 +824,36 @@ void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
 void PreferencesDialog::on_cbBlend_toggled(bool checked)
 {
     Settings::setEnableBlend(checked);
+}
+
+void PreferencesDialog::on_editBookingsLocation_editingFinished()
+{
+    Settings::setBookingsLocation(editBookingsLocation->text());
+}
+
+void PreferencesDialog::on_cbDownloadBookings_toggled(bool checked)
+{
+    Settings::setDownloadBookings(checked);
+    Window::getInstance()->setEnableBookedAtc(checked);
+}
+
+void PreferencesDialog::on_cbBookingsPeriodically_toggled(bool checked)
+{
+    Settings::setBookingsPeriodically(checked);
+}
+
+void PreferencesDialog::on_sbBookingsInterval_valueChanged(int value)
+{
+    Settings::setBookingsInterval(value);
+}
+
+// zooming
+void PreferencesDialog::on_pbWheelCalibrate_clicked()
+{
+    Settings::deleteWheelSettings();
+}
+
+void PreferencesDialog::on_sbZoomFactor_valueChanged(double value)
+{
+    Settings::setZoomFactor(value);
 }

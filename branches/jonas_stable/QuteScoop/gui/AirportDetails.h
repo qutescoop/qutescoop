@@ -38,7 +38,8 @@ public:
 	void refresh(Airport* airport = 0);
 
 private slots:
-	void atcSelected(const QModelIndex& index);
+    void on_cbPlotRoutes_toggled(bool checked);
+ void atcSelected(const QModelIndex& index);
 	void arrivalSelected(const QModelIndex& index);
 	void departureSelected(const QModelIndex& index);
 	

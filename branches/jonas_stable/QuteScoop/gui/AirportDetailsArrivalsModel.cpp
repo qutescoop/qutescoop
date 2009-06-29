@@ -100,8 +100,8 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 8:
                 if (p->flightStatus() == Pilot::GROUND_ARR || p->flightStatus() == Pilot::BLOCKED)
                     return "--:--";
-                else if(!p->ete().toString("H:mm").isEmpty())
-                    return p->ete().toString("H:mm");
+                else if(!p->eet().toString("H:mm").isEmpty())
+                    return p->eet().toString("H:mm");
                 else
                     return "n/a";
                 break;

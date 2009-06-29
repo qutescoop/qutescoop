@@ -21,6 +21,7 @@
 #include "BookedAtcSortFilter.h"
 #include "Whazzup.h"
 #include "Window.h"
+#include "Settings.h"
 #include "ui_MainWindow.h"
 
 BookedAtcDialog *bookedAtcDialog = 0;
@@ -50,13 +51,16 @@ BookedAtcDialog::BookedAtcDialog() :
     connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), &bookedAtcModel, SLOT(modelSelected(const QModelIndex&)));
     
     dateFilter->setDate(QDateTime::currentDateTime().toUTC().date());
-    dateFilter->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+    //dateFilter->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
     //dateFilter->setMaximumDate(QDateTime::currentDateTime().date().addMonths(1));
     timeFilter->setTime(QDateTime::currentDateTime().toUTC().time());
 
     QFont font = lblStatusInfo->font();
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
+
+    if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
+        Whazzup::getInstance()->downloadBookings();
 
     refresh();
 }

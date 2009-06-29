@@ -18,6 +18,7 @@
 
 #include "Settings.h"
 #include "Whazzup.h"
+#include "Window.h"
 
 #include <QSettings>
 #include <QApplication>
@@ -54,6 +55,39 @@ void Settings::setDownloadPeriodically(bool value) {
 	getSettings()->setValue("download/downloadPeriodically", value);
 }
 
+bool Settings::downloadBookings() {
+    return getSettings()->value("download/downloadBookings", downloadNetwork() == 1).toBool();
+}
+
+void Settings::setDownloadBookings(bool value) {
+    getSettings()->setValue("download/downloadBookings", value);
+}
+
+QString Settings::bookingsLocation() {
+    return getSettings()->value("download/bookingsLocation", "http://vatbook.euroutepro.com/servinfo.asp").toString();
+}
+
+void Settings::setBookingsLocation(const QString& value) {
+    getSettings()->setValue("download/bookingsLocation", value);
+}
+
+bool Settings::bookingsPeriodically() {
+    return getSettings()->value("download/bookingsPeriodically", true).toBool();
+}
+
+void Settings::setBookingsPeriodically(bool value) {
+    getSettings()->setValue("download/bookingsPeriodically", value);
+}
+
+int Settings::bookingsInterval() {
+    return getSettings()->value("download/bookingsInterval", 30).toInt();
+}
+
+void Settings::setBookingsInterval(int value) {
+    getSettings()->setValue("download/bookingsInterval", value);
+}
+
+//
 bool Settings::useSupFile() {
 	return getSettings()->value("data/useSupFile", false).toBool();
 }
@@ -742,14 +776,6 @@ void Settings::setVoicePassword(const QString& value) {
 	getSettings()->setValue("voice/password", value);
 }
 
-QString Settings::bookingsLocation() {
-	return getSettings()->value("download/atcBookingsLocation", "http://vatbook.euroutepro.com/servinfo.asp").toString();
-}
-
-void Settings::setBookingsLocation(const QString& value) {
-	getSettings()->setValue("download/atcBookingsLocation", value);
-}
-
 // Airport traffic
 void Settings::deleteAirportTrafficSettings() {
 	QSettings settings;
@@ -812,4 +838,27 @@ double Settings::airportCongestionBorderLineStrength() {
 void Settings::setAirportCongestionBorderLineStrength(double value) {
 	getSettings()->setValue("airportTraffic/borderLineStrength", value);
 }
-// ---------------------
+
+// zooming
+void Settings::deleteWheelSettings() {
+    QSettings settings;
+    settings.beginGroup("mouseWheel");
+    settings.remove("");
+    settings.endGroup();
+}
+
+int Settings::wheelMax() {
+    return getSettings()->value("mouseWheel/wheelMax", 120).toInt();
+}
+
+void Settings::setWheelMax(int value) {
+    getSettings()->setValue("mouseWheel/wheelMax", value);
+}
+
+double Settings::zoomFactor() {
+    return getSettings()->value("zoom/zoomFactor", 1.0).toDouble();
+}
+
+void Settings::setZoomFactor(double value) {
+    getSettings()->setValue("zoom/zoomFactor", value);
+}

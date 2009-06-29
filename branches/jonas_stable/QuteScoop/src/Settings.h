@@ -61,7 +61,19 @@ public:
 	static QString statusLocation();
 	static void setStatusLocation(const QString& location);
 
-	static bool useProxy();
+    static QString bookingsLocation();
+    static void setBookingsLocation(const QString& value);
+
+    static bool downloadBookings();
+    static void setDownloadBookings(bool value);
+
+    static bool bookingsPeriodically();
+    static void setBookingsPeriodically(bool value);
+
+    static int bookingsInterval();
+    static void setBookingsInterval(int value);
+
+    static bool useProxy();
 	static void setUseProxy(bool value);
 
 	static QString proxyServer();
@@ -160,7 +172,7 @@ public:
 	static void deleteFirSettings();
 
 	static QColor firBorderLineColor();
-	static void setFirBorderLineColor(const QColor& color);
+    static void setFirBorderLineColor(const QColor& color);
 
 	static double firBorderLineStrength();
 	static void setFirBorderLineStrength(double strength);
@@ -217,7 +229,7 @@ public:
 	static void setAppMarginColor(const QColor& color);
 
 	static QColor twrMarginColor();
-	static void setTwrMarginColor(const QColor& color);
+    static void setTwrMarginColor(const QColor& color);
 
 	static QColor twrCenterColor();
 	static void setTwrCenterColor(const QColor& color);
@@ -305,8 +317,14 @@ public:
 	static QString dataDirectory();
 	static void setDataDirectory(const QString& value);
 
-    static QString bookingsLocation();
-	static void setBookingsLocation(const QString& value);
+    //zooming
+    static void deleteWheelSettings();
+
+    static int wheelMax();
+    static void setWheelMax(const int value);
+
+    static double zoomFactor();
+    static void setZoomFactor(const double value);
 
 private:
 	static QSettings *getSettings();

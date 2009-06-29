@@ -1,6 +1,6 @@
 QuteScoop Changelog - Version 1.0.3 jonas alpha
 changed:
-* Zoom accelerated if mouse wheel driver supports it
+* Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
 * Increase max. value for shown labels (in preferences)
 
 added:
@@ -13,10 +13,13 @@ added:
 * Filter airport traffic to only show traffic in the vicinity of airport (configurable)
 * Show rings of airport congestion around airports (configurable)
 * Doubleclick to center map, right or left drag to pan
+* Key commands for pan and zoom
+* Remember and recall 7 Map Positions
 * Request routes from route providers. So far only vroute is integrated, 
   but we asked all major route databases to join us
 * Show _FSS stations by faking the facilityType which is not reported correctly in WhazzUp data
 * Show delay as difference from filed arrival time to calculated ETA
+* Zoom butons on the status bar (requested by tablet PC user)
 
 fixed:  
 * Docks restore correctly on window minimize/restore

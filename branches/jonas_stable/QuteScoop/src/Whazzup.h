@@ -58,6 +58,7 @@ signals:
 public slots:
 	void download();
     void setStatusLocation(const QString& url);
+    void downloadBookings();
 
 private slots:
 	void statusDownloaded(bool error);
@@ -69,8 +70,6 @@ private slots:
 private:
 	Whazzup();
 	virtual ~Whazzup();
-
-    void downloadBookings();
 
     WhazzupData data;
 	WhazzupData predictedData;
@@ -97,7 +96,7 @@ private:
 	
 	QTime lastDownloadTime;
 	
-	QTimer *downloadTimer;
+    QTimer *downloadTimer, *bookingsTimer;
 };
 
 #endif /*WHAZZUP_H_*/

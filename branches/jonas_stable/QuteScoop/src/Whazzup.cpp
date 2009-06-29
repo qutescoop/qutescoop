@@ -47,14 +47,17 @@ Whazzup::Whazzup() {
 	// init random seed to switch between URLs
 	srand(time(NULL));
 	
-	downloadTimer = new QTimer(this);
-	connect(downloadTimer, SIGNAL(timeout()), this, SLOT(download()));
+    downloadTimer = new QTimer(this);
+    bookingsTimer = new QTimer(this);
+    connect(downloadTimer, SIGNAL(timeout()), this, SLOT(download()));
+    connect(bookingsTimer, SIGNAL(timeout()), this, SLOT(downloadBookings()));
 }
 
 Whazzup::~Whazzup() {
 	if(statusDownloader != 0) delete statusDownloader;
 	if(statusBuffer != 0) delete statusBuffer;
-	if(downloadTimer != 0) delete downloadTimer;
+    if(downloadTimer != 0) delete downloadTimer;
+    if(bookingsTimer != 0) delete bookingsTimer;
 }
 
 void Whazzup::setStatusLocation(const QString& statusLocation) {
@@ -198,6 +201,7 @@ void Whazzup::whazzupDownloaded(bool error) {
     Window::getInstance()->setStatusText(QString());
     Window::getInstance()->setProgressBar(false);
     if(whazzupBuffer == 0) {
+        emit downloadError("Download Error. Buffer unavailable.");
         emit newData(false); // update statusbar
         return;
     }
@@ -206,6 +210,7 @@ void Whazzup::whazzupDownloaded(bool error) {
 		downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
 
 	if(whazzupBuffer->data().isEmpty()) {
+        emit networkMessage("No data in Whazzup.");
         emit newData(false); // update statusbar
         return;
 	}
@@ -230,18 +235,14 @@ void Whazzup::whazzupDownloaded(bool error) {
         }
 	}
 
-    if (data.isVatsim()) {// get ATC Bookings if network is VATSIM
-        downloadBookings(); 
-        Window::getInstance()->setEnableBookedAtc(true);
-    } else {
-        Window::getInstance()->setEnableBookedAtc(false);
-    }
 }
 
 void Whazzup::downloadBookings() {
 	QUrl url(Settings::bookingsLocation());
 	QFileInfo fileInfo(url.path());
 	QString fileName = fileInfo.fileName();
+
+    bookingsTimer->stop();
 
     Window::getInstance()->setStatusText(QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
    	qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
@@ -276,17 +277,23 @@ void Whazzup::bookingsDownloaded(bool error) {
     qDebug() << "Bookings received";
     Window::getInstance()->setProgressBar(false);
     if(bookingsBuffer == 0) {
+        emit downloadError("Download Error. Buffer unavailable.");
         emit newData(false); // update statusbar
         return;
     }
+
+    if(Settings::downloadBookings() && Settings::bookingsPeriodically()) {
+        bookingsTimer->start(Settings::bookingsInterval() * 60 * 1000);
+    }
+
     bookingsBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     if(bookingsBuffer->data().isEmpty()) {
+        emit networkMessage("No data in Bookings.");
         emit newData(false); // update statusbar
         return;
 	}
 	
 	if(error) {
-        Window::getInstance()->setEnableBookedAtc(false);
 		emit downloadError(bookingsDownloader->errorString());
         emit newData(false); // update statusbar
         return;
@@ -320,6 +327,10 @@ QString Whazzup::getAtisLink(const QString& id) const {
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
     this->predictedTime = predictedTime;
+    if (Settings::downloadBookings() && !data.bookingsTimestamp().isValid()) {
+        downloadBookings();
+    }
+
     WhazzupData newdata = WhazzupData(predictedTime, data);
     predictedData.updateFrom(newdata);
     qDebug() << "Time Warp completed" << predictedData.timestamp().toString();

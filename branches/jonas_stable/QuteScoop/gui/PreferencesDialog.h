@@ -20,6 +20,7 @@
 #define PREFERENCESDIALOG_H_
 
 #include <QDialog>
+#include <QWheelEvent>
 
 #include "ui_PreferencesDialog.h"
 
@@ -29,6 +30,7 @@ class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
 
 public:
 	PreferencesDialog();
+    static PreferencesDialog *getInstance();
 
 private slots:
     //
@@ -44,6 +46,10 @@ private slots:
 	void on_cbDownloadOnStartup_stateChanged(int state);
 	void on_cbNetwork_currentIndexChanged(int index);
 	void on_editUserDefinedLocation_editingFinished();
+    void on_editBookingsLocation_editingFinished();
+    void on_sbBookingsInterval_valueChanged(int value);
+    void on_cbBookingsPeriodically_toggled(bool checked);
+    void on_cbDownloadBookings_toggled(bool checked);
 
 	// proxy settings
 	void on_cbUseProxy_stateChanged(int state);
@@ -57,10 +63,11 @@ private slots:
 	void on_cbFilterTraffic_stateChanged(int state);
 	void on_spFilterDistance_valueChanged(int value);
 	void on_spFilterArriving_valueChanged(double value);
+    void on_sbCongestionMinimum_valueChanged(int );
     void on_sbCongestionBorderLineStrength_valueChanged(double value);
     void on_pbCongestionBorderLineColor_clicked();
     void on_cbShowCongestion_clicked(bool checked);
-	
+
 	// display
 	void on_spinBoxTimeline_valueChanged(int value);
 	void on_cbLineSmoothing_stateChanged(int state);
@@ -141,6 +148,10 @@ private slots:
 	// updates + feedback
 	void on_cbCheckForUpdates_stateChanged(int state);
 	void on_cbSendVersionInfo_stateChanged(int state);
+
+    //zooming
+    void on_pbWheelCalibrate_clicked();
+    void on_sbZoomFactor_valueChanged(double );
 
 private:
 	bool settingsLoaded;

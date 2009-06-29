@@ -44,17 +44,20 @@ public slots:
     void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
                             // updating the statusbar as well - we do not want a full GL update here sometimes
 	void setMapPosition(double lat, double lon, double newZoom);
+    void scrollBy(int moveByX, int moveByY);
 	void rightClick(const QPoint& pos);
-	void zoomIn()  { return zoomIn(1);  }
-	void zoomOut() { return zoomOut(1); }
-	void zoomIn(int factor);
-	void zoomOut(int factor);
+    void zoomIn()  { return zoomIn(1);  }
+    void zoomOut() { return zoomOut(1); }
+    void zoomIn(double factor);
+    void zoomOut(double factor);
 
     void rememberPosition(int nr);
     void restorePosition(int nr);
 
 	void displayAllFirs(bool value);
 	void showInactiveAirports(bool value);
+
+    void createPilotsList();
 
 	/**
 	 * Return a list of all clients at given lat/lon, within radius miles
@@ -100,7 +103,6 @@ private:
 	GLuint countriesList;
 	void createCountriesList();
 	GLuint pilotsList;
-	void createPilotsList();
 	GLuint airportsList;
 	GLuint airportsInactiveList;
 	void createAirportsList();

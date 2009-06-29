@@ -101,7 +101,7 @@ QString Client::clientInformation() const {
 
 QString Client::detailInformation() const {
 	if(!homeBase.isEmpty()) {
-		return "Home: " + homeBase;
+        return "(" + homeBase + ")";
 	}
 	return QString();
 }
