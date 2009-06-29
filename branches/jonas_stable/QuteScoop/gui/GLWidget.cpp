@@ -652,8 +652,8 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
             QString text = o->mapLabel();
             QRectF rect = fontMetrics.boundingRect(text);
             int drawX, drawY;
-            drawX = x - rect.width() / 2; // center horizontally
-            drawY = y - rect.height() - 5; // some px above dot
+            drawX = (int) x - rect.width() / 2; // center horizontally
+            drawY = (int) y - rect.height() - 5; // some px above dot
             rect.moveTo(drawX, drawY);
 
             FontRectangle fontRect = FontRectangle(rect, o);
@@ -938,8 +938,8 @@ void GLWidget::restorePosition(int nr) {
 
 void GLWidget::scrollBy(int moveByX, int moveByY) {
     double lat, lon;
-    double fakeMousePosX = width() * (0.5 + (float) moveByX / 6);
-    double fakeMousePosY = height() * (0.5 + (float) moveByY / 6);
+    int fakeMousePosX = (int) width() * (0.5 + (float) moveByX / 6);
+    int fakeMousePosY = (int) height() * (0.5 + (float) moveByY / 6);
     mouse2latlon(fakeMousePosX, fakeMousePosY, lat, lon);
     setMapPosition(lat, lon, zoom);
     updateGL();

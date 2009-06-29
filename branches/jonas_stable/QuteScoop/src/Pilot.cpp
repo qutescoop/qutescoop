@@ -303,9 +303,9 @@ double Pilot::distanceToDestination() const {
 int Pilot::planTasInt() const { // defuck flightplanned TAS
     if(planTAS.startsWith("M")) { // approximate Mach -> TAS conversion
         if(planTAS.contains("."))
-            return planTAS.mid(1).toDouble() * 550;
+            return (int) planTAS.mid(1).toDouble() * 550;
         else
-            return planTAS.mid(1).toInt() * 5.5;
+            return (int) planTAS.mid(1).toInt() * 5.5;
     }
     return planTAS.toInt();
 }
@@ -331,9 +331,9 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
         if(planTasInt() == 0) {
             if(groundspeed == 0)
                 return QDateTime(); // abort
-            enrouteSecs = (distanceToDestination() * 3600) / groundspeed;
+            enrouteSecs = (int) (distanceToDestination() * 3600) / groundspeed;
         } else {
-            enrouteSecs = (distanceToDestination() * 3600) / planTasInt();
+            enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
         }
         return whazzupTime.addSecs(enrouteSecs);
     } else if(status == EN_ROUTE || status == ARRIVING) { // try groundspeed
@@ -341,9 +341,9 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
         if(groundspeed == 0) {
             if(planTasInt() == 0)
                 return QDateTime(); // abort
-            enrouteSecs = (distanceToDestination() * 3600) / planTasInt();
+            enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
         } else {
-            enrouteSecs = (distanceToDestination() * 3600) / groundspeed;
+            enrouteSecs = (int) (distanceToDestination() * 3600) / groundspeed;
         }
         QDateTime ret = whazzupTime.addSecs(enrouteSecs);
         return ret;

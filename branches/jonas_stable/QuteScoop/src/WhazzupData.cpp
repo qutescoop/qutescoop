@@ -253,7 +253,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         np->lon = lon;
         np->altitude = altitude;
         np->trueHeading = trueHeading;
-        np->groundspeed = groundspeed;
+        np->groundspeed = (int) groundspeed;
 
         pilots[np->label] = np;
     }
