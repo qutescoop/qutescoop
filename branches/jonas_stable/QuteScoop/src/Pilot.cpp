@@ -154,30 +154,30 @@ QString Pilot::flightStatusString() const {
             result = QString("Boarding");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr();
+            result += ", Delay " + delayStr() + " hrs";
             return result;
         case GROUND_DEP:
             result = QString("Taxi to runway");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr();
+            result += ", Delay " + delayStr() + " hrs";
             return result;
         case DEPARTING:
             result = QString("Departing");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr();
+            result += ", Delay " + delayStr() + " hrs";
             return result;
         case ARRIVING:
             result = QString("Arriving");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr();
+            result += ", Delay " + delayStr() + " hrs";
             return result;
         case GROUND_ARR:
             result = QString("Taxi to gate");
             result += ", ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
-            result += ", Delay " + delayStr();
+            result += ", Delay " + delayStr() + " hrs";
             return result;
         case BLOCKED:
             result = QString("Blocked at gate");
@@ -201,8 +201,8 @@ QString Pilot::flightStatusString() const {
 					}
 				}
                 result += ", EET " + eet().toString("H:mm") + " hrs";
-                result += " ETA " + eta().toString("HH:mm") + " UTC";
-                result += ", Delay " + delayStr();
+                result += ", ETA " + eta().toString("HH:mm") + " UTC";
+                result += ", Delay " + delayStr() + " hrs";
 				return result;
             }
         case PREFILED:

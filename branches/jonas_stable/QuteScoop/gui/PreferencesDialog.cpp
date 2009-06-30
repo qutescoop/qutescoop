@@ -57,7 +57,7 @@ void PreferencesDialog::loadSettings() {
 	editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
 	lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
 
-    cbDownloadBookings->setChecked(Settings::downloadBookings()); // must be after cbNetwork
+    gbDownloadBookings->setChecked(Settings::downloadBookings()); // must be after cbNetwork
     editBookingsLocation->setText(Settings::bookingsLocation());
     cbBookingsPeriodically->setChecked(Settings::bookingsPeriodically());
     sbBookingsInterval->setValue(Settings::bookingsInterval());
@@ -308,15 +308,15 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 	switch(index) {
 	case 0: // IVAO
 		Settings::setStatusLocation("http://www.ivao.aero/whazzup/status.txt");
-        cbDownloadBookings->setChecked(false);
+        gbDownloadBookings->setChecked(false);
 		break;
 	case 1: // VATSIM
 		Settings::setStatusLocation("http://www.vatsim.net/data/status.txt");
-        cbDownloadBookings->setChecked(true);
+        gbDownloadBookings->setChecked(true);
         break;
 	case 2: // user defined
 		Settings::setStatusLocation(editUserDefinedLocation->text());
-        cbDownloadBookings->setChecked(false);
+        gbDownloadBookings->setChecked(false);
         break;
 	}
 
@@ -831,12 +831,6 @@ void PreferencesDialog::on_editBookingsLocation_editingFinished()
     Settings::setBookingsLocation(editBookingsLocation->text());
 }
 
-void PreferencesDialog::on_cbDownloadBookings_toggled(bool checked)
-{
-    Settings::setDownloadBookings(checked);
-    Window::getInstance()->setEnableBookedAtc(checked);
-}
-
 void PreferencesDialog::on_cbBookingsPeriodically_toggled(bool checked)
 {
     Settings::setBookingsPeriodically(checked);
@@ -856,4 +850,10 @@ void PreferencesDialog::on_pbWheelCalibrate_clicked()
 void PreferencesDialog::on_sbZoomFactor_valueChanged(double value)
 {
     Settings::setZoomFactor(value);
+}
+
+void PreferencesDialog::on_gbDownloadBookings_toggled(bool checked)
+{
+    Settings::setDownloadBookings(checked);
+    Window::getInstance()->setEnableBookedAtc(checked);
 }

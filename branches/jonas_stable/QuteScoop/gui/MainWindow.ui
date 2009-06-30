@@ -19,6 +19,12 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="margin">
+     <number>0</number>
+    </property>
     <item>
      <widget class="QFrame" name="framePredict">
       <property name="sizePolicy">
@@ -78,6 +84,9 @@
        </item>
        <item>
         <widget class="QDateEdit" name="datePredictTime">
+         <property name="toolTip">
+          <string>Select a date to warp to.</string>
+         </property>
          <property name="wrapping">
           <bool>true</bool>
          </property>
@@ -91,6 +100,9 @@
        </item>
        <item>
         <widget class="QTimeEdit" name="timePredictTime">
+         <property name="toolTip">
+          <string>Select a time to warp to.</string>
+         </property>
          <property name="wrapping">
           <bool>true</bool>
          </property>
@@ -105,6 +117,9 @@
        </item>
        <item>
         <widget class="QToolButton" name="tbDisablePredict">
+         <property name="toolTip">
+          <string>Return to reality.</string>
+         </property>
          <property name="text">
           <string/>
          </property>
@@ -141,11 +156,26 @@
     </item>
     <item>
      <widget class="QToolButton" name="tbZoomOut">
+      <property name="minimumSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>22</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Zoom out.</string>
       </property>
       <property name="text">
        <string>-</string>
@@ -154,11 +184,26 @@
     </item>
     <item>
      <widget class="QToolButton" name="tbZoomIn">
+      <property name="minimumSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>22</width>
         <height>22</height>
        </size>
+      </property>
+      <property name="baseSize">
+       <size>
+        <width>22</width>
+        <height>22</height>
+       </size>
+      </property>
+      <property name="toolTip">
+       <string>Zoom in.</string>
       </property>
       <property name="text">
        <string>+</string>
@@ -311,7 +356,7 @@
        <item>
         <widget class="QLineEdit" name="metarEdit">
          <property name="toolTip">
-          <string>wildcards (*, ?) and powerful regular expressions allowed</string>
+          <string>Wildcards (*, ?) and powerful regular expressions allowed.</string>
          </property>
          <property name="text">
           <string/>
@@ -460,7 +505,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QLineEdit" name="searchEdit">
          <property name="toolTip">
-          <string>wildcards (*, ?) and powerful regular expressions allowed</string>
+          <string>Searches all objects. Wildcards (*, ?) and powerful regular expressions allowed.</string>
          </property>
         </widget>
        </item>

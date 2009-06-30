@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>403</width>
-    <height>503</height>
+    <height>505</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,6 +89,9 @@ p, li { white-space: pre-wrap; }
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>As enterred in flightplan.</string>
+          </property>
           <property name="text">
            <string>A319</string>
           </property>
@@ -96,8 +99,11 @@ p, li { white-space: pre-wrap; }
         </item>
         <item row="0" column="2">
          <widget class="QLabel" name="label_13">
-          <property name="text">
+          <property name="toolTip">
            <string>Groundspeed</string>
+          </property>
+          <property name="text">
+           <string>GS</string>
           </property>
          </widget>
         </item>
@@ -129,8 +135,11 @@ p, li { white-space: pre-wrap; }
         </item>
         <item row="1" column="2">
          <widget class="QLabel" name="label_15">
-          <property name="text">
+          <property name="toolTip">
            <string>Altitude</string>
+          </property>
+          <property name="text">
+           <string>Alt</string>
           </property>
          </widget>
         </item>
@@ -147,8 +156,14 @@ p, li { white-space: pre-wrap; }
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
        <widget class="QLabel" name="lblFlightStatus">
+        <property name="toolTip">
+         <string>EET: Estimated remaining Enroute Time, ETA: Estimated Time of Arrival (constantly updated), delay: According to planned ETA</string>
+        </property>
         <property name="text">
-         <string>En route (35%), ETE 0:33 hrs, ETA 11:20 UTC, delay -0:05</string>
+         <string>En route (35%), EET 0:33 hrs, ETA 11:20 UTC, Delay -0:05 hrs</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
@@ -168,15 +183,35 @@ p, li { white-space: pre-wrap; }
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
          <widget class="QLabel" name="label_3">
+          <property name="toolTip">
+           <string>Departure aerodrome / Estimated Time of Departure</string>
+          </property>
           <property name="text">
-           <string>DEP/ETD:</string>
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Dep&lt;/span&gt;/&lt;span style=&quot; font-weight:600;&quot;&gt;ETD&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_4">
+          <property name="toolTip">
+           <string>Destination aerodrome / Estimated Time of Arrival (flightplan)</string>
+          </property>
           <property name="text">
-           <string>DEST/ETA:</string>
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Dest&lt;/span&gt;/&lt;span style=&quot; font-weight:600;&quot;&gt;ETA&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
           </property>
          </widget>
         </item>
@@ -253,8 +288,18 @@ p, li { white-space: pre-wrap; }
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_2">
+          <property name="toolTip">
+           <string>Filed True Airspeed / Cruise Level / Estimated Time Enroute (according to flightplan)</string>
+          </property>
           <property name="text">
-           <string>TAS/FL/ETE:</string>
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;TAS&lt;/span&gt;/&lt;span style=&quot; font-weight:600;&quot;&gt;FL&lt;/span&gt;/&lt;span style=&quot; font-weight:600;&quot;&gt;ETE&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
           </property>
          </widget>
         </item>
@@ -387,8 +432,18 @@ p, li { white-space: pre-wrap; }
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_9">
+          <property name="toolTip">
+           <string>Alternate aerodrome / Fuel on Board</string>
+          </property>
           <property name="text">
-           <string>ALT/FUEL:</string>
+           <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Altern&lt;/span&gt;/&lt;span style=&quot; font-weight:600;&quot;&gt;Fuel&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="textFormat">
+           <enum>Qt::RichText</enum>
           </property>
          </widget>
         </item>
@@ -445,32 +500,48 @@ p, li { white-space: pre-wrap; }
        </layout>
       </item>
       <item row="1" column="0">
-       <layout class="QFormLayout" name="formLayout">
-        <property name="fieldGrowthPolicy">
-         <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-        </property>
-        <item row="1" column="0">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
            <widget class="QLabel" name="label_6">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
             <property name="text">
-             <string>Route: </string>
+             <string>Route</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QCheckBox" name="cbPlotRoute">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="toolTip">
-             <string>Also accessible via right click on the airplane's label on the map.</string>
+             <string>Plot the resolved route on the map (requires Navigation Database). Also accessible via right click on the airplane's label on the map.</string>
             </property>
             <property name="text">
-             <string>&amp;Plot</string>
+             <string>&amp;Plot
+Route</string>
             </property>
            </widget>
           </item>
          </layout>
         </item>
-        <item row="1" column="1">
+        <item row="0" column="2">
          <widget class="QLabel" name="lblRoute">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -495,14 +566,26 @@ p, li { white-space: pre-wrap; }
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
+        <item row="1" column="0">
          <widget class="QLabel" name="label">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>Remarks:</string>
+           <string>Remarks</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="1" column="2">
          <widget class="QLabel" name="lblRemarks">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -515,6 +598,20 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="wordWrap">
            <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>

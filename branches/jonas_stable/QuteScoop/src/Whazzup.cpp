@@ -63,7 +63,7 @@ Whazzup::~Whazzup() {
 }
 
 void Whazzup::setStatusLocation(const QString& statusLocation) {
-    qDebug() << "Downloading network status from" << statusLocation;
+    qDebug() << "Downloading network status from\t" << statusLocation;
     
 	QUrl url(statusLocation);
 	QFileInfo fileInfo(url.path());
@@ -85,6 +85,7 @@ void Whazzup::setStatusLocation(const QString& statusLocation) {
 }
 
 void Whazzup::statusDownloaded(bool error) {
+    //qDebug() << "Status received";
 	if(statusBuffer == 0)
 		return;
 
@@ -139,7 +140,7 @@ void Whazzup::statusDownloaded(bool error) {
 	statusBuffer = 0;
 	lastDownloadTime = QTime();
 	
-    qDebug() << "Got network status:" << urls.size() << "Whazzup URLs";
+    qDebug() << "Got network status:\t" << urls.size() << "Whazzup URLs";
 
     emit statusDownloaded();
 }
@@ -169,7 +170,7 @@ void Whazzup::download() {
 	QString fileName = fileInfo.fileName();
 
     Window::getInstance()->setStatusText(QString("Updating whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)));
-    qDebug() << "Downloading whazzup from" << fileLocation;
+    qDebug() << "Downloading Whazzup from\t" << fileLocation;
 
 	if(whazzupDownloader != 0) {
 		whazzupDownloader->abort();
@@ -199,8 +200,7 @@ void Whazzup::whazzupDownloading(int prog, int tot) {
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
-    qDebug() << "Whazzup received";
-    Window::getInstance()->setStatusText(QString());
+    //qDebug() << "Whazzup received";
     Window::getInstance()->setProgressBar(false);
     if(whazzupBuffer == 0) {
         emit downloadError("Download Error. Buffer unavailable.");
@@ -229,10 +229,10 @@ void Whazzup::whazzupDownloaded(bool error) {
 	if(!newWhazzupData.isNull()) {
         if(newWhazzupData.timestamp() != data.timestamp()) {
             data.updateFrom(newWhazzupData);
-            qDebug() << "Whazzup updated" << data.timestamp().toString();
+            qDebug() << "Whazzup updated from\t" << data.timestamp().toString();
             emit newData(true);
         } else {
-            qDebug() << "We already have Whazzup with that Timestamp" << data.timestamp().toString();
+            qDebug() << "We already have Whazzup with that Timestamp\t" << data.timestamp().toString();
             emit newData(false);
         }
 	}
@@ -247,7 +247,7 @@ void Whazzup::downloadBookings() {
     bookingsTimer->stop();
 
     Window::getInstance()->setStatusText(QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
-   	qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
+    qDebug() << "Downloading ATC bookings from\t" << url.toString(QUrl::RemoveUserInfo);
 
 	if(bookingsDownloader != 0) {
 		bookingsDownloader->abort();
@@ -276,7 +276,7 @@ void Whazzup::bookingsDownloading(int prog, int tot) {
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
-    qDebug() << "Bookings received";
+    //qDebug() << "Bookings received";
     Window::getInstance()->setProgressBar(false);
     if(bookingsBuffer == 0) {
         emit downloadError("Download Error. Buffer unavailable.");
@@ -306,10 +306,10 @@ void Whazzup::bookingsDownloaded(bool error) {
     if(!newBookingsData.isNull()) {
         if(newBookingsData.bookingsTimestamp() != data.bookingsTimestamp()) {
             data.updateFrom(newBookingsData);
-            qDebug() << "Bookings updated" << data.bookingsTimestamp().toString();
+            qDebug() << "Bookings updated from\t" << data.bookingsTimestamp().toString();
             emit newData(true);
         } else {
-            qDebug() << "We already have Bookings with that Timestamp" << data.bookingsTimestamp().toString();
+            qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
             emit newData(false);
         }
     }
@@ -335,6 +335,6 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
 
     WhazzupData newdata = WhazzupData(predictedTime, data);
     predictedData.updateFrom(newdata);
-    qDebug() << "Time Warp completed" << predictedData.timestamp().toString();
+    //qDebug() << "Time Warped to\t" << predictedData.timestamp().toString();
     emit newData(true);
 }

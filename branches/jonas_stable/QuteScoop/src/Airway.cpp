@@ -45,7 +45,7 @@ Airway::~Airway() {
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	if(name == DEBUG_AWY) {
-		qDebug() << "seg+: " << from->label << to->label;
+        //qDebug() << "seg+: " << from->label << to->label;
 	}
 
 	Segment newSegment(from, to);

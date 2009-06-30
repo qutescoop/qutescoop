@@ -46,10 +46,10 @@ private slots:
 	void on_cbDownloadOnStartup_stateChanged(int state);
 	void on_cbNetwork_currentIndexChanged(int index);
 	void on_editUserDefinedLocation_editingFinished();
+    void on_gbDownloadBookings_toggled(bool checked);
     void on_editBookingsLocation_editingFinished();
     void on_sbBookingsInterval_valueChanged(int value);
     void on_cbBookingsPeriodically_toggled(bool checked);
-    void on_cbDownloadBookings_toggled(bool checked);
 
 	// proxy settings
 	void on_cbUseProxy_stateChanged(int state);

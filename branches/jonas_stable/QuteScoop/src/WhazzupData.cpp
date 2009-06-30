@@ -258,7 +258,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         pilots[np->label] = np;
     }
     connectedClients = controllers.size() + pilots.size();
-    qDebug() << "faked and inserted" << connectedClients << "clients for the Warp";
+    qDebug() << "Warped to\t" << predictTime.toString() << "\t- Faked and inserted\t" << connectedClients << "clients";
 }
 
 WhazzupData::WhazzupData(const WhazzupData& data) {
@@ -451,7 +451,7 @@ QList<Controller*> WhazzupData::activeSectors() const {
 		while(!firs.contains(icao) && !icao.isEmpty()) {
 			int p = icao.lastIndexOf('_');
 			if(p == -1) {
-				qDebug() << "Unknown FIR" << icao;
+                qDebug() << "Unknown FIR\t" << icao << "\tPlease provide sector information if you can";
 				icao = "";
 				continue;
 			}

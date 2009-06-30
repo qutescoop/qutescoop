@@ -63,7 +63,7 @@ void Airac::readFixes(const QString& directory) {
 
 		addFix(wp);
 	}
-    qDebug() << "Read fixes from" << (directory + "/default data/earth_fix.dat") << "-" << waypointMap.size() << "imported";
+    qDebug() << "Read fixes from\t" << (directory + "/default data/earth_fix.dat") << "-" << waypointMap.size() << "imported";
 }
 
 void Airac::readNavaids(const QString& directory) {
@@ -82,7 +82,7 @@ void Airac::readNavaids(const QString& directory) {
 		list.append(nav);
 		navaidMap[nav->label] = list;
 	}
-    qDebug() << "Read navaids from" << (directory + "/default data/earth_nav.dat") << "-" << navaidMap.size() << "imported";
+    qDebug() << "Read navaids from\t" << (directory + "/default data/earth_nav.dat") << "-" << navaidMap.size() << "imported";
 }
 
 void Airac::readAirways(const QString& directory) {
@@ -160,7 +160,7 @@ void Airac::readAirways(const QString& directory) {
 		list.clear();
 		list += sorted;
 	}
-    qDebug() << "Read airways from" << (directory + "/default data/earth_awy.dat") << "-" << airwayMap.size() << "airways," << segments << "segments imported and sorted";
+    qDebug() << "Read airways from\t" << (directory + "/default data/earth_awy.dat") << "-" << airwayMap.size() << "airways," << segments << "segments imported and sorted";
 }
 
 Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double maxDist) const {
@@ -255,7 +255,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 
 	QStringList workingList = plan;
 
-	qDebug() << "resolving" << plan;
+    qDebug() << "Resolving\t" << plan;
 
 	// find a starting point
 	Waypoint* currPoint = getNextWaypoint(workingList, lat, lon);
@@ -305,7 +305,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 		if(i>0) debugStr += "-";
 		debugStr += result[i]->label;
 	}
-	qDebug() << debugStr;
+    //qDebug() << debugStr;
 
 	return result;
 }

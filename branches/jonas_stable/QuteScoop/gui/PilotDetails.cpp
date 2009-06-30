@@ -132,9 +132,11 @@ void PilotDetails::refresh(Pilot *newPilot) {
 
     cbPlotRoute->setChecked(pilot->displayLineToDest);
 
-    // adjust window
+    // adjust window, little tweaking //fixme, does not work perfectly but only on second refresh()
+    //setUpdatesEnabled(false);
     adjustSize();
-    adjustSize();
+    //updateGeometry();
+    //setUpdatesEnabled(true);
 }
 
 void PilotDetails::on_buttonDest_clicked() {
