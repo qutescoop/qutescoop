@@ -142,7 +142,11 @@ void Whazzup::statusDownloaded(bool error) {
 	
     qDebug() << "Got network status:\t" << urls.size() << "Whazzup URLs";
 
-    emit statusDownloaded();
+    if(urls.size() == 0){
+        emit networkMessage("No Whazzup URLs found. Reset Preferences to a valid Status source or try again later.");
+    } else {
+        emit statusDownloaded();
+    }
 }
 
 void Whazzup::download() {

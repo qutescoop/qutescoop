@@ -42,7 +42,7 @@ PreferencesDialog::PreferencesDialog():
 	setupUi(this);
 
 	cbNetwork->addItems(QStringList() << "IVAO" << "VATSIM" << "User Defined Network");
-	cbDashedFrontAfter->addItems(QStringList() << "in front of" << "behind");
+    cbDashedFrontAfter->addItems(QStringList() << "in front" << "behind");
 	loadSettings();
 }
 

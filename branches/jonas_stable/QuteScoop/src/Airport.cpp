@@ -326,6 +326,7 @@ void Airport::setDisplayFlightLines(bool show) {
 		arrivals[i]->displayLineToDest = show;
 	for(int i = 0; i < departures.size(); i++)
 		departures[i]->displayLineFromDep = show;
+    AirportDetails::getInstance()->refresh();
 }
 
 void Airport::refreshAfterUpdate() {

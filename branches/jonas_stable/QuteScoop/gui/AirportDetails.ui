@@ -307,7 +307,7 @@
      <item>
       <widget class="QCheckBox" name="cbPlotRoutes">
        <property name="toolTip">
-        <string>Also accessible by right click on the airport label. (Needs Navigation Database)</string>
+        <string>Also accessible by right click on the airport label. (Uses Navigation Database if available)</string>
        </property>
        <property name="text">
         <string>Plot &amp;Routes</string>

@@ -26,9 +26,10 @@ DEPENDPATH += ./src \
     ./gui
 INCLUDEPATH += ./src \
     ./gui
-MOC_DIR = temp
-UI_DIR = temp
-OBJECTS_DIR = temp
+MOC_DIR = ./temp
+UI_DIR = ./temp
+OBJECTS_DIR = ./temp
+RCC_DIR = ./temp
 QT += network \
     opengl \
     xml
@@ -132,4 +133,3 @@ SOURCES += WhazzupData.cpp \
     gui/PlanFlightRoutesModel.cpp \
     gui/BookedAtcSortFilter.cpp
 RESOURCES += Resources.qrc
-OTHERS += CHANGELOG

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>403</width>
-    <height>505</height>
+    <height>518</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -531,7 +531,7 @@ p, li { white-space: pre-wrap; }
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>Plot the resolved route on the map (requires Navigation Database). Also accessible via right click on the airplane's label on the map.</string>
+             <string>Plot route on map (requires Navigation Database). Also accessible via right click on the airplane's label on the map. (Uses Navigation Database if available)</string>
             </property>
             <property name="text">
              <string>&amp;Plot

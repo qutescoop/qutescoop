@@ -2,11 +2,12 @@ QuteScoop Changelog - Version 1.0.3 jonas alpha
 changed:
 * Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
 * Increase max. value for shown labels (in preferences)
+* Render dashed lines in front of/behind plane also in flightplan Plot mode
 
 added:
 * Show ATC bookings in list (VATSIM only so far)
 * Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
-* See prefiled flights in arrival and departure lists and in Time Warp on the map
+* See prefiled flights in arrival and departure lists and in Time Warp on the map as faked real pilots
 * Multiple Map Positions can now be remembered / recalled
 * OpenGL debug messages + ability to set OpenGL parameters through own config file
 * Show inactive airports when zoomed in

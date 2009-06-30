@@ -17,6 +17,11 @@
  **************************************************************************/
 
 #include <QApplication>
+#include <QtGui>
+//#include <QWindowsVistaStyle>
+//#include <QWindowsCEStyle>
+//#include <QWindowsMobileStyle>
+//#include <QWindowsXPStyle>
 #include "helpers.h"
 #include "Window.h"
 
@@ -75,6 +80,20 @@ int main(int argc, char *argv[]) {
 
 #ifndef RUN_TEST
 	Window *window = Window::getInstance();
+
+    // Playing with styles...
+    //QStyle *style = new QWindowsXPStyle();
+    //QCDEStyle
+    //QCleanlooksStyle
+    //MotifStyle
+    //QPlastiqueStyle
+    //QWindowsStyle
+    //QWindowsVistaStyle
+    //QWindowsXPStyle
+    //QWindowsCEStyle
+    //QWindowsMobileStyle
+    //window->setStyle(style);
+
 	window->show();
 	return app.exec();
 #else

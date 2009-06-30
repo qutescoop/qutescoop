@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>602</width>
-    <height>716</height>
+    <height>717</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -2074,16 +2074,22 @@ airports with at least</string>
            </layout>
           </item>
           <item>
-           <widget class="Line" name="line_4">
+           <widget class="Line" name="line">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item>
-           <layout class="QGridLayout" name="gridLayout_7">
+           <layout class="QGridLayout" name="gridLayout_14">
             <item row="0" column="0">
              <widget class="QLabel" name="label">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="toolTip">
                <string>Visualizes the current heading and speed of an airplane.</string>
               </property>
@@ -2108,13 +2114,92 @@ airports with at least</string>
               </property>
              </widget>
             </item>
+            <item row="0" column="2">
+             <widget class="QDoubleSpinBox" name="sbTimeLineStrength">
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="3">
+             <spacer name="horizontalSpacer_13">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="0" column="4">
+             <widget class="QSpinBox" name="spinBoxTimeline">
+              <property name="toolTip">
+               <string>Length of Time Line. Represents speed of the airplane.</string>
+              </property>
+              <property name="specialValueText">
+               <string>no</string>
+              </property>
+              <property name="suffix">
+               <string> sec</string>
+              </property>
+              <property name="maximum">
+               <number>600</number>
+              </property>
+              <property name="singleStep">
+               <number>10</number>
+              </property>
+              <property name="value">
+               <number>120</number>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="5">
+             <widget class="QLabel" name="label_33">
+              <property name="text">
+               <string>ahead
+(0 to turn off)</string>
+              </property>
+              <property name="buddy">
+               <cstring>spinBoxTimeline</cstring>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="line_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QGridLayout" name="gridLayout_7">
             <item row="1" column="0">
              <widget class="QLabel" name="label_3">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="toolTip">
                <string>Displays straight lines from Departure and to Destination.</string>
               </property>
               <property name="text">
-               <string>Track Line</string>
+               <string>Dep/Dest Line</string>
               </property>
               <property name="buddy">
                <cstring>pbTrackLineColor</cstring>
@@ -2160,37 +2245,11 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
-             <spacer name="horizontalSpacer_13">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="0" column="2">
-             <widget class="QDoubleSpinBox" name="sbTimeLineStrength">
-              <property name="suffix">
-               <string> px</string>
-              </property>
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <double>10.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>0.100000000000000</double>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="2">
              <widget class="QDoubleSpinBox" name="sbTrackLineStrength">
+              <property name="specialValueText">
+               <string>off</string>
+              </property>
               <property name="suffix">
                <string> px</string>
               </property>
@@ -2207,6 +2266,9 @@ airports with at least</string>
             </item>
             <item row="2" column="2">
              <widget class="QDoubleSpinBox" name="sbPlanLineStrength">
+              <property name="specialValueText">
+               <string>off</string>
+              </property>
               <property name="suffix">
                <string> px</string>
               </property>
@@ -2221,40 +2283,7 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="4">
-             <widget class="QSpinBox" name="spinBoxTimeline">
-              <property name="toolTip">
-               <string>Length of Time Line. Represents speed of the airplane.</string>
-              </property>
-              <property name="specialValueText">
-               <string>no</string>
-              </property>
-              <property name="suffix">
-               <string> sec</string>
-              </property>
-              <property name="maximum">
-               <number>600</number>
-              </property>
-              <property name="singleStep">
-               <number>10</number>
-              </property>
-              <property name="value">
-               <number>120</number>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="5">
-             <widget class="QLabel" name="label_33">
-              <property name="text">
-               <string>ahead
-(0 to turn off)</string>
-              </property>
-              <property name="buddy">
-               <cstring>spinBoxTimeline</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="5">
+            <item row="1" column="5" rowspan="2">
              <widget class="QComboBox" name="cbDashedFrontAfter">
               <property name="currentIndex">
                <number>-1</number>
@@ -2264,8 +2293,8 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="4">
-             <widget class="QLabel" name="label_40">
+            <item row="1" column="4" rowspan="2">
+             <widget class="QLabel" name="lblDashed">
               <property name="text">
                <string>Dashed 
 part is</string>
@@ -2277,6 +2306,19 @@ part is</string>
                <cstring>cbDashedFrontAfter</cstring>
               </property>
              </widget>
+            </item>
+            <item row="1" column="3">
+             <spacer name="horizontalSpacer_15">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
            </layout>
           </item>
@@ -2378,7 +2420,6 @@ part is</string>
   <tabstop>cbReadSupFile</tabstop>
   <tabstop>buttonResetFir</tabstop>
   <tabstop>pbPilotFontColor</tabstop>
-  <tabstop>pbTimeLineColor</tabstop>
   <tabstop>pbTrackLineColor</tabstop>
   <tabstop>pbPlanLineColor</tabstop>
  </tabstops>

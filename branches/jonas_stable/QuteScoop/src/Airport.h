@@ -71,7 +71,8 @@ public:
 
 	void toggleFlightLines();
 	void setDisplayFlightLines(bool show);
-	void refreshAfterUpdate();
+    bool showFlightLines;
+    void refreshAfterUpdate();
 
 	const GLuint& getAppDisplayList();
 	const GLuint& getAppBorderDisplayList();
@@ -82,7 +83,6 @@ public:
 
 private:
 	void createAppDisplayLists();
-	bool showFlightLines;
 
 	bool active;
 	QList<Controller*> towers;

@@ -50,6 +50,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	inactiveAirportDotZoomTreshold = 0.15;
 	inactiveAirportLabelZoomTreshold = 0.08;
 	controllerLabelZoomTreshold = 3;
+    fixZoomTreshold = 0.05;
 
 	firPolygonsList = 0;
 	airportControllersList = 0;
@@ -58,8 +59,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     congestionsList = 0;
 
 	allFirsDisplayed = false;
-
-	fixZoomTreshold = 0.1;
 }
 
 GLWidget::~GLWidget() {
@@ -628,6 +627,18 @@ void GLWidget::renderLabels() {
             if(!airportList[i]->isActive()) objects.append(airportList[i]);
         }
     	renderLabels(objects, Settings::inactiveAirportFont(), inactiveAirportLabelZoomTreshold, Settings::inactiveAirportFontColor());
+    }
+
+    // Fixes
+    if(Settings::showFixes()) {
+        const Airac& airac = NavData::getInstance()->getAirac();
+        const QList<Waypoint*>& fixes = airac.getAllWaypoints();
+        objects.clear();
+        for(int i = 0; i < fixes.size(); i++) {
+            if(fixes[i] == 0) continue;
+            objects.append(fixes[i]);
+        }
+        renderLabels(objects, Settings::inactiveAirportFont(), fixZoomTreshold, Settings::countryLineColor());
     }
 }
 

@@ -143,6 +143,8 @@ void AirportDetails::refresh(Airport* newAirport) {
 	atcModel.setClients(atcContent);
     atcSortModel->invalidate();
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);    
+
+    cbPlotRoutes->setChecked(airport->showFlightLines);
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {
@@ -159,6 +161,8 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 
 void AirportDetails::on_cbPlotRoutes_toggled(bool checked)
 {
-    airport->setDisplayFlightLines(checked);
-    Window::getInstance()->updateGLPilots();
+    if(airport->showFlightLines != checked) {
+        airport->setDisplayFlightLines(checked);
+        Window::getInstance()->updateGLPilots();
+    }
 }
