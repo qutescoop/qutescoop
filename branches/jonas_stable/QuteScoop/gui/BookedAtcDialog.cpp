@@ -59,13 +59,15 @@ BookedAtcDialog::BookedAtcDialog() :
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
-        Whazzup::getInstance()->downloadBookings();
+    connect(this, SIGNAL(needBookings()), Whazzup::getInstance(), SLOT(downloadBookings()));
 
     refresh();
 }
 
 void BookedAtcDialog::refresh() {
+    if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
+        emit needBookings();
+
     bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
     bookedAtcSortModel->invalidate();

@@ -80,20 +80,20 @@ Window::Window(QWidget *parent) :
 
     centralwidget->layout()->addWidget(glWidget);
     qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
-            << "| version: " << glWidget->format().openGLVersionFlags()
-            << "\nOptions from QuteScoop-Config (add it to your config-file and report any findings):"
+            << "\t| version: " << glWidget->format().openGLVersionFlags()
+            << "\nOptions from Config:"
             << "\ngl/directrendering" << glWidget->format().directRendering()
-            << "| gl/doublebuffer" << glWidget->format().doubleBuffer()
-            << "| gl/stencilbuffer" << glWidget->format().stencil()
-            << "| gl/stencilsize" << glWidget->format().stencilBufferSize()
+            << "\t| gl/doublebuffer" << glWidget->format().doubleBuffer()
+            << "\t| gl/stencilbuffer" << glWidget->format().stencil()
+            << "\t| gl/stencilsize" << glWidget->format().stencilBufferSize()
             << "\ngl/depthbuffer" << glWidget->format().depth()
-            << "| gl/depthsize" << glWidget->format().depthBufferSize()
-            << "| gl/alphabuffer" << glWidget->format().alpha()
-            << "| gl/alphasize" << glWidget->format().alphaBufferSize()
+            << "\t| gl/depthsize" << glWidget->format().depthBufferSize()
+            << "\t| gl/alphabuffer" << glWidget->format().alpha()
+            << "\t| gl/alphasize" << glWidget->format().alphaBufferSize()
             << "\ngl/samplebuffers" << glWidget->format().sampleBuffers()
-            << "| gl/samples" << glWidget->format().samples()
-            << "| gl/accumbuffer" << glWidget->format().accum()
-            << "| gl/accumsize" << glWidget->format().accumBufferSize();
+            << "\t| gl/samples" << glWidget->format().samples()
+            << "\t| gl/accumbuffer" << glWidget->format().accum()
+            << "\t| gl/accumsize" << glWidget->format().accumBufferSize();
             
             
 
@@ -102,7 +102,7 @@ Window::Window(QWidget *parent) :
     setProgressBar(0);
     lblStatus->setText("");
     statusbar->addWidget(lblStatus, 5);
-    statusbar->addPermanentWidget(progressBar, 3);
+    statusbar->addWidget(progressBar, 3);
     statusbar->addPermanentWidget(tbZoomIn, 0);
     statusbar->addPermanentWidget(tbZoomOut, 0);
 
@@ -113,7 +113,9 @@ Window::Window(QWidget *parent) :
     connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
     connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
 
-	Whazzup *whazzup = Whazzup::getInstance();
+    qDebug() << "Expecting data directory at" << Settings::dataDirectory() << "(Option: general/dataDirectory)";
+
+    Whazzup *whazzup = Whazzup::getInstance();
 	connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
 	connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));

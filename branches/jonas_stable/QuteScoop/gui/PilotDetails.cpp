@@ -134,6 +134,7 @@ void PilotDetails::refresh(Pilot *newPilot) {
 
     // adjust window
     adjustSize();
+    adjustSize();
 }
 
 void PilotDetails::on_buttonDest_clicked() {

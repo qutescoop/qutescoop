@@ -111,5 +111,6 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
 #endif
 	
 	QString command = program + " " + controller->voiceLink();	
-	system(command.toAscii());
+    int ret = system(command.toAscii());
+    qDebug() << program << "returned" << ret;
 }

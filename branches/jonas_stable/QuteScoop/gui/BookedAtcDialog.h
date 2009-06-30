@@ -31,7 +31,10 @@ public:
     BookedAtcDialog();
 	static BookedAtcDialog *getInstance();
     void refresh();
-    
+
+signals:
+    void needBookings();
+
 private slots:
     void on_tbPredict_clicked();
     void modelSelected(const QModelIndex& index);

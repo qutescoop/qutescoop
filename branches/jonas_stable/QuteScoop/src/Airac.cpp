@@ -51,7 +51,6 @@ void Airac::addFix(Waypoint* fix) {
 
 void Airac::readFixes(const QString& directory) {
 	waypointMap.clear();
-	qDebug() << "reading fixes from file" << (directory + "/default data/earth_fix.dat") << "...";
 	FileReader fr(directory + "/default data/earth_fix.dat");
 	while(!fr.atEnd()) {
 		QString line = fr.nextLine().trimmed();
@@ -64,12 +63,11 @@ void Airac::readFixes(const QString& directory) {
 
 		addFix(wp);
 	}
-	qDebug() << "done loading waypoints:" << waypointMap.size() << "names";
+    qDebug() << "Read fixes from" << (directory + "/default data/earth_fix.dat") << "-" << waypointMap.size() << "imported";
 }
 
 void Airac::readNavaids(const QString& directory) {
 	navaidMap.clear();
-	qDebug() << "reading fixes from file" << (directory + "/default data/earth_nav.dat") << "...";
 	FileReader fr(directory + "/default data/earth_nav.dat");
 	while(!fr.atEnd()) {
 		QString line = fr.nextLine().trimmed();
@@ -84,14 +82,13 @@ void Airac::readNavaids(const QString& directory) {
 		list.append(nav);
 		navaidMap[nav->label] = list;
 	}
-	qDebug() << "done loading navaids:" << navaidMap.size() << "names";
+    qDebug() << "Read navaids from" << (directory + "/default data/earth_nav.dat") << "-" << navaidMap.size() << "imported";
 }
 
 void Airac::readAirways(const QString& directory) {
 	bool ok;
 	int segments = 0;
 
-	qDebug() << "reading airways from file" << (directory + "/default data/earth_awy.dat") << "...";
 	FileReader fr(directory + "/default data/earth_awy.dat");
 	while(!fr.atEnd()) {
 		QString line = fr.nextLine().trimmed();
@@ -154,8 +151,6 @@ void Airac::readAirways(const QString& directory) {
 		}
 	}
 
-	qDebug() << "sorting airways...";
-
 	QHash<QString, QList<Airway*> >::iterator iter;
 	for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
 		QList<Airway*>& list = iter.value();
@@ -165,8 +160,7 @@ void Airac::readAirways(const QString& directory) {
 		list.clear();
 		list += sorted;
 	}
-
-	qDebug() << "done ...loading airways:" << airwayMap.size() << "names," << segments << "segments";
+    qDebug() << "Read airways from" << (directory + "/default data/earth_awy.dat") << "-" << airwayMap.size() << "airways," << segments << "segments imported and sorted";
 }
 
 Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double maxDist) const {

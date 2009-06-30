@@ -51,6 +51,8 @@ Whazzup::Whazzup() {
     bookingsTimer = new QTimer(this);
     connect(downloadTimer, SIGNAL(timeout()), this, SLOT(download()));
     connect(bookingsTimer, SIGNAL(timeout()), this, SLOT(downloadBookings()));
+
+    connect(this, SIGNAL(needBookings()), this, SLOT(downloadBookings()));
 }
 
 Whazzup::~Whazzup() {
@@ -328,7 +330,7 @@ QString Whazzup::getAtisLink(const QString& id) const {
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
     this->predictedTime = predictedTime;
     if (Settings::downloadBookings() && !data.bookingsTimestamp().isValid()) {
-        downloadBookings();
+        emit needBookings();
     }
 
     WhazzupData newdata = WhazzupData(predictedTime, data);

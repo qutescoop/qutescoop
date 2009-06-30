@@ -420,7 +420,7 @@ void GLWidget::createCoastlineList() {
 	glLineWidth(Settings::coastLineStrength());
 
 	LineReader lineReader(Settings::dataDirectory() + "coastline.dat");
-	QList<QPair<double, double> > line = lineReader.readLine();
+    QList<QPair<double, double> > line = lineReader.readLine();
 	while (!line.isEmpty()) {
 		glBegin(GL_LINE_STRIP);
 		for (int i = 0; i < line.size(); i++) {

@@ -54,7 +54,8 @@ signals:
 	void networkMessage(QString message);
 	void downloadError(QString message);
 	void statusDownloaded();
-	
+    void needBookings();
+
 public slots:
 	void download();
     void setStatusLocation(const QString& url);
