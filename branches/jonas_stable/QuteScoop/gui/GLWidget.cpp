@@ -832,6 +832,7 @@ void GLWidget::rightClick(const QPoint& pos) {
 				return; // abort search, too much stuff around
 			airport = a;
 			countRelevant++;
+            break; // priorise airports
 		}
 
 		if(countRelevant > 1) return; // area too crowded
