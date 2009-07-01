@@ -65,8 +65,9 @@ public:
 	void addArrival(Pilot* client);
 	void addDeparture(Pilot* client);
 
-	void addApproach(Controller* client);
-	void addTower(Controller* client);
+    void addCenter(Controller* client);
+    void addApproach(Controller* client);
+    void addTower(Controller* client);
 	void addGround(Controller* client);
 
 	void toggleFlightLines();
@@ -87,7 +88,8 @@ private:
 	bool active;
 	QList<Controller*> towers;
 	QList<Controller*> grounds;
-	QList<Controller*> approaches;
+    QList<Controller*> approaches;
+    QList<Controller*> centers;
 
 	QList<Pilot*> arrivals;
 	QList<Pilot*> departures;

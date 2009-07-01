@@ -496,11 +496,12 @@ void GLWidget::createPilotsList() {
 		glEnd();
 	}
 
-	// flight paths
-	for (int i = 0; i < pilots.size(); i++) {
-		const Pilot *p = pilots[i];
-		p->plotFlightPath();
-	}
+    // flight paths
+    pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
+    for (int i = 0; i < pilots.size(); i++) {
+        const Pilot *p = pilots[i];
+        p->plotFlightPath();
+    }
 
 	glEndList();
 }
@@ -595,7 +596,8 @@ bool GLWidget::pointIsVisible(double lat, double lon, int *px, int *py) const {
 }
 
 void GLWidget::renderLabels() {
-	fontRectangles.clear();
+    fontRectangles.clear();
+    allFontRectangles.clear();
 
 	// FIR labels
 	QList<MapObject*> objects;
@@ -668,10 +670,11 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
             rect.moveTo(drawX, drawY);
 
             FontRectangle fontRect = FontRectangle(rect, o);
+            allFontRectangles.append(fontRect);
             if(shouldDrawLabel(fontRect)) {
                 qglColor(color);
                 renderText(drawX, drawY + rect.height(), text, font);
-                fontRectangles.append(fontRect);
+                fontRectangles.append(fontRect); // let's add it not only when it it's drawn but always to get more selection for nearby objects
             }
         }
     }
@@ -876,9 +879,9 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 	QList<MapObject*> result;
 
 	// scan text labels
-	for(int i = 0; i < fontRectangles.size(); i++) {
-		if(fontRectangles[i].rect().contains(x, y))
-			result.append(fontRectangles[i].object());
+    for(int i = 0; i < allFontRectangles.size(); i++) {
+        if(allFontRectangles[i].rect().contains(x, y))
+            result.append(allFontRectangles[i].object());
 	}
 
 	double lat, lon;

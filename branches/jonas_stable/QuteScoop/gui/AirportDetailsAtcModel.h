@@ -30,7 +30,7 @@ public:
 	AirportDetailsAtcModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
 
 	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const { return controllers.count(); }
-	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const { return 5; } 
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const { return 7; }
 	
 	virtual QVariant data(const QModelIndex &index, int role) const;
 	virtual QVariant headerData(int section, Qt::Orientation orientation,

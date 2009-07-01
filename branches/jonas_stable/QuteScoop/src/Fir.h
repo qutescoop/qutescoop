@@ -42,10 +42,12 @@ public:
 	const double& lon() const { return _lon; }
 	
 	void setPointList(const QList<QPair<double, double> >& points);
-	
+
 	GLuint getPolygon();
 	GLuint getBorderLine();
-	
+
+    int maxDistanceFromCenter();
+
 private:
 	void compileDisplayLists();
 
@@ -53,6 +55,8 @@ private:
 	QString _icao, _name, _countryCode, _id;
 	double _lat, _lon;
 	GLuint polygon, borderline;
+
+    int _maxDistFromCenter;
 };
 
 #endif /*FIR_H_*/

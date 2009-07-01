@@ -16,9 +16,12 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "Settings.h"
 #include "Fir.h"
 #include "Tessellator.h"
+#include "NavData.h"
 #include "helpers.h"
 
 Fir::Fir() {
@@ -38,8 +41,10 @@ Fir::Fir(QStringList strings) {
 	_lat = strings[3].toDouble();
 	_lon = strings[4].toDouble();
 	_id = strings[5];
-	polygon = 0;
+
+    polygon = 0;
 	borderline = 0;
+    _maxDistFromCenter = 0;
 }
 
 Fir::~Fir() {
@@ -87,4 +92,22 @@ void Fir::setPointList(const QList<QPair<double, double> >& points) {
 	_points = points;
 	if(_points.last() != _points.first())
 		_points.append(_points.first());
+}
+
+int Fir::maxDistanceFromCenter() {
+    if(_maxDistFromCenter != 0)
+        return _maxDistFromCenter;
+
+    if(_points.size() == 0)
+        return -1;
+
+    double maxDist = NavData::distance(lat(), lon(), _points[0].first, _points[0].second);
+    for(int i = 0; i < _points.size(); i++) {
+        if(NavData::distance(lat(), lon(), _points[i].first, _points[i].second) > maxDist) {
+            maxDist = NavData::distance(lat(), lon(), _points[i].first, _points[i].second);
+        }
+    }
+
+    _maxDistFromCenter = (int) maxDist;
+    return _maxDistFromCenter;
 }

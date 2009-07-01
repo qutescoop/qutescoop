@@ -1,18 +1,19 @@
 QuteScoop Changelog - Version 1.0.3 jonas alpha
 changed:
 * Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
-* Increase max. value for shown labels (in preferences)
+* Increased max. value for shown labels (in preferences)
 * Render dashed lines in front of/behind plane also in flightplan Plot mode
 
 added:
 * Show ATC bookings in list (VATSIM only so far)
 * Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
 * See prefiled flights in arrival and departure lists and in Time Warp on the map as faked real pilots
-* Multiple Map Positions can now be remembered / recalled
-* OpenGL debug messages + ability to set OpenGL parameters through own config file
+* Multiple Map Positions can be remembered / recalled
+* OpenGL debug messages and ability to set OpenGL parameters through own config file
 * Show inactive airports when zoomed in
 * Filter airport traffic to only show traffic in the vicinity of airport (configurable)
 * Show rings of airport congestion around airports (configurable)
+* Show _CTR and _FSS stations as ATC in Airport Information, if their sector boundaries are somewhat near to the airport (experimental)
 * Doubleclick to center map, right or left drag to pan
 * Key commands for pan and zoom
 * Remember and recall 7 Map Positions
@@ -21,15 +22,17 @@ added:
 * Show _FSS stations by faking the facilityType which is not reported correctly in WhazzUp data
 * Show delay as difference from filed arrival time to calculated ETA
 * Zoom butons on the status bar (requested by tablet PC user)
+* Use timeout to select first item in ClientSelection
 
 fixed:  
 * Docks restore correctly on window minimize/restore
 * Allow to disable border lines by setting strength to 0px
-* Always show map label of a busy airport in favor to a less busier one
-* Labels are less conservative in decluttering (allow a bit of overlap on the edges)
+* Always show map label of a busy airport in favor to a less busy one
+* Labels are less conservative in decluttering and use the screen better
 * Preferences dialog fits on a 1280x800 screen
-* Data location on Unix/Linux: now in the program path (./data), not /usr/share
+* Data location on Unix/Linux: standard is now in the program path (./data), not /usr/share, may be overridden through option general/dataDirectory as before
 * Set Zoom In/Out to CTRL+/- as F11 got obscured on Linux and was not applicable on Mac as well
+* Show _DEL in Airport Information
 
 QuteScoop Changelog - Version 1.0.2
 

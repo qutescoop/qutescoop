@@ -35,6 +35,11 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
 	link = getField(stringList, 35);
 	timeFrom = getField(stringList, 37);
 
+    // default
+    countryCode = "";
+    lat, lon = 0.0;
+    visualRange = 0;
+
     // computed values
     switch (bookingType) {
         case 0:  bookingInfoStr = link; break;
@@ -49,6 +54,7 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
             countryCode = NavData::getInstance()->airports()[this->getDelivery()]->countryCode;
             lat = NavData::getInstance()->airports()[this->getDelivery()]->lat;
             lon = NavData::getInstance()->airports()[this->getDelivery()]->lon;
+            visualRange = 2;
         }
         facilityType = 3; 
     }
@@ -57,6 +63,7 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
             countryCode = NavData::getInstance()->airports()[this->getGround()]->countryCode;
             lat = NavData::getInstance()->airports()[this->getGround()]->lat;
             lon = NavData::getInstance()->airports()[this->getGround()]->lon;
+            visualRange = 5;
         }
         facilityType = 3; 
     }
@@ -66,6 +73,7 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
             countryCode = NavData::getInstance()->airports()[this->getTower()]->countryCode;
             lat = NavData::getInstance()->airports()[this->getTower()]->lat;
             lon = NavData::getInstance()->airports()[this->getTower()]->lon;
+            visualRange = 15;
         }
     }
     else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
@@ -74,22 +82,27 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
             countryCode = NavData::getInstance()->airports()[this->getApproach()]->countryCode;
             lat = NavData::getInstance()->airports()[this->getApproach()]->lat;
             lon = NavData::getInstance()->airports()[this->getApproach()]->lon;
+            visualRange = 35;
         }
     }
     else if (label.right(4) == "_CTR") {
         facilityType = 6; 
-        if (NavData::getInstance()->firs().contains(this->getCenter())) {
-            countryCode = NavData::getInstance()->firs()[this->getCenter()]->countryCode();
-            lat = NavData::getInstance()->firs()[this->getCenter()]->lat();
-            lon = NavData::getInstance()->firs()[this->getCenter()]->lon();
+        QString ctr = this->getCenter();
+        if (NavData::getInstance()->firs().contains(ctr)) {
+            countryCode = NavData::getInstance()->firs()[ctr]->countryCode();
+            lat = NavData::getInstance()->firs()[ctr]->lat();
+            lon = NavData::getInstance()->firs()[ctr]->lon();
+            visualRange = NavData::getInstance()->firs()[ctr]->maxDistanceFromCenter();
         }
     }
     else if (label.right(4) == "_FSS") {
         facilityType = 7; 
-        if (NavData::getInstance()->firs().contains(this->getCenter())) {
-            countryCode = NavData::getInstance()->firs()[this->getCenter()]->countryCode();
-            lat = NavData::getInstance()->firs()[this->getCenter()]->lat();
-            lon = NavData::getInstance()->firs()[this->getCenter()]->lon();
+        QString ctr = this->getCenter();
+        if (NavData::getInstance()->firs().contains(ctr)) {
+            countryCode = NavData::getInstance()->firs()[ctr]->countryCode();
+            lat = NavData::getInstance()->firs()[ctr]->lat();
+            lon = NavData::getInstance()->firs()[ctr]->lon();
+            visualRange = NavData::getInstance()->firs()[ctr]->maxDistanceFromCenter();
         }
     }
     
@@ -97,7 +110,6 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
     
     //some unapplicable data for a booked controller, but we might need it once to cast BookedController -> Controller
     frequency = "";
-	visualRange = -1; 
 	atisMessage = "";
 	timeLastAtisReceived = QDateTime();
 	voiceServer = "";

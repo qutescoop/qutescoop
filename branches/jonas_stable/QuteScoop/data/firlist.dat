@@ -127,6 +127,7 @@ LLPT:Pluto:IL:31.7:34.8:180
 LLSC:South:IL:30.9:34.7:530
 LMMM:Malta:MT:35.4:17.5:181
 LOVV:Wien:AT:47.7:15:182
+LOVV_I:Wien:AT:47.7:15:182
 LPOO:Porto Oceanic:PT:31:-26.5:183
 LPPO:Santa Maria Oceanic:PT:31:-26.5:183
 LPAZ:Santa Maria TMA:PT:37:-26.5:1761
@@ -574,3 +575,4 @@ YWTN:Winton:AU:-22.2:142.2:5902
 YBAS:Alice Springs:AU:-25.7:135.8:5903
 YPAD:Adelaide:AU:-34.5:135.5:5904
 AFRC:Central Africa Control:CD:-02.7:24.1:612
+GULF:Gulf Control::26:58:

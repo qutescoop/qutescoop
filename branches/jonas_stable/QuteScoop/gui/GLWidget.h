@@ -147,8 +147,9 @@ private:
             QRectF _rect;
             MapObject *_object;
 	};
-	QList<FontRectangle> fontRectangles;
-	bool shouldDrawLabel(const FontRectangle& rect);
+    QList<FontRectangle> fontRectangles;
+    QList<FontRectangle> allFontRectangles;
+    bool shouldDrawLabel(const FontRectangle& rect);
 
 	void renderLabels();
 	void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);

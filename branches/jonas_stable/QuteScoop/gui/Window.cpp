@@ -426,11 +426,14 @@ void Window::on_actionClearAllFlightPaths_triggered() {
 		}
 	}
 
-	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
+    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
 	for(int i = 0; i < pilots.size(); i++) {
 		pilots[i]->displayLineFromDep = false;
 		pilots[i]->displayLineToDest = false;
 	}
+    // adjust the "plot route" tick in dialogs
+    AirportDetails::getInstance()->refresh();
+    PilotDetails::getInstance()->refresh();
 
 	// tell glWidget that there is new whazzup data (which is a lie)
 	// so it will refresh itself and clear the lines

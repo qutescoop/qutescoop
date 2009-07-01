@@ -36,8 +36,10 @@ QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation or
 	case 1: return QString("Freq"); break;
 	case 2: return QString("Facility"); break;
 	case 3: return QString("Name"); break;
-	case 4: return QString("Rank"); break;
-	}
+    case 4: return QString("Rank"); break;
+    case 5: return QString("Online"); break;
+    case 6: return QString("Server"); break;
+    }
 	
 	return QVariant();
 }
@@ -56,8 +58,10 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
 		case 1: return c->frequency.toDouble() > 199 ? QVariant(): c->frequency; break; //sort out observers without prim freq
 		case 2: return c->facilityString(); break;
 		case 3: return c->realName; break;
-		case 4: return c->rank(); break;
-		}
+        case 4: return c->rank(); break;
+        case 5: return c->onlineTime(); break;
+        case 6: return c->server; break;
+        }
 	}
 	
 	return QVariant();

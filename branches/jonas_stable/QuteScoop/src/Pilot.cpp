@@ -407,7 +407,7 @@ void Pilot::positionInFuture(double *futureLat, double *futureLon, int seconds) 
 
 void Pilot::toggleDisplayPath() {
 	if(displayLineToDest) {
-		displayLineFromDep = false;
+        displayLineFromDep = false;
 		displayLineToDest = false;
 	} else {
 		displayLineFromDep = true;
@@ -508,11 +508,20 @@ void Pilot::plotPathToDest() const {
 void Pilot::plotPlannedLine() const {
 	if(Settings::planLineStrength() == 0)
 		return;
-
 	QList<Waypoint*> points = resolveFlightplan();
+    Airport* dep = depAirport();
+    if(dep != 0) {
+        Waypoint* depWp = new Waypoint(dep->label, dep->lat, dep->lon);
+        points.prepend(depWp);
+    }
+    Airport* dest = destAirport();
+    if(dest != 0) {
+        Waypoint* destWp = new Waypoint(dest->label, dest->lat, dest->lon);
+        points.append(destWp);
+    }
 
-	if(points.size() < 2)
-		return;
+    if(points.size() < 2)
+        return;
 
 	QColor lineCol = Settings::planLineColor();
 	glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
@@ -521,58 +530,71 @@ void Pilot::plotPlannedLine() const {
     if(!Settings::dashedTrackInFront())
         glLineStipple(3, 0xAAAA);
     glBegin(GL_LINE_STRIP);
+        VERTEX(points[0]->lat, points[0]->lon);
 
-		Airport* ap = depAirport();
-		if(ap != 0) {
-			VERTEX(ap->lat, ap->lon);
-		}
-
+        int nextPoint = 1; // first point as default
         // calculate first point behind plane
-        // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
-        int courseRoute, courseToPlane;
-        int firstPointBehind = points.size(); // destination
-        double currLat = ap->lat, currLon = ap->lon;
-        for(int i = 0; i < points.size(); i++) {
-            if(lat == 0 && lon == 0)
-                break; // prefiled flight
-            courseRoute = (int) NavData::courseTo(currLat, currLon, points[i]->lat, points[i]->lon);
-            courseToPlane = (int) NavData::courseTo(currLat, currLon, lat, lon);
-            int courseDeviation = (abs(courseRoute - courseToPlane)) % 360;
-            if (courseDeviation > 90) {
-                firstPointBehind = i;
-                break;
+        if(lat == 0 && lon == 0) {
+            nextPoint = 1; // prefiled flight or no known position
+        } else {
+            // find the point that is nearest to the plane
+            double minDist = NavData::distance(lat, lon, points[0]->lat, points[0]->lon);
+            int minPoint = 0; // next to departure as default
+            for(int i = 1; i < points.size(); i++) {
+                if(NavData::distance(lat, lon, points[i]->lat, points[i]->lon) < minDist) {
+                    minDist = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
+                    minPoint = i;
+                }
             }
-            currLat = points[i]->lat; currLon = points[i]->lon;
+
+            // with the nearest point, look which one is the next point ahead - saves from trouble with zig-zag routes
+            if(minPoint == 0) {
+                nextPoint = 1;
+            } else if(minPoint == points.size() - 1) {
+                nextPoint = points.size() - 1;
+            } else {
+                nextPoint = minPoint + 1; // default
+                // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
+                int courseRoute, courseToPlane, courseDeviation;
+                for(int i = minPoint - 1; i <= minPoint; i++) {
+                    courseRoute = (int) NavData::courseTo(points[i]->lat, points[i]->lon, points[i + 1]->lat, points[i + 1]->lon);
+                    courseToPlane = (int) NavData::courseTo(points[i]->lat, points[i]->lon, lat, lon);
+                    courseDeviation = (abs(courseRoute - courseToPlane)) % 360;
+                    if (courseDeviation > 90) {
+                        nextPoint = i;
+                        break;
+                    }
+                }
+            }
         }
 
-        currLat = ap->lat; currLon = ap->lon;
         // line before plane
-        for(int i = 0; i < firstPointBehind - 1; i++) {
+        double currLat = points[0]->lat, currLon = points[0]->lon;
+        for(int i = 0; i < nextPoint; i++) {
             plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
             currLat = points[i]->lat; currLon = points[i]->lon;
         }
-        // part between: draw to plane, change line type
-        plotPath(currLat, currLon, lat, lon);
-        currLat = lat; currLon = lon;
+        // part between: draw to plane if position valid
+        if(lat != 0 && lon != 0) {
+            plotPath(currLat, currLon, lat, lon);
+            currLat = lat; currLon = lon;
+        }
         VERTEX(currLat, currLon);
-        glEnd();
+    glEnd();
+
+    // change line type
+    if(Settings::dashedTrackInFront()) glLineStipple(3, 0xAAAA);
+    else glLineStipple(1, 0xFFFF);
+    glBegin(GL_LINE_STRIP);
 
         // part behind plane
-        if(Settings::dashedTrackInFront()) glLineStipple(3, 0xAAAA);
-        else glLineStipple(1, 0xFFFF);
-        glBegin(GL_LINE_STRIP);
-        for(int i = firstPointBehind; i < points.size(); i++) {
+        for(int i = nextPoint; i < points.size(); i++) {
             plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
             currLat = points[i]->lat; currLon = points[i]->lon;
         }
 		VERTEX(currLat, currLon);
 
-		ap = destAirport();
-		if(ap != 0) {
-			VERTEX(ap->lat, ap->lon);
-		}
-
-	glEnd();
+    glEnd();
     glLineStipple(1, 0xFFFF);
 }
 

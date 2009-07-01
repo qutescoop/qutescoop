@@ -178,6 +178,9 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             //server = getField(stringList, 14);
             sl[14] = "BOOKED SESSION"; 
 
+            //visualRange = getField(stringList, 19).toInt();
+            sl[19] = QString("%1").arg(bc[i]->visualRange);
+
             // not applicable:
             //frequency = getField(stringList, 4);
             //visualRange = getField(stringList, 19).toInt();

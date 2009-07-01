@@ -255,8 +255,6 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 
 	QStringList workingList = plan;
 
-    qDebug() << "Resolving\t" << plan;
-
 	// find a starting point
 	Waypoint* currPoint = getNextWaypoint(workingList, lat, lon);
 	if(currPoint == 0) return result;
@@ -300,12 +298,12 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 		}
 	}
 
-	QString debugStr = "resolved to: ";
+    QString debugStr;
 	for(int i = 0; i < result.size(); i++) {
 		if(i>0) debugStr += "-";
 		debugStr += result[i]->label;
 	}
-    //qDebug() << debugStr;
+    qDebug() << "Resolved\t" << plan << "\nto\t" << debugStr;
 
 	return result;
 }

@@ -27,6 +27,8 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 {
 	frequency = getField(stringList, 4);
 	facilityType = getField(stringList, 18).toInt();
+    if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
+
 	visualRange = getField(stringList, 19).toInt();
 	atisMessage = getField(stringList, 35);
 	timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
@@ -42,7 +44,17 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 		atisMessage = atis;
 	}
 
-    fir = 0;
+    QString ctr = this->getCenter();
+    if(!ctr.isNull()) {
+        if(NavData::getInstance()->firs().contains(ctr)) {
+            fir = NavData::getInstance()->firs()[ctr];
+            lat = fir->lat(); // fix my coordinates so that user can find me on the map. Reported lat, lon only seems to be the last visibility center set
+            lon = fir->lon();
+            visualRange = fir->maxDistanceFromCenter();
+        }
+    } else {
+        fir = 0;
+    }
 }
 
 QString Controller::facilityString() const {
@@ -82,12 +94,6 @@ QString Controller::getCenter() {
 	while(!segments.isEmpty()) {
 		result += "_" + segments.first();
 		segments.removeFirst();
-	}
-
-	if(NavData::getInstance()->firs().contains(result)) {
-		Fir *f = NavData::getInstance()->firs()[result];
-		lat = f->lat(); // fix my coordinates so that user can find me on the map
-		lon = f->lon();
 	}
 	return result;
 }

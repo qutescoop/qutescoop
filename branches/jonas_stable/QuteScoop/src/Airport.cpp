@@ -65,8 +65,9 @@ Airport::~Airport() {
 void Airport::resetWhazzupStatus() {
 	active = false;
 	towers.clear();
-	approaches.clear();
-	grounds.clear();
+    centers.clear();
+    approaches.clear();
+    grounds.clear();
 	arrivals.clear();
 	departures.clear();
 }
@@ -223,11 +224,18 @@ const GLuint& Airport::getGndDisplayList() {
 	return gndDisplayList;
 }
 
+void Airport::addCenter(Controller* client) {
+    if(!centers.contains(client)) {
+        centers.append(client);
+        //active = true; // would make too much airports show as active on the map
+    }
+}
+
 void Airport::addApproach(Controller* client) {
-	if(!approaches.contains(client)) {
-		approaches.append(client);
-		active = true;
-	}
+    if(!approaches.contains(client)) {
+        approaches.append(client);
+        active = true;
+    }
 }
 
 void Airport::addTower(Controller* client) {
@@ -260,8 +268,9 @@ QList<Controller*> Airport::getAllControllers() const {
 	
 	result += grounds;
 	result += towers;
-	result += approaches;
-	
+    result += approaches;
+    result += centers;
+
 	return result;
 }
 
@@ -304,7 +313,7 @@ int Airport::numFilteredDepartures() const {
 
 QString Airport::mapLabel() const {
 	QString result = label;
-    if(!this->active) 
+    if(!this->active || numFilteredArrivals() + numFilteredDepartures() == 0)
         return label;
 
     if(!numFilteredArrivals()) result += " -/";

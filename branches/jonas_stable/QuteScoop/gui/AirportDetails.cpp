@@ -86,9 +86,7 @@ void AirportDetails::refresh(Airport* newAirport) {
 	
 	setWindowTitle(airport->toolTip());
 
-	lblIcao->setText(airport->label);
-	lblCity->setText(airport->city);
-	lblName->setText(airport->name);
+    lblName->setText(QString("%1\n%2").arg(airport->city).arg(airport->name));
 	
 	QLocale locale(airport->countryCode.toLower());
     int utcDev = (int) (airport->lon/180*12 + 0.5); // lets estimate the deviation from UTC and round that
@@ -96,7 +94,7 @@ void AirportDetails::refresh(Airport* newAirport) {
 	lblCountry->setText(QString("%1 (%2)")
                         .arg(airport->countryCode)
                         .arg(NavData::getInstance()->countryName(airport->countryCode)));
-	lblLocation->setText(QString("%1 %2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
+    lblLocation->setText(QString("%1\n%2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
     lblTime->setText(QString("local time %1, UTC %2%3")
                         .arg(lt)
                         .arg(utcDev < 0 ? "": "+") // just a plus sign
@@ -117,28 +115,35 @@ void AirportDetails::refresh(Airport* newAirport) {
 	groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->getArrivals().size()));
 	groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
 
-	QList<Controller*> atcContent = airport->getAllControllers();
-    Controller* atis = Whazzup::getInstance()->whazzupData().getController(airport->label + "_ATIS");
+    QList<Controller*> atcContent = airport->getAllControllers();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
-    if (atis != 0)
-        atcContent.append(atis);
+    // ATIS
+    if(cbAtis->isChecked()) {
+        Controller* atis = Whazzup::getInstance()->whazzupData().getController(airport->label + "_ATIS");
+        if (atis != 0)
+            atcContent.append(atis);
+    }
 	
-	// observers
-	QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();
-	for(int i = 0; i < controllers.size(); i++) {
-		Controller* c = controllers[i];
-		if(c->isObserver()) {
-			double distance = NavData::distance(airport->lat, airport->lon, c->lat, c->lon);
-			if(c->visualRange > distance && distance < 20)
-				atcContent.append(c);			
-		}
-	}
+    // observers
+    if(cbObservers->isChecked()) {
+        QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();
+        for(int i = 0; i < controllers.size(); i++) {
+            Controller* c = controllers[i];
+            if(c->isObserver()) {
+                double distance = NavData::distance(airport->lat, airport->lon, c->lat, c->lon);
+                if(c->visualRange > distance && distance < 20)
+                    atcContent.append(c);
+            }
+        }
+    }
+    /*
     // booked ATC
-    //QList<BookedController*> bookedcontrollers = airport->getBookedControllers();
-    //for (int i = 0; i < bookedcontrollers.size(); i++) {
-    //    controllers.append(dynamic_cast <Controller*> (bookedcontrollers[i]));
-    //}
+    QList<BookedController*> bookedcontrollers = airport->getBookedControllers();
+    for (int i = 0; i < bookedcontrollers.size(); i++) {
+        controllers.append(dynamic_cast <Controller*> (bookedcontrollers[i]));
+    }
+    */
 	
 	atcModel.setClients(atcContent);
     atcSortModel->invalidate();
@@ -165,4 +170,14 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked)
         airport->setDisplayFlightLines(checked);
         Window::getInstance()->updateGLPilots();
     }
+}
+
+void AirportDetails::on_cbObservers_toggled(bool checked)
+{
+    refresh();
+}
+
+void AirportDetails::on_cbAtis_toggled(bool checked)
+{
+    refresh();
 }

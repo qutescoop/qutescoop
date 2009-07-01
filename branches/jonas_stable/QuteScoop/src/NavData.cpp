@@ -172,8 +172,21 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 		if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
 			airportMap[icao]->addGround(c);
 		}
-	}
-    
+
+        if(c->label.right(4) == "_FSS" || c->label.right(4) == "_CTR") {
+            QList<Airport*> aps = NavData::getInstance()->airportsAt(c->lat, c->lon, c->visualRange);
+            qDebug() << QString("%1 at %2/%3 (%4 NM) covering %5 airports")
+                    .arg(c->label)
+                    .arg(c->lat)
+                    .arg(c->lon)
+                    .arg(c->visualRange)
+                    .arg(aps.size());
+            for(int j = 0; j < aps.size(); j++) {
+                aps[j]->addCenter(c);
+            }
+        }
+    }
+
     airportsListTrafficSorted.clear(); // we gonna fill it again here
 	for(int i = 0; i < airportList.size(); i++) {
 		if(airportList[i] != 0)

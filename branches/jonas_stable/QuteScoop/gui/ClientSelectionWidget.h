@@ -38,12 +38,17 @@ public:
 
 public slots:
 	void dialogForItem(QListWidgetItem * item);
+    void userActs();
 
 protected:
 	virtual void focusOutEvent(QFocusEvent *event);
 
+private slots:
+    void timerDefaultTriggered();
+
 private:
 	QList<MapObject*> displayClients;
+    QTimer timerDefault;
 };
 
 #endif

@@ -86,7 +86,7 @@ void ControllerDetails::refresh(Controller *newController) {
     buttonAddFriend->setDisabled(controller->userId.isEmpty());
     
     // check if we know position
-    buttonShowOnMap->setDisabled(controller->lon > 90);
+    buttonShowOnMap->setDisabled(controller->lat == 0 && controller->lon == 0);
 }
 
 void ControllerDetails::on_buttonAddFriend_clicked() {
