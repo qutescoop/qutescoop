@@ -27,6 +27,8 @@
 #include "Settings.h"
 #include "Route.h"
 #include "Window.h"
+#include "NavData.h"
+#include "helpers.h"
 
 PlanFlightDialog *planFlightDialogInstance = 0;
 
@@ -40,7 +42,10 @@ PlanFlightDialog::PlanFlightDialog():
     QDialog()
 {
     setupUi(this);
-    
+    setWindowFlags(Qt::Tool);
+
+    selectedRoute = 0;
+
 	routesSortModel = new QSortFilterProxyModel;
 	routesSortModel->setDynamicSortFilter(true);
 	routesSortModel->setSourceModel(&routesModel);
@@ -49,10 +54,11 @@ PlanFlightDialog::PlanFlightDialog():
     treeRoutes->header()->setResizeMode(QHeaderView::Interactive);
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
-    //connect(treeVroute, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
+    connect(treeRoutes, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
     connect(this, SIGNAL(networkMessage(QString)), Window::getInstance(), SLOT(networkMessage(QString)));
     connect(this, SIGNAL(downloadError(QString)), Window::getInstance(), SLOT(downloadError(QString)));
 
+    lblPlotStatus->setText(QString(""));
 }
 
 void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected providers
@@ -230,3 +236,99 @@ void PlanFlightDialog::on_edDest_textChanged(QString str)
 {
     edDest->setText(str.toUpper());
 }
+
+void PlanFlightDialog::routeSelected(const QModelIndex& index) {
+    if(!index.isValid()) {
+        qDebug() <<"deselected";
+        selectedRoute = 0;
+        return;
+    }
+    selectedRoute = routes[routesSortModel->mapToSource(index).row()];
+    if(cbPlot->isChecked()) Window::getInstance()->setPlotFlightPlannedRoute(true);
+}
+
+void PlanFlightDialog::plotPlannedRoute() const {
+    if(selectedRoute == 0) {
+        lblPlotStatus->setText("No route to plot");
+        return;
+    }
+
+    Airport* dep;
+    if(NavData::getInstance()->airports().contains(selectedRoute->dep))
+        dep = NavData::getInstance()->airports()[selectedRoute->dep];
+    else {
+        lblPlotStatus->setText("Dep not found");
+        return;
+    }
+
+    Airport* dest;
+    if(NavData::getInstance()->airports().contains(selectedRoute->dest))
+        dest = NavData::getInstance()->airports()[selectedRoute->dest];
+    else {
+        lblPlotStatus->setText("Dest not found");
+        return;
+    }
+
+    QStringList list = selectedRoute->flightPlan.split(' ', QString::SkipEmptyParts);
+    QList<Waypoint*> points = NavData::getInstance()->getAirac().resolveFlightplan(list, dep->lat, dep->lon);
+
+    Waypoint* depWp = new Waypoint(dep->label, dep->lat, dep->lon);
+    points.prepend(depWp);
+    Waypoint* destWp = new Waypoint(dest->label, dest->lat, dest->lon);
+    points.append(destWp);
+
+    QString resolved;
+    for(int i = 0; i < points.size(); i++) {
+        resolved += points[i]->label;
+        resolved += "-";
+    }
+    lblPlotStatus->setText(QString("Route resolved to: %1").arg(resolved));
+
+    if(points.size() < 2)
+        return;
+
+    QColor lineCol = QColor(255, 0, 0, 255);//Settings::planLineColor();
+    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
+
+    glLineWidth(Settings::planLineStrength() * 2 + 2);
+    if(!Settings::dashedTrackInFront())
+        glLineStipple(3, 0xAAAA);
+
+    glBegin(GL_LINE_STRIP);
+        double currLat = points[0]->lat;
+        double currLon = points[0]->lon;
+        for(int i = 0; i < points.size(); i++) {
+            NavData::plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
+            currLat = points[i]->lat; currLon = points[i]->lon;
+        }
+        VERTEX(currLat, currLon);
+
+    glEnd();
+    glLineStipple(1, 0xFFFF);
+}
+
+void PlanFlightDialog::on_cbPlot_toggled(bool checked)
+{
+    Window::getInstance()->setPlotFlightPlannedRoute(checked);
+}
+
+/*void PlanFlightDialog::on_textRoute_textChanged()
+{
+    textRoute->setPlainText(textRoute->toPlainText().toUpper());
+    if(selectedRoute == 0) {
+        QStringList sl = QStringList();
+            sl.append("user");
+            sl.append("");
+            sl.append(edDep->text());
+            sl.append(edDest->text());
+            sl.append("");
+            sl.append("");
+            sl.append(textRoute->toPlainText());
+            sl.append("");
+            sl.append("");
+        selectedRoute = new Route(sl);
+    }
+    selectedRoute->flightPlan = textRoute->toPlainText();
+    if(cbPlot->isChecked()) Window::getInstance()->setPlotFlightPlannedRoute(true);
+}
+*/

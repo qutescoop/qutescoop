@@ -776,3 +776,9 @@ void Window::updateGLPilots() {
     glWidget->createPilotsList();
     glWidget->updateGL();
 }
+
+void Window::setPlotFlightPlannedRoute(bool value) {
+    glWidget->plotFlightPlannedRoute = value;
+    glWidget->createPilotsList();
+    glWidget->updateGL();
+}

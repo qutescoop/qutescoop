@@ -14,7 +14,7 @@ EBGT:Gent:Gent:BE:51.183:3.816
 EBKH:Balen-Keiheuvel:Balen-Keiheuvel:BE:51.178:5.221
 EBKT:Wevelgem:Kortrijk:BE:50.819:3.209
 EBLB:Elsenborn:Elsenborn:BE:50.467:6.183
-EBLG:Bierset:Li�ge:BE:50.637:5.443
+EBLG:Bierset:Liège:BE:50.637:5.443
 EBMB:Melsbroek:Brussels:BE:50.9:4.5
 EBMT:Munte:Munte:BE:50.933:3.733
 EBNM:Namur-Suarlee:Namur:BE:50.488:4.769
@@ -26,248 +26,436 @@ EBST:St Truiden:St Truiden:BE:50.792:5.202
 EBSU:St Hubert:St Hubert:BE:50.034:5.44
 EBTN:Goetsenhoven:Goetsenhoven:BE:50.782:4.958
 EBTX:Theux Verviers:Theux:BE:50.552:5.855
-EBTY:Tournai Maubray:Tournai:BE:50.53:3.494
+EBTY:Tournai Maubray:Tournai:BE:50.53:3.494ha
 EBUL:Ursel:Ursel:BE:51.144:3.476
 EBWE:Weelde:Weelde:BE:51.395:4.96
 EBZH:Hasselt:Hasselt:BE:50.97:5.375
 EBZR:Oostmalle:Zoersel:BE:51.265:4.753
 EBZW:Zwartberg:Genk:BE:51.015:5.526
-EDAB:Bautzen:Bautzen:DE:51.194:14.52
-EDAC:Altenburg Nobitz:Altenburg:DE:50.982:12.506
-EDAD:Dessau:Dessau:DE:51.832:12.184
-EDAE:Eisenhuttenstadt:Eisenhuttenstadt:DE:52.197:14.586
-EDAG:Grossrueckerswalde:Grossruckerswalde:DE:50.644:13.126
-EDAH:Heringsdorf:Heringsdorf:DE:53.879:14.152
-EDAI:Segeletz:Segeletz:DE:52.826:12.542
-EDAJ:Gera-Leumnitz:Gera:DE:50.881:12.137
-EDAK:Grossenhaim:Grossenhaim:DE:51.308:13.555
-EDAL:Fuerstenwalde:Furstenwalde:DE:52.39:14.094
-EDAM:Merseburg:Merseburg:DE:51.363:11.941
-EDAN:Neustadt-Glewe:Neustadt-Glewe:DE:53.361:11.615
-EDAO:Nordhausen:Nordhausen:DE:51.493:10.833
-EDAP:Neuhausen:Neuhausen:DE:51.685:14.423
-EDAQ:Halle Oppin:Halle:DE:51.552:12.053
-EDAR:Pirna:Pirna:DE:50.978:13.915
-EDAU:Gohlis:Riesa:DE:51.294:13.356
-EDAV:Finow:Finow:DE:52.827:13.694
-EDAW:Roitzschjora:Roitzschjora:DE:51.578:12.494
-EDAX:Rechlin-Larz:Rechlin-Larz:DE:53.306:12.753
-EDAY:Strausberg:Strausberg:DE:52.58:13.916
-EDAZ:Schonhagen:Schonhagen:DE:52.203:13.159
-EDBA:Alkersleben:Alkersleben:DE:50.842:11.07
-EDBB:Berlin:Berlin:DE:52.56:13.288
-EDBC:Cochstedt-Schneidlingen:Cochstedt-Schneidlingen:DE:51.856:11.418
-EDBD:Dedelow:Dedelow:DE:53.356:13.784
-EDBF:Fehrbellin:Fehrbellin:DE:52.793:12.756
-EDBH:Barth:Barth:DE:54.338:12.71
-EDBI:Zwickau:Zwickau:DE:50.703:12.459
-EDBJ:Schongleina:Jena:DE:50.915:11.714
-EDBK:Kyritz:Kyritz:DE:52.919:12.425
-EDBM:Magdeburg:Magdeburg:DE:52.074:11.626
-EDBN:Brandis Waldpolenz:Brandis:DE:51.328:12.657
-EDBO:Oehna:Oehna:DE:51.899:13.056
-EDBP:Schwerin:Pinnow:DE:53.615:11.561
-EDBQ:Bronkow:Bronkow:DE:51.671:13.96
-EDBR:Rothenburg:Rothenburg-Oberlausitz:DE:51.363:14.95
-EDBS:Sommerda-Dermsdorf:Sommerda-Dermsdorf:DE:51.199:11.192
-EDBT:Allstedt:Allstedt:DE:51.38:11.447
-EDBW:Werneuchen:Werneuchen:DE:52.633:13.767
-EDBX:Gorlitz:Gorlitz:DE:51.159:14.95
-EDBZ:Schwarzheide-Schipkau:Schwarzheide-Schipkau:DE:51.49:13.879
-EDCA:Anklam:Anklam:DE:53.833:13.669
-EDCB:Ballenstedt:Ballenstedt:DE:51.746:11.229
-EDCD:Cottbus Drewitz:Drewitz:DE:51.889:14.532
-EDCE:Eggerdorf-Muncheberg:Eggersdorf:DE:52.479:14.083
-EDCG:Guttin:Guttin:DE:54.384:13.326
-EDCI:Klix:Klix:DE:51.274:14.506
-EDCK:Kothen:Kothen:DE:51.722:11.947
-EDCM:Kamenz:Kamenz:DE:51.297:14.127
-EDCN:Nauen:Nauen:DE:52.626:12.914
-EDCO:Obermehler:Schlotheim:DE:51.268:10.635
-EDCP:Peenemunde:Peenemunde:DE:54.158:13.773
-EDCQ:Aschersleben:Aschersleben:DE:51.765:11.498
-EDCS:Saarmund:Saarmund:DE:52.309:13.101
-EDCV:Pasewalk:Pasewalk:DE:53.506:13.948
-EDCW:Wismar Mueggenburg:Wismar:DE:53.914:11.499
-EDCX:Purkshof:Purkshof:DE:54.161:12.249
-EDCY:Welzow:Welzow:DE:51.577:14.137
-EDDB:Schonefeld:Berlin:DE:52.38:13.522
-EDDC:Klotzsche:Dresden:DE:51.133:13.767
-EDDE:Binderslebn:Erfurt:DE:50.98:10.958
-EDDF:Frankfurt:Frankfurt/Main:DE:50.026:8.543
-EDDG:Munster-Osnabruck:Munster-Osnabruck:DE:52.135:7.685
-EDDH:Fuhlsb�ttel:Hamburg:DE:53.63:9.988
-EDDI:Tempelhof:Berlin:DE:52.473:13.404
-EDDK:Cologne-Bonn:Cologne:DE:50.866:7.143
-EDDL:Dusseldorf:Dusseldorf:DE:51.289:6.767
-EDDM:Munich:Munich:DE:48.354:11.786
-EDDN:Nurnberg:Nurnberg:DE:49.499:11.078
-EDDP:Schkeuditz:Leipzig Halle:DE:51.424:12.236
-EDDR:Saarbrucken:Saarbrucken:DE:49.214:7.11
-EDDS:Stuttgart:Stuttgart:DE:48.69:9.222
-EDDT:Tegel:Berlin:DE:52.56:13.288
-EDDV:Hannover:Hannover:DE:52.461:9.685
-EDDW:Bremen:Bremen:DE:53.047:8.787
-EDEL:Langenlonsheim:Langenlonsheim:DE:49.908:7.908
-EDFB:Reichelsheim:Reichelsheim:DE:50.341:8.878
-EDFC:Aschaffenburg:Aschaffenburg:DE:49.939:9.062
-EDFE:Egelsbach:Egelsbach:DE:49.962:8.643
-EDFG:Gelnhausen:Gelnhausen:DE:50.197:9.17
-EDFH:Hahn:Hahn:DE:49.949:7.264
-EDFM:Mannheim City:Mannheim City:DE:49.473:8.515
-EDFO:Michelstadt:Michelstadt:DE:49.678:8.974
-EDFU:Mainbullau:Mainbullau:DE:49.695:9.182
-EDFV:Worms:Worms:DE:49.606:8.368
-EDFZ:Finthen:Mainz:DE:49.969:8.148
-EDGS:Siegerland:Siegerland:DE:50.708:8.083
-EDHC:Luchow Rehbeck:Luchow:DE:53.015:11.144
-EDHE:Uetersen:Uetersen:DE:53.647:9.704
-EDHI:Finkenwerder:Hamburg:DE:53.536:9.837
-EDHK:Holtenau:Kiel:DE:54.38:10.145
-EDHL:Blankensee:Lubeck:DE:53.805:10.719
+EDAB:Bautzen:Bautzen:DE:51.1933333333333:14.52
+EDAC:Altenburg:Nobitz:DE:50.9816666666667:12.5066666666667
+EDAD:Dessau:Dessau:DE:51.8316666666667:12.1866666666667
+EDAE:Eisenhüttenstadt:Eisenhüttenstadt:DE:52.1966666666667:14.585
+EDAG:Grossrückerswalde:Grossrückerswalde:DE:50.6433333333333:13.1266666666667
+EDAH:Heringsdorf:Heringsdorf:DE:53.8783333333333:14.1516666666667
+EDAI:Segeletz:Segeletz:DE:52.8266666666667:12.5416666666667
+EDAJ:Gera:Leumnitz:DE:50.88:12.1366666666667
+EDAK:Grossenhain:Grossenhain:DE:51.3066666666667:13.555
+EDAL:Fürstenwalde:Fürstenwalde:DE:52.39:14.0966666666667
+EDAM:Merseburg:Merseburg:DE:51.3633333333333:11.9416666666667
+EDAN:Neustadt-Glewe:Neustadt-Glewe:DE:53.3616666666667:11.615
+EDAO:Nordhausen:Nordhausen:DE:51.495:10.835
+EDAP:Neuhausen:Neuhausen:DE:51.685:14.4233333333333
+EDAQ:Halle:Oppin:DE:51.5516666666667:12.0533333333333
+EDAR:Pirna:Pratzschwitz:DE:50.98:13.9083333333333
+EDAT:Nardt:Nardt:DE:51.4516666666667:14.2033333333333
+EDAU:Riesa:Göhlis:DE:51.2933333333333:13.3566666666667
+EDAV:Finow:Finow:DE:52.8266666666667:13.6933333333333
+EDAW:Roitzschjora:Roitzschjora:DE:51.5783333333333:12.495
+EDAX:Rechlin-Lärz:Rechlin-Lärz:DE:53.305:12.7516666666667
+EDAY:Strausberg:Strausberg:DE:52.58:13.915
+EDAZ:Schönhagen:Schönhagen:DE:52.2083333333333:13.1566666666667
+EDBA:Arnstadt:Alkersleben:DE:50.8416666666667:11.07
+EDBC:Magdeburg/Cochstedt:Magdeburg/Cochstedt:DE:51.8566666666667:11.4183333333333
+EDBD:Dedelow:Dedelow:DE:53.3566666666667:13.7833333333333
+EDBE:Brandenburg:Mühlenfeld:DE:52.4366666666667:12.59
+EDBF:Ruppiner Land:Ruppiner Land:DE:52.7933333333333:12.76
+EDBG:Burg:Burg:DE:52.2416666666667:11.8566666666667
+EDBH:Barth:Barth:DE:54.3383333333333:12.71
+EDBI:Zwickau:Zwickau:DE:50.705:12.4616666666667
+EDBJ:Jena:Schöngleina:DE:50.915:11.715
+EDBK:Kyritz:Kyritz:DE:52.9183333333333:12.425
+EDBL:Laucha:Laucha:DE:51.2466666666667:11.6933333333333
+EDBM:Magdeburg:Magdeburg:DE:52.0733333333333:11.6266666666667
+EDBO:Oehna:Oehna:DE:51.8983333333333:13.0566666666667
+EDBP:Pinnow:Pinnow:DE:53.615:11.5616666666667
+EDBQ:Bronkow:Bronkow:DE:51.67:13.96
+EDBR:Rothenburg:Rothenburg:DE:51.3633333333333:14.95
+EDBS:Sömmerda-Dermsdorf:Sömmerda-Dermsdorf:DE:51.1983333333333:11.1933333333333
+EDBT:Allstedt:Allstedt:DE:51.38:11.4466666666667
+EDBU:Pritzwalk:Sommersberg:DE:53.1816666666667:12.185
+EDBV:Stralsund:Stralsund:DE:54.3383333333333:13.0466666666667
+EDBW:Werneuchen:Werneuchen:DE:52.6333333333333:13.7666666666667
+EDBX:Görlitz:Görlitz:DE:51.1583333333333:14.95
+EDBY:Schmoldow:Schmoldow:DE:53.97:13.3433333333333
+EDBZ:Schwarzheide/Schipkau:Schwarzheide/Schipkau:DE:51.49:13.88
+EDCA:Anklam:Anklam:DE:53.8316666666667:13.6733333333333
+EDCB:Ballenstedt:Ballenstedt:DE:51.7466666666667:11.23
+EDCD:Cottbus-Drewitz:Cottbus-Drewitz:DE:51.89:14.5316666666667
+EDCE:Eggersdorf:Eggersdorf:DE:52.48:14.0833333333333
+EDCG:Rügen:Rügen:DE:54.3833333333333:13.325
+EDCH:Sprossen:Sprossen:DE:51.0433333333333:12.2333333333333
+EDCI:Klix:Klix:DE:51.2733333333333:14.5066666666667
+EDCJ:Chemniz:Jahnsdorf:DE:50.7466666666667:12.8366666666667
+EDCK:Köthen:Köthen:DE:51.7233333333333:11.9466666666667
+EDCL:Klietz:Scharlibbe:DE:52.71:12.0733333333333
+EDCM:Kamenz:Kamenz:DE:51.2966666666667:14.1283333333333
+EDCO:Obermehler/Schlotheim:Obermehler/Schlotheim:DE:51.2683333333333:10.635
+EDCP:Peenemünde:Peenemünde:DE:54.1583333333333:13.7733333333333
+EDCQ:Aschersleben:Aschersleben:DE:51.765:11.4983333333333
+EDCR:Rerik-Zweedorf:Rerik-Zweedorf:DE:54.0816666666667:11.655
+EDCS:Saarmund:Saarmund:DE:52.31:13.1
+EDCT:Taucha:Taucha:DE:51.395:12.5366666666667
+EDCU:Güstrow:Güstrow:DE:53.8066666666667:12.2316666666667
+EDCV:Pasewalk:Pasewalk:DE:53.505:13.9483333333333
+EDCW:Wismar:Wismar:DE:53.915:11.5
+EDCX:Purkshof:Purkshof:DE:54.1616666666667:12.2483333333333
+EDCY:Spremberg-Welzow:Spremberg-Welzow:DE:51.5766666666667:14.1366666666667
+EDDB:Berlin:Schönefeld:DE:52.3783333333333:13.52
+EDDC:Dresden:Dresden:DE:51.135:13.7683333333333
+EDDE:Erfurt:Erfurt:DE:50.98:10.9583333333333
+EDDF:Frankfurt/Main:Frankfurt/Main:DE:50.0333333333333:8.57
+EDDG:Münster/Osnabrück:Münster/Osnabrück:DE:52.135:7.685
+EDDH:Hamburg:Hamburg:DE:53.63:9.98833333333333
+EDDI:Berlin:Tempelhof:DE:52.4733333333333:13.4016666666667
+EDDK:Köln-Bonn:Köln-Bonn:DE:50.8666666666667:7.14333333333333
+EDDL:Düsseldorf:Düsseldorf:DE:51.2816666666667:6.75666666666667
+EDDM:München:München:DE:48.3533333333333:11.7866666666667
+EDDN:Nürnberg:Nürnberg:DE:49.4983333333333:11.0783333333333
+EDDP:Leipzig-Halle:Leipzig-Halle:DE:51.4233333333333:12.2366666666667
+EDDR:Saarbrücken:Saarbrücken:DE:49.215:7.11
+EDDS:Stuttgart:Stuttgart:DE:48.69:9.22166666666667
+EDDT:Berlin:Tegel:DE:52.56:13.2883333333333
+EDDV:Hannover:Hannover:DE:52.46:9.68333333333333
+EDDW:Bremen:Bremen:DE:53.0466666666667:8.78666666666667
+EDEB:Bad Langensalza:Bad Langensalza:DE:51.13:10.6216666666667
+EDEF:Babenhausen:Babenhausen:DE:49.9533333333333:8.97
+EDEG:Gotha-Ost:Gotha-Ost:DE:50.97:10.7283333333333
+EDEH:Herrenteich:Herrenteich:DE:49.345:8.48833333333333
+EDEL:Langenlonsheim:Langenlonsheim:DE:49.9083333333333:7.905
+EDEM:Mosenberg:Mosenberg:DE:51.0633333333333:9.42166666666667
+EDEP:Heppenheim:Heppenheim:DE:49.6216666666667:8.625
+EDEQ:Mühlhausen:Mühlhausen:DE:51.215:10.5433333333333
+EDER:Wasserkupper:Wasserkupper:DE:50.4983333333333:9.95
+EDEW:Walldürn:Walldürn:DE:49.5816666666667:9.40166666666667
+EDFA:Anspach/Taunus:Anspach/Taunus:DE:50.29:8.53666666666667
+EDFB:Reichelsheim:Reichelsheim:DE:50.3383333333333:8.87833333333333
+EDFC:Aschaffenburg:Aschaffenburg:DE:49.9383333333333:9.06333333333333
+EDFD:Bad Neustadt/Saale:Grasberg:DE:50.305:10.2266666666667
+EDFE:Frankfurt-Egelsbach:Frankfurt-Egelsbach:DE:49.9616666666667:8.64166666666667
+EDFG:Gelnhausen:Gelnhausen:DE:50.1966666666667:9.17
+EDFH:Frankfurt-Hahn:Frankfurt-Hahn:DE:49.9483333333333:7.26333333333333
+EDFI:Hirzenhain:Hirzenhain:DE:50.7883333333333:8.39333333333333
+EDFJ:Lager Hammelburg:Lager Hammelburg:DE:50.0983333333333:9.88333333333333
+EDFK:Bad Kissingen:Bad Kissingen:DE:50.21:10.0683333333333
+EDFL:Giessen:Lützellinden:DE:50.5433333333333:8.59
+EDFM:Mannheim:Mannheim City:DE:49.4733333333333:8.515
+EDFN:Marburg:Schönstadt:DE:50.8733333333333:8.81333333333333
+EDFO:Michelstadt/Odw.:Michelstadt/Odw.:DE:49.6783333333333:8.97333333333333
+EDFP:Ober-Mörlen:Ober-Mörlen:DE:50.3616666666667:8.71
+EDFQ:Allendorf/Eder:Allendorf/Eder:DE:51.035:8.68166666666667
+EDFR:Rothenburg o.d.T.:Rothenburg o.d.T.:DE:49.39:10.2183333333333
+EDFS:Schweinfurt-Süd:Schweinfurt-Süd:DE:50.01:10.2516666666667
+EDFT:Lauterbach:Lauterbach:DE:50.6833333333333:9.41
+EDFU:Mainbullau:Mainbullau:DE:49.695:9.18166666666667
+EDFV:Worms:Worms:DE:49.6066666666667:8.36666666666667
+EDFW:Würzburg:Schenkenturm:DE:49.8183333333333:9.89666666666667
+EDFX:Hockenheim:Hockenheim:DE:49.325:8.52833333333333
+EDFY:Elz:Elz:DE:50.4266666666667:8.01166666666667
+EDFZ:Mainz:Finthen:DE:49.9683333333333:8.14833333333333
+EDGA:Ailertchen:Ailertchen:DE:50.595:7.94666666666667
+EDGB:Breitscheid:Breitscheid:DE:50.6766666666667:8.17
+EDGE:Eichsenach-Kindel:Eichsenach-Kindel:DE:50.9916666666667:10.4766666666667
+EDGF:Fulda:Jossa:DE:50.475:9.44166666666667
+EDGH:Hettstadt:Hettstadt:DE:49.7983333333333:9.83666666666667
+EDGI:Ingelfingen:Bühlhof:DE:49.3216666666667:9.66333333333333
+EDGJ:Ochsenfurt:Ochsenfurt:DE:49.675:10.0716666666667
+EDGK:Korbach:Korbach:DE:51.2533333333333:8.87666666666667
+EDGM:Mosbach:Lohrbach:DE:49.3983333333333:9.12333333333333
+EDGP:Oppenheim:Oppenheim:DE:49.84:8.37666666666667
+EDGQ:Schameder:Schameder:DE:51:8.30666666666667
+EDGR:Giessen:Reiskirchen:DE:50.5666666666667:8.87
+EDGS:Siegerland:Siegerland:DE:50.7083333333333:8.08333333333333
+EDGT:Bottenhorn:Bottenhorn:DE:50.795:8.46333333333333
+EDGU:Unterschüpf:Unterschüpf:DE:49.515:9.66833333333333
+EDGW:Wolfhagen:Graner Berg:DE:51.3066666666667:9.175
+EDGX:Walldorf:Walldorf:DE:49.3033333333333:8.65833333333333
+EDGZ:Weinheim/Bergstrasse:Weinheim/Bergstrasse:DE:49.5683333333333:8.61166666666667
+EDHB:Grube:Grube:DE:54.245:11.025
+EDHC:Lüchow:Rehbeck:DE:53.0183333333333:11.145
+EDHE:Uetersen:Uetersen:DE:53.6466666666667:9.705
+EDHF:Itzehoe:Hungriger Wolf:DE:53.995:9.57833333333333
+EDHG:Lüneburg:Lüneburg:DE:53.2483333333333:10.4583333333333
+EDHI:Hamburg:Finkenwerder:DE:53.535:9.835
+EDHK:Kiel:Holtenau:DE:54.38:10.145
+EDHL:Lübeck:Blankensee:DE:53.805:10.72
 EDHM:Hartenholm:Hartenholm:DE:53.915:10.04
-EDHS:Stade:Stade:DE:53.56:9.498
-EDHW:Wahlstedt:Wahlstedt:DE:53.969:10.224
-EDKB:Bonn Hangelar:Bonn:DE:50.769:7.164
-EDKH:Hunsborn:Hunsborn:DE:50.929:7.899
-EDKL:Leverkusen:Leverkusen:DE:51.015:7.006
-EDKM:Meschede Schuren:Meschede:DE:51.302:8.237
-EDKO:Brilon-Hochsauerland:Brilon-Hochsauerland:DE:51.402:8.642
-EDKR:Schmallenberg-Rennefeld:Schmallenberg-Rennefeld:DE:51.161:8.261
-EDKV:Dahlemer Binz:Dahlemer Binz:DE:50.406:6.528
-EDKW:Werdohl-Kuntrop:Werdohl:DE:51.297:7.817
-EDKZ:Meinerzhagen:Meinerzhagen:DE:51.099:7.602
-EDLA:Arnsberg:Arnsberg:DE:51.483:7.899
-EDLD:Schwarze Heide:Dinslaken:DE:51.616:6.866
-EDLE:Essen-Mulheim:Essen-Mulheim:DE:51.402:6.937
-EDLH:Lippewiesen:Hamm:DE:51.69:7.817
-EDLI:Windelsbleiche:Bielefeld:DE:51.965:8.545
-EDLK:Egelsberg:Krefeld:DE:51.386:6.585
-EDLM:Marl Loemuhle:Marl:DE:51.647:7.164
-EDLN:Monchengladbach:Monchengladbach:DE:51.23:6.504
-EDLP:Paderborn-Lippstadt:Paderborn-Lippstadt:DE:51.614:8.616
-EDLR:Haxterberg:Paderborn:DE:51.688:8.775
-EDLS:Wenningfield:Stadtlohn:DE:51.996:6.841
-EDLT:Munster-Telgte:Munster-Telgte:DE:51.945:7.773
-EDTD:Donaueschingen-Villingen:Donaueschingen-Villingen:DE:47.978:8.526
-EDLW:Wickede:Dortmund:DE:51.518:7.612
-EDLX:Romerwardt:Wesel:DE:51.663:6.596
-EDLY:Borken-Hoxfeld:Borken-Hoxfeld:DE:51.853:6.815
-EDLZ:Bad Sassendorf:Soest:DE:51.578:8.215
-EDMA:Augsburg:Augsburg:DE:48.425:10.932
-EDMB:Biberach:Biberach An Der Riss:DE:48.111:9.763
-EDMC:Blauberen:Blaubeuren:DE:48.42:9.799
-EDMD:Dachau-Grobenried:Dachau-Grobenried:DE:48.229:11.423
-EDME:Eggenfelden:Eggenfelden:DE:48.396:12.724
-EDMK:Durach:Kempten:DE:47.693:10.338
-EDML:Landshut:Landshut:DE:48.513:12.035
-EDMN:Mattsies:Mindelheim:DE:48.109:10.524
-EDMO:Oberpfaffenhofen:Oberpfaffenhofen:DE:48.081:11.283
-EDMS:Straubing Wallmuhl:Straubing:DE:48.901:12.518
-EDMT:Tannheim:Tannheim:DE:48.011:10.101
-EDMV:Vilshofen:Vilshofen:DE:48.635:13.196
-EDMY:Muhldorf:Muhldorf:DE:48.279:12.505
-EDNA:Ampfing-Waldkraiburg:Ampfing-Waldkraiburg:DE:48.263:12.411
-EDNE:Erbach:Erbach:DE:48.342:9.917
-EDNH:Bad Woerrishofen:Bad Woerrishofen:DE:48.016:10.616
-EDNJ:Neuberg-Egweil:Neuburg-Egweil:DE:48.782:11.221
-EDNK:Kirchdorf-Inn:Kirchdorf-Inn:DE:48.238:12.977
-EDNL:Leutkirch Unterzeil:Leutkirch:DE:47.859:10.014
+EDHN:Neumünster:Neumünster:DE:54.075:9.93833333333333
+EDHO:Ahrenlohe:Ahrenlohe:DE:53.7:9.74
+EDHP:Pellworm:Pellworm:DE:54.5366666666667:8.68166666666667
+EDHS:Stade:Stade:DE:53.56:9.49833333333333
+EDHU:Lauenbrück:Lauenbrück:DE:53.2066666666667:9.57333333333333
+EDHW:Wahlstedt:Wahlstedt:DE:53.9683333333333:10.2233333333333
+EDJA:Memmingen/Allgäu:Memmingen/Allgäu:DE:47.9883333333333:10.24
+EDKA:Aachen:Merzbrück:DE:50.8233333333333:6.18666666666667
+EDKB:Bonn:Hangelar:DE:50.7683333333333:7.16333333333333
+EDKD:Altena:Hegenscheid:DE:51.3133333333333:7.71
+EDKF:Bergneustadt:Auf dem Dümpel:DE:51.0516666666667:7.70666666666667
+EDKH:Hünsborn:Hünsborn:DE:50.9283333333333:7.9
+EDKI:Betzdorf-Kirchen:Betzdorf-Kirchen:DE:50.8183333333333:7.83333333333333
+EDKL:Leverkusen:Leverkusen:DE:51.015:7.00666666666667
+EDKM:Meschede:Schüren:DE:51.3016666666667:8.23666666666667
+EDKN:Wipperfürth:Neye:DE:51.1233333333333:7.375
+EDKO:Brillon/Hochsauerland:Brillon/Hochsauerland:DE:51.4033333333333:8.64166666666667
+EDKP:Plettenberg:Hüinghausen:DE:51.1916666666667:7.79
+EDKR:Schmallenberg:Rennefeld:DE:51.1616666666667:8.26
+EDKU:Attendorn:Finnentrop:DE:51.1466666666667:7.93666666666667
+EDKV:Dahlemer Binz:Dahlemer Binz:DE:50.405:6.52833333333333
+EDKW:Werdohl:Küntrop:DE:51.2966666666667:7.81666666666667
+EDKZ:Meinerzhagen:Meinerzhagen:DE:51.1016666666667:7.6
+EDLA:Arnsberg:Menden:DE:51.4833333333333:7.9
+EDLB:Borkenberge:Borkenberge:DE:51.78:7.28833333333333
+EDLC:Kamp-Lintfort:Kamp-Lintfort:DE:51.5283333333333:6.53666666666667
+EDLD:Dinslaken:Schwarzer Heide:DE:51.6166666666667:6.865
+EDLE:Essen/Mühlheim:Essen/Mühlheim:DE:51.4016666666667:6.93666666666667
+EDLF:Grefrath:Niershorst:DE:51.3333333333333:6.36
+EDLG:Goch:Asperden:DE:51.6916666666667:6.105
+EDLH:Hamm:Lippewiesen:DE:51.69:7.81666666666667
+EDLI:Bielefeld:Bielefeld:DE:51.965:8.545
+EDLJ:Detmold:Detmold:DE:51.9416666666667:8.905
+EDLK:Krefeld:Egelsberg:DE:51.385:6.58833333333333
+EDLM:Marl:Loemühle:DE:51.6466666666667:7.16333333333333
+EDLN:Mönchengladbach:Mönchengladbach:DE:51.23:6.505
+EDLO:Oerlinghausen:Oerlinghausen:DE:51.9333333333333:8.66166666666667
+EDLP:Paderborn/Lippstadt:Paderborn/Lippstadt:DE:51.615:8.61666666666667
+EDLR:Paderborn:Haxterberg:DE:51.6883333333333:8.775
+EDLS:Stadtlohn:Vreden:DE:51.9966666666667:6.84
+EDLT:Münster:Telgte:DE:51.945:7.77333333333333
+EDLV:Niederrhein:Niederrhein:DE:51.6016666666667:6.14166666666667
+EDLW:Dortmund:Dortmund:DE:51.5183333333333:7.61166666666667
+EDLX:Wesel:Römerwardt:DE:51.6633333333333:6.595
+EDLY:Borken:Hoxfeld:DE:51.8533333333333:6.815
+EDLZ:Soest:Bad Sassendorf:DE:51.5783333333333:8.215
+EDMA:Augsburg:Augsburg:DE:48.425:10.9316666666667
+EDMB:Biberach a.d. Riss:Biberach a.d. Riss:DE:48.1116666666667:9.76333333333333
+EDMC:Blaubeuren:Blaubeuren:DE:48.42:9.79833333333333
+EDMD:Dachau:Gröbenried:DE:48.2283333333333:11.4233333333333
+EDME:Eggenfelden:Eggenfelden:DE:48.3966666666667:12.7233333333333
+EDMF:Fürstenzell:Fürstenzell:DE:48.5183333333333:13.3466666666667
+EDMG:Günzburg:Donauried:DE:48.4866666666667:10.2833333333333
+EDMH:Gunzenhausen:Reutberg:DE:49.1116666666667:10.7816666666667
+EDMI:Illertissen:Illertissen:DE:48.235:10.1383333333333
+EDMJ:Jessenwang:Jessenwang:DE:48.175:11.125
+EDMK:Kempten:Durach:DE:47.6933333333333:10.3383333333333
+EDML:Landshut:Landshut:DE:48.5133333333333:12.035
+EDMN:Mindelheim:Mattsies:DE:48.1083333333333:10.525
+EDMO:Oberpfaffenhofen:Oberpfaffenhofen:DE:48.0816666666667:11.2833333333333
+EDMP:Vilsbiburg:Vilsbiburg:DE:48.4266666666667:12.345
+EDMQ:Donauswörth:Genderkingen:DE:48.7033333333333:10.8516666666667
+EDMS:Straubing:Straubing:DE:48.9016666666667:12.5183333333333
+EDMT:Tannheim:Tannheim:DE:48.0116666666667:10.1016666666667
+EDMU:Gundelfingen:Gundelfingen:DE:48.57:10.3583333333333
+EDMV:Vilshofen:Vilshofen:DE:48.635:13.195
+EDMW:Deggedorf:Deggedorf:DE:48.83:12.88
+EDMY:Mühldorf:Mühldorf:DE:48.28:12.5016666666667
+EDNA:Ampfing:Waldkraiburg:DE:48.2633333333333:12.4116666666667
+EDNB:Arnbruck:Arnbruck:DE:49.125:12.985
+EDNC:Beilngries:Beilngries:DE:49.0216666666667:11.485
+EDND:Dinkelsbühl:Sinbronn:DE:49.065:10.4016666666667
+EDNE:Erbach:Erbach:DE:48.3416666666667:9.91666666666667
+EDNG:Giengen/Brenz:Giengen/Brenz:DE:48.635:10.215
+EDNH:Bad Wörishofen-Nord:Bad Wörishofen-Nord:DE:48.0166666666667:10.6166666666667
+EDNI:Berching:Berching:DE:49.13:11.445
+EDNJ:Neuburg:Egweil:DE:48.7816666666667:11.2216666666667
+EDNK:Kirchdorf/Inn:Kirchdorf/Inn:DE:48.24:12.9783333333333
+EDNL:Leutkirch:Unterzeil:DE:47.8583333333333:10.015
+EDNM:Nittenau:Bruck:DE:49.2233333333333:12.2983333333333
+EDNO:Nördlingen:Nördlingen:DE:48.8716666666667:10.5066666666667
 EDNP:Pfarrkirchen:Pfarrkirchen:DE:48.42:12.865
-EDNQ:Bopfingen:Bopfingen:DE:48.849:10.334
-EDNR:Regensburg Oberhub:Regensburg:DE:49.142:12.082
-EDNS:Schwabmunchen:Schwabmunchen:DE:48.179:10.703
-EDNT:Treuchtlimgen-Bubenheim:Treuchtlingen-Bubenheim:DE:48.996:10.885
-EDNW:Weissenhorn:Weissenhorn:DE:48.289:10.14
-EDNX:Oberschleissheim:Oberschleissheim:DE:48.239:11.559
-EDNY:Friedrichshafen:Friedrichshafen:DE:47.671:9.511
-EDOA:Auerbach:Auerbach:DE:50.497:12.379
-EDOB:Bad Berka:Bad Berka:DE:50.904:11.257
-EDOD:Rheindorf:Reinsdorf:DE:51.901:13.194
-EDOE:Bohlen:Bohlen:DE:51.215:12.368
-EDOI:Bienenfarm:Bienenfarm:DE:52.66:12.746
-EDOJ:Luesse:Lusse:DE:52.143:12.664
-EDON:Wriezen:Wriezen:DE:52.613:14.243
-EDOP:Schwerin-Parchim:Schwerin-Parchim:DE:53.427:11.783
-EDOQ:Oschatz:Oschatz:DE:51.296:13.078
-EDOV:Stendal-Borstel:Stendal-Borstel:DE:52.629:11.82
-EDPA:Aalen-Heidenheim:Aalen-Heidenheim:DE:48.778:10.265
-EDPD:Dingolfing:Dingolfing:DE:48.658:12.5
-EDPE:Eichstatt:Eichstatt:DE:48.877:11.182
+EDNQ:Bopfingen:Bopfingen:DE:48.8483333333333:10.3333333333333
+EDNR:Regensburg:Oberhub:DE:49.1416666666667:12.0816666666667
+EDNS:Schwabmünchen:Schwabmünchen:DE:48.18:10.7033333333333
+EDNT:Treuchtlingen:Bubenheim:DE:48.9966666666667:10.885
+EDNU:Thannhausen:Thannhausen:DE:48.29:10.4416666666667
+EDNV:Vogtareuth:Vogtareuth:DE:47.9466666666667:12.205
+EDNW:Weissenhorn:Weissenhorn:DE:48.29:10.14
+EDNX:Oberschleissheim:Oberschleissheim:DE:48.2383333333333:11.56
+EDNY:Friedrichshafen:Friedrichshafen:DE:47.6716666666667:9.51166666666667
+EDNZ:Zell:Haidberg:DE:50.1366666666667:11.795
+EDOA:Auerbach:Auerbach:DE:50.4966666666667:12.3783333333333
+EDOB:Bad Berka:Bad Berka:DE:50.905:11.2566666666667
+EDOC:Gardelegen:Gardelegen:DE:52.5283333333333:11.355
+EDOD:Reinsdorf:Reinsdorf:DE:51.9016666666667:13.195
+EDOE:Böhlen:Böhlen:DE:51.215:12.3683333333333
+EDOF:Bad Frankenhausen:Bad Frankenhausen:DE:51.3733333333333:11.1416666666667
+EDOG:Torgau:Beilrode:DE:51.5716666666667:13.0516666666667
+EDOH:Lanhennersdorf:Lanhennersdorf:DE:50.9466666666667:13.2616666666667
+EDOI:Bienenfarm:Bienenfarm:DE:52.66:12.7466666666667
+EDOJ:Lüsse:Lüsse:DE:52.145:12.67
+EDOK:Rudolstadt:Groschwitz:DE:50.7333333333333:11.2366666666667
+EDOL:Oschersleben:Oschersleben:DE:52.04:11.2033333333333
+EDOM:Klein Mühlingen:Klein Mühlingen:DE:51.9483333333333:11.77
+EDON:Neuhardenberg:Neuhardenberg:DE:52.6133333333333:14.2433333333333
+EDOP:Schwerin-Parchim:Schwerin-Parchim:DE:53.4266666666667:11.7833333333333
+EDOQ:Oschatz:Oschatz:DE:51.2966666666667:13.0783333333333
+EDOR:Stölln/Rhinow:Stölln/Rhinow:DE:52.7416666666667:12.39
+EDOS:Pennewitz:Pennewitz:DE:50.67:11.05
+EDOT:Greiz:Obergrochlitz:DE:50.645:12.1716666666667
+EDOU:Weiden :Umpferstedt:DE:50.965:11.4
+EDOV:Stendal-Borstel:Stendal-Borstel:DE:52.6283333333333:11.82
+EDOW:Waren:Vielist:DE:53.5683333333333:12.6533333333333
+EDOX:Renneritz:Renneritz:DE:51.5933333333333:12.2366666666667
+EDOZ:Schönebeck:Zackmünde:DE:51.9966666666667:11.7916666666667
+EDPA:Aalen-Heidenheim:Elchingen:DE:48.7783333333333:10.265
+EDPB:Bad Ditzenbach:Bad Ditzenbach:DE:48.5633333333333:9.73
+EDPD:Dingolfing:Dingolfing:DE:48.6583333333333:12.5
+EDPE:Eichstätt:Eichstätt:DE:48.8766666666667:11.1816666666667
 EDPF:Schwandorf:Schwandorf:DE:49.34:12.185
-EDPO:Neumarkt-Oberpfalz:Neumarkt:DE:49.286:11.445
-EDQD:Bayreuth:Bayreuth:DE:49.983:11.633
-EDQE:Burg Feuerstein:Burg Feuerstein:DE:49.794:11.132
-EDQH:Herzogenaurach:Herzogenaurach:DE:49.582:10.878
-EDQM:Hof:Hof:DE:50.289:11.855
-EDRA:Bad Neuenahr:Ahrweiler:DE:50.558:7.137
-EDRK:Winningen:Koblenz:DE:50.325:7.531
-EDRM:Mont Royal Traben:Trabach:DE:49.964:7.114
-EDRT:Trier-F�hren:Trier-F�hren:DE:49.863:6.789
-EDRY:Speyer:Speyer:DE:49.303:8.451
-EDRZ:Zweibruecken:Zweibruecken:DE:49.21:7.402
-EDSA:Degerfeld:Albstadt:DE:48.25:8.06
-EDSB:Karlsruhe-Baden Baden:Karlsruhe-Baden Baden:DE:48.779:8.081
-EDTF:Breisgau:Freiburg:DE:48.023:7.832
-EDTK:Forchheim:Karlsruhe:DE:48.98:8.331
-EDTL:Lahr:Lahr:DE:48.37:7.828
-EDTM:Mengen-Hohentengen:Mengen-Hohentengen:DE:48.054:9.373
-EDTX:Weckrieden:Schwabisch Hall:DE:49.125:9.783
-EDTY:Hessental:Schwabisch Hall:DE:49.12:9.778
-EDTZ:Konstanz:Konstanz:DE:47.683:9.183
-EDVA:Bad Gandersheim:Bad Gandersheim:DE:51.853:10.026
-EDVC:Arloh:Celle:DE:52.689:10.108
-EDVE:Braunschweig:Braunschweig:DE:52.319:10.556
-EDVH:Hodenhagen:Hodenhagen:DE:52.762:9.608
-EDVI:Hoxter-Holzminden:Hoxter-Holzminden:DE:51.806:9.378
-EDVK:Calden:Kassel:DE:51.408:9.378
-EDVM:Hildesheim:Hildesheim:DE:52.18:9.946
-EDVN:Northeim:Northeim:DE:51.707:10.04
-EDVP:Peine Eddesse:Peine:DE:52.402:10.229
-EDVS:Drutte:Salzgitter:DE:52.154:10.426
-EDVY:Porta-Westfalica:Porta-Westfalica:DE:52.222:8.863
-EDWB:Bremerhaven:Bremerhaven:DE:53.507:8.573
-EDWC:Damme:Damme:DE:52.487:8.186
-EDWD:Lemwerder:Lemwerder:DE:53.143:8.623
-EDWE:Emden:Emden:DE:53.391:7.227
-EDWF:Papenburg:Leer:DE:53.272:7.442
-EDWG:Wangerooge:Wangerooge:DE:53.787:7.916
-EDWH:Hatten:Oldenburg:DE:53.069:8.313
-EDWI:Mariensiel:Wilhelmshaven:DE:53.505:8.053
-EDWJ:Juist:Juist:DE:53.68:7.058
-EDWK:Karlshofen:Karlshofen:DE:53.333:9.028
-EDWM:Weser-Wumme:Weser-Wumme:DE:53.054:9.209
-EDWN:Nordhorn:Nordhorn:DE:52.458:7.185
-EDWO:Atterheide:Osnabruck:DE:52.286:7.973
-EDWQ:Ganderkesee Atlas:Ganderkesee:DE:53.036:8.505
-EDWR:Borkum:Borkum:DE:53.596:6.709
-EDWS:Nordern-Norddeich:Norden-Norddeich:DE:53.633:7.189
-EDWU:Varrelbusch:Varrelbusch:DE:52.907:8.041
-EDWY:Norderney:Norderney:DE:53.707:7.23
-EDXA:Achmer:Achmer:DE:52.377:7.914
-EDXB:Heide-Busum:Heide:DE:54.153:8.902
-EDXC:Schleswig-Kropp:Schleswig-Kropp:DE:54.425:9.54
-EDXE:Eschendorf:Rheine:DE:52.276:7.491
-EDXF:Schaferhaus:Flensburg:DE:54.772:9.378
-EDXG:Melle-Gronegau:Melle-Gronegau:DE:52.201:8.378
-EDXI:Neinburg-Holzbalge:Nienburg-Holzbalge:DE:52.71:9.162
-EDXL:Barssel:Barssel:DE:53.164:7.793
-EDXM:St Michaelisdonn:St Michaelisdonn:DE:53.978:9.143
-EDXN:Nordholz Spieka:Nordholz-Spieka:DE:53.767:8.644
-EDXO:St Peter-Ording:St Peter-Ording:DE:54.309:8.687
-EDXR:Schachtholm:Rendsburg:DE:54.221:9.601
-EDXW:Westerland-Sylt:Westerland-Sylt:DE:54.913:8.34
-EDXY:Wyk Auf Fohr:Wyk Auf Fohr:DE:54.685:8.532
-EDZE:Essen:Essen:DE:51.4:6.966
-EDEQ:Muhlhausen:Muhlhausen:DE:51.217:10.55
-EDFY:Elz:Elz:DE:50.433:8.02
-EDGU:Unterschupf:Unterschupf:DE:49.655:9.683
-EDNB:Arnbruck:Arnbruck:DE:49.117:12.983
-EDNM:Bruck:Nittenau:DE:49.217:12.3
-EDNV:Vogtareuth:Vogtareuth:DE:47.933:12.2
-EDPB:Bad Ditzenbach:Bad Ditzenbach:DE:48.567:9.733
-EDPQ:Oberpfalz:Schmidgaden:DE:49.417:12.083
-EDSZ:Zepfenhan:Rottweil:DE:48.183:8.717
+EDPG:Griesau:Griesau:DE:48.9533333333333:12.4216666666667
+EDPH:Schwabach:Heidenberg:DE:49.2683333333333:11.01
+EDPJ:Laichingen:Laichingen:DE:48.4983333333333:9.64
+EDPK:Schönberg:Schönberg:DE:48.0483333333333:12.5
+EDPM:Donzdorf:Donzdorf:DE:48.6783333333333:9.84333333333333
+EDPO:Neumarkt/Opf.:Neumarkt/Opf.:DE:49.285:11.445
+EDPQ:Schmidgaden:Schmidgaden:DE:49.4316666666667:12.1
+EDPS:Sonnen:Sonnen:DE:48.6833333333333:13.6966666666667
+EDPT:Gerstetten:Gerstetten:DE:48.6216666666667:10.0616666666667
+EDPU:Bartholomä:Amalienhof:DE:48.7466666666667:10.005
+EDPW:Thalmässing-Waizenhofen:Thalmässing-Waizenhofen:DE:49.065:11.21
+EDPY:Ellwangen:Ellwangen:DE:48.9616666666667:10.2366666666667
+EDQB:Bad Windsheim:Bad Windsheim:DE:49.51:10.3666666666667
+EDQC:Coburg:Brandensteinsebene:DE:50.2633333333333:10.995
+EDQD:Bayreuth:Bayreuth:DE:49.985:11.6383333333333
+EDQE:Burg Feuerstein:Burg Feuerstein:DE:49.7933333333333:11.1333333333333
+EDQF:Ansbach:Petersdorf:DE:49.3616666666667:10.6716666666667
+EDQH:Herzogenaurach:Herzogenaurach:DE:49.5833333333333:10.8783333333333
+EDQI:Lauf:Lillinghof:DE:49.605:11.2833333333333
+EDQK:Kulmbach:Kulmbach:DE:50.135:11.4566666666667
+EDQL:Lichtenfels:Lichtenfels:DE:50.1483333333333:11.0466666666667
+EDQM:Hof-Plauen:Hof-Plauen:DE:50.2883333333333:11.855
+EDQN:Neustadt/Aisch:Neustadt/Aisch:DE:49.5883333333333:10.5783333333333
+EDQO:Ottengrüner Heide:Ottengrüner Heide:DE:50.2266666666667:11.7333333333333
+EDQP:Rosenthal-Field-Plössen:Rosenthal-Field-Plössen:DE:49.8633333333333:11.7883333333333
+EDQR:Ebern:Sendelbach:DE:50.0416666666667:10.825
+EDQS:Suhl:Goldlauter:DE:50.6316666666667:10.7266666666667
+EDQT:Hassfurt:Hassfurt:DE:50.0183333333333:10.53
+EDQW:Weiden/Opf.:Weiden/Opf.:DE:49.6783333333333:12.1166666666667
+EDQX:Hetzleser Berg:Hetzleser Berg:DE:49.6416666666667:11.1616666666667
+EDQY:Coburg:Steinrücken:DE:50.23:10.9966666666667
+EDQZ:Pegnitz:Zipser Berg:DE:49.7616666666667:11.575
+EDRA:Bad Neuenahr:Ahrweiler:DE:50.5583333333333:7.13666666666667
+EDRB:Bittburg:Bittburg:DE:49.945:6.565
+EDRD:Neumagen-Dhron:Neumagen-Dhron:DE:49.8433333333333:6.91666666666667
+EDRF:Bad Dürkheim:Bad Dürkheim:DE:49.4733333333333:8.19666666666667
+EDRG:Idar-Oberstein:Göttschied:DE:49.7333333333333:7.33833333333333
+EDRH:Hoppstädten-Weiersbach:Hoppstädten-Weiersbach:DE:49.6116666666667:7.185
+EDRI:Linkenheim:Linkenheim:DE:48.1416666666667:8.395
+EDRJ:Saarlouis:Düren:DE:49.3133333333333:6.67333333333333
+EDRK:Koblenz:Winningen:DE:50.325:7.52833333333333
+EDRL:Lachen-Speyerdorf:Lachen-Speyerdorf:DE:49.3316666666667:8.205
+EDRM:Traben-Trabach:Mont Royal:DE:49.9683333333333:7.11166666666667
+EDRN:Nannhausen:Nannhausen:DE:49.97:7.48
+EDRO:Schweighofen:Schweighofen:DE:49.0316666666667:7.99
+EDRP:Pirmasens:Pirmasens:DE:49.265:7.49166666666667
+EDRS:Bad Sobenheim:Domberg:DE:49.79:7.665
+EDRT:Trier:Föhren:DE:49.865:6.78833333333333
+EDRV:Wershofen/Eifel:Wershofen/Eifel:DE:50.4516666666667:6.78666666666667
+EDRW:Dierdorf:Wienau:DE:50.5666666666667:7.65333333333333
+EDRY:Speyer:Speyer:DE:49.305:8.45166666666667
+EDRZ:Zweibrücken:Zweibrücken:DE:49.21:7.4
+EDSA:Albstadt:Degerfeld:DE:48.25:9.06
+EDSB:Karlsruhe/Baden-Baden:Karlsruhe/Baden-Baden:DE:48.78:8.08
+EDSG:Grabenstetten:Grabenstetten:DE:48.5366666666667:9.43666666666667
+EDSH:Backnang:Heiningen:DE:48.92:9.455
+EDSI:Binningen:Binningen:DE:47.8:8.72
+EDSK:Kehl:Sundheim:DE:48.5616666666667:7.84333333333333
+EDSL:Blumberg:Blumberg:DE:47.845:8.565
+EDSN:Neuhausen ob Eck:Neuhausen ob Eck:DE:47.9766666666667:8.905
+EDSW:Altdorf-Wallburg:Altdorf-Wallburg:DE:48.27:7.84166666666667
+EDSZ:Rottweil:Rottweil:DE:48.1866666666667:8.72166666666667
+EDTB:Baden-Oos:Baden-Oos:DE:48.7916666666667:8.18666666666667
+EDTC:Bruchsal:Bruchsal:DE:49.135:8.56333333333333
+EDTD:Donaueschingen:Villingen:DE:47.9733333333333:8.52166666666667
+EDTF:Freiburg i.Br.:Freiburg i.Br.:DE:48.02:7.83333333333333
+EDTG:Bremgarten:Bremgarten:DE:47.9033333333333:7.61833333333333
+EDTH:Heubach:Heubach:DE:48.8016666666667:9.92833333333333
+EDTL:Lahr:Lahr:DE:48.37:7.82833333333333
+EDTM:Mengen:Hohentengen:DE:48.0533333333333:9.37333333333333
+EDTN:Nabern/Teck:Nabern/Teck:DE:48.6133333333333:9.47666666666667
+EDTO:Offenburg:Offenburg:DE:48.45:7.925
+EDTP:Pfullendorf:Pfullendorf:DE:47.9083333333333:9.25166666666667
+EDTQ:Pattonville:Pattonville:DE:48.8633333333333:9.225
+EDTR:Herten:Rheinfelden:DE:47.56:7.74833333333333
+EDTS:Schwenningen am Neckar:Schwenningen am Neckar:DE:48.065:8.57166666666667
+EDTU:Saulgau:Saulgau:DE:48.03:9.50666666666667
+EDTW:Winzeln-Schramberg:Winzeln-Schramberg:DE:48.28:8.42833333333333
+EDTX:Schwäbisch Hall:Weckrieden:DE:49.1233333333333:9.79833333333333
+EDTY:Schwäbisch Hall:Schwäbisch Hall:DE:49.1183333333333:9.78333333333333
+EDTZ:Konstanz:Konstanz:DE:47.6816666666667:9.13666666666667
+EDUA:Stechow:Ferchesar:DE:52.6516666666667:12.4883333333333
+EDUB:Brandenburg:Briest:DE:52.4383333333333:12.4583333333333
+EDUF:Falkenberg:Lönnewitz:DE:51.5483333333333:13.2283333333333
+EDUO:Oberrissdorf:Oberrissdorf:DE:51.5433333333333:11.5966666666667
+EDUS:Finsterwalde:Schacksdorf:DE:51.6083333333333:13.7383333333333
+EDUT:Templin:Groß Dölln:DE:53.0316666666667:13.5433333333333
+EDUW:Tutow:Tutow:DE:53.9216666666667:13.2183333333333
+EDUY:Welzow:Sedlitzer See:DE:51.5583333333333:14.105
+EDUZ:Zerbst:Zerbst:DE:52.0016666666667:12.15
+EDVA:Bad Gandersheim:Bad Gandersheim:DE:51.8533333333333:10.0266666666667
+EDVC:Celle:Arloh:DE:52.69:10.1083333333333
+EDVE:Braunschweig-Wolfsburg:Braunschweig-Wolfsburg:DE:52.32:10.5566666666667
+EDVF:Blomberg:Borkhausen:DE:51.9183333333333:9.11333333333333
+EDVG:Mengeringhausen:Mengeringhausen:DE:51.3766666666667:8.98166666666667
+EDVH:Hodenhagen:Hodenhagen:DE:52.7633333333333:9.60833333333333
+EDVI:Höxter-Holzminden:Höxter-Holzminden:DE:51.8066666666667:9.37833333333333
+EDVJ:Salzgitter:Schäferstuhl:DE:52.0283333333333:10.3683333333333
+EDVK:Kassel:Calden:DE:51.4083333333333:9.37833333333333
+EDVL:Hölleberg:Hölleberg:DE:51.6116666666667:9.39833333333333
+EDVM:Hildesheim:Hildesheim:DE:52.18:9.945
+EDVN:Northeim:Northeim:DE:51.7066666666667:10.04
+EDVP:Peine:Eddesse:DE:52.4033333333333:10.2283333333333
+EDVR:Rinteln:Rinteln:DE:52.175:9.05333333333333
+EDVS:Salzgitter:Drütte:DE:52.155:10.4266666666667
+EDVU:Uelzen:Uelzen:DE:52.9833333333333:10.465
+EDVW:Bad Pyrmont:Bad Pyrmont:DE:51.9683333333333:9.29333333333333
+EDVY:Porta-Westfalica:Porta-Westfalica:DE:52.2216666666667:8.86333333333333
+EDWA:Borderlum:Borderlum:DE:54.6266666666667:8.93
+EDWB:Bremerhaven:Bremerhaven:DE:53.5066666666667:8.57333333333333
+EDWC:Damme:Damme:DE:52.4883333333333:8.18666666666667
+EDWE:Emden:Emden:DE:53.3916666666667:7.225
+EDWF:Leer:Papenburg:DE:53.2716666666667:7.44333333333333
+EDWG:Wangerooge:Wangerooge:DE:53.7866666666667:7.91666666666667
+EDWH:Oldenburg:Hatten:DE:53.0683333333333:8.31333333333333
+EDWI:Wilhelmshaven:Mariensiel:DE:53.5033333333333:8.05333333333333
+EDWJ:Juist:Juist:DE:53.68:7.05833333333333
+EDWK:Karlshöfen:Karlshöfen:DE:53.3333333333333:9.02833333333333
+EDWL:Langeoog:Langeoog:DE:53.7433333333333:7.49833333333333
+EDWM:Weser-Wümme:Weser-Wümme:DE:53.0533333333333:9.20833333333333
+EDWN:Nordhorn:Lingen:DE:52.4583333333333:7.185
+EDWO:Osnabrück:Atterheide:DE:52.2866666666667:7.97333333333333
+EDWP:Wiefelstede/Conneforde:Wiefelstede/Conneforde:DE:53.3216666666667:8.07333333333333
+EDWQ:Ganderkesee:Atlas Airfield:DE:53.0366666666667:8.505
+EDWR:Borkum:Borkum:DE:53.595:6.71
+EDWS:Norden-Norddeich:Norden-Norddeich:DE:53.6333333333333:7.19
+EDWU:Varrelbusch:Varrelbusch:DE:52.9066666666667:8.04
+EDWV:Verden:Scharnhorst:DE:52.965:9.285
+EDWX:Westerstede:Felde:DE:53.2883333333333:7.93
+EDWY:Norderney:Norderney:DE:53.7066666666667:7.22833333333333
+EDWZ:Baltrum:Baltrum:DE:53.725:7.37166666666667
+EDXA:Achmer:Achmer:DE:52.3783333333333:7.91333333333333
+EDXB:Heide-Büsum:Heide-Büsum:DE:54.1533333333333:8.90166666666667
+EDXC:Schleswig:Kropp:DE:54.425:9.54
+EDXD:Bohmte:Bad Essen:DE:52.3516666666667:8.32666666666667
+EDXE:Rheine:Eschendorf:DE:52.2766666666667:7.49166666666667
+EDXF:Flensburg:Schäferhaus:DE:54.7733333333333:9.37833333333333
+EDXG:Melle-Grönegau:Melle-Grönegau:DE:52.2016666666667:8.37833333333333
+EDXH:Helgoland:Düne:DE:54.185:7.91666666666667
+EDXI:Nienburg:Holzbalge:DE:52.71:9.16333333333333
+EDXJ:Husum:Schwesing:DE:54.51:9.13833333333333
+EDXK:Leck:Leck:DE:54.79:8.96166666666667
+EDXL:Barssel:Barssel:DE:53.1633333333333:7.79333333333333
+EDXM:St. Michaelsdonn:St. Michaelsdonn:DE:53.9783333333333:9.14333333333333
+EDXN:Nordholz:Spieka:DE:53.7666666666667:8.64333333333333
+EDXO:St. Peter-Ording:St. Peter-Ording:DE:54.3083333333333:8.68666666666667
+EDXP:Harle:Harle:DE:53.7066666666667:7.82166666666667
+EDXQ:Rotehnburg/Wümme:Rotehnburg/Wümme:DE:53.1283333333333:9.34833333333333
+EDXR:Rendsburg:Schachtholm:DE:54.2183333333333:9.60333333333333
+EDXS:Seedorf:Seedorf:DE:53.335:9.26
+EDXT:Sierksdorf:Hof Altona:DE:54.07:10.745
+EDXU:Hüttenbusch:Hüttenbusch:DE:53.2866666666667:8.94666666666667
+EDXW:Westerland/Sylt:Westerland/Sylt:DE:54.9116666666667:8.34166666666667
+EDXY:Wyk auf Föhr:Wyk auf Föhr:DE:54.685:8.53166666666667
+EDXZ:Kührstedt:Bederkesa:DE:53.5683333333333:8.79
 EEKA:Kardla:Kardla:EE:58.991:22.831
 EEKE:Kuressaare:Kuressaare:EE:58.23:22.509
 EEPU:Parnu:Parnu:EE:58.419:24.473
@@ -879,7 +1067,7 @@ ESOH:Hagfors:Hagfors:SE:60.02:13.579
 ESOL:Lemstanas:Storvik:SE:60.588:16.587
 ESOW:Hasslo:Vasteras:SE:59.589:16.634
 ESPA:Luela:Lulea:SE:65.544:22.122
-ESPC:�stersund:Ostersund:SE:63.194:14.502
+ESPC:Östersund:Ostersund:SE:63.194:14.502
 ESPD:Gunnarn:Gunnarn:SE:64.967:17.7
 ESPE:Vidsel:Vidsel:SE:65.875:20.15
 ESPJ:Heden:Heden:SE:65.838:21.469
@@ -1035,10 +1223,10 @@ LECF:Calaf:Barcelona:ES:41.44:1.33
 LECH:Calamocha:Teruel:ES:40.9:-1.304
 LECI:Santa Cilia de Jaca:Huesca:ES:42.341:-0.434
 LECJ:Castejon de los Monegros:Huesca:ES:41.364:-0.13
-LECN:Castell�n:Castell�n:ES:40.017:0.025
+LECN:Castellón:Castellón:ES:40.017:0.025
 LECO:La Coruna:La Coruna:ES:43.302:-8.377
 LECQ:Ciudad Quesada:Alicante:ES:38.044:-0.423
-LECT:El Casta�o:Ciudad Real:ES:39.004:-4.231
+LECT:El Castaño:Ciudad Real:ES:39.004:-4.231
 LECU:Cuatro Vientos:Madrid:ES:40.383:-3.783
 LECV:Colmenar Viejo:Madrid:ES:40.65:-3.733
 LECX:Campolara:Segovia:ES:40.535:-4.31
@@ -1077,7 +1265,7 @@ LEMT:Casarubios del Monte:Toledo:ES:40.141:-4.013
 LEMU:Muchamiel:Alicante:ES:38.262:-0.28
 LEMX:La Mancha:Toledo:ES:39.332:-3.151
 LENA:Benabarre:Huesca:ES:42.012:0.286
-LEOC:Oca�a:Toledo:ES:39.938:-3.503
+LEOC:Ocaña:Toledo:ES:39.938:-3.503
 LEOT:Ontur:Alicante:ES:38.37:-1.313
 LEPA:Palma De Mallorca:Palma De Mallorca:ES:39.552:2.739
 LEPI:Casas de los Pinos:Cuenca:ES:39.185:-2.19
@@ -1085,7 +1273,7 @@ LEPP:Pamplona:Pamplona:ES:42.77:-1.646
 LEPR:Palma del Rio:Cordoba:ES:37.431:-5.124
 LEPZ:Pozuelos de Calatrava:Ciudad Real:ES:38.546:-4.112
 LERI:Alcantarilla:Murcia:ES:37.95:-1.233
-LERJ:Logro�o:Logro�o:ES:42.453:-2.3
+LERJ:Logroño:Logroño:ES:42.453:-2.3
 LERM:Robledillo De Mohernando:Guadalajara:ES:40.858:-3.248
 LERO:Rozas:Lugo:ES:43.07:-7.284
 LERS:Reus:Reus:ES:41.147:1.167
@@ -1838,19 +2026,19 @@ LLTM:Ben-Gurion TMA:Ben-Gurion TMA:IL:32.01:34.877
 LMML:Luqa:Malta:MT:35.857:14.477
 LOAA:Ottenschlag:Ottenschlag:AT:48.418:15.217
 LOAB:Dobersberg:Dobersberg:AT:48.921:15.291
-LOAD:V�ltendorf:V�ltendorf:AT:48.157:15.586
+LOAD:Völtendorf:Völtendorf:AT:48.157:15.586
 LOAG:Langenlois:Krems:AT:48.444:15.634
 LOAN:Wiener Neustadt:Wiener Neustadt/Ost:AT:47.843:16.26
 LOAS:Spitzberg:Spitzberg:AT:48.101:16.934
 LOAU:Stockerau:Stockerau:AT:48.406:16.188
 LOAV:Voslau:Voslau:AT:47.965:16.26
-LOGF:F�rstenfeld:F�rstenfeld:AT:47.057:16.085
-LOGG:Punitz-G�ssing:Punitz-G�ssing:AT:47.142:16.317
+LOGF:Fürstenfeld:Fürstenfeld:AT:47.057:16.085
+LOGG:Punitz-Güssing:Punitz-Güssing:AT:47.142:16.317
 LOGI:Trieben:Trieben:AT:47.49:14.492
 LOGK:Kapfenberg:Kapfenberg:AT:47.455:15.325
 LOGL:Lanzen-Turnau:Lanzen-Turnau:AT:47.554:15.322
 LOGM:Mariazell:Mariazell:AT:47.786:15.301
-LOGO:Nieder�blarn:Nieder�blarn:AT:47.474:14.005
+LOGO:Niederöblarn:Niederöblarn:AT:47.474:14.005
 LOGP:Pinkafeld:Pinkafeld:AT:47.386:16.107
 LOGT:Timmersdorf:Timmersdorf:AT:47.375:14.968
 LOGW:Weiz-Unterfladnitz:Weiz-Unterfladnitz:AT:47.169:15.659
@@ -1863,7 +2051,7 @@ LOKG:Glainach-Frelach:Glainach-Frelach:AT:46.526:14.326
 LOKH:Friesach:Friesach:AT:46.923:14.426
 LOKL:Lienz-Nikolsdorf:Lienz-Nikolsdorf:AT:46.792:12.885
 LOKM:Mayerhofen:Mayerhofen:AT:46.972:14.37
-LOKN:N�tsch im Gailtal:N�tsch im Gailtal:AT:46.575:13.624
+LOKN:Nötsch im Gailtal:Nötsch im Gailtal:AT:46.575:13.624
 LOKW:Wolfsberg:Wolfsberg:AT:46.818:14.822
 LOLC:Scharnstein:Scharnstein:AT:47.892:13.937
 LOLE:Eferding:Eferding:AT:48.337:13.985
@@ -1871,7 +2059,7 @@ LOLG:St. Georgen am Ybbsfeld:St. Georgen am Ybbsfeld:AT:48.102:14.95
 LOLH:HB Hofkirchen:HB Hofkirchen:AT:48.137:14.336
 LOLK:Ried-Kirchheim:Ried-Kirchheim:AT:48.208:13.341
 LOLM:Micheldorf:Micheldorf:AT:47.869:14.122
-LOLS:Sch�rding-Suben:Sch�rding-Suben:AT:48.402:13.443
+LOLS:Schärding-Suben:Schärding-Suben:AT:48.402:13.443
 LOLT:Seitenstetten:Seitenstetten:AT:48.051:14.658
 LOLU:Gmunden:Gmunden:AT:47.951:13.867
 LOLW:Wels:Wels:AT:48.183:14.041
@@ -2479,7 +2667,7 @@ SA0L:25 de Mayo:25 de Mayo:AR:-37.81:-67.659
 SA0M:Santa Victoria:Santa Victoria Este:AR:-22.286:-62.713
 SA0N:Apostoles:Apostoles:AR:-27.903:-55.766
 SA0O:Calilegua:Calilegua:AR:-23.78:-64.747
-SA0P:Ca�adon Seco:Ca�adon Seco:AR:-46.544:-67.548
+SA0P:Cañadon Seco:Cañadon Seco:AR:-46.544:-67.548
 SA0Q:Bella Vista:Bella Vista:AR:-28.526:-59.038
 SA0R:Pto Rosales:Bahia Blanca:AR:-38.9:-62.01
 SA0S:Nanco Lauquen:Trenque Lauquen:AR:-35.971:-62.772
@@ -2717,7 +2905,7 @@ SBMS:Mossoro:Mossoro:BR:-5.202:-37.364
 SBMT:Marte:Sao Paulo:BR:-23.509:-46.638
 SBMY:Manicore:Manicore:BR:-5.811:-61.278
 SBNF:Navegantes:Navegantes:BR:-26.88:-48.651
-SBNM:Santo �ngelo:Santo �ngelo:BR:-28.166:-54.101
+SBNM:Santo Ângelo:Santo Ângelo:BR:-28.166:-54.101
 SBWO:Navegantes:Navegantes:BR:-26.88:-48.651
 SBNT:Natal:Natal:BR:-5.911:-35.248
 SBOI:Oiapoque:Oiapoque:BR:3.856:-51.797

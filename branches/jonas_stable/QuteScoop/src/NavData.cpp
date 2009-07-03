@@ -267,3 +267,30 @@ void NavData::loadDatabase(const QString& directory) {
 		airac.load(directory);
 	}
 }
+
+void NavData::plotPath(double lat1, double lon1, double lat2, double lon2){
+
+    // always start plotting at the origin
+    VERTEX(lat1, lon1);
+
+    double d = NavData::distance(lat1, lon1, lat2, lon2);
+    if(d < 1) return; // less than 1 mile - not worth plotting
+
+    double fractionIncrement = 30 / d; // one dot every 30nm
+    if(fractionIncrement > 1) fractionIncrement = 1;
+    double currentFraction = 0;
+
+    double myLat = lat1;
+    double myLon = lon1;
+    do {
+        currentFraction += fractionIncrement;
+        if(currentFraction > 1) currentFraction = 1;
+
+        if(currentFraction < 1) {
+            // don't plot last dot - we do that in the caller. Avoids plotting vertices twice
+            greatCirclePlotTo(lat1, lon1, lat2, lon2, currentFraction, &myLat, &myLon);
+            VERTEX(myLat, myLon);
+        }
+
+    } while(currentFraction < 1);
+}

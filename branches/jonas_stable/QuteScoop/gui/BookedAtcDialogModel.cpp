@@ -85,5 +85,5 @@ int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
 
 
 void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {
-	controllers[index.row()]->showDetailsDialog();
+    controllers[index.row()]->showDetailsDialog();
 }

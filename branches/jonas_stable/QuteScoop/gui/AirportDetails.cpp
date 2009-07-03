@@ -38,7 +38,8 @@ AirportDetails::AirportDetails():
 	airport(0)
 {
 	setupUi(this);
-	
+    setWindowFlags(Qt::Tool);
+
 	connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
 	connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
 
@@ -112,8 +113,8 @@ void AirportDetails::refresh(Airport* newAirport) {
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 	
     // set titles
-	groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->getArrivals().size()));
-	groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
+    groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals()).arg(airport->getArrivals().size()));
+    groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures()).arg(airport->getDepartures().size()));
 
     QList<Controller*> atcContent = airport->getAllControllers();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));

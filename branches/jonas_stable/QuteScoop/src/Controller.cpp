@@ -44,17 +44,34 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 		atisMessage = atis;
 	}
 
-    QString ctr = this->getCenter();
-    if(!ctr.isNull()) {
-        if(NavData::getInstance()->firs().contains(ctr)) {
-            fir = NavData::getInstance()->firs()[ctr];
-            lat = fir->lat(); // fix my coordinates so that user can find me on the map. Reported lat, lon only seems to be the last visibility center set
-            lon = fir->lon();
-            visualRange = fir->maxDistanceFromCenter();
-        }
-    } else {
+/*
+    QHash<QString, Fir*> firs = NavData::getInstance()->firs();
+    QString icao = this->getCenter();
+    if(icao.isNull() || icao.isEmpty()) {
         fir = 0;
+    } else {
+        while(!firs.contains(icao) && !icao.isEmpty()) {
+            int p = icao.lastIndexOf('_');
+            if(p == -1) {
+                qDebug() << "Unknown FIR\t" << icao << "\tPlease provide sector information if you can";
+                icao = "";
+                continue;
+            }
+            else {
+                icao = icao.left(p);
+            }
+        }
+        if(!icao.isEmpty() && firs.contains(icao)) {
+            fir = firs[icao];
+            if(firs[icao] != 0) {
+                QPair<double, double> equidistantPoint = fir->equidistantPoint();
+                lat = equidistantPoint.first; //fir->lat();
+                lon = equidistantPoint.second; //fir->lon(); // fixme
+                visualRange = fir->maxDistanceFromCenter(); // hack to find airports under its control
+            }
+        }
     }
+    */
 }
 
 QString Controller::facilityString() const {

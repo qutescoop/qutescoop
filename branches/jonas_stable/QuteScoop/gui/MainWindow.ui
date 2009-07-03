@@ -443,6 +443,9 @@ p, li { white-space: pre-wrap; }
      </property>
      <item>
       <widget class="QTreeView" name="friendsList">
+       <property name="toolTip">
+        <string>Friends are identified by their network ID. As we do not have one for Booked ATC, we cannot show booked controllers here.</string>
+       </property>
        <property name="rootIsDecorated">
         <bool>false</bool>
        </property>

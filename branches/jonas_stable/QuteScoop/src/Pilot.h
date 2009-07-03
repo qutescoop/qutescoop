@@ -34,7 +34,8 @@ public:
 
 	Pilot(const QStringList& stringList, const WhazzupData* whazzup);
 
-	virtual QString rank() const;
+    void plotPath(double lat1, double lon1, double lat2, double lon2) const;
+    virtual QString rank() const;
 
 	void showDetailsDialog();
 	FlightStatus flightStatus() const;
@@ -107,7 +108,6 @@ private:
     void plotPathToDest() const;
 	void plotPathFromDep() const;
 	void plotPlannedLine() const;
-	void plotPath(double lat1, double lon1, double lat2, double lon2) const;
 	QList<Waypoint*> resolveFlightplan() const;
 };
 

@@ -40,6 +40,7 @@ PreferencesDialog::PreferencesDialog():
 	settingsLoaded(false)
 {
 	setupUi(this);
+    setWindowFlags(Qt::Tool);
 
 	cbNetwork->addItems(QStringList() << "IVAO" << "VATSIM" << "User Defined Network");
     cbDashedFrontAfter->addItems(QStringList() << "in front" << "behind");

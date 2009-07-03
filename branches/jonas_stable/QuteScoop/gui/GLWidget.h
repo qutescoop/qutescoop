@@ -40,6 +40,8 @@ public:
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
 
+    bool plotFlightPlannedRoute;
+
 public slots:
     void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
                             // updating the statusbar as well - we do not want a full GL update here sometimes

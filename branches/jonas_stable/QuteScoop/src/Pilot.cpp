@@ -45,7 +45,11 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 	planDeptime = getField(stringList, 22);
 	planActtime = getField(stringList, 23);
     
-	planHrsEnroute = getField(stringList, 24).toInt();
+    QString tmpStr = getField(stringList, 24);
+    if(tmpStr.isNull())
+        planHrsEnroute = -1;
+    else
+        planHrsEnroute = tmpStr.toInt();
 	planMinEnroute = getField(stringList, 25).toInt();
 	planHrsFuel = getField(stringList, 26).toInt();
 	planMinFuel = getField(stringList, 27).toInt();
@@ -68,7 +72,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 		qnhMb = getField(stringList, 40); // VATSIM only
 	}
     // day of flight
-    if(QTime::fromString(planDeptime, "HHmm") <= whazzupTime.time())
+    if((QTime::fromString(planDeptime, "HHmm").hour() - whazzupTime.time().hour()) % 24 <= 2) // allow for early birds (up to 2 hours before planned departure)
         dayOfFlight = whazzupTime.date();
     else
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
@@ -154,34 +158,35 @@ QString Pilot::flightStatusString() const {
             result = QString("Boarding");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr() + " hrs";
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_DEP:
             result = QString("Taxi to runway");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr() + " hrs";
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case DEPARTING:
             result = QString("Departing");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr() + " hrs";
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case ARRIVING:
             result = QString("Arriving");
             result += ", EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
-            result += ", Delay " + delayStr() + " hrs";
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_ARR:
             result = QString("Taxi to gate");
             result += ", ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
-            result += ", Delay " + delayStr() + " hrs";
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case BLOCKED:
             result = QString("Blocked at gate");
-            result += ", Delay " + delayStr();
+            result += ", ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case CRASHED: return "Crashed";
 		case BUSH: return "Bush pilot";
@@ -202,8 +207,8 @@ QString Pilot::flightStatusString() const {
 				}
                 result += ", EET " + eet().toString("H:mm") + " hrs";
                 result += ", ETA " + eta().toString("HH:mm") + " UTC";
-                result += ", Delay " + delayStr() + " hrs";
-				return result;
+                result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                return result;
             }
         case PREFILED:
             return QString("Prefiled (ETD %1, ETA %2)")
@@ -324,9 +329,9 @@ QDateTime Pilot::etd() const { // Estimated Time of Departure
 
 QDateTime Pilot::eta() const { // Estimated Time of Arrival
     FlightStatus status = flightStatus();
-    if(status == PREFILED || status == BOARDING || status == GROUND_DEP) {
+    if(status == PREFILED || status == BOARDING) {
         return etaPlan();
-    } else if(status == DEPARTING) { // try to calculate with flightplanned speed
+    } else if(status == DEPARTING || status == GROUND_DEP) { // try to calculate with flightplanned speed
         int enrouteSecs;
         if(planTasInt() == 0) {
             if(groundspeed == 0)
@@ -335,6 +340,7 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
         } else {
             enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
         }
+        if(status == GROUND_DEP) enrouteSecs += 240; // taxi time outbound
         return whazzupTime.addSecs(enrouteSecs);
     } else if(status == EN_ROUTE || status == ARRIVING) { // try groundspeed
         int enrouteSecs;
@@ -347,7 +353,7 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
         }
         QDateTime ret = whazzupTime.addSecs(enrouteSecs);
         return ret;
-    } else if(status == GROUND_ARR) {
+    } else if(status == GROUND_ARR || status == BLOCKED) {
         return whazzupTime;
     }
     return QDateTime();
@@ -360,10 +366,14 @@ QTime Pilot::eet() const { // Estimated Enroute Time remaining
 }
 
 QDateTime Pilot::etaPlan() const { // Estimated Time of Arrival as flightplanned
+    if(planHrsEnroute < 0)
+        return QDateTime();
     return etd().addSecs(planHrsEnroute * 3600 + planMinEnroute * 60);
 }
 
 QString Pilot::delayStr() const { // delay
+    if(!etaPlan().isValid())
+        return QString();
     int secs, calcSecs;
     secs = etaPlan().secsTo(eta());
     if (secs == 0)

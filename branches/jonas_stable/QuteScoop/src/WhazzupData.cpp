@@ -153,7 +153,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     for (int i=0; i<bc.size(); i++) {
         if (bc[i] == 0) continue;
         if (bc[i]->starts() <= predictTime && bc[i]->ends() >= predictTime) { // only ones booked for the selected time
-            QStringList sl;// = new QStringList();
+            QStringList sl;
             for (int h=0; h<50; h++) sl.append(QString()); // build a QStringList with enough items
 
             //userId = getField(stringList, 1);
@@ -469,7 +469,6 @@ QList<Controller*> WhazzupData::activeSectors() const {
 			result.append(controllerList[i]);
 		}
 	}
-
 	return result;
 }
 

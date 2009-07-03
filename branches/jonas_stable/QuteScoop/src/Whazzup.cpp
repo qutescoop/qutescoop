@@ -111,7 +111,7 @@ void Whazzup::statusDownloaded(bool error) {
 		QStringList list = line.split('=');
 		
 		if("msg0" == list[0]) {
-			message = line.right(line.length() - QString("url0=").length());
+            message = line.right(line.length() - QString("msg0=").length());
 			continue;
 		}
 		
@@ -143,7 +143,7 @@ void Whazzup::statusDownloaded(bool error) {
     qDebug() << "Got network status:\t" << urls.size() << "Whazzup URLs";
 
     if(urls.size() == 0){
-        emit networkMessage("No Whazzup URLs found. Reset Preferences to a valid Status source or try again later.");
+        emit networkMessage("No Whazzup URLs found. Try again later.");
     } else {
         emit statusDownloaded();
     }

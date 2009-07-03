@@ -37,7 +37,8 @@ BookedAtcDialog::BookedAtcDialog() :
     QDialog()
 {
     setupUi(this);
-        
+    setWindowFlags(Qt::Tool);
+
    	//bookedAtcSortModel = new QSortFilterProxyModel;
    	bookedAtcSortModel = new BookedAtcSortFilter;
 	bookedAtcSortModel->setDynamicSortFilter(true);

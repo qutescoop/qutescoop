@@ -42,6 +42,7 @@ public:
     void setProgressBar(int prog, int tot);
     void setProgressBar(bool isVisible);
     void setEnableBookedAtc(bool enable);
+    void setPlotFlightPlannedRoute(bool value);
 
 public slots:
 	void showOnMap(double lat, double lon);

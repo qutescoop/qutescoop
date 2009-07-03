@@ -17,6 +17,7 @@
  **************************************************************************/
 
 #include <QDebug>
+#include <QPair>
 
 #include "Settings.h"
 #include "Fir.h"
@@ -92,6 +93,23 @@ void Fir::setPointList(const QList<QPair<double, double> >& points) {
 	_points = points;
 	if(_points.last() != _points.first())
 		_points.append(_points.first());
+}
+
+QPair<double, double> Fir::equidistantPoint() {
+    QPair<double, double> topLeft = _points[0];
+    QPair<double, double> bottomRight = _points[0];
+    for(int i = 0; i < _points.size(); i++) {
+        if(_points[i].first < topLeft.first)
+            topLeft.first = _points[i].first;
+        else if(_points[i].first > bottomRight.first)
+            bottomRight.first = _points[i].first;
+        else if(_points[i].second < topLeft.second)
+            topLeft.first = _points[i].first;
+        else if(_points[i].second > bottomRight.second)
+            bottomRight.first = _points[i].first;
+    }
+
+    return QPair<double, double>((topLeft.first + bottomRight.first) / 2, (topLeft.second + bottomRight.second) / 2);
 }
 
 int Fir::maxDistanceFromCenter() {

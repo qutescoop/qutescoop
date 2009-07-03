@@ -46,6 +46,7 @@ public:
 	GLuint getPolygon();
 	GLuint getBorderLine();
 
+    QPair<double, double> equidistantPoint(); // finds a point which is suitable to draw the minimum circle that encloses the whole FIR
     int maxDistanceFromCenter();
 
 private:

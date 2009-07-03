@@ -31,6 +31,7 @@
 #include "NavData.h"
 #include "Settings.h"
 #include "Waypoint.h"
+#include "PlanFlightDialog.h"
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	QGLWidget(fmt, parent) {
@@ -57,6 +58,8 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	firPolygonBorderLinesList = 0;
 	appBorderLinesList = 0;
     congestionsList = 0;
+
+    plotFlightPlannedRoute = false;
 
 	allFirsDisplayed = false;
 }
@@ -502,6 +505,10 @@ void GLWidget::createPilotsList() {
         const Pilot *p = pilots[i];
         p->plotFlightPath();
     }
+
+    // planned Route from Flight Plan Dialog
+    if(plotFlightPlannedRoute)
+        PlanFlightDialog::getInstance()->plotPlannedRoute();
 
 	glEndList();
 }

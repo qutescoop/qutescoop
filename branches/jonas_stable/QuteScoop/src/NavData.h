@@ -43,6 +43,7 @@ public:
 									double lat2, double lon2,
 									double fraction,
 									double *lat, double *lon);
+    static void plotPath(double lat1, double lon1, double lat2, double lon2);
 
 	QString countryName(const QString& countryCode) const { return countryCodes[countryCode]; }
 
