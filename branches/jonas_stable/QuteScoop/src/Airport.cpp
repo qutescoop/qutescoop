@@ -31,7 +31,7 @@ Airport::Airport() {
 	gndDisplayList = 0;
 	appBorderDisplayList = 0;
 	showFlightLines = false;
-	
+
 	resetWhazzupStatus();
 }
 
@@ -46,7 +46,7 @@ Airport::Airport(const QStringList& list) {
 
 	if(list.size() != 6)
 		return;
-	
+
 	label = list[0];
 	name = list[1];
 	city = list[2];
@@ -65,9 +65,9 @@ Airport::~Airport() {
 void Airport::resetWhazzupStatus() {
 	active = false;
 	towers.clear();
-    centers.clear();
-    approaches.clear();
-    grounds.clear();
+	centers.clear();
+	approaches.clear();
+	grounds.clear();
 	arrivals.clear();
 	departures.clear();
 }
@@ -96,7 +96,7 @@ const GLuint& Airport::getAppBorderDisplayList() {
 const GLuint& Airport::getAppDisplayList() {
 	if(appDisplayList == 0)
 		createAppDisplayLists();
-	
+
 	return appDisplayList;
 }
 
@@ -104,16 +104,16 @@ void Airport::createAppDisplayLists() {
 	// prepare points for the circle
 	GLdouble circle_distort = cos(lat * Pi180);
 	QList<QPair<double, double> > points;
-	for(int i = 0; i <= 360; i += 10) {		
+	for(int i = 0; i <= 360; i += 10) {
 		double x = lat + Nm2Deg(40) * circle_distort * cos(i * Pi180);
 		double y = lon + Nm2Deg(40) * sin(i * Pi180);
 		points.append(QPair<double, double>(x, y));
 	}
-	
+
 	// This draws an APP controller 'big filled circle' at x, y coordinates
 	appDisplayList = glGenLists(1);
 	glNewList(appDisplayList, GL_COMPILE);
-	
+
 	QColor colorMiddle = Settings::appCenterColor();
 	QColor colorBorder = Settings::appMarginColor();
 	QColor borderLine = Settings::appBorderLineColor();
@@ -127,10 +127,10 @@ void Airport::createAppDisplayLists() {
 	}
 	glEnd();
 	glEndList();
-	
+
 	// border line
 	appBorderDisplayList = glGenLists(1);
-	glNewList(appBorderDisplayList, GL_COMPILE);	
+	glNewList(appBorderDisplayList, GL_COMPILE);
 	glLineWidth(Settings::appBorderLineStrength());
 	glBegin(GL_LINE_LOOP);
 	glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
@@ -155,12 +155,12 @@ const GLuint& Airport::getTwrDisplayList() {
 	GLdouble circle_distort = cos(lat * Pi180);
 
 	QList<QPair<double, double> > points;
-	for(int i = 0; i <= 360; i += 20) {		
+	for(int i = 0; i <= 360; i += 20) {
 		double x = lat + Nm2Deg(22) * circle_distort * cos(i * Pi180);
 		double y = lon + Nm2Deg(22) * sin(i * Pi180);
 		points.append(QPair<double, double>(x, y));
 	}
-	
+
 	glBegin(GL_TRIANGLE_FAN);
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE);
 	glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
@@ -169,9 +169,9 @@ const GLuint& Airport::getTwrDisplayList() {
 	for(int i = 0; i < points.size(); i++) {
 		VERTEX(points[i].first, points[i].second);
 	}
-	glEnd();	
+	glEnd();
 	glEndList();
-	
+
 	return twrDisplayList;
 }
 
@@ -187,11 +187,11 @@ const GLuint& Airport::getGndDisplayList() {
 	GLdouble s3 = circle_distort * 0.25;
 
 	QColor color = Settings::gndFillColor();
-	
-    glBegin(GL_POLYGON);
-    	glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        // first point is in center to avoid problems with the concave shape
-    	VERTEX(lat, lon);
+
+	glBegin(GL_POLYGON);
+		glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+		// first point is in center to avoid problems with the concave shape
+		VERTEX(lat, lon);
 
 		// draw a star shape
 		VERTEX(lat + s3, lon);
@@ -219,23 +219,23 @@ const GLuint& Airport::getGndDisplayList() {
 		VERTEX(lat,      lon - 0.25);
 		VERTEX(lat + s1, lon - 0.07);
 		VERTEX(lat + s3, lon);
-    glEnd();
-    glEndList();
+	glEnd();
+	glEndList();
 	return gndDisplayList;
 }
 
 void Airport::addCenter(Controller* client) {
-    if(!centers.contains(client)) {
-        centers.append(client);
-        //active = true; // would make too much airports show as active on the map
-    }
+	if(!centers.contains(client)) {
+		centers.append(client);
+		//active = true; // would make too much airports show as active on the map
+	}
 }
 
 void Airport::addApproach(Controller* client) {
-    if(!approaches.contains(client)) {
-        approaches.append(client);
-        active = true;
-    }
+	if(!approaches.contains(client)) {
+		approaches.append(client);
+		active = true;
+	}
 }
 
 void Airport::addTower(Controller* client) {
@@ -249,7 +249,7 @@ void Airport::addGround(Controller* client) {
 	if(!grounds.contains(client)) {
 		grounds.append(client);
 		active = true;
-	}	
+	}
 }
 
 
@@ -265,11 +265,11 @@ void Airport::showDetailsDialog() {
 
 QList<Controller*> Airport::getAllControllers() const {
 	QList<Controller*> result;
-	
+
 	result += grounds;
 	result += towers;
-    result += approaches;
-    result += centers;
+	result += approaches;
+	result += centers;
 
 	return result;
 }
@@ -283,46 +283,46 @@ bool Airport::matches(const QRegExp& regex) const {
 
 int Airport::numFilteredArrivals() const {
 	int numFilteredArrivals = 0;
-    if(Settings::filterTraffic()) { // Airport traffic filtered
-		for (int i=0; i < arrivals.length(); i++){
+	if(Settings::filterTraffic()) { // Airport traffic filtered
+		for (int i=0; i < arrivals.count(); i++){
 			if(
-			   	(arrivals[i]->distanceToDestination() < Settings::filterDistance()) 
-			   	|| 
-			   	(arrivals[i]->distanceToDestination() / arrivals[i]->groundspeed < Settings::filterArriving()) 
+				(arrivals[i]->distanceToDestination() < Settings::filterDistance())
+				||
+				(arrivals[i]->distanceToDestination() / arrivals[i]->groundspeed < Settings::filterArriving())
 				) {
 				numFilteredArrivals++;
 			}
 		}
-    } else
-        return arrivals.size();
-    return numFilteredArrivals;
+	} else
+		return arrivals.size();
+	return numFilteredArrivals;
 }
 
 int Airport::numFilteredDepartures() const {
 	int numFilteredDepartures = 0;
-    if(Settings::filterTraffic()) { // Airport traffic filtered
-		for (int i=0; i < departures.length(); i++){
+	if(Settings::filterTraffic()) { // Airport traffic filtered
+		for (int i=0; i < departures.count(); i++){
 			if(departures[i]->distanceFromDeparture() < Settings::filterDistance()) {
 				numFilteredDepartures++;
 			}
 		}
-    } else
-        return departures.size();
-    return numFilteredDepartures;
+	} else
+		return departures.size();
+	return numFilteredDepartures;
 }
 
 QString Airport::mapLabel() const {
 	QString result = label;
-    if(!this->active || numFilteredArrivals() + numFilteredDepartures() == 0)
-        return label;
+	if(!this->active || numFilteredArrivals() + numFilteredDepartures() == 0)
+		return label;
 
-    if(!numFilteredArrivals()) result += " -/";
-    else result += QString(" %1/").arg(numFilteredArrivals());
-    
-    if(!numFilteredDepartures()) result += "-"; 
-    else result += QString("%1").arg(numFilteredDepartures());
+	if(!numFilteredArrivals()) result += " -/";
+	else result += QString(" %1/").arg(numFilteredArrivals());
 
-    return result;
+	if(!numFilteredDepartures()) result += "-";
+	else result += QString("%1").arg(numFilteredDepartures());
+
+	return result;
 }
 
 void Airport::toggleFlightLines() {
@@ -335,7 +335,7 @@ void Airport::setDisplayFlightLines(bool show) {
 		arrivals[i]->displayLineToDest = show;
 	for(int i = 0; i < departures.size(); i++)
 		departures[i]->displayLineFromDep = show;
-    AirportDetails::getInstance()->refresh();
+	AirportDetails::getInstance()->refresh();
 }
 
 void Airport::refreshAfterUpdate() {

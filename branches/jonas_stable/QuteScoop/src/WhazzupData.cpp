@@ -482,7 +482,7 @@ QList<Pilot*> WhazzupData::getBookedPilots() const {
 
 QList<Pilot*> WhazzupData::getAllPilots() const {
     QList<Pilot*> ap = bookedpilots.values();
-    ap.append(pilots.values());
+	ap += pilots.values();
     return ap;
 }
 

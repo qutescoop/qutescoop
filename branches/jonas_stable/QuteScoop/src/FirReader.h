@@ -18,6 +18,7 @@
 #ifndef FIRREADER_H_
 #define FIRREADER_H_
 
+#include <QHash>
 #include <QString>
 #include <QMultiMap>
 

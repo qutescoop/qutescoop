@@ -47,90 +47,90 @@ Window::Window(QWidget *parent) :
 
 	if(Settings::resetOnNextStart())
 		QSettings().clear();
-    
-    QSettings* settings = new QSettings();
+
+	QSettings* settings = new QSettings();
 	QGLFormat fmt;
 
-    // Can please somebody comment on which settings are useful and which
-    // should go to the preferences window? Thanks, jonas.
+	// Can please somebody comment on which settings are useful and which
+	// should go to the preferences window? Thanks, jonas.
 	fmt.setDirectRendering(settings->value("gl/directrendering", fmt.defaultFormat().directRendering()).toBool());
 	fmt.setDoubleBuffer(settings->value("gl/doublebuffer", fmt.defaultFormat().doubleBuffer()).toBool());
-    fmt.setStencil(settings->value("gl/stencilbuffer", fmt.defaultFormat().stencil()).toBool());
-    if (fmt.defaultFormat().stencilBufferSize() > 0)
-        fmt.setStencilBufferSize(settings->value("gl/stencilsize", fmt.defaultFormat().stencilBufferSize()).toInt());
+	fmt.setStencil(settings->value("gl/stencilbuffer", fmt.defaultFormat().stencil()).toBool());
+	if (fmt.defaultFormat().stencilBufferSize() > 0)
+		fmt.setStencilBufferSize(settings->value("gl/stencilsize", fmt.defaultFormat().stencilBufferSize()).toInt());
 	fmt.setDepth(settings->value("gl/depthbuffer", fmt.defaultFormat().depth()).toBool());
-    if (fmt.defaultFormat().depthBufferSize() > 0)
-        fmt.setDepthBufferSize(settings->value("gl/depthsize", fmt.defaultFormat().depthBufferSize()).toInt());
+	if (fmt.defaultFormat().depthBufferSize() > 0)
+		fmt.setDepthBufferSize(settings->value("gl/depthsize", fmt.defaultFormat().depthBufferSize()).toInt());
 	fmt.setAlpha(settings->value("gl/alphabuffer", fmt.defaultFormat().alpha()).toBool());
-    if (fmt.defaultFormat().alphaBufferSize() > 0)
-        fmt.setAlphaBufferSize(settings->value("gl/alphasize", fmt.defaultFormat().alphaBufferSize()).toInt());
+	if (fmt.defaultFormat().alphaBufferSize() > 0)
+		fmt.setAlphaBufferSize(settings->value("gl/alphasize", fmt.defaultFormat().alphaBufferSize()).toInt());
 	fmt.setSampleBuffers(settings->value("gl/samplebuffers", fmt.defaultFormat().sampleBuffers()).toBool());
-    if (fmt.defaultFormat().samples() > 0)
-        fmt.setSamples(settings->value("gl/samples", fmt.defaultFormat().samples()).toInt());
+	if (fmt.defaultFormat().samples() > 0)
+		fmt.setSamples(settings->value("gl/samples", fmt.defaultFormat().samples()).toInt());
 	fmt.setAccum(settings->value("gl/accumbuffer", fmt.defaultFormat().accum()).toBool());
-    if (fmt.defaultFormat().accumBufferSize() > 0)
-        fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
-    //fmt.setRgba(true);
-    glWidget = new GLWidget(fmt);
+	if (fmt.defaultFormat().accumBufferSize() > 0)
+		fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
+	//fmt.setRgba(true);
+	glWidget = new GLWidget(fmt);
 
-    // have fun :)
-    //setAttribute(Qt::WA_TranslucentBackground, true);
-    //glWidget->setAttribute(Qt::WA_TranslucentBackground, true);
-    setAttribute(Qt::WA_AlwaysShowToolTips, true);
+	// have fun :)
+	//setAttribute(Qt::WA_TranslucentBackground, true);
+	//glWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+	setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
-    centralwidget->layout()->addWidget(glWidget);
-    qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
-            << "\t| version: " << glWidget->format().openGLVersionFlags()
-            << "\nOptions from Config:"
-            << "\ngl/directrendering" << glWidget->format().directRendering()
-            << "\t| gl/doublebuffer" << glWidget->format().doubleBuffer()
-            << "\t| gl/stencilbuffer" << glWidget->format().stencil()
-            << "\t| gl/stencilsize" << glWidget->format().stencilBufferSize()
-            << "\ngl/depthbuffer" << glWidget->format().depth()
-            << "\t| gl/depthsize" << glWidget->format().depthBufferSize()
-            << "\t| gl/alphabuffer" << glWidget->format().alpha()
-            << "\t| gl/alphasize" << glWidget->format().alphaBufferSize()
-            << "\ngl/samplebuffers" << glWidget->format().sampleBuffers()
-            << "\t| gl/samples" << glWidget->format().samples()
-            << "\t| gl/accumbuffer" << glWidget->format().accum()
-            << "\t| gl/accumsize" << glWidget->format().accumBufferSize();
-            
-            
+	centralwidget->layout()->addWidget(glWidget);
+	qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
+			<< "\t| version: " << glWidget->format().openGLVersionFlags()
+			<< "\nOptions from Config:"
+			<< "\ngl/directrendering" << glWidget->format().directRendering()
+			<< "\t| gl/doublebuffer" << glWidget->format().doubleBuffer()
+			<< "\t| gl/stencilbuffer" << glWidget->format().stencil()
+			<< "\t| gl/stencilsize" << glWidget->format().stencilBufferSize()
+			<< "\ngl/depthbuffer" << glWidget->format().depth()
+			<< "\t| gl/depthsize" << glWidget->format().depthBufferSize()
+			<< "\t| gl/alphabuffer" << glWidget->format().alpha()
+			<< "\t| gl/alphasize" << glWidget->format().alphaBufferSize()
+			<< "\ngl/samplebuffers" << glWidget->format().sampleBuffers()
+			<< "\t| gl/samples" << glWidget->format().samples()
+			<< "\t| gl/accumbuffer" << glWidget->format().accum()
+			<< "\t| gl/accumsize" << glWidget->format().accumBufferSize();
+
+
 
 	clientSelection = new ClientSelectionWidget();
-    
-    setProgressBar(0);
-    lblStatus->setText("");
-    statusbar->addWidget(lblStatus, 5);
-    statusbar->addWidget(progressBar, 3);
-    statusbar->addPermanentWidget(tbZoomIn, 0);
-    statusbar->addPermanentWidget(tbZoomOut, 0);
+
+	setProgressBar(0);
+	lblStatus->setText("");
+	statusbar->addWidget(lblStatus, 5);
+	statusbar->addWidget(progressBar, 3);
+	statusbar->addPermanentWidget(tbZoomIn, 0);
+	statusbar->addPermanentWidget(tbZoomOut, 0);
 
 	connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
 	connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
 	connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
-    connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
-    connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
-    connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
+	connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
+	connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
+	connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
 
-    qDebug() << "Expecting data directory at" << Settings::dataDirectory() << "(Option: general/dataDirectory)";
+	qDebug() << "Expecting data directory at" << Settings::dataDirectory() << "(Option: general/dataDirectory)";
 
-    Whazzup *whazzup = Whazzup::getInstance();
+	Whazzup *whazzup = Whazzup::getInstance();
 	connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
 	connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
-    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
-    connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+	connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+	connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 	connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
 	connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
 
 	connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
 
-    if(Settings::downloadOnStartup()) {
-        // download whazzup as soon as whazzup status download is complete
-        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
-    }
-    // Always download status
-    whazzup->setStatusLocation(Settings::statusLocation());
+	if(Settings::downloadOnStartup()) {
+		// download whazzup as soon as whazzup status download is complete
+		connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
+	}
+	// Always download status
+	whazzup->setStatusLocation(Settings::statusLocation());
 
 	searchResult->setModel(&searchResultModel);
 	connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)), &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
@@ -146,7 +146,7 @@ Window::Window(QWidget *parent) :
 	connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
 	connect(metarList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
 	connect(metarList->header(), SIGNAL(sectionClicked(int)), metarList, SLOT(sortByColumn(int)));
-	metarList->sortByColumn(0, metarSortModel->sortOrder());
+	metarList->sortByColumn(0, Qt::AscendingOrder);
 
 	friendsSortModel = new QSortFilterProxyModel;
 	friendsSortModel->setDynamicSortFilter(true);
@@ -156,23 +156,23 @@ Window::Window(QWidget *parent) :
 	connect(friendsList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(friendDoubleClicked(const QModelIndex&)));
 	connect(friendsList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(friendClicked(const QModelIndex&)));
 	connect(friendsList->header(), SIGNAL(sectionClicked(int)), friendsList, SLOT(sortByColumn(int)));
-	metarList->sortByColumn(0, friendsSortModel->sortOrder());
+	metarList->sortByColumn(0, Qt::AscendingOrder);
 
-    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
+	connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 	connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
 	connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
 //#ifndef Q_WS_MAC // lets use CTRL +/- which I think shuld work everywhere. No normal input characters, as these get trapped by the EditWidgets (Search etc.)
-    // F11 is Fullscreen on most Linux Displaymanagers
-    //actionZoomIn->setShortcut(QKeySequence("F11"));
-    //actionZoomOut->setShortcut(QKeySequence("F12"));
+	// F11 is Fullscreen on most Linux Displaymanagers
+	//actionZoomIn->setShortcut(QKeySequence("F11"));
+	//actionZoomOut->setShortcut(QKeySequence("F12"));
 //#endif
 
 	connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
-    connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
-    connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
+	connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
+	connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
 	connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
-    actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
+	actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
 
 	connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
 	connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
@@ -187,7 +187,7 @@ Window::Window(QWidget *parent) :
 		checkForUpdates();
 
 	// restore saved states
-    glWidget->restorePosition(1);
+	glWidget->restorePosition(1);
 	if(restoreState(Settings::getSavedState(), VERSION_INT)) {
 		QSize savedSize = Settings::getSavedSize();
 		if(!savedSize.isNull()) resize(savedSize);
@@ -195,20 +195,20 @@ Window::Window(QWidget *parent) :
 		QPoint savedPos = Settings::getSavedPosition();
 		if(!savedPos.isNull()) move(savedPos);
 	}
-    
-    // Forecast / Predict settings
-    //datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
-    datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
-    timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
-    framePredict->hide();
-    warpTimer.stop();
-    connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
 
-    QFont font = lblWarpInfo->font();
-    font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
-    lblWarpInfo->setFont(font); //make it a bit smaller than standard text
+	// Forecast / Predict settings
+	//datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+	datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
+	timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
+	framePredict->hide();
+	warpTimer.stop();
+	connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
 
-    setEnableBookedAtc(Settings::downloadBookings());
+	QFont font = lblWarpInfo->font();
+	font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
+	lblWarpInfo->setFont(font); //make it a bit smaller than standard text
+
+	setEnableBookedAtc(Settings::downloadBookings());
 }
 
 void Window::toggleFullscreen() {
@@ -255,63 +255,63 @@ void Window::downloadError(QString message) {
 }
 
 void Window::whazzupDownloaded(bool isNew) {
-    const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
-    const WhazzupData &data = Whazzup::getInstance()->whazzupData();
+	const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
+	const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
-    QString msg = QString(tr("%1%2 - %3 UTC: %4 clients"))
-                  .arg(Settings::downloadNetworkName())
-                  .arg(Whazzup::getInstance()->getPredictedTime().isValid()
-                       ? " - <b>W A R P E D</b>  to"
-                       : ""
-                       )
-                  .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString())
-                        : data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss"))
-                  .arg(data.clients());
+	QString msg = QString(tr("%1%2 - %3 UTC: %4 clients"))
+				  .arg(Settings::downloadNetworkName())
+				  .arg(Whazzup::getInstance()->getPredictedTime().isValid()
+					   ? " - <b>W A R P E D</b>  to"
+					   : ""
+					   )
+				  .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+						? QString("today %1").arg(data.timestamp().time().toString())
+						: data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss"))
+				  .arg(data.clients());
 	setStatusText(msg);
 
-    msg = QString("Whazzup %1, bookings %2 updated")
-                  .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(realdata.timestamp().time().toString())
-                        : (realdata.timestamp().isValid()
-                           ? realdata.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
-                           : "never")
-                        )
-                  .arg(realdata.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(realdata.bookingsTimestamp().time().toString())
-                        : (realdata.bookingsTimestamp().isValid()
-                           ? realdata.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
-                           : "never")
-                        );
-    lblWarpInfo->setText(msg);
-    if (Whazzup::getInstance()->getPredictedTime().isValid()) {
-        framePredict->show();
-        timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
-        datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
-        if(isNew) {
-            // recalculate prediction on new data arrived
-            if(data.predictionBasedOnTimestamp() != realdata.timestamp()
-                || data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {
-                Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
-            }
-        }
-    }
+	msg = QString("Whazzup %1, bookings %2 updated")
+				  .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+						? QString("today %1").arg(realdata.timestamp().time().toString())
+						: (realdata.timestamp().isValid()
+						   ? realdata.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+						   : "never")
+						)
+				  .arg(realdata.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
+						? QString("today %1").arg(realdata.bookingsTimestamp().time().toString())
+						: (realdata.bookingsTimestamp().isValid()
+						   ? realdata.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+						   : "never")
+						);
+	lblWarpInfo->setText(msg);
+	if (Whazzup::getInstance()->getPredictedTime().isValid()) {
+		framePredict->show();
+		timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
+		datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
+		if(isNew) {
+			// recalculate prediction on new data arrived
+			if(data.predictionBasedOnTimestamp() != realdata.timestamp()
+				|| data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {
+				Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+			}
+		}
+	}
 
-    if(isNew) {
-        clientSelection->clearClients();
-        clientSelection->close();
-        performSearch();
+	if(isNew) {
+		clientSelection->clearClients();
+		clientSelection->close();
+		performSearch();
 
-        AirportDetails::getInstance()->refresh();
-        PilotDetails::getInstance()->refresh();
-        ControllerDetails::getInstance()->refresh();
-        if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
+		AirportDetails::getInstance()->refresh();
+		PilotDetails::getInstance()->refresh();
+		ControllerDetails::getInstance()->refresh();
+		if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
 
-        refreshFriends();
-    }
+		refreshFriends();
+	}
 	downloadWatchdog.stop();
 	if(Settings::downloadPeriodically())
-        downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
+		downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
 }
 
 void Window::refreshFriends() {
@@ -343,29 +343,29 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
 }
 
 void Window::showOnMap(double lat, double lon) {
-    if ((lat != 0) || (lon != 0)) // exclude prefiled (non-connected) flights - do not mapcenter on Atlantic between Brazil and Angola (N0/E0)
-        glWidget->setMapPosition(lat, lon, 0.1);
+	if ((lat != 0) || (lon != 0)) // exclude prefiled (non-connected) flights - do not mapcenter on Atlantic between Brazil and Angola (N0/E0)
+		glWidget->setMapPosition(lat, lon, 0.1);
 }
 
 void Window::openPreferences() {
-    PreferencesDialog::getInstance()->show();
-    PreferencesDialog::getInstance()->raise();
-    PreferencesDialog::getInstance()->activateWindow();
-    PreferencesDialog::getInstance()->setFocus();
+	PreferencesDialog::getInstance()->show();
+	PreferencesDialog::getInstance()->raise();
+	PreferencesDialog::getInstance()->activateWindow();
+	PreferencesDialog::getInstance()->setFocus();
 }
 
 void Window::openPlanFlight() {
-    PlanFlightDialog::getInstance()->show();
-    PlanFlightDialog::getInstance()->raise();
-    PlanFlightDialog::getInstance()->activateWindow();
-    PlanFlightDialog::getInstance()->setFocus();
+	PlanFlightDialog::getInstance()->show();
+	PlanFlightDialog::getInstance()->raise();
+	PlanFlightDialog::getInstance()->activateWindow();
+	PlanFlightDialog::getInstance()->setFocus();
 }
 
 void Window::openBookedAtc() {
-    BookedAtcDialog::getInstance()->show();
-    BookedAtcDialog::getInstance()->raise();
-    BookedAtcDialog::getInstance()->activateWindow();
-    BookedAtcDialog::getInstance()->setFocus();
+	BookedAtcDialog::getInstance()->show();
+	BookedAtcDialog::getInstance()->raise();
+	BookedAtcDialog::getInstance()->activateWindow();
+	BookedAtcDialog::getInstance()->setFocus();
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
@@ -408,9 +408,9 @@ void Window::on_actionHideAllWindows_triggered() {
 	PilotDetails::getInstance()->close();
 	ControllerDetails::getInstance()->close();
 	AirportDetails::getInstance()->close();
-    //PreferencesDialog::getInstance()->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
-    //PlanFlightDialog::getInstance()->close();
-    //BookedAtcDialog::getInstance()->close();
+	//PreferencesDialog::getInstance()->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
+	//PlanFlightDialog::getInstance()->close();
+	//BookedAtcDialog::getInstance()->close();
 
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
@@ -426,14 +426,14 @@ void Window::on_actionClearAllFlightPaths_triggered() {
 		}
 	}
 
-    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
+	QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
 	for(int i = 0; i < pilots.size(); i++) {
 		pilots[i]->displayLineFromDep = false;
 		pilots[i]->displayLineToDest = false;
 	}
-    // adjust the "plot route" tick in dialogs
-    AirportDetails::getInstance()->refresh();
-    PilotDetails::getInstance()->refresh();
+	// adjust the "plot route" tick in dialogs
+	AirportDetails::getInstance()->refresh();
+	PilotDetails::getInstance()->refresh();
 
 	// tell glWidget that there is new whazzup data (which is a lie)
 	// so it will refresh itself and clear the lines
@@ -591,7 +591,7 @@ void Window::versionDownloaded(bool error) {
 }
 
 void Window::on_actionRememberPosition_triggered() {
-    glWidget->rememberPosition(1);
+	glWidget->rememberPosition(1);
 }
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
@@ -603,42 +603,42 @@ void Window::updateMetarDecoder(const QString& airport, const QString& decodedTe
 void Window::downloadWatchdogTriggered() {
 	downloadWatchdog.stop();
 	QMessageBox::warning(this, tr("Data Download Failed"),
-            QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.")
+			QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.")
 		);
-    Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
+	Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
 }
 
 void Window::setStatusText(QString text) {
-    lblStatus->setText(text);
+	lblStatus->setText(text);
 }
 
 void Window::setProgressBar(bool isVisible) {
-    progressBar->setVisible(isVisible);
+	progressBar->setVisible(isVisible);
 }
 
 void Window::setProgressBar(int prog, int tot) {
-    if (prog == tot) {
-        progressBar->setVisible(false);
-    } else {
-        progressBar->setVisible(true);
-        if (tot == 0) {
-            progressBar->setFormat(QString("%1 bytes").arg(prog));
-            progressBar->setValue(0);
-        } else {
-            progressBar->setFormat("%p%");
-            progressBar->setValue(100 * prog / tot);
-        }
-    }
+	if (prog == tot) {
+		progressBar->setVisible(false);
+	} else {
+		progressBar->setVisible(true);
+		if (tot == 0) {
+			progressBar->setFormat(QString("%1 bytes").arg(prog));
+			progressBar->setValue(0);
+		} else {
+			progressBar->setFormat("%p%");
+			progressBar->setValue(100 * prog / tot);
+		}
+	}
 }
 
 void Window::setEnableBookedAtc(bool enable) {
-    actionBookedAtc->setEnabled(enable);
+	actionBookedAtc->setEnabled(enable);
 }
 
 void Window::performWarp()
 {
-    warpTimer.stop();
-    Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+	warpTimer.stop();
+	Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
 }
 
 void Window::on_actionPredict_triggered()
@@ -647,138 +647,138 @@ void Window::on_actionPredict_triggered()
 
 void Window::on_tbDisablePredict_clicked()
 {
-    Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
-    actionPredict->setChecked(false);
-    framePredict->hide();
+	Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
+	actionPredict->setChecked(false);
+	framePredict->hide();
 }
 
 void Window::on_datePredictTime_dateChanged(QDate date)
 {
-    warpTimer.stop();
-    warpTimer.start(1000);
+	warpTimer.stop();
+	warpTimer.start(1000);
 }
 
 void Window::on_timePredictTime_timeChanged(QTime date)
 {
-    warpTimer.stop();
-    warpTimer.start(1000);
+	warpTimer.stop();
+	warpTimer.start(1000);
 }
 
 void Window::on_actionPredict_toggled(bool value)
 {
-    if(value) {
-        datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
-        datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
-        timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
-                                 .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
-        framePredict->show();
-    } else {
-        on_tbDisablePredict_clicked();
-    }
+	if(value) {
+		datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
+		datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
+		timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
+								 .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
+		framePredict->show();
+	} else {
+		on_tbDisablePredict_clicked();
+	}
 }
 
 void Window::on_actionRecallMapPosition_triggered()
 {
-    glWidget->restorePosition(1);
+	glWidget->restorePosition(1);
 }
 
 void Window::on_actionRecallMapPosition7_triggered()
 {
-    glWidget->restorePosition(7);
+	glWidget->restorePosition(7);
 }
 
 void Window::on_actionRecallMapPosition6_triggered()
 {
-    glWidget->restorePosition(6);
+	glWidget->restorePosition(6);
 }
 
 void Window::on_actionRecallMapPosition5_triggered()
 {
-    glWidget->restorePosition(5);
+	glWidget->restorePosition(5);
 }
 
 void Window::on_actionRecallMapPosition4_triggered()
 {
-    glWidget->restorePosition(4);
+	glWidget->restorePosition(4);
 }
 
 void Window::on_actionRecallMapPosition3_triggered()
 {
-    glWidget->restorePosition(3);
+	glWidget->restorePosition(3);
 }
 
 void Window::on_actionRecallMapPosition2_triggered()
 {
-    glWidget->restorePosition(2);
+	glWidget->restorePosition(2);
 }
 
 void Window::on_actionRememberMapPosition7_triggered()
 {
-    glWidget->rememberPosition(7);
+	glWidget->rememberPosition(7);
 }
 
 void Window::on_actionRememberMapPosition6_triggered()
 {
-    glWidget->rememberPosition(6);
+	glWidget->rememberPosition(6);
 }
 
 void Window::on_actionRememberMapPosition5_triggered()
 {
-    glWidget->rememberPosition(5);
+	glWidget->rememberPosition(5);
 }
 
 void Window::on_actionRememberMapPosition4_triggered()
 {
-    glWidget->rememberPosition(4);
+	glWidget->rememberPosition(4);
 }
 
 void Window::on_actionRememberMapPosition3_triggered()
 {
-    glWidget->rememberPosition(3);
+	glWidget->rememberPosition(3);
 }
 
 void Window::on_actionRememberMapPosition2_triggered()
 {
-    glWidget->rememberPosition(2);
+	glWidget->rememberPosition(2);
 }
 
 void Window::on_actionMoveLeft_triggered()
 {
-    glWidget->scrollBy(-1, 0);
+	glWidget->scrollBy(-1, 0);
 }
 
 void Window::on_actionMoveRight_triggered()
 {
-    glWidget->scrollBy(1, 0);
+	glWidget->scrollBy(1, 0);
 }
 
 void Window::on_actionMoveUp_triggered()
 {
-    glWidget->scrollBy(0, -1);
+	glWidget->scrollBy(0, -1);
 }
 
 void Window::on_actionMoveDown_triggered()
 {
-    glWidget->scrollBy(0, 1);
+	glWidget->scrollBy(0, 1);
 }
 
 void Window::on_tbZoomIn_clicked()
 {
-    glWidget->zoomIn();
+	glWidget->zoomIn();
 }
 
 void Window::on_tbZoomOut_clicked()
 {
-    glWidget->zoomOut();
+	glWidget->zoomOut();
 }
 
 void Window::updateGLPilots() {
-    glWidget->createPilotsList();
-    glWidget->updateGL();
+	glWidget->createPilotsList();
+	glWidget->updateGL();
 }
 
 void Window::setPlotFlightPlannedRoute(bool value) {
-    glWidget->plotFlightPlannedRoute = value;
-    glWidget->createPilotsList();
-    glWidget->updateGL();
+	glWidget->plotFlightPlannedRoute = value;
+	glWidget->createPilotsList();
+	glWidget->updateGL();
 }
