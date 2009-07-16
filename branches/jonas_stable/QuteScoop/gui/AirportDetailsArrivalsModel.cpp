@@ -39,13 +39,14 @@ QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientati
         case 1: return QString("Type"); break;
         case 2: return QString("Name"); break;
         case 3: return QString("Arriving From"); break;
-        case 4: return QString("Via"); break;
-        case 5: return QString("Alt"); break;
-        case 6: return QString("Speed"); break;
-        case 7: return QString("Dist"); break;
-        case 8: return QString("Expected"); break;
-        case 9: return QString("Delay"); break;
-        case 10: return QString("Status"); break;
+        case 4: return QString("T"); break;
+        case 5: return QString("Via"); break;
+        case 6: return QString("Alt"); break;
+        case 7: return QString("Speed"); break;
+        case 8: return QString("Dist"); break;
+        case 9: return QString("Expected"); break;
+        case 10: return QString("Delay"); break;
+        case 11: return QString("Status"); break;
     }
 
 	return QVariant();
@@ -56,7 +57,7 @@ int AirportDetailsArrivalsModel::rowCount(const QModelIndex &parent) const {
 }
 
 int AirportDetailsArrivalsModel::columnCount(const QModelIndex &parent) const {
-    return 11;
+    return 12;
 }
 
 QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) const {
@@ -86,29 +87,31 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 3:
                 if (p->depAirport() != 0) return p->depAirport()->toolTip(); break;
             case 4:
-                return p->waypoints().last(); break;
+                return p->planFlighttype; break;
             case 5:
-                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
+                return p->waypoints().last(); break;
             case 6:
-                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
+                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
             case 7:
+                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
+            case 8:
                 if(p->flightStatus() == Pilot::PREFILED)
-                    return "n/a";
+                    return QString();
                 else
                     return (p->distanceToDestination() < 3? 0: (int)p->distanceToDestination());
                 break;
-            case 8:
+            case 9:
                 if (p->flightStatus() == Pilot::GROUND_ARR || p->flightStatus() == Pilot::BLOCKED)
                     return "--:--";
                 else if(!p->eet().toString("H:mm").isEmpty())
                     return p->eet().toString("H:mm");
                 else
-                    return "n/a";
-                break;
-            case 9:
-                return p->delayStr();
+                    return QString();
                 break;
             case 10:
+                return p->delayStr();
+                break;
+            case 11:
                 return p->flightStatusShortString();
                 break;
         }

@@ -20,7 +20,8 @@ FORMS = gui/MainWindow.ui \
     gui/AirportDetails.ui \
     gui/PreferencesDialog.ui \
     gui/PlanFlightDialog.ui \
-    gui/BookedAtcDialog.ui
+    gui/BookedAtcDialog.ui \
+    gui/ListClientsDialog.ui
 TARGET = 
 DEPENDPATH += ./src \
     ./gui
@@ -33,16 +34,17 @@ RCC_DIR = ./temp
 QT += network \
     opengl \
     xml
+
 # CONFIG += debug
 # CONFIG += release
-#CONFIG += warn_off
-
+# CONFIG += warn_off
 mac { 
     ICON = gui/Dolomynum.icns
     CONFIG += x86 \
         ppc
 }
 win32:RC_FILE = gui/windowsicon.rc
+
 # Input
 HEADERS += WhazzupData.h \
     Whazzup.h \
@@ -88,7 +90,10 @@ HEADERS += WhazzupData.h \
     src/Route.h \
     gui/PlanFlightRoutesModel.h \
     gui/BookedAtcSortFilter.h \
-    src/helpers.h
+    src/helpers.h \
+    gui/ListClientsSortFilter.h \
+    gui/ListClientsDialogModel.h \
+    gui/ListClientsDialog.h
 SOURCES += WhazzupData.cpp \
     Whazzup.cpp \
     Waypoint.cpp \
@@ -131,5 +136,8 @@ SOURCES += WhazzupData.cpp \
     AirportDetails.cpp \
     src/Route.cpp \
     gui/PlanFlightRoutesModel.cpp \
-    gui/BookedAtcSortFilter.cpp
+    gui/BookedAtcSortFilter.cpp \
+    gui/ListClientsSortFilter.cpp \
+    gui/ListClientsDialogModel.cpp \
+    gui/ListClientsDialog.cpp
 RESOURCES += Resources.qrc

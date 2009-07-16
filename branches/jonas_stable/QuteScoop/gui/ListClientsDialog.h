@@ -16,37 +16,33 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef BOOKEDATCDIALOG_H
-#define BOOKEDATCDIALOG_H
+#ifndef LISTCLIENTSDIALOG_H
+#define LISTCLIENTSDIALOG_H
 
 #include <QSortFilterProxyModel>
 
-#include "BookedAtcDialogModel.h"
-#include "BookedAtcSortFilter.h"
-#include "ui_BookedAtcDialog.h"
+#include "ListClientsDialogModel.h"
+#include "ListClientsSortFilter.h"
+#include "ui_ListClientsDialog.h"
 
-class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
+class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
     Q_OBJECT
 public:
-    BookedAtcDialog();
-	static BookedAtcDialog *getInstance();
+    ListClientsDialog();
+    static ListClientsDialog *getInstance();
     void refresh();
 
-signals:
-    void needBookings();
+public slots:
+    void newMapPosition();
 
 private slots:
-    void newFilter();
     void modelSelected(const QModelIndex& index);
-    void on_tbPredict_clicked();
-    void on_dateFilter_dateChanged(QDate date);
-    void on_timeFilter_timeChanged(QTime date);
-    void on_spinHours_valueChanged(int val);
     void on_editFilter_textChanged(QString str);
+    void newFilter();
 
 private:
-    BookedAtcDialogModel bookedAtcModel;
-	BookedAtcSortFilter *bookedAtcSortModel;
+    ListClientsDialogModel listClientsModel;
+    ListClientsSortFilter *listClientsSortModel;
 };
 
-#endif // BOOKEDATCDIALOG_H
+#endif // LISTCLIENTSDIALOG_H

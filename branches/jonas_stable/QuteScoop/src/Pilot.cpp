@@ -82,7 +82,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 		planRoute.replace(QRegExp("[/]"), " ");
 
 	if(planRoute.isEmpty())
-		planRoute = "n/a";
+        planRoute = "";
 }
 
 void Pilot::showDetailsDialog() {
@@ -155,67 +155,64 @@ QString Pilot::flightStatusString() const {
     QString result;
     switch(flightStatus()) {
         case BOARDING:
-            result = QString("Boarding");
-            result += ", EET " + eet().toString("H:mm") + " hrs";
+            result = QString();
+            result += "EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_DEP:
-            result = QString("Taxi to runway");
-            result += ", EET " + eet().toString("H:mm") + " hrs";
+            result = QString();
+            result += "EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case DEPARTING:
-            result = QString("Departing");
-            result += ", EET " + eet().toString("H:mm") + " hrs";
+            result = QString();
+            result += "EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case ARRIVING:
-            result = QString("Arriving");
-            result += ", EET " + eet().toString("H:mm") + " hrs";
+            result = QString();
+            result += "EET " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HH:mm") + " UTC";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_ARR:
-            result = QString("Taxi to gate");
-            result += ", ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
+            result = QString();
+            result += "ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case BLOCKED:
-            result = QString("Blocked at gate");
-            result += ", ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
+            result = QString();
+            result += "ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
-        case CRASHED: return "Crashed";
-		case BUSH: return "Bush pilot";
+        case CRASHED: return QString();
+        case BUSH: return QString();
 		case EN_ROUTE: {
-				Airport *dep = depAirport();
+                result = QString();
+                Airport *dep = depAirport();
 				Airport *dst = destAirport();
-				if(dst == 0)
-					return "En route";
-
-                result = "En route";
-				if(dep != 0) {
-					// calculate %done
-					int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
-					if(total_dist > 0) {
-						int dist_done = (int)NavData::distance(lat, lon, dep->lat, dep->lon);
-						result += QString(" (%1%)").arg(dist_done * 100 / total_dist);
-					}
-				}
+                if(dst == 0)
+                    return QString();
+                if(dep != 0) {
+                    // calculate %done
+                    int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
+                    if(total_dist > 0) {
+                        int dist_done = (int)NavData::distance(lat, lon, dep->lat, dep->lon);
+                        result += QString("%1%").arg(dist_done * 100 / total_dist);
+                    }
+                }
                 result += ", EET " + eet().toString("H:mm") + " hrs";
                 result += ", ETA " + eta().toString("HH:mm") + " UTC";
                 result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
                 return result;
             }
         case PREFILED:
-            return QString("Prefiled (ETD %1, ETA %2)")
-                    .arg(etd().toString("ddd MM/dd HH:mm"))
-                    .arg(etaPlan().toString("ddd MM/dd HH:mm"));
+            return QString();
 	}
-	return "Unknown";
+    return QString("Unknown");
 }
 
 QString Pilot::flightStatusShortString() const {
@@ -246,8 +243,8 @@ QString Pilot::rank() const {
 		case 8: return "CC"; break;
 		case 9: return "CFC"; break;
 		case 10: return "CSC"; break;
-		default: return "??"; break;
-		}
+        default: return QString("? (%1)").arg(rating); break;
+        }
 	}
 	return QString();
 }
@@ -399,7 +396,7 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
 QStringList Pilot::waypoints() const {
 	QStringList result = planRoute.split(QRegExp("([\\s\\+\\-\\.\\,]|//)"), QString::SkipEmptyParts);
 	if(result.isEmpty()) {
-		result.append("n/a");
+        result.append("");
 	}
 	return result;
 }

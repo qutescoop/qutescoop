@@ -44,7 +44,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 		atisMessage = atis;
 	}
 
-/*
+
     QHash<QString, Fir*> firs = NavData::getInstance()->firs();
     QString icao = this->getCenter();
     if(icao.isNull() || icao.isEmpty()) {
@@ -63,15 +63,8 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
         }
         if(!icao.isEmpty() && firs.contains(icao)) {
             fir = firs[icao];
-            if(firs[icao] != 0) {
-                QPair<double, double> equidistantPoint = fir->equidistantPoint();
-                lat = equidistantPoint.first; //fir->lat();
-                lon = equidistantPoint.second; //fir->lon(); // fixme
-                visualRange = fir->maxDistanceFromCenter(); // hack to find airports under its control
-            }
         }
     }
-    */
 }
 
 QString Controller::facilityString() const {
@@ -190,34 +183,34 @@ void Controller::showDetailsDialog() {
 QString Controller::rank() const {
 	if(network == VATSIM) {
 		switch(rating) {
-		case 0: return ""; break;
-		case 1: return "OBS"; break;
-		case 2: return "STU"; break;
-		case 3:
-		case 4: return "STU+"; break;
-		case 5: return "CTR"; break;
-		case 6:
-		case 7: return "CTR+"; break;
-		case 8: return "INS"; break;
-		case 9:
-		case 10: return "INS+"; break;
-		default: return "???"; break;
-		}
+        case 1: return QString("OBS"); break;
+        case 2: return QString("S1"); break;
+        case 3: return QString("S2"); break; // will be re-introduced in 2009/08
+        case 4: return QString("S3"); break;
+        case 5: return QString("C1"); break;
+        case 6: return QString("C2"); break;
+        case 7: return QString("C3"); break;
+        case 8: return QString("I1"); break;
+        case 9: return QString("I2"); break;
+        case 10: return QString("I3"); break;
+        case 11: return QString("SUP"); break;
+        case 12: return QString("ADM"); break;
+        default: return QString("unknown:%1").arg(rating); break;
+        }
 	} else {
 		switch(rating) {
-		case 0:
-		case 1: return "OBS"; break;
-		case 2: return "S1"; break;
-		case 3: return "S2"; break;
-		case 4: return "S3"; break;
-		case 5: return "C1"; break;
-		case 6: return "C2"; break;
-		case 7: return "C3"; break;
-		case 8: return "I1"; break;
-		case 9: return "I2"; break;
-		case 10: return "I3"; break;
-		default: return "??"; break;
-		}
+        case 1: return QString("OBS"); break;
+        case 2: return QString("S1"); break;
+        case 3: return QString("S2"); break;
+        case 4: return QString("S3"); break;
+        case 5: return QString("C1"); break;
+        case 6: return QString("C2"); break;
+        case 7: return QString("C3"); break;
+        case 8: return QString("I1"); break;
+        case 9: return QString("I2"); break;
+        case 10: return QString("I3"); break;
+        default: return QString("unknown:%1").arg(rating); break;
+        }
 	}
 }
 

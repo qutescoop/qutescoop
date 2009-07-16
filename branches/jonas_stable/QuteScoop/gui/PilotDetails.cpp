@@ -34,7 +34,7 @@ PilotDetails::PilotDetails():
 	pilot(0)
 {
 	setupUi(this);
-    setWindowFlags(Qt::Tool);
+//    setWindowFlags(Qt::Tool);
 
 	connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
 	connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
@@ -55,19 +55,19 @@ void PilotDetails::refresh(Pilot *newPilot) {
 	setWindowTitle(pilot->label);
 	
 	// Pilot Information
-    lblPilotInfo->setText(QString("<strong>PILOT: %1</strong>, %2")
+    lblPilotInfo->setText(QString("<strong>PILOT: %1</strong>%2")
                         .arg(pilot->displayName(true))
-                        .arg(pilot->detailInformation()));
+                        .arg(pilot->detailInformation().isEmpty() ? "" : ", " + pilot->detailInformation()));
     if (pilot->server.isEmpty()) {
-        lblConnected->setText(QString("<i>Not connected (prefiled flight)</i>"));
-        buttonShowOnMap->setEnabled(false);
+        lblConnected->setText(QString("<i>Not connected</i>"));
     } else {
         lblConnected->setText(QString("On %1 for %2%3")
                      .arg(pilot->server)
                      .arg(pilot->onlineTime())
                      .arg(pilot->clientInformation().isEmpty()? "": ", "+ pilot->clientInformation()));
-        buttonShowOnMap->setEnabled(true);
     }
+    buttonShowOnMap->setEnabled(pilot->lat != 0 || pilot->lon != 0);
+
 	
 	// Aircraft Information
     lblAircraft->setText(QString("%1").arg(pilot->planAircraft));
@@ -75,6 +75,7 @@ void PilotDetails::refresh(Pilot *newPilot) {
     lblGroundspeed->setText(QString("%1 kts").arg(pilot->groundspeed));
 	
 	// flight status
+    groupStatus->setTitle(QString("Flight Status: %1").arg(pilot->flightStatusShortString()));
 	lblFlightStatus->setText(pilot->flightStatusString());
 
     // flight plan
@@ -86,9 +87,9 @@ void PilotDetails::refresh(Pilot *newPilot) {
     else if (pilot->planFlighttype == "V")
         fpTypeStr = "VFR";
     else if (pilot->planFlighttype == "Y")
-        fpTypeStr = "IFR to VFR";
+        fpTypeStr = "Y: IFR to VFR";
     else if (pilot->planFlighttype == "Z")
-        fpTypeStr = "VFR to IFR";
+        fpTypeStr = "Z: VFR to IFR";
     else
         fpTypeStr =  pilot->planFlighttype;
     groupFp->setTitle(QString("Flight Plan (%1)")
@@ -97,21 +98,24 @@ void PilotDetails::refresh(Pilot *newPilot) {
     QString depStr = pilot->planDep;
 	Airport *airport = pilot->depAirport();
     if(airport != 0) depStr = airport->toolTip();
-    lblDep->setText(depStr);
+    //lblDep->setText(depStr);
+    buttonFrom->setText(depStr);
 
     lblPlanEtd->setText(pilot->etd().toString("HH:mm"));
 	
 	QString destStr = pilot->planDest;
 	airport = pilot->destAirport();
     if(airport != 0) destStr = airport->toolTip();
-    lblDest->setText(destStr);
+    //lblDest->setText(destStr);
+    buttonDest->setText(destStr);
 
     lblPlanEta->setText(pilot->etaPlan().toString("HH:mm"));
 
     QString altStr = pilot->planAltAirport;
     airport = pilot->altAirport();
     if(airport != 0) altStr = airport->toolTip();
-    lblAlt->setText(altStr);
+    //lblAlt->setText(altStr);
+    buttonAlt->setText(altStr);
 
     lblFuel->setText(QTime(pilot->planHrsFuel, pilot->planMinFuel).toString("H:mm"));
     lblRoute->setText(pilot->planRoute);

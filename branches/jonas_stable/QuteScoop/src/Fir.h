@@ -57,6 +57,7 @@ private:
 	double _lat, _lon;
 	GLuint polygon, borderline;
 
+    QPair<double, double> _equidistantPoint;
     int _maxDistFromCenter;
 };
 

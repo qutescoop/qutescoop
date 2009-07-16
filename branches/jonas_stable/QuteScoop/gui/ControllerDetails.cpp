@@ -36,7 +36,7 @@ ControllerDetails::ControllerDetails():
 	controller(0)
 {
 	setupUi(this);
-    setWindowFlags(Qt::Tool);
+//    setWindowFlags(Qt::Tool);
 
 	connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
 	connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));

@@ -36,11 +36,12 @@ QVariant AirportDetailsDeparturesModel::headerData(int section, enum Qt::Orienta
         case 1: return QString("Type"); break;
         case 2: return QString("Name"); break;
         case 3: return QString("Outbound To"); break;
-        case 4: return QString("Via"); break;
-        case 5: return QString("Alt"); break;
-        case 6: return QString("Speed"); break;
-        case 7: return QString("Dist"); break;
-        case 8: return QString("Status"); break;
+        case 4: return QString("T"); break;
+        case 5: return QString("Via"); break;
+        case 6: return QString("Alt"); break;
+        case 7: return QString("Speed"); break;
+        case 8: return QString("Dist"); break;
+        case 9: return QString("Status"); break;
     }
 	
 	return QVariant();
@@ -51,7 +52,7 @@ int AirportDetailsDeparturesModel::rowCount(const QModelIndex &parent) const {
 }
 
 int AirportDetailsDeparturesModel::columnCount(const QModelIndex &parent) const {
-	return 9;
+    return 10;
 }
 
 QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role) const {
@@ -80,16 +81,18 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
                 return p->displayName(); break;
             case 3: 
                 if(p->destAirport() != 0) return p->destAirport()->toolTip(); break;
-            case 4: 
-                return p->waypoints().first(); break;
+            case 4:
+                return p->planFlighttype; break;
             case 5:
-                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
+                return p->waypoints().first(); break;
             case 6:
-                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
+                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
             case 7:
+                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
+            case 8:
                 if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
                 else return (p->distanceFromDeparture() < 3? 0: (int)p->distanceFromDeparture()); break;
-            case 8: 
+            case 9:
                 return p->flightStatusShortString();
                 break;
         }

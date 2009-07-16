@@ -47,8 +47,17 @@ Window::Window(QWidget *parent) :
 
 	if(Settings::resetOnNextStart())
 		QSettings().clear();
+<<<<<<< .mine
+
+    // Playing with toolbar
+    //addToolBar(toolBar = new QToolBar());
+    //toolBar->addWidget(new QLabel("test", toolBar));
+
+    QSettings* settings = new QSettings();
+=======
 
 	QSettings* settings = new QSettings();
+>>>>>>> .r102
 	QGLFormat fmt;
 
 	// Can please somebody comment on which settings are useful and which
@@ -112,6 +121,7 @@ Window::Window(QWidget *parent) :
 	connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
 	connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
 	connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
+    connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
 
 	qDebug() << "Expecting data directory at" << Settings::dataDirectory() << "(Option: general/dataDirectory)";
 
@@ -302,10 +312,19 @@ void Window::whazzupDownloaded(bool isNew) {
 		clientSelection->close();
 		performSearch();
 
+<<<<<<< .mine
+        AirportDetails::getInstance()->refresh();
+        PilotDetails::getInstance()->refresh();
+        ControllerDetails::getInstance()->refresh();
+
+        ListClientsDialog::getInstance()->refresh();
+        if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
+=======
 		AirportDetails::getInstance()->refresh();
 		PilotDetails::getInstance()->refresh();
 		ControllerDetails::getInstance()->refresh();
 		if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
+>>>>>>> .r102
 
 		refreshFriends();
 	}
@@ -368,6 +387,14 @@ void Window::openBookedAtc() {
 	BookedAtcDialog::getInstance()->setFocus();
 }
 
+void Window::openListClients()
+{
+    ListClientsDialog::getInstance()->show();
+    ListClientsDialog::getInstance()->raise();
+    ListClientsDialog::getInstance()->activateWindow();
+    ListClientsDialog::getInstance()->setFocus();
+}
+
 void Window::on_searchEdit_textChanged(const QString& text) {
 	if(text.length() < 2) {
 		searchTimer.stop();
@@ -411,6 +438,7 @@ void Window::on_actionHideAllWindows_triggered() {
 	//PreferencesDialog::getInstance()->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
 	//PlanFlightDialog::getInstance()->close();
 	//BookedAtcDialog::getInstance()->close();
+    //ListClientsDialog::getInstance()->close();
 
 	if(metarDecoderDock->isFloating())
 		metarDecoderDock->hide();
@@ -782,3 +810,4 @@ void Window::setPlotFlightPlannedRoute(bool value) {
 	glWidget->createPilotsList();
 	glWidget->updateGL();
 }
+

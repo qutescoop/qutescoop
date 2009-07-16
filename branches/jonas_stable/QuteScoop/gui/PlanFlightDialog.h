@@ -24,6 +24,7 @@
 #include <QHttp>
 #include <QBuffer>
 #include <QSortFilterProxyModel>
+#include <QItemDelegate>
 
 #include <QtCore>
 

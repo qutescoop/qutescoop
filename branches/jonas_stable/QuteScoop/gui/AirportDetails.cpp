@@ -38,7 +38,7 @@ AirportDetails::AirportDetails():
 	airport(0)
 {
 	setupUi(this);
-    setWindowFlags(Qt::Tool);
+//    setWindowFlags(Qt::Tool);
 
 	connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
 	connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
@@ -59,7 +59,7 @@ AirportDetails::AirportDetails():
 	arrivalsSortModel->setDynamicSortFilter(true);
 	arrivalsSortModel->setSourceModel(&arrivalsModel);
 	treeArrivals->setModel(arrivalsSortModel);
-    treeArrivals->sortByColumn(8, Qt::AscendingOrder);
+    treeArrivals->sortByColumn(9, Qt::AscendingOrder);
     treeArrivals->header()->setResizeMode(QHeaderView::Interactive);
 
     connect(treeArrivals->header(), SIGNAL(sectionClicked(int)), treeArrivals, SLOT(sortByColumn(int)));
@@ -69,9 +69,9 @@ AirportDetails::AirportDetails():
 	departuresSortModel = new QSortFilterProxyModel;
 	departuresSortModel->setDynamicSortFilter(true);
 	departuresSortModel->setSourceModel(&departuresModel);
-    departuresSortModel->sort(7, Qt::AscendingOrder);
+//    departuresSortModel->sort(8, Qt::AscendingOrder);  // necessary?
 	treeDepartures->setModel(departuresSortModel);
-    treeDepartures->sortByColumn(7, Qt::AscendingOrder);
+    treeDepartures->sortByColumn(8, Qt::AscendingOrder);
     treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
 	
     connect(treeDepartures->header(), SIGNAL(sectionClicked(int)), treeDepartures, SLOT(sortByColumn(int)));
@@ -81,7 +81,16 @@ AirportDetails::AirportDetails():
 }
 
 void AirportDetails::refresh(Airport* newAirport) {
-	if(newAirport != 0) airport = newAirport;
+    if(newAirport != 0) {
+        if(newAirport != airport) {
+            // scroll Boxes to top on new Data
+            treeAtc->scrollTo(atcSortModel->index(0, 0));
+            treeArrivals->scrollTo(arrivalsSortModel->index(0, 0));
+            treeDepartures->scrollTo(departuresSortModel->index(0, 0));
+        }
+
+        airport = newAirport;
+    }
 	if(airport == 0) return;
 	setMapObject(airport);
 	

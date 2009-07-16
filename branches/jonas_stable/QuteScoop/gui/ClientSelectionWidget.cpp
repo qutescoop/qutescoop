@@ -86,9 +86,10 @@ void ClientSelectionWidget::timerDefaultTriggered() {
     progressBar->setValue(progressBar->value() - 2);
     if(progressBar->value() < 5) {
         timerDefault.stop();
+        progressBar->setValue(100);
         listWidget->releaseKeyboard();
-        displayClients[0]->showDetailsDialog();
         close();
+        displayClients[0]->showDetailsDialog();
         return;
     }
 }

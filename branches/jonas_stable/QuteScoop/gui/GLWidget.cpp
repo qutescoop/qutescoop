@@ -32,6 +32,8 @@
 #include "Settings.h"
 #include "Waypoint.h"
 #include "PlanFlightDialog.h"
+#include "ListClientsDialog.h"
+#include "Window.h"
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	QGLWidget(fmt, parent) {
@@ -40,6 +42,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 	zRot = 0;
 	zoom = 2;
 	aspectRatio = 1;
+    emit newPosition();
 
 	pilotsList = 0;
 	airportsList = 0;
@@ -92,13 +95,27 @@ QSize GLWidget::sizeHint() const {
 }
 
 void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
-	xRot = 360 - lat;
-	yRot = 360 - lon;
+    xRot = 360 - lat;
+    yRot = 360 - lon;
     normalizeAngle(&xRot);
     normalizeAngle(&yRot);
     zoom = newZoom;
     resetZoom();
-	updateGL();
+    updateGL();
+    emit newPosition();
+}
+
+QPair<double, double> GLWidget::currentPosition() {
+    double lat = 360 - xRot;
+    double lon = 360 - yRot;
+    while (lat > 180) lat -= 360;
+    while (lat < -180) lat += 360;
+    if (lat > 90) lat = 180 - lat;
+    if (lat < -90) lat = -180 + lat;
+    while (lon > 180) lon -= 360;
+    while (lon < -180) lon += 360;
+
+    return QPair<double, double>(lat, lon);
 }
 
 void GLWidget::prepareDisplayLists() {
@@ -257,9 +274,9 @@ void GLWidget::initializeGL() {
         glEnable(GL_LINE_SMOOTH);
         glEnable(GL_POLYGON_SMOOTH);
     }
-    if(Settings::enableBlend()) {
+    if(Settings::enableBlend())
         glEnable(GL_BLEND);
-    }
+
     glEnable(GL_LINE_STIPPLE);
     glEnable(GL_TEXTURE_2D);
 }
@@ -272,7 +289,8 @@ void GLWidget::paintGL() {
 	glRotated(yRot, 0.0, 1.0, 0.0);
 	glRotated(zRot, 0.0, 0.0, 1.0);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if(Settings::enableBlend())
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glCallList(orbList);
 	glCallList(gridlinesList);
@@ -289,12 +307,12 @@ void GLWidget::paintGL() {
     if(Settings::showAirportCongestion()) 
         glCallList(congestionsList);
 
-	glCallList(airportsList);
+    glCallList(airportsList);
 
     glCallList(pilotsList);
 
     if(Settings::showInactiveAirports() && zoom < inactiveAirportDotZoomTreshold)
-    	glCallList(airportsInactiveList);
+        glCallList(airportsInactiveList);
 
 	if(zoom < fixZoomTreshold && Settings::showFixes())
 		glCallList(fixesList);
@@ -366,6 +384,7 @@ void GLWidget::handleRotation(QMouseEvent *event) {
     }
 
 	lastPos = event->pos();
+    emit newPosition();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
@@ -842,20 +861,29 @@ void GLWidget::rightClick(const QPoint& pos) {
             break; // priorise airports
 		}
 
-		if(countRelevant > 1) return; // area too crowded
+        if(countRelevant > 1) {
+            Window::getInstance()->statusBar()->showMessage("Too many objects under cursor", 3000);
+            return; // area too crowded
+        }
 	}
-	if(countRelevant != 1) return; // ambiguous search result
+    if(countRelevant == 0) {
+        Window::getInstance()->statusBar()->showMessage("No object under cursor", 3000);
+        return;
+    }
+    if(countRelevant != 1) return; // ambiguous search result
 
 	if(airport != 0) {
-		airport->toggleFlightLines();
-		createPilotsList();
+        Window::getInstance()->statusBar()->showMessage(QString("Toggled routes for %1").arg(airport->label), 2000);
+        airport->toggleFlightLines();
+        createPilotsList();
 		updateGL();
 		return;
 	}
 
 	if(pilot != 0) {
 		// display flight path for pilot
-		pilot->toggleDisplayPath();
+        Window::getInstance()->statusBar()->showMessage(QString("Toggled route for %1").arg(pilot->label), 2000);
+        pilot->toggleDisplayPath();
 		createPilotsList();
 		updateGL();
 		return;
@@ -956,6 +984,7 @@ void GLWidget::restorePosition(int nr) {
 	normalizeAngle(&yRot);
 	resetZoom();
 	updateGL();
+    emit newPosition();
 }
 
 void GLWidget::scrollBy(int moveByX, int moveByY) {

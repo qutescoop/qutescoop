@@ -410,7 +410,7 @@ Location</string>
         </widget>
        </item>
        <item>
-        <spacer>
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -1549,7 +1549,7 @@ Margin</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_2">
           <item>
-           <layout class="QGridLayout" name="gridLayout">
+           <layout class="QGridLayout" name="gridLayout_APtraffic">
             <item row="1" column="1">
              <widget class="QSpinBox" name="spFilterDistance">
               <property name="enabled">
@@ -1787,7 +1787,7 @@ airports with at least</string>
         </widget>
        </item>
        <item>
-        <spacer name="verticalSpacer_3">
+        <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>
@@ -1802,7 +1802,7 @@ airports with at least</string>
       </layout>
       <zorder>groupBoxAirports</zorder>
       <zorder>groupBoxAirportTraffic</zorder>
-      <zorder>verticalSpacer_3</zorder>
+      <zorder>verticalSpacer_2</zorder>
      </widget>
      <widget class="QWidget" name="display3Tab">
       <attribute name="title">
@@ -2350,7 +2350,7 @@ part is</string>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <layout class="QHBoxLayout" name="mainLayout">
      <item>
       <widget class="QLabel" name="label_58">
        <property name="font">

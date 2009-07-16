@@ -17,6 +17,9 @@
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -145,12 +148,11 @@
         <item row="0" column="2">
          <widget class="QCheckBox" name="cbGenerated">
           <property name="enabled">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
           <property name="text">
            <string>generated 
-(experimental)
-(inactive)</string>
+(experimental)</string>
           </property>
           <property name="checked">
            <bool>false</bool>
@@ -222,6 +224,9 @@
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
        <widget class="QTreeView" name="treeRoutes">
+        <property name="editTriggers">
+         <set>QAbstractItemView::AllEditTriggers</set>
+        </property>
         <property name="rootIsDecorated">
          <bool>false</bool>
         </property>
@@ -229,6 +234,9 @@
          <bool>false</bool>
         </property>
         <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="wordWrap">
          <bool>true</bool>
         </property>
        </widget>
@@ -254,6 +262,12 @@
      </item>
      <item>
       <widget class="QLabel" name="lblPlotStatus">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="text">
         <string>Plotted OK.</string>
        </property>

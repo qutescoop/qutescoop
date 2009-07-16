@@ -39,10 +39,19 @@ PlanFlightDialog *PlanFlightDialog::getInstance() {
 }
 
 PlanFlightDialog::PlanFlightDialog():
+<<<<<<< .mine
+    QDialog(Window::getInstance())
+=======
 	QDialog()
+>>>>>>> .r102
 {
+<<<<<<< .mine
+    setupUi(this);
+//    setWindowFlags(Qt::Tool);
+=======
 	setupUi(this);
 	setWindowFlags(Qt::Tool);
+>>>>>>> .r102
 
 	selectedRoute = 0;
 
@@ -72,6 +81,38 @@ void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected 
 }
 
 void PlanFlightDialog::requestGenerated() {
+<<<<<<< .mine
+    if (edDep->text().length() != 4 || edDest->text().length() != 4) {
+        lblGeneratedStatus->setText(QString("bad request"));
+        return;
+    }
+      
+    // add bogus routes
+    QList<Route*> newroutes;
+    for (int i=0; i<1; i++) {
+        QStringList sl = QStringList();
+        sl.append("generated");
+        sl.append(QString("%1").arg(1000 + i));
+        sl.append(edDep->text());
+        sl.append(edDest->text());
+        sl.append(QString("%1").arg(180 - i*10));
+        sl.append(QString("%1").arg(180 + i*10));
+        sl.append("DCT");
+        sl.append("n/a");
+        sl.append("just a test");
+        
+        Route *r = new Route(sl);
+        newroutes.append(r);
+    }
+    
+    lblGeneratedStatus->setText(QString("%1 route%2")
+                                .arg(newroutes.size())
+                                .arg(newroutes.size() == 1 ? "": "s"));
+    routes.append(newroutes);
+    routesModel.setClients(routes);
+    routesSortModel->invalidate();
+    treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
+=======
 	if (edDep->text().length() != 4 || edDest->text().length() != 4) {
 		lblGeneratedStatus->setText(QString("bad request"));
 		return;
@@ -102,6 +143,7 @@ void PlanFlightDialog::requestGenerated() {
 	routesModel.setClients(routes);
 	routesSortModel->invalidate();
 	treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
+>>>>>>> .r102
 }
 
 void PlanFlightDialog::requestVroute() {
@@ -238,6 +280,14 @@ void PlanFlightDialog::on_edDest_textChanged(QString str)
 }
 
 void PlanFlightDialog::routeSelected(const QModelIndex& index) {
+<<<<<<< .mine
+    if(!index.isValid()) {
+        selectedRoute = 0;
+        return;
+    }
+    selectedRoute = routes[routesSortModel->mapToSource(index).row()];
+    if(cbPlot->isChecked()) Window::getInstance()->setPlotFlightPlannedRoute(true);
+=======
 	if(!index.isValid()) {
 		qDebug() <<"deselected";
 		selectedRoute = 0;
@@ -245,6 +295,7 @@ void PlanFlightDialog::routeSelected(const QModelIndex& index) {
 	}
 	selectedRoute = routes[routesSortModel->mapToSource(index).row()];
 	if(cbPlot->isChecked()) Window::getInstance()->setPlotFlightPlannedRoute(true);
+>>>>>>> .r102
 }
 
 void PlanFlightDialog::plotPlannedRoute() const {

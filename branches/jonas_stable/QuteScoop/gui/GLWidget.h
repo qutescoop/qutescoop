@@ -41,6 +41,7 @@ public:
     QSize sizeHint() const;
 
     bool plotFlightPlannedRoute;
+    QPair<double, double> currentPosition();
 
 public slots:
     void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
@@ -48,8 +49,8 @@ public slots:
 	void setMapPosition(double lat, double lon, double newZoom);
     void scrollBy(int moveByX, int moveByY);
 	void rightClick(const QPoint& pos);
-    void zoomIn()  { return zoomIn(1);  }
-    void zoomOut() { return zoomOut(1); }
+    void zoomIn()  { return zoomIn(0.6);  }
+    void zoomOut() { return zoomOut(0.6); }
     void zoomIn(double factor);
     void zoomOut(double factor);
 
@@ -68,6 +69,7 @@ public slots:
 
 signals:
 	void mapClicked(int x, int y, QPoint absolutePos);
+    void newPosition();
 
 protected:
 	void initializeGL();

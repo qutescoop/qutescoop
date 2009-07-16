@@ -151,7 +151,7 @@ void Whazzup::statusDownloaded(bool error) {
 
 void Whazzup::download() {
     if(urls.size() == 0) {
-        emit downloadError("No network status available. Trying to get one.");
+        emit downloadError("No Whazzup URLs in network status. Trying to get a new network status.");
         setStatusLocation(Settings::statusLocation());
         qDebug() << "no Whazzup URLs available";
 		return;
@@ -161,6 +161,8 @@ void Whazzup::download() {
 	
     QTime now = QTime::currentTime();
     if(lastDownloadTime.secsTo(now) < 30) {
+        Window::getInstance()->statusBar()->showMessage(
+                QString("Whazzup checked less than 30 seconds ago. Skipping."), 3000);
         qDebug() << "Whazzup already checked less than 30 seconds ago. Skipping.";
 		return; // don't allow download intervals < 30 seconds
     }
@@ -236,6 +238,9 @@ void Whazzup::whazzupDownloaded(bool error) {
             qDebug() << "Whazzup updated from\t" << data.timestamp().toString();
             emit newData(true);
         } else {
+            Window::getInstance()->statusBar()->showMessage(
+                    QString("We already have Whazzup with that Timestamp: %1")
+                    .arg(data.timestamp().toString()), 3000);
             qDebug() << "We already have Whazzup with that Timestamp\t" << data.timestamp().toString();
             emit newData(false);
         }
@@ -313,6 +318,9 @@ void Whazzup::bookingsDownloaded(bool error) {
             qDebug() << "Bookings updated from\t" << data.bookingsTimestamp().toString();
             emit newData(true);
         } else {
+            Window::getInstance()->statusBar()->showMessage(
+                    QString("We already have Bookings with that Timestamp: %1")
+                    .arg(data.bookingsTimestamp().toString()), 3000);
             qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
             emit newData(false);
         }

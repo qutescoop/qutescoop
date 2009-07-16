@@ -37,7 +37,7 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
 
     // default
     countryCode = "";
-    lat, lon = 0.0;
+    lat = 0.0; lon = 0.0;
     visualRange = 0;
 
     // computed values
@@ -251,33 +251,33 @@ void BookedController::showDetailsDialog() {
 QString BookedController::rank() const {
 	if(network == VATSIM) {
 		switch(rating) {
-		case 0:
-		case 1: return "OBS"; break;
-		case 2: return "STU"; break;
-		case 3:
-		case 4: return "STU+"; break;
-		case 5: return "CTR"; break;
-		case 6:
-		case 7: return "CTR+"; break;
-		case 8: return "INS"; break;
-		case 9:
-		case 10: return "INS+"; break;
-		default: return "???"; break;
+        case 1: return QString("OBS"); break;
+        case 2: return QString("S1"); break;
+        case 3: return QString("S2"); break;
+        case 4: return QString("S3"); break;
+        case 5: return QString("C1"); break;
+        case 6: return QString("C2"); break;
+        case 7: return QString("C3"); break;
+        case 8: return QString("I1"); break;
+        case 9: return QString("I2"); break;
+        case 10: return QString("I3"); break;
+        case 11: return QString("SUP"); break;
+        case 12: return QString("ADM"); break;
+        default: return QString("unknown:%1").arg(rating); break;
 		}
 	} else {
 		switch(rating) {
-		case 0:
-		case 1: return "OBS"; break;
-		case 2: return "S1"; break;
-		case 3: return "S2"; break;
-		case 4: return "S3"; break;
-		case 5: return "C1"; break;
-		case 6: return "C2"; break;
-		case 7: return "C3"; break;
-		case 8: return "I1"; break;
-		case 9: return "I2"; break;
-		case 10: return "I3"; break;
-		default: return "??"; break;
+        case 1: return QString("OBS"); break;
+        case 2: return QString("S1"); break;
+        case 3: return QString("S2"); break;
+        case 4: return QString("S3"); break;
+        case 5: return QString("C1"); break;
+        case 6: return QString("C2"); break;
+        case 7: return QString("C3"); break;
+        case 8: return QString("I1"); break;
+        case 9: return QString("I2"); break;
+        case 10: return QString("I3"); break;
+        default: return QString("unknown:%1").arg(rating); break;
 		}
 	}
 }

@@ -3,13 +3,13 @@ changed:
 * Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
 * Increased max. value for shown labels (in preferences)
 * Render dashed lines in front of/behind plane also in flightplan Plot mode
-* All Subwindows are now Tool-Windows (smaller Header) to save space. Please report if you are having trouble with it.
 
 added:
 * Show ATC bookings in list (VATSIM only so far)
 * Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
 * See prefiled flights in arrival and departure lists and in Time Warp on the map as faked real pilots
-* Multiple Map Positions can be remembered / recalled
+* List, search and filter all connected clients and see distance from present position: look for supervisors
+* Remember / recall Multiple Map Positions
 * OpenGL debug messages and ability to set OpenGL parameters through own config file
 * Show inactive airports when zoomed in
 * Filter airport traffic to only show traffic in the vicinity of airport (configurable)
@@ -18,7 +18,7 @@ added:
 * Doubleclick to center map, right or left drag to pan
 * Key commands for pan and zoom
 * Remember and recall 7 Map Positions
-* Request routes from route providers. So far only vroute is integrated, but we asked all major route databases to join us.
+* Request routes from route providers. So far only vroute is integrated, but all major route databases are invited.
 * Requested or manually enterred routes can be plotted onto the map using the free XPlane-NavDatabase
 * Show _FSS stations (by faking the facilityType which is not reported correctly in WhazzUp data)
 * Show flight delay as difference from filed arrival time to calculated ETA

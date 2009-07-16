@@ -36,7 +36,8 @@ QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation ori
     
 	// orientation is Qt::Horizontal
 	switch(section) {
-    case 0: return QString("Provider"); break;
+    case 0: return QString(); break;
+    case 1: return QString("Provider"); break;
     case 2: return QString("Dep"); break;
     case 3: return QString("Dest"); break;
     case 4: return QString("Route"); break;
@@ -67,15 +68,13 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
                 return QIcon(":/routeproviders/images/vroute.png");
             break;
         }
-    }
-	
-	if(role == Qt::DisplayRole) {
+    } else if(role == Qt::DisplayRole) {
 		Route* r = routes[index.row()];
 		switch(index.column()) {
         case 1: return r->provider; break;
         case 2: return r->dep; break;
         case 3: return r->dest; break;
-        case 4: return QString("%1...%2").arg(r->flightPlan.left(10)).arg(r->flightPlan.right(10)); break;
+        case 4: return QString("%1").arg(r->flightPlan); break; //.left(10)).arg(r->flightPlan.right(10)); break;
         case 5: return QString("%1 NM").arg(r->routeDistance); break;
         case 6: return r->minFl; break;
         case 7: return r->maxFl; break;
@@ -92,6 +91,16 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
 }
 
 void PlanFlightRoutesModel::modelSelected(const QModelIndex& index) {
-    //QMessageBox::information(PlanFlightDialog::getInstance(), tr("Route"), routes[index.row()]->flightPlan);
     //routes[index.row()]->showDetailsDialog();
+}
+
+bool PlanFlightRoutesModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    //qDebug() << "setData" << role << value;
+}
+
+Qt::ItemFlags PlanFlightRoutesModel::flags(const QModelIndex &index) const {
+    // make column 4 edittable
+    //if (index.column() == 4)
+    //    return Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
 }

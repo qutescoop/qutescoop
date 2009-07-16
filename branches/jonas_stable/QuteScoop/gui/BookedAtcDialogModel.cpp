@@ -33,7 +33,7 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
 	// orientation is Qt::Horizontal
 	switch(section) {
         case 0: return QString("Callsign"); break;
-        case 1: return QString("Position"); break;
+        case 1: return QString("Facility"); break;
         case 2: return QString("Country"); break;
         case 3: return QString("Name"); break;
         case 4: return QString("Date"); break;

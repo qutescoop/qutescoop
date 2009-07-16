@@ -1,6 +1,6 @@
 /**************************************************************************
  *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
+ *  Copyright (C) 2007-2008 Martin Domig <martin@domig.net>
  *
  *  QuteScoop is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -16,37 +16,20 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef BOOKEDATCDIALOG_H
-#define BOOKEDATCDIALOG_H
+#ifndef LISTCLIENTSSORTFILTER_H
+#define LISTCLIENTSSORTFILTER_H
 
 #include <QSortFilterProxyModel>
+#include <QtCore>
 
-#include "BookedAtcDialogModel.h"
-#include "BookedAtcSortFilter.h"
-#include "ui_BookedAtcDialog.h"
+class ListClientsSortFilter : public QSortFilterProxyModel {
 
-class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
-    Q_OBJECT
 public:
-    BookedAtcDialog();
-	static BookedAtcDialog *getInstance();
-    void refresh();
+    ListClientsSortFilter(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
 
-signals:
-    void needBookings();
-
-private slots:
-    void newFilter();
-    void modelSelected(const QModelIndex& index);
-    void on_tbPredict_clicked();
-    void on_dateFilter_dateChanged(QDate date);
-    void on_timeFilter_timeChanged(QTime date);
-    void on_spinHours_valueChanged(int val);
-    void on_editFilter_textChanged(QString str);
-
-private:
-    BookedAtcDialogModel bookedAtcModel;
-	BookedAtcSortFilter *bookedAtcSortModel;
+protected:
+    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    
 };
 
-#endif // BOOKEDATCDIALOG_H
+#endif // LISTCLIENTSSORTFILTER_H

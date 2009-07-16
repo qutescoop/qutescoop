@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="_2">
@@ -144,7 +144,7 @@ E009° 37.21'</string>
        <property name="title">
         <string>ATC</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout">
+       <layout class="QGridLayout" name="gridLayoutATC">
         <item row="0" column="0">
          <widget class="QTreeView" name="treeAtc">
           <property name="editTriggers">
@@ -335,7 +335,9 @@ E009° 37.21'</string>
   <tabstop>treeDepartures</tabstop>
   <tabstop>buttonShowOnMap</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonShowOnMap</sender>

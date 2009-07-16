@@ -36,11 +36,11 @@ PreferencesDialog *PreferencesDialog::getInstance() {
 }
 
 PreferencesDialog::PreferencesDialog():
-	QDialog(),
+    QDialog(Window::getInstance()),
 	settingsLoaded(false)
 {
 	setupUi(this);
-    setWindowFlags(Qt::Tool);
+//    setWindowFlags(Qt::Tool);
 
 	cbNetwork->addItems(QStringList() << "IVAO" << "VATSIM" << "User Defined Network");
     cbDashedFrontAfter->addItems(QStringList() << "in front" << "behind");
