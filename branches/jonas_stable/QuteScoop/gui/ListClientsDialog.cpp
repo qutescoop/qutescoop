@@ -82,7 +82,7 @@ void ListClientsDialog::refresh() {
 
     QString msg = QString("Whazzup %1 updated")
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString())
+                        ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
                         : (data.timestamp().isValid()
                            ? data.timestamp().toString("ddd yyyy/MM/dd HHmm'z'")
                            : "never")

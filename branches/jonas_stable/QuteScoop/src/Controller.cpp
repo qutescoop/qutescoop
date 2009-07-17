@@ -31,7 +31,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 
     visualRange = getField(stringList, 19).toInt();
     atisMessage = getField(stringList, 35);
-    timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
+    timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddHHmmss");
 
     QStringList atisLines = atisMessage.split(QString::fromUtf8("^§")); // needed due to source encoded in UTF8 - found after some headache...
     if(atisLines.size() >= 1) {
@@ -48,7 +48,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
     QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)", Qt::CaseInsensitive);
     if (rxOnlineUntil.indexIn(atisMessage) > 0) {
         //fixme
-        QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "hhmm");
+        QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
         if(found.isValid()) {
             if (qAbs(found.secsTo(whazzup->timestamp().time())) > 60*60 * 12) // e.g. now its 2200z, and he says "online until 0030z", allow for up to 12 hours
                 assumeOnlineUntil = QDateTime(whazzup->timestamp().date().addDays(1), found, Qt::UTC);

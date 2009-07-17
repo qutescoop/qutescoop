@@ -23,8 +23,8 @@
 #include <QMessageBox>
 
 void PlanFlightRoutesModel::setClients(const QList<Route*>& newroutes) {
-    routes = newroutes; 
-	reset();
+    routes = newroutes;
+    reset();
 }
 
 QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -32,10 +32,10 @@ QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation ori
         return QVariant();
 
     if(orientation == Qt::Vertical)
-    	return QVariant();
-    
-	// orientation is Qt::Horizontal
-	switch(section) {
+        return QVariant();
+
+    // orientation is Qt::Horizontal
+    switch(section) {
     case 0: return QString(); break;
     case 1: return QString("Provider"); break;
     case 2: return QString("Dep"); break;
@@ -46,21 +46,21 @@ QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation ori
     case 7: return QString("FL<"); break;
     case 8: return QString("Remarks"); break;
     case 9: return QString("Last changed"); break;
-	}
-	
-	return QVariant();
+    }
+
+    return QVariant();
 }
 
 QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
-	if(!index.isValid())
-		return QVariant();
-	
-	if(index.row() >= routes.size())
-		return QVariant();
-    
+    if(!index.isValid())
+        return QVariant();
+
+    if(index.row() >= routes.size())
+        return QVariant();
+
     if(role == Qt::DecorationRole) {
-		Route* r = routes[index.row()];
-		switch(index.column()) {
+        Route* r = routes[index.row()];
+        switch(index.column()) {
         case 0:
             if (r->provider == "generated")
                 return QIcon(":/icons/qutescoop.png");
@@ -69,8 +69,8 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
             break;
         }
     } else if(role == Qt::DisplayRole) {
-		Route* r = routes[index.row()];
-		switch(index.column()) {
+        Route* r = routes[index.row()];
+        switch(index.column()) {
         case 1: return r->provider; break;
         case 2: return r->dep; break;
         case 3: return r->dest; break;
@@ -80,14 +80,14 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
         case 7: return r->maxFl; break;
         case 8: return r->comments; break;
         case 9:
-            QDateTime lastChange = QDateTime::fromString(r->lastChange, "yyyyMMddhhmmss");
+            QDateTime lastChange = QDateTime::fromString(r->lastChange, "yyyyMMddHHmmss");
             if (lastChange.isValid()) return lastChange.date();
             else return r->lastChange;
             break;
-		}
-	}
-	
-	return QVariant();
+        }
+    }
+
+    return QVariant();
 }
 
 void PlanFlightRoutesModel::modelSelected(const QModelIndex& index) {

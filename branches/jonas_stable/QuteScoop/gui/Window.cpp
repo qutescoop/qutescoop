@@ -265,7 +265,7 @@ void Window::whazzupDownloaded(bool isNew) {
     const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
     const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
-    QString msg = QString(tr("%1%2 - %3z: %4 clients"))
+    QString msg = QString(tr("%1%2 - %3: %4 clients"))
                   .arg(Settings::downloadNetworkName())
                   .arg(Whazzup::getInstance()->getPredictedTime().isValid()
                        ? " - <b>W A R P E D</b>  to"
@@ -273,7 +273,7 @@ void Window::whazzupDownloaded(bool isNew) {
                        )
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
-                        : data.timestamp().toString("ddd yyyy/MM/dd HHmm'z'"))
+                        : data.timestamp().toString("ddd MM/dd HHmm'z'"))
                   .arg(data.clients());
     setStatusText(msg);
 

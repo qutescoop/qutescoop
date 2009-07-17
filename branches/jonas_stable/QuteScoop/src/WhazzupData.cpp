@@ -199,12 +199,12 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
 
             //atisMessage = getField(stringList, 35);
             sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
-                     .arg(bc[i]->starts().toString("hhmmZ"))
-                     .arg(bc[i]->ends().toString("hhmmZ"))
+                     .arg(bc[i]->starts().toString("HHmm'z'"))
+                     .arg(bc[i]->ends().toString("HHmm'z'"))
                      .arg(bc[i]->bookingInfoStr);
 
-            //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddhhmmss");
-            sl[37] = bc[i]->timeConnected.toString("yyyyMMddhhmmss");
+            //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddHHmmss");
+            sl[37] = bc[i]->timeConnected.toString("yyyyMMddHHmmss");
 
             //server = getField(stringList, 14);
             sl[14] = "BOOKED SESSION";
@@ -215,7 +215,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             // not applicable:
             //frequency = getField(stringList, 4);
             //visualRange = getField(stringList, 19).toInt();
-            //timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
+            //timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddHHmmss");
             //protrevision = getField(stringList, 15).toInt();
             //rating = getField(stringList, 16).toInt();
 

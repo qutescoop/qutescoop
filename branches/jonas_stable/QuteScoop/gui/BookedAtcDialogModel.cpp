@@ -38,7 +38,7 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
         case 3: return QString("Name"); break;
         case 4: return QString("Date"); break;
         case 5: return QString("From"); break;
-        case 6: return QString("To"); break;
+        case 6: return QString("Until"); break;
         case 7: return QString("Info"); break;
     }
 
@@ -60,8 +60,8 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 2: return c->countryCode; break;
             case 3: return c->realName; break;
             case 4: return c->starts().toString("MM/dd (ddd)"); break;
-            case 5: return c->starts().time().toString("hhmm'z'"); break;
-            case 6: return c->ends().time().toString("hhmm'z'"); break;
+            case 5: return c->starts().time().toString("HHmm'z'"); break;
+            case 6: return c->ends().time().toString("HHmm'z'"); break;
             case 7: return c->bookingInfoStr; break;
         }
     } else if(role == Qt::EditRole) {
@@ -69,6 +69,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
         switch(index.column()) {
             case 5: return c->starts(); break;
             case 6: return c->ends(); break;
+            case 7: return c->bookingInfoStr; break;
         }
     }
 

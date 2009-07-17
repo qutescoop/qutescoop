@@ -105,6 +105,9 @@
      </item>
      <item row="0" column="5">
       <widget class="QDateEdit" name="dateFilter">
+       <property name="wrapping">
+        <bool>true</bool>
+       </property>
        <property name="calendarPopup">
         <bool>true</bool>
        </property>
@@ -163,12 +166,6 @@
         </property>
         <property name="sortingEnabled">
          <bool>true</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-        <property name="expandsOnDoubleClick">
-         <bool>false</bool>
         </property>
        </widget>
       </item>

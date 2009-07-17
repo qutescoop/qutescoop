@@ -253,7 +253,7 @@ void Whazzup::whazzupDownloaded(bool error) {
         } else {
             Window::getInstance()->statusBar()->showMessage(
                     QString("We already have Whazzup with that Timestamp: %1")
-                    .arg(data.timestamp().toString()), 3000);
+                    .arg(data.timestamp().toString("ddd MM/dd HHmm'z'")), 3000);
             qDebug() << "We already have Whazzup with that Timestamp\t" << data.timestamp().toString();
             emit newData(false);
         }
@@ -346,7 +346,7 @@ void Whazzup::bookingsDownloaded(bool error) {
         } else {
             Window::getInstance()->statusBar()->showMessage(
                     QString("We already have Bookings with that Timestamp: %1")
-                    .arg(data.bookingsTimestamp().toString()), 3000);
+                    .arg(data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")), 3000);
             qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
             emit newData(false);
         }
@@ -373,6 +373,5 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
 
     WhazzupData newdata = WhazzupData(predictedTime, data);
     predictedData.updateFrom(newdata);
-    //qDebug() << "Time Warped to\t" << predictedData.timestamp().toString();
     emit newData(true);
 }
