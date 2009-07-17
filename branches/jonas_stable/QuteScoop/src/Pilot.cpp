@@ -159,35 +159,35 @@ QString Pilot::flightStatusString() const {
         case BOARDING:
             result = QString();
             result += "EET " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HH:mm") + " UTC";
+            result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_DEP:
             result = QString();
             result += "EET " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HH:mm") + " UTC";
+            result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case DEPARTING:
             result = QString();
             result += "EET " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HH:mm") + " UTC";
+            result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case ARRIVING:
             result = QString();
             result += "EET " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HH:mm") + " UTC";
+            result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_ARR:
             result = QString();
-            result += "ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
+            result += "ATA " + eta().toString("HHmm") + "z"; // Actual Time of Arrival :)
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case BLOCKED:
             result = QString();
-            result += "ATA " + eta().toString("HH:mm") + " UTC"; // Actual Time of Arrival :)
+            result += "ATA " + eta().toString("HHmm") + "z"; // Actual Time of Arrival :)
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case CRASHED: return QString();
@@ -207,7 +207,7 @@ QString Pilot::flightStatusString() const {
                     }
                 }
                 result += ", EET " + eet().toString("H:mm") + " hrs";
-                result += ", ETA " + eta().toString("HH:mm") + " UTC";
+                result += ", ETA " + eta().toString("HHmm") + "z";
                 result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
                 return result;
             }

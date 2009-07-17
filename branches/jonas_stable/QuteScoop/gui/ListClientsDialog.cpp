@@ -84,7 +84,7 @@ void ListClientsDialog::refresh() {
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.timestamp().time().toString())
                         : (data.timestamp().isValid()
-                           ? data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           ? data.timestamp().toString("ddd yyyy/MM/dd HHmm'z'")
                            : "never")
                         );
     lblStatusInfo->setText(msg);

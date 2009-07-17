@@ -19,8 +19,8 @@
 #include "BookedAtcDialogModel.h"
 
 void BookedAtcDialogModel::setClients(const QList<BookedController*>& controllers) {
-	this->controllers = controllers;
-	reset();
+    this->controllers = controllers;
+    reset();
 }
 
 QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -28,30 +28,30 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
         return QVariant();
 
     if(orientation == Qt::Vertical)
-    	return QVariant();
-    
-	// orientation is Qt::Horizontal
-	switch(section) {
+        return QVariant();
+
+    // orientation is Qt::Horizontal
+    switch(section) {
         case 0: return QString("Callsign"); break;
         case 1: return QString("Facility"); break;
         case 2: return QString("Country"); break;
         case 3: return QString("Name"); break;
         case 4: return QString("Date"); break;
-        case 5: return QString("From [UTC]"); break;
-        case 6: return QString("To [UTC]"); break;
+        case 5: return QString("From"); break;
+        case 6: return QString("To"); break;
         case 7: return QString("Info"); break;
-	}
-	
-	return QVariant();
+    }
+
+    return QVariant();
 }
 
 QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
-	if(!index.isValid())
-		return QVariant();
-	
-	if(index.row() >= controllers.size())
-		return QVariant();
-	
+    if(!index.isValid())
+        return QVariant();
+
+    if(index.row() >= controllers.size())
+        return QVariant();
+
     if(role == Qt::DisplayRole) {
         BookedController* c = controllers[index.row()];
         switch(index.column()) {
@@ -60,8 +60,8 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 2: return c->countryCode; break;
             case 3: return c->realName; break;
             case 4: return c->starts().toString("MM/dd (ddd)"); break;
-            case 5: return c->starts().time(); break;
-            case 6: return c->ends().time(); break;
+            case 5: return c->starts().time().toString("hhmm'z'"); break;
+            case 6: return c->ends().time().toString("hhmm'z'"); break;
             case 7: return c->bookingInfoStr; break;
         }
     } else if(role == Qt::EditRole) {
@@ -71,17 +71,17 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 6: return c->ends(); break;
         }
     }
-	
-	return QVariant();
+
+    return QVariant();
 }
 
-int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const { 
-    return controllers.count(); 
+int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const {
+    return controllers.count();
 }
 
-int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const { 
-    return 8; 
-} 
+int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
+    return 8;
+}
 
 
 void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {

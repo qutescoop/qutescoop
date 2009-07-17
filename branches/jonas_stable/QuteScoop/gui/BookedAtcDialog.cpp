@@ -87,7 +87,7 @@ void BookedAtcDialog::refresh() {
                   .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.bookingsTimestamp().time().toString())
                         : (data.bookingsTimestamp().isValid()
-                           ? data.bookingsTimestamp().toString("ddd MM/dd HH:mm:ss")
+                           ? data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")
                            : "never")
                         );
     lblStatusInfo->setText(msg);

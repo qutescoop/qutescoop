@@ -198,9 +198,9 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             sl[6] = QString("%1").arg(bc[i]->lon);
 
             //atisMessage = getField(stringList, 35);
-            sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2 UTC^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
-                     .arg(bc[i]->starts().toString("hh:mm"))
-                     .arg(bc[i]->ends().toString("hh:mm"))
+            sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
+                     .arg(bc[i]->starts().toString("hhmmZ"))
+                     .arg(bc[i]->ends().toString("hhmmZ"))
                      .arg(bc[i]->bookingInfoStr);
 
             //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddhhmmss");
@@ -226,24 +226,6 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked (to allow for smoother realtime simulation).
     QList<Controller*> c = data.getControllers();
     for (int i = 0; i < c.size(); i++) {
-/* //fixme
-        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
-        // do some magic for Controller Info like "online until"...
-        QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)", Qt::CaseInsensitive);
-        if (rxOnlineUntil.indexIn(c[i]->atisMessage) > 0) {
-            //fixme
-            QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "hhmm");
-            if(found.isValid()) {
-                if (qAbs(found.secsTo(predictionBasedOnTime.time())) > 60*60 * 12) // e.g. now its 2200z, and he says "online until 0030z", allow for up to 12 hours
-                    showUntil = QDateTime(predictionBasedOnTime.date().addDays(1), found, Qt::UTC);
-                else
-                    showUntil = QDateTime(predictionBasedOnTime.date(), found, Qt::UTC);
-            }
-            if (showUntil < predictionBasedOnTime) // he/she enterred a time before and is still online
-                showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
-            qDebug() << "Found" << c[i]->label << "to be online until" << showUntil << "(Controller Info)";
-        }
-    */
         QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
         if(c[i]->assumeOnlineUntil.isValid())
             showUntil = c[i]->assumeOnlineUntil;

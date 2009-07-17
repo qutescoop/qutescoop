@@ -265,29 +265,29 @@ void Window::whazzupDownloaded(bool isNew) {
     const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
     const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
-    QString msg = QString(tr("%1%2 - %3 UTC: %4 clients"))
+    QString msg = QString(tr("%1%2 - %3z: %4 clients"))
                   .arg(Settings::downloadNetworkName())
                   .arg(Whazzup::getInstance()->getPredictedTime().isValid()
                        ? " - <b>W A R P E D</b>  to"
                        : ""
                        )
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString())
-                        : data.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss"))
+                        ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
+                        : data.timestamp().toString("ddd yyyy/MM/dd HHmm'z'"))
                   .arg(data.clients());
     setStatusText(msg);
 
     msg = QString("Whazzup %1, bookings %2 updated")
                   .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(realdata.timestamp().time().toString())
+                        ? QString("today %1").arg(realdata.timestamp().time().toString("HHmm'z'"))
                         : (realdata.timestamp().isValid()
-                           ? realdata.timestamp().toString("ddd MM/dd HH:mm:ss")
+                           ? realdata.timestamp().toString("ddd MM/dd HHmm'z'")
                            : "never")
                         )
                   .arg(realdata.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(realdata.bookingsTimestamp().time().toString())
+                        ? QString("today %1").arg(realdata.bookingsTimestamp().time().toString("HHmm'z'"))
                         : (realdata.bookingsTimestamp().isValid()
-                           ? realdata.bookingsTimestamp().toString("ddd MM/dd HH:mm:ss")
+                           ? realdata.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")
                            : "never")
                         );
     lblWarpInfo->setText(msg);

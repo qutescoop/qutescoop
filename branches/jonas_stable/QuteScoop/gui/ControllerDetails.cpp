@@ -75,7 +75,7 @@ void ControllerDetails::refresh(Controller *newController) {
 
     QString atis = controller->atisMessage;
     if (controller->assumeOnlineUntil.isValid())
-        atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1 UTC</i></p>")
+        atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(controller->assumeOnlineUntil.toString("HHmm"));
 
     lblAtis->setText(atis);

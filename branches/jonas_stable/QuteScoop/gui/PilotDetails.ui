@@ -160,7 +160,7 @@ p, li { white-space: pre-wrap; }
          <string>EET: Estimated remaining Enroute Time, ETA: Estimated Time of Arrival (constantly updated), delay: According to planned ETA</string>
         </property>
         <property name="text">
-         <string>35%, EET 0:33 hrs, ETA 11:20 UTC, Delay -0:05 hrs</string>
+         <string>35%, EET 0:33 hrs, ETA 1120z, Delay -0:05 hrs</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
@@ -224,7 +224,7 @@ p, li { white-space: pre-wrap; }
            </font>
           </property>
           <property name="text">
-           <string>11:25</string>
+           <string>1125</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
            </font>
           </property>
           <property name="text">
-           <string>10:35</string>
+           <string>1035</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -374,14 +374,14 @@ p, li { white-space: pre-wrap; }
         <item row="0" column="3">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>UTC</string>
+           <string>z</string>
           </property>
          </widget>
         </item>
         <item row="1" column="3">
          <widget class="QLabel" name="label_7">
           <property name="text">
-           <string>UTC</string>
+           <string>z</string>
           </property>
          </widget>
         </item>
