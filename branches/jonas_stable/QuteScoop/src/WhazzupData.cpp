@@ -227,8 +227,10 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     QList<Controller*> c = data.getControllers();
     for (int i = 0; i < c.size(); i++) {
         QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
-        if(c[i]->assumeOnlineUntil.isValid())
-            showUntil = c[i]->assumeOnlineUntil;
+        if(c[i]->assumeOnlineUntil.isValid()) {
+            if(predictionBasedOnTime.secsTo(c[i]->assumeOnlineUntil) > 0) // use only if we catched him before his stated leave-time.
+                showUntil = c[i]->assumeOnlineUntil;
+        }
 
         if (predictTime < showUntil && predictTime > predictionBasedOnTime) {
             controllers[c[i]->label] = new Controller(*c[i]);

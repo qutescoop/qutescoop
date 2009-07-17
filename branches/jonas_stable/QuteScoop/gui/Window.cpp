@@ -272,7 +272,7 @@ void Window::whazzupDownloaded(bool isNew) {
                        : ""
                        )
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
+                        ? QString("today %1").arg(data.timestamp().time().toString("HHmmss'z'"))
                         : data.timestamp().toString("ddd MM/dd HHmm'z'"))
                   .arg(data.clients());
     setStatusText(msg);
@@ -657,7 +657,6 @@ void Window::setEnableBookedAtc(bool enable) {
 void Window::performWarp()
 {
     warpTimer.stop();
-    statusBar()->showMessage(QString("Calculating WARP"), 1000);
     Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
 }
 
@@ -676,10 +675,12 @@ void Window::on_datePredictTime_dateChanged(QDate date)
 
     QDate newDate;
     // make month change if lastday+ or 0-
-    if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
-        newDate = date.addMonths(1);
-    if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
-        newDate = date.addMonths(-1);
+    if (!tbRunPredict->isChecked()) {
+        if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
+            newDate = date.addMonths(1);
+        if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
+            newDate = date.addMonths(-1);
+    }
 
     datePredictTime_old = date;
     if(newDate.isValid())
@@ -693,17 +694,19 @@ void Window::on_timePredictTime_timeChanged(QTime time)
     warpTimer.stop();
 
     QTime newTime;
-    // make hour change if 59+ or 0-
-    if (timePredictTime_old.minute() == 59 && time.minute() == 0)
-        newTime = time.addSecs(60 * 60);
-    if (timePredictTime_old.minute() == 0 && time.minute() == 59)
-        newTime = time.addSecs(-60 * 60);
+    if (!tbRunPredict->isChecked()) {
+        // make hour change if 59+ or 0-
+        if (timePredictTime_old.minute() == 59 && time.minute() == 0)
+            newTime = time.addSecs(60 * 60);
+        if (timePredictTime_old.minute() == 0 && time.minute() == 59)
+            newTime = time.addSecs(-60 * 60);
 
-    // make date change if 23+ or 00-
-    if (timePredictTime_old.hour() == 23 && time.hour() == 0)
-        datePredictTime->setDate(datePredictTime->date().addDays(1));
-    if (timePredictTime_old.hour() == 0 && time.hour() == 23)
-        datePredictTime->setDate(datePredictTime->date().addDays(-1));
+        // make date change if 23+ or 00-
+        if (timePredictTime_old.hour() == 23 && time.hour() == 0)
+            datePredictTime->setDate(datePredictTime->date().addDays(1));
+        if (timePredictTime_old.hour() == 0 && time.hour() == 23)
+            datePredictTime->setDate(datePredictTime->date().addDays(-1));
+    }
 
     timePredictTime_old = time;
     if (newTime.isValid())
