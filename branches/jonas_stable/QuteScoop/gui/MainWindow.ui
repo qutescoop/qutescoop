@@ -34,167 +34,253 @@
        </sizepolicy>
       </property>
       <property name="frameShape">
-       <enum>QFrame::Panel</enum>
+       <enum>QFrame::StyledPanel</enum>
       </property>
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <layout class="QHBoxLayout" name="horizontalLayout">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <property name="spacing">
+        <number>1</number>
+       </property>
        <property name="topMargin">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="rightMargin">
-        <number>0</number>
+        <number>1</number>
        </property>
        <property name="bottomMargin">
-        <number>0</number>
+        <number>1</number>
        </property>
        <item>
-        <widget class="QLabel" name="lblWarpInfo">
-         <property name="text">
-          <string>waiting for data</string>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="spacing">
+          <number>2</number>
          </property>
-        </widget>
+         <item>
+          <widget class="QLabel" name="lblWarpInfo">
+           <property name="text">
+            <string>waiting for data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_3">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateEdit" name="datePredictTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Select a date to warp to.</string>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+           <property name="timeSpec">
+            <enum>Qt::UTC</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QTimeEdit" name="timePredictTime">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="toolTip">
+            <string>Select a time to warp to.</string>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="accelerated">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbRunPredict">
+           <property name="toolTip">
+            <string>Toggle Run: Makes time run from selected time.</string>
+           </property>
+           <property name="text">
+            <string>run</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::RightArrow</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbDisablePredict">
+           <property name="toolTip">
+            <string>Exit Warp mode. Return to reality.</string>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="popupMode">
+            <enum>QToolButton::InstantPopup</enum>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextBesideIcon</enum>
+           </property>
+           <property name="arrowType">
+            <enum>Qt::UpArrow</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
        <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_3">
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Time Warp: </string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDateEdit" name="datePredictTime">
-         <property name="toolTip">
-          <string>Select a date to warp to.</string>
-         </property>
-         <property name="wrapping">
-          <bool>true</bool>
-         </property>
-         <property name="calendarPopup">
-          <bool>true</bool>
-         </property>
-         <property name="timeSpec">
-          <enum>Qt::UTC</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QTimeEdit" name="timePredictTime">
-         <property name="toolTip">
-          <string>Select a time to warp to.</string>
-         </property>
-         <property name="wrapping">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QDoubleSpinBox" name="dsRunPredictStep">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="toolTip">
-          <string>Select '0' for realtime.</string>
-         </property>
-         <property name="specialValueText">
-          <string>realtime</string>
-         </property>
-         <property name="accelerated">
-          <bool>true</bool>
-         </property>
-         <property name="prefix">
-          <string/>
-         </property>
-         <property name="suffix">
-          <string> min</string>
-         </property>
-         <property name="decimals">
-          <number>1</number>
-         </property>
-         <property name="minimum">
-          <double>0.000000000000000</double>
-         </property>
-         <property name="singleStep">
-          <double>0.500000000000000</double>
-         </property>
-         <property name="value">
-          <double>0.500000000000000</double>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="tbRunPredict">
-         <property name="toolTip">
-          <string>Makes time run from present time. Select 0 for real time simulation.</string>
-         </property>
-         <property name="text">
-          <string>run</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="popupMode">
-          <enum>QToolButton::InstantPopup</enum>
-         </property>
-         <property name="arrowType">
-          <enum>Qt::RightArrow</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QToolButton" name="tbDisablePredict">
-         <property name="toolTip">
-          <string>Return to reality.</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="popupMode">
-          <enum>QToolButton::InstantPopup</enum>
-         </property>
-         <property name="toolButtonStyle">
-          <enum>Qt::ToolButtonTextBesideIcon</enum>
-         </property>
-         <property name="arrowType">
-          <enum>Qt::UpArrow</enum>
-         </property>
+        <widget class="QWidget" name="widgetRunPredict" native="true">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <property name="margin">
+           <number>0</number>
+          </property>
+          <item>
+           <spacer name="horizontalSpacer_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>&lt;b&gt;Run:&lt;/b&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Step</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="dsRunPredictStep">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="toolTip">
+             <string>The next Warp will add this timespan to the old one. Select '0' for realtime (starts from now and time will be linked to real time).</string>
+            </property>
+            <property name="specialValueText">
+             <string>realtime</string>
+            </property>
+            <property name="accelerated">
+             <bool>true</bool>
+            </property>
+            <property name="prefix">
+             <string/>
+            </property>
+            <property name="suffix">
+             <string>min</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="minimum">
+             <double>0.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+            <property name="value">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Interval</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="spinRunPredictInterval">
+            <property name="specialValueText">
+             <string>none</string>
+            </property>
+            <property name="accelerated">
+             <bool>true</bool>
+            </property>
+            <property name="suffix">
+             <string>s</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <double>1000.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.200000000000000</double>
+            </property>
+            <property name="value">
+             <double>2.000000000000000</double>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>

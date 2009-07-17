@@ -29,7 +29,7 @@ class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
     Q_OBJECT
 public:
     BookedAtcDialog();
-	static BookedAtcDialog *getInstance();
+    static BookedAtcDialog *getInstance();
     void refresh();
 
 signals:
@@ -46,7 +46,10 @@ private slots:
 
 private:
     BookedAtcDialogModel bookedAtcModel;
-	BookedAtcSortFilter *bookedAtcSortModel;
+    BookedAtcSortFilter *bookedAtcSortModel;
+
+    QTime timeFilter_old;
+    QDate dateFilter_old;
 };
 
 #endif // BOOKEDATCDIALOG_H

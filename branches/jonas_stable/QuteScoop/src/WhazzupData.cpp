@@ -139,8 +139,8 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 }
                 else if(list[3] == "ATC") {
                     if (type == WHAZZUP) {
-                        if (list.size() > 42 && whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
-                            list[35] = list[35]+ ":" +list[36];
+                        while (list.size() > 42 && whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
+                            list[35] = list[35] + ":" + list[36];
                             list.removeAt(36);
                         }
                         Controller *c = new Controller(list, this);
@@ -198,7 +198,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             sl[6] = QString("%1").arg(bc[i]->lon);
 
             //atisMessage = getField(stringList, 35);
-            sl[35] = QString::fromUtf8("^§BOOKED from %1 to %2 UTC^§%3")
+            sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2 UTC^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
                      .arg(bc[i]->starts().toString("hh:mm"))
                      .arg(bc[i]->ends().toString("hh:mm"))
                      .arg(bc[i]->bookingInfoStr);
@@ -226,6 +226,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked (to allow for smoother realtime simulation).
     QList<Controller*> c = data.getControllers();
     for (int i = 0; i < c.size(); i++) {
+/* //fixme
         QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
         // do some magic for Controller Info like "online until"...
         QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)", Qt::CaseInsensitive);
@@ -242,11 +243,12 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
                 showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
             qDebug() << "Found" << c[i]->label << "to be online until" << showUntil << "(Controller Info)";
         }
+    */
+        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
+        if(c[i]->assumeOnlineUntil.isValid())
+            showUntil = c[i]->assumeOnlineUntil;
+
         if (predictTime < showUntil && predictTime > predictionBasedOnTime) {
-            if (!c[i]->atisMessage.contains(QString("QuteScoop assumes")))
-                    c[i]->atisMessage +=
-                            QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1 UTC</i></p>")
-                                .arg(showUntil.toString("HHmm"));
             controllers[c[i]->label] = new Controller(*c[i]);
         }
     }

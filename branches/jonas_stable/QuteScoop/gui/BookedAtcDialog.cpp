@@ -87,7 +87,7 @@ void BookedAtcDialog::refresh() {
                   .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(data.bookingsTimestamp().time().toString())
                         : (data.bookingsTimestamp().isValid()
-                           ? data.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           ? data.bookingsTimestamp().toString("ddd MM/dd HH:mm:ss")
                            : "never")
                         );
     lblStatusInfo->setText(msg);
@@ -125,8 +125,27 @@ void BookedAtcDialog::on_spinHours_valueChanged(int val)
 }
 
 
-void BookedAtcDialog::on_timeFilter_timeChanged(QTime date)
+void BookedAtcDialog::on_timeFilter_timeChanged(QTime time)
 {
+    QTime newTime;
+    // make hour change if 59+ or 0-
+    if (timeFilter_old.minute() == 59 && time.minute() == 0)
+        newTime = time.addSecs(60 * 60);
+    if (timeFilter_old.minute() == 0 && time.minute() == 59)
+        newTime = time.addSecs(-60 * 60);
+
+    // make date change if 23+ or 00-
+    if (timeFilter_old.hour() == 23 && time.hour() == 0)
+        dateFilter->setDate(dateFilter->date().addDays(1));
+    if (timeFilter_old.hour() == 0 && time.hour() == 23)
+        dateFilter->setDate(dateFilter->date().addDays(-1));
+
+    timeFilter_old = time;
+    if (newTime.isValid()) {
+        timeFilter->setTime(newTime);
+        return;
+    }
+
     QDateTime from = QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC);
     QDateTime to = from.addSecs(spinHours->value() * 3600);
     bookedAtcSortModel->setDateTimeRange(from, to);
@@ -136,6 +155,19 @@ void BookedAtcDialog::on_timeFilter_timeChanged(QTime date)
 
 void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
 {
+    QDate newDate;
+    // make month change if lastday+ or 0-
+    if (dateFilter_old.day() == dateFilter_old.daysInMonth() && date.day() == 1)
+        newDate = date.addMonths(1);
+    if (dateFilter_old.day() == 1 && date.day() == date.daysInMonth())
+        newDate = date.addMonths(-1);
+
+    dateFilter_old = date;
+    if(newDate.isValid()) {
+        dateFilter->setDate(newDate);
+        return;
+    }
+
     QDateTime from = QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC);
     QDateTime to = from.addSecs(spinHours->value() * 3600);
     bookedAtcSortModel->setDateTimeRange(from, to);

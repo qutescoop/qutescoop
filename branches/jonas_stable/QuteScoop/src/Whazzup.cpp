@@ -240,9 +240,9 @@ void Whazzup::whazzupDownloaded(bool error) {
             data.updateFrom(newWhazzupData);
             qDebug() << "Whazzup updated from\t" << data.timestamp().toString();
 
-            QFile out(QString("downloaded/%1_whazzup_%2.txt")
+            QFile out(QString("downloaded/%1_whazzup_%2")
                       .arg(Settings::downloadNetwork())
-                      .arg(data.timestamp().toString("yyyyMMddHHmmss")));
+                      .arg(data.timestamp().toString("yyyyMMdd-HHmmss")));
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 out.write(whazzupBuffer->data());
             } else {
@@ -333,9 +333,9 @@ void Whazzup::bookingsDownloaded(bool error) {
             data.updateFrom(newBookingsData);
             qDebug() << "Bookings updated from\t" << data.bookingsTimestamp().toString();
 
-            QFile out(QString("downloaded/%1_bookings_%2.txt")
+            QFile out(QString("downloaded/%1_bookings_%2")
                       .arg(Settings::downloadNetwork())
-                      .arg(data.bookingsTimestamp().toString("yyyyMMddHHmmss")));
+                      .arg(data.bookingsTimestamp().toString("yyMMdd-HHmmss")));
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 out.write(bookingsBuffer->data());
             } else {

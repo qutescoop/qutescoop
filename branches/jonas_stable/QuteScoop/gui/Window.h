@@ -53,32 +53,43 @@ public slots:
     void updateGLPilots();
 
 private slots:
-    void on_tbRunPredict_toggled(bool checked);
+
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
+
     void on_actionMoveDown_triggered();
     void on_actionMoveUp_triggered();
     void on_actionMoveRight_triggered();
     void on_actionMoveLeft_triggered();
+
+    void on_actionRememberPosition_triggered();
     void on_actionRememberMapPosition2_triggered();
     void on_actionRememberMapPosition3_triggered();
     void on_actionRememberMapPosition4_triggered();
     void on_actionRememberMapPosition5_triggered();
     void on_actionRememberMapPosition6_triggered();
     void on_actionRememberMapPosition7_triggered();
+
+    void on_actionRecallMapPosition_triggered();
     void on_actionRecallMapPosition2_triggered();
     void on_actionRecallMapPosition3_triggered();
     void on_actionRecallMapPosition4_triggered();
     void on_actionRecallMapPosition5_triggered();
     void on_actionRecallMapPosition6_triggered();
     void on_actionRecallMapPosition7_triggered();
-    void on_actionRecallMapPosition_triggered();
+
+    void on_actionHideAllWindows_triggered();
+
     void on_actionPredict_toggled(bool );
     void on_timePredictTime_timeChanged(QTime date);
     void on_datePredictTime_dateChanged(QDate date);
     void on_tbDisablePredict_clicked();
-    void on_actionPredict_triggered();
+    void on_tbRunPredict_toggled(bool checked);
+    void performWarp();
+    void runPredict();
+
     void about();
+
     void networkMessage(QString message);
     void downloadError(QString message);
     void toggleFullscreen();
@@ -108,13 +119,6 @@ private slots:
     void friendDoubleClicked(const QModelIndex& index);
 
     void versionDownloaded(bool error);
-
-    void on_actionRememberPosition_triggered();
-    void on_actionHideAllWindows_triggered();
-
-    void performWarp();
-    void runPredict();
-
     void downloadWatchdogTriggered();
 protected:
     virtual void closeEvent(QCloseEvent *event);
@@ -139,6 +143,9 @@ private:
 
     QHttp *versionChecker;
     QBuffer *versionBuffer;
+
+    QTime timePredictTime_old;
+    QDate datePredictTime_old;
 };
 
 #endif /*WINDOW_H_*/

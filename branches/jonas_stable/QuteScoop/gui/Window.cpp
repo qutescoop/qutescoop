@@ -209,7 +209,7 @@ Window::Window(QWidget *parent) :
     connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
     runPredictTimer.stop();
     connect(&runPredictTimer, SIGNAL(timeout()), this, SLOT(runPredict()));
-    dsRunPredictStep->hide();
+    widgetRunPredict->hide();
 
     QFont font = lblWarpInfo->font();
     font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
@@ -281,13 +281,13 @@ void Window::whazzupDownloaded(bool isNew) {
                   .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(realdata.timestamp().time().toString())
                         : (realdata.timestamp().isValid()
-                           ? realdata.timestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           ? realdata.timestamp().toString("ddd MM/dd HH:mm:ss")
                            : "never")
                         )
                   .arg(realdata.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
                         ? QString("today %1").arg(realdata.bookingsTimestamp().time().toString())
                         : (realdata.bookingsTimestamp().isValid()
-                           ? realdata.bookingsTimestamp().toString("ddd yyyy/MM/dd HH:mm:ss")
+                           ? realdata.bookingsTimestamp().toString("ddd MM/dd HH:mm:ss")
                            : "never")
                         );
     lblWarpInfo->setText(msg);
@@ -657,29 +657,58 @@ void Window::setEnableBookedAtc(bool enable) {
 void Window::performWarp()
 {
     warpTimer.stop();
+    statusBar()->showMessage(QString("Calculating WARP"), 1000);
     Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
-}
-
-void Window::on_actionPredict_triggered()
-{
 }
 
 void Window::on_tbDisablePredict_clicked()
 {
+    runPredictTimer.stop();
     Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
     actionPredict->setChecked(false);
     framePredict->hide();
+    widgetRunPredict->hide();
 }
 
 void Window::on_datePredictTime_dateChanged(QDate date)
 {
     warpTimer.stop();
+
+    QDate newDate;
+    // make month change if lastday+ or 0-
+    if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
+        newDate = date.addMonths(1);
+    if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
+        newDate = date.addMonths(-1);
+
+    datePredictTime_old = date;
+    if(newDate.isValid())
+        datePredictTime->setDate(newDate);
+
     warpTimer.start(1000);
 }
 
-void Window::on_timePredictTime_timeChanged(QTime date)
+void Window::on_timePredictTime_timeChanged(QTime time)
 {
     warpTimer.stop();
+
+    QTime newTime;
+    // make hour change if 59+ or 0-
+    if (timePredictTime_old.minute() == 59 && time.minute() == 0)
+        newTime = time.addSecs(60 * 60);
+    if (timePredictTime_old.minute() == 0 && time.minute() == 59)
+        newTime = time.addSecs(-60 * 60);
+
+    // make date change if 23+ or 00-
+    if (timePredictTime_old.hour() == 23 && time.hour() == 0)
+        datePredictTime->setDate(datePredictTime->date().addDays(1));
+    if (timePredictTime_old.hour() == 0 && time.hour() == 23)
+        datePredictTime->setDate(datePredictTime->date().addDays(-1));
+
+    timePredictTime_old = time;
+    if (newTime.isValid())
+        timePredictTime->setTime(newTime);
+
     warpTimer.start(1000);
 }
 
@@ -805,12 +834,12 @@ void Window::setPlotFlightPlannedRoute(bool value) {
 void Window::on_tbRunPredict_toggled(bool checked)
 {
     if(checked) {
-        dsRunPredictStep->show();
+        widgetRunPredict->show();
         if(!Whazzup::getInstance()->getPredictedTime().isValid())
             performWarp();
         runPredictTimer.start(1000);
     } else {
-        dsRunPredictStep->hide();
+        widgetRunPredict->hide();
         runPredictTimer.stop();
     }
 }
@@ -831,5 +860,5 @@ void Window::runPredict() {
     timePredictTime->setTime(to.time());
     warpTimer.stop();
     performWarp();
-    runPredictTimer.start(1000);
+    runPredictTimer.start(spinRunPredictInterval->value() * 1000);
 }
