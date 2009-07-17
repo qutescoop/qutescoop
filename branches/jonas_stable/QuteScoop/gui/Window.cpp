@@ -202,12 +202,14 @@ Window::Window(QWidget *parent) :
     }
 
     // Forecast / Predict settings
-    //datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
-    datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
-    timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
+    //datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
+    //timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
     framePredict->hide();
     warpTimer.stop();
     connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
+    runPredictTimer.stop();
+    connect(&runPredictTimer, SIGNAL(timeout()), this, SLOT(runPredict()));
+    dsRunPredictStep->hide();
 
     QFont font = lblWarpInfo->font();
     font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
@@ -328,6 +330,7 @@ void Window::refreshFriends() {
     friendsModel.setData(visitor->result());
     delete visitor;
     friendsList->reset();
+    ListClientsDialog::getInstance()->refresh();
 }
 
 void Window::mapClicked(int x, int y, QPoint absolutePos) {
@@ -683,7 +686,6 @@ void Window::on_timePredictTime_timeChanged(QTime date)
 void Window::on_actionPredict_toggled(bool value)
 {
     if(value) {
-        datePredictTime->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
         datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
         timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
                                  .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
@@ -799,3 +801,35 @@ void Window::setPlotFlightPlannedRoute(bool value) {
     glWidget->updateGL();
 }
 
+
+void Window::on_tbRunPredict_toggled(bool checked)
+{
+    if(checked) {
+        dsRunPredictStep->show();
+        if(!Whazzup::getInstance()->getPredictedTime().isValid())
+            performWarp();
+        runPredictTimer.start(1000);
+    } else {
+        dsRunPredictStep->hide();
+        runPredictTimer.stop();
+    }
+}
+
+void Window::runPredict() {
+    runPredictTimer.stop();
+    QDateTime to;
+    if (dsRunPredictStep->value() == 0) { // real time selected
+        to = QDateTime::currentDateTime().toUTC();
+        datePredictTime->setEnabled(false);
+        timePredictTime->setEnabled(false);
+    } else {
+        to = Whazzup::getInstance()->getPredictedTime().addSecs(dsRunPredictStep->value()*60);
+        datePredictTime->setEnabled(true);
+        timePredictTime->setEnabled(true);
+    }
+    datePredictTime->setDate(to.date());
+    timePredictTime->setTime(to.time());
+    warpTimer.stop();
+    performWarp();
+    runPredictTimer.start(1000);
+}

@@ -23,7 +23,7 @@
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
     this->clients = clients;
-	reset();
+    reset();
 }
 
 QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -32,28 +32,29 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
 
     if(orientation == Qt::Vertical)
         return QVariant();
-    
-	// orientation is Qt::Horizontal
-	switch(section) {
-        case 0: return QString("Callsign"); break;
-        case 1: return QString("Rating"); break;
-        case 2: return QString("Name"); break;
-        case 3: return QString("Online"); break;
-        case 4: return QString("Dist from Here"); break;
-        case 5: return QString("Server"); break;
-        case 6: return QString("Admin Rating"); break; //IVAO
+
+    // orientation is Qt::Horizontal
+    switch(section) {
+        case 0: return QString("Callsign");
+        case 1: return QString("Rating");
+        case 2: return QString("Name");
+        case 3: return QString("Online");
+        case 4: return QString("Dist from Here");
+        case 5: return QString("Server");
+        case 6: return QString("Controller Info / Flight Status"); //if Controller/Pilot
+        case 7: return QString("Admin Rating"); //IVAO
     }
-	
-	return QVariant();
+
+    return QVariant();
 }
 
 QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const {
-	if(!index.isValid())
-		return QVariant();
-	
+    if(!index.isValid())
+        return QVariant();
+
     if(index.row() >= clients.size())
-		return QVariant();
-	
+        return QVariant();
+
     Client* c = clients[index.row()];
     if(role == Qt::FontRole) {
         if (c->isFriend()) {
@@ -63,24 +64,31 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
         }
         return QFont();
     } else if (role == Qt::DisplayRole) {
+        Controller *co = dynamic_cast<Controller*>(c);
+        Pilot *p = dynamic_cast<Pilot*>(c);
         switch(index.column()) {
-            case 0: return c->label; break;
-            case 1: return c->rank(); break;
-            case 2: return c->realName; break;
-            case 3: return c->onlineTime(); break;
+            case 0: return c->label;
+            case 1: return c->rank();
+            case 2: return c->realName;
+            case 3: return c->onlineTime();
             case 4:
                 return (int) NavData::distance(
                                 c->lat, c->lon,
                                 Window::getInstance()->glWidget->currentPosition().first,
                                 Window::getInstance()->glWidget->currentPosition().second)
                              ;
-                break;
-            case 5: return c->server; break;
-            case 6: return c->adminRating > 2? QString("%1").arg(c->adminRating): QString(); break;
+            case 5: return c->server;
+            case 6: // Controller Info / Flight Status
+                if(co != 0)
+                    return co->atisMessage;
+                if(p != 0)
+                    return p->flightStatusShortString();
+                return QString();
+            case 7: return c->adminRating > 2? QString("%1").arg(c->adminRating): QString();
         }
     }
-	
-	return QVariant();
+
+    return QVariant();
 }
 
 int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
@@ -88,8 +96,8 @@ int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
 }
 
 int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
-    return Whazzup::getInstance()->realWhazzupData().isIvao()? 7: 6;
-} 
+    return Whazzup::getInstance()->realWhazzupData().isIvao()? 8: 7;
+}
 
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {

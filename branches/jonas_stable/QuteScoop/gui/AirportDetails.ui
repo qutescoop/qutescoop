@@ -168,6 +168,9 @@ E009° 37.21'</string>
           <property name="sortingEnabled">
            <bool>true</bool>
           </property>
+          <property name="allColumnsShowFocus">
+           <bool>true</bool>
+          </property>
           <property name="expandsOnDoubleClick">
            <bool>false</bool>
           </property>
@@ -246,6 +249,9 @@ E009° 37.21'</string>
         <property name="sortingEnabled">
          <bool>true</bool>
         </property>
+        <property name="allColumnsShowFocus">
+         <bool>true</bool>
+        </property>
         <property name="expandsOnDoubleClick">
          <bool>false</bool>
         </property>
@@ -284,6 +290,9 @@ E009° 37.21'</string>
          <bool>false</bool>
         </property>
         <property name="sortingEnabled">
+         <bool>true</bool>
+        </property>
+        <property name="allColumnsShowFocus">
          <bool>true</bool>
         </property>
         <property name="expandsOnDoubleClick">

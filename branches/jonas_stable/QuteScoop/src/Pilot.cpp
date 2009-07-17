@@ -24,131 +24,133 @@
 #include "Settings.h"
 
 Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
-	Client(stringList, whazzup),
-	onGround(false),
-	displayLineFromDep(false),
-	displayLineToDest(false)
+    Client(stringList, whazzup),
+    onGround(false),
+    displayLineFromDep(false),
+    displayLineToDest(false)
 {
     whazzupTime = QDateTime(whazzup->timestamp()); // need some local reference to that
 
     altitude = getField(stringList, 7).toInt(); // we could do some barometric calculations here (only for VATSIM needed)
-	groundspeed = getField(stringList, 8).toInt();
-	planAircraft = getField(stringList, 9);
-	planTAS = getField(stringList, 10);
-	planDep = getField(stringList, 11);
-	planAlt = getField(stringList, 12);
-	planDest = getField(stringList, 13);
+    groundspeed = getField(stringList, 8).toInt();
+    planAircraft = getField(stringList, 9);
+    planTAS = getField(stringList, 10);
+    planDep = getField(stringList, 11);
+    planAlt = getField(stringList, 12);
+    planDest = getField(stringList, 13);
 
-	transponder = getField(stringList, 17);
-	planRevision = getField(stringList, 20);
-	planFlighttype = getField(stringList, 21);
-	planDeptime = getField(stringList, 22);
-	planActtime = getField(stringList, 23);
-    
+    transponder = getField(stringList, 17);
+    planRevision = getField(stringList, 20);
+    planFlighttype = getField(stringList, 21);
+    planDeptime = getField(stringList, 22);
+    planActtime = getField(stringList, 23);
+
     QString tmpStr = getField(stringList, 24);
     if(tmpStr.isNull())
         planHrsEnroute = -1;
     else
         planHrsEnroute = tmpStr.toInt();
-	planMinEnroute = getField(stringList, 25).toInt();
-	planHrsFuel = getField(stringList, 26).toInt();
-	planMinFuel = getField(stringList, 27).toInt();
-	planAltAirport = getField(stringList, 28);
-	planRemarks = getField(stringList, 29);
-	planRoute = getField(stringList, 30);
+    planMinEnroute = getField(stringList, 25).toInt();
+    planHrsFuel = getField(stringList, 26).toInt();
+    planMinFuel = getField(stringList, 27).toInt();
+    planAltAirport = getField(stringList, 28);
+    planRemarks = getField(stringList, 29);
+    planRoute = getField(stringList, 30);
 
-	if(whazzup->isIvao()) {
-		planAltAirport2 = getField(stringList, 42); // IVAO only
-		planTypeOfFlight = getField(stringList, 43); // IVAO only
-		pob = getField(stringList, 44).toInt(); // IVAO only
+    if(whazzup->isIvao()) {
+        planAltAirport2 = getField(stringList, 42); // IVAO only
+        planTypeOfFlight = getField(stringList, 43); // IVAO only
+        pob = getField(stringList, 44).toInt(); // IVAO only
 
-		trueHeading = getField(stringList, 45).toInt();
-		onGround = getField(stringList, 46).toInt() == 1; // IVAO only
-	}
+        trueHeading = getField(stringList, 45).toInt();
+        onGround = getField(stringList, 46).toInt() == 1; // IVAO only
+    }
 
-	if(whazzup->isVatsim()) {
-		trueHeading = getField(stringList, 38).toInt();
-		qnhInHg = getField(stringList, 39); // VATSIM only
-		qnhMb = getField(stringList, 40); // VATSIM only
-	}
+    if(whazzup->isVatsim()) {
+        trueHeading = getField(stringList, 38).toInt();
+        qnhInHg = getField(stringList, 39); // VATSIM only
+        qnhMb = getField(stringList, 40); // VATSIM only
+    }
     // day of flight
-    if((QTime::fromString(planDeptime, "HHmm").hour() - whazzupTime.time().hour()) % 24 <= 2) // allow for early birds (up to 2 hours before planned departure)
+    if(!QTime::fromString(planDeptime, "HHmm").isValid()) // no Plan ETA given: maybe some more magic needed here
+        dayOfFlight = whazzupTime.date();
+    else if((QTime::fromString(planDeptime, "HHmm").hour() - whazzupTime.time().hour()) % 24 <= 2) // allow for early birds (up to 2 hours before planned departure)
         dayOfFlight = whazzupTime.date();
     else
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
 
-	// anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
-	if(planRoute.count('/') > 4)
-		planRoute.replace(QRegExp("[/]"), " ");
+    // anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
+    if(planRoute.count('/') > 4)
+        planRoute.replace(QRegExp("[/]"), " ");
 
-	if(planRoute.isEmpty())
+    if(planRoute.isEmpty())
         planRoute = "";
 }
 
 void Pilot::showDetailsDialog() {
-	PilotDetails *infoDialog = PilotDetails::getInstance();
-	infoDialog->refresh(this);
-	infoDialog->show();
-	infoDialog->raise();
-	infoDialog->setFocus();
-	infoDialog->activateWindow();
+    PilotDetails *infoDialog = PilotDetails::getInstance();
+    infoDialog->refresh(this);
+    infoDialog->show();
+    infoDialog->raise();
+    infoDialog->setFocus();
+    infoDialog->activateWindow();
 }
 
 Pilot::FlightStatus Pilot::flightStatus() const {
-	Airport *dep = depAirport();
-	Airport *dst = destAirport();
+    Airport *dep = depAirport();
+    Airport *dst = destAirport();
 
-	// flying?
-	bool flying = true;
-	if(groundspeed < 50 && altitude < 9000) flying = false;
-	if(onGround) flying = false;
+    // flying?
+    bool flying = true;
+    if(groundspeed < 50 && altitude < 9000) flying = false;
+    if(onGround) flying = false;
 
-	if ( dep == NULL || dst == NULL ) {
-		if(flying)
-			return EN_ROUTE;
-		else
-			return BUSH;
-	}
+    if ( dep == NULL || dst == NULL ) {
+        if(flying)
+            return EN_ROUTE;
+        else
+            return BUSH;
+    }
 
-	double totalDist = NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
-	double distDone = NavData::distance(lat, lon, dep->lat, dep->lon);
-	double distRemaining = totalDist - distDone;
+    double totalDist = NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
+    double distDone = NavData::distance(lat, lon, dep->lat, dep->lon);
+    double distRemaining = totalDist - distDone;
 
-	// arriving?
-	bool arriving = false;
-	if(distRemaining < 50) arriving = true;
+    // arriving?
+    bool arriving = false;
+    if(distRemaining < 50) arriving = true;
 
-	// departing?
-	bool departing = false;
-	if(distDone < 50) departing = true;
+    // departing?
+    bool departing = false;
+    if(distDone < 50) departing = true;
 
 
-	// BOARDING: !flying, speed = 0, departing
-	// GROUND_DEP: !flying, speed > 0, departing
-	// DEPARTING: flying, departing
-	// EN_ROUTE: flying, !departing, !arriving
-	// ARRIVING: flying, arriving
-	// GROUND_ARR: !flying, speed > 0, arriving
-	// BLOCKED: !flying, speed = 0, arriving
-	// PREFILED: !flying, lat=0, lon=0
+    // BOARDING: !flying, speed = 0, departing
+    // GROUND_DEP: !flying, speed > 0, departing
+    // DEPARTING: flying, departing
+    // EN_ROUTE: flying, !departing, !arriving
+    // ARRIVING: flying, arriving
+    // GROUND_ARR: !flying, speed > 0, arriving
+    // BLOCKED: !flying, speed = 0, arriving
+    // PREFILED: !flying, lat=0, lon=0
 
-	if(!flying && groundspeed == 0 && departing)
-		return BOARDING;
-	if(!flying && groundspeed > 0 && departing)
-		return GROUND_DEP;
-	if(flying && arriving)
-		return ARRIVING; // put before departing; on small hops tend to show "arriving", not departing
-	if(flying && departing)
-		return DEPARTING;
-	if(flying && !departing && !arriving)
-		return EN_ROUTE;
-	if(!flying && groundspeed > 0 && arriving)
-		return GROUND_ARR;
+    if(!flying && groundspeed == 0 && departing)
+        return BOARDING;
+    if(!flying && groundspeed > 0 && departing)
+        return GROUND_DEP;
+    if(flying && arriving)
+        return ARRIVING; // put before departing; on small hops tend to show "arriving", not departing
+    if(flying && departing)
+        return DEPARTING;
+    if(flying && !departing && !arriving)
+        return EN_ROUTE;
+    if(!flying && groundspeed > 0 && arriving)
+        return GROUND_ARR;
     if(!flying && lat == 0 && lon == 0) // must be before BLOCKED
-		return PREFILED;
-	if(!flying && groundspeed == 0 && arriving)
-		return BLOCKED;
-	return CRASHED;
+        return PREFILED;
+    if(!flying && groundspeed == 0 && arriving)
+        return BLOCKED;
+    return CRASHED;
 }
 
 QString Pilot::flightStatusString() const {
@@ -190,10 +192,10 @@ QString Pilot::flightStatusString() const {
             return result;
         case CRASHED: return QString();
         case BUSH: return QString();
-		case EN_ROUTE: {
+        case EN_ROUTE: {
                 result = QString();
                 Airport *dep = depAirport();
-				Airport *dst = destAirport();
+                Airport *dst = destAirport();
                 if(dst == 0)
                     return QString();
                 if(dep != 0) {
@@ -211,7 +213,7 @@ QString Pilot::flightStatusString() const {
             }
         case PREFILED:
             return QString();
-	}
+    }
     return QString("Unknown");
 }
 
@@ -232,40 +234,40 @@ QString Pilot::flightStatusShortString() const {
 }
 
 QString Pilot::rank() const {
-	if(network == IVAO) {
-		switch(rating) {
-		case 2: return "SFO"; break;
-		case 3: return "FFO"; break;
-		case 4: return "C"; break;
-		case 5: return "FC"; break;
-		case 6: return "SC"; break;
-		case 7: return "SFC"; break;
-		case 8: return "CC"; break;
-		case 9: return "CFC"; break;
-		case 10: return "CSC"; break;
+    if(network == IVAO) {
+        switch(rating) {
+        case 2: return "SFO"; break;
+        case 3: return "FFO"; break;
+        case 4: return "C"; break;
+        case 5: return "FC"; break;
+        case 6: return "SC"; break;
+        case 7: return "SFC"; break;
+        case 8: return "CC"; break;
+        case 9: return "CFC"; break;
+        case 10: return "CSC"; break;
         default: return QString("? (%1)").arg(rating); break;
         }
-	}
-	return QString();
+    }
+    return QString();
 }
 
 QString Pilot::aircraftType() const {
-	QStringList acftSegments = planAircraft.split('/');
+    QStringList acftSegments = planAircraft.split('/');
 
-	if(network == IVAO && acftSegments.size() >= 2) {
-		return acftSegments[1];
-	}
+    if(network == IVAO && acftSegments.size() >= 2) {
+        return acftSegments[1];
+    }
 
-	if(network == VATSIM) {
-		// VATSIM can be a real PITA.
-		QString result = planAircraft;
-		if(acftSegments.size() == 2 && acftSegments[0].length() > 2) result = acftSegments[0];
-		else if(acftSegments.size() >= 2) result = acftSegments[1];
+    if(network == VATSIM) {
+        // VATSIM can be a real PITA.
+        QString result = planAircraft;
+        if(acftSegments.size() == 2 && acftSegments[0].length() > 2) result = acftSegments[0];
+        else if(acftSegments.size() >= 2) result = acftSegments[1];
 
-		return result;
-	}
+        return result;
+    }
 
-	return planAircraft;
+    return planAircraft;
 }
 
 Airport* Pilot::depAirport() const {
@@ -287,19 +289,19 @@ Airport* Pilot::altAirport() const {
 }
 
 double Pilot::distanceFromDeparture() const {
-	Airport *dep = depAirport();
-	if(dep == 0)
-		return 0;
+    Airport *dep = depAirport();
+    if(dep == 0)
+        return 0;
 
-	return NavData::distance(lat, lon, dep->lat, dep->lon);
+    return NavData::distance(lat, lon, dep->lat, dep->lon);
 }
 
 double Pilot::distanceToDestination() const {
-	Airport *dest = destAirport();
-	if(dest == 0)
-		return 0;
+    Airport *dest = destAirport();
+    if(dest == 0)
+        return 0;
 
-	return NavData::distance(lat, lon, dest->lat, dest->lon);
+    return NavData::distance(lat, lon, dest->lat, dest->lon);
 }
 
 int Pilot::planTasInt() const { // defuck flightplanned TAS
@@ -394,128 +396,128 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
 
 
 QStringList Pilot::waypoints() const {
-	QStringList result = planRoute.split(QRegExp("([\\s\\+\\-\\.\\,]|//)"), QString::SkipEmptyParts);
-	if(result.isEmpty()) {
+    QStringList result = planRoute.split(QRegExp("([\\s\\+\\-\\.\\,]|//)"), QString::SkipEmptyParts);
+    if(result.isEmpty()) {
         result.append("");
-	}
-	return result;
+    }
+    return result;
 }
 
 void Pilot::positionInFuture(double *futureLat, double *futureLon, int seconds) const {
-	if(groundspeed == 0) {
-		*futureLat = lat;
-		*futureLon = lon;
-		return;
-	}
+    if(groundspeed == 0) {
+        *futureLat = lat;
+        *futureLon = lon;
+        return;
+    }
 
-	double dist = (double)groundspeed * ((double)seconds / 3600.0);
-	NavData::distanceTo(lat, lon, dist, trueHeading, futureLat, futureLon);
+    double dist = (double)groundspeed * ((double)seconds / 3600.0);
+    NavData::distanceTo(lat, lon, dist, trueHeading, futureLat, futureLon);
 }
 
 void Pilot::toggleDisplayPath() {
-	if(displayLineToDest) {
+    if(displayLineToDest) {
         displayLineFromDep = false;
-		displayLineToDest = false;
-	} else {
-		displayLineFromDep = true;
-		displayLineToDest = true;
-	}
+        displayLineToDest = false;
+    } else {
+        displayLineFromDep = true;
+        displayLineToDest = true;
+    }
     PilotDetails::getInstance()->refresh();
 }
 
 void Pilot::plotFlightPath() const {
     if(displayLineToDest && Settings::trackLineStrength() != 0.0)
-		plotPathToDest();
+        plotPathToDest();
 
     if(displayLineFromDep && Settings::trackLineStrength() != 0.0)
-		plotPathFromDep();
+        plotPathFromDep();
 
     if((displayLineToDest || displayLineFromDep) && Settings::planLineStrength() != 0.0)
-		plotPlannedLine();
+        plotPlannedLine();
 }
 
 void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) const {
 
-	// always start plotting at the origin
-	VERTEX(lat1, lon1);
+    // always start plotting at the origin
+    VERTEX(lat1, lon1);
 
-	double d = NavData::distance(lat1, lon1, lat2, lon2);
-	if(d < 1) return; // less than 1 mile - not worth plotting
+    double d = NavData::distance(lat1, lon1, lat2, lon2);
+    if(d < 1) return; // less than 1 mile - not worth plotting
 
     double fractionIncrement = 30 / d; // one dot every 30nm
-	if(fractionIncrement > 1) fractionIncrement = 1;
-	double currentFraction = 0;
+    if(fractionIncrement > 1) fractionIncrement = 1;
+    double currentFraction = 0;
 
-	double myLat = lat1;
-	double myLon = lon1;
-	do {
-		currentFraction += fractionIncrement;
-		if(currentFraction > 1) currentFraction = 1;
+    double myLat = lat1;
+    double myLon = lon1;
+    do {
+        currentFraction += fractionIncrement;
+        if(currentFraction > 1) currentFraction = 1;
 
-		if(currentFraction < 1) {
-			// don't plot last dot - we do that in the caller. Avoids plotting vertices twice
-			NavData::greatCirclePlotTo(lat1, lon1, lat2, lon2, currentFraction, &myLat, &myLon);
-			VERTEX(myLat, myLon);
-		}
+        if(currentFraction < 1) {
+            // don't plot last dot - we do that in the caller. Avoids plotting vertices twice
+            NavData::greatCirclePlotTo(lat1, lon1, lat2, lon2, currentFraction, &myLat, &myLon);
+            VERTEX(myLat, myLon);
+        }
 
-	} while(currentFraction < 1);
+    } while(currentFraction < 1);
 }
 
 void Pilot::plotPathFromDep() const {
-	if(Settings::trackLineStrength() == 0)
-		return;
+    if(Settings::trackLineStrength() == 0)
+        return;
 
-	Airport *dep = depAirport();
-	if(dep == 0) return; // dont know where to plot to - abort
+    Airport *dep = depAirport();
+    if(dep == 0) return; // dont know where to plot to - abort
 
-	double currLat = dep->lat;
-	double currLon = dep->lon;
+    double currLat = dep->lat;
+    double currLon = dep->lon;
 
-	if(!Settings::dashedTrackInFront())
-		glLineStipple(3, 0xAAAA);
+    if(!Settings::dashedTrackInFront())
+        glLineStipple(3, 0xAAAA);
 
-	QColor lineCol = Settings::trackLineColor();
-	glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-	glLineWidth(Settings::trackLineStrength());
-	glBegin(GL_LINE_STRIP);
+    QColor lineCol = Settings::trackLineColor();
+    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
+    glLineWidth(Settings::trackLineStrength());
+    glBegin(GL_LINE_STRIP);
 
-		for(int i = 0; i < oldPositions.size(); i++) {
-			plotPath(currLat, currLon, oldPositions[i].first, oldPositions[i].second);
-			currLat = oldPositions[i].first;
-			currLon = oldPositions[i].second;
-		}
+        for(int i = 0; i < oldPositions.size(); i++) {
+            plotPath(currLat, currLon, oldPositions[i].first, oldPositions[i].second);
+            currLat = oldPositions[i].first;
+            currLon = oldPositions[i].second;
+        }
 
-		plotPath(currLat, currLon, lat, lon);
-		VERTEX(lat, lon);
-	glEnd();
-	glLineStipple(1, 0xFFFF);
+        plotPath(currLat, currLon, lat, lon);
+        VERTEX(lat, lon);
+    glEnd();
+    glLineStipple(1, 0xFFFF);
 }
 
 void Pilot::plotPathToDest() const {
-	if(Settings::trackLineStrength() == 0)
-		return;
+    if(Settings::trackLineStrength() == 0)
+        return;
 
-	Airport *dest = destAirport();
-	if(dest == 0) return; // dont know where to plot to - abort
+    Airport *dest = destAirport();
+    if(dest == 0) return; // dont know where to plot to - abort
 
-	QColor lineCol = Settings::trackLineColor();
-	glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
+    QColor lineCol = Settings::trackLineColor();
+    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
 
-	if(Settings::dashedTrackInFront())
-		glLineStipple(3, 0xAAAA);
+    if(Settings::dashedTrackInFront())
+        glLineStipple(3, 0xAAAA);
 
-	glLineWidth(Settings::trackLineStrength());
-	glBegin(GL_LINE_STRIP);
-		plotPath(lat, lon, dest->lat, dest->lon);
-		VERTEX(dest->lat, dest->lon);
-	glEnd();
-	glLineStipple(1, 0xFFFF);
+    glLineWidth(Settings::trackLineStrength());
+    glBegin(GL_LINE_STRIP);
+        plotPath(lat, lon, dest->lat, dest->lon);
+        VERTEX(dest->lat, dest->lon);
+    glEnd();
+    glLineStipple(1, 0xFFFF);
 }
 
 void Pilot::plotPlannedLine() const {
-	if(Settings::planLineStrength() == 0)
-		return;
-	QList<Waypoint*> points = resolveFlightplan();
+    if(Settings::planLineStrength() == 0)
+        return;
+    QList<Waypoint*> points = resolveFlightplan();
     Airport* dep = depAirport();
     if(dep != 0) {
         Waypoint* depWp = new Waypoint(dep->label, dep->lat, dep->lon);
@@ -530,10 +532,10 @@ void Pilot::plotPlannedLine() const {
     if(points.size() < 2)
         return;
 
-	QColor lineCol = Settings::planLineColor();
-	glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
+    QColor lineCol = Settings::planLineColor();
+    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
 
-	glLineWidth(Settings::planLineStrength());
+    glLineWidth(Settings::planLineStrength());
     if(!Settings::dashedTrackInFront())
         glLineStipple(3, 0xAAAA);
     glBegin(GL_LINE_STRIP);
@@ -599,18 +601,18 @@ void Pilot::plotPlannedLine() const {
             plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
             currLat = points[i]->lat; currLon = points[i]->lon;
         }
-		VERTEX(currLat, currLon);
+        VERTEX(currLat, currLon);
 
     glEnd();
     glLineStipple(1, 0xFFFF);
 }
 
 QList<Waypoint*> Pilot::resolveFlightplan() const {
-	QList<Waypoint*> result;
+    QList<Waypoint*> result;
 
-	Airport *dep = depAirport();
-	if(dep == 0) return QList<Waypoint*>();
+    Airport *dep = depAirport();
+    if(dep == 0) return QList<Waypoint*>();
 
-	QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
-	return NavData::getInstance()->getAirac().resolveFlightplan(list, dep->lat, dep->lon);
+    QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
+    return NavData::getInstance()->getAirac().resolveFlightplan(list, dep->lat, dep->lon);
 }

@@ -38,7 +38,7 @@ class Window : public QMainWindow, private Ui::MainWindow {
 Q_OBJECT
 
 public:
-	static Window* getInstance();
+    static Window* getInstance();
     void setStatusText(QString text);
     void setProgressBar(int prog, int tot);
     void setProgressBar(bool isVisible);
@@ -47,12 +47,13 @@ public:
     GLWidget *glWidget;
 
 public slots:
-	void showOnMap(double lat, double lon);
-	void updateMetarDecoder(const QString& airport, const QString& decodedText);
-	void refreshFriends();
+    void showOnMap(double lat, double lon);
+    void updateMetarDecoder(const QString& airport, const QString& decodedText);
+    void refreshFriends();
     void updateGLPilots();
 
-private slots:	
+private slots:
+    void on_tbRunPredict_toggled(bool checked);
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
     void on_actionMoveDown_triggered();
@@ -78,65 +79,66 @@ private slots:
     void on_tbDisablePredict_clicked();
     void on_actionPredict_triggered();
     void about();
-	void networkMessage(QString message);
-	void downloadError(QString message);
-	void toggleFullscreen();
+    void networkMessage(QString message);
+    void downloadError(QString message);
+    void toggleFullscreen();
     void whazzupDownloaded(bool isNew = true);
-	void mapClicked(int x, int y, QPoint absolutePos);
+    void mapClicked(int x, int y, QPoint absolutePos);
     void openPreferences();
     void openPlanFlight();
     void openBookedAtc();
     void openListClients();
 
-	void on_searchEdit_textChanged(const QString& text);
-	void on_actionClearAllFlightPaths_triggered();
-	void on_actionDisplayAllFlightPaths_triggered();
-	
-	void on_metarEdit_textChanged(const QString& text);
-	void on_btnRefreshMetar_clicked();
-	
-	void performSearch();
-	void updateMetars();
-	void metarDoubleClicked(const QModelIndex& index);
-	void metarDockMoved(Qt::DockWidgetArea area);
-	void searchDockMoved(Qt::DockWidgetArea area);
-	void metarDecoderDockMoved(Qt::DockWidgetArea area);
-	void friendsDockMoved(Qt::DockWidgetArea area);
+    void on_searchEdit_textChanged(const QString& text);
+    void on_actionClearAllFlightPaths_triggered();
+    void on_actionDisplayAllFlightPaths_triggered();
 
-	void friendClicked(const QModelIndex& index);
-	void friendDoubleClicked(const QModelIndex& index);
+    void on_metarEdit_textChanged(const QString& text);
+    void on_btnRefreshMetar_clicked();
 
-	void versionDownloaded(bool error);
-	
-	void on_actionRememberPosition_triggered();
-	void on_actionHideAllWindows_triggered();
-	
+    void performSearch();
+    void updateMetars();
+    void metarDoubleClicked(const QModelIndex& index);
+    void metarDockMoved(Qt::DockWidgetArea area);
+    void searchDockMoved(Qt::DockWidgetArea area);
+    void metarDecoderDockMoved(Qt::DockWidgetArea area);
+    void friendsDockMoved(Qt::DockWidgetArea area);
+
+    void friendClicked(const QModelIndex& index);
+    void friendDoubleClicked(const QModelIndex& index);
+
+    void versionDownloaded(bool error);
+
+    void on_actionRememberPosition_triggered();
+    void on_actionHideAllWindows_triggered();
+
     void performWarp();
+    void runPredict();
 
     void downloadWatchdogTriggered();
 protected:
-	virtual void closeEvent(QCloseEvent *event);
-	
+    virtual void closeEvent(QCloseEvent *event);
+
 private:
-	void checkForUpdates();
-	
-	void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
-	
-	// singleton
-	Window(QWidget *parent = 0);
-	void createActions();
+    void checkForUpdates();
+
+    void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
+
+    // singleton
+    Window(QWidget *parent = 0);
+    void createActions();
 
     //QToolBar *toolBar;
-	ClientSelectionWidget *clientSelection;
+    ClientSelectionWidget *clientSelection;
 
-	SearchResultModel searchResultModel, friendsModel;
-	MetarModel metarModel;
-    QTimer searchTimer, metarTimer, warpTimer;
+    SearchResultModel searchResultModel, friendsModel;
+    MetarModel metarModel;
+    QTimer searchTimer, metarTimer, warpTimer, runPredictTimer;
     QTimer downloadWatchdog;
-	QSortFilterProxyModel *metarSortModel, *friendsSortModel;
-	
-	QHttp *versionChecker;
-	QBuffer *versionBuffer;
+    QSortFilterProxyModel *metarSortModel, *friendsSortModel;
+
+    QHttp *versionChecker;
+    QBuffer *versionBuffer;
 };
 
 #endif /*WINDOW_H_*/

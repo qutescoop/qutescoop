@@ -73,8 +73,8 @@ void ListClientsDialog::refresh() {
     }
 
     listClientsModel.setClients(clients);
-    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
     listClientsSortModel->invalidate();
+    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
 
     newFilter();
 
@@ -109,6 +109,7 @@ void ListClientsDialog::on_editFilter_textChanged(QString searchStr)
 
     listClientsSortModel->setFilterRegExp(regex);
     listClientsSortModel->setFilterKeyColumn(-1);
+    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
     newFilter();
 }
 
@@ -122,4 +123,5 @@ void ListClientsDialog::newFilter() {
 
 void ListClientsDialog::newMapPosition() {
     if(this->isVisible()) listClientsSortModel->invalidate();
+    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
 }

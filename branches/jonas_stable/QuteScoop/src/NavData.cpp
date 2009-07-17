@@ -178,6 +178,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             double coverLat, coverLon;
             int coverRange;
             if (c->fir != 0) {
+                qDebug() << "checking equdistant Point for FIR" << c->label; //fixme
                 QPair<double, double> center = c->fir->equidistantPoint();
                 coverLat = center.first;
                 coverLon = center.second;
@@ -189,7 +190,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             }
 
             QList<Airport*> aps = NavData::getInstance()->airportsAt(coverLat, coverLon, coverRange);
-            qDebug() << QString("%1 at %2/%3 (%4 NM) covering %5 airports (roughly estimated by FIR extensions)")
+            qDebug() << QString("%1 at %2/%3 (%4 NM) covering %5 airports")
                     .arg(c->label)
                     .arg(coverLat)
                     .arg(coverLon)

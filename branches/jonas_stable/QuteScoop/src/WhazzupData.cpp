@@ -25,6 +25,7 @@
 #include "Controller.h"
 #include "BookedController.h"
 #include "NavData.h"
+#include "Settings.h"
 #include "helpers.h"
 
 WhazzupData::WhazzupData():
@@ -98,8 +99,6 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                     connectedClients = list[1].trimmed().toInt();
                 } else if(line.startsWith("CONNECTED SERVERS")) {
                     connectedServers = list[1].trimmed().toInt();
-                } else if(line.startsWith("RELOAD")) {
-                    // maybe schedule reloading here
                 } else if(line.startsWith("BOOKING")) {
                     // always "1" for bookings, but we select already by the whazzup location
                 } else if(line.startsWith("UPDATE")) {
@@ -110,6 +109,18 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                         bookingsTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
                         bookingsTime.setTimeSpec(Qt::UTC);
                     }
+                } else if(line.startsWith("RELOAD")) {
+                    //maybe schedule reloading here
+                    /*
+                    int reloadInMin = list[1].trimmed().toInt();
+
+                    if (whazzupTime.isValid() && reloadIn > 0) {
+                        TDateTime reloadAt = whazzupTime.addSecs(reloadInMin * 60);
+                        if(reloadAt < QDateTime::currentDateTime().addSecs(Settings::downloadInterval() * 60))
+                            reloadAt = QDateTime::currentDateTime().addSecs(Settings::downloadInterval() * 60);
+                    }
+                    */
+
                 } else if(line.startsWith("VERSION")) {
                     whazzupVersion = list[1].trimmed().toInt();
                 }
@@ -128,6 +139,10 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 }
                 else if(list[3] == "ATC") {
                     if (type == WHAZZUP) {
+                        if (list.size() > 42 && whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
+                            list[35] = list[35]+ ":" +list[36];
+                            list.removeAt(36);
+                        }
                         Controller *c = new Controller(list, this);
                         controllers[c->label] = c;
                     } else if (type == ATCBOOKINGS) {
@@ -208,6 +223,34 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         }
     }
 
+    // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked (to allow for smoother realtime simulation).
+    QList<Controller*> c = data.getControllers();
+    for (int i = 0; i < c.size(); i++) {
+        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
+        // do some magic for Controller Info like "online until"...
+        QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)", Qt::CaseInsensitive);
+        if (rxOnlineUntil.indexIn(c[i]->atisMessage) > 0) {
+            //fixme
+            QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "hhmm");
+            if(found.isValid()) {
+                if (qAbs(found.secsTo(predictionBasedOnTime.time())) > 60*60 * 12) // e.g. now its 2200z, and he says "online until 0030z", allow for up to 12 hours
+                    showUntil = QDateTime(predictionBasedOnTime.date().addDays(1), found, Qt::UTC);
+                else
+                    showUntil = QDateTime(predictionBasedOnTime.date(), found, Qt::UTC);
+            }
+            if (showUntil < predictionBasedOnTime) // he/she enterred a time before and is still online
+                showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
+            qDebug() << "Found" << c[i]->label << "to be online until" << showUntil << "(Controller Info)";
+        }
+        if (predictTime < showUntil && predictTime > predictionBasedOnTime) {
+            if (!c[i]->atisMessage.contains(QString("QuteScoop assumes")))
+                    c[i]->atisMessage +=
+                            QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1 UTC</i></p>")
+                                .arg(showUntil.toString("HHmm"));
+            controllers[c[i]->label] = new Controller(*c[i]);
+        }
+    }
+
     QList<Pilot*> p = data.getAllPilots();
 
     QDateTime startTime, endTime = QDateTime();
@@ -219,6 +262,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             continue;
         if (!p[i]->eta().isValid())
             continue; // no ETA, no prediction...
+        if (!p[i]->etd().isValid() && predictTime < predictionBasedOnTime)
+            continue; // no ETD, difficult prediction. Before the WhazzupTime, no prediction...
         if(p[i]->destAirport() == 0)
             continue; // sorry, no magic available yet. Just let him fly the last heading until etaPlan()? Does not make sense
         if(p[i]->etd() > predictTime || p[i]->eta() < predictTime) {
@@ -498,7 +543,7 @@ QList<Pilot*> WhazzupData::getBookedPilots() const {
 
 QList<Pilot*> WhazzupData::getAllPilots() const {
     QList<Pilot*> ap = bookedpilots.values();
-	ap += pilots.values();
+    ap += pilots.values();
     return ap;
 }
 

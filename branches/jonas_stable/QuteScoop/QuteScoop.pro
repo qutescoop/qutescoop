@@ -22,7 +22,7 @@ FORMS = gui/MainWindow.ui \
     gui/PlanFlightDialog.ui \
     gui/BookedAtcDialog.ui \
     gui/ListClientsDialog.ui
-TARGET = 
+TARGET =
 DEPENDPATH += ./src \
     ./gui
 INCLUDEPATH += ./src \
@@ -38,7 +38,7 @@ QT += network \
 # CONFIG += debug
 # CONFIG += release
 # CONFIG += warn_off
-mac { 
+mac {
     ICON = gui/Dolomynum.icns
     CONFIG += x86 \
         ppc
@@ -47,26 +47,26 @@ win32:RC_FILE = gui/windowsicon.rc
 
 # Input
 HEADERS += WhazzupData.h \
-    Whazzup.h \
-    Waypoint.h \
-    Tessellator.h \
-    Settings.h \
-    Pilot.h \
-    NavData.h \
-    NavAid.h \
-    Metar.h \
+    src/Whazzup.h \
+    src/Waypoint.h \
+    src/Tessellator.h \
+    src/Settings.h \
+    src/Pilot.h \
+    src/NavData.h \
+    src/NavAid.h \
+    src/Metar.h \
     MapObject.h \
-    LineReader.h \
-    helpers.h \
-    FirReader.h \
-    Fir.h \
-    FileReader.h \
-    Controller.h \
-    Client.h \
-    BookedController.h \
-    Airway.h \
-    Airport.h \
-    Airac.h \
+    src/LineReader.h \
+    src/helpers.h \
+    src/FirReader.h \
+    src/Fir.h \
+    src/FileReader.h \
+    src/Controller.h \
+    src/Client.h \
+    src/BookedController.h \
+    src/Airway.h \
+    src/Airport.h \
+    src/Airac.h \
     Window.h \
     SearchVisitor.h \
     SearchResultModel.h \
