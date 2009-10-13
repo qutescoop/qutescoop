@@ -17,7 +17,6 @@
  **************************************************************************/
 
 #include <QtGui>
-
 #include "GLWidget.h"
 #include "Window.h"
 #include "ClientDetails.h"
@@ -132,7 +131,7 @@ Window::Window(QWidget *parent) :
 
     if(Settings::downloadOnStartup()) {
         // download whazzup as soon as whazzup status download is complete
-        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
+    connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
     }
     // Always download status
     whazzup->setStatusLocation(Settings::statusLocation());
@@ -252,13 +251,17 @@ along with this program.  If not, see <a href='http://www.gnu.org/licenses/'>www
 }
 
 void Window::networkMessage(QString message) {
-    QMessageBox::information(this, tr("Network Message"), message);
+/*    QMessageBox::information(this, tr("Network Message"), message);
+      */
+    statusBar()->showMessage(message);
 }
 
 void Window::downloadError(QString message) {
-    QMessageBox::critical(this, tr("Download Failed"),
+/*    QMessageBox::critical(this, tr("Download Failed"),
             tr("Data download failed:") +
             QString("<br><br><strong>%1</strong>").arg(message));
+            */
+    statusBar()->showMessage(message);
 }
 
 void Window::whazzupDownloaded(bool isNew) {
@@ -317,6 +320,9 @@ void Window::whazzupDownloaded(bool isNew) {
         if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
 
         refreshFriends();
+
+        if (actionShootScreenies->isChecked())
+            shootScreenie();
     }
     downloadWatchdog.stop();
     if(Settings::downloadPeriodically())
@@ -426,10 +432,10 @@ void Window::on_actionHideAllWindows_triggered() {
     PilotDetails::getInstance()->close();
     ControllerDetails::getInstance()->close();
     AirportDetails::getInstance()->close();
-    //PreferencesDialog::getInstance()->close(); // maybe let them open as they got not invoked by map click - but depends on user feel
-    //PlanFlightDialog::getInstance()->close();
-    //BookedAtcDialog::getInstance()->close();
-    //ListClientsDialog::getInstance()->close();
+    PreferencesDialog::getInstance()->close();
+    PlanFlightDialog::getInstance()->close();
+    BookedAtcDialog::getInstance()->close();
+    ListClientsDialog::getInstance()->close();
 
     if(metarDecoderDock->isFloating())
         metarDecoderDock->hide();
@@ -447,8 +453,10 @@ void Window::on_actionClearAllFlightPaths_triggered() {
 
     QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
     for(int i = 0; i < pilots.size(); i++) {
-        pilots[i]->displayLineFromDep = false;
-        pilots[i]->displayLineToDest = false;
+        if(pilots[i] != 0) {
+            pilots[i]->displayLineFromDep = false;
+            pilots[i]->displayLineToDest = false;
+        }
     }
     // adjust the "plot route" tick in dialogs
     AirportDetails::getInstance()->refresh();
@@ -609,21 +617,23 @@ void Window::versionDownloaded(bool error) {
     }
 }
 
-void Window::on_actionRememberPosition_triggered() {
-    glWidget->rememberPosition(1);
-}
-
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
-    metarDecoderDock->show();
     metarDecoderDock->setWindowTitle("METAR for " + airport);
     metarText->setText(decodedText);
+    metarDecoderDock->show();
+    metarDecoderDock->raise();
+    metarDecoderDock->activateWindow(); // ?? it gets on top only after the second click from AirportDialog...
+    metarDecoderDock->setFocus(); // Don't understand how I can bring this nasty on top of all other. A simple click on the titlebar and it is done.
 }
 
 void Window::downloadWatchdogTriggered() {
     downloadWatchdog.stop();
-    QMessageBox::warning(this, tr("Data Download Failed"),
+    // try to be less intrusive and just get a new one (show a StatusMessage)
+    // relates to the sequential saving of downloaded Whazzup-files for later use
+    /*QMessageBox::warning(this, tr("Data Download Failed"),
             QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.")
-        );
+        );*/
+    statusBar()->showMessage(QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again."), 8000);
     Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
 }
 
@@ -673,18 +683,21 @@ void Window::on_datePredictTime_dateChanged(QDate date)
 {
     warpTimer.stop();
 
-    QDate newDate;
-    // make month change if lastday+ or 0-
-    if (!tbRunPredict->isChecked()) {
-        if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
-            newDate = date.addMonths(1);
-        if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
-            newDate = date.addMonths(-1);
-    }
+    if(cbNoPredict->isChecked()) {
+    } else {
+        QDate newDate;
+        // make month change if lastday+ or 0-
+        if (!tbRunPredict->isChecked()) {
+            if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
+                newDate = date.addMonths(1);
+            if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
+                newDate = date.addMonths(-1);
+        }
 
-    datePredictTime_old = date;
-    if(newDate.isValid())
-        datePredictTime->setDate(newDate);
+        datePredictTime_old = date;
+        if(newDate.isValid())
+            datePredictTime->setDate(newDate);
+    }
 
     warpTimer.start(1000);
 }
@@ -693,24 +706,35 @@ void Window::on_timePredictTime_timeChanged(QTime time)
 {
     warpTimer.stop();
 
-    QTime newTime;
-    if (!tbRunPredict->isChecked()) {
-        // make hour change if 59+ or 0-
-        if (timePredictTime_old.minute() == 59 && time.minute() == 0)
-            newTime = time.addSecs(60 * 60);
-        if (timePredictTime_old.minute() == 0 && time.minute() == 59)
-            newTime = time.addSecs(-60 * 60);
+    if(cbNoPredict->isChecked()) {
+        QList<QPair<QDateTime, QString>*> downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
+        for (int i=0; i < downloaded.size(); i++) {
+            if(downloaded[i]->first < selected) {
+                Whazzup::getInstance()->fromFile(downloaded[i]->second);
+                break;
+            }
+        }
+    } else {
+        QTime newTime;
+        if (!tbRunPredict->isChecked()) {
+            // make hour change if 59+ or 0-
+            if (timePredictTime_old.minute() == 59 && time.minute() == 0)
+                newTime = time.addSecs(60 * 60);
+            if (timePredictTime_old.minute() == 0 && time.minute() == 59)
+                newTime = time.addSecs(-60 * 60);
 
-        // make date change if 23+ or 00-
-        if (timePredictTime_old.hour() == 23 && time.hour() == 0)
-            datePredictTime->setDate(datePredictTime->date().addDays(1));
-        if (timePredictTime_old.hour() == 0 && time.hour() == 23)
-            datePredictTime->setDate(datePredictTime->date().addDays(-1));
+            // make date change if 23+ or 00-
+            if (timePredictTime_old.hour() == 23 && time.hour() == 0)
+                datePredictTime->setDate(datePredictTime->date().addDays(1));
+            if (timePredictTime_old.hour() == 0 && time.hour() == 23)
+                datePredictTime->setDate(datePredictTime->date().addDays(-1));
+        }
+
+        timePredictTime_old = time;
+        if (newTime.isValid())
+            timePredictTime->setTime(newTime);
     }
-
-    timePredictTime_old = time;
-    if (newTime.isValid())
-        timePredictTime->setTime(newTime);
 
     warpTimer.start(1000);
 }
@@ -760,6 +784,10 @@ void Window::on_actionRecallMapPosition3_triggered()
 void Window::on_actionRecallMapPosition2_triggered()
 {
     glWidget->restorePosition(2);
+}
+
+void Window::on_actionRememberPosition_triggered() {
+    glWidget->rememberPosition(1);
 }
 
 void Window::on_actionRememberMapPosition7_triggered()
@@ -864,4 +892,15 @@ void Window::runPredict() {
     warpTimer.stop();
     performWarp();
     runPredictTimer.start(spinRunPredictInterval->value() * 1000);
+}
+
+void Window::shootScreenie() {
+    // screenshot (only works if QuteScoop Window is shown on top)
+    QString filename = QString("screenshots/%1_%2")
+              .arg(Settings::downloadNetwork())
+              .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss"));
+    QPixmap *pixmap = new QPixmap(QPixmap::grabWindow(Window::getInstance()->glWidget->winId()));
+    pixmap->save(QString("%1.png").arg(filename), "png");
+    delete pixmap;
+    qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
 }

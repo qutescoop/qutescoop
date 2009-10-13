@@ -22,19 +22,19 @@
 #include <QDebug>
 
 void AirportDetailsArrivalsModel::setClients(const QList<Pilot*>& pilots) {
-	this->pilots = pilots;
-	reset();
+    this->pilots = pilots;
+    reset();
 }
 
 QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-	if (role != Qt::DisplayRole)
-		return QVariant();
+    if (role != Qt::DisplayRole)
+        return QVariant();
 
-	if (orientation == Qt::Vertical)
-		return QVariant();
+    if (orientation == Qt::Vertical)
+        return QVariant();
 
-	// orientation is Qt::Horizontal
-	switch (section) {
+    // orientation is Qt::Horizontal
+    switch (section) {
         case 0: return QString("Callsign"); break;
         case 1: return QString("Type"); break;
         case 2: return QString("Name"); break;
@@ -42,18 +42,18 @@ QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientati
         case 4: return QString("T"); break;
         case 5: return QString("Via"); break;
         case 6: return QString("Alt"); break;
-        case 7: return QString("Speed"); break;
+        case 7: return QString("GS"); break;
         case 8: return QString("Dist"); break;
-        case 9: return QString("Expected"); break;
+        case 9: return QString("TTG"); break;
         case 10: return QString("Delay"); break;
         case 11: return QString("Status"); break;
     }
 
-	return QVariant();
+    return QVariant();
 }
 
 int AirportDetailsArrivalsModel::rowCount(const QModelIndex &parent) const {
-	return pilots.count();
+    return pilots.count();
 }
 
 int AirportDetailsArrivalsModel::columnCount(const QModelIndex &parent) const {
@@ -61,23 +61,27 @@ int AirportDetailsArrivalsModel::columnCount(const QModelIndex &parent) const {
 }
 
 QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) const {
-	if (!index.isValid())
-		return QVariant();
+    if (!index.isValid())
+        return QVariant();
 
-	if (index.row() >= pilots.size())
-		return QVariant();
-	
+    if (index.row() >= pilots.size())
+        return QVariant();
+
     Pilot* p = pilots[index.row()];
-	
+
     if(role == Qt::FontRole) {
+        QFont result;
         if (p->flightStatus() == Pilot::PREFILED) {
-            QFont result;
             result.setItalic(true);
             return result;
         }
-		return QFont();
-	} else if (role == Qt::DisplayRole) {
-		switch (index.column()) {
+        if (p->isFriend()) {
+            result.setBold(true);
+            return result;
+        }
+        return QFont();
+    } else if(role == Qt::DisplayRole) {
+        switch (index.column()) {
             case 0:
                 return p->label; break;
             case 1:
@@ -115,11 +119,11 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
                 return p->flightStatusShortString();
                 break;
         }
-	}
+    }
 
-	return QVariant();
+    return QVariant();
 }
 
 void AirportDetailsArrivalsModel::modelSelected(const QModelIndex& index) {
-	pilots[index.row()]->showDetailsDialog();
+    pilots[index.row()]->showDetailsDialog();
 }

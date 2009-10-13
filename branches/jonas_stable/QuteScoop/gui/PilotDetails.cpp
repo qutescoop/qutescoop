@@ -81,19 +81,8 @@ void PilotDetails::refresh(Pilot *newPilot) {
     // flight plan
     groupFp->setVisible(!pilot->planFlighttype.isEmpty()); // hide for Bush pilots
 
-    QString fpTypeStr;
-    if (pilot->planFlighttype == "I")
-        fpTypeStr = "IFR";
-    else if (pilot->planFlighttype == "V")
-        fpTypeStr = "VFR";
-    else if (pilot->planFlighttype == "Y")
-        fpTypeStr = "Y: IFR to VFR";
-    else if (pilot->planFlighttype == "Z")
-        fpTypeStr = "Z: VFR to IFR";
-    else
-        fpTypeStr =  pilot->planFlighttype;
     groupFp->setTitle(QString("Flight Plan (%1)")
-                      .arg(fpTypeStr));
+                      .arg(pilot->planFlighttypeString()));
 
     QString depStr = pilot->planDep;
     Airport *airport = pilot->depAirport();

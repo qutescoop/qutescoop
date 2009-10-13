@@ -21,6 +21,7 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QTimer>
+#include <QDir>
 
 #include "Settings.h"
 #include "Whazzup.h"
@@ -149,6 +150,29 @@ void Whazzup::statusDownloaded(bool error) {
     }
 }
 
+void Whazzup::fromFile(QString filename) {
+    qDebug() << "fromFile" << filename;
+    /*if(whazzupDownloader != 0) {
+        whazzupDownloader->abort();
+        delete whazzupDownloader;
+    }
+    */
+    QFile *file = new QFile(filename);
+    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qDebug() << "File Error on open";
+        return;
+    }
+
+    if(whazzupBuffer != 0)
+        whazzupBuffer->close();
+        delete whazzupBuffer;
+    whazzupBuffer = new QBuffer;
+    whazzupBuffer->open(QBuffer::WriteOnly);
+    whazzupBuffer->write(file->readAll());
+    whazzupBuffer->close();
+    whazzupDownloaded(false);
+}
+
 void Whazzup::download() {
     if(urls.size() == 0) {
         emit downloadError("No Whazzup URLs in network status. Trying to get a new network status.");
@@ -158,13 +182,24 @@ void Whazzup::download() {
     }
 
     downloadTimer->stop();
-
     QTime now = QTime::currentTime();
-    if(lastDownloadTime.secsTo(now) < 30) {
+    if(!data.isNull()) {
+        if(data.updateEarliest().isValid()
+                && QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest()) > 0
+                && Settings::downloadNetwork() == data.network()) {
+            Window::getInstance()->statusBar()->showMessage(
+                    QString("Server said new data available in %1s. Skipping.")
+                    .arg(QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest())), 3000
+                    );
+            return; // Server said we do not need to update
+        }
+    } else if(lastDownloadTime.secsTo(now) < 30) {
         Window::getInstance()->statusBar()->showMessage(
-                QString("Whazzup checked less than 30 seconds ago. Skipping."), 3000);
+                QString("Whazzup checked %1s (less than 30s) ago. Skipping.")
+                .arg(lastDownloadTime.secsTo(now)), 3000
+                );
         qDebug() << "Whazzup already checked less than 30 seconds ago. Skipping.";
-        return; // don't allow download intervals < 30 seconds
+        return; // don't allow download intervals < 30s
     }
     lastDownloadTime = now;
 
@@ -240,9 +275,11 @@ void Whazzup::whazzupDownloaded(bool error) {
             data.updateFrom(newWhazzupData);
             qDebug() << "Whazzup updated from\t" << data.timestamp().toString();
 
-            QFile out(QString("downloaded/%1_whazzup_%2")
+            // write out whazzup to a file
+            QString filename = QString("downloaded/%1_%2.whazzup")
                       .arg(Settings::downloadNetwork())
-                      .arg(data.timestamp().toString("yyyyMMdd-HHmmss")));
+                      .arg(data.timestamp().toString("yyyyMMdd-HHmmss"));
+            QFile out(filename);
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 out.write(whazzupBuffer->data());
             } else {
@@ -333,7 +370,7 @@ void Whazzup::bookingsDownloaded(bool error) {
             data.updateFrom(newBookingsData);
             qDebug() << "Bookings updated from\t" << data.bookingsTimestamp().toString();
 
-            QFile out(QString("downloaded/%1_bookings_%2")
+            QFile out(QString("downloaded/%1_%2.bookings")
                       .arg(Settings::downloadNetwork())
                       .arg(data.bookingsTimestamp().toString("yyMMdd-HHmmss")));
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -374,4 +411,20 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
     WhazzupData newdata = WhazzupData(predictedTime, data);
     predictedData.updateFrom(newdata);
     emit newData(true);
+}
+
+QList<QPair<QDateTime, QString>*> Whazzup::getDownloadedWhazzups() {
+    // Process directory
+    QDir myDir("downloaded/");
+    QStringList list = myDir.entryList(QStringList(QString("%1_*.whazzup")
+                            .arg(Settings::downloadNetwork()))
+                            , QDir::Files | QDir::Readable);
+    qDebug() << "getDLWhazzup" << list;
+    for (int i = 0; i < list.size(); i++) {
+        QRegExp dtRe = QRegExp("\\d+_(\\d{8}-\\d{6})");
+        if (dtRe.indexIn(list[i]) > 0) {
+            qDebug() << dtRe.cap(1);
+            QDateTime dt = QDateTime::fromString(dtRe.cap(1), "yyyyMMdd-HHmmss");
+        }
+    }
 }

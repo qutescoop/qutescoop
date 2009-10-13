@@ -307,6 +307,9 @@ E009° 37.21'</string>
     <layout class="QHBoxLayout" name="_4">
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
+       <property name="toolTip">
+        <string>Center Map and zoom in on this Airport</string>
+       </property>
        <property name="text">
         <string>Show on &amp;Map</string>
        </property>
@@ -315,6 +318,16 @@ E009° 37.21'</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="pbMetar">
+       <property name="toolTip">
+        <string>Will be displayed in the Metar Decoder Widget</string>
+       </property>
+       <property name="text">
+        <string>Get M&amp;ETAR</string>
        </property>
       </widget>
      </item>

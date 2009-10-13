@@ -16,38 +16,32 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef LISTCLIENTSDIALOG_H
-#define LISTCLIENTSDIALOG_H
+#include "Ping.h"
 
-#include <QSortFilterProxyModel>
+void Ping::pingReadyRead() {
+    QRegExp findMs = QRegExp("time\\W?=\\W?(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);
+    if (findMs.indexIn(pingProcess->readAll()) > 0) {
+        int ping = (int) findMs.cap(1).toDouble();
+        emit havePing(server, ping);
+    } else {
+        emit havePing(server, -1);
+    }
+}
 
-#include "ListClientsDialogModel.h"
-#include "ListClientsSortFilter.h"
-#include "ui_ListClientsDialog.h"
+void Ping::startPing(QString server) {
+    this->server = server;
 
-class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
-    Q_OBJECT
-public:
-    static ListClientsDialog *getInstance();
-    void refresh();
+    pingProcess = new QProcess(this);
+    connect(pingProcess, SIGNAL(readyRead()), this, SLOT(pingReadyRead()));
 
-public slots:
-    void newMapPosition();
-    void pingReceived(QString, int);
-
-private slots:
-    void on_pbPingVoiceServers_clicked();
-    void on_pbPingServers_clicked();
-    void modelSelected(const QModelIndex& index);
-    void on_editFilter_textChanged(QString str);
-    void newFilter();
-
-private:
-    ListClientsDialog();
-
-    ListClientsDialogModel listClientsModel;
-    ListClientsSortFilter *listClientsSortModel;
-    QColor mapPingToColor(int ms);
-};
-
-#endif // LISTCLIENTSDIALOG_H
+#ifdef Q_WS_WIN
+    QString pingCmd = QString("ping %1 -n 1").arg(server);
+#endif
+#ifdef Q_WS_X11
+    QString pingCmd = QString("ping %1 -c1").arg(server);
+#endif
+#ifdef Q_WS_MAC
+    QString pingCmd = QString("ping %1 -c1").arg(server);
+#endif
+    pingProcess->start(pingCmd);
+}

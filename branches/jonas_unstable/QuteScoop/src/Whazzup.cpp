@@ -21,6 +21,7 @@
 #include <QUrl>
 #include <QFileInfo>
 #include <QTimer>
+#include <QDir>
 
 #include "Settings.h"
 #include "Whazzup.h"
@@ -29,162 +30,170 @@
 Whazzup *whazzupInstance = 0;
 
 Whazzup* Whazzup::getInstance() {
-	if(whazzupInstance == 0)
-		whazzupInstance = new Whazzup();
-	return whazzupInstance;
+    if(whazzupInstance == 0)
+        whazzupInstance = new Whazzup();
+    return whazzupInstance;
 }
 
 Whazzup::Whazzup() {
-	statusDownloader = new QHttp;
-	whazzupDownloader = new QHttp;
-	bookingsDownloader = new QHttp;
+    statusDownloader = new QHttp;
+    whazzupDownloader = new QHttp;
+    bookingsDownloader = new QHttp;
 
-	statusBuffer = 0;
-	whazzupBuffer = 0;
-	bookingsBuffer = 0;
-	connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
-	
-	// init random seed to switch between URLs
-	srand(time(NULL));
-	
-	downloadTimer = new QTimer(this);
-	connect(downloadTimer, SIGNAL(timeout()), this, SLOT(download()));
+    statusBuffer = 0;
+    whazzupBuffer = 0;
+    bookingsBuffer = 0;
+    connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
+
+    // init random seed to switch between URLs
+    srand(time(NULL));
+
+    downloadTimer = new QTimer(this);
+    connect(downloadTimer, SIGNAL(timeout()), this, SLOT(download()));
 }
 
 Whazzup::~Whazzup() {
-	if(statusDownloader != 0) delete statusDownloader;
-	if(statusBuffer != 0) delete statusBuffer;
-	if(downloadTimer != 0) delete downloadTimer;
+    if(statusDownloader != 0) delete statusDownloader;
+    if(statusBuffer != 0) delete statusBuffer;
+    if(downloadTimer != 0) delete downloadTimer;
 }
 
 void Whazzup::setStatusLocation(const QString& statusLocation) {
     qDebug() << "Downloading network status from" << statusLocation;
-    
-	QUrl url(statusLocation);
-	QFileInfo fileInfo(url.path());
-	QString fileName = fileInfo.fileName();
 
-	statusDownloader->abort();
-	statusDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-	Settings::applyProxySetting(statusDownloader);
-	
-	if (!url.userName().isEmpty())
-		statusDownloader->setUser(url.userName(), url.password());
+    QUrl url(statusLocation);
+    QFileInfo fileInfo(url.path());
+    QString fileName = fileInfo.fileName();
 
-	QString querystr = url.path() + "?" + url.encodedQuery();
-	
-	if(statusBuffer != 0) delete statusBuffer;
-	statusBuffer = new QBuffer;
-	statusBuffer->open(QBuffer::ReadWrite);
-	statusDownloader->get(querystr, statusBuffer);
+    statusDownloader->abort();
+    statusDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
+    Settings::applyProxySetting(statusDownloader);
+
+    if (!url.userName().isEmpty())
+        statusDownloader->setUser(url.userName(), url.password());
+
+    QString querystr = url.path() + "?" + url.encodedQuery();
+
+    if(statusBuffer != 0) delete statusBuffer;
+    statusBuffer = new QBuffer;
+    statusBuffer->open(QBuffer::ReadWrite);
+    statusDownloader->get(querystr, statusBuffer);
 }
 
 void Whazzup::statusDownloaded(bool error) {
-	if(statusBuffer == 0)
-		return;
+    if(statusBuffer == 0)
+        return;
 
-	if(error) {
-		emit downloadError(statusDownloader->errorString());
-		return;
-	}
+    if(error) {
+        emit downloadError(statusDownloader->errorString());
+        return;
+    }
 
-	urls.clear();
-	gzurls.clear();
-	metarUrl = "";
-	tafUrl = "";
-	shorttafUrl = "";
-	atisLink = "";
-	userLink = "";
-	
-	statusBuffer->seek(0);
-	while(statusBuffer->canReadLine()) {
-		QString line = QString(statusBuffer->readLine()).trimmed();
-		if(line.startsWith(";")) // ignore comments
-			continue;
+    urls.clear();
+    gzurls.clear();
+    metarUrl = "";
+    tafUrl = "";
+    shorttafUrl = "";
+    atisLink = "";
+    userLink = "";
 
-		QStringList list = line.split('=');
-		
-		if("msg0" == list[0]) {
-			message = line.right(line.length() - QString("url0=").length());
-			continue;
-		}
-		
-		if(list.size() != 2) continue;
-		
-		if("url0" == list[0])
-			urls.append(list[1]);
-		else if("gzurl0" == list[0])
-			gzurls.append(list[1]);
-		else if("metar0" == list[0])
-			metarUrl = list[1];
-		else if("taf0" == list[0])
-			tafUrl = list[1];
-		else if("shorttaf0" == list[0])
-			shorttafUrl = list[1];
-		else if("user0" == list[0])
-			userLink = list[1];
-		else if("atis0" == list[0])
-			atisLink = list[1];
-	}
-	
-	if(!message.isEmpty())
-		emit networkMessage(message);
-	
-	delete statusBuffer;
-	statusBuffer = 0;
-	lastDownloadTime = QTime();
-	
+    statusBuffer->seek(0);
+    while(statusBuffer->canReadLine()) {
+        QString line = QString(statusBuffer->readLine()).trimmed();
+        if(line.startsWith(";")) // ignore comments
+            continue;
+
+        QStringList list = line.split('=');
+
+        if("msg0" == list[0]) {
+            message = line.right(line.length() - QString("url0=").length());
+            continue;
+        }
+
+        if(list.size() != 2) continue;
+
+        if("url0" == list[0])
+            urls.append(list[1]);
+        else if("gzurl0" == list[0])
+            gzurls.append(list[1]);
+        else if("metar0" == list[0])
+            metarUrl = list[1];
+        else if("taf0" == list[0])
+            tafUrl = list[1];
+        else if("shorttaf0" == list[0])
+            shorttafUrl = list[1];
+        else if("user0" == list[0])
+            userLink = list[1];
+        else if("atis0" == list[0])
+            atisLink = list[1];
+    }
+
+    if(!message.isEmpty())
+        emit networkMessage(message);
+
+    delete statusBuffer;
+    statusBuffer = 0;
+    lastDownloadTime = QTime();
+
     qDebug() << "Got network status:" << urls.size() << "Whazzup URLs";
 
     emit statusDownloaded();
 }
 
+void Whazzup::fromFile(QString& filename) {
+    QDir myDir("./downloaded");
+    QStringList list = myDir.entryList(QDir::Files | QDir::Readable);
+    qDebug()<<"fromFile" << list;
+}
+
 void Whazzup::download() {
     if(urls.size() == 0) {
+        emit downloadError("No network status available. Trying to get one.");
+        setStatusLocation(Settings::statusLocation());
         qDebug() << "no Whazzup URLs available";
-		return;
+        return;
     }
-	
-	downloadTimer->stop();
-	
+
+    downloadTimer->stop();
+
     QTime now = QTime::currentTime();
     if(lastDownloadTime.secsTo(now) < 30) {
         qDebug() << "Whazzup already checked less than 30 seconds ago. Skipping.";
-		return; // don't allow download intervals < 30 seconds
+        return; // don't allow download intervals < 30 seconds
     }
-	lastDownloadTime = now;
-	
-    int index = rand() % urls.size();
-	QString fileLocation = urls[index];
+    lastDownloadTime = now;
 
-	QUrl url(fileLocation);
-	QFileInfo fileInfo(url.path());
-	QString fileName = fileInfo.fileName();
+    int index = rand() % urls.size();
+    QString fileLocation = urls[index];
+
+    QUrl url(fileLocation);
+    QFileInfo fileInfo(url.path());
+    QString fileName = fileInfo.fileName();
 
     Window::getInstance()->setStatusText(QString("Updating whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)));
     qDebug() << "Downloading whazzup from" << fileLocation;
 
-	if(whazzupDownloader != 0) {
-		whazzupDownloader->abort();
-		delete whazzupDownloader;
-	}
-	whazzupDownloader = new QHttp(this);
-	connect(whazzupDownloader, SIGNAL(done(bool)), this, SLOT(whazzupDownloaded(bool)));
-	connect(whazzupDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(whazzupDownloading(int,int)));
-	Settings::applyProxySetting(whazzupDownloader);
-	
-	whazzupDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-	if (!url.userName().isEmpty())
-		whazzupDownloader->setUser(url.userName(), url.password());
+    if(whazzupDownloader != 0) {
+        whazzupDownloader->abort();
+        delete whazzupDownloader;
+    }
+    whazzupDownloader = new QHttp(this);
+    connect(whazzupDownloader, SIGNAL(done(bool)), this, SLOT(whazzupDownloaded(bool)));
+    connect(whazzupDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(whazzupDownloading(int,int)));
+    Settings::applyProxySetting(whazzupDownloader);
 
-	QString querystr = url.path() + "?" + url.encodedQuery();
-	
+    whazzupDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
+    if (!url.userName().isEmpty())
+        whazzupDownloader->setUser(url.userName(), url.password());
+
+    QString querystr = url.path() + "?" + url.encodedQuery();
+
     if(whazzupBuffer != 0)
         whazzupBuffer->close();
         delete whazzupBuffer;
-	whazzupBuffer = new QBuffer;
-	whazzupBuffer->open(QBuffer::ReadWrite);
-	whazzupDownloader->get(querystr, whazzupBuffer);
+    whazzupBuffer = new QBuffer;
+    whazzupBuffer->open(QBuffer::ReadWrite);
+    whazzupDownloader->get(querystr, whazzupBuffer);
 }
 
 void Whazzup::whazzupDownloading(int prog, int tot) {
@@ -199,25 +208,25 @@ void Whazzup::whazzupDownloaded(bool error) {
         emit newData(false); // update statusbar
         return;
     }
-	
-	if(Settings::downloadPeriodically())
-		downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
 
-	if(whazzupBuffer->data().isEmpty()) {
+    if(Settings::downloadPeriodically())
+        downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
+
+    if(whazzupBuffer->data().isEmpty()) {
         emit newData(false); // update statusbar
         return;
-	}
-	
-	if(error) {
-		emit downloadError(statusDownloader->errorString());
+    }
+
+    if(error) {
+        emit downloadError(statusDownloader->errorString());
         emit newData(false); // update statusbar
         return;
-	}
+    }
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
-	WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
+    WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
     whazzupBuffer->close();
-	if(!newWhazzupData.isNull()) {
+    if(!newWhazzupData.isNull()) {
         if(newWhazzupData.timestamp() != data.timestamp()) {
             data.updateFrom(newWhazzupData);
             qDebug() << "Whazzup updated" << data.timestamp().toString();
@@ -226,10 +235,10 @@ void Whazzup::whazzupDownloaded(bool error) {
             qDebug() << "We already have Whazzup with that Timestamp" << data.timestamp().toString();
             emit newData(false);
         }
-	}
+    }
 
     if (data.isVatsim()) {// get ATC Bookings if network is VATSIM
-        downloadBookings(); 
+        downloadBookings();
         Window::getInstance()->setEnableBookedAtc(true);
     } else {
         Window::getInstance()->setEnableBookedAtc(false);
@@ -237,33 +246,33 @@ void Whazzup::whazzupDownloaded(bool error) {
 }
 
 void Whazzup::downloadBookings() {
-	QUrl url(Settings::bookingsLocation());
-	QFileInfo fileInfo(url.path());
-	QString fileName = fileInfo.fileName();
+    QUrl url(Settings::bookingsLocation());
+    QFileInfo fileInfo(url.path());
+    QString fileName = fileInfo.fileName();
 
     Window::getInstance()->setStatusText(QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
-   	qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
+    qDebug() << "Downloading ATC bookings from" << url.toString(QUrl::RemoveUserInfo);
 
-	if(bookingsDownloader != 0) {
-		bookingsDownloader->abort();
+    if(bookingsDownloader != 0) {
+        bookingsDownloader->abort();
         delete bookingsDownloader;
-	}
-	bookingsDownloader = new QHttp(this);
-	connect(bookingsDownloader, SIGNAL(done(bool)), this, SLOT(bookingsDownloaded(bool)));
-	connect(bookingsDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(bookingsDownloading(int,int)));
-	Settings::applyProxySetting(bookingsDownloader);
-	
-	bookingsDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-	if (!url.userName().isEmpty())
-		bookingsDownloader->setUser(url.userName(), url.password());
+    }
+    bookingsDownloader = new QHttp(this);
+    connect(bookingsDownloader, SIGNAL(done(bool)), this, SLOT(bookingsDownloaded(bool)));
+    connect(bookingsDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(bookingsDownloading(int,int)));
+    Settings::applyProxySetting(bookingsDownloader);
 
-	QString querystr = url.path() + "?" + url.encodedQuery();
+    bookingsDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
+    if (!url.userName().isEmpty())
+        bookingsDownloader->setUser(url.userName(), url.password());
+
+    QString querystr = url.path() + "?" + url.encodedQuery();
 
     if(bookingsBuffer != 0)
         delete bookingsBuffer;
     bookingsBuffer = new QBuffer;
-	bookingsBuffer->open(QBuffer::ReadWrite);
-	bookingsDownloader->get(querystr, bookingsBuffer);
+    bookingsBuffer->open(QBuffer::ReadWrite);
+    bookingsDownloader->get(querystr, bookingsBuffer);
 }
 
 void Whazzup::bookingsDownloading(int prog, int tot) {
@@ -281,14 +290,14 @@ void Whazzup::bookingsDownloaded(bool error) {
     if(bookingsBuffer->data().isEmpty()) {
         emit newData(false); // update statusbar
         return;
-	}
-	
-	if(error) {
+    }
+
+    if(error) {
         Window::getInstance()->setEnableBookedAtc(false);
-		emit downloadError(bookingsDownloader->errorString());
+        emit downloadError(bookingsDownloader->errorString());
         emit newData(false); // update statusbar
         return;
-	}
+    }
 
     WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
@@ -305,15 +314,15 @@ void Whazzup::bookingsDownloaded(bool error) {
 }
 
 QString Whazzup::getUserLink(const QString& id) const {
-	if(userLink.isEmpty())
-		return QString();
-	return userLink + "?id=" + id;
+    if(userLink.isEmpty())
+        return QString();
+    return userLink + "?id=" + id;
 }
 
 QString Whazzup::getAtisLink(const QString& id) const {
-	if(metarUrl.isEmpty())
-		return QString();
-	return metarUrl + "?id=" + id;
+    if(metarUrl.isEmpty())
+        return QString();
+    return metarUrl + "?id=" + id;
 }
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {

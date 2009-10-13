@@ -28,12 +28,21 @@
 #include "Settings.h"
 #include "helpers.h"
 
+/*
+TODO:
+It was a bad idea to pull Bookings and Whazzup in one WhazzupData instance.
+We should instead hold one instance for each type.
+*/
+
 WhazzupData::WhazzupData():
     connectedClients(0),
     connectedServers(0),
+    connectedServerList(QList<QStringList>()),
+    connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
+    nextUpdate(QDateTime()),
     dataType(UNIFIED)
 {
 }
@@ -41,11 +50,15 @@ WhazzupData::WhazzupData():
 WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     connectedClients(0),
     connectedServers(0),
+    connectedServerList(QList<QStringList>()),
+    connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
     whazzupTime(QDateTime()),
-    bookingsTime(QDateTime())
+    bookingsTime(QDateTime()),
+    nextUpdate(QDateTime())
 {
     dataType = type;
+    int reloadInMin;
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
     ParserState state = STATE_NONE;
     while(buffer->canReadLine()) {
@@ -79,6 +92,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 QStringList list = line.split(':');
                 if(list.size() < 5)
                     continue;
+                connectedServerList += list;
                 //; !SERVERS section -         ident:hostname_or_IP:location:name:clients_connection_allowed:
                 //EUROPE-C2:88.198.19.202:Europe:Center Europe Server Two:1:
             }
@@ -87,6 +101,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 QStringList list = line.split(':');
                 if(list.size() < 5)
                     continue;
+                connectedVoiceServerList += list;
                 //; !VOICE SERVERS section -   hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
                 //voice2.vacc-sag.org:Nurnberg:Europe-CW:1:R:
             }
@@ -110,17 +125,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                         bookingsTime.setTimeSpec(Qt::UTC);
                     }
                 } else if(line.startsWith("RELOAD")) {
-                    //maybe schedule reloading here
-                    /*
-                    int reloadInMin = list[1].trimmed().toInt();
-
-                    if (whazzupTime.isValid() && reloadIn > 0) {
-                        TDateTime reloadAt = whazzupTime.addSecs(reloadInMin * 60);
-                        if(reloadAt < QDateTime::currentDateTime().addSecs(Settings::downloadInterval() * 60))
-                            reloadAt = QDateTime::currentDateTime().addSecs(Settings::downloadInterval() * 60);
-                    }
-                    */
-
+                    reloadInMin = list[1].trimmed().toInt();
                 } else if(line.startsWith("VERSION")) {
                     whazzupVersion = list[1].trimmed().toInt();
                 }
@@ -162,16 +167,26 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
             break;
         }
     }
+
+    // set the earliest time the server will have new data
+    if (whazzupTime.isValid() && reloadInMin > 0) {
+        nextUpdate = whazzupTime.addSecs(reloadInMin * 60);
+        nextUpdate.setTimeSpec(Qt::UTC);
+        qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << nextUpdate << QDateTime::currentDateTime().toUTC().secsTo(nextUpdate);
+    }
 }
 
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     connectedClients(0),
     connectedServers(0),
+    connectedServerList(QList<QStringList>()),
+    connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
     predictionBasedOnTime(QDateTime()),
-    predictionBasedOnBookingsTime(QDateTime())
+    predictionBasedOnBookingsTime(QDateTime()),
+    nextUpdate(QDateTime())
 {
     whazzupVersion = data.whazzupVersion;
     whazzupTime = predictTime;
@@ -328,8 +343,11 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         if(dataType == ATCBOOKINGS) dataType = UNIFIED;
         connectedClients = data.connectedClients;
         connectedServers = data.connectedServers;
+        connectedServerList = data.connectedServerList;
+        connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
+        nextUpdate = data.nextUpdate;
 
         pilots.clear();
         QList<QString> callsigns = data.pilots.keys();
@@ -455,8 +473,11 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
 
         connectedClients = data.connectedClients;
         connectedServers = data.connectedServers;
+        connectedServerList = data.connectedServerList;
+        connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupVersion = data.whazzupVersion;
         whazzupTime = data.whazzupTime;
+        nextUpdate = data.nextUpdate;
         predictionBasedOnTime = data.predictionBasedOnTime;
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {

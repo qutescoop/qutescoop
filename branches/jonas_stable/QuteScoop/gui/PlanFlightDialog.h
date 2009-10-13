@@ -37,8 +37,7 @@ class PlanFlightDialog : public QDialog, private Ui::PlanFlightDialog {
     Q_OBJECT
 
 public:
-    PlanFlightDialog();
-	static PlanFlightDialog *getInstance();
+    static PlanFlightDialog *getInstance();
     void plotPlannedRoute() const;
 
 signals:
@@ -53,19 +52,21 @@ private slots:
     void on_edDep_textChanged(QString str);
     void on_buttonRequest_clicked();
     void fpDownloaded(bool error);
-	void fpDownloading(int prog, int tot);
+    void fpDownloading(int prog, int tot);
     void routeSelected(const QModelIndex& index);
 
 private:
+    PlanFlightDialog();
+
     void requestGenerated();
     void requestVroute();
-    
+
     QHttp *fpDownloader;
     QBuffer *fpBuffer;
     QList<Route*> routes;
 
     Route* selectedRoute;
-    
+
     PlanFlightRoutesModel routesModel;
     QSortFilterProxyModel *routesSortModel;
 };

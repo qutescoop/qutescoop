@@ -22,7 +22,7 @@ FORMS = gui/MainWindow.ui \
     gui/PlanFlightDialog.ui \
     gui/BookedAtcDialog.ui \
     gui/ListClientsDialog.ui
-TARGET =
+TARGET = 
 DEPENDPATH += ./src \
     ./gui
 INCLUDEPATH += ./src \
@@ -38,7 +38,7 @@ QT += network \
 # CONFIG += debug
 # CONFIG += release
 # CONFIG += warn_off
-mac {
+mac { 
     ICON = gui/Dolomynum.icns
     CONFIG += x86 \
         ppc
@@ -93,7 +93,8 @@ HEADERS += WhazzupData.h \
     src/helpers.h \
     gui/ListClientsSortFilter.h \
     gui/ListClientsDialogModel.h \
-    gui/ListClientsDialog.h
+    gui/ListClientsDialog.h \
+    src/Ping.h
 SOURCES += WhazzupData.cpp \
     Whazzup.cpp \
     Waypoint.cpp \
@@ -139,5 +140,8 @@ SOURCES += WhazzupData.cpp \
     gui/BookedAtcSortFilter.cpp \
     gui/ListClientsSortFilter.cpp \
     gui/ListClientsDialogModel.cpp \
-    gui/ListClientsDialog.cpp
+    gui/ListClientsDialog.cpp \
+    src/Ping.cpp
 RESOURCES += Resources.qrc
+OTHER_FILES += CHANGELOG \
+    README

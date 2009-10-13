@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>602</width>
-    <height>717</height>
+    <width>604</width>
+    <height>726</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -89,7 +89,7 @@
                 <bool>false</bool>
                </property>
                <property name="text">
-                <string>User Defined 
+                <string>User Defined
 Location</string>
                </property>
                <property name="buddy">
@@ -125,6 +125,27 @@ Location</string>
                  </property>
                  <property name="minimum">
                   <number>1</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_18">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_13">
+                 <property name="text">
+                  <string>(Respects the server's
+minimum interval)</string>
                  </property>
                 </widget>
                </item>
@@ -1089,7 +1110,7 @@ p, li { white-space: pre-wrap; }
           <item row="0" column="0">
            <widget class="QCheckBox" name="cbBlend">
             <property name="toolTip">
-             <string>In some rare circumstances, it may be needed to disable Blending. It is a pity because it won't look nice without. 
+             <string>In some rare circumstances, it may be needed to disable Blending. It is a pity because it won't look nice without.
 Please give us feedback if you encounter such situations - we are researching that.</string>
             </property>
             <property name="text">
@@ -1132,7 +1153,7 @@ Please give us feedback if you encounter such situations - we are researching th
           <item>
            <widget class="QGroupBox" name="groupBox">
             <property name="title">
-             <string>Inactive Airports</string>
+             <string>Inactive Airports (can be switched off via menu)</string>
             </property>
             <layout class="QGridLayout" name="gridLayout_11">
              <property name="leftMargin">
@@ -1578,7 +1599,7 @@ Margin</string>
                <bool>false</bool>
               </property>
               <property name="text">
-               <string>around airport 
+               <string>around airport
 or arriving in </string>
               </property>
               <property name="buddy">
@@ -1647,7 +1668,7 @@ or arriving in </string>
                <string>Those 'congestion rings' shall give you a visual hint about the traffic an airports receives at the moment.</string>
               </property>
               <property name="text">
-               <string>Show airport congestion for 
+               <string>Show airport congestion for
 airports with at least</string>
               </property>
              </widget>
@@ -1800,9 +1821,6 @@ airports with at least</string>
         </spacer>
        </item>
       </layout>
-      <zorder>groupBoxAirports</zorder>
-      <zorder>groupBoxAirportTraffic</zorder>
-      <zorder>verticalSpacer_2</zorder>
      </widget>
      <widget class="QWidget" name="display3Tab">
       <attribute name="title">
@@ -2183,6 +2201,57 @@ airports with at least</string>
            </widget>
           </item>
           <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_4">
+            <item>
+             <widget class="QCheckBox" name="cbTrackFront">
+              <property name="text">
+               <string>Show Dest Line</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_16">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="cbTrackAfter">
+              <property name="text">
+               <string>Show Dep Line</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_17">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QLabel" name="label_15">
+            <property name="text">
+             <string>You need to activate the line by right clicking on a plane or an airport</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <layout class="QGridLayout" name="gridLayout_7">
             <item row="1" column="0">
              <widget class="QLabel" name="label_3">
@@ -2293,7 +2362,7 @@ airports with at least</string>
             <item row="1" column="4" rowspan="2">
              <widget class="QLabel" name="lblDashed">
               <property name="text">
-               <string>Dashed 
+               <string>Dashed
 part is</string>
               </property>
               <property name="alignment">

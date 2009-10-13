@@ -52,8 +52,16 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
     if(index.row() >= controllers.size())
         return QVariant();
 
-    if(role == Qt::DisplayRole) {
-        Controller* c = controllers[index.row()];
+    Controller* c = controllers[index.row()];
+
+    if(role == Qt::FontRole) {
+        if (c->isFriend()) {
+            QFont result;
+            result.setBold(true);
+            return result;
+        }
+        return QFont();
+    } else if (role == Qt::DisplayRole) {
         switch(index.column()) {
         case 0: return c->label; break;
         case 1: return c->frequency.toDouble() > 199 ? QVariant(): c->frequency; break; //sort out observers without prim freq

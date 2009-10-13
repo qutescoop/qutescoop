@@ -33,6 +33,8 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
     date = getField(stringList, 16);
     //always some miracle "1" here: getField(stringList, 19); ??
     link = getField(stringList, 35);
+    if(!link.isEmpty() && !link.contains("http://"))
+        link = QString("http://%1").arg(link);
     timeFrom = getField(stringList, 37);
 
     // default
@@ -42,8 +44,8 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
 
     // computed values
     switch (bookingType) {
-        case 0:  bookingInfoStr = link; break;
-        case 1:  bookingInfoStr = QString("Event: %1").arg(link); break;
+        case 0:  bookingInfoStr = QString(); break;
+        case 1:  bookingInfoStr = QString("Event"); break;
         case 10: bookingInfoStr = QString("Training"); break;
     }
     if (label.right(5) == "_ATIS") facilityType = 2; // dont know who wants to book it, but well...
@@ -251,33 +253,35 @@ void BookedController::showDetailsDialog() {
 QString BookedController::rank() const {
     if(network == VATSIM) {
         switch(rating) {
-        case 1: return QString("OBS"); break;
-        case 2: return QString("S1"); break;
-        case 3: return QString("S2"); break;
-        case 4: return QString("S3"); break;
-        case 5: return QString("C1"); break;
-        case 6: return QString("C2"); break;
-        case 7: return QString("C3"); break;
-        case 8: return QString("I1"); break;
-        case 9: return QString("I2"); break;
-        case 10: return QString("I3"); break;
-        case 11: return QString("SUP"); break;
-        case 12: return QString("ADM"); break;
-        default: return QString("unknown:%1").arg(rating); break;
+        case 0: return QString();
+        case 1: return QString("OBS");
+        case 2: return QString("S1");
+        case 3: return QString("S2");
+        case 4: return QString("S3");
+        case 5: return QString("C1");
+        case 6: return QString("C2");
+        case 7: return QString("C3");
+        case 8: return QString("I1");
+        case 9: return QString("I2");
+        case 10: return QString("I3");
+        case 11: return QString("SUP");
+        case 12: return QString("ADM");
+        default: return QString("unknown:%1").arg(rating);
         }
     } else {
         switch(rating) {
-        case 1: return QString("OBS"); break;
-        case 2: return QString("S1"); break;
-        case 3: return QString("S2"); break;
-        case 4: return QString("S3"); break;
-        case 5: return QString("C1"); break;
-        case 6: return QString("C2"); break;
-        case 7: return QString("C3"); break;
-        case 8: return QString("I1"); break;
-        case 9: return QString("I2"); break;
-        case 10: return QString("I3"); break;
-        default: return QString("unknown:%1").arg(rating); break;
+        case 0: return QString();
+        case 1: return QString("OBS");
+        case 2: return QString("S1");
+        case 3: return QString("S2");
+        case 4: return QString("S3");
+        case 5: return QString("C1");
+        case 6: return QString("C2");
+        case 7: return QString("C3");
+        case 8: return QString("I1");
+        case 9: return QString("I2");
+        case 10: return QString("I3");
+        default: return QString("unknown:%1").arg(rating);
         }
     }
 }

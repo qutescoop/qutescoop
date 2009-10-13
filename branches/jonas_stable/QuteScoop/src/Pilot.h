@@ -30,57 +30,58 @@ class Airport;
 class Pilot: public Client
 {
 public:
-	enum FlightStatus { BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING, GROUND_ARR, BLOCKED, CRASHED, BUSH, PREFILED };
+    enum FlightStatus { BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING, GROUND_ARR, BLOCKED, CRASHED, BUSH, PREFILED };
 
-	Pilot(const QStringList& stringList, const WhazzupData* whazzup);
+    Pilot(const QStringList& stringList, const WhazzupData* whazzup);
 
     void plotPath(double lat1, double lon1, double lat2, double lon2) const;
     virtual QString rank() const;
 
-	void showDetailsDialog();
-	FlightStatus flightStatus() const;
+    void showDetailsDialog();
+    FlightStatus flightStatus() const;
     QString flightStatusString() const;
     QString flightStatusShortString() const;
+    QString planFlighttypeString() const;
 
-	int altitude;
-	int groundspeed;
-	QString planAircraft;
-	QString planTAS;
-	QString planDep;
-	QString planAlt;
-	QString planDest;
-	QString transponder;
-	QString planRevision;
-	QString planFlighttype;
-	QString planDeptime;
+    int altitude;
+    int groundspeed;
+    QString planAircraft;
+    QString planTAS;
+    QString planDep;
+    QString planAlt;
+    QString planDest;
+    QString transponder;
+    QString planRevision;
+    QString planFlighttype;
+    QString planDeptime;
     QDate dayOfFlight;
 
-	QString planActtime;
-	int planHrsEnroute;
-	int planMinEnroute;
-	int planHrsFuel;
-	int planMinFuel;
-	QString planAltAirport;
-	QString planRemarks;
-	QString planRoute;
+    QString planActtime;
+    int planHrsEnroute;
+    int planMinEnroute;
+    int planHrsFuel;
+    int planMinFuel;
+    QString planAltAirport;
+    QString planRemarks;
+    QString planRoute;
 
-	QString planAltAirport2; // IVAO only
-	QString planTypeOfFlight; // IVAO only
-	int pob; // IVAO only
+    QString planAltAirport2; // IVAO only
+    QString planTypeOfFlight; // IVAO only
+    int pob; // IVAO only
 
     double trueHeading;
-	bool onGround; // IVAO only
+    bool onGround; // IVAO only
 
-	QString qnhInHg; // VATSIM only
-	QString qnhMb; // VATSIM only
+    QString qnhInHg; // VATSIM only
+    QString qnhMb; // VATSIM only
 
-	QString aircraftType() const;
-	Airport* depAirport() const;
+    QString aircraftType() const;
+    Airport* depAirport() const;
     Airport* destAirport() const;
     Airport* altAirport() const;
     QStringList waypoints() const;
-	double distanceToDestination() const;
-	double distanceFromDeparture() const;
+    double distanceToDestination() const;
+    double distanceFromDeparture() const;
 
     QDateTime etd() const; // Estimated Time of Departure
     QDateTime eta() const; // Estimated Time of Arrival
@@ -95,20 +96,20 @@ public:
 
     int defuckPlanAlt(QString alt) const; // // returns an altitude from various flightplan strings
 
-	void positionInFuture(double *lat, double *lon, int seconds) const;
+    void positionInFuture(double *lat, double *lon, int seconds) const;
 
-	void toggleDisplayPath();
-	void plotFlightPath() const;
+    void toggleDisplayPath();
+    void plotFlightPath() const;
 
-	bool displayLineFromDep, displayLineToDest;
+    bool displayLineFromDep, displayLineToDest;
 
-	QList<QPair<double, double> > oldPositions;
+    QList<QPair<double, double> > oldPositions;
 
 private:
     void plotPathToDest() const;
-	void plotPathFromDep() const;
-	void plotPlannedLine() const;
-	QList<Waypoint*> resolveFlightplan() const;
+    void plotPathFromDep() const;
+    void plotPlannedLine() const;
+    QList<Waypoint*> resolveFlightplan() const;
 };
 
 #endif /*PILOT_H_*/

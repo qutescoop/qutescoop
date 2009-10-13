@@ -59,11 +59,13 @@ PlanFlightDialog::PlanFlightDialog():
     connect(this, SIGNAL(downloadError(QString)), Window::getInstance(), SLOT(downloadError(QString)));
 
     lblPlotStatus->setText(QString(""));
+    linePlotStatus->setVisible(false);
 }
 
 void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected providers
     routes.clear();
     routesModel.setClients(routes);
+    toolBox->setItemText(1, QString("Results (%1)").arg(routes.size()));
     lblGeneratedStatus->setText(QString());
     lblVrouteStatus->setText(QString());
 
@@ -102,6 +104,8 @@ void PlanFlightDialog::requestGenerated() {
     routesModel.setClients(routes);
     routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
+    toolBox->setItemText(1, QString("Results (%1)").arg(routes.size()));
+    toolBox->setCurrentIndex(1);
 }
 
 void PlanFlightDialog::requestVroute() {
@@ -222,6 +226,8 @@ void PlanFlightDialog::fpDownloaded(bool error) {
     routesModel.setClients(routes);
     routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
+    toolBox->setItemText(1, QString("Results (%1)").arg(routes.size()));
+    toolBox->setCurrentIndex(1);
 
     delete fpBuffer;
     fpBuffer = 0;
@@ -309,9 +315,12 @@ void PlanFlightDialog::plotPlannedRoute() const {
 void PlanFlightDialog::on_cbPlot_toggled(bool checked)
 {
     Window::getInstance()->setPlotFlightPlannedRoute(checked);
+    lblPlotStatus->setVisible(checked);
+    linePlotStatus->setVisible(checked);
 }
 
-/*void PlanFlightDialog::on_textRoute_textChanged()
+/* Some try to let the user enter and plot routes
+void PlanFlightDialog::on_textRoute_textChanged()
 {
     textRoute->setPlainText(textRoute->toPlainText().toUpper());
     if(selectedRoute == 0) {

@@ -80,9 +80,17 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
             case 5: return c->server;
             case 6: // Controller Info / Flight Status
                 if(co != 0)
-                    return co->atisMessage;
+                    return QString(co->atisMessage).replace("<br>", "; ");
                 if(p != 0)
-                    return p->flightStatusShortString();
+                    return (p->planRevision.isEmpty()
+                        ? p->flightStatusShortString()
+                        : QString("%1 (%2 %3) %4-%5")
+                            .arg(p->flightStatusShortString())
+                            .arg(p->aircraftType())
+                            .arg(p->planFlighttypeString())
+                            .arg(p->planDep)
+                            .arg(p->planDest)
+                        );
                 return QString();
             case 7: return c->adminRating > 2? QString("%1").arg(c->adminRating): QString();
         }

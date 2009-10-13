@@ -45,7 +45,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
     }
 
     // do some magic for Controller Info like "online until"...
-    QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)", Qt::CaseInsensitive);
+    QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?", Qt::CaseInsensitive);
     if (rxOnlineUntil.indexIn(atisMessage) > 0) {
         //fixme
         QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
@@ -86,12 +86,12 @@ QString Controller::facilityString() const {
     switch(facilityType) {
     case 0: return "Observer";
     case 1: return "Staff";
-    case 2: return "ATIS";
+    case 2: return  network == VATSIM? "Delivery": "ATIS";
     case 3: return "Ground";
     case 4: return "Tower";
     case 5: return "App/Dep";
     case 6: return "Center";
-    case 7: return "FSS";
+    case 7: return "Long Range Ctr";
     }
     return QString();
 }
@@ -163,7 +163,26 @@ QString Controller::getGround() const {
             (list[1].startsWith("X") || list[1].startsWith("T")))
         return QString();
 
-    if(list.last().startsWith("GND") || list.last().startsWith("DEL")) {
+    if(list.last().startsWith("GND")) {
+        if(list.first().length() == 3)
+            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+        return list.first();
+    }
+
+    return QString();
+}
+
+QString Controller::getDelivery() const {
+    if(!isATC())
+        return QString();
+
+    QStringList list = label.split('_');
+    if(list.size() > 3) return QString();
+    if(list.size() == 3 &&
+            (list[1].startsWith("X") || list[1].startsWith("T")))
+        return QString();
+
+    if(list.last().startsWith("DEL")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
         return list.first();
@@ -198,33 +217,35 @@ void Controller::showDetailsDialog() {
 QString Controller::rank() const {
     if(network == VATSIM) {
         switch(rating) {
-        case 1: return QString("OBS"); break;
-        case 2: return QString("S1"); break;
-        case 3: return QString("S2"); break; // will be re-introduced in 2009/08
-        case 4: return QString("S3"); break;
-        case 5: return QString("C1"); break;
-        case 6: return QString("C2"); break;
-        case 7: return QString("C3"); break;
-        case 8: return QString("I1"); break;
-        case 9: return QString("I2"); break;
-        case 10: return QString("I3"); break;
-        case 11: return QString("SUP"); break;
-        case 12: return QString("ADM"); break;
-        default: return QString("unknown:%1").arg(rating); break;
+        case 0: return QString();
+        case 1: return QString("OBS");
+        case 2: return QString("S1");
+        case 3: return QString("S2");
+        case 4: return QString("S3");
+        case 5: return QString("C1");
+        case 6: return QString("C2");
+        case 7: return QString("C3");
+        case 8: return QString("I1");
+        case 9: return QString("I2");
+        case 10: return QString("I3");
+        case 11: return QString("SUP");
+        case 12: return QString("ADM");
+        default: return QString("unknown:%1").arg(rating);
         }
     } else {
         switch(rating) {
-        case 1: return QString("OBS"); break;
-        case 2: return QString("S1"); break;
-        case 3: return QString("S2"); break;
-        case 4: return QString("S3"); break;
-        case 5: return QString("C1"); break;
-        case 6: return QString("C2"); break;
-        case 7: return QString("C3"); break;
-        case 8: return QString("I1"); break;
-        case 9: return QString("I2"); break;
-        case 10: return QString("I3"); break;
-        default: return QString("unknown:%1").arg(rating); break;
+        case 0: return QString();
+        case 1: return QString("OBS");
+        case 2: return QString("S1");
+        case 3: return QString("S2");
+        case 4: return QString("S3");
+        case 5: return QString("C1");
+        case 6: return QString("C2");
+        case 7: return QString("C3");
+        case 8: return QString("I1");
+        case 9: return QString("I2");
+        case 10: return QString("I3");
+        default: return QString("unknown:%1").arg(rating);
         }
     }
 }

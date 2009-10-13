@@ -16,38 +16,28 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef LISTCLIENTSDIALOG_H
-#define LISTCLIENTSDIALOG_H
+#ifndef PING_H
+#define PING_H
 
-#include <QSortFilterProxyModel>
+#include <QObject>
+#include <QProcess>
 
-#include "ListClientsDialogModel.h"
-#include "ListClientsSortFilter.h"
-#include "ui_ListClientsDialog.h"
-
-class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
+class Ping: public QObject
+{
     Q_OBJECT
-public:
-    static ListClientsDialog *getInstance();
-    void refresh();
 
-public slots:
-    void newMapPosition();
-    void pingReceived(QString, int);
+public:
+    void startPing(QString server);
+
+signals:
+    void havePing(QString,int);
 
 private slots:
-    void on_pbPingVoiceServers_clicked();
-    void on_pbPingServers_clicked();
-    void modelSelected(const QModelIndex& index);
-    void on_editFilter_textChanged(QString str);
-    void newFilter();
+    void pingReadyRead();
 
 private:
-    ListClientsDialog();
-
-    ListClientsDialogModel listClientsModel;
-    ListClientsSortFilter *listClientsSortModel;
-    QColor mapPingToColor(int ms);
+    QProcess *pingProcess;
+    QString server;
 };
 
-#endif // LISTCLIENTSDIALOG_H
+#endif // PING_H

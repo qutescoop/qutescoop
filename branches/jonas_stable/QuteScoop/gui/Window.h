@@ -44,6 +44,7 @@ public:
     void setProgressBar(bool isVisible);
     void setEnableBookedAtc(bool enable);
     void setPlotFlightPlannedRoute(bool value);
+    void shootScreenie();
     GLWidget *glWidget;
 
 public slots:
@@ -53,7 +54,6 @@ public slots:
     void updateGLPilots();
 
 private slots:
-
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
 
@@ -136,10 +136,10 @@ private:
     ClientSelectionWidget *clientSelection;
 
     SearchResultModel searchResultModel, friendsModel;
-    MetarModel metarModel;
     QTimer searchTimer, metarTimer, warpTimer, runPredictTimer;
     QTimer downloadWatchdog;
     QSortFilterProxyModel *metarSortModel, *friendsSortModel;
+    MetarModel metarModel;
 
     QHttp *versionChecker;
     QBuffer *versionBuffer;

@@ -18,6 +18,11 @@
 
 #include "BookedAtcDialogModel.h"
 
+#include <QDebug>
+#include <QDesktopServices>
+#include <QMessageBox>
+#include "Window.h"
+
 void BookedAtcDialogModel::setClients(const QList<BookedController*>& controllers) {
     this->controllers = controllers;
     reset();
@@ -40,6 +45,7 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
         case 5: return QString("From"); break;
         case 6: return QString("Until"); break;
         case 7: return QString("Info"); break;
+        case 8: return QString("Link"); break;
     }
 
     return QVariant();
@@ -63,6 +69,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 5: return c->starts().time().toString("HHmm'z'"); break;
             case 6: return c->ends().time().toString("HHmm'z'"); break;
             case 7: return c->bookingInfoStr; break;
+            case 8: return c->link; break;
         }
     } else if(role == Qt::EditRole) {
         BookedController* c = controllers[index.row()];
@@ -70,6 +77,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 5: return c->starts(); break;
             case 6: return c->ends(); break;
             case 7: return c->bookingInfoStr; break;
+            case 8: return c->link; break;
         }
     }
 
@@ -81,10 +89,21 @@ int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const {
 }
 
 int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
-    return 8;
+    return 9;
 }
 
-
 void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {
-    controllers[index.row()]->showDetailsDialog();
+    if(controllers[index.row()] != 0) {
+        if(!controllers[index.row()]->link.isEmpty()) {
+            QUrl url = QUrl(controllers[index.row()]->link, QUrl::TolerantMode);
+            if(QMessageBox::question(Window::getInstance(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+                if (url.isValid()) {
+                    if(!QDesktopServices::openUrl(url))
+                        QMessageBox::critical(Window::getInstance(), tr("Error"), tr("Could not invoke browser"));
+                } else
+                    QMessageBox::critical(Window::getInstance(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
+            }
+        }
+        //controllers[index.row()]->showDetailsDialog();
+    }
 }

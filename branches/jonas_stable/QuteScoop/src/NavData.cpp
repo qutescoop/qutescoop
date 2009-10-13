@@ -173,6 +173,11 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             airportMap[icao]->addGround(c);
         }
 
+        icao = c->getDelivery();
+        if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
+            airportMap[icao]->addDelivery(c);
+        }
+
         if(c->label.right(4) == "_FSS" || c->label.right(4) == "_CTR") {
             // calculate covered airports (by a circle around the geometrical centre of the FIR)
             double coverLat, coverLon;

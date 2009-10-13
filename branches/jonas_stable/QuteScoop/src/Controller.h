@@ -47,6 +47,7 @@ public:
     QString getApproach() const;
     QString getTower() const;
     QString getGround() const;
+    QString getDelivery() const;
 
     QString frequency;
     int facilityType;

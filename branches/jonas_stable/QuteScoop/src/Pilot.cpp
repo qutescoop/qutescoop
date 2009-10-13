@@ -158,25 +158,25 @@ QString Pilot::flightStatusString() const {
     switch(flightStatus()) {
         case BOARDING:
             result = QString();
-            result += "EET " + eet().toString("H:mm") + " hrs";
+            result += "TTG " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case GROUND_DEP:
             result = QString();
-            result += "EET " + eet().toString("H:mm") + " hrs";
+            result += "TTG " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case DEPARTING:
             result = QString();
-            result += "EET " + eet().toString("H:mm") + " hrs";
+            result += "TTG " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
         case ARRIVING:
             result = QString();
-            result += "EET " + eet().toString("H:mm") + " hrs";
+            result += "TTG " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HHmm") + "z";
             result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
             return result;
@@ -206,7 +206,7 @@ QString Pilot::flightStatusString() const {
                         result += QString("%1%").arg(dist_done * 100 / total_dist);
                     }
                 }
-                result += ", EET " + eet().toString("H:mm") + " hrs";
+                result += ", TTG " + eet().toString("H:mm") + " hrs";
                 result += ", ETA " + eta().toString("HHmm") + "z";
                 result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
                 return result;
@@ -231,6 +231,21 @@ QString Pilot::flightStatusShortString() const {
         case PREFILED: return QString("Prefiled");
     }
     return QString("Unknown");
+}
+
+QString Pilot::planFlighttypeString() const {
+    if (planFlighttype == "I")
+        return QString("IFR");
+    else if (planFlighttype == "V")
+        return QString("VFR");
+    else if (planFlighttype == "Y")
+        return QString("Y: IFR to VFR");
+    else if (planFlighttype == "Z")
+        return QString("Z: VFR to IFR");
+    else if (planFlighttype == "S")
+        return QString("SVFR");
+    else
+        return QString(planFlighttype);
 }
 
 QString Pilot::rank() const {
@@ -385,15 +400,18 @@ QString Pilot::delayStr() const { // delay
 
 int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from various flightplan strings
     altStr = altStr.trimmed();
-    if(altStr.length() < 4) // 280
+    if(altStr.length() < 4 && altStr.toInt() != 0) // 280
         return altStr.toInt() * 100;
     if(altStr.left(2) == "FL") // FL280
         return altStr.mid(2).toInt() * 100;
     if(altStr.left(1) == "F") // F280
         return altStr.mid(1).toInt() * 100;
+    if(altStr.left(1) == "A" && altStr.length() <= 4) // A45
+        return altStr.mid(1).toInt() * 100;
+    if(altStr.left(1) == "A" && altStr.length() > 4) // A4500
+        return altStr.mid(1).toInt();
     return altStr.toInt();
 }
-
 
 QStringList Pilot::waypoints() const {
     QStringList result = planRoute.split(QRegExp("([\\s\\+\\-\\.\\,]|//)"), QString::SkipEmptyParts);
@@ -426,10 +444,10 @@ void Pilot::toggleDisplayPath() {
 }
 
 void Pilot::plotFlightPath() const {
-    if(displayLineToDest && Settings::trackLineStrength() != 0.0)
+    if(displayLineToDest && Settings::trackFront() && Settings::trackLineStrength() != 0.0)
         plotPathToDest();
 
-    if(displayLineFromDep && Settings::trackLineStrength() != 0.0)
+    if(displayLineFromDep && Settings::trackAfter() && Settings::trackLineStrength() != 0.0)
         plotPathFromDep();
 
     if((displayLineToDest || displayLineFromDep) && Settings::planLineStrength() != 0.0)
@@ -532,78 +550,91 @@ void Pilot::plotPlannedLine() const {
     if(points.size() < 2)
         return;
 
+    // find the nextPoint on his route after the present plane position
+    int nextPoint = 1; // first point as default
+    // calculate first point behind plane
+    if(lat == 0 && lon == 0) {
+        nextPoint = 1; // prefiled flight or no known position
+    } else {
+        // find the point that is nearest to the plane
+        double minDist = NavData::distance(lat, lon, points[0]->lat, points[0]->lon);
+        int minPoint = 0; // next to departure as default
+        for(int i = 1; i < points.size(); i++) {
+            if(NavData::distance(lat, lon, points[i]->lat, points[i]->lon) < minDist) {
+                minDist = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
+                minPoint = i;
+            }
+        }
+
+        // with the nearest point, look which one is the next point ahead - saves from trouble with zig-zag routes
+        if(minPoint == 0) {
+            nextPoint = 1;
+        } else if(minPoint == points.size() - 1) {
+            nextPoint = points.size() - 1;
+        } else {
+            nextPoint = minPoint + 1; // default
+            // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
+            int courseRoute, courseToPlane, courseDeviation;
+            for(int i = minPoint - 1; i <= minPoint; i++) {
+                courseRoute = (int) NavData::courseTo(points[i]->lat, points[i]->lon, points[i + 1]->lat, points[i + 1]->lon);
+                courseToPlane = (int) NavData::courseTo(points[i]->lat, points[i]->lon, lat, lon);
+                courseDeviation = (abs(courseRoute - courseToPlane)) % 360;
+                if (courseDeviation > 90) {
+                    nextPoint = i;
+                    break;
+                }
+            }
+        }
+    }
+
+    // prepare the line
     QColor lineCol = Settings::planLineColor();
     glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-
     glLineWidth(Settings::planLineStrength());
-    if(!Settings::dashedTrackInFront())
-        glLineStipple(3, 0xAAAA);
-    glBegin(GL_LINE_STRIP);
-        VERTEX(points[0]->lat, points[0]->lon);
 
-        int nextPoint = 1; // first point as default
-        // calculate first point behind plane
-        if(lat == 0 && lon == 0) {
-            nextPoint = 1; // prefiled flight or no known position
-        } else {
-            // find the point that is nearest to the plane
-            double minDist = NavData::distance(lat, lon, points[0]->lat, points[0]->lon);
-            int minPoint = 0; // next to departure as default
-            for(int i = 1; i < points.size(); i++) {
-                if(NavData::distance(lat, lon, points[i]->lat, points[i]->lon) < minDist) {
-                    minDist = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
-                    minPoint = i;
-                }
+    double currLat = points[0]->lat, currLon = points[0]->lon;
+    if(Settings::trackAfter()) {
+        if(!Settings::dashedTrackInFront())
+            glLineStipple(3, 0xAAAA);
+
+        // actually draw the line
+        glBegin(GL_LINE_STRIP);
+            VERTEX(points[0]->lat, points[0]->lon);
+
+            // route before plane
+            for(int i = 0; i < nextPoint; i++) {
+                if(Settings::trackFront())
+                    plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
+                currLat = points[i]->lat; currLon = points[i]->lon;
             }
-
-            // with the nearest point, look which one is the next point ahead - saves from trouble with zig-zag routes
-            if(minPoint == 0) {
-                nextPoint = 1;
-            } else if(minPoint == points.size() - 1) {
-                nextPoint = points.size() - 1;
-            } else {
-                nextPoint = minPoint + 1; // default
-                // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
-                int courseRoute, courseToPlane, courseDeviation;
-                for(int i = minPoint - 1; i <= minPoint; i++) {
-                    courseRoute = (int) NavData::courseTo(points[i]->lat, points[i]->lon, points[i + 1]->lat, points[i + 1]->lon);
-                    courseToPlane = (int) NavData::courseTo(points[i]->lat, points[i]->lon, lat, lon);
-                    courseDeviation = (abs(courseRoute - courseToPlane)) % 360;
-                    if (courseDeviation > 90) {
-                        nextPoint = i;
-                        break;
-                    }
-                }
+            // part between: draw to plane if position valid
+            if(lat != 0 && lon != 0) {
+                if(Settings::trackAfter())
+                    plotPath(currLat, currLon, lat, lon);
+                currLat = lat; currLon = lon;
             }
-        }
+            VERTEX(currLat, currLon);
+        glEnd();
+    }
 
-        // line before plane
-        double currLat = points[0]->lat, currLon = points[0]->lon;
-        for(int i = 0; i < nextPoint; i++) {
-            plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
-            currLat = points[i]->lat; currLon = points[i]->lon;
-        }
-        // part between: draw to plane if position valid
-        if(lat != 0 && lon != 0) {
-            plotPath(currLat, currLon, lat, lon);
+    if(Settings::trackFront()) {
+        // change line type
+        if(Settings::dashedTrackInFront())
+            glLineStipple(3, 0xAAAA);
+        else
+            glLineStipple(1, 0xFFFF);
+
+        // route behind plane
+        glBegin(GL_LINE_STRIP);
             currLat = lat; currLon = lon;
-        }
-        VERTEX(currLat, currLon);
-    glEnd();
-
-    // change line type
-    if(Settings::dashedTrackInFront()) glLineStipple(3, 0xAAAA);
-    else glLineStipple(1, 0xFFFF);
-    glBegin(GL_LINE_STRIP);
-
-        // part behind plane
-        for(int i = nextPoint; i < points.size(); i++) {
-            plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
-            currLat = points[i]->lat; currLon = points[i]->lon;
-        }
-        VERTEX(currLat, currLon);
-
-    glEnd();
+            VERTEX(currLat, currLon);
+            for(int i = nextPoint; i < points.size(); i++) {
+                plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
+                currLat = points[i]->lat; currLon = points[i]->lon;
+            }
+            VERTEX(currLat, currLon);
+        glEnd();
+    }
     glLineStipple(1, 0xFFFF);
 }
 
