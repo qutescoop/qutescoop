@@ -16,21 +16,22 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef FIR_H_
-#define FIR_H_
+#ifndef SECTOR_H_
+#define SECTOR_H_
 
 #include <QStringList>
 #include <QString>
 #include <QGLWidget>
 #include <QList>
 #include <QPair>
+#include <QPolygon>
 
-class Fir
+class Sector
 {
 public:
-	Fir();
-	Fir(QStringList strings);
-	~Fir();
+    Sector();
+    Sector(QStringList strings);
+    ~Sector();
 
 	bool isNull() const;
 	
@@ -40,14 +41,16 @@ public:
 	const QString& id() const { return _id; }
 	const double& lat() const { return _lat; }
 	const double& lon() const { return _lon; }
+    const QList<QPair<double, double> > sector() const { return _points; }
 	
 	void setPointList(const QList<QPair<double, double> >& points);
 
 	GLuint getPolygon();
 	GLuint getBorderLine();
 
-    QPair<double, double> equidistantPoint(); // finds a point which is suitable to draw the minimum circle that encloses the whole FIR
-    int maxDistanceFromCenter();
+    //Working on better way; Markus
+    //QPair<double, double> equidistantPoint(); // finds a point which is suitable to draw the minimum circle that encloses the whole FIR
+    //int maxDistanceFromCenter();
 
 private:
 	void compileDisplayLists();
@@ -61,4 +64,4 @@ private:
     int _maxDistFromCenter;
 };
 
-#endif /*FIR_H_*/
+#endif /*SECTOR_H_*/

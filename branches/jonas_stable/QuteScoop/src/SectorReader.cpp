@@ -16,49 +16,50 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#include "FirReader.h"
+#include "SectorReader.h"
 #include "FileReader.h"
 #include "Settings.h"
 
-FirReader::FirReader() {
+SectorReader::SectorReader() {
 }
 
-FirReader::~FirReader() {
+SectorReader::~SectorReader() {
 }
 
-void FirReader::loadFirs(QHash<QString, Fir*>& firs) {
-	firs.clear();
+void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
+        sectors.clear();
 	idIcaoMapping.clear();
 
-	loadFirlist(firs);
-	loadFirdisplay(firs, Settings::dataDirectory() + "firdisplay.dat");
+        loadSectorlist(sectors);
+        loadSectordisplay(sectors, Settings::dataDirectory() + "firdisplay.dat");
 	if(Settings::useSupFile())
-		loadFirdisplay(firs, Settings::dataDirectory() + "firdisplay.sup");
+                loadSectordisplay(sectors, Settings::dataDirectory() + "firdisplay.sup");
 }
 
-void FirReader::loadFirlist(QHash<QString, Fir*>& firs) {
+void SectorReader::loadSectorlist(QHash<QString, Sector*>& sectors) {
 	FileReader *fileReader = new FileReader(Settings::dataDirectory() + "firlist.dat");
 
 	QString line = fileReader->nextLine();
 	while(!line.isNull()) {
-		Fir *fir = new Fir(line.split(':'));
-		if(fir->isNull()) {
-			delete fir;
+                Sector *sector = new Sector(line.split(':'));
+                if(sector->isNull()) {
+                        delete sector;
 			continue;
 		}
 
-		firs[fir->icao()] = fir;
-		idIcaoMapping.insert(fir->id(), fir->icao());
+                sectors[sector->icao()] = sector;
+                idIcaoMapping.insert(sector->id(), sector->icao());
 		line = fileReader->nextLine();
 	}
 	
 	delete fileReader;
 }
 
-void FirReader::loadFirdisplay(QHash<QString, Fir*>& firs, const QString& filename) {
+void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QString& filename)
+{
 	FileReader *fileReader = new FileReader(filename);
 
-	QString workingFirId;
+        QString workingSectorId;
 	QList<QPair<double, double> > pointList;
 	
 	QString line = fileReader->nextLine();
@@ -67,21 +68,25 @@ void FirReader::loadFirdisplay(QHash<QString, Fir*>& firs, const QString& filena
 		// 51.08:2.55
 		// ...
 
-		if(line.startsWith("DISPLAY_LIST_")) {
-			
-			if(!workingFirId.isEmpty()) {
-				QList<QString> firIcaos = idIcaoMapping.values(workingFirId);
-				for(int i = 0; i < firIcaos.size(); i++) {
-                    if(firs.contains(firIcaos[i])) { // be conservative as a segfault was reported on Mac OS
-                        firs[firIcaos[i]]->setPointList(pointList);
+                if(line.startsWith("DISPLAY_LIST_"))
+                {
+                    if(!workingSectorId.isEmpty())
+                    {
+                        QList<QString> SectorIcaos = idIcaoMapping.values(workingSectorId);
+                        for(int i = 0; i < SectorIcaos.size(); i++)
+                        {
+                        if(sectors.contains(SectorIcaos[i])) // be conservative as a segfault was reported on Mac OS
+                        {
+                            sectors[SectorIcaos[i]]->setPointList(pointList);
+                        }
+                        }
                     }
-				}
-			}
+                    workingSectorId = line.right(line.length() - QString("DISPLAY_LIST_").length());
+                    pointList.clear();
 			
-			workingFirId = line.right(line.length() - QString("DISPLAY_LIST_").length());
-			pointList.clear();
-			
-		} else if(!workingFirId.isEmpty()) {
+                }
+                else if(!workingSectorId.isEmpty())
+                {
 			QStringList points = line.split(':');
 			double lat = points[0].toDouble();
 			double lon = points[1].toDouble();

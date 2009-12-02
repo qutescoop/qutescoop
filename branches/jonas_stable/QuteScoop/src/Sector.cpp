@@ -20,23 +20,23 @@
 #include <QPair>
 
 #include "Settings.h"
-#include "Fir.h"
+#include "Sector.h"
 #include "Tessellator.h"
 #include "NavData.h"
 #include "helpers.h"
 
-Fir::Fir() {
+Sector::Sector() {
     polygon = 0;
     borderline = 0;
     _maxDistFromCenter = 0;
     _equidistantPoint = QPair<double, double>(181,91);
 }
 
-bool Fir::isNull() const {
+bool Sector::isNull() const {
     return _icao.isNull();
 }
 
-Fir::Fir(QStringList strings) {
+Sector::Sector(QStringList strings) {
     //LSAZ:Zurich:CH:46.9:9.1:189
     _icao = strings[0];
     _name = strings[1];
@@ -51,12 +51,12 @@ Fir::Fir(QStringList strings) {
     _equidistantPoint = QPair<double, double>(181,91);
 }
 
-Fir::~Fir() {
+Sector::~Sector() {
     if(polygon != 0) glDeleteLists(polygon, 1);
     if(borderline != 0) glDeleteLists(borderline, 1);
 }
 
-void Fir::compileDisplayLists() {
+void Sector::compileDisplayLists() {
     // filled polygon
     polygon = glGenLists(1);
     glNewList(polygon, GL_COMPILE);
@@ -80,25 +80,29 @@ void Fir::compileDisplayLists() {
     glEndList();
 }
 
-GLuint Fir::getPolygon() {
+GLuint Sector::getPolygon() {
     if(polygon == 0)
         compileDisplayLists();
     return polygon;
 }
 
-GLuint Fir::getBorderLine() {
+GLuint Sector::getBorderLine() {
     if(borderline == 0)
         compileDisplayLists();
     return borderline;
 }
 
-void Fir::setPointList(const QList<QPair<double, double> >& points) {
+void Sector::setPointList(const QList<QPair<double, double> >& points)
+{
     _points = points;
     if(_points.last() != _points.first())
         _points.append(_points.first());
+
 }
 
-QPair<double, double> Fir::equidistantPoint() {
+/*Looking for better way
+QPair<double, double> Sector::equidistantPoint()
+{
     if(_equidistantPoint != QPair<double, double>(181, 91)) {
         return _equidistantPoint;
     }
@@ -124,7 +128,7 @@ QPair<double, double> Fir::equidistantPoint() {
     return _equidistantPoint;
 }
 
-int Fir::maxDistanceFromCenter() {
+int Sector::maxDistanceFromCenter() {
     if(_maxDistFromCenter != 0)
         return _maxDistFromCenter;
 
@@ -142,4 +146,4 @@ int Fir::maxDistanceFromCenter() {
 
     _maxDistFromCenter = (int) maxDist;
     return _maxDistFromCenter;
-}
+}*/

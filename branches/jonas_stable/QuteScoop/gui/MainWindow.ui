@@ -370,7 +370,7 @@
      <x>0</x>
      <y>0</y>
      <width>814</width>
-     <height>29</height>
+     <height>26</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -697,8 +697,11 @@ p, li { white-space: pre-wrap; }
    </widget>
   </widget>
   <widget class="QDockWidget" name="warpDock">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
    <property name="windowTitle">
-    <string>Time Warp</string>
+    <string>Time Warp - not used at the moment</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>

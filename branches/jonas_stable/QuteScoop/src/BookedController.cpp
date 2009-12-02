@@ -25,7 +25,7 @@
 BookedController::BookedController(const QStringList& stringList, const WhazzupData* whazzup):
     Client(stringList, whazzup)
 {
-    fir = 0;
+    sector = 0;
 
     // extra booking values
     bookingType = getField(stringList, 4).toInt();
@@ -90,21 +90,21 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
     else if (label.right(4) == "_CTR") {
         facilityType = 6;
         QString ctr = this->getCenter();
-        if (NavData::getInstance()->firs().contains(ctr)) {
-            countryCode = NavData::getInstance()->firs()[ctr]->countryCode();
-            lat = NavData::getInstance()->firs()[ctr]->lat();
-            lon = NavData::getInstance()->firs()[ctr]->lon();
-            visualRange = NavData::getInstance()->firs()[ctr]->maxDistanceFromCenter();
+        if (NavData::getInstance()->sectors().contains(ctr)) {
+            countryCode = NavData::getInstance()->sectors()[ctr]->countryCode();
+            lat = NavData::getInstance()->sectors()[ctr]->lat();
+            lon = NavData::getInstance()->sectors()[ctr]->lon();
+            //visualRange = NavData::getInstance()->sectors()[ctr]->maxDistanceFromCenter();
         }
     }
     else if (label.right(4) == "_FSS") {
         facilityType = 7;
         QString ctr = this->getCenter();
-        if (NavData::getInstance()->firs().contains(ctr)) {
-            countryCode = NavData::getInstance()->firs()[ctr]->countryCode();
-            lat = NavData::getInstance()->firs()[ctr]->lat();
-            lon = NavData::getInstance()->firs()[ctr]->lon();
-            visualRange = NavData::getInstance()->firs()[ctr]->maxDistanceFromCenter();
+        if (NavData::getInstance()->sectors().contains(ctr)) {
+            countryCode = NavData::getInstance()->sectors()[ctr]->countryCode();
+            lat = NavData::getInstance()->sectors()[ctr]->lat();
+            lon = NavData::getInstance()->sectors()[ctr]->lon();
+            //visualRange = NavData::getInstance()->sectors()[ctr]->maxDistanceFromCenter();
         }
     }
 
@@ -157,8 +157,8 @@ QString BookedController::getCenter() {
         segments.removeFirst();
     }
 
-    if(NavData::getInstance()->firs().contains(result)) {
-        Fir *f = NavData::getInstance()->firs()[result];
+    if(NavData::getInstance()->sectors().contains(result)) {
+        Sector *f = NavData::getInstance()->sectors()[result];
         lat = f->lat(); // fix my coordinates so that user can find me on the map
         lon = f->lon();
     }

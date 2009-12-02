@@ -62,6 +62,7 @@ ListClientsDialog::ListClientsDialog() :
     serverHeaders << "Ident" << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" <<  "Allowed";
     serversTable->setColumnCount(serverHeaders.size());
     serversTable->setHorizontalHeaderLabels(serverHeaders);
+    connect(serversTable, SIGNAL(cellClicked(int, int)), this, SLOT(serverClicked(int, int)));
 
     QStringList voiceServerHeaders;
     voiceServerHeaders << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" << "Type" << "Allowed" << "Information URL";
@@ -236,7 +237,7 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
         }
     }
 
-    // Voice voiceServers
+    // voiceServers
     for (int row = 0; row < voiceServersTable->rowCount(); row++) {
         if (voiceServersTable->item(row, 0)->data(Qt::DisplayRole) == QVariant(server)) {
             for (int col = 1; col < 4; col++) {
@@ -311,4 +312,9 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 
     int red = qMin(255, qMax(0, (ms - BEST) * 255 / (WORST - BEST)));
     return QColor(red, 255 - red, 0, 70);
+}
+
+void ListClientsDialog::serverClicked(int row, int column) {
+    //Fixme
+    //QMessageBox::information(Window::getInstance(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No);
 }

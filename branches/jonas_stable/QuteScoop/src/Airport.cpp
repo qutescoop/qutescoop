@@ -68,7 +68,7 @@ Airport::~Airport() {
 void Airport::resetWhazzupStatus() {
     active = false;
     towers.clear();
-    centers.clear();
+    //centers.clear();
     approaches.clear();
     grounds.clear();
     deliveries.clear();
@@ -269,12 +269,12 @@ const GLuint& Airport::getDelDisplayList() {
     return delDisplayList;
 }
 
-void Airport::addCenter(Controller* client) {
+/*void Airport::addCenter(Controller* client) {
     if(!centers.contains(client)) {
         centers.append(client);
         //active = true; // would make too much airports show as active on the map
     }
-}
+}*/
 
 void Airport::addApproach(Controller* client) {
     if(!approaches.contains(client)) {
@@ -318,7 +318,7 @@ void Airport::showDetailsDialog() {
 QList<Controller*> Airport::getAllControllers() const {
     QList<Controller*> result;
 
-    result += centers;
+    //result += centers;
     result += approaches;
     result += towers;
     result += grounds;

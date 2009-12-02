@@ -56,15 +56,15 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     controllerLabelZoomTreshold = 3;
     fixZoomTreshold = 0.05;
 
-    firPolygonsList = 0;
+    sectorPolygonsList = 0;
     airportControllersList = 0;
-    firPolygonBorderLinesList = 0;
+    sectorPolygonBorderLinesList = 0;
     appBorderLinesList = 0;
     congestionsList = 0;
 
     plotFlightPlannedRoute = false;
 
-    allFirsDisplayed = false;
+    allSectorsDisplayed = false;
 }
 
 GLWidget::~GLWidget() {
@@ -80,9 +80,9 @@ GLWidget::~GLWidget() {
         delete airportList[i];
     }
 
-    QList<Fir*> firList = NavData::getInstance()->firs().values();
-    for (int i = 0; i < firList.size(); i++) {
-        delete firList[i];
+    QList<Sector*> sectorList = NavData::getInstance()->sectors().values();
+    for (int i = 0; i < sectorList.size(); i++) {
+        delete sectorList[i];
     }
 }
 
@@ -121,20 +121,20 @@ QPair<double, double> GLWidget::currentPosition() {
 void GLWidget::prepareDisplayLists() {
 
     // FIR polygons
-    if(firPolygonsList == 0)
-        firPolygonsList = glGenLists(1);
+    if(sectorPolygonsList == 0)
+        sectorPolygonsList = glGenLists(1);
 
     // make sure all the lists are there to avoid nested glNewList calls
-    for(int i = 0; i < firsToDraw.size(); i++) {
-        Fir *f = firsToDraw[i]->fir;
+    for(int i = 0; i < sectorsToDraw.size(); i++) {
+        Sector *f = sectorsToDraw[i]->sector;
         if(f == 0) continue;
         f->getPolygon();
     }
 
     // create a list of lists
-    glNewList(firPolygonsList, GL_COMPILE);
-        for(int i = 0; i < firsToDraw.size(); i++) {
-            Fir *f = firsToDraw[i]->fir;
+    glNewList(sectorPolygonsList, GL_COMPILE);
+        for(int i = 0; i < sectorsToDraw.size(); i++) {
+            Sector *f = sectorsToDraw[i]->sector;
             if(f == 0) continue;
             glCallList(f->getPolygon());
         }
@@ -190,21 +190,21 @@ void GLWidget::prepareDisplayLists() {
     glEndList();
 
     // FIR borders
-    if(firPolygonBorderLinesList == 0)
-        firPolygonBorderLinesList = glGenLists(1);
+    if(sectorPolygonBorderLinesList == 0)
+        sectorPolygonBorderLinesList = glGenLists(1);
 
-    if(!allFirsDisplayed) {
+    if(!allSectorsDisplayed) {
         // first, make sure all lists are there
-        for(int i = 0; i < firsToDraw.size(); i++) {
-            Fir *f = firsToDraw[i]->fir;
+        for(int i = 0; i < sectorsToDraw.size(); i++) {
+            Sector *f = sectorsToDraw[i]->sector;
             if(f == 0) continue;
             f->getBorderLine();
         }
 
         if(Settings::firBorderLineStrength() > 0) {
-            glNewList(firPolygonBorderLinesList, GL_COMPILE);
-                for(int i = 0; i < firsToDraw.size(); i++) {
-                    Fir *f = firsToDraw[i]->fir;
+            glNewList(sectorPolygonBorderLinesList, GL_COMPILE);
+                for(int i = 0; i < sectorsToDraw.size(); i++) {
+                    Sector *f = sectorsToDraw[i]->sector;
                     if(f == 0) continue;
                     glCallList(f->getBorderLine());
                 }
@@ -213,16 +213,16 @@ void GLWidget::prepareDisplayLists() {
 
     } else {
         // display ALL fir borders
-        QList<Fir*> firs = NavData::getInstance()->firs().values();
-        for(int i = 0; i < firs.size(); i++) {
-            if(firs[i] == 0) continue;
-            firs[i]->getBorderLine();
+        QList<Sector*> sectors = NavData::getInstance()->sectors().values();
+        for(int i = 0; i < sectors.size(); i++) {
+            if(sectors[i] == 0) continue;
+            sectors[i]->getBorderLine();
         }
 
-        glNewList(firPolygonBorderLinesList, GL_COMPILE);
-            for(int i = 0; i < firs.size(); i++) {
-                if(firs[i] == 0) continue;
-                glCallList(firs[i]->getBorderLine());
+        glNewList(sectorPolygonBorderLinesList, GL_COMPILE);
+            for(int i = 0; i < sectors.size(); i++) {
+                if(sectors[i] == 0) continue;
+                glCallList(sectors[i]->getBorderLine());
             }
         glEndList();
     }
@@ -252,7 +252,7 @@ void GLWidget::prepareDisplayLists() {
 void GLWidget::newWhazzupData(bool isNew) {
     if(isNew) {
         updateAirports();
-        firsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
+        sectorsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
 
         createPilotsList();
         createAirportsList();
@@ -262,8 +262,8 @@ void GLWidget::newWhazzupData(bool isNew) {
     }
 }
 
-void GLWidget::displayAllFirs(bool value) {
-    allFirsDisplayed = value;
+void GLWidget::displayAllSectors(bool value) {
+    allSectorsDisplayed = value;
     newWhazzupData();
 }
 
@@ -304,13 +304,13 @@ void GLWidget::paintGL() {
     glCallList(orbList);
     glCallList(gridlinesList);
 
-    glCallList(firPolygonsList);
+    glCallList(sectorPolygonsList);
     glCallList(airportControllersList);
 
     glCallList(countriesList);
     glCallList(coastlineList);
 
-    glCallList(firPolygonBorderLinesList);
+    glCallList(sectorPolygonBorderLinesList);
     glCallList(appBorderLinesList);
 
     if(Settings::showAirportCongestion())
@@ -636,7 +636,7 @@ void GLWidget::renderLabels() {
 
     // FIR labels
     QList<MapObject*> objects;
-    for(int i = 0; i < firsToDraw.size(); i++) objects.append(firsToDraw[i]);
+    for(int i = 0; i < sectorsToDraw.size(); i++) objects.append(sectorsToDraw[i]);
     renderLabels(objects, Settings::firFont(), controllerLabelZoomTreshold, Settings::firFontColor());
 
     // Airport labels
@@ -700,15 +700,15 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
             QString text = o->mapLabel();
             QRectF rect = fontMetrics.boundingRect(text);
             int drawX, drawY;
-            drawX = (int) x - rect.width() / 2; // center horizontally
-            drawY = (int) y - rect.height() - 5; // some px above dot
+            drawX = static_cast<int>(x - rect.width() / 2); // center horizontally
+            drawY = static_cast<int>(y - rect.height() - 5); // some px above dot
             rect.moveTo(drawX, drawY);
 
             FontRectangle fontRect = FontRectangle(rect, o);
             allFontRectangles.append(fontRect);
             if(shouldDrawLabel(fontRect)) {
                 qglColor(color);
-                renderText(drawX, drawY + rect.height(), text, font);
+                renderText(drawX, static_cast<int>(drawY + rect.height()), text, font);
                 fontRectangles.append(fontRect); // let's add it not only when it it's drawn but always to get more selection for nearby objects
             }
         }
@@ -716,7 +716,7 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 }
 
 bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
-    int shrinkCheckRectByFactor = 1.5; // be less conservative in edge overlap-checking
+    int shrinkCheckRectByFactor = static_cast<int>(1.5); // be less conservative in edge overlap-checking
     for(int i = 0; i < fontRectangles.size(); i++) {
         QRectF checkrect = fontRectangles[i].rect();
         checkrect.setWidth(checkrect.width() / shrinkCheckRectByFactor); // make them smaller to allow a tiny bit of intersect
@@ -999,8 +999,8 @@ void GLWidget::restorePosition(int nr) {
 
 void GLWidget::scrollBy(int moveByX, int moveByY) {
     double lat, lon;
-    int fakeMousePosX = (int) width() * (0.5 + (float) moveByX / 6);
-    int fakeMousePosY = (int) height() * (0.5 + (float) moveByY / 6);
+    int fakeMousePosX = static_cast<int>(width() * (0.5 + (float) moveByX / 6));
+    int fakeMousePosY = static_cast<int>(height() * (0.5 + (float) moveByY / 6));
     mouse2latlon(fakeMousePosX, fakeMousePosY, lat, lon);
     setMapPosition(lat, lon, zoom);
     updateGL();

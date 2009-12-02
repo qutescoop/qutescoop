@@ -1,4 +1,8 @@
-neu:
+wanted (not yet implemented):
+* control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)
+
+new in last alpha: 1.0.3-jonasmarkus-alpha-7
+* Markus' great code to identify ATC sectors above an airport!
 * Added Delivery symbol
 * Fixed Facilitytype for ATIS (VATSIM)
 

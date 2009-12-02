@@ -48,15 +48,15 @@ public:
 
     void resetWhazzupStatus();
 
-    bool isActive() { return active; };
+    bool isActive() { return active; }
 
-    const QList<Controller*>& getApproaches() const { return approaches; };
-    const QList<Controller*>& getTowers() const { return towers; };
-    const QList<Controller*>& getGrounds() const { return grounds; };
-    const QList<Controller*>& getDeliveries() const { return deliveries; };
+    const QList<Controller*>& getApproaches() const { return approaches; }
+    const QList<Controller*>& getTowers() const { return towers; }
+    const QList<Controller*>& getGrounds() const { return grounds; }
+    const QList<Controller*>& getDeliveries() const { return deliveries; }
 
-    const QList<Pilot*>& getArrivals() const { return arrivals; };
-    const QList<Pilot*>& getDepartures() const { return departures; };
+    const QList<Pilot*>& getArrivals() const { return arrivals; }
+    const QList<Pilot*>& getDepartures() const { return departures; }
 
     int numFilteredArrivals() const;
     int numFilteredDepartures() const;
@@ -66,7 +66,7 @@ public:
     void addArrival(Pilot* client);
     void addDeparture(Pilot* client);
 
-    void addCenter(Controller* client);
+    //void addCenter(Controller* client);
     void addApproach(Controller* client);
     void addTower(Controller* client);
     void addGround(Controller* client);
@@ -89,7 +89,7 @@ private:
     void createAppDisplayLists();
 
     bool active;
-    QList<Controller*> centers;
+    //QList<Controller*> centers;
     QList<Controller*> approaches;
     QList<Controller*> towers;
     QList<Controller*> grounds;

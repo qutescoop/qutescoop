@@ -19,11 +19,13 @@
 #include "AirportDetails.h"
 #include <QLocale>
 #include <QHeaderView>
+#include <QPolygon>
+#include <math.h>
 
 #include "helpers.h"
-#include "Whazzup.h"
 #include "NavData.h"
 #include "Window.h"
+
 
 AirportDetails *airportDetailsInstance = 0;
 
@@ -127,7 +129,9 @@ void AirportDetails::refresh(Airport* newAirport) {
     groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals()).arg(airport->getArrivals().size()));
     groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures()).arg(airport->getDepartures().size()));
 
+
     QList<Controller*> atcContent = airport->getAllControllers();
+    atcContent += CheckSectors();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
     // ATIS
@@ -209,3 +213,74 @@ void AirportDetails::on_pbMetar_clicked()
         }
     }
 }
+
+QList<Controller*> AirportDetails::CheckSectors()
+{
+    QList<Controller*> result;
+    QList<Controller*> allSectors = Whazzup::getInstance()->whazzupData().activeSectors();
+
+    for(int i = 0; i < allSectors.size(); i++)
+    {
+        int crossings = 0;
+        double x1, x2;
+
+        //To make to code more clear
+        int size = allSectors[i]->sector->sector().size();
+
+        for ( int ii = 0; ii < size ; ii++ )
+        {
+            /* This is done to ensure that we get the same result when
+               the line goes from left to right and right to left */
+            if ( allSectors[i]->sector->sector().value(ii).first <
+                 allSectors[i]->sector->sector().value((ii+1)%size).first)
+            {
+                    x1 = allSectors[i]->sector->sector().value(ii).first;
+                    x2 = allSectors[i]->sector->sector().value((ii+1)%size).first;
+            }
+            else
+            {
+                    x1 = allSectors[i]->sector->sector().value((ii+1)%size).first;
+                    x2 = allSectors[i]->sector->sector().value(ii).first;
+            }
+
+            /* First check if the ray is possible to cross the line */
+            if ( airport->lat > x1 && airport->lat <= x2 && (
+                    airport->lon < allSectors[i]->sector->sector().value(ii).second
+                    || airport->lon <= allSectors[i]->sector->sector().value((ii+1)%8).second))
+            {
+                    static const float eps = 0.000001;
+
+                    /* Calculate the equation of the line */
+                    double dx = allSectors[i]->sector->sector().value((ii+1)%size).first
+                                - allSectors[i]->sector->sector().value(ii).first;
+                    double dy = allSectors[i]->sector->sector().value((ii+1)%size).second
+                                - allSectors[i]->sector->sector().value(ii).second;
+                    double k;
+
+                    if ( fabs(dx) < eps )
+                    {
+                            k = INFINITY;	// math.h
+                    }
+                    else
+                    {
+                            k = dy/dx;
+                    }
+
+                    double m = allSectors[i]->sector->sector().value(ii).second
+                               - k * allSectors[i]->sector->sector().value(ii).first;
+
+                    /* Find if the ray crosses the line */
+                    double y2 = k * airport->lat + m;
+                    if ( airport->lon <= y2 )
+                    {
+                            crossings++;
+                    }
+                }
+        }
+
+        if(crossings%2 == 1) result.append(allSectors.value(i));
+    }
+
+    return result;
+}
+

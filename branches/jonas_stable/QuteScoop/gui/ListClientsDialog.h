@@ -41,6 +41,7 @@ private slots:
     void modelSelected(const QModelIndex& index);
     void on_editFilter_textChanged(QString str);
     void newFilter();
+    void serverClicked(int row, int column);
 
 private:
     ListClientsDialog();

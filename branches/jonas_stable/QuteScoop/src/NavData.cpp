@@ -21,7 +21,7 @@
 
 #include "NavData.h"
 #include "FileReader.h"
-#include "FirReader.h"
+#include "SectorReader.h"
 #include "helpers.h"
 #include "Settings.h"
 
@@ -29,7 +29,7 @@ NavData *instance = 0;
 
 NavData::NavData() {
     loadAirports(Settings::dataDirectory() + "airports.dat");
-    loadFirs();
+    loadSectors();
     loadCountryCodes(Settings::dataDirectory() + "countrycodes.dat");
     loadDatabase(Settings::navdataDirectory());
 }
@@ -62,9 +62,9 @@ void NavData::loadCountryCodes(const QString& filename) {
     }
 }
 
-void NavData::loadFirs() {
-    FirReader firReader;
-    firReader.loadFirs(firMap);
+void NavData::loadSectors() {
+    SectorReader sectorReader;
+    sectorReader.loadSectors(sectorMap);
 }
 
 NavData* NavData::getInstance() {
@@ -82,8 +82,8 @@ const QList<Airport*>& NavData::airportsTrafficSorted() const {
     return airportsListTrafficSorted;
 }
 
-const QHash<QString, Fir*>& NavData::firs() const {
-    return firMap;
+const QHash<QString, Sector*>& NavData::sectors() const {
+    return sectorMap;
 }
 
 #define IS_NAN(x) (x != x)
@@ -178,16 +178,18 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             airportMap[icao]->addDelivery(c);
         }
 
-        if(c->label.right(4) == "_FSS" || c->label.right(4) == "_CTR") {
+        /* We looking for a better and a exacter way
+        if(c->label.right(4) == "_FSS" || c->label.right(4) == "_CTR")
+        {
             // calculate covered airports (by a circle around the geometrical centre of the FIR)
             double coverLat, coverLon;
             int coverRange;
-            if (c->fir != 0) {
+            if (c->sector != 0) {
                 qDebug() << "checking equdistant Point for FIR" << c->label; //fixme
-                QPair<double, double> center = c->fir->equidistantPoint();
+                QPair<double, double> center = c->sector->equidistantPoint();
                 coverLat = center.first;
                 coverLon = center.second;
-                coverRange = c->fir->maxDistanceFromCenter();
+                coverRange = c->sector->maxDistanceFromCenter();
             } else {
                 coverLat = c->lat;
                 coverLon = c->lon;
@@ -204,7 +206,8 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             for(int j = 0; j < aps.size(); j++) {
                 aps[j]->addCenter(c);
             }
-        }
+
+        }*/
     }
 
     airportsListTrafficSorted.clear(); // we gonna fill it again here

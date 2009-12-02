@@ -324,7 +324,7 @@ int Pilot::planTasInt() const { // defuck flightplanned TAS
         if(planTAS.contains("."))
             return (int) planTAS.mid(1).toDouble() * 550;
         else
-            return (int) planTAS.mid(1).toInt() * 5.5;
+            return static_cast<int>(planTAS.mid(1).toInt() * 5.5);
     }
     return planTAS.toInt();
 }

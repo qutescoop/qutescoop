@@ -24,7 +24,7 @@
 #include "ClientDetails.h"
 
 class WhazzupData;
-class Fir;
+class Sector;
 
 class Controller: public Client
 {
@@ -59,7 +59,7 @@ public:
     QString voiceServer;
     QString voiceLink() const;
 
-    Fir *fir;
+    Sector *sector;
 
 private:
     bool couldBeAtcCallsign() const;

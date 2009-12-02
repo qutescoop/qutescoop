@@ -15,29 +15,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
-#ifndef FIRREADER_H_
-#define FIRREADER_H_
+#ifndef SECTORREADER_H_
+#define SECTORREADER_H_
 
 #include <QHash>
 #include <QString>
 #include <QMultiMap>
 
-#include "Fir.h"
+#include "Sector.h"
 
-class FirReader
+class SectorReader
 {
 public:
-	FirReader();
-	~FirReader();
+        SectorReader();
+        ~SectorReader();
 	
-	void loadFirs(QHash<QString, Fir*>& firs);
+        void loadSectors(QHash<QString, Sector*>& sectors);
 	
 private:
-	void loadFirlist(QHash<QString, Fir*>& firs);
-	void loadFirdisplay(QHash<QString, Fir*>& firs, const QString& filename);
+        void loadSectorlist(QHash<QString, Sector*>& sectors);
+        void loadSectordisplay(QHash<QString, Sector*>& sectors, const QString& filename);
 	
 	QMultiMap<QString, QString> idIcaoMapping;
 	
 };
 
-#endif /*FIRREADER_H_*/
+#endif /*SECTORREADER_H_*/

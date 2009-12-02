@@ -25,6 +25,8 @@
 #include "ClientDetails.h"
 #include "Airport.h"
 #include "MetarModel.h"
+#include "Whazzup.h"
+
 
 #include "AirportDetailsAtcModel.h"
 #include "AirportDetailsArrivalsModel.h"
@@ -57,6 +59,9 @@ private:
     QSortFilterProxyModel *atcSortModel;
     QSortFilterProxyModel *arrivalsSortModel;
     QSortFilterProxyModel *departuresSortModel;
+
+    //test for sectorcheck
+    QList<Controller*> CheckSectors(void);
 
     MetarModel* metarModel;
 };

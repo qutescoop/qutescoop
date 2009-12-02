@@ -24,7 +24,7 @@
 #include "ClientDetails.h"
 
 class WhazzupData;
-class Fir;
+class Sector;
 
 class BookedController: public Client
 {
@@ -72,7 +72,7 @@ public:
     QDateTime starts() const;
     QDateTime ends() const;
     
-	Fir *fir;
+    Sector *sector;
 
 private:
 	bool couldBeAtcCallsign() const;

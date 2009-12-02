@@ -59,13 +59,13 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
     }
 
 
-    QHash<QString, Fir*> firs = NavData::getInstance()->firs();
+    QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
     QString icao = this->getCenter();
-    fir = 0; // make this bulletproof as we get crashes around here
+    sector = 0; // make this bulletproof as we get crashes around here
     if(icao.isNull() || icao.isEmpty()) {
-        fir = 0;
+        sector = 0;
     } else {
-        while(!firs.contains(icao) && !icao.isEmpty()) {
+        while(!sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
             if(p == -1) {
                 qDebug() << "Unknown FIR\t" << icao << "\tPlease provide sector information if you can";
@@ -76,8 +76,8 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
                 icao = icao.left(p);
             }
         }
-        if(!icao.isEmpty() && firs.contains(icao)) {
-            this->fir = firs[icao];
+        if(!icao.isEmpty() && sectors.contains(icao)) {
+            this->sector = sectors[icao];
         }
     }
 }

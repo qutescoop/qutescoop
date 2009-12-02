@@ -426,6 +426,7 @@ void Window::closeEvent(QCloseEvent *event) {
     on_actionHideAllWindows_triggered();
 
     QMainWindow::closeEvent(event);
+    exit(0);
 }
 
 void Window::on_actionHideAllWindows_triggered() {
@@ -883,7 +884,7 @@ void Window::runPredict() {
         datePredictTime->setEnabled(false);
         timePredictTime->setEnabled(false);
     } else {
-        to = Whazzup::getInstance()->getPredictedTime().addSecs(dsRunPredictStep->value()*60);
+        to = Whazzup::getInstance()->getPredictedTime().addSecs(static_cast<int>(dsRunPredictStep->value()*60));
         datePredictTime->setEnabled(true);
         timePredictTime->setEnabled(true);
     }
@@ -891,7 +892,7 @@ void Window::runPredict() {
     timePredictTime->setTime(to.time());
     warpTimer.stop();
     performWarp();
-    runPredictTimer.start(spinRunPredictInterval->value() * 1000);
+    runPredictTimer.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
 }
 
 void Window::shootScreenie() {

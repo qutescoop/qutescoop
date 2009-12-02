@@ -25,7 +25,7 @@
 #include <QList>
 
 #include "MapObject.h"
-#include "Fir.h"
+#include "Sector.h"
 #include "Airport.h"
 #include "WhazzupData.h"
 
@@ -57,7 +57,7 @@ public slots:
     void rememberPosition(int nr);
     void restorePosition(int nr);
 
-	void displayAllFirs(bool value);
+        void displayAllSectors(bool value);
 	void showInactiveAirports(bool value);
 
     void createPilotsList();
@@ -114,14 +114,14 @@ private:
 	GLuint fixesList;
 	void createFixesList();
 
-	GLuint firPolygonsList;
+        GLuint sectorPolygonsList;
 	GLuint airportControllersList;
-	GLuint firPolygonBorderLinesList;
+        GLuint sectorPolygonBorderLinesList;
 	GLuint appBorderLinesList;
 	GLuint congestionsList;
 	void prepareDisplayLists();
 
-	QList<Controller*> firsToDraw;
+        QList<Controller*> sectorsToDraw;
 
 	double pilotLabelZoomTreshold;
 	double airportLabelZoomTreshold;
@@ -158,7 +158,7 @@ private:
 	void renderLabels();
 	void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
-	bool allFirsDisplayed;
+    bool allSectorsDisplayed;
 };
 
 #endif /*GLWIDGET_H_*/

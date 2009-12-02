@@ -22,7 +22,7 @@ FORMS = gui/MainWindow.ui \
     gui/PlanFlightDialog.ui \
     gui/BookedAtcDialog.ui \
     gui/ListClientsDialog.ui
-TARGET = 
+TARGET =
 DEPENDPATH += ./src \
     ./gui
 INCLUDEPATH += ./src \
@@ -38,7 +38,7 @@ QT += network \
 # CONFIG += debug
 # CONFIG += release
 # CONFIG += warn_off
-mac { 
+mac {
     ICON = gui/Dolomynum.icns
     CONFIG += x86 \
         ppc
@@ -58,8 +58,8 @@ HEADERS += WhazzupData.h \
     MapObject.h \
     src/LineReader.h \
     src/helpers.h \
-    src/FirReader.h \
-    src/Fir.h \
+    src/SectorReader.h \
+    src/Sector.h \
     src/FileReader.h \
     src/Controller.h \
     src/Client.h \
@@ -107,8 +107,8 @@ SOURCES += WhazzupData.cpp \
     Metar.cpp \
     MapObject.cpp \
     LineReader.cpp \
-    FirReader.cpp \
-    Fir.cpp \
+    SectorReader.cpp \
+    Sector.cpp \
     FileReader.cpp \
     Controller.cpp \
     Client.cpp \

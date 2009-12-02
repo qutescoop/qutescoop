@@ -20,7 +20,7 @@
 
 #include "WhazzupData.h"
 
-#include "Fir.h"
+#include "Sector.h"
 #include "Pilot.h"
 #include "Controller.h"
 #include "BookedController.h"
@@ -511,7 +511,7 @@ WhazzupData::~WhazzupData() {
 
 QList<Controller*> WhazzupData::activeSectors() const {
     QList<Controller*> result;
-    QHash<QString, Fir*> firs = NavData::getInstance()->firs();
+    QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
 
     QList<Controller*> controllerList = controllers.values();
     for(int i = 0; i < controllerList.size(); i++) {
@@ -519,10 +519,10 @@ QList<Controller*> WhazzupData::activeSectors() const {
         if(icao.isNull() || icao.isEmpty())
             continue;
 
-        while(!firs.contains(icao) && !icao.isEmpty()) {
+        while(!sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
             if(p == -1) {
-                qDebug() << "Unknown FIR\t" << icao << "\tPlease provide sector information if you can";
+                qDebug() << "Unknown Sector\t" << icao << "\tPlease provide sector information if you can";
                 icao = "";
                 continue;
             }
@@ -530,10 +530,10 @@ QList<Controller*> WhazzupData::activeSectors() const {
                 icao = icao.left(p);
             }
         }
-        if(!icao.isEmpty() && firs.contains(icao)) {
-            controllerList[i]->fir = firs[icao];
-            controllerList[i]->lat = firs[icao]->lat();
-            controllerList[i]->lon = firs[icao]->lon();
+        if(!icao.isEmpty() && sectors.contains(icao)) {
+            controllerList[i]->sector = sectors[icao];
+            controllerList[i]->lat = sectors[icao]->lat();
+            controllerList[i]->lon = sectors[icao]->lon();
             result.append(controllerList[i]);
         }
     }
