@@ -166,7 +166,7 @@ Window::Window(QWidget *parent) :
     connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
     connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
-//#ifndef Q_WS_MAC // lets use CTRL +/- which I think shuld work everywhere. No normal input characters, as these get trapped by the EditWidgets (Search etc.)
+//#ifndef Q_WS_MAC // lets use CTRL +/- which I think should work everywhere. No normal input characters, as these get trapped by the EditWidgets (Search etc.)
     // F11 is Fullscreen on most Linux Displaymanagers
     //actionZoomIn->setShortcut(QKeySequence("F11"));
     //actionZoomOut->setShortcut(QKeySequence("F12"));
@@ -174,7 +174,7 @@ Window::Window(QWidget *parent) :
 
     connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
     connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
-    connect(actionDisplayAllFirs, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllFirs(bool)));
+	connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
     connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
 

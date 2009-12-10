@@ -73,7 +73,7 @@ BookedAtcDialog::BookedAtcDialog() :
 }
 
 void BookedAtcDialog::refresh() {
-    if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
+	if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
         emit needBookings();
 
     bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());

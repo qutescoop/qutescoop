@@ -1,10 +1,8 @@
 wanted (not yet implemented):
 * control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)
+* bookings get not downloaded if they are not needed (code change, hopefully works in the end...)
 
-new in last alpha: 1.0.3-jonasmarkus-alpha-7
-* Markus' great code to identify ATC sectors above an airport!
-* Added Delivery symbol
-* Fixed Facilitytype for ATIS (VATSIM)
+new in last alpha: 1.0.3-jonasmarkus-alpha-8
 
 QuteScoop Changelog - Version 1.0.3 jonas alpha
 
@@ -14,6 +12,8 @@ REMARKS:
 * Next big thing: Replay mode (replay downloaded Whazzups, save a picture of each to allow creating videos from events et al)
 
 changed:
+* Markus' great code to identify ATC sectors above an airport!
+* Symbol for Delivery
 * Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
 * Increased max. possible value for shown labels (in preferences)
 * Render dashed lines in front of/behind plane also in flightplan Plot mode
@@ -49,6 +49,7 @@ added:
 * See ToolTips on most buttons and objects
 
 fixed:
+* Facilitytype for ATIS (VATSIM)
 * Restore Docks correctly on window minimize/restore
 * Allow to disable border lines by setting strength to 0px
 * Show map labels of busy airports in favor of less busier ones
