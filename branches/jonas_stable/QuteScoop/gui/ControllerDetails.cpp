@@ -112,8 +112,12 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
 
 #ifdef Q_WS_WIN
     QString program = "start";
-#else
-    QString program = "open";
+#endif
+#ifdef Q_WS_MAC
+	QString program = "open";
+#endif
+#ifdef Q_WS_X11
+	QString program = "xdg-open";
 #endif
 
     QString command = program + " " + controller->voiceLink();
