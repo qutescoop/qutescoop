@@ -95,6 +95,9 @@ int main(int argc, char *argv[]) {
     //window->setStyle(style);
 
     window->show();
+    //Debug
+    //app.instance()->thread()->setPriority(QThread::LowestPriority);
+    //app.thread()->setPriority(QThread::HighestPriority);
     return app.exec();
 #else
     return runTest();
