@@ -413,7 +413,7 @@
     <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
     <addaction name="separator"/>
-    <addaction name="actionDisplayAllFirs"/>
+    <addaction name="actionDisplayAllSectors"/>
     <addaction name="actionShowInactiveAirports"/>
    </widget>
    <widget class="QMenu" name="menuPlan">
@@ -853,7 +853,7 @@ p, li { white-space: pre-wrap; }
     <string>F2</string>
    </property>
   </action>
-  <action name="actionDisplayAllFirs">
+  <action name="actionDisplayAllSectors">
    <property name="checkable">
     <bool>true</bool>
    </property>
