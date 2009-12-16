@@ -24,10 +24,9 @@
 
 ControllerDetails *controllerDetailsInstance = 0;
 
-ControllerDetails* ControllerDetails::getInstance() {
-    if(controllerDetailsInstance == 0) {
-        controllerDetailsInstance = new ControllerDetails();
-    }
+ControllerDetails* ControllerDetails::getInstance(bool createIfNoInstance) {
+    if(controllerDetailsInstance == 0)
+        if (createIfNoInstance) controllerDetailsInstance = new ControllerDetails();
     return controllerDetailsInstance;
 }
 
@@ -114,10 +113,10 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
     QString program = "start";
 #endif
 #ifdef Q_WS_MAC
-	QString program = "open";
+    QString program = "open";
 #endif
 #ifdef Q_WS_X11
-	QString program = "xdg-open";
+    QString program = "xdg-open";
 #endif
 
     QString command = program + " " + controller->voiceLink();

@@ -32,9 +32,9 @@
 
 PlanFlightDialog *planFlightDialogInstance = 0;
 
-PlanFlightDialog *PlanFlightDialog::getInstance() {
+PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance) {
     if(planFlightDialogInstance == 0)
-        planFlightDialogInstance = new PlanFlightDialog();
+        if (createIfNoInstance) planFlightDialogInstance = new PlanFlightDialog();
     return planFlightDialogInstance;
 }
 

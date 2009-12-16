@@ -37,7 +37,7 @@ class AirportDetails : public ClientDetails, private Ui::AirportDetails
     Q_OBJECT
 
 public:
-    static AirportDetails *getInstance();
+    static AirportDetails *getInstance(bool createIfNoInstance = true);
     void refresh(Airport* airport = 0);
 
 private slots:

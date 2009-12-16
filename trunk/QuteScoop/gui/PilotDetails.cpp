@@ -22,10 +22,9 @@
 
 PilotDetails *pilotDetailsInstance = 0;
 
-PilotDetails* PilotDetails::getInstance() {
-    if(pilotDetailsInstance == 0) {
-        pilotDetailsInstance = new PilotDetails();
-    }
+PilotDetails* PilotDetails::getInstance(bool createIfNoInstance) {
+    if(pilotDetailsInstance == 0)
+        if (createIfNoInstance) pilotDetailsInstance = new PilotDetails();
     return pilotDetailsInstance;
 }
 

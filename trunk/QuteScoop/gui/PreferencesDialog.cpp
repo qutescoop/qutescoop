@@ -29,9 +29,9 @@
 
 PreferencesDialog *preferencesDialogInstance = 0;
 
-PreferencesDialog *PreferencesDialog::getInstance() {
+PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance) {
     if(preferencesDialogInstance == 0)
-        preferencesDialogInstance = new PreferencesDialog();
+        if (createIfNoInstance) preferencesDialogInstance = new PreferencesDialog();
     return preferencesDialogInstance;
 }
 

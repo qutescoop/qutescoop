@@ -37,7 +37,7 @@ class PlanFlightDialog : public QDialog, private Ui::PlanFlightDialog {
     Q_OBJECT
 
 public:
-    static PlanFlightDialog *getInstance();
+    static PlanFlightDialog *getInstance(bool createIfNoInstance = true);
     void plotPlannedRoute() const;
 
 signals:
