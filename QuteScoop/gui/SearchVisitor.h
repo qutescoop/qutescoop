@@ -23,7 +23,6 @@
 
 #include "MapObjectVisitor.h"
 #include "Controller.h"
-#include "BookedController.h"
 #include "Pilot.h"
 
 class SearchVisitor : public MapObjectVisitor

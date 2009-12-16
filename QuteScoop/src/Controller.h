@@ -24,45 +24,44 @@
 #include "ClientDetails.h"
 
 class WhazzupData;
-class Sector;
+class Fir;
 
 class Controller: public Client
 {
 public:
-    Controller(const QStringList& stringList, const WhazzupData* whazzup);
+	Controller(const QStringList& stringList, const WhazzupData* whazzup);
 
-    void showDetailsDialog();
-    bool isObserver() const { return facilityType == 0; }
-    bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations (at least from VATSIM)
+	void showDetailsDialog();
+	bool isObserver() const { return facilityType == 0; };
+	bool isStaff() const { return facilityType == 1; };
+	bool isATC() const { return facilityType >= 2; };
 
-    QString toolTip() const;
+	QString toolTip() const;
 
-    QString facilityString() const;
+	QString facilityString() const;
 
-    virtual QString mapLabel() const;
+	virtual QString mapLabel() const;
 
-    virtual QString rank() const;
+	virtual QString rank() const;
 
-    QString getCenter();
-    QString getApproach() const;
-    QString getTower() const;
-    QString getGround() const;
-    QString getDelivery() const;
+	QString getCenter();
+	QString getApproach() const;
+	QString getTower() const;
+	QString getGround() const;
 
-    QString frequency;
-    int facilityType;
-    int visualRange;
-    QString atisMessage;
-    QDateTime timeLastAtisReceived;
-    QDateTime assumeOnlineUntil;
+	QString frequency;
+	int facilityType;
+	int visualRange;
+	QString atisMessage;
+	QDateTime timeLastAtisReceived;
 
-    QString voiceServer;
-    QString voiceLink() const;
+	QString voiceServer;
+	QString voiceLink() const;
 
-    Sector *sector;
+	Fir *fir;
 
 private:
-    bool couldBeAtcCallsign() const;
+	bool couldBeAtcCallsign() const;
 };
 
 #endif /*CONTROLLER_H_*/

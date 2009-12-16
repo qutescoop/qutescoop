@@ -23,150 +23,86 @@
 PilotDetails *pilotDetailsInstance = 0;
 
 PilotDetails* PilotDetails::getInstance() {
-    if(pilotDetailsInstance == 0) {
-        pilotDetailsInstance = new PilotDetails();
-    }
-    return pilotDetailsInstance;
+	if(pilotDetailsInstance == 0) {
+		pilotDetailsInstance = new PilotDetails();
+	}
+	return pilotDetailsInstance;
 }
 
 PilotDetails::PilotDetails():
-    ClientDetails(),
-    pilot(0)
+	ClientDetails(),
+	pilot(0)
 {
-    setupUi(this);
-//    setWindowFlags(Qt::Tool);
-
-    connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-    connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
+	setupUi(this);
+	
+	connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
+	connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
 }
 
 void PilotDetails::refresh(Pilot *newPilot) {
-    if(newPilot != 0) {
-        pilot = newPilot;
-    } else {
-        pilot = Whazzup::getInstance()->whazzupData().getPilot(callsign);
-    }
-    if(pilot == 0) {
-        hide();
-        return;
-    }
-    setMapObject(pilot);
+	if(newPilot != 0) {
+		pilot = newPilot;
+	} else {
+		pilot = Whazzup::getInstance()->whazzupData().getPilot(callsign);
+	}
+	if(pilot == 0) return;
+	setMapObject(pilot);
 
-    setWindowTitle(pilot->label);
+	setWindowTitle(pilot->label);
+	
+	// Pilot Information
+	QString pilotInfo = QString("<strong>PILOT: %1</strong><br>").arg(pilot->displayName(true));
+	pilotInfo += pilot->detailInformation() + "<br>";
+	pilotInfo += QString("On %3 for %4").arg(pilot->server).arg(pilot->onlineTime());
+	QString software = pilot->clientInformation();
+	if(!software.isEmpty()) pilotInfo += ", " + software;
+	lblPilotInfo->setText(pilotInfo);
+	
+	// Aircraft Information
+	QString aircraftInfo = QString("Aircraft: <strong>%1</strong><br>").arg(pilot->planAircraft);
+	aircraftInfo += QString("Altitude: <strong>%1</strong> feet<br>").arg(pilot->altitude);
+	aircraftInfo += QString("Ground Speed: <strong>%1</strong> kts").arg(pilot->groundspeed);
+	lblAircraftInfo->setText(aircraftInfo);
+	
+	// flight status
+	lblFlightStatus->setText(pilot->flightStatusString());
+	
+	QString depStr = pilot->planDep;
+	Airport *airport = pilot->depAirport();
+	if(airport != 0) depStr = airport->toolTip();
+	buttonFrom->setText(depStr);
+	
+	QString destStr = pilot->planDest;
+	airport = pilot->destAirport();
+	if(airport != 0) destStr = airport->toolTip();
+	buttonDest->setText(destStr);
 
-    // Pilot Information
-    lblPilotInfo->setText(QString("<strong>PILOT: %1</strong>%2")
-                        .arg(pilot->displayName(true))
-                        .arg(pilot->detailInformation().isEmpty() ? "" : ", " + pilot->detailInformation()));
-    if (pilot->server.isEmpty()) {
-        lblConnected->setText(QString("<i>Not connected</i>"));
-    } else {
-        lblConnected->setText(QString("On %1 for %2%3")
-                     .arg(pilot->server)
-                     .arg(pilot->onlineTime())
-                     .arg(pilot->clientInformation().isEmpty()? "": ", "+ pilot->clientInformation()));
-    }
-    buttonShowOnMap->setEnabled(pilot->lat != 0 || pilot->lon != 0);
-
-
-    // Aircraft Information
-    lblAircraft->setText(QString("%1").arg(pilot->planAircraft));
-    lblAltitude->setText(QString("%1 ft").arg(pilot->altitude));
-    lblGroundspeed->setText(QString("%1 kts").arg(pilot->groundspeed));
-
-    // flight status
-    groupStatus->setTitle(QString("Flight Status: %1").arg(pilot->flightStatusShortString()));
-    lblFlightStatus->setText(pilot->flightStatusString());
-
-    // flight plan
-    groupFp->setVisible(!pilot->planFlighttype.isEmpty()); // hide for Bush pilots
-
-    groupFp->setTitle(QString("Flight Plan (%1)")
-                      .arg(pilot->planFlighttypeString()));
-
-    QString depStr = pilot->planDep;
-    Airport *airport = pilot->depAirport();
-    if(airport != 0) depStr = airport->toolTip();
-    //lblDep->setText(depStr);
-    buttonFrom->setText(depStr);
-
-    lblPlanEtd->setText(pilot->etd().toString("HHmm"));
-
-    QString destStr = pilot->planDest;
-    airport = pilot->destAirport();
-    if(airport != 0) destStr = airport->toolTip();
-    //lblDest->setText(destStr);
-    buttonDest->setText(destStr);
-
-    lblPlanEta->setText(pilot->etaPlan().toString("HHmm"));
-
-    QString altStr = pilot->planAltAirport;
-    airport = pilot->altAirport();
-    if(airport != 0) altStr = airport->toolTip();
-    //lblAlt->setText(altStr);
-    buttonAlt->setText(altStr);
-
-    lblFuel->setText(QTime(pilot->planHrsFuel, pilot->planMinFuel).toString("H:mm"));
-    lblRoute->setText(pilot->planRoute);
-    lblPlanTas->setText(QString("N%1").arg(pilot->planTasInt()));
-    lblPlanFl->setText(QString("F%1").arg(pilot->defuckPlanAlt(pilot->planAlt)/100));
-    lblPlanEte->setText(QString("%1").arg(QTime(pilot->planHrsEnroute, pilot->planMinEnroute).toString("H:mm")));
-
-    lblRemarks->setText(pilot->planRemarks);
-
-    // check if we know userId
-    buttonAddFriend->setDisabled(pilot->userId.isEmpty());
-    if(pilot->isFriend())
-        buttonAddFriend->setText("Remove Friend");
-    else
-        buttonAddFriend->setText("Add Friend");
-
-    // check if we know position
-    buttonShowOnMap->setDisabled(pilot->lon == 0.0 && pilot->lat == 0.0);
-
-    cbPlotRoute->setChecked(pilot->displayLineToDest);
-
-    // adjust window, little tweaking //fixme, does not work perfectly but only on second refresh()
-    //setUpdatesEnabled(false);
-    adjustSize();
-    //updateGeometry();
-    //setUpdatesEnabled(true);
+	// do something about alternate here
+	
+	lblRoute->setText(pilot->planRoute);
+	lblRemarks->setText(pilot->planRemarks);
+	
+	if(pilot->isFriend())
+		buttonAddFriend->setText("Remove Friend");
+	else
+		buttonAddFriend->setText("Add Friend");
 }
 
 void PilotDetails::on_buttonDest_clicked() {
-    Airport *airport = pilot->destAirport();
-    if(airport != 0) {
-        airport->showDetailsDialog();
-        close();
-    }
-}
-
-void PilotDetails::on_buttonAlt_clicked()
-{
-    Airport *airport = pilot->altAirport();
-    if(airport != 0) {
-        airport->showDetailsDialog();
-        close();
-    }
+	Airport *airport = pilot->destAirport();
+	if(airport != 0)
+		airport->showDetailsDialog();
+	close();
 }
 
 void PilotDetails::on_buttonFrom_clicked() {
-    Airport *airport = pilot->depAirport();
-    if(airport != 0) {
-        airport->showDetailsDialog();
-        close();
-    }
+	Airport *airport = pilot->depAirport();
+	if(airport != 0)
+		airport->showDetailsDialog();
+	close();
 }
 
 void PilotDetails::on_buttonAddFriend_clicked() {
-    friendClicked();
-    refresh();
-}
-
-void PilotDetails::on_cbPlotRoute_toggled(bool checked)
-{
-    if (pilot->displayLineToDest != checked) {
-        pilot->toggleDisplayPath();
-        Window::getInstance()->updateGLPilots();
-    }
+	friendClicked();
+	refresh();
 }

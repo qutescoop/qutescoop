@@ -16,32 +16,43 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
-#ifndef LISTCLIENTSDIALOGMODEL_H_
-#define LISTCLIENTSDIALOGMODEL_H_
+#ifndef FIR_H_
+#define FIR_H_
 
-#include <QAbstractTableModel>
+#include <QStringList>
+#include <QString>
+#include <QGLWidget>
 #include <QList>
-#include "Client.h"
+#include <QPair>
 
-class ListClientsDialogModel : public QAbstractTableModel {
-	Q_OBJECT
-
+class Fir
+{
 public:
-    ListClientsDialogModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
+	Fir();
+	Fir(QStringList strings);
+	~Fir();
 
-	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+	bool isNull() const;
 	
-	virtual QVariant data(const QModelIndex &index, int role) const;
-	virtual QVariant headerData(int section, Qt::Orientation orientation,
-	                         int role = Qt::DisplayRole) const;
+	const QString& icao() const { return _icao; }
+	const QString& name() const { return _name; }
+	const QString& countryCode() const { return _countryCode; }
+	const QString& id() const { return _id; }
+	const double& lat() const { return _lat; }
+	const double& lon() const { return _lon; }
 	
-public slots:
-    void setClients(const QList<Client*>& clients);
-	void modelSelected(const QModelIndex& index);
-  
+	void setPointList(const QList<QPair<double, double> >& points);
+	
+	GLuint getPolygon();
+	GLuint getBorderLine();
+	
 private:
-    QList<Client*> clients;
+	void compileDisplayLists();
+
+	QList<QPair<double, double> > _points;
+	QString _icao, _name, _countryCode, _id;
+	double _lat, _lon;
+	GLuint polygon, borderline;
 };
 
-#endif /*LISTCLIENTSDIALOGMODEL_H_*/
+#endif /*FIR_H_*/

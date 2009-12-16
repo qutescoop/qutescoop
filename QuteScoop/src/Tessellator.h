@@ -26,7 +26,7 @@
 // same on all platforms
 
 #ifdef Q_WS_MAC
-#define CALLBACK_CAST (GLvoid (*)())
+#define CALLBACK_CAST (GLvoid (*)(...))
 #define CALLBACK_DECL GLvoid
 #endif
 
@@ -43,22 +43,22 @@
 class Tessellator
 {
 public:
-    Tessellator();
-    ~Tessellator();
-
-    void tessellate(const QList<QPair<double, double> >& points);
-
+	Tessellator();
+	~Tessellator();
+	
+	void tessellate(const QList<QPair<double, double> >& points);
+	
 private:
-    GLUtesselator *tess;
-    QList<GLdouble*> pointList;
-
-    static CALLBACK_DECL tessBeginCB(GLenum which);
-    static CALLBACK_DECL tessEndCB();
-    static CALLBACK_DECL tessVertexCB(const GLvoid *data);
-    static CALLBACK_DECL tessErrorCB(GLenum errorCode);
-    static CALLBACK_DECL tessCombineCB(const GLdouble newVertex[3],
-                                        const GLdouble *neighborVertex[4],
-                                        const GLfloat neighborWeight[4], GLdouble **outData);
+	GLUtesselator *tess;
+	QList<GLdouble*> pointList;
+	
+	static CALLBACK_DECL tessBeginCB(GLenum which);
+	static CALLBACK_DECL tessEndCB();
+	static CALLBACK_DECL tessVertexCB(const GLvoid *data);
+	static CALLBACK_DECL tessErrorCB(GLenum errorCode);
+	static CALLBACK_DECL tessCombineCB(const GLdouble newVertex[3],
+										const GLdouble *neighborVertex[4],
+										const GLfloat neighborWeight[4], GLdouble **outData);
 };
 
 #endif /*TESSELLATOR_H_*/

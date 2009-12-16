@@ -15,33 +15,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
+#ifndef FIRREADER_H_
+#define FIRREADER_H_
 
-#ifndef BOOKEDATCDIALOGMODEL_H_
-#define BOOKEDATCDIALOGMODEL_H_
+#include <QString>
+#include <QMultiMap>
 
-#include <QAbstractTableModel>
-#include <QList>
-#include "BookedController.h"
+#include "Fir.h"
 
-class BookedAtcDialogModel : public QAbstractTableModel {
-	Q_OBJECT
-
+class FirReader
+{
 public:
-	BookedAtcDialogModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
-
-	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+	FirReader();
+	~FirReader();
 	
-	virtual QVariant data(const QModelIndex &index, int role) const;
-	virtual QVariant headerData(int section, Qt::Orientation orientation,
-	                         int role = Qt::DisplayRole) const;
+	void loadFirs(QHash<QString, Fir*>& firs);
 	
-public slots:
-	void setClients(const QList<BookedController*>& controllers);
-	void modelSelected(const QModelIndex& index);
-  
 private:
-	QList<BookedController*> controllers;
+	void loadFirlist(QHash<QString, Fir*>& firs);
+	void loadFirdisplay(QHash<QString, Fir*>& firs, const QString& filename);
+	
+	QMultiMap<QString, QString> idIcaoMapping;
+	
 };
 
-#endif /*BOOKEDATCDIALOGMODEL_H_*/
+#endif /*FIRREADER_H_*/

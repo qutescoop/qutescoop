@@ -21,7 +21,6 @@
 
 #include <QStringList>
 #include <QList>
-#include <QPair>
 #include <QHttp>
 #include <QBuffer>
 #include <QTime>
@@ -33,75 +32,58 @@ class WhazzupData;
 
 class Whazzup: public QObject
 {
-    Q_OBJECT
-
+	Q_OBJECT
+	
 public:
-    static Whazzup* getInstance();
-
-    /**
-     * Set the download location for whazzup status file
-     */
-    const WhazzupData& whazzupData() { return (predictedTime.isValid()? predictedData: data); } // we fake it when predicting a certain time
-    const WhazzupData& realWhazzupData() { return data; } // this is always the really downloaded thing
-
-    void setPredictedTime(QDateTime predictedTime);
-    QDateTime getPredictedTime() const { return predictedTime; }
-
-    QString getUserLink(const QString& id) const;
-    QString getAtisLink(const QString& id) const;
-
-    QList<QPair<QDateTime, QString>*> getDownloadedWhazzups();
-
+	static Whazzup* getInstance();
+	
+	/**
+	 * Set the download location for whazzup status file
+	 */
+	void setStatusLocation(const QString& url);
+	
+	const WhazzupData& whazzupData() { return data; }
+	
+	QString getUserLink(const QString& id) const;
+	QString getAtisLink(const QString& id) const;
+	
 signals:
-    void newData(bool isNew);
-    void networkMessage(QString message);
-    void downloadError(QString message);
-    void statusDownloaded();
-    void needBookings();
-
+	void newData();
+	void networkMessage(QString message);
+	void downloadError(QString message);
+	void statusDownloaded();
+	
 public slots:
-    void download();
-    void fromFile(QString filename);
-    void setStatusLocation(const QString& url);
-    void downloadBookings();
-
+	void download();
+	
 private slots:
-    void statusDownloaded(bool error);
-    void whazzupDownloading(int prog, int tot);
-    void bookingsDownloading(int prog, int tot);
-    void whazzupDownloaded(bool error);
-    void bookingsDownloaded(bool error);
-
+	void statusDownloaded(bool error);
+	void whazzupDownloaded(bool error);
+		
 private:
-    Whazzup();
-    virtual ~Whazzup();
+	Whazzup();
+	virtual ~Whazzup();
+	
+	WhazzupData data;
 
-    WhazzupData data;
-    WhazzupData predictedData;
-
-    QDateTime predictedTime;
-
-    QHttp *statusDownloader;
-    QBuffer *statusBuffer;
-
-    QHttp *whazzupDownloader;
-    QBuffer *whazzupBuffer;
-
-    QHttp *bookingsDownloader;
-    QBuffer *bookingsBuffer;
-
-    QStringList urls;
-    QStringList gzurls;
-    QString metarUrl;
-    QString tafUrl;
-    QString shorttafUrl;
-    QString userLink;
-    QString atisLink;
-    QString message;
-
-    QTime lastDownloadTime;
-
-    QTimer *downloadTimer, *bookingsTimer;
+	QHttp *statusDownloader;
+	QBuffer *statusBuffer;
+	
+	QHttp *whazzupDownloader;
+	QBuffer *whazzupBuffer;
+	
+	QStringList urls;
+	QStringList gzurls;
+	QString metarUrl;
+	QString tafUrl;
+	QString shorttafUrl;
+	QString userLink;
+	QString atisLink;
+	QString message;
+	
+	QTime lastDownloadTime;
+	
+	QTimer *downloadTimer;
 };
 
 #endif /*WHAZZUP_H_*/

@@ -21,6 +21,7 @@
 #include "Client.h"
 #include "Window.h"
 
+#include <QDebug>
 #include <QTimer>
 
 ClientDetails::ClientDetails():

@@ -16,6 +16,8 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "Waypoint.h"
 
 Waypoint::Waypoint(const QStringList& stringList)

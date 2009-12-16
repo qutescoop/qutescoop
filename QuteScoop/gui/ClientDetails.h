@@ -28,25 +28,25 @@ class MapObject;
 
 class ClientDetails : public QDialog
 {
-    Q_OBJECT
-
-public:
-    virtual void refresh() {}
-
+	Q_OBJECT
+	
+public:	
+	virtual void refresh() {};
+	
 signals:
-    void showOnMap(double lat, double lon);
-
+	void showOnMap(double lat, double lon);
+		
 protected:
-    ClientDetails();
-    void setMapObject(MapObject *object);
+	ClientDetails();
+	void setMapObject(MapObject *object);
 
 protected slots:
-    void showOnMap();
-    void friendClicked();
-
+	void showOnMap();
+	void friendClicked();
+	
 protected:
-    double lat, lon;
-    QString userId, callsign;
+	double lat, lon;
+	QString userId, callsign;
 };
 
 #endif /*CLIENTDETAILS_H_*/

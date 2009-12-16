@@ -1,216 +1,207 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>AirportDetails</class>
- <widget class="QDialog" name="AirportDetails">
-  <property name="geometry">
+ <widget class="QDialog" name="AirportDetails" >
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1014</width>
+    <width>826</width>
     <height>585</height>
    </rect>
   </property>
-  <property name="windowTitle">
+  <property name="windowTitle" >
    <string>Dialog</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
-  </property>
-  <layout class="QVBoxLayout" name="_2">
+  <layout class="QVBoxLayout" >
+   <property name="leftMargin" >
+    <number>0</number>
+   </property>
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" >
      <item>
-      <widget class="QGroupBox" name="groupBox_4">
-       <property name="title">
+      <widget class="QGroupBox" name="groupBox_4" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title" >
         <string>Airport Information</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-       <layout class="QGridLayout">
-        <property name="leftMargin">
+       <layout class="QGridLayout" >
+        <property name="leftMargin" >
          <number>6</number>
         </property>
-        <property name="rightMargin">
+        <property name="topMargin" >
          <number>6</number>
         </property>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="text">
+        <property name="rightMargin" >
+         <number>6</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>6</number>
+        </property>
+        <property name="horizontalSpacing" >
+         <number>4</number>
+        </property>
+        <property name="verticalSpacing" >
+         <number>0</number>
+        </property>
+        <item row="0" column="0" >
+         <widget class="QLabel" name="label" >
+          <property name="text" >
+           <string>ICAO:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" >
+         <widget class="QLabel" name="lblIcao" >
+          <property name="font" >
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text" >
+           <string>LOWI</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="QLabel" name="label_3" >
+          <property name="text" >
+           <string>City:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" >
+         <widget class="QLabel" name="lblCity" >
+          <property name="font" >
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text" >
+           <string>Innsbruck</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" >
+         <widget class="QLabel" name="label_4" >
+          <property name="text" >
            <string>Name:</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QLabel" name="lblName">
-          <property name="font">
+        <item row="2" column="1" >
+         <widget class="QLabel" name="lblName" >
+          <property name="font" >
            <font>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
-          <property name="text">
-           <string>Innsbruck
-Kranebitten</string>
+          <property name="text" >
+           <string>Kranebitten</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
+        <item row="3" column="0" >
+         <widget class="QLabel" name="label_5" >
+          <property name="text" >
            <string>Country:</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QLabel" name="lblCountry">
-          <property name="font">
+        <item row="3" column="1" >
+         <widget class="QLabel" name="lblCountry" >
+          <property name="font" >
            <font>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
-          <property name="text">
+          <property name="text" >
            <string>Austria</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_2">
-          <property name="text">
+        <item row="4" column="0" >
+         <widget class="QLabel" name="label_2" >
+          <property name="text" >
            <string>Location:</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="lblLocation">
-          <property name="font">
+        <item row="4" column="1" >
+         <widget class="QLabel" name="lblLocation" >
+          <property name="font" >
            <font>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
-          <property name="text">
-           <string>N47° 15.44' 
-E009° 37.21'</string>
+          <property name="text" >
+           <string>N47° 15.44' E009° 37.21'</string>
           </property>
          </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Time (est.):</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLabel" name="lblTime">
-          <property name="font">
-           <font>
-            <weight>75</weight>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>09:13, UTC +2</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
      </item>
      <item>
-      <widget class="QGroupBox" name="groupBoxAtc">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+      <widget class="QGroupBox" name="groupBoxAtc" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
-       <property name="title">
+       <property name="maximumSize" >
+        <size>
+         <width>16777215</width>
+         <height>128</height>
+        </size>
+       </property>
+       <property name="title" >
         <string>ATC</string>
        </property>
-       <layout class="QGridLayout" name="gridLayoutATC">
-        <item row="0" column="0">
-         <widget class="QTreeView" name="treeAtc">
-          <property name="editTriggers">
-           <set>QAbstractItemView::NoEditTriggers</set>
-          </property>
-          <property name="tabKeyNavigation">
-           <bool>true</bool>
-          </property>
-          <property name="showDropIndicator" stdset="0">
+       <layout class="QVBoxLayout" >
+        <property name="leftMargin" >
+         <number>3</number>
+        </property>
+        <property name="topMargin" >
+         <number>3</number>
+        </property>
+        <property name="rightMargin" >
+         <number>3</number>
+        </property>
+        <property name="bottomMargin" >
+         <number>3</number>
+        </property>
+        <item>
+         <widget class="QTreeView" name="treeAtc" >
+          <property name="rootIsDecorated" >
            <bool>false</bool>
           </property>
-          <property name="rootIsDecorated">
-           <bool>false</bool>
-          </property>
-          <property name="uniformRowHeights">
+          <property name="uniformRowHeights" >
            <bool>true</bool>
           </property>
-          <property name="itemsExpandable">
-           <bool>false</bool>
-          </property>
-          <property name="sortingEnabled">
-           <bool>true</bool>
-          </property>
-          <property name="allColumnsShowFocus">
-           <bool>true</bool>
-          </property>
-          <property name="expandsOnDoubleClick">
+          <property name="itemsExpandable" >
            <bool>false</bool>
           </property>
          </widget>
-        </item>
-        <item row="0" column="2">
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <spacer name="verticalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Vertical</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>20</width>
-              <height>40</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbAtis">
-            <property name="text">
-             <string>Show
-&amp;ATIS</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbObservers">
-            <property name="text">
-             <string>Show 
-&amp;OBS</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </widget>
@@ -218,73 +209,42 @@ E009° 37.21'</string>
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBoxArrivals">
-     <property name="title">
+    <widget class="QGroupBox" name="groupBoxArrivals" >
+     <property name="title" >
       <string>Arrivals</string>
      </property>
-     <layout class="QVBoxLayout">
-      <property name="margin">
+     <layout class="QVBoxLayout" >
+      <property name="leftMargin" >
+       <number>3</number>
+      </property>
+      <property name="topMargin" >
+       <number>3</number>
+      </property>
+      <property name="rightMargin" >
+       <number>3</number>
+      </property>
+      <property name="bottomMargin" >
        <number>3</number>
       </property>
       <item>
-       <widget class="QTreeView" name="treeArrivals">
-        <property name="editTriggers">
+       <widget class="QTreeView" name="treeArrivals" >
+        <property name="editTriggers" >
          <set>QAbstractItemView::NoEditTriggers</set>
         </property>
-        <property name="tabKeyNavigation">
-         <bool>true</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
+        <property name="showDropIndicator" stdset="0" >
          <bool>false</bool>
         </property>
-        <property name="rootIsDecorated">
+        <property name="rootIsDecorated" >
          <bool>false</bool>
         </property>
-        <property name="uniformRowHeights">
+        <property name="uniformRowHeights" >
          <bool>true</bool>
         </property>
-        <property name="itemsExpandable">
+        <property name="itemsExpandable" >
          <bool>false</bool>
         </property>
-        <property name="sortingEnabled">
+        <property name="sortingEnabled" >
          <bool>true</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-        <property name="expandsOnDoubleClick">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QTreeView" name="treeDepartures">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>true</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <property name="uniformRowHeights">
-         <bool>true</bool>
-        </property>
-        <property name="itemsExpandable">
-         <bool>false</bool>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-        <property name="expandsOnDoubleClick">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -292,42 +252,36 @@ E009° 37.21'</string>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBoxDepartures">
-     <property name="title">
+    <widget class="QGroupBox" name="groupBoxDepartures" >
+     <property name="title" >
       <string>Departures</string>
      </property>
-     <layout class="QVBoxLayout">
-      <property name="margin">
+     <layout class="QVBoxLayout" >
+      <property name="leftMargin" >
+       <number>3</number>
+      </property>
+      <property name="topMargin" >
+       <number>3</number>
+      </property>
+      <property name="rightMargin" >
+       <number>3</number>
+      </property>
+      <property name="bottomMargin" >
        <number>3</number>
       </property>
       <item>
-       <widget class="QTreeView" name="treeDepartures">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>true</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
+       <widget class="QTreeView" name="treeDepartures" >
+        <property name="rootIsDecorated" >
          <bool>false</bool>
         </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <property name="uniformRowHeights">
+        <property name="uniformRowHeights" >
          <bool>true</bool>
         </property>
-        <property name="itemsExpandable">
+        <property name="itemsExpandable" >
          <bool>false</bool>
         </property>
-        <property name="sortingEnabled">
+        <property name="sortingEnabled" >
          <bool>true</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-        <property name="expandsOnDoubleClick">
-         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -335,47 +289,27 @@ E009° 37.21'</string>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="_4">
+    <layout class="QHBoxLayout" >
      <item>
-      <widget class="QPushButton" name="buttonShowOnMap">
-       <property name="toolTip">
-        <string>Center Map and zoom in on this Airport</string>
+      <widget class="QPushButton" name="buttonShowOnMap" >
+       <property name="text" >
+        <string>Show on Map</string>
        </property>
-       <property name="text">
-        <string>Show on &amp;Map</string>
-       </property>
-       <property name="shortcut">
+       <property name="shortcut" >
         <string>S</string>
        </property>
-       <property name="autoDefault">
+       <property name="autoDefault" >
         <bool>false</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pbMetar">
-       <property name="toolTip">
-        <string>Will be displayed in the Metar Decoder Widget</string>
+      <widget class="QPushButton" name="btnClose" >
+       <property name="text" >
+        <string>Close</string>
        </property>
-       <property name="text">
-        <string>Get M&amp;ETAR</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="cbPlotRoutes">
-       <property name="toolTip">
-        <string>Also accessible by right click on the airport label. (Uses Navigation Database if available)</string>
-       </property>
-       <property name="text">
-        <string>Plot &amp;Routes</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Close</set>
+       <property name="shortcut" >
+        <string>Esc</string>
        </property>
       </widget>
      </item>
@@ -383,42 +317,37 @@ E009° 37.21'</string>
    </item>
   </layout>
  </widget>
- <tabstops>
-  <tabstop>treeArrivals</tabstop>
-  <tabstop>treeDepartures</tabstop>
-  <tabstop>buttonShowOnMap</tabstop>
- </tabstops>
  <resources/>
  <connections>
+  <connection>
+   <sender>btnClose</sender>
+   <signal>clicked()</signal>
+   <receiver>AirportDetails</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>469</x>
+     <y>604</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>316</x>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
   <connection>
    <sender>buttonShowOnMap</sender>
    <signal>clicked()</signal>
    <receiver>AirportDetails</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>105</x>
-     <y>581</y>
+    <hint type="sourcelabel" >
+     <x>180</x>
+     <y>547</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>361</x>
      <y>281</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>clicked(QAbstractButton*)</signal>
-   <receiver>AirportDetails</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>776</x>
-     <y>565</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>742</x>
-     <y>343</y>
     </hint>
    </hints>
   </connection>

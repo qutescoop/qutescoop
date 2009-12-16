@@ -23,270 +23,218 @@
 #include "Settings.h"
 
 Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
-    Client(stringList, whazzup)
+	Client(stringList, whazzup)
 {
-    frequency = getField(stringList, 4);
-    facilityType = getField(stringList, 18).toInt();
-    if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
+	frequency = getField(stringList, 4);
+	facilityType = getField(stringList, 18).toInt();
+	visualRange = getField(stringList, 19).toInt();
+	atisMessage = getField(stringList, 35);
+	timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddhhmmss");
 
-    visualRange = getField(stringList, 19).toInt();
-    atisMessage = getField(stringList, 35);
-    timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddHHmmss");
+	QStringList atisLines = atisMessage.split("^ง");
+	if(atisLines.size() >= 1) {
+		voiceServer = atisLines[0];
+		QString atis = "";
+		for(int i = 1; i < atisLines.size(); i++) {
+			if(i > 1) atis += "<br>";
+			atis += atisLines[i];
+		}
+		atisMessage = atis;
+	}
 
-    QStringList atisLines = atisMessage.split(QString::fromUtf8("^ยง")); // needed due to source encoded in UTF8 - found after some headache...
-    if(atisLines.size() >= 1) {
-        voiceServer = atisLines[0];
-        QString atis = "";
-        for(int i = 1; i < atisLines.size(); i++) {
-            if(i > 1) atis += "<br>";
-            atis += atisLines[i];
-        }
-        atisMessage = atis;
-    }
-
-    // do some magic for Controller Info like "online until"...
-    QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?", Qt::CaseInsensitive);
-    if (rxOnlineUntil.indexIn(atisMessage) > 0) {
-        //fixme
-        QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
-        if(found.isValid()) {
-            if (qAbs(found.secsTo(whazzup->timestamp().time())) > 60*60 * 12) // e.g. now its 2200z, and he says "online until 0030z", allow for up to 12 hours
-                assumeOnlineUntil = QDateTime(whazzup->timestamp().date().addDays(1), found, Qt::UTC);
-            else
-                assumeOnlineUntil = QDateTime(whazzup->timestamp().date(), found, Qt::UTC);
-        }
-        qDebug() << "Found" << label << "to be online until" << assumeOnlineUntil << "(Controller Info)";
-    }
-
-
-    QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
-    QString icao = this->getCenter();
-    sector = 0; // make this bulletproof as we get crashes around here
-    if(icao.isNull() || icao.isEmpty()) {
-        sector = 0;
-    } else {
-        while(!sectors.contains(icao) && !icao.isEmpty()) {
-            int p = icao.lastIndexOf('_');
-            if(p == -1) {
-                qDebug() << "Unknown FIR\t" << icao << "\tPlease provide sector information if you can";
-                icao = "";
-                continue;
-            }
-            else {
-                icao = icao.left(p);
-            }
-        }
-        if(!icao.isEmpty() && sectors.contains(icao)) {
-            this->sector = sectors[icao];
-        }
-    }
+	fir = 0;
 }
 
 QString Controller::facilityString() const {
-    switch(facilityType) {
-    case 0: return "Observer";
-    case 1: return "Staff";
-    case 2: return  network == VATSIM? "Delivery": "ATIS";
-    case 3: return "Ground";
-    case 4: return "Tower";
-    case 5: return "App/Dep";
-    case 6: return "Center";
-    case 7: return "Long Range Ctr";
-    }
-    return QString();
+	switch(facilityType) {
+	case 0: return "Observer";
+	case 1: return "Staff";
+	case 2: return "ATIS";
+	case 3: return "Ground";
+	case 4: return "Tower";
+	case 5: return "App/Dep";
+	case 6: return "Center";
+	case 7: return "FSS";
+	}
+	return QString();
 }
 
 QString Controller::getCenter() {
-    if(!isATC())
-        return QString();
+	if(!isATC())
+		return QString();
 
-    QStringList segments = label.split('_');
+	QStringList segments = label.split('_');
 
-    // allow only _FSS* and _CTR*
-    if(!segments.last().startsWith("CTR") && !segments.last().startsWith("FSS"))
-        return QString();
-    segments.removeLast();
+	// allow only _FSS* and _CTR*
+	if(!segments.last().startsWith("CTR") && !segments.last().startsWith("FSS"))
+		return QString();
+	segments.removeLast();
 
-    // ignore _T* and _X* positions
-    if(segments.last().startsWith("T_") || segments.last().startsWith("T1_")
-            || segments.last().startsWith("T2_") || segments.last().startsWith("T3_") ||
-            segments.last().startsWith("X"))
-        return QString();
+	// ignore _T* and _X* positions
+	if(segments.last().startsWith("T_") || segments.last().startsWith("T1_")
+			|| segments.last().startsWith("T2_") || segments.last().startsWith("T3_") ||
+			segments.last().startsWith("X"))
+		return QString();
 
-    // now create LOVV_N from LOVV and N, then return it
-    QString result = segments.first();
-    segments.removeFirst();
-    while(!segments.isEmpty()) {
-        result += "_" + segments.first();
-        segments.removeFirst();
-    }
-    return result;
+	// now create LOVV_N from LOVV and N, then return it
+	QString result = segments.first();
+	segments.removeFirst();
+	while(!segments.isEmpty()) {
+		result += "_" + segments.first();
+		segments.removeFirst();
+	}
+
+	if(NavData::getInstance()->firs().contains(result)) {
+		Fir *f = NavData::getInstance()->firs()[result];
+		lat = f->lat(); // fix my coordinates so that user can find me on the map
+		lon = f->lon();
+	}
+	return result;
 }
 
 QString Controller::getApproach() const {
-    if(!isATC())
-        return QString();
+	if(!isATC())
+		return QString();
 
-    if(!couldBeAtcCallsign()) return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
+	if(!couldBeAtcCallsign()) return QString();
+	QStringList list = label.split('_');
+	if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
+		if(list.first().length() == 3)
+			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+		return list.first();
+	}
 
-    return QString();
+	return QString();
 }
 
 QString Controller::getTower() const {
-    if(!isATC())
-        return QString();
+	if(!isATC())
+		return QString();
 
-    if(!couldBeAtcCallsign()) return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("TWR")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
+	if(!couldBeAtcCallsign()) return QString();
+	QStringList list = label.split('_');
+	if(list.last().startsWith("TWR")) {
+		if(list.first().length() == 3)
+			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+		return list.first();
+	}
 
-    return QString();
+	return QString();
 }
 
 QString Controller::getGround() const {
-    if(!isATC())
-        return QString();
+	if(!isATC())
+		return QString();
 
-    QStringList list = label.split('_');
-    if(list.size() > 3) return QString();
-    if(list.size() == 3 &&
-            (list[1].startsWith("X") || list[1].startsWith("T")))
-        return QString();
+	QStringList list = label.split('_');
+	if(list.size() > 3) return QString();
+	if(list.size() == 3 &&
+			(list[1].startsWith("X") || list[1].startsWith("T")))
+		return QString();
 
-    if(list.last().startsWith("GND")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
+	if(list.last().startsWith("GND")) {
+		if(list.first().length() == 3)
+			return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+		return list.first();
+	}
 
-    return QString();
-}
-
-QString Controller::getDelivery() const {
-    if(!isATC())
-        return QString();
-
-    QStringList list = label.split('_');
-    if(list.size() > 3) return QString();
-    if(list.size() == 3 &&
-            (list[1].startsWith("X") || list[1].startsWith("T")))
-        return QString();
-
-    if(list.last().startsWith("DEL")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
-
-    return QString();
+	return QString();
 }
 
 bool Controller::couldBeAtcCallsign() const {
-    QStringList list = label.split('_');
-    if(list.size() > 4 || list.size() <= 1) return false; // ignore XXXX_A_B_C_D_CTR and bogus
-    if(list.size() == 3 && // ignore LOVV_T_CTR and LOVV_X_CTR
-            (list[1].startsWith("X") || list[1].startsWith("T")))
-        return false;
-    if(list.size() == 4 && // ignore XXXX_X_N_CTR
-            (list[2].startsWith("X") || list[2].startsWith("T")))
-        return false;
+	QStringList list = label.split('_');
+	if(list.size() > 4 || list.size() <= 1) return false; // ignore XXXX_A_B_C_D_CTR and bogus
+	if(list.size() == 3 && // ignore LOVV_T_CTR and LOVV_X_CTR
+			(list[1].startsWith("X") || list[1].startsWith("T")))
+		return false;
+	if(list.size() == 4 && // ignore XXXX_X_N_CTR
+			(list[2].startsWith("X") || list[2].startsWith("T")))
+		return false;
 
-    return true;
+	return true;
 }
 
 void Controller::showDetailsDialog() {
-    ControllerDetails *infoDialog = ControllerDetails::getInstance();
+	ControllerDetails *infoDialog = ControllerDetails::getInstance();
 
-    infoDialog->refresh(this);
-    infoDialog->show();
-    infoDialog->raise();
-    infoDialog->activateWindow();
-    infoDialog->setFocus();
+	infoDialog->refresh(this);
+	infoDialog->show();
+	infoDialog->raise();
+	infoDialog->activateWindow();
+	infoDialog->setFocus();
 }
 
 QString Controller::rank() const {
-    if(network == VATSIM) {
-        switch(rating) {
-        case 0: return QString();
-        case 1: return QString("OBS");
-        case 2: return QString("S1");
-        case 3: return QString("S2");
-        case 4: return QString("S3");
-        case 5: return QString("C1");
-        case 6: return QString("C2");
-        case 7: return QString("C3");
-        case 8: return QString("I1");
-        case 9: return QString("I2");
-        case 10: return QString("I3");
-        case 11: return QString("SUP");
-        case 12: return QString("ADM");
-        default: return QString("unknown:%1").arg(rating);
-        }
-    } else {
-        switch(rating) {
-        case 0: return QString();
-        case 1: return QString("OBS");
-        case 2: return QString("S1");
-        case 3: return QString("S2");
-        case 4: return QString("S3");
-        case 5: return QString("C1");
-        case 6: return QString("C2");
-        case 7: return QString("C3");
-        case 8: return QString("I1");
-        case 9: return QString("I2");
-        case 10: return QString("I3");
-        default: return QString("unknown:%1").arg(rating);
-        }
-    }
+	if(network == VATSIM) {
+		switch(rating) {
+		case 0:
+		case 1: return "OBS"; break;
+		case 2: return "STU"; break;
+		case 3:
+		case 4: return "STU+"; break;
+		case 5: return "CTR"; break;
+		case 6:
+		case 7: return "CTR+"; break;
+		case 8: return "INS"; break;
+		case 9:
+		case 10: return "INS+"; break;
+		default: return "???"; break;
+		}
+	} else {
+		switch(rating) {
+		case 0:
+		case 1: return "OBS"; break;
+		case 2: return "S1"; break;
+		case 3: return "S2"; break;
+		case 4: return "S3"; break;
+		case 5: return "C1"; break;
+		case 6: return "C2"; break;
+		case 7: return "C3"; break;
+		case 8: return "I1"; break;
+		case 9: return "I2"; break;
+		case 10: return "I3"; break;
+		default: return "??"; break;
+		}
+	}
 }
 
 QString Controller::toolTip() const {
-    QString r = rank();
-    QString result = label + " (";
-    if(!isObserver() && !frequency.isEmpty()) {
-        result += frequency + ", ";
-    }
-    result += realName;
-    if(!r.isEmpty()) result += ", " + r;
-    result += ")";
-    return result;
+	QString r = rank();
+	QString result = label + " (";
+	if(!isObserver() && !frequency.isEmpty()) {
+		result += frequency + ", ";
+	}
+	result += realName;
+	if(!r.isEmpty()) result += ", " + r;
+	result += ")";
+	return result;
 }
 
 QString Controller::mapLabel() const {
-    if(label.endsWith("_CTR")) // hack to make _CTR labels smaller
-        return label.left(label.length() - 4);
-    return label;
+	if(label.endsWith("_CTR")) // hack to make _CTR labels smaller
+		return label.left(label.length() - 4);
+	return label;
 }
 
 QString Controller::voiceLink() const {
-    switch(Settings::voiceType()) {
-        case Settings::TEAMSPEAK: {
-            QStringList serverChannel = voiceServer.split('/');
-            return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
-                .arg(serverChannel.first())
-                .arg(Settings::voiceCallsign())
-                .arg(Settings::voiceUser()).arg(Settings::voicePassword())
-                .arg(serverChannel.last());
-        }
+	switch(Settings::voiceType()) {
+		case Settings::TEAMSPEAK: {
+			QStringList serverChannel = voiceServer.split('/');
+			return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
+				.arg(serverChannel.first())
+				.arg(Settings::voiceCallsign())
+				.arg(Settings::voiceUser()).arg(Settings::voicePassword())
+				.arg(serverChannel.last());
+		}
 
-        case Settings::VRC:
-            // insert something useful here - I dont know how vatsim voice works.
-            // should return something like vrc://server?user=user ...
-            // ...or something else that can be passed to system(). See ControllerDetails.cpp on how this is used
-            return QString();
+		case Settings::VRC:
+			// insert something useful here - I dont know how vatsim voice works.
+			// should return something like vrc://server?user=user ...
+			// ...or something else that can be passed to system(). See ControllerDetails.cpp on how this is used
+			return QString();
 
-        case Settings::NONE:
-        default:
-            return QString();
-    }
+		case Settings::NONE:
+		default:
+			return QString();
+	}
 }

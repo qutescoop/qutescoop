@@ -51,6 +51,7 @@ void Airac::addFix(Waypoint* fix) {
 
 void Airac::readFixes(const QString& directory) {
 	waypointMap.clear();
+	qDebug() << "reading fixes from file" << (directory + "/default data/earth_fix.dat") << "...";
 	FileReader fr(directory + "/default data/earth_fix.dat");
 	while(!fr.atEnd()) {
 		QString line = fr.nextLine().trimmed();
@@ -63,11 +64,12 @@ void Airac::readFixes(const QString& directory) {
 
 		addFix(wp);
 	}
-    qDebug() << "Read fixes from\t" << (directory + "/default data/earth_fix.dat") << "-" << waypointMap.size() << "imported";
+	qDebug() << "done loading waypoints:" << waypointMap.size() << "names";
 }
 
 void Airac::readNavaids(const QString& directory) {
 	navaidMap.clear();
+	qDebug() << "reading fixes from file" << (directory + "/default data/earth_nav.dat") << "...";
 	FileReader fr(directory + "/default data/earth_nav.dat");
 	while(!fr.atEnd()) {
 		QString line = fr.nextLine().trimmed();
@@ -82,13 +84,14 @@ void Airac::readNavaids(const QString& directory) {
 		list.append(nav);
 		navaidMap[nav->label] = list;
 	}
-    qDebug() << "Read navaids from\t" << (directory + "/default data/earth_nav.dat") << "-" << navaidMap.size() << "imported";
+	qDebug() << "done loading navaids:" << navaidMap.size() << "names";
 }
 
 void Airac::readAirways(const QString& directory) {
 	bool ok;
 	int segments = 0;
 
+	qDebug() << "reading airways from file" << (directory + "/default data/earth_awy.dat") << "...";
 	FileReader fr(directory + "/default data/earth_awy.dat");
 	while(!fr.atEnd()) {
 		QString line = fr.nextLine().trimmed();
@@ -151,6 +154,8 @@ void Airac::readAirways(const QString& directory) {
 		}
 	}
 
+	qDebug() << "sorting airways...";
+
 	QHash<QString, QList<Airway*> >::iterator iter;
 	for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
 		QList<Airway*>& list = iter.value();
@@ -160,7 +165,8 @@ void Airac::readAirways(const QString& directory) {
 		list.clear();
 		list += sorted;
 	}
-    qDebug() << "Read airways from\t" << (directory + "/default data/earth_awy.dat") << "-" << airwayMap.size() << "airways," << segments << "segments imported and sorted";
+
+	qDebug() << "done loading airways:" << airwayMap.size() << "names," << segments << "segments";
 }
 
 Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double maxDist) const {
@@ -255,6 +261,8 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 
 	QStringList workingList = plan;
 
+	qDebug() << "resolving" << plan;
+
 	// find a starting point
 	Waypoint* currPoint = getNextWaypoint(workingList, lat, lon);
 	if(currPoint == 0) return result;
@@ -298,12 +306,12 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
 		}
 	}
 
-    QString debugStr;
+	QString debugStr = "resolved to: ";
 	for(int i = 0; i < result.size(); i++) {
 		if(i>0) debugStr += "-";
 		debugStr += result[i]->label;
 	}
-    qDebug() << "Resolved\t" << plan << "\nto\t" << debugStr;
+	qDebug() << debugStr;
 
 	return result;
 }

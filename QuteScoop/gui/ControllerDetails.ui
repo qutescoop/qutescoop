@@ -1,73 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>ControllerDetails</class>
- <widget class="QDialog" name="ControllerDetails">
-  <property name="geometry">
+ <widget class="QDialog" name="ControllerDetails" >
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
     <width>442</width>
-    <height>294</height>
+    <height>315</height>
    </rect>
   </property>
-  <property name="windowTitle">
+  <property name="windowTitle" >
    <string>Dialog</string>
   </property>
-  <property name="windowIcon">
-   <iconset resource="Resources.qrc">
-    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
-  </property>
-  <layout class="QVBoxLayout">
-   <property name="margin">
+  <layout class="QVBoxLayout" >
+   <property name="leftMargin" >
+    <number>6</number>
+   </property>
+   <property name="topMargin" >
+    <number>6</number>
+   </property>
+   <property name="rightMargin" >
+    <number>6</number>
+   </property>
+   <property name="bottomMargin" >
     <number>6</number>
    </property>
    <item>
-    <widget class="QGroupBox" name="groupBox">
-     <property name="title">
+    <widget class="QGroupBox" name="groupBox" >
+     <property name="title" >
       <string>Controller Information</string>
      </property>
-     <layout class="QVBoxLayout">
-      <property name="margin">
+     <layout class="QVBoxLayout" >
+      <property name="leftMargin" >
+       <number>6</number>
+      </property>
+      <property name="topMargin" >
+       <number>6</number>
+      </property>
+      <property name="rightMargin" >
+       <number>6</number>
+      </property>
+      <property name="bottomMargin" >
        <number>6</number>
       </property>
       <item>
-       <widget class="QLabel" name="lblControllerInfo">
-        <property name="text">
-         <string>&lt;strong&gt;ATC: C3 Donald Fauntleroy Duck&lt;/strong&gt;&lt;br&gt;On IVANIT for 01:23, IvAc 1.2.3</string>
+       <widget class="QLabel" name="lblControllerInfo" >
+        <property name="text" >
+         <string>&lt;strong>ATC: C3 Donald Fauntleroy Duck&lt;/strong>&lt;br>On IVANIT for 01:23, IvAc 1.2.3</string>
         </property>
-        <property name="alignment">
+        <property name="alignment" >
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
         </property>
-        <property name="openExternalLinks">
+        <property name="openExternalLinks" >
          <bool>true</bool>
         </property>
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout">
+       <layout class="QHBoxLayout" >
         <item>
-         <widget class="QLabel" name="lblStationInformatoin">
-          <property name="text">
-           <string>Approach on frequency &lt;strong&gt;123.45&lt;/strong&gt;&lt;br&gt;Voice: de.ts.ivao.aero/LOVV_CTR</string>
+         <widget class="QLabel" name="lblStationInformatoin" >
+          <property name="text" >
+           <string>Approach on frequency &lt;strong>123.45&lt;/strong>&lt;br>Voice: de.ts.ivao.aero/LOVV_CTR</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="btnJoinChannel">
-          <property name="text">
+         <widget class="QPushButton" name="btnJoinChannel" >
+          <property name="text" >
            <string>Join Channel</string>
           </property>
-          <property name="flat">
+          <property name="flat" >
            <bool>false</bool>
           </property>
          </widget>
         </item>
         <item>
          <spacer>
-          <property name="orientation">
+          <property name="orientation" >
            <enum>Qt::Horizontal</enum>
           </property>
-          <property name="sizeHint" stdset="0">
+          <property name="sizeHint" >
            <size>
             <width>40</width>
             <height>20</height>
@@ -81,84 +94,84 @@
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
+    <widget class="QGroupBox" name="groupBox_2" >
+     <property name="title" >
       <string>ATIS</string>
      </property>
-     <layout class="QVBoxLayout">
-      <property name="margin">
+     <layout class="QVBoxLayout" >
+      <property name="leftMargin" >
+       <number>6</number>
+      </property>
+      <property name="topMargin" >
+       <number>6</number>
+      </property>
+      <property name="rightMargin" >
+       <number>6</number>
+      </property>
+      <property name="bottomMargin" >
        <number>6</number>
       </property>
       <item>
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+       <widget class="QLabel" name="lblAtis" >
+        <property name="text" >
+         <string>TextLabel</string>
         </property>
-        <property name="widgetResizable">
+        <property name="alignment" >
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <property name="wordWrap" >
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>410</width>
-           <height>88</height>
-          </rect>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QLabel" name="lblAtis">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
+        <property name="textInteractionFlags" >
+         <set>Qt::LinksAccessibleByMouse|Qt::NoTextInteraction|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        </property>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <spacer>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" >
+      <size>
+       <width>422</width>
+       <height>61</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" >
      <item>
-      <widget class="QPushButton" name="buttonShowOnMap">
-       <property name="text">
+      <widget class="QPushButton" name="buttonShowOnMap" >
+       <property name="text" >
         <string>&amp;Show on Map</string>
        </property>
-       <property name="shortcut">
+       <property name="shortcut" >
         <string>S</string>
        </property>
-       <property name="autoDefault">
+       <property name="autoDefault" >
         <bool>false</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="buttonAddFriend">
-       <property name="text">
+      <widget class="QPushButton" name="buttonAddFriend" >
+       <property name="text" >
         <string>Add Friend</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QDialogButtonBox" name="buttonBox">
-       <property name="standardButtons">
-        <set>QDialogButtonBox::Close</set>
+      <widget class="QPushButton" name="buttonClose" >
+       <property name="text" >
+        <string>Close</string>
+       </property>
+       <property name="shortcut" >
+        <string>Esc</string>
        </property>
       </widget>
      </item>
@@ -166,39 +179,37 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
+  <connection>
+   <sender>buttonClose</sender>
+   <signal>clicked()</signal>
+   <receiver>ControllerDetails</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>293</x>
+     <y>271</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>199</x>
+     <y>149</y>
+    </hint>
+   </hints>
+  </connection>
   <connection>
    <sender>buttonShowOnMap</sender>
    <signal>clicked()</signal>
    <receiver>ControllerDetails</receiver>
    <slot>close()</slot>
    <hints>
-    <hint type="sourcelabel">
-     <x>111</x>
-     <y>305</y>
+    <hint type="sourcelabel" >
+     <x>105</x>
+     <y>261</y>
     </hint>
-    <hint type="destinationlabel">
+    <hint type="destinationlabel" >
      <x>210</x>
      <y>138</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>clicked(QAbstractButton*)</signal>
-   <receiver>ControllerDetails</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>387</x>
-     <y>293</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>391</x>
-     <y>236</y>
     </hint>
    </hints>
   </connection>

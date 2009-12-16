@@ -38,28 +38,20 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 	if(role == Qt::DisplayRole) {
 		MapObject* o = content[index.row()];
 		switch(index.column()) {
-            case 0: return o->toolTip(); break;
+		case 0: return o->toolTip(); break;
 		}
 	}
-
-    if(role == Qt::FontRole) {
-		QFont result;
-        //prefiled italic
-        if(dynamic_cast<Pilot*>(content[index.row()])) {
-            Pilot *p = dynamic_cast<Pilot*>(content[index.row()]);
-            if(p->flightStatus() == Pilot::PREFILED) {
-				result.setItalic(true);
-            }
-        }
-        
-        //friends bold
+	
+	if(role == Qt::FontRole) {
 		Client *c = dynamic_cast<Client*>(content[index.row()]);
 		if(c != 0) {
 			if(c->isFriend()) {
+				QFont result;
 				result.setBold(true);
+				return result;
 			}
 		}
-		return result;
+		return QFont();
 	}
 	
 	return QVariant();
@@ -82,13 +74,13 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 	return QString("%1 Results").arg(content.size());
 }
 
-void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center
-    double lat = content[index.row()]->lat;
-    double lon = content[index.row()]->lon;
-
-    Window::getInstance()->showOnMap(lat, lon);
+void SearchResultModel::modelDoubleClicked(const QModelIndex& index) {
+	content[index.row()]->showDetailsDialog();
 }
 
-void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the Details, as is the case on the map
-    content[index.row()]->showDetailsDialog();
+void SearchResultModel::modelClicked(const QModelIndex& index) {
+	double lat = content[index.row()]->lat;
+	double lon = content[index.row()]->lon;
+	
+	Window::getInstance()->showOnMap(lat, lon);
 }
