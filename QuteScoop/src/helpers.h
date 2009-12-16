@@ -25,10 +25,11 @@
 // version information
 
 // VERSION_INT is used as QMainWindow::saveState() and restoreState()
-#define VERSION_INT         114
+#define VERSION_INT     114
+#define CVS_REVISION $Revision$
 
 #define VERSION_NUMBER "1.0.3 alpha 8"
-#define VERSION_STRING QString("QuteScoop %1").arg(VERSION_NUMBER)
+#define VERSION_STRING QString("QuteScoop %1 - Rev. %2").arg(VERSION_NUMBER, CVS_REVISION)
 
 // mathematical constants
 const GLdouble Pi = 3.14159265358979323846;
