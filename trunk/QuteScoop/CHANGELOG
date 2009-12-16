@@ -1,0 +1,157 @@
+wanted (not yet implemented):
+* control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)
+* bookings get not downloaded if they are not needed (code change, hopefully works in the end...)
+
+new in last alpha: 1.0.3-jonasmarkus-alpha-8
+
+QuteScoop Changelog - Version 1.0.3 jonas alpha
+
+REMARKS:
+* Please provide feedback how you like the ToolBoxes or if we should change to Tabs (in List Clients and Plan Flight)
+* We still need a way to map EDBB_APP -> EDDB + EDDT and so on
+* Next big thing: Replay mode (replay downloaded Whazzups, save a picture of each to allow creating videos from events et al)
+
+changed:
+* Markus' great code to identify ATC sectors above an airport!
+* Symbol for Delivery
+* Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
+* Increased max. possible value for shown labels (in preferences)
+* Render dashed lines in front of/behind plane also in flightplan Plot mode
+* Replace Messageboxes by Statusbar-Messages to allow a less intrusive and smoother user experience that does not need any interaction - thought for running whole nights
+
+added:
+* Show Network (and Voice for VATSIM) Servers and ping them
+* Respect the update interval that the Whazzup server transmits
+* Show ATC bookings in list (VATSIM only so far)
+* Do Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
+    * See prefiled flights in arrival and departure lists and in Time Warp on the map as faked real pilots
+    * Allow "real time"-prediction
+    * Add Controllers to prediction that have "ONLINE UNTIL 1234Z" et al in their Controller Info (ATIS)
+* List, search and filter all connected clients and show distance from present position: look for supervisors etc.
+* Remember / recall Multiple Map Positions
+* Save all downloaded data in "./downloaded" - to be used in replay mode (not yet implemented)
+* Show OpenGL debug messages and be able to set OpenGL parameters through own config file
+* Show inactive airports when zoomed in (switchable via Menu)
+* Filter airport traffic to only show traffic in the vicinity of airport (configurable)
+* Show rings of airport congestion around airports (configurable)
+* Show _CTR and _FSS stations as ATC in Airport Information, if their sector boundaries are somewhat near to the airport (experimental)
+* Doubleclick to center map, right or left drag to pan
+* Press Key commands for pan and zoom
+* Remember and recall 7 Map Positions
+* Request routes from route providers. So far only vroute is integrated, but all major route databases have been asked (SimRoutes, asalink, VATroute, IVAO-DB).
+    * Requested or manually enterred routes can be plotted onto the map using the free XPlane-NavDatabase
+* Allow to disable the front/behind part of plotted routes
+* Show flight delay as difference from filed ETA to calculated ETA
+* Zoom with butons on the status bar (requested by tablet PC user)
+* Use "timeout bar" to select first item on map click in crowded areas
+* Show _DEL in Airport Information
+* Get METAR direct from Airport Information
+* See ToolTips on most buttons and objects
+
+fixed:
+* Facilitytype for ATIS (VATSIM)
+* Restore Docks correctly on window minimize/restore
+* Allow to disable border lines by setting strength to 0px
+* Show map labels of busy airports in favor of less busier ones
+* Labels are less conservative in decluttering and use the screen better
+* Show _FSS stations (by faking the facilityType which is not reported correctly in WhazzUp data for VATSIM)
+* Preferences dialog fits on a 1280x800 screen
+* Put data location in the program path (./data), not /usr/share on Unix, may be overridden through option general/dataDirectory as before
+* Set Zoom In/Out to CTRL+/- as F11 got obscured on Linux and was not applicable on Mac as well
+
+QuteScoop Changelog - Version 1.0.2
+
+* Fixed a VATSIM display bug introduced by a new blank line. Patch was
+  submitted by Jonas Eberle - thanks!
+
+QuteScoop Changelog - Version 1.0.2 alpha
+
+* Loading of navigation database in the XPlane 9 format. This is a free
+  database that can be downloaded from http://data.x-plane.com
+* Plotting of flight route according to the filed flight plan
+* No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are filtered.
+
+QuteScoop Changelog - Version 1.0.1
+
+* Improved support for 3rd party networks (example MCDU)
+
+QuteScoop Changelog - up to Version 1.0.0
+
+Iteration 1
+* Create a work environment based on Eclipse and QT4 on Mac
+* Create a basic application that shows some OpenGL content and a menue.
+* Show a globe in the OpenGL window (port code from Dolomynum)
+* Parse whazzup.txt
+* Show aircraft positions from whazzup.txt on the globe
+
+Iteration 2
+* Parse FIR boundaries
+* Show ATC from whazzup.txt on the globe
+* Show aircraft labels
+
+Iteration 3
+* read airport data
+* show online TWR/APP on map
+* Show airport labels if staffed or aircraft depart/arrive
+* show ATC label (for centers)
+* Port to Linux
+
+Iteration 4
+* fix the memory leak
+* fix the framerate
+* read firdisplay.sup
+* Download whazzup from IVAO + VATSIM
+* Download whazzup.txt from user-defined networks (requires a status.txt for now)
+
+Iteration 5
+* Display basic Information about clients
+* Display information popup window when clicking on a pilot
+* Allow to click on map, show popup with nearby pilots in a popup
+
+Iteration 6
+* Allow to click on map, show popup with nearby ATC/pilots/airports
+* Display airport details window
+* Display tooltip for center positions at the label
+* automatic download in configurable intervals
+* Make it work on windows
+
+Iteration 7
+* Create public SVN repository of the source code
+* Crashes sometimes with VATSIM data.
+* Create a user option to read firdisplay.sup or not (no matter if the file is there or not)
+* implement search
+
+Iteration 8
+* Make all tables sortable by any column
+* User can click anywhere on a text label to display information
+* fix broken sectors (self-intersecting polygons, FIRs not being displayed)
+* Improve labelling performance (does no longer display overlapping text labels)
+* Other stuff (that I was not supposed to do, but did anyways)
+
+Iteration 9
+* Display flight route (line from departure to aircraft to destination) (right-click on any airport or aircraft to toggle flight paths)
+* Download and show METAR for airports
+* Display percentage of flight completed in pilot details window
+
+Iteration 10
+* Configurable Colors
+* Configurable Fonts
+* Allow user to configure colors for everything
+* User can configure fonts, font sizes and colors
+* User can configure line smoothing and thickness for all kinds of lines
+* User can configure default map starting point (location + zoom)
+* Check for new program versions online
+
+Release Candidate 1
+* Friend List
+
+Release Candidate 5
+* Added "Join Channel" button in controller details (currently for IVAO, should be simple to adapt for VATSIM)
+* Detail windows do not appear in the windows taskbar any more
+* Departure and destination show up in this order in pilot window
+
+Release 1.0.0
+* Made update check + version feedback optional in the preferences dialog
+* Minor fix in ATIS decoding (did not work with voice link when ATIS contained one line only)
+* FIR border line strength setting had no effect
+* VATSIM VVL support can not be added due to their restrictive licensing.
