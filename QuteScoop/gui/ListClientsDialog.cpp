@@ -28,9 +28,9 @@
 
 ListClientsDialog *listClientsDialog = 0;
 
-ListClientsDialog *ListClientsDialog::getInstance() {
+ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance) {
     if(listClientsDialog == 0)
-        listClientsDialog = new ListClientsDialog();
+        if (createIfNoInstance) listClientsDialog = new ListClientsDialog();
     return listClientsDialog;
 }
 

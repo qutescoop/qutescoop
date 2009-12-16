@@ -28,7 +28,7 @@
 class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
     Q_OBJECT
 public:
-    static BookedAtcDialog *getInstance();
+    static BookedAtcDialog *getInstance(bool createIfNoInstance = true);
     void refresh();
 
 signals:

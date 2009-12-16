@@ -29,7 +29,7 @@ class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
     Q_OBJECT
 
 public:
-    static PreferencesDialog *getInstance();
+    static PreferencesDialog *getInstance(bool createIfNoInstance = true);
 
 private slots:
     //

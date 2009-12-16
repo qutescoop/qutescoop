@@ -28,9 +28,9 @@
 
 BookedAtcDialog *bookedAtcDialog = 0;
 
-BookedAtcDialog *BookedAtcDialog::getInstance() {
+BookedAtcDialog *BookedAtcDialog::getInstance(bool createIfNoInstance) {
     if(bookedAtcDialog == 0)
-        bookedAtcDialog = new BookedAtcDialog();
+        if (createIfNoInstance) bookedAtcDialog = new BookedAtcDialog();
     return bookedAtcDialog;
 }
 
@@ -73,7 +73,7 @@ BookedAtcDialog::BookedAtcDialog() :
 }
 
 void BookedAtcDialog::refresh() {
-	if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
+    if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
         emit needBookings();
 
     bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());

@@ -26,19 +26,19 @@
 
 class ControllerDetails: public ClientDetails, private Ui::ControllerDetails
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	static ControllerDetails* getInstance();
-	void refresh(Controller* controller = 0);
+    static ControllerDetails* getInstance(bool createIfNoInstance = true);
+    void refresh(Controller* controller = 0);
 
 private slots:
-	void on_buttonAddFriend_clicked();
-	void on_btnJoinChannel_clicked();
-	
+    void on_buttonAddFriend_clicked();
+    void on_btnJoinChannel_clicked();
+
 private:
-	ControllerDetails();
-	Controller* controller;
+    ControllerDetails();
+    Controller* controller;
 };
 
 #endif /*CONTROLLERDETAILS_H_*/

@@ -29,9 +29,9 @@
 
 AirportDetails *airportDetailsInstance = 0;
 
-AirportDetails *AirportDetails::getInstance() {
+AirportDetails *AirportDetails::getInstance(bool createIfNoInstance) {
     if(airportDetailsInstance == 0)
-        airportDetailsInstance = new AirportDetails();
+        if (createIfNoInstance) airportDetailsInstance = new AirportDetails();
     return airportDetailsInstance;
 }
 

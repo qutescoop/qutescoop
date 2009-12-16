@@ -174,7 +174,7 @@ Window::Window(QWidget *parent) :
 
     connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
     connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
-	connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
+    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
     connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
 
@@ -430,13 +430,13 @@ void Window::closeEvent(QCloseEvent *event) {
 }
 
 void Window::on_actionHideAllWindows_triggered() {
-    PilotDetails::getInstance()->close();
-    ControllerDetails::getInstance()->close();
-    AirportDetails::getInstance()->close();
-    PreferencesDialog::getInstance()->close();
-    PlanFlightDialog::getInstance()->close();
-    BookedAtcDialog::getInstance()->close();
-    ListClientsDialog::getInstance()->close();
+    if (PilotDetails::getInstance(false) != 0) PilotDetails::getInstance()->close();
+    if (ControllerDetails::getInstance(false) != 0) ControllerDetails::getInstance()->close();
+    if (AirportDetails::getInstance(false) != 0) AirportDetails::getInstance()->close();
+    if (PreferencesDialog::getInstance(false) != 0) PreferencesDialog::getInstance()->close();
+    if (PlanFlightDialog::getInstance(false) != 0) PlanFlightDialog::getInstance()->close();
+    if (BookedAtcDialog::getInstance(false) != 0) BookedAtcDialog::getInstance()->close();
+    if (ListClientsDialog::getInstance(false) != 0) ListClientsDialog::getInstance()->close();
 
     if(metarDecoderDock->isFloating())
         metarDecoderDock->hide();

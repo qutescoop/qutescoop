@@ -26,24 +26,24 @@
 
 class PilotDetails : public ClientDetails, private Ui::PilotDetails
 {
-	Q_OBJECT
-	
+    Q_OBJECT
+
 public:
-	static PilotDetails* getInstance();
-	
-	virtual void refresh(Pilot *pilot = 0);
+    static PilotDetails* getInstance(bool createIfNoInstance = true);
+
+    virtual void refresh(Pilot *pilot = 0);
 
 private slots:
     void on_cbPlotRoute_toggled(bool checked);
     void on_buttonAlt_clicked();
     void on_buttonDest_clicked();
-	void on_buttonFrom_clicked();
-	void on_buttonAddFriend_clicked();
-	
-private:
-	PilotDetails();
+    void on_buttonFrom_clicked();
+    void on_buttonAddFriend_clicked();
 
-	Pilot *pilot;
+private:
+    PilotDetails();
+
+    Pilot *pilot;
 };
 
 #endif /*PILOTDETAILS_H_*/
