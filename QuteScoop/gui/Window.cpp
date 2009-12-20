@@ -192,7 +192,7 @@ Window::Window(QWidget *parent) :
 
     // restore saved states
     glWidget->restorePosition(1);
-    if(restoreState(Settings::getSavedState(), VERSION_INT)) {
+    if(restoreState(Settings::getSavedState())) { //was: VERSION_INT
         QSize savedSize = Settings::getSavedSize();
         if(!savedSize.isNull()) resize(savedSize);
 
@@ -419,7 +419,7 @@ void Window::performSearch() {
 }
 
 void Window::closeEvent(QCloseEvent *event) {
-    Settings::saveState(saveState(VERSION_INT));
+    Settings::saveState(saveState()); //was: VERSION_INT
     Settings::saveSize(size());
     Settings::savePosition(pos());
 

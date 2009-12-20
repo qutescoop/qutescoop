@@ -23,10 +23,10 @@
 #include <QGLWidget>
 
 // version information
-
-// VERSION_INT is used as QMainWindow::saveState() and restoreState()
-#define VERSION_INT     114
-#define CVS_REVISION "$Revision$"
+//#define VERSION_INT 114 // VERSION_INT is used as QMainWindow::saveState() and restoreState()
+#define CVS_REVISION "$Revision$" // Gets set automatically on commit of THIS file.
+                                        // This is just the revision of THIS file, not the whole working copy.
+                                        // Well, better than nothing. No working copy revision information is available cross-platform :(
 
 #define VERSION_NUMBER "1.0.3 alpha 8"
 #define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
