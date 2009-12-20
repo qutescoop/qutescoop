@@ -16,6 +16,8 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include "time.h"
+
 #include <QHttp>
 #include <QDebug>
 #include <QUrl>
@@ -46,7 +48,7 @@ Whazzup::Whazzup() {
     connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
 
     // init random seed to switch between URLs
-    srand(time(NULL));
+    srand(time(0));
 
     downloadTimer = new QTimer(this);
     bookingsTimer = new QTimer(this);
@@ -427,4 +429,5 @@ QList<QPair<QDateTime, QString>*> Whazzup::getDownloadedWhazzups() {
             QDateTime dt = QDateTime::fromString(dtRe.cap(1), "yyyyMMdd-HHmmss");
         }
     }
+    return QList<QPair<QDateTime, QString>*>();
 }
