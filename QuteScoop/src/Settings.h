@@ -30,6 +30,9 @@
 class Settings
 {
 public:
+    static void exportToFile(QString fileName);
+    static void importFromFile(QString fileName);
+
     static void saveState(const QByteArray& state);
     static QByteArray getSavedState();
 
@@ -38,6 +41,9 @@ public:
 
     static void savePosition(const QPoint& pos);
     static QPoint getSavedPosition();
+
+    static bool shootScreenshots();
+    static void setShootScreenshots(bool value);
 
     static int downloadInterval();
     static void setDownloadInterval(int value);

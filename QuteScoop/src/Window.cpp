@@ -84,7 +84,7 @@ Window::Window(QWidget *parent) :
     centralwidget->layout()->addWidget(glWidget);
     qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
             << "\t| version: " << glWidget->format().openGLVersionFlags()
-            << "\nOptions from Config:"
+            << "\nActually applied options (config has options to overwrite):"
             << "\ngl/directrendering" << glWidget->format().directRendering()
             << "\t| gl/doublebuffer" << glWidget->format().doubleBuffer()
             << "\t| gl/stencilbuffer" << glWidget->format().stencil()
@@ -177,6 +177,7 @@ Window::Window(QWidget *parent) :
     connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
     connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
+    actionShootScreenshots->setChecked(Settings::shootScreenshots());
 
     connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
     connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
@@ -321,8 +322,8 @@ void Window::whazzupDownloaded(bool isNew) {
 
         refreshFriends();
 
-        if (actionShootScreenies->isChecked())
-            shootScreenie();
+        if (actionShootScreenshots->isChecked())
+            shootScreenshot();
     }
     downloadWatchdog.stop();
     if(Settings::downloadPeriodically())
@@ -685,6 +686,17 @@ void Window::on_datePredictTime_dateChanged(QDate date)
     warpTimer.stop();
 
     if(cbNoPredict->isChecked()) {
+        qDebug() << "cbNoPredict";
+        QList<QPair<QDateTime, QString>*> downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
+        for (int i=0; i < downloaded.size(); i++) {
+            qDebug() << downloaded[i]->second;
+            if(downloaded[i]->first < selected) {
+                Whazzup::getInstance()->fromFile(downloaded[i]->second);
+                qDebug() << "loading from file: " << downloaded[i]->second;
+                break;
+            }
+        }
     } else {
         QDate newDate;
         // make month change if lastday+ or 0-
@@ -708,11 +720,14 @@ void Window::on_timePredictTime_timeChanged(QTime time)
     warpTimer.stop();
 
     if(cbNoPredict->isChecked()) {
+        qDebug() << "cbNoPredict";
         QList<QPair<QDateTime, QString>*> downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
         QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
         for (int i=0; i < downloaded.size(); i++) {
+            qDebug() << downloaded[i]->second;
             if(downloaded[i]->first < selected) {
                 Whazzup::getInstance()->fromFile(downloaded[i]->second);
+                qDebug() << "loading from file: " << downloaded[i]->second;
                 break;
             }
         }
@@ -895,7 +910,7 @@ void Window::runPredict() {
     runPredictTimer.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
 }
 
-void Window::shootScreenie() {
+void Window::shootScreenshot() {
     // screenshot (only works if QuteScoop Window is shown on top)
     QString filename = QString("screenshots/%1_%2")
               .arg(Settings::downloadNetwork())
@@ -904,4 +919,9 @@ void Window::shootScreenie() {
     pixmap->save(QString("%1.png").arg(filename), "png");
     delete pixmap;
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
+}
+
+void Window::on_actionShootScreenshots_toggled(bool value)
+{
+    Settings::setShootScreenshots(value);
 }

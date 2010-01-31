@@ -1,10 +1,19 @@
 wanted (not yet implemented):
 * control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)
+
+last commit Changelog (1.0.3 alpha 9):
+
+changed
 * bookings get not downloaded if they are not needed (code change, hopefully works in the end...)
+* disabled View/Show All Routes, this often produced a program hang, and I do not think it is important.
+* Make "save screenshots" selection persistent
+* re-organization of directory structure (remove ./gui and put files to ./src)
 
-new in last alpha: 1.0.3-jonasmarkus-alpha-8
+added
+* map special approaches: EDBB -> EDDI, NY -> KLGA
+* import/export settings from/to a .ini file - allows transfer of settings between computers.
 
-QuteScoop Changelog - Version 1.0.3 jonas alpha
+QuteScoop Changelog - Version 1.0.2 - 1.0.3 alpha 8
 
 REMARKS:
 * Please provide feedback how you like the ToolBoxes or if we should change to Tabs (in List Clients and Plan Flight)
@@ -36,7 +45,7 @@ added:
 * Show rings of airport congestion around airports (configurable)
 * Show _CTR and _FSS stations as ATC in Airport Information, if their sector boundaries are somewhat near to the airport (experimental)
 * Doubleclick to center map, right or left drag to pan
-* Press Key commands for pan and zoom
+* Key commands for pan and zoom
 * Remember and recall 7 Map Positions
 * Request routes from route providers. So far only vroute is integrated, but all major route databases have been asked (SimRoutes, asalink, VATroute, IVAO-DB).
     * Requested or manually enterred routes can be plotted onto the map using the free XPlane-NavDatabase

@@ -45,7 +45,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
     }
 
     // do some magic for Controller Info like "online until"...
-    QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?", Qt::CaseInsensitive);
+    QRegExp rxOnlineUntil = QRegExp("(open|close|online|offline|till|until)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?", Qt::CaseInsensitive);
     if (rxOnlineUntil.indexIn(atisMessage) > 0) {
         //fixme
         QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
@@ -55,9 +55,8 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
             else
                 assumeOnlineUntil = QDateTime(whazzup->timestamp().date(), found, Qt::UTC);
         }
-        qDebug() << "Found" << label << "to be online until" << assumeOnlineUntil << "(Controller Info)";
+        //qDebug() << "Found" << label << "to be online until" << assumeOnlineUntil << "(Controller Info)";
     }
-
 
     QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
     QString icao = this->getCenter();
@@ -84,14 +83,14 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 
 QString Controller::facilityString() const {
     switch(facilityType) {
-    case 0: return "Observer";
+    case 0: return "OBS";
     case 1: return "Staff";
-    case 2: return  network == VATSIM? "Delivery": "ATIS";
-    case 3: return "Ground";
-    case 4: return "Tower";
-    case 5: return "App/Dep";
-    case 6: return "Center";
-    case 7: return "Long Range Ctr";
+    case 2: return  network == VATSIM? "DEL": "ATIS";
+    case 3: return "GND";
+    case 4: return "TWR";
+    case 5: return "APP";
+    case 6: return "CTR";
+    case 7: return "FSS";
     }
     return QString();
 }
@@ -132,6 +131,12 @@ QString Controller::getApproach() const {
     if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+
+        // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
+        if(list.first() == "EDBB")
+            return "EDDI"; // map EDBB -> EDDI
+        if(list.first() == "NY")
+            return "KLGA"; // map NY -> KLGA
         return list.first();
     }
 

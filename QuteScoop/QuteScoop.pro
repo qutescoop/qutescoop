@@ -13,20 +13,18 @@
 # along with QuteScoop. If not, see <http://www.gnu.org/licenses/>
 # #####################################################################
 TEMPLATE = app
-FORMS = gui/MainWindow.ui \
-    gui/PilotDetails.ui \
-    gui/ClientSelectionDialog.ui \
-    gui/ControllerDetails.ui \
-    gui/AirportDetails.ui \
-    gui/PreferencesDialog.ui \
-    gui/PlanFlightDialog.ui \
-    gui/BookedAtcDialog.ui \
-    gui/ListClientsDialog.ui
-TARGET =
-DEPENDPATH += ./src \
-    ./gui
-INCLUDEPATH += ./src \
-    ./gui
+FORMS = src/MainWindow.ui \
+    src/PilotDetails.ui \
+    src/ClientSelectionDialog.ui \
+    src/ControllerDetails.ui \
+    src/AirportDetails.ui \
+    src/PreferencesDialog.ui \
+    src/PlanFlightDialog.ui \
+    src/BookedAtcDialog.ui \
+    src/ListClientsDialog.ui
+# DESTDIR = bin/
+# DEPENDPATH += ./src
+INCLUDEPATH += ./src
 MOC_DIR = ./temp
 UI_DIR = ./temp
 OBJECTS_DIR = ./temp
@@ -37,7 +35,7 @@ QT += network \
 
 # CONFIG += debug
 # CONFIG += release
-# CONFIG += warn_off
+CONFIG += warn_off
 mac {
     ICON = gui/Dolomynum.icns
     CONFIG += x86 \
@@ -46,7 +44,7 @@ mac {
 win32:RC_FILE = gui/windowsicon.rc
 
 # Input
-HEADERS += WhazzupData.h \
+HEADERS += src/WhazzupData.h \
     src/Whazzup.h \
     src/Waypoint.h \
     src/Tessellator.h \
@@ -55,7 +53,7 @@ HEADERS += WhazzupData.h \
     src/NavData.h \
     src/NavAid.h \
     src/Metar.h \
-    MapObject.h \
+    src/MapObject.h \
     src/LineReader.h \
     src/helpers.h \
     src/SectorReader.h \
@@ -67,81 +65,83 @@ HEADERS += WhazzupData.h \
     src/Airway.h \
     src/Airport.h \
     src/Airac.h \
-    Window.h \
-    SearchVisitor.h \
-    SearchResultModel.h \
-    PreferencesDialog.h \
-    PlanFlightDialog.h \
-    PilotDetails.h \
-    MetarSearchVisitor.h \
-    MetarModel.h \
-    MapObjectVisitor.h \
-    GLWidget.h \
-    FriendsVisitor.h \
-    ControllerDetails.h \
-    ClientSelectionWidget.h \
-    ClientDetails.h \
-    BookedAtcDialogModel.h \
-    BookedAtcDialog.h \
-    AirportDetailsDeparturesModel.h \
-    AirportDetailsAtcModel.h \
-    AirportDetailsArrivalsModel.h \
-    AirportDetails.h \
+    src/Window.h \
+    src/SearchVisitor.h \
+    src/SearchResultModel.h \
+    src/PreferencesDialog.h \
+    src/PlanFlightDialog.h \
+    src/PilotDetails.h \
+    src/MetarSearchVisitor.h \
+    src/MetarModel.h \
+    src/MapObjectVisitor.h \
+    src/GLWidget.h \
+    src/FriendsVisitor.h \
+    src/ControllerDetails.h \
+    src/ClientSelectionWidget.h \
+    src/ClientDetails.h \
+    src/BookedAtcDialogModel.h \
+    src/BookedAtcDialog.h \
+    src/AirportDetailsDeparturesModel.h \
+    src/AirportDetailsAtcModel.h \
+    src/AirportDetailsArrivalsModel.h \
+    src/AirportDetails.h \
     src/Route.h \
-    gui/PlanFlightRoutesModel.h \
-    gui/BookedAtcSortFilter.h \
+    src/PlanFlightRoutesModel.h \
+    src/BookedAtcSortFilter.h \
     src/helpers.h \
-    gui/ListClientsSortFilter.h \
-    gui/ListClientsDialogModel.h \
-    gui/ListClientsDialog.h \
+    src/ListClientsSortFilter.h \
+    src/ListClientsDialogModel.h \
+    src/ListClientsDialog.h \
     src/Ping.h
-SOURCES += WhazzupData.cpp \
-    Whazzup.cpp \
-    Waypoint.cpp \
-    Tessellator.cpp \
-    Settings.cpp \
-    QuteScoop.cpp \
-    Pilot.cpp \
-    NavData.cpp \
-    NavAid.cpp \
-    Metar.cpp \
-    MapObject.cpp \
-    LineReader.cpp \
-    SectorReader.cpp \
-    Sector.cpp \
-    FileReader.cpp \
-    Controller.cpp \
-    Client.cpp \
-    BookedController.cpp \
-    Airway.cpp \
-    Airport.cpp \
-    Airac.cpp \
-    Window.cpp \
-    SearchVisitor.cpp \
-    SearchResultModel.cpp \
-    PreferencesDialog.cpp \
-    PlanFlightDialog.cpp \
-    PilotDetails.cpp \
-    MetarSearchVisitor.cpp \
-    MetarModel.cpp \
-    GLWidget.cpp \
-    FriendsVisitor.cpp \
-    ControllerDetails.cpp \
-    ClientSelectionWidget.cpp \
-    ClientDetails.cpp \
-    BookedAtcDialogModel.cpp \
-    BookedAtcDialog.cpp \
-    AirportDetailsDeparturesModel.cpp \
-    AirportDetailsAtcModel.cpp \
-    AirportDetailsArrivalsModel.cpp \
-    AirportDetails.cpp \
+SOURCES += src/WhazzupData.cpp \
+    src/Whazzup.cpp \
+    src/Waypoint.cpp \
+    src/Tessellator.cpp \
+    src/Settings.cpp \
+    src/QuteScoop.cpp \
+    src/Pilot.cpp \
+    src/NavData.cpp \
+    src/NavAid.cpp \
+    src/Metar.cpp \
+    src/MapObject.cpp \
+    src/LineReader.cpp \
+    src/SectorReader.cpp \
+    src/Sector.cpp \
+    src/FileReader.cpp \
+    src/Controller.cpp \
+    src/Client.cpp \
+    src/BookedController.cpp \
+    src/Airway.cpp \
+    src/Airport.cpp \
+    src/Airac.cpp \
+    src/Window.cpp \
+    src/SearchVisitor.cpp \
+    src/SearchResultModel.cpp \
+    src/PreferencesDialog.cpp \
+    src/PlanFlightDialog.cpp \
+    src/PilotDetails.cpp \
+    src/MetarSearchVisitor.cpp \
+    src/MetarModel.cpp \
+    src/GLWidget.cpp \
+    src/FriendsVisitor.cpp \
+    src/ControllerDetails.cpp \
+    src/ClientSelectionWidget.cpp \
+    src/ClientDetails.cpp \
+    src/BookedAtcDialogModel.cpp \
+    src/BookedAtcDialog.cpp \
+    src/AirportDetailsDeparturesModel.cpp \
+    src/AirportDetailsAtcModel.cpp \
+    src/AirportDetailsArrivalsModel.cpp \
+    src/AirportDetails.cpp \
     src/Route.cpp \
-    gui/PlanFlightRoutesModel.cpp \
-    gui/BookedAtcSortFilter.cpp \
-    gui/ListClientsSortFilter.cpp \
-    gui/ListClientsDialogModel.cpp \
-    gui/ListClientsDialog.cpp \
+    src/PlanFlightRoutesModel.cpp \
+    src/BookedAtcSortFilter.cpp \
+    src/ListClientsSortFilter.cpp \
+    src/ListClientsDialogModel.cpp \
+    src/ListClientsDialog.cpp \
     src/Ping.cpp
-RESOURCES += Resources.qrc
+RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
-    README
+    README \
+    downloaded/+notes.txt \
+    data/+notes.txt
