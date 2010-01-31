@@ -889,7 +889,7 @@ void PreferencesDialog::on_pbImportFromFile_clicked()
 
 void PreferencesDialog::on_pbExportToFile_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(
+    QString fileName = QFileDialog::getSaveFileName(
             this, tr("Export to File"),
             QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
     );

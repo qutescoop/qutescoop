@@ -37,11 +37,11 @@ QT += network \
 # CONFIG += release
 CONFIG += warn_off
 mac {
-    ICON = gui/Dolomynum.icns
+    ICON = src/Dolomynum.icns
     CONFIG += x86 \
         ppc
 }
-win32:RC_FILE = gui/windowsicon.rc
+win32:RC_FILE = src/windowsicon.rc
 
 # Input
 HEADERS += src/WhazzupData.h \
