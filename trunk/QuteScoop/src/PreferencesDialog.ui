@@ -749,7 +749,7 @@ p, li { white-space: pre-wrap; }
        <item>
         <widget class="QGroupBox" name="groupBoxResetConfigration">
          <property name="title">
-          <string>Reset Configuration</string>
+          <string>All Settings</string>
          </property>
          <layout class="QVBoxLayout" name="_6">
           <item>
@@ -760,19 +760,29 @@ p, li { white-space: pre-wrap; }
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_60">
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbExportToFile">
+            <property name="toolTip">
+             <string>Writes settings to .ini file.</string>
+            </property>
             <property name="text">
-             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;If you want to backup, see &lt;/span&gt;&lt;a href=&quot;http://doc.trolltech.com/4.5/qsettings.html#platform-specific-notes&quot;&gt;&lt;span style=&quot; font-size:9pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://doc.trolltech.com/4.5/qsettings.html#platform-specific-notes&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt; for informations where your settings are stored. We use NativeFormat to support the system's native settings mechanism.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>Export all settings to file</string>
             </property>
-            <property name="textFormat">
-             <enum>Qt::RichText</enum>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbImportFromFile">
+            <property name="toolTip">
+             <string>Reads settings from .ini file.</string>
             </property>
-            <property name="wordWrap">
-             <bool>true</bool>
+            <property name="text">
+             <string>Import settings from file</string>
             </property>
            </widget>
           </item>

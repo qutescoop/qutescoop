@@ -14,7 +14,7 @@
    <string>QuteScoop</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -87,6 +87,16 @@
            </property>
            <property name="text">
             <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbNoPredict">
+           <property name="toolTip">
+            <string>Use only WhazzUp data from &quot;/downloaded&quot; directory. If unchecked, adds predictions for planes and controllers via flightplan data and controller bookings. If checked, only date/time from downloaded WhazzUps are selectable.</string>
+           </property>
+           <property name="text">
+            <string>no prediction</string>
            </property>
           </widget>
          </item>
@@ -370,7 +380,7 @@
      <x>0</x>
      <y>0</y>
      <width>814</width>
-     <height>26</height>
+     <height>28</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -389,7 +399,7 @@
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionDownload"/>
-    <addaction name="actionShootScreenies"/>
+    <addaction name="actionShootScreenshots"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -405,7 +415,6 @@
     <addaction name="actionShowSearch"/>
     <addaction name="actionShowMetars"/>
     <addaction name="actionShowFriendsDock"/>
-    <addaction name="actionShowTimeWarpDock"/>
     <addaction name="actionHideAllWindows"/>
     <addaction name="separator"/>
     <addaction name="actionDisplayAllFlightPaths"/>
@@ -696,28 +705,6 @@ p, li { white-space: pre-wrap; }
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="warpDock">
-   <property name="enabled">
-    <bool>true</bool>
-   </property>
-   <property name="windowTitle">
-    <string>Time Warp - not used at the moment</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_5">
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="cbNoPredict">
-       <property name="text">
-        <string>use only downloaded</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
   <action name="actionAbout">
    <property name="text">
     <string>&amp;About</string>
@@ -793,6 +780,9 @@ p, li { white-space: pre-wrap; }
    <property name="shortcut">
     <string>F6</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionDisplayAllFlightPaths">
    <property name="text">
@@ -800,6 +790,9 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+F6</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionShowMetars">
@@ -1059,7 +1052,7 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+F5</string>
    </property>
   </action>
-  <action name="actionShootScreenies">
+  <action name="actionShootScreenshots">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -1067,18 +1060,11 @@ p, li { white-space: pre-wrap; }
     <string>&amp;Save Screenshots</string>
    </property>
    <property name="toolTip">
-    <string>Saves screenshots to &quot;screenshots&quot; directory whenever new data is generated/arrives.</string>
-   </property>
-  </action>
-  <action name="actionShowTimeWarpDock">
-   <property name="text">
-    <string>Show Time &amp;Warp Dock</string>
+    <string>Saves screenshots to &quot;/screenshots&quot; directory whenever a new map display is generated.</string>
    </property>
   </action>
  </widget>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionQuit</sender>
@@ -1141,22 +1127,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>143</x>
      <y>542</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionShowTimeWarpDock</sender>
-   <signal>triggered()</signal>
-   <receiver>warpDock</receiver>
-   <slot>show()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>91</x>
-     <y>727</y>
     </hint>
    </hints>
   </connection>

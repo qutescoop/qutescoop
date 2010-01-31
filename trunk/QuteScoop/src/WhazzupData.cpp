@@ -172,7 +172,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     if (whazzupTime.isValid() && reloadInMin > 0) {
         nextUpdate = whazzupTime.addSecs(reloadInMin * 60);
         nextUpdate.setTimeSpec(Qt::UTC);
-        qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << nextUpdate << QDateTime::currentDateTime().toUTC().secsTo(nextUpdate);
+        //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << nextUpdate << QDateTime::currentDateTime().toUTC().secsTo(nextUpdate);
     }
 }
 

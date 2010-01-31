@@ -31,6 +31,32 @@ QSettings* Settings::getSettings() {
     return settings_instance;
 }
 
+// .ini File Functions
+void Settings::exportToFile(QString fileName) {
+    QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
+    for (int i = 0; i < getSettings()->allKeys().length(); i++) {
+        settings_file->setValue(getSettings()->allKeys()[i], getSettings()->value(getSettings()->allKeys()[i]));
+    }
+    delete settings_file;
+}
+
+void Settings::importFromFile(QString fileName) {
+    QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
+    for (int i = 0; i < settings_file->allKeys().length(); i++) {
+        getSettings()->setValue(settings_file->allKeys()[i], settings_file->value(settings_file->allKeys()[i]));
+    }
+    delete settings_file;
+}
+
+
+bool Settings::shootScreenshots() {
+    return getSettings()->value("screenshots/shootScreenshots", false).toBool();
+}
+
+void Settings::setShootScreenshots(bool value) {
+    getSettings()->setValue("screenshots/shootScreenshots", value);
+}
+
 int Settings::downloadInterval() {
     return getSettings()->value("download/interval", 5).toInt();
 }

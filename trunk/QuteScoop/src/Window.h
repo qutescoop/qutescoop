@@ -44,7 +44,7 @@ public:
     void setProgressBar(bool isVisible);
     void setEnableBookedAtc(bool enable);
     void setPlotFlightPlannedRoute(bool value);
-    void shootScreenie();
+    void shootScreenshot();
     GLWidget *glWidget;
 
 public slots:
@@ -54,6 +54,7 @@ public slots:
     void updateGLPilots();
 
 private slots:
+    void on_actionShootScreenshots_toggled(bool );
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
 

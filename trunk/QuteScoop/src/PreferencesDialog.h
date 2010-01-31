@@ -36,6 +36,10 @@ private slots:
     void loadSettings();
     void on_cbResetConfiguration_stateChanged(int state);
 
+    // import/export to .ini
+    void on_pbExportToFile_clicked();
+    void on_pbImportFromFile_clicked();
+
     // OpenGL settings
     void on_cbBlend_toggled(bool checked);
 

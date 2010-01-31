@@ -275,7 +275,7 @@ void Whazzup::whazzupDownloaded(bool error) {
 
         if(newWhazzupData.timestamp() != data.timestamp()) {
             data.updateFrom(newWhazzupData);
-            qDebug() << "Whazzup updated from\t" << data.timestamp().toString();
+            qDebug() << "Whazzup updated from timestamp\t" << data.timestamp().toString();
 
             // write out whazzup to a file
             QString filename = QString("downloaded/%1_%2.whazzup")
@@ -293,7 +293,7 @@ void Whazzup::whazzupDownloaded(bool error) {
             Window::getInstance()->statusBar()->showMessage(
                     QString("We already have Whazzup with that Timestamp: %1")
                     .arg(data.timestamp().toString("ddd MM/dd HHmm'z'")), 3000);
-            qDebug() << "We already have Whazzup with that Timestamp\t" << data.timestamp().toString();
+            //qDebug() << "We already have Whazzup with that Timestamp\t" << data.timestamp().toString();
             emit newData(false);
         }
     }
@@ -370,7 +370,7 @@ void Whazzup::bookingsDownloaded(bool error) {
 
         if(newBookingsData.bookingsTimestamp() != data.bookingsTimestamp()) {
             data.updateFrom(newBookingsData);
-            qDebug() << "Bookings updated from\t" << data.bookingsTimestamp().toString();
+            qDebug() << "Bookings updated from timestamp\t" << data.bookingsTimestamp().toString();
 
             QFile out(QString("downloaded/%1_%2.bookings")
                       .arg(Settings::downloadNetwork())
@@ -386,7 +386,7 @@ void Whazzup::bookingsDownloaded(bool error) {
             Window::getInstance()->statusBar()->showMessage(
                     QString("We already have Bookings with that Timestamp: %1")
                     .arg(data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")), 3000);
-            qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
+            //qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
             emit newData(false);
         }
     }
@@ -424,6 +424,7 @@ QList<QPair<QDateTime, QString>*> Whazzup::getDownloadedWhazzups() {
     qDebug() << "getDLWhazzup" << list;
     for (int i = 0; i < list.size(); i++) {
         QRegExp dtRe = QRegExp("\\d+_(\\d{8}-\\d{6})");
+        qDebug() << list[i] << dtRe.indexIn(list[i]);
         if (dtRe.indexIn(list[i]) > 0) {
             qDebug() << dtRe.cap(1);
             QDateTime dt = QDateTime::fromString(dtRe.cap(1), "yyyyMMdd-HHmmss");

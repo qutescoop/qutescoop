@@ -873,3 +873,26 @@ void PreferencesDialog::on_cbTrackAfter_toggled(bool checked)
     Settings::setTrackAfter(checked);
     if(!checked && !cbTrackFront->isChecked()) cbTrackFront->setChecked(true);
 }
+
+
+//import & export
+void PreferencesDialog::on_pbImportFromFile_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(
+            this, tr("Import from File"),
+            QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
+    );
+    if (!fileName.isEmpty())
+        Settings::importFromFile(fileName);
+    loadSettings();
+}
+
+void PreferencesDialog::on_pbExportToFile_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(
+            this, tr("Export to File"),
+            QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
+    );
+    if (!fileName.isEmpty())
+        Settings::exportToFile(fileName);
+}
