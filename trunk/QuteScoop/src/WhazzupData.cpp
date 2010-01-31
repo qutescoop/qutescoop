@@ -522,7 +522,7 @@ QList<Controller*> WhazzupData::activeSectors() const {
         while(!sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
             if(p == -1) {
-                qDebug() << "Unknown Sector\t" << icao << "\tPlease provide sector information if you can";
+//                qDebug() << "Unknown Sector/FIR\t" << icao << "\tPlease provide sector information if you can";
                 icao = "";
                 continue;
             }
@@ -537,6 +537,7 @@ QList<Controller*> WhazzupData::activeSectors() const {
             result.append(controllerList[i]);
         }
     }
+
     return result;
 }
 

@@ -67,7 +67,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
         while(!sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
             if(p == -1) {
-                qDebug() << "Unknown FIR\t" << icao << "\tPlease provide sector information if you can";
+                qDebug() << "Unknown sector/FIR\t" << icao << "\tPlease provide sector information if you can";
                 icao = "";
                 continue;
             }
