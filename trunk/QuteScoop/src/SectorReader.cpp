@@ -16,6 +16,8 @@
  *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
  **************************************************************************/
 
+#include <QDebug>
+
 #include "SectorReader.h"
 #include "FileReader.h"
 #include "Settings.h"
@@ -28,74 +30,73 @@ SectorReader::~SectorReader() {
 
 void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
         sectors.clear();
-	idIcaoMapping.clear();
+    idIcaoMapping.clear();
 
         loadSectorlist(sectors);
         loadSectordisplay(sectors, Settings::dataDirectory() + "firdisplay.dat");
-	if(Settings::useSupFile())
+    if(Settings::useSupFile())
                 loadSectordisplay(sectors, Settings::dataDirectory() + "firdisplay.sup");
 }
 
 void SectorReader::loadSectorlist(QHash<QString, Sector*>& sectors) {
-	FileReader *fileReader = new FileReader(Settings::dataDirectory() + "firlist.dat");
+    FileReader *fileReader = new FileReader(Settings::dataDirectory() + "firlist.dat");
 
-	QString line = fileReader->nextLine();
-	while(!line.isNull()) {
+    QString line = fileReader->nextLine();
+    while(!line.isNull()) {
                 Sector *sector = new Sector(line.split(':'));
                 if(sector->isNull()) {
                         delete sector;
-			continue;
-		}
+            continue;
+        }
 
                 sectors[sector->icao()] = sector;
                 idIcaoMapping.insert(sector->id(), sector->icao());
-		line = fileReader->nextLine();
-	}
-	
-	delete fileReader;
+        line = fileReader->nextLine();
+    }
+
+    delete fileReader;
 }
 
 void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QString& filename)
 {
-	FileReader *fileReader = new FileReader(filename);
+    FileReader *fileReader = new FileReader(filename);
 
         QString workingSectorId;
-	QList<QPair<double, double> > pointList;
-	
-	QString line = fileReader->nextLine();
-	while(!line.isNull() && !fileReader->atEnd()) {
-		// DISPLAY_LIST_100
-		// 51.08:2.55
-		// ...
+    QList<QPair<double, double> > pointList;
 
-                if(line.startsWith("DISPLAY_LIST_"))
+    QString line = fileReader->nextLine();
+    while(!line.isNull() && !fileReader->atEnd()) {
+        // DISPLAY_LIST_100
+        // 51.08:2.55
+        // ...
+
+        if(line.startsWith("DISPLAY_LIST_"))
+        {
+            if(!workingSectorId.isEmpty())
+            {
+                QList<QString> SectorIcaos = idIcaoMapping.values(workingSectorId);
+                for(int i = 0; i < SectorIcaos.size(); i++)
                 {
-                    if(!workingSectorId.isEmpty())
-                    {
-                        QList<QString> SectorIcaos = idIcaoMapping.values(workingSectorId);
-                        for(int i = 0; i < SectorIcaos.size(); i++)
-                        {
-                        if(sectors.contains(SectorIcaos[i])) // be conservative as a segfault was reported on Mac OS
-                        {
-                            sectors[SectorIcaos[i]]->setPointList(pointList);
-                        }
-                        }
-                    }
-                    workingSectorId = line.right(line.length() - QString("DISPLAY_LIST_").length());
-                    pointList.clear();
-			
+                if(sectors.contains(SectorIcaos[i])) // be conservative as a segfault was reported on Mac OS
+                {
+                    sectors[SectorIcaos[i]]->setPointList(pointList);
                 }
-                else if(!workingSectorId.isEmpty())
-                {
-			QStringList points = line.split(':');
-			double lat = points[0].toDouble();
-			double lon = points[1].toDouble();
-			if(lat != 0.0 && lon != 0.0)
-				pointList.append(QPair<double, double>(lat, lon));
-		}
-		
-		line = fileReader->nextLine();
-	}
-	
-	delete fileReader;
+                }
+            }
+            workingSectorId = line.right(line.length() - QString("DISPLAY_LIST_").length());
+            pointList.clear();
+
+        } else if(!workingSectorId.isEmpty() && !line.isEmpty())
+        {
+            QStringList points = line.split(':');
+            double lat = points[0].toDouble();
+            double lon = points[1].toDouble();
+            if(lat != 0.0 && lon != 0.0)
+                pointList.append(QPair<double, double>(lat, lon));
+        }
+
+        line = fileReader->nextLine();
+    }
+
+    delete fileReader;
 }

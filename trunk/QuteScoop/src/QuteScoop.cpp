@@ -24,6 +24,7 @@
 //#include <QWindowsXPStyle>
 #include "helpers.h"
 #include "Window.h"
+#include "Progress.h"
 
 //#define RUN_TEST
 
@@ -77,27 +78,27 @@ int main(int argc, char *argv[]) {
     QCoreApplication::setApplicationName("QuteScoop");
 
     QApplication app(argc, argv);
+    app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
 
 #ifndef RUN_TEST
-    Window *window = Window::getInstance();
+    // splash screen
+    QPixmap pixmap(":/splash/splash");
+    QSplashScreen *splash = new QSplashScreen(pixmap);
+    splash->show();
+    splash->showMessage("Loading data...", Qt::AlignCenter, QColor(0, 24, 81));
+    app.processEvents();
 
-    // Playing with styles...
-    //QStyle *style = new QWindowsXPStyle();
-    //QCDEStyle
-    //QCleanlooksStyle
-    //MotifStyle
-    //QPlastiqueStyle
-    //QWindowsStyle
-    //QWindowsVistaStyle
-    //QWindowsXPStyle
-    //QWindowsCEStyle
-    //QWindowsMobileStyle
-    //window->setStyle(style);
+    // create main window
+    Window *window = Window::getInstance();
 
     window->show();
     //Debug
     //app.instance()->thread()->setPriority(QThread::LowestPriority);
     //app.thread()->setPriority(QThread::HighestPriority);
+
+    splash->showMessage("all done...", Qt::AlignCenter, QColor(0, 24, 81));
+    app.processEvents();
+    splash->finish(window);
     return app.exec();
 #else
     return runTest();
