@@ -1,8 +1,11 @@
 <RCC>
-    <qresource prefix="/icons" >
+    <qresource prefix="/icons">
         <file>qutescoop.png</file>
     </qresource>
-    <qresource prefix="/routeproviders" >
+    <qresource prefix="/routeproviders">
         <file>images/vroute.png</file>
+    </qresource>
+    <qresource prefix="/splash">
+        <file alias="splash">images/splash.png</file>
     </qresource>
 </RCC>

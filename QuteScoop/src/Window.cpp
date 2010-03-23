@@ -30,6 +30,7 @@
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
 #include "FriendsVisitor.h"
+#include "Progress.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -43,6 +44,7 @@ Window* Window::getInstance() {
 Window::Window(QWidget *parent) :
     QMainWindow(parent) {
     setupUi(this);
+
 
     if(Settings::resetOnNextStart())
         QSettings().clear();
