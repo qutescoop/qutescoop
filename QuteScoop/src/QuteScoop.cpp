@@ -24,7 +24,6 @@
 //#include <QWindowsXPStyle>
 #include "helpers.h"
 #include "Window.h"
-#include "Progress.h"
 
 //#define RUN_TEST
 

@@ -19,6 +19,7 @@
 #include <QtGui>
 #include <QtOpenGL>
 #include <QFontMetricsF>
+#include <QDebug>
 #include <math.h>
 
 #include "helpers.h"
@@ -251,6 +252,7 @@ void GLWidget::prepareDisplayLists() {
 
 void GLWidget::newWhazzupData(bool isNew) {
     if(isNew) {
+        qDebug() << "GLWidget/newWhazzupData";
         updateAirports();
         sectorsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
 

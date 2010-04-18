@@ -57,6 +57,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     bookingsTime(QDateTime()),
     nextUpdate(QDateTime())
 {
+    qDebug() << "WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     dataType = type;
     int reloadInMin;
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
@@ -188,6 +189,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     predictionBasedOnBookingsTime(QDateTime()),
     nextUpdate(QDateTime())
 {
+    qDebug() << "WhazzupData(predictTime)";
+
     whazzupVersion = data.whazzupVersion;
     whazzupTime = predictTime;
     predictionBasedOnTime = QDateTime(data.whazzupTime);
@@ -336,6 +339,7 @@ WhazzupData& WhazzupData::operator=(const WhazzupData& data) {
 }
 
 void WhazzupData::assignFrom(const WhazzupData& data) {
+    qDebug() << "WhazzupData/assignFrom";
     if(this == &data)
         return;
 
@@ -380,6 +384,7 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
 }
 
 void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
+    qDebug() << "WhazzupData/updatePilotsFrom";
     QList<QString> callsigns = pilots.keys();
     for(int i = 0; i < callsigns.size(); i++) {
         if(!data.pilots.contains(callsigns[i])) {
@@ -431,6 +436,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
 }
 
 void WhazzupData::updateControllersFrom(const WhazzupData& data) {
+    qDebug() << "WhazzupData/updateControllersFrom";
     QList<QString> callsigns = controllers.keys();
     for(int i = 0; i < callsigns.size(); i++) {
         if(!data.controllers.contains(callsigns[i])) {
@@ -453,6 +459,7 @@ void WhazzupData::updateControllersFrom(const WhazzupData& data) {
 }
 
 void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
+    qDebug() << "WhazzupData/updateBookedControllersFrom";
     bookedcontrollers.clear();
     for (int i = 0; i < data.bookedcontrollers.size(); i++) {
         bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
@@ -460,6 +467,7 @@ void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
 }
 
 void WhazzupData::updateFrom(const WhazzupData& data) {
+    qDebug() << "WhazzupData/updateFrom";
     if(this == &data)
         return;
 
@@ -510,6 +518,7 @@ WhazzupData::~WhazzupData() {
 }
 
 QList<Controller*> WhazzupData::activeSectors() const {
+    qDebug() << "WhazzupData/activeSectors";
     QList<Controller*> result;
     QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
 
