@@ -30,7 +30,6 @@
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
 #include "FriendsVisitor.h"
-#include "Progress.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -302,6 +301,7 @@ void Window::whazzupDownloaded(bool isNew) {
         timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
         datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
         if(isNew) {
+            qDebug() << "debug: Window/whazzupDownloaded/isNew";
             // recalculate prediction on new data arrived
             if(data.predictionBasedOnTimestamp() != realdata.timestamp()
                 || data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {

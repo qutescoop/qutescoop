@@ -24,6 +24,7 @@
 #include <QFileInfo>
 #include <QTimer>
 #include <QDir>
+#include <QtGui>
 
 #include "Settings.h"
 #include "Whazzup.h"
@@ -164,6 +165,11 @@ void Whazzup::fromFile(QString filename) {
         qDebug() << "File Error on open";
         return;
     }
+    // splash screen
+    QPixmap pixmap(":/splash/splash");
+    QSplashScreen *splash = new QSplashScreen(pixmap);
+    splash->show();
+    splash->showMessage("Loading Whazzup from file...", Qt::AlignCenter, QColor(0, 24, 81));
 
     if(whazzupBuffer != 0)
         whazzupBuffer->close();
@@ -173,6 +179,7 @@ void Whazzup::fromFile(QString filename) {
     whazzupBuffer->write(file->readAll());
     whazzupBuffer->close();
     whazzupDownloaded(false);
+    splash->finish(Window::getInstance());
 }
 
 void Whazzup::download() {
@@ -265,6 +272,12 @@ void Whazzup::whazzupDownloaded(bool error) {
         emit newData(false); // update statusbar
         return;
     }
+    // splash screen
+    QPixmap pixmap(":/splash/splash");
+    QSplashScreen *splash = new QSplashScreen(pixmap);
+    splash->show();
+    splash->showMessage("Processing Whazzup...", Qt::AlignCenter, QColor(0, 24, 81));
+
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
     WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
@@ -297,7 +310,7 @@ void Whazzup::whazzupDownloaded(bool error) {
             emit newData(false);
         }
     }
-
+    splash->finish(Window::getInstance());
 }
 
 void Whazzup::downloadBookings() {
@@ -362,6 +375,12 @@ void Whazzup::bookingsDownloaded(bool error) {
         return;
     }
 
+    // splash screen
+    QPixmap pixmap(":/splash/splash");
+    QSplashScreen *splash = new QSplashScreen(pixmap);
+    splash->show();
+    splash->showMessage("Processing Bookings...", Qt::AlignCenter, QColor(0, 24, 81));
+
     WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
     if(!newBookingsData.isNull()) {
@@ -390,6 +409,7 @@ void Whazzup::bookingsDownloaded(bool error) {
             emit newData(false);
         }
     }
+    splash->finish(Window::getInstance());
 }
 
 QString Whazzup::getUserLink(const QString& id) const {
