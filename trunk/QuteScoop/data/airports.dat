@@ -32,430 +32,246 @@ EBWE:Weelde:Weelde:BE:51.395:4.96
 EBZH:Hasselt:Hasselt:BE:50.97:5.375
 EBZR:Oostmalle:Zoersel:BE:51.265:4.753
 EBZW:Zwartberg:Genk:BE:51.015:5.526
-EDAB:Bautzen:Bautzen:DE:51.1933333333333:14.52
-EDAC:Altenburg:Nobitz:DE:50.9816666666667:12.5066666666667
-EDAD:Dessau:Dessau:DE:51.8316666666667:12.1866666666667
-EDAE:Eisenhuettenstadt:Eisenhuettenstadt:DE:52.1966666666667:14.585
-EDAG:Grossrueckerswalde:Grossrueckerswalde:DE:50.6433333333333:13.1266666666667
-EDAH:Heringsdorf:Heringsdorf:DE:53.8783333333333:14.1516666666667
-EDAI:Segeletz:Segeletz:DE:52.8266666666667:12.5416666666667
-EDAJ:Gera:Leumnitz:DE:50.88:12.1366666666667
-EDAK:Grossenhain:Grossenhain:DE:51.3066666666667:13.555
-EDAL:Fuerstenwalde:Fuerstenwalde:DE:52.39:14.0966666666667
-EDAM:Merseburg:Merseburg:DE:51.3633333333333:11.9416666666667
-EDAN:Neustadt-Glewe:Neustadt-Glewe:DE:53.3616666666667:11.615
-EDAO:Nordhausen:Nordhausen:DE:51.495:10.835
-EDAP:Neuhausen:Neuhausen:DE:51.685:14.4233333333333
-EDAQ:Halle:Oppin:DE:51.5516666666667:12.0533333333333
-EDAR:Pirna:Pratzschwitz:DE:50.98:13.9083333333333
-EDAT:Nardt:Nardt:DE:51.4516666666667:14.2033333333333
-EDAU:Riesa:Goehlis:DE:51.2933333333333:13.3566666666667
-EDAV:Finow:Finow:DE:52.8266666666667:13.6933333333333
-EDAW:Roitzschjora:Roitzschjora:DE:51.5783333333333:12.495
-EDAX:Rechlin-Laerz:Rechlin-Laerz:DE:53.305:12.7516666666667
-EDAY:Strausberg:Strausberg:DE:52.58:13.915
-EDAZ:Schoenhagen:Schoenhagen:DE:52.2083333333333:13.1566666666667
-EDBA:Arnstadt:Alkersleben:DE:50.8416666666667:11.07
-EDBC:Magdeburg/Cochstedt:Magdeburg/Cochstedt:DE:51.8566666666667:11.4183333333333
-EDBD:Dedelow:Dedelow:DE:53.3566666666667:13.7833333333333
-EDBE:Brandenburg:Muehlenfeld:DE:52.4366666666667:12.59
-EDBF:Ruppiner Land:Ruppiner Land:DE:52.7933333333333:12.76
-EDBG:Burg:Burg:DE:52.2416666666667:11.8566666666667
-EDBH:Barth:Barth:DE:54.3383333333333:12.71
-EDBI:Zwickau:Zwickau:DE:50.705:12.4616666666667
-EDBJ:Jena:Schoengleina:DE:50.915:11.715
-EDBK:Kyritz:Kyritz:DE:52.9183333333333:12.425
-EDBL:Laucha:Laucha:DE:51.2466666666667:11.6933333333333
-EDBM:Magdeburg:Magdeburg:DE:52.0733333333333:11.6266666666667
-EDBO:Oehna:Oehna:DE:51.8983333333333:13.0566666666667
-EDBP:Pinnow:Pinnow:DE:53.615:11.5616666666667
-EDBQ:Bronkow:Bronkow:DE:51.67:13.96
-EDBR:Rothenburg:Rothenburg:DE:51.3633333333333:14.95
-EDBS:Soemmerda-Dermsdorf:Soemmerda-Dermsdorf:DE:51.1983333333333:11.1933333333333
-EDBT:Allstedt:Allstedt:DE:51.38:11.4466666666667
-EDBU:Pritzwalk:Sommersberg:DE:53.1816666666667:12.185
-EDBV:Stralsund:Stralsund:DE:54.3383333333333:13.0466666666667
-EDBW:Werneuchen:Werneuchen:DE:52.6333333333333:13.7666666666667
-EDBX:Goerlitz:Goerlitz:DE:51.1583333333333:14.95
-EDBY:Schmoldow:Schmoldow:DE:53.97:13.3433333333333
-EDBZ:Schwarzheide/Schipkau:Schwarzheide/Schipkau:DE:51.49:13.88
-EDCA:Anklam:Anklam:DE:53.8316666666667:13.6733333333333
-EDCB:Ballenstedt:Ballenstedt:DE:51.7466666666667:11.23
-EDCD:Cottbus-Drewitz:Cottbus-Drewitz:DE:51.89:14.5316666666667
-EDCE:Eggersdorf:Eggersdorf:DE:52.48:14.0833333333333
-EDCG:Ruegen:Ruegen:DE:54.3833333333333:13.325
-EDCH:Sprossen:Sprossen:DE:51.0433333333333:12.2333333333333
-EDCI:Klix:Klix:DE:51.2733333333333:14.5066666666667
-EDCJ:Chemniz:Jahnsdorf:DE:50.7466666666667:12.8366666666667
-EDCK:Koethen:Koethen:DE:51.7233333333333:11.9466666666667
-EDCL:Klietz:Scharlibbe:DE:52.71:12.0733333333333
-EDCM:Kamenz:Kamenz:DE:51.2966666666667:14.1283333333333
-EDCO:Obermehler/Schlotheim:Obermehler/Schlotheim:DE:51.2683333333333:10.635
-EDCP:Peenemuende:Peenemuende:DE:54.1583333333333:13.7733333333333
-EDCQ:Aschersleben:Aschersleben:DE:51.765:11.4983333333333
-EDCR:Rerik-Zweedorf:Rerik-Zweedorf:DE:54.0816666666667:11.655
-EDCS:Saarmund:Saarmund:DE:52.31:13.1
-EDCT:Taucha:Taucha:DE:51.395:12.5366666666667
-EDCU:Guestrow:Guestrow:DE:53.8066666666667:12.2316666666667
-EDCV:Pasewalk:Pasewalk:DE:53.505:13.9483333333333
-EDCW:Wismar:Wismar:DE:53.915:11.5
-EDCX:Purkshof:Purkshof:DE:54.1616666666667:12.2483333333333
-EDCY:Spremberg-Welzow:Spremberg-Welzow:DE:51.5766666666667:14.1366666666667
-EDDB:Berlin:Schoenefeld:DE:52.3783333333333:13.52
-EDDC:Dresden:Dresden:DE:51.135:13.7683333333333
-EDDE:Erfurt:Erfurt:DE:50.98:10.9583333333333
-EDDF:Frankfurt/Main:Frankfurt/Main:DE:50.0333333333333:8.57
-EDDG:Muenster/Osnabrueck:Muenster/Osnabrueck:DE:52.135:7.685
-EDDH:Hamburg:Hamburg:DE:53.63:9.98833333333333
-EDDI:Berlin:Tempelhof:DE:52.4733333333333:13.4016666666667
-EDDK:Koeln-Bonn:Koeln-Bonn:DE:50.8666666666667:7.14333333333333
-EDDL:Duesseldorf:Duesseldorf:DE:51.2816666666667:6.75666666666667
-EDDM:Muenchen:Muenchen:DE:48.3533333333333:11.7866666666667
-EDDN:Nuernberg:Nuernberg:DE:49.4983333333333:11.0783333333333
-EDDP:Leipzig-Halle:Leipzig-Halle:DE:51.4233333333333:12.2366666666667
-EDDR:Saarbruecken:Saarbruecken:DE:49.215:7.11
-EDDS:Stuttgart:Stuttgart:DE:48.69:9.22166666666667
-EDDT:Berlin:Tegel:DE:52.56:13.2883333333333
-EDDV:Hannover:Hannover:DE:52.46:9.68333333333333
-EDDW:Bremen:Bremen:DE:53.0466666666667:8.78666666666667
-EDEB:Bad Langensalza:Bad Langensalza:DE:51.13:10.6216666666667
-EDEF:Babenhausen:Babenhausen:DE:49.9533333333333:8.97
-EDEG:Gotha-Ost:Gotha-Ost:DE:50.97:10.7283333333333
-EDEH:Herrenteich:Herrenteich:DE:49.345:8.48833333333333
-EDEL:Langenlonsheim:Langenlonsheim:DE:49.9083333333333:7.905
-EDEM:Mosenberg:Mosenberg:DE:51.0633333333333:9.42166666666667
-EDEP:Heppenheim:Heppenheim:DE:49.6216666666667:8.625
-EDEQ:Muehlhausen:Muehlhausen:DE:51.215:10.5433333333333
-EDER:Wasserkupper:Wasserkupper:DE:50.4983333333333:9.95
-EDEW:Wallduern:Wallduern:DE:49.5816666666667:9.40166666666667
-EDFA:Anspach/Taunus:Anspach/Taunus:DE:50.29:8.53666666666667
-EDFB:Reichelsheim:Reichelsheim:DE:50.3383333333333:8.87833333333333
-EDFC:Aschaffenburg:Aschaffenburg:DE:49.9383333333333:9.06333333333333
-EDFD:Bad Neustadt/Saale:Grasberg:DE:50.305:10.2266666666667
-EDFE:Frankfurt-Egelsbach:Frankfurt-Egelsbach:DE:49.9616666666667:8.64166666666667
-EDFG:Gelnhausen:Gelnhausen:DE:50.1966666666667:9.17
-EDFH:Frankfurt-Hahn:Frankfurt-Hahn:DE:49.9483333333333:7.26333333333333
-EDFI:Hirzenhain:Hirzenhain:DE:50.7883333333333:8.39333333333333
-EDFJ:Lager Hammelburg:Lager Hammelburg:DE:50.0983333333333:9.88333333333333
-EDFK:Bad Kissingen:Bad Kissingen:DE:50.21:10.0683333333333
-EDFL:Giessen:Luetzellinden:DE:50.5433333333333:8.59
-EDFM:Mannheim:Mannheim City:DE:49.4733333333333:8.515
-EDFN:Marburg:Schoenstadt:DE:50.8733333333333:8.81333333333333
-EDFO:Michelstadt/Odw.:Michelstadt/Odw.:DE:49.6783333333333:8.97333333333333
-EDFP:Ober-Moerlen:Ober-Moerlen:DE:50.3616666666667:8.71
-EDFQ:Allendorf/Eder:Allendorf/Eder:DE:51.035:8.68166666666667
-EDFR:Rothenburg o.d.T.:Rothenburg o.d.T.:DE:49.39:10.2183333333333
-EDFS:Schweinfurt-Sued:Schweinfurt-Sued:DE:50.01:10.2516666666667
-EDFT:Lauterbach:Lauterbach:DE:50.6833333333333:9.41
-EDFU:Mainbullau:Mainbullau:DE:49.695:9.18166666666667
-EDFV:Worms:Worms:DE:49.6066666666667:8.36666666666667
-EDFW:Wuerzburg:Schenkenturm:DE:49.8183333333333:9.89666666666667
-EDFX:Hockenheim:Hockenheim:DE:49.325:8.52833333333333
-EDFY:Elz:Elz:DE:50.4266666666667:8.01166666666667
-EDFZ:Mainz:Finthen:DE:49.9683333333333:8.14833333333333
-EDGA:Ailertchen:Ailertchen:DE:50.595:7.94666666666667
-EDGB:Breitscheid:Breitscheid:DE:50.6766666666667:8.17
-EDGE:Eichsenach-Kindel:Eichsenach-Kindel:DE:50.9916666666667:10.4766666666667
-EDGF:Fulda:Jossa:DE:50.475:9.44166666666667
-EDGH:Hettstadt:Hettstadt:DE:49.7983333333333:9.83666666666667
-EDGI:Ingelfingen:Buehlhof:DE:49.3216666666667:9.66333333333333
-EDGJ:Ochsenfurt:Ochsenfurt:DE:49.675:10.0716666666667
-EDGK:Korbach:Korbach:DE:51.2533333333333:8.87666666666667
-EDGM:Mosbach:Lohrbach:DE:49.3983333333333:9.12333333333333
-EDGP:Oppenheim:Oppenheim:DE:49.84:8.37666666666667
-EDGQ:Schameder:Schameder:DE:51:8.30666666666667
-EDGR:Giessen:Reiskirchen:DE:50.5666666666667:8.87
-EDGS:Siegerland:Siegerland:DE:50.7083333333333:8.08333333333333
-EDGT:Bottenhorn:Bottenhorn:DE:50.795:8.46333333333333
-EDGU:Unterschuepf:Unterschuepf:DE:49.515:9.66833333333333
-EDGW:Wolfhagen:Graner Berg:DE:51.3066666666667:9.175
-EDGX:Walldorf:Walldorf:DE:49.3033333333333:8.65833333333333
-EDGZ:Weinheim/Bergstrasse:Weinheim/Bergstrasse:DE:49.5683333333333:8.61166666666667
-EDHB:Grube:Grube:DE:54.245:11.025
-EDHC:Luechow:Rehbeck:DE:53.0183333333333:11.145
-EDHE:uetersen:uetersen:DE:53.6466666666667:9.705
-EDHF:Itzehoe:Hungriger Wolf:DE:53.995:9.57833333333333
-EDHG:Lueneburg:Lueneburg:DE:53.2483333333333:10.4583333333333
-EDHI:Hamburg:Finkenwerder:DE:53.535:9.835
-EDHK:Kiel:Holtenau:DE:54.38:10.145
-EDHL:Luebeck:Blankensee:DE:53.805:10.72
+EDAB:Bautzen:Bautzen:DE:51.194:14.52
+EDAC:Altenburg Nobitz:Altenburg:DE:50.982:12.506
+EDAD:Dessau:Dessau:DE:51.832:12.184
+EDAE:Eisenhuttenstadt:Eisenhuttenstadt:DE:52.197:14.586
+EDAG:Grossrueckerswalde:Grossruckerswalde:DE:50.644:13.126
+EDAH:Heringsdorf:Heringsdorf:DE:53.879:14.152
+EDAI:Segeletz:Segeletz:DE:52.826:12.542
+EDAJ:Gera-Leumnitz:Gera:DE:50.881:12.137
+EDAK:Grossenhaim:Grossenhaim:DE:51.308:13.555
+EDAL:Fuerstenwalde:Furstenwalde:DE:52.39:14.094
+EDAM:Merseburg:Merseburg:DE:51.363:11.941
+EDAN:Neustadt-Glewe:Neustadt-Glewe:DE:53.361:11.615
+EDAO:Nordhausen:Nordhausen:DE:51.493:10.833
+EDAP:Neuhausen:Neuhausen:DE:51.685:14.423
+EDAQ:Halle Oppin:Halle:DE:51.552:12.053
+EDAR:Pirna:Pirna:DE:50.978:13.915
+EDAU:Gohlis:Riesa:DE:51.294:13.356
+EDAV:Finow:Finow:DE:52.827:13.694
+EDAW:Roitzschjora:Roitzschjora:DE:51.578:12.494
+EDAX:Rechlin-Larz:Rechlin-Larz:DE:53.306:12.753
+EDAY:Strausberg:Strausberg:DE:52.58:13.916
+EDAZ:Schonhagen:Schonhagen:DE:52.203:13.159
+EDBA:Alkersleben:Alkersleben:DE:50.842:11.07
+EDBB:Berlin:Berlin:DE:52.56:13.288
+EDBC:Cochstedt-Schneidlingen:Cochstedt-Schneidlingen:DE:51.856:11.418
+EDBD:Dedelow:Dedelow:DE:53.356:13.784
+EDBF:Fehrbellin:Fehrbellin:DE:52.793:12.756
+EDBH:Barth:Barth:DE:54.338:12.71
+EDBI:Zwickau:Zwickau:DE:50.703:12.459
+EDBJ:Schongleina:Jena:DE:50.915:11.714
+EDBK:Kyritz:Kyritz:DE:52.919:12.425
+EDBM:Magdeburg:Magdeburg:DE:52.074:11.626
+EDBN:Brandis Waldpolenz:Brandis:DE:51.328:12.657
+EDBO:Oehna:Oehna:DE:51.899:13.056
+EDBP:Schwerin:Pinnow:DE:53.615:11.561
+EDBQ:Bronkow:Bronkow:DE:51.671:13.96
+EDBR:Rothenburg:Rothenburg-Oberlausitz:DE:51.363:14.95
+EDBS:Sommerda-Dermsdorf:Sommerda-Dermsdorf:DE:51.199:11.192
+EDBT:Allstedt:Allstedt:DE:51.38:11.447
+EDBW:Werneuchen:Werneuchen:DE:52.633:13.767
+EDBX:Gorlitz:Gorlitz:DE:51.159:14.95
+EDBZ:Schwarzheide-Schipkau:Schwarzheide-Schipkau:DE:51.49:13.879
+EDCA:Anklam:Anklam:DE:53.833:13.669
+EDCB:Ballenstedt:Ballenstedt:DE:51.746:11.229
+EDCD:Cottbus Drewitz:Drewitz:DE:51.889:14.532
+EDCE:Eggerdorf-Muncheberg:Eggersdorf:DE:52.479:14.083
+EDCG:Guttin:Guttin:DE:54.384:13.326
+EDCI:Klix:Klix:DE:51.274:14.506
+EDCK:Kothen:Kothen:DE:51.722:11.947
+EDCM:Kamenz:Kamenz:DE:51.297:14.127
+EDCN:Nauen:Nauen:DE:52.626:12.914
+EDCO:Obermehler:Schlotheim:DE:51.268:10.635
+EDCP:Peenemunde:Peenemunde:DE:54.158:13.773
+EDCQ:Aschersleben:Aschersleben:DE:51.765:11.498
+EDCS:Saarmund:Saarmund:DE:52.309:13.101
+EDCV:Pasewalk:Pasewalk:DE:53.506:13.948
+EDCW:Wismar Mueggenburg:Wismar:DE:53.914:11.499
+EDCX:Purkshof:Purkshof:DE:54.161:12.249
+EDCY:Welzow:Welzow:DE:51.577:14.137
+EDDB:Schonefeld:Berlin:DE:52.38:13.522
+EDDC:Klotzsche:Dresden:DE:51.133:13.767
+EDDE:Binderslebn:Erfurt:DE:50.98:10.958
+EDDF:Frankfurt:Frankfurt/Main:DE:50.026:8.543
+EDDG:Munster-Osnabruck:Munster-Osnabruck:DE:52.135:7.685
+EDDH:Fuhlsbüttel:Hamburg:DE:53.63:9.988
+EDDI:Tempelhof:Berlin:DE:52.473:13.404
+EDDK:Cologne-Bonn:Cologne:DE:50.866:7.143
+EDDL:Dusseldorf:Dusseldorf:DE:51.289:6.767
+EDDM:Munich:Munich:DE:48.354:11.786
+EDDN:Nurnberg:Nurnberg:DE:49.499:11.078
+EDDP:Schkeuditz:Leipzig Halle:DE:51.424:12.236
+EDDR:Saarbrucken:Saarbrucken:DE:49.214:7.11
+EDDS:Stuttgart:Stuttgart:DE:48.69:9.222
+EDDT:Tegel:Berlin:DE:52.56:13.288
+EDDV:Hannover:Hannover:DE:52.461:9.685
+EDDW:Bremen:Bremen:DE:53.047:8.787
+EDEL:Langenlonsheim:Langenlonsheim:DE:49.908:7.908
+EDFB:Reichelsheim:Reichelsheim:DE:50.341:8.878
+EDFC:Aschaffenburg:Aschaffenburg:DE:49.939:9.062
+EDFE:Egelsbach:Egelsbach:DE:49.962:8.643
+EDFG:Gelnhausen:Gelnhausen:DE:50.197:9.17
+EDFH:Hahn:Hahn:DE:49.949:7.264
+EDFM:Mannheim City:Mannheim City:DE:49.473:8.515
+EDFO:Michelstadt:Michelstadt:DE:49.678:8.974
+EDFU:Mainbullau:Mainbullau:DE:49.695:9.182
+EDFV:Worms:Worms:DE:49.606:8.368
+EDFZ:Finthen:Mainz:DE:49.969:8.148
+EDGP:Oppenheim:Oppenheim:DE:49.906:8.469
+EDGS:Siegerland:Siegerland:DE:50.708:8.083
+EDHC:Luchow Rehbeck:Luchow:DE:53.015:11.144
+EDHE:Uetersen:Uetersen:DE:53.647:9.704
+EDHG:Luneburg:Luneburg:DE:53.248:10.459
+EDHI:Finkenwerder:Hamburg:DE:53.536:9.837
+EDHK:Holtenau:Kiel:DE:54.38:10.145
+EDHL:Blankensee:Lubeck:DE:53.805:10.719
 EDHM:Hartenholm:Hartenholm:DE:53.915:10.04
-EDHN:Neumuenster:Neumuenster:DE:54.075:9.93833333333333
-EDHO:Ahrenlohe:Ahrenlohe:DE:53.7:9.74
-EDHP:Pellworm:Pellworm:DE:54.5366666666667:8.68166666666667
-EDHS:Stade:Stade:DE:53.56:9.49833333333333
-EDHU:Lauenbrueck:Lauenbrueck:DE:53.2066666666667:9.57333333333333
-EDHW:Wahlstedt:Wahlstedt:DE:53.9683333333333:10.2233333333333
-EDJA:Memmingen/Allgaeu:Memmingen/Allgaeu:DE:47.9883333333333:10.24
-EDKA:Aachen:Merzbrueck:DE:50.8233333333333:6.18666666666667
-EDKB:Bonn:Hangelar:DE:50.7683333333333:7.16333333333333
-EDKD:Altena:Hegenscheid:DE:51.3133333333333:7.71
-EDKF:Bergneustadt:Auf dem Duempel:DE:51.0516666666667:7.70666666666667
-EDKH:Huensborn:Huensborn:DE:50.9283333333333:7.9
-EDKI:Betzdorf-Kirchen:Betzdorf-Kirchen:DE:50.8183333333333:7.83333333333333
-EDKL:Leverkusen:Leverkusen:DE:51.015:7.00666666666667
-EDKM:Meschede:Schueren:DE:51.3016666666667:8.23666666666667
-EDKN:Wipperfuerth:Neye:DE:51.1233333333333:7.375
-EDKO:Brillon/Hochsauerland:Brillon/Hochsauerland:DE:51.4033333333333:8.64166666666667
-EDKP:Plettenberg:Hueinghausen:DE:51.1916666666667:7.79
-EDKR:Schmallenberg:Rennefeld:DE:51.1616666666667:8.26
-EDKU:Attendorn:Finnentrop:DE:51.1466666666667:7.93666666666667
-EDKV:Dahlemer Binz:Dahlemer Binz:DE:50.405:6.52833333333333
-EDKW:Werdohl:Kuentrop:DE:51.2966666666667:7.81666666666667
-EDKZ:Meinerzhagen:Meinerzhagen:DE:51.1016666666667:7.6
-EDLA:Arnsberg:Menden:DE:51.4833333333333:7.9
-EDLB:Borkenberge:Borkenberge:DE:51.78:7.28833333333333
-EDLC:Kamp-Lintfort:Kamp-Lintfort:DE:51.5283333333333:6.53666666666667
-EDLD:Dinslaken:Schwarzer Heide:DE:51.6166666666667:6.865
-EDLE:Essen/Muehlheim:Essen/Muehlheim:DE:51.4016666666667:6.93666666666667
-EDLF:Grefrath:Niershorst:DE:51.3333333333333:6.36
-EDLG:Goch:Asperden:DE:51.6916666666667:6.105
-EDLH:Hamm:Lippewiesen:DE:51.69:7.81666666666667
-EDLI:Bielefeld:Bielefeld:DE:51.965:8.545
-EDLJ:Detmold:Detmold:DE:51.9416666666667:8.905
-EDLK:Krefeld:Egelsberg:DE:51.385:6.58833333333333
-EDLM:Marl:Loemuehle:DE:51.6466666666667:7.16333333333333
-EDLN:Moenchengladbach:Moenchengladbach:DE:51.23:6.505
-EDLO:Oerlinghausen:Oerlinghausen:DE:51.9333333333333:8.66166666666667
-EDLP:Paderborn/Lippstadt:Paderborn/Lippstadt:DE:51.615:8.61666666666667
-EDLR:Paderborn:Haxterberg:DE:51.6883333333333:8.775
-EDLS:Stadtlohn:Vreden:DE:51.9966666666667:6.84
-EDLT:Muenster:Telgte:DE:51.945:7.77333333333333
-EDLV:Niederrhein:Niederrhein:DE:51.6016666666667:6.14166666666667
-EDLW:Dortmund:Dortmund:DE:51.5183333333333:7.61166666666667
-EDLX:Wesel:Roemerwardt:DE:51.6633333333333:6.595
-EDLY:Borken:Hoxfeld:DE:51.8533333333333:6.815
-EDLZ:Soest:Bad Sassendorf:DE:51.5783333333333:8.215
-EDMA:Augsburg:Augsburg:DE:48.425:10.9316666666667
-EDMB:Biberach a.d. Riss:Biberach a.d. Riss:DE:48.1116666666667:9.76333333333333
-EDMC:Blaubeuren:Blaubeuren:DE:48.42:9.79833333333333
-EDMD:Dachau:Groebenried:DE:48.2283333333333:11.4233333333333
-EDME:Eggenfelden:Eggenfelden:DE:48.3966666666667:12.7233333333333
-EDMF:Fuerstenzell:Fuerstenzell:DE:48.5183333333333:13.3466666666667
-EDMG:Guenzburg:Donauried:DE:48.4866666666667:10.2833333333333
-EDMH:Gunzenhausen:Reutberg:DE:49.1116666666667:10.7816666666667
-EDMI:Illertissen:Illertissen:DE:48.235:10.1383333333333
-EDMJ:Jessenwang:Jessenwang:DE:48.175:11.125
-EDMK:Kempten:Durach:DE:47.6933333333333:10.3383333333333
-EDML:Landshut:Landshut:DE:48.5133333333333:12.035
-EDMN:Mindelheim:Mattsies:DE:48.1083333333333:10.525
-EDMO:Oberpfaffenhofen:Oberpfaffenhofen:DE:48.0816666666667:11.2833333333333
-EDMP:Vilsbiburg:Vilsbiburg:DE:48.4266666666667:12.345
-EDMQ:Donauswoerth:Genderkingen:DE:48.7033333333333:10.8516666666667
-EDMS:Straubing:Straubing:DE:48.9016666666667:12.5183333333333
-EDMT:Tannheim:Tannheim:DE:48.0116666666667:10.1016666666667
-EDMU:Gundelfingen:Gundelfingen:DE:48.57:10.3583333333333
-EDMV:Vilshofen:Vilshofen:DE:48.635:13.195
-EDMW:Deggedorf:Deggedorf:DE:48.83:12.88
-EDMY:Muehldorf:Muehldorf:DE:48.28:12.5016666666667
-EDNA:Ampfing:Waldkraiburg:DE:48.2633333333333:12.4116666666667
-EDNB:Arnbruck:Arnbruck:DE:49.125:12.985
-EDNC:Beilngries:Beilngries:DE:49.0216666666667:11.485
-EDND:Dinkelsbuehl:Sinbronn:DE:49.065:10.4016666666667
-EDNE:Erbach:Erbach:DE:48.3416666666667:9.91666666666667
-EDNG:Giengen/Brenz:Giengen/Brenz:DE:48.635:10.215
-EDNH:Bad Woerishofen-Nord:Bad Woerishofen-Nord:DE:48.0166666666667:10.6166666666667
-EDNI:Berching:Berching:DE:49.13:11.445
-EDNJ:Neuburg:Egweil:DE:48.7816666666667:11.2216666666667
-EDNK:Kirchdorf/Inn:Kirchdorf/Inn:DE:48.24:12.9783333333333
-EDNL:Leutkirch:Unterzeil:DE:47.8583333333333:10.015
-EDNM:Nittenau:Bruck:DE:49.2233333333333:12.2983333333333
-EDNO:Noerdlingen:Noerdlingen:DE:48.8716666666667:10.5066666666667
+EDHS:Stade:Stade:DE:53.56:9.498
+EDHW:Wahlstedt:Wahlstedt:DE:53.969:10.224
+EDJA:Allgau:Memmingen:DE:47.988:10.239
+EDKB:Bonn Hangelar:Bonn:DE:50.769:7.164
+EDKH:Hunsborn:Hunsborn:DE:50.929:7.899
+EDKL:Leverkusen:Leverkusen:DE:51.015:7.006
+EDKM:Meschede Schuren:Meschede:DE:51.302:8.237
+EDKO:Brilon-Hochsauerland:Brilon-Hochsauerland:DE:51.402:8.642
+EDKR:Schmallenberg-Rennefeld:Schmallenberg-Rennefeld:DE:51.161:8.261
+EDKV:Dahlemer Binz:Dahlemer Binz:DE:50.406:6.528
+EDKW:Werdohl-Kuntrop:Werdohl:DE:51.297:7.817
+EDKZ:Meinerzhagen:Meinerzhagen:DE:51.099:7.602
+EDLA:Arnsberg:Arnsberg:DE:51.483:7.899
+EDLD:Schwarze Heide:Dinslaken:DE:51.616:6.866
+EDLE:Essen-Mulheim:Essen-Mulheim:DE:51.402:6.937
+EDLH:Lippewiesen:Hamm:DE:51.69:7.817
+EDLI:Windelsbleiche:Bielefeld:DE:51.965:8.545
+EDLK:Egelsberg:Krefeld:DE:51.386:6.585
+EDLM:Marl Loemuhle:Marl:DE:51.647:7.164
+EDLN:Monchengladbach:Monchengladbach:DE:51.23:6.504
+EDLP:Paderborn-Lippstadt:Paderborn-Lippstadt:DE:51.614:8.616
+EDLR:Haxterberg:Paderborn:DE:51.688:8.775
+EDLS:Wenningfield:Stadtlohn:DE:51.996:6.841
+EDLT:Munster-Telgte:Munster-Telgte:DE:51.945:7.773
+EDTD:Donaueschingen-Villingen:Donaueschingen-Villingen:DE:47.978:8.526
+EDLW:Wickede:Dortmund:DE:51.518:7.612
+EDLX:Romerwardt:Wesel:DE:51.663:6.596
+EDLY:Borken-Hoxfeld:Borken-Hoxfeld:DE:51.853:6.815
+EDLZ:Bad Sassendorf:Soest:DE:51.578:8.215
+EDMA:Augsburg:Augsburg:DE:48.425:10.932
+EDMB:Biberach:Biberach An Der Riss:DE:48.111:9.763
+EDMC:Blauberen:Blaubeuren:DE:48.42:9.799
+EDMD:Dachau-Grobenried:Dachau-Grobenried:DE:48.229:11.423
+EDME:Eggenfelden:Eggenfelden:DE:48.396:12.724
+EDMK:Durach:Kempten:DE:47.693:10.338
+EDML:Landshut:Landshut:DE:48.513:12.035
+EDMN:Mattsies:Mindelheim:DE:48.109:10.524
+EDMO:Oberpfaffenhofen:Oberpfaffenhofen:DE:48.081:11.283
+EDMS:Straubing Wallmuhl:Straubing:DE:48.901:12.518
+EDMT:Tannheim:Tannheim:DE:48.011:10.101
+EDMV:Vilshofen:Vilshofen:DE:48.635:13.196
+EDMY:Muhldorf:Muhldorf:DE:48.279:12.505
+EDNA:Ampfing-Waldkraiburg:Ampfing-Waldkraiburg:DE:48.263:12.411
+EDNE:Erbach:Erbach:DE:48.342:9.917
+EDNH:Bad Woerrishofen:Bad Woerrishofen:DE:48.016:10.616
+EDNJ:Neuberg-Egweil:Neuburg-Egweil:DE:48.782:11.221
+EDNK:Kirchdorf-Inn:Kirchdorf-Inn:DE:48.238:12.977
+EDNL:Leutkirch Unterzeil:Leutkirch:DE:47.859:10.014
 EDNP:Pfarrkirchen:Pfarrkirchen:DE:48.42:12.865
-EDNQ:Bopfingen:Bopfingen:DE:48.8483333333333:10.3333333333333
-EDNR:Regensburg:Oberhub:DE:49.1416666666667:12.0816666666667
-EDNS:Schwabmuenchen:Schwabmuenchen:DE:48.18:10.7033333333333
-EDNT:Treuchtlingen:Bubenheim:DE:48.9966666666667:10.885
-EDNU:Thannhausen:Thannhausen:DE:48.29:10.4416666666667
-EDNV:Vogtareuth:Vogtareuth:DE:47.9466666666667:12.205
-EDNW:Weissenhorn:Weissenhorn:DE:48.29:10.14
-EDNX:Oberschleissheim:Oberschleissheim:DE:48.2383333333333:11.56
-EDNY:Friedrichshafen:Friedrichshafen:DE:47.6716666666667:9.51166666666667
-EDNZ:Zell:Haidberg:DE:50.1366666666667:11.795
-EDOA:Auerbach:Auerbach:DE:50.4966666666667:12.3783333333333
-EDOB:Bad Berka:Bad Berka:DE:50.905:11.2566666666667
-EDOC:Gardelegen:Gardelegen:DE:52.5283333333333:11.355
-EDOD:Reinsdorf:Reinsdorf:DE:51.9016666666667:13.195
-EDOE:Boehlen:Boehlen:DE:51.215:12.3683333333333
-EDOF:Bad Frankenhausen:Bad Frankenhausen:DE:51.3733333333333:11.1416666666667
-EDOG:Torgau:Beilrode:DE:51.5716666666667:13.0516666666667
-EDOH:Lanhennersdorf:Lanhennersdorf:DE:50.9466666666667:13.2616666666667
-EDOI:Bienenfarm:Bienenfarm:DE:52.66:12.7466666666667
-EDOJ:Luesse:Luesse:DE:52.145:12.67
-EDOK:Rudolstadt:Groschwitz:DE:50.7333333333333:11.2366666666667
-EDOL:Oschersleben:Oschersleben:DE:52.04:11.2033333333333
-EDOM:Klein Muehlingen:Klein Muehlingen:DE:51.9483333333333:11.77
-EDON:Neuhardenberg:Neuhardenberg:DE:52.6133333333333:14.2433333333333
-EDOP:Schwerin-Parchim:Schwerin-Parchim:DE:53.4266666666667:11.7833333333333
-EDOQ:Oschatz:Oschatz:DE:51.2966666666667:13.0783333333333
-EDOR:Stoelln/Rhinow:Stoelln/Rhinow:DE:52.7416666666667:12.39
-EDOS:Pennewitz:Pennewitz:DE:50.67:11.05
-EDOT:Greiz:Obergrochlitz:DE:50.645:12.1716666666667
-EDOU:Weiden :Umpferstedt:DE:50.965:11.4
-EDOV:Stendal-Borstel:Stendal-Borstel:DE:52.6283333333333:11.82
-EDOW:Waren:Vielist:DE:53.5683333333333:12.6533333333333
-EDOX:Renneritz:Renneritz:DE:51.5933333333333:12.2366666666667
-EDOZ:Schoenebeck:Zackmuende:DE:51.9966666666667:11.7916666666667
-EDPA:Aalen-Heidenheim:Elchingen:DE:48.7783333333333:10.265
-EDPB:Bad Ditzenbach:Bad Ditzenbach:DE:48.5633333333333:9.73
-EDPD:Dingolfing:Dingolfing:DE:48.6583333333333:12.5
-EDPE:Eichstaett:Eichstaett:DE:48.8766666666667:11.1816666666667
+EDNQ:Bopfingen:Bopfingen:DE:48.849:10.334
+EDNR:Regensburg Oberhub:Regensburg:DE:49.142:12.082
+EDNS:Schwabmunchen:Schwabmunchen:DE:48.179:10.703
+EDNT:Treuchtlimgen-Bubenheim:Treuchtlingen-Bubenheim:DE:48.996:10.885
+EDNW:Weissenhorn:Weissenhorn:DE:48.289:10.14
+EDNX:Oberschleissheim:Oberschleissheim:DE:48.239:11.559
+EDNY:Friedrichshafen:Friedrichshafen:DE:47.671:9.511
+EDOA:Auerbach:Auerbach:DE:50.497:12.379
+EDOB:Bad Berka:Bad Berka:DE:50.904:11.257
+EDOD:Rheindorf:Reinsdorf:DE:51.901:13.194
+EDOE:Bohlen:Bohlen:DE:51.215:12.368
+EDOI:Bienenfarm:Bienenfarm:DE:52.66:12.746
+EDOJ:Luesse:Lusse:DE:52.143:12.664
+EDON:Wriezen:Wriezen:DE:52.613:14.243
+EDOP:Schwerin-Parchim:Schwerin-Parchim:DE:53.427:11.783
+EDOQ:Oschatz:Oschatz:DE:51.296:13.078
+EDOV:Stendal-Borstel:Stendal-Borstel:DE:52.629:11.82
+EDPA:Aalen-Heidenheim:Aalen-Heidenheim:DE:48.778:10.265
+EDPD:Dingolfing:Dingolfing:DE:48.658:12.5
+EDPE:Eichstatt:Eichstatt:DE:48.877:11.182
 EDPF:Schwandorf:Schwandorf:DE:49.34:12.185
-EDPG:Griesau:Griesau:DE:48.9533333333333:12.4216666666667
-EDPH:Schwabach:Heidenberg:DE:49.2683333333333:11.01
-EDPJ:Laichingen:Laichingen:DE:48.4983333333333:9.64
-EDPK:Schoenberg:Schoenberg:DE:48.0483333333333:12.5
-EDPM:Donzdorf:Donzdorf:DE:48.6783333333333:9.84333333333333
-EDPO:Neumarkt/Opf.:Neumarkt/Opf.:DE:49.285:11.445
-EDPQ:Schmidgaden:Schmidgaden:DE:49.4316666666667:12.1
-EDPS:Sonnen:Sonnen:DE:48.6833333333333:13.6966666666667
-EDPT:Gerstetten:Gerstetten:DE:48.6216666666667:10.0616666666667
-EDPU:Bartholomae:Amalienhof:DE:48.7466666666667:10.005
-EDPW:Thalmaessing-Waizenhofen:Thalmaessing-Waizenhofen:DE:49.065:11.21
-EDPY:Ellwangen:Ellwangen:DE:48.9616666666667:10.2366666666667
-EDQB:Bad Windsheim:Bad Windsheim:DE:49.51:10.3666666666667
-EDQC:Coburg:Brandensteinsebene:DE:50.2633333333333:10.995
-EDQD:Bayreuth:Bayreuth:DE:49.985:11.6383333333333
-EDQE:Burg Feuerstein:Burg Feuerstein:DE:49.7933333333333:11.1333333333333
-EDQF:Ansbach:Petersdorf:DE:49.3616666666667:10.6716666666667
-EDQH:Herzogenaurach:Herzogenaurach:DE:49.5833333333333:10.8783333333333
-EDQI:Lauf:Lillinghof:DE:49.605:11.2833333333333
-EDQK:Kulmbach:Kulmbach:DE:50.135:11.4566666666667
-EDQL:Lichtenfels:Lichtenfels:DE:50.1483333333333:11.0466666666667
-EDQM:Hof-Plauen:Hof-Plauen:DE:50.2883333333333:11.855
-EDQN:Neustadt/Aisch:Neustadt/Aisch:DE:49.5883333333333:10.5783333333333
-EDQO:Ottengruener Heide:Ottengruener Heide:DE:50.2266666666667:11.7333333333333
-EDQP:Rosenthal-Field-Ploessen:Rosenthal-Field-Ploessen:DE:49.8633333333333:11.7883333333333
-EDQR:Ebern:Sendelbach:DE:50.0416666666667:10.825
-EDQS:Suhl:Goldlauter:DE:50.6316666666667:10.7266666666667
-EDQT:Hassfurt:Hassfurt:DE:50.0183333333333:10.53
-EDQW:Weiden/Opf.:Weiden/Opf.:DE:49.6783333333333:12.1166666666667
-EDQX:Hetzleser Berg:Hetzleser Berg:DE:49.6416666666667:11.1616666666667
-EDQY:Coburg:Steinruecken:DE:50.23:10.9966666666667
-EDQZ:Pegnitz:Zipser Berg:DE:49.7616666666667:11.575
-EDRA:Bad Neuenahr:Ahrweiler:DE:50.5583333333333:7.13666666666667
-EDRB:Bittburg:Bittburg:DE:49.945:6.565
-EDRD:Neumagen-Dhron:Neumagen-Dhron:DE:49.8433333333333:6.91666666666667
-EDRF:Bad Duerkheim:Bad Duerkheim:DE:49.4733333333333:8.19666666666667
-EDRG:Idar-Oberstein:Goettschied:DE:49.7333333333333:7.33833333333333
-EDRH:Hoppstaedten-Weiersbach:Hoppstaedten-Weiersbach:DE:49.6116666666667:7.185
-EDRI:Linkenheim:Linkenheim:DE:48.1416666666667:8.395
-EDRJ:Saarlouis:Dueren:DE:49.3133333333333:6.67333333333333
-EDRK:Koblenz:Winningen:DE:50.325:7.52833333333333
-EDRL:Lachen-Speyerdorf:Lachen-Speyerdorf:DE:49.3316666666667:8.205
-EDRM:Traben-Trabach:Mont Royal:DE:49.9683333333333:7.11166666666667
-EDRN:Nannhausen:Nannhausen:DE:49.97:7.48
-EDRO:Schweighofen:Schweighofen:DE:49.0316666666667:7.99
-EDRP:Pirmasens:Pirmasens:DE:49.265:7.49166666666667
-EDRS:Bad Sobenheim:Domberg:DE:49.79:7.665
-EDRT:Trier:Foehren:DE:49.865:6.78833333333333
-EDRV:Wershofen/Eifel:Wershofen/Eifel:DE:50.4516666666667:6.78666666666667
-EDRW:Dierdorf:Wienau:DE:50.5666666666667:7.65333333333333
-EDRY:Speyer:Speyer:DE:49.305:8.45166666666667
-EDRZ:Zweibruecken:Zweibruecken:DE:49.21:7.4
-EDSA:Albstadt:Degerfeld:DE:48.25:9.06
-EDSB:Karlsruhe/Baden-Baden:Karlsruhe/Baden-Baden:DE:48.78:8.08
-EDSG:Grabenstetten:Grabenstetten:DE:48.5366666666667:9.43666666666667
-EDSH:Backnang:Heiningen:DE:48.92:9.455
-EDSI:Binningen:Binningen:DE:47.8:8.72
-EDSK:Kehl:Sundheim:DE:48.5616666666667:7.84333333333333
-EDSL:Blumberg:Blumberg:DE:47.845:8.565
-EDSN:Neuhausen ob Eck:Neuhausen ob Eck:DE:47.9766666666667:8.905
-EDSW:Altdorf-Wallburg:Altdorf-Wallburg:DE:48.27:7.84166666666667
-EDSZ:Rottweil:Rottweil:DE:48.1866666666667:8.72166666666667
-EDTB:Baden-Oos:Baden-Oos:DE:48.7916666666667:8.18666666666667
-EDTC:Bruchsal:Bruchsal:DE:49.135:8.56333333333333
-EDTD:Donaueschingen:Villingen:DE:47.9733333333333:8.52166666666667
-EDTF:Freiburg i.Br.:Freiburg i.Br.:DE:48.02:7.83333333333333
-EDTG:Bremgarten:Bremgarten:DE:47.9033333333333:7.61833333333333
-EDTH:Heubach:Heubach:DE:48.8016666666667:9.92833333333333
-EDTL:Lahr:Lahr:DE:48.37:7.82833333333333
-EDTM:Mengen:Hohentengen:DE:48.0533333333333:9.37333333333333
-EDTN:Nabern/Teck:Nabern/Teck:DE:48.6133333333333:9.47666666666667
-EDTO:Offenburg:Offenburg:DE:48.45:7.925
-EDTP:Pfullendorf:Pfullendorf:DE:47.9083333333333:9.25166666666667
-EDTQ:Pattonville:Pattonville:DE:48.8633333333333:9.225
-EDTR:Herten:Rheinfelden:DE:47.56:7.74833333333333
-EDTS:Schwenningen am Neckar:Schwenningen am Neckar:DE:48.065:8.57166666666667
-EDTU:Saulgau:Saulgau:DE:48.03:9.50666666666667
-EDTW:Winzeln-Schramberg:Winzeln-Schramberg:DE:48.28:8.42833333333333
-EDTX:Schwaebisch Hall:Weckrieden:DE:49.1233333333333:9.79833333333333
-EDTY:Schwaebisch Hall:Schwaebisch Hall:DE:49.1183333333333:9.78333333333333
-EDTZ:Konstanz:Konstanz:DE:47.6816666666667:9.13666666666667
-EDUA:Stechow:Ferchesar:DE:52.6516666666667:12.4883333333333
-EDUB:Brandenburg:Briest:DE:52.4383333333333:12.4583333333333
-EDUF:Falkenberg:Loennewitz:DE:51.5483333333333:13.2283333333333
-EDUO:Oberrissdorf:Oberrissdorf:DE:51.5433333333333:11.5966666666667
-EDUS:Finsterwalde:Schacksdorf:DE:51.6083333333333:13.7383333333333
-EDUT:Templin:Groß Doelln:DE:53.0316666666667:13.5433333333333
-EDUW:Tutow:Tutow:DE:53.9216666666667:13.2183333333333
-EDUY:Welzow:Sedlitzer See:DE:51.5583333333333:14.105
-EDUZ:Zerbst:Zerbst:DE:52.0016666666667:12.15
-EDVA:Bad Gandersheim:Bad Gandersheim:DE:51.8533333333333:10.0266666666667
-EDVC:Celle:Arloh:DE:52.69:10.1083333333333
-EDVE:Braunschweig-Wolfsburg:Braunschweig-Wolfsburg:DE:52.32:10.5566666666667
-EDVF:Blomberg:Borkhausen:DE:51.9183333333333:9.11333333333333
-EDVG:Mengeringhausen:Mengeringhausen:DE:51.3766666666667:8.98166666666667
-EDVH:Hodenhagen:Hodenhagen:DE:52.7633333333333:9.60833333333333
-EDVI:Hoexter-Holzminden:Hoexter-Holzminden:DE:51.8066666666667:9.37833333333333
-EDVJ:Salzgitter:Schaeferstuhl:DE:52.0283333333333:10.3683333333333
-EDVK:Kassel:Calden:DE:51.4083333333333:9.37833333333333
-EDVL:Hoelleberg:Hoelleberg:DE:51.6116666666667:9.39833333333333
-EDVM:Hildesheim:Hildesheim:DE:52.18:9.945
-EDVN:Northeim:Northeim:DE:51.7066666666667:10.04
-EDVP:Peine:Eddesse:DE:52.4033333333333:10.2283333333333
-EDVR:Rinteln:Rinteln:DE:52.175:9.05333333333333
-EDVS:Salzgitter:Druette:DE:52.155:10.4266666666667
-EDVU:uelzen:uelzen:DE:52.9833333333333:10.465
-EDVW:Bad Pyrmont:Bad Pyrmont:DE:51.9683333333333:9.29333333333333
-EDVY:Porta-Westfalica:Porta-Westfalica:DE:52.2216666666667:8.86333333333333
-EDWA:Borderlum:Borderlum:DE:54.6266666666667:8.93
-EDWB:Bremerhaven:Bremerhaven:DE:53.5066666666667:8.57333333333333
-EDWC:Damme:Damme:DE:52.4883333333333:8.18666666666667
-EDWE:Emden:Emden:DE:53.3916666666667:7.225
-EDWF:Leer:Papenburg:DE:53.2716666666667:7.44333333333333
-EDWG:Wangerooge:Wangerooge:DE:53.7866666666667:7.91666666666667
-EDWH:Oldenburg:Hatten:DE:53.0683333333333:8.31333333333333
-EDWI:Wilhelmshaven:Mariensiel:DE:53.5033333333333:8.05333333333333
-EDWJ:Juist:Juist:DE:53.68:7.05833333333333
-EDWK:Karlshoefen:Karlshoefen:DE:53.3333333333333:9.02833333333333
-EDWL:Langeoog:Langeoog:DE:53.7433333333333:7.49833333333333
-EDWM:Weser-Wuemme:Weser-Wuemme:DE:53.0533333333333:9.20833333333333
-EDWN:Nordhorn:Lingen:DE:52.4583333333333:7.185
-EDWO:Osnabrueck:Atterheide:DE:52.2866666666667:7.97333333333333
-EDWP:Wiefelstede/Conneforde:Wiefelstede/Conneforde:DE:53.3216666666667:8.07333333333333
-EDWQ:Ganderkesee:Atlas Airfield:DE:53.0366666666667:8.505
-EDWR:Borkum:Borkum:DE:53.595:6.71
-EDWS:Norden-Norddeich:Norden-Norddeich:DE:53.6333333333333:7.19
-EDWU:Varrelbusch:Varrelbusch:DE:52.9066666666667:8.04
-EDWV:Verden:Scharnhorst:DE:52.965:9.285
-EDWX:Westerstede:Felde:DE:53.2883333333333:7.93
-EDWY:Norderney:Norderney:DE:53.7066666666667:7.22833333333333
-EDWZ:Baltrum:Baltrum:DE:53.725:7.37166666666667
-EDXA:Achmer:Achmer:DE:52.3783333333333:7.91333333333333
-EDXB:Heide-Buesum:Heide-Buesum:DE:54.1533333333333:8.90166666666667
-EDXC:Schleswig:Kropp:DE:54.425:9.54
-EDXD:Bohmte:Bad Essen:DE:52.3516666666667:8.32666666666667
-EDXE:Rheine:Eschendorf:DE:52.2766666666667:7.49166666666667
-EDXF:Flensburg:Schaeferhaus:DE:54.7733333333333:9.37833333333333
-EDXG:Melle-Groenegau:Melle-Groenegau:DE:52.2016666666667:8.37833333333333
-EDXH:Helgoland:Duene:DE:54.185:7.91666666666667
-EDXI:Nienburg:Holzbalge:DE:52.71:9.16333333333333
-EDXJ:Husum:Schwesing:DE:54.51:9.13833333333333
-EDXK:Leck:Leck:DE:54.79:8.96166666666667
-EDXL:Barssel:Barssel:DE:53.1633333333333:7.79333333333333
-EDXM:St. Michaelsdonn:St. Michaelsdonn:DE:53.9783333333333:9.14333333333333
-EDXN:Nordholz:Spieka:DE:53.7666666666667:8.64333333333333
-EDXO:St. Peter-Ording:St. Peter-Ording:DE:54.3083333333333:8.68666666666667
-EDXP:Harle:Harle:DE:53.7066666666667:7.82166666666667
-EDXQ:Rotehnburg/Wuemme:Rotehnburg/Wuemme:DE:53.1283333333333:9.34833333333333
-EDXR:Rendsburg:Schachtholm:DE:54.2183333333333:9.60333333333333
-EDXS:Seedorf:Seedorf:DE:53.335:9.26
-EDXT:Sierksdorf:Hof Altona:DE:54.07:10.745
-EDXU:Huettenbusch:Huettenbusch:DE:53.2866666666667:8.94666666666667
-EDXW:Westerland/Sylt:Westerland/Sylt:DE:54.9116666666667:8.34166666666667
-EDXY:Wyk auf Foehr:Wyk auf Foehr:DE:54.685:8.53166666666667
-EDXZ:Kuehrstedt:Bederkesa:DE:53.5683333333333:8.79
+EDPO:Neumarkt-Oberpfalz:Neumarkt:DE:49.286:11.445
+EDQD:Bayreuth:Bayreuth:DE:49.983:11.633
+EDQE:Burg Feuerstein:Burg Feuerstein:DE:49.794:11.132
+EDQH:Herzogenaurach:Herzogenaurach:DE:49.582:10.878
+EDQM:Hof:Hof:DE:50.289:11.855
+EDRA:Bad Neuenahr:Ahrweiler:DE:50.558:7.137
+EDRK:Winningen:Koblenz:DE:50.325:7.531
+EDRM:Mont Royal Traben:Trabach:DE:49.964:7.114
+EDRT:Trier-Föhren:Trier-Föhren:DE:49.863:6.789
+EDRY:Speyer:Speyer:DE:49.303:8.451
+EDRZ:Zweibruecken:Zweibruecken:DE:49.21:7.402
+EDSA:Degerfeld:Albstadt:DE:48.25:8.06
+EDSB:Karlsruhe-Baden Baden:Karlsruhe-Baden Baden:DE:48.779:8.081
+EDTF:Breisgau:Freiburg:DE:48.023:7.832
+EDTK:Forchheim:Karlsruhe:DE:48.98:8.331
+EDTL:Lahr:Lahr:DE:48.37:7.828
+EDTM:Mengen-Hohentengen:Mengen-Hohentengen:DE:48.054:9.373
+EDTX:Weckrieden:Schwabisch Hall:DE:49.125:9.783
+EDTY:Hessental:Schwabisch Hall:DE:49.12:9.778
+EDTZ:Konstanz:Konstanz:DE:47.683:9.183
+EDVA:Bad Gandersheim:Bad Gandersheim:DE:51.853:10.026
+EDVC:Arloh:Celle:DE:52.689:10.108
+EDVE:Braunschweig:Braunschweig:DE:52.319:10.556
+EDVH:Hodenhagen:Hodenhagen:DE:52.762:9.608
+EDVI:Hoxter-Holzminden:Hoxter-Holzminden:DE:51.806:9.378
+EDVK:Calden:Kassel:DE:51.408:9.378
+EDVM:Hildesheim:Hildesheim:DE:52.18:9.946
+EDVN:Northeim:Northeim:DE:51.707:10.04
+EDVP:Peine Eddesse:Peine:DE:52.402:10.229
+EDVS:Drutte:Salzgitter:DE:52.154:10.426
+EDVY:Porta-Westfalica:Porta-Westfalica:DE:52.222:8.863
+EDWB:Bremerhaven:Bremerhaven:DE:53.507:8.573
+EDWC:Damme:Damme:DE:52.487:8.186
+EDWD:Lemwerder:Lemwerder:DE:53.143:8.623
+EDWE:Emden:Emden:DE:53.391:7.227
+EDWF:Papenburg:Leer:DE:53.272:7.442
+EDWG:Wangerooge:Wangerooge:DE:53.787:7.916
+EDWH:Hatten:Oldenburg:DE:53.069:8.313
+EDWI:Mariensiel:Wilhelmshaven:DE:53.505:8.053
+EDWJ:Juist:Juist:DE:53.68:7.058
+EDWK:Karlshofen:Karlshofen:DE:53.333:9.028
+EDWL:Langeoog:Langeoog:DE:53.743:7.499
+EDWM:Weser-Wumme:Weser-Wumme:DE:53.054:9.209
+EDWN:Nordhorn:Nordhorn:DE:52.458:7.185
+EDWO:Atterheide:Osnabruck:DE:52.286:7.973
+EDWQ:Ganderkesee Atlas:Ganderkesee:DE:53.036:8.505
+EDWR:Borkum:Borkum:DE:53.596:6.709
+EDWS:Nordern-Norddeich:Norden-Norddeich:DE:53.633:7.189
+EDWU:Varrelbusch:Varrelbusch:DE:52.907:8.041
+EDWY:Norderney:Norderney:DE:53.707:7.23
+EDXA:Achmer:Achmer:DE:52.377:7.914
+EDXB:Heide-Busum:Heide:DE:54.153:8.902
+EDXC:Schleswig-Kropp:Schleswig-Kropp:DE:54.425:9.54
+EDXE:Eschendorf:Rheine:DE:52.276:7.491
+EDXF:Schaferhaus:Flensburg:DE:54.772:9.378
+EDXG:Melle-Gronegau:Melle-Gronegau:DE:52.201:8.378
+EDXI:Neinburg-Holzbalge:Nienburg-Holzbalge:DE:52.71:9.162
+EDXL:Barssel:Barssel:DE:53.164:7.793
+EDXM:St Michaelisdonn:St Michaelisdonn:DE:53.978:9.143
+EDXN:Nordholz Spieka:Nordholz-Spieka:DE:53.767:8.644
+EDXO:St Peter-Ording:St Peter-Ording:DE:54.309:8.687
+EDXR:Schachtholm:Rendsburg:DE:54.221:9.601
+EDXW:Westerland-Sylt:Westerland-Sylt:DE:54.913:8.34
+EDXY:Wyk Auf Fohr:Wyk Auf Fohr:DE:54.685:8.532
+EDZE:Essen:Essen:DE:51.4:6.966
+EDEQ:Muhlhausen:Muhlhausen:DE:51.217:10.55
+EDFY:Elz:Elz:DE:50.433:8.02
+EDGU:Unterschupf:Unterschupf:DE:49.655:9.683
+EDNB:Arnbruck:Arnbruck:DE:49.117:12.983
+EDNM:Bruck:Nittenau:DE:49.217:12.3
+EDNV:Vogtareuth:Vogtareuth:DE:47.933:12.2
+EDPB:Bad Ditzenbach:Bad Ditzenbach:DE:48.567:9.733
+EDPQ:Oberpfalz:Schmidgaden:DE:49.417:12.083
+EDSZ:Zepfenhan:Rottweil:DE:48.183:8.717
 EEKA:Kardla:Kardla:EE:58.991:22.831
 EEKE:Kuressaare:Kuressaare:EE:58.23:22.509
 EEPU:Parnu:Parnu:EE:58.419:24.473
@@ -628,7 +444,7 @@ EGNC:Carlisle:Carlisle:GB:54.938:-2.809
 EGNE:Gamston:Retford:GB:53.28:-0.951
 EGNH:Blackpool:Blackpool:GB:53.772:-3.029
 EGNJ:Humberside:Humberside:GB:53.574:-0.351
-EGNL:Walney I:Barrow:GB:54.131:-3.264
+EGNL:Walney:Barrow:GB:54.131:-3.264
 EGNM:Leeds Bradford:Leeds Bradford:GB:53.866:-1.661
 EGNO:Warton:Warton:GB:53.745:-2.883
 EGNR:Hawarden:Hawarden:GB:53.178:-2.978
@@ -1086,7 +902,7 @@ ESSL:Saab:Linkoping:SE:58.406:15.68
 ESSM:Brattforsheden:Brattforsheden:SE:59.608:13.912
 ESSN:Norrtalje:Norrtalje:SE:59.733:18.696
 ESSP:Kungsangen:Norrkoping:SE:58.586:16.251
-ESSQ:Karlstad Flygplats:Karlstad Flygplats:SE:59.367:13.466
+ESOK:Karlstad:Karlstad:SE:59.367:13.466
 ESST:Fryklanda:Torsby:SE:60.158:12.991
 ESSU:Eskilstuna:Eskilstuna:SE:59.351:16.708
 ESSV:Visby:Visby:SE:57.663:18.346
@@ -1184,7 +1000,7 @@ LCPH:Paphos:Pafos:CY:34.718:32.486
 LCRA:Akrotiri:Akrotiri:CY:34.59:32.988
 LDDD:Zagreb-Maksimir:Zagreb-Maksimir:HR:45.817:16.033
 LDDU:Cilipi:Dubrovnik:HR:42.561:18.268
-LDLO:Losinj:Losinj I:HR:44.566:14.393
+LDLO:Losinj:Losinj:HR:44.566:14.393
 LDOC:Cepin:Osijek:HR:45.542:18.636
 LDOR:Slavonski Brod:Slavonski Brod:HR:45.167:18
 LDOS:Cepin:Osijek:HR:45.462:18.811
@@ -1639,8 +1455,8 @@ LFTH:Le Palyvestre:Hyeres:FR:43.097:6.146
 LFTU:St Raphael:St Raphael:FR:43.417:6.75
 LFTW:Garons:Nimes:FR:43.757:4.416
 LFTZ:La Mole:La Mole:FR:43.205:6.482
-LFVM:Miquelon:Miquelon I:FR:47.095:-56.38
-LFVP:St Pierre And Miquelon:St Pierre I:FR:46.763:-56.176
+LFVM:Miquelon:Miquelon:FR:47.095:-56.38
+LFVP:St Pierre And Miquelon:St Pierre:FR:46.763:-56.176
 LFXA:Amberieu:Amberieu:FR:45.987:5.328
 LFXB:Thenac:Saintes:FR:45.702:-0.637
 LFXC:Vittel:Auxainvilliers:FR:48.23:5.846
@@ -2100,7 +1916,7 @@ LPMR:Monte Real:Monte Real:PT:39.831:-8.887
 LPMT:Montijo:Montijo:PT:38.704:-9.036
 LPOV:Ovar:Ovar:PT:40.916:-8.646
 LPPD:Ponta Delgada:Ponta Delgada:PT:37.741:-25.698
-LPPI:Pico Pico I:Pico:PT:38.554:-28.44
+LPPI:Pico Pico:Pico:PT:38.554:-28.44
 LPPM:Portimao:Portimao:PT:37.149:-8.584
 LPPR:Francisco Sa Carneiro:Porto:PT:41.248:-8.681
 LPPS:Porto Santo:Porto Santo:PT:33.073:-16.35
@@ -2137,6 +1953,7 @@ LRSV:Salcea:Suceava:RO:47.688:26.354
 LRTC:Cataloi:Tulcea:RO:45.062:28.714
 LRTM:Vidrasau:Targu Mures:RO:46.468:24.412
 LRTR:Giarmata:Timisoara:RO:45.81:21.338
+LRTZ:Tuzla:Tuzla:RO:43.985:28.607
 LSAZ:Reichenbach:Reichenbach:CH:46.614:7.678
 LSGC:Les Eplatures:Les Eplatures:CH:47.084:6.793
 LSGE:Ecuvillens:Ecuvillens:CH:46.755:7.076
@@ -2334,6 +2151,8 @@ UGEE:Zvartnots:Yerevan:AM:40.148:44.397
 UDYZ:Zvartnots:Yerevan:AM:40.148:44.397
 UGEL:Shirak:Gyumri:AM:40.752:43.86
 UGGG:Novo Alexeyevka:Tbilisi:GE:41.669:44.955
+UGTB:Novo Alexeyevka:Tbilisi:GE:41.669:44.955
+UGSB:Batumi:Batumi:GE:41.61:41.599
 UGMM:Muhrani:Muhrani:GE:41.933:44.583
 UGSS:Babushra:Sukhumi:GE:42.853:41.122
 UHBB:Blagoveshensk:Blagoveschensk:RU:50.425:127.412
@@ -2460,12 +2279,12 @@ UWPP:Penza:Penza:RU:54.783:46
 UWSS:Tsentralny:Saratov:RU:51.566:46.044
 UWUU:Ufa:Ufa:RU:54.558:55.874
 UWWW:Kurumoch:Samara:RU:53.505:50.164
-MBGT:Grand Turk:Grand Turk I:TC:21.444:-71.142
+MBGT:Grand Turk:Grand Turk:TC:21.444:-71.142
 MBMC:Middle Caicos:Middle Caicos:TC:21.833:-71.817
-MBNC:North Caicos:North Caicos I:TC:21.917:-71.94
+MBNC:North Caicos:North Caicos:TC:21.917:-71.94
 MBPI:Pine Cay:Caicos:TC:21.9:-72.1
-MBPV:Providenciales:Providenciales I:TC:21.774:-72.266
-MBSC:South Caicos:South Caicos I:TC:21.516:-71.529
+MBPV:Providenciales:Providenciales:TC:21.774:-72.266
+MBSC:South Caicos:South Caicos:TC:21.516:-71.529
 MBSY:Salt Cay:Salt Key:TC:21.333:-71.2
 MDAB:Arroyo Barril:Samana:DO:19.198:-69.43
 MDBH:Maria Montez:Barahona:DO:18.251:-71.12
@@ -2627,30 +2446,30 @@ MUVR:Varadero:Varadero:CU:23.034:-81.435
 MUVT:Las Tunas:Las Tunas:CU:20.988:-76.936
 MWCB:Gerrard Smith:Cayman Brac:KY:19.687:-79.883
 MWCR:Roberts:Grand Cayman:KY:19.293:-81.358
-MYAB:Clarence A Bain:Andros I:BS:24.288:-77.685
-MYAF:IVAO Test Center:Andros I:BS:24.698:-77.796
-MYAK:Congo Town:Andros I:BS:24.159:-77.59
-MYAM:Marsh Harbour:Abaco I:BS:26.511:-77.084
-MYAN:San Andros:Andros I:BS:25.054:-78.049
-MYAP:Spring Point:Acklins I:BS:22.442:-73.971
-MYAT:Treasure Cay:Abaco I:BS:26.745:-77.391
-MYBC:Chub Cay:Berry I:BS:25.417:-77.881
+MYAB:Clarence A Bain:Andros:BS:24.288:-77.685
+MYAF:IVAO Test Center:Andros:BS:24.698:-77.796
+MYAK:Congo Town:Andros:BS:24.159:-77.59
+MYAM:Marsh Harbour:Abaco:BS:26.511:-77.084
+MYAN:San Andros:Andros:BS:25.054:-78.049
+MYAP:Spring Point:Acklins:BS:22.442:-73.971
+MYAT:Treasure Cay:Abaco:BS:26.745:-77.391
+MYBC:Chub Cay:Berry:BS:25.417:-77.881
 MYBS:Bimini Island:Bimini:BS:25.7:-79.265
-MYCA:Arthurs Town:Cat I:BS:24.629:-75.674
-MYCB:New Bight:Cat I:BS:24.317:-75.45
-MYEF:Great Exuma:Great Exuma I:BS:23.563:-75.878
+MYCA:Arthurs Town:Cat:BS:24.629:-75.674
+MYCB:New Bight:Cat:BS:24.317:-75.45
+MYEF:Great Exuma:Great Exuma:BS:23.563:-75.878
 MYEG:Exuma:George Town:BS:23.467:-75.782
-MYEH:North Eleuthera:Eleuthera I:BS:25.475:-76.684
-MYEM:Governors Harbour:Eleuthera I:BS:25.285:-76.331
-MYER:Rock Sound:Eleuthera I:BS:24.892:-76.178
+MYEH:North Eleuthera:Eleuthera:BS:25.475:-76.684
+MYEM:Governors Harbour:Eleuthera:BS:25.285:-76.331
+MYER:Rock Sound:Eleuthera:BS:24.892:-76.178
 MYGF:Freeport:Freeport:BS:26.559:-78.696
 MYGM:Grand Bahama Aux:Grand Bahama:BS:26.633:-78.367
 MYGW:West End:West End:BS:26.683:-78.967
-MYIG:Great Inagua:Great Inagua I:BS:20.975:-73.667
-MYLD:Deadmans Cay:Long I:BS:23.179:-75.094
-MYLS:Stella Maris:Long I:BS:23.583:-75.269
+MYIG:Great Inagua:Great Inagua:BS:20.975:-73.667
+MYLD:Deadmans Cay:Long:BS:23.179:-75.094
+MYLS:Stella Maris:Long:BS:23.583:-75.269
 MYNN:Nassau:Nassau:BS:25.039:-77.466
-MYSM:Cockburn Town:San Salvador I:BS:24.063:-74.524
+MYSM:Cockburn Town:San Salvador:BS:24.063:-74.524
 MZBZ:Phillip SW Goldson:Belize City:BZ:17.539:-88.308
 SA0A:Estancia Don Panos:Chaco:AR:-26.296:-59.538
 SA0B:Campo Arenal:Catamarca:AR:-27.072:-66.586
@@ -3029,7 +2848,7 @@ SCIE:Concepcion:Concepcion:CL:-36.773:-73.063
 SCIL:Auco:Illapel:CL:-31.57:-71.109
 SCIM:Isla Mocha:Isla Mocha:CL:-38.391:-73.87
 SCIP:Mataveri:Isla De Pascua:CL:-27.165:-109.422
-SCIR:Isla Robinson Crusoe:Robinson Crusoe I:CL:-33.667:-78.983
+SCIR:Isla Robinson Crusoe:Robinson Crusoe:CL:-33.667:-78.983
 SCJO:Canal Bajo:Osorno:CL:-40.611:-73.06
 SCLC:Las Condes:Santiago:CL:-33.376:-70.578
 SCLI:Torca:Llico:CL:-34.785:-72.05
@@ -3080,7 +2899,7 @@ SESV:San Vicente:San Vicente:EC:-0.583:-80.4
 SECO:Francisco De Orellan:Coca:EC:-0.463:-76.987
 SECU:Mariscal Lamar:Cuenca:EC:-2.89:-78.984
 SEES:Tachina:Esmeraldas:EC:0.967:-79.633
-SEGS:Baltra-Seymour:Galapagos I:EC:-0.454:-90.266
+SEGS:Baltra-Seymour:Galapagos:EC:-0.454:-90.266
 SEGU:Guayaquil:Guayaquil:EC:-2.158:-79.884
 SEIB:Atahualpa:Ibarra:EC:0.338:-78.137
 SELO:Catamayo:Catamayo:EC:-4:-79.366
@@ -3152,7 +2971,7 @@ SKRG:Rionegro:Rionegro:CO:6.164:-75.423
 SKRH:Riohacha:Riohacha:CO:11.526:-72.926
 SKSJ:San Jose Del Guavaire:San Jose Del Guaviare:CO:2.58:-72.639
 SKSM:Santa Marta:Santa Marta:CO:11.12:-74.231
-SKSP:San Andres:San Andres I:CO:12.584:-81.711
+SKSP:San Andres:San Andres:CO:12.584:-81.711
 SKSV:San Vincente:San Vicente Del Caguan:CO:2.152:-74.766
 SKTM:Tame:Tame:CO:6.451:-71.76
 SKUC:Arauca:Arauca:CO:7.069:-70.737
@@ -3330,20 +3149,20 @@ SYGT:Georgetown:Georgetown:GY:6.8:-58.15
 SYLT:Lethem:Lethem:GY:3.373:-59.79
 SYTM:Timehri:Timehri:GY:6.5:-58.25
 TAPA:Antigua VC Bird:St Johns:AG:17.137:-61.793
-TBPB:Bridgetown-Grantley Adams:Barbados I:BB:13.075:-59.492
+TBPB:Bridgetown-Grantley Adams:Barbados:BB:13.075:-59.492
 TBPO:Bridgetown City:Bridgetown City:BB:13.1:-59.616
 TDCF:Canefield:Canefield:DM:15.533:-61.4
 TDPD:Melville Hall:Roseau:DM:15.547:-61.3
 TDPR:Roseau:Roseau:DM:15.3:-61.4
 TFFB:Ballif:Basse-Terre:FR:16.013:-61.742
 TFFF:Ft De France:Ft De France:FR:14.591:-61.003
-TFFG:Grand Case:St Martin I:FR:18.1:-63.047
-TFFJ:St Barthelemy:St Barthelemy I:FR:17.904:-62.844
+TFFG:Grand Case:St Martin:FR:18.1:-63.047
+TFFJ:St Barthelemy:St Barthelemy:FR:17.904:-62.844
 TFFM:Grand Bourg:Grand-Bourg:FR:15.869:-61.27
 TFFR:Le Raizet:Pointe A Pitre:FR:16.265:-61.532
 TGPY:Point Salines:St Georges:GD:12.004:-61.786
-TIST:Cyril E King:St Thomas I:VI:18.337:-64.973
-TISX:Alexander Hamilton:St Croix I:VI:17.702:-64.799
+TIST:Cyril E King:St Thomas:VI:18.337:-64.973
+TISX:Alexander Hamilton:St Croix:VI:17.702:-64.799
 TJBQ:Rafael Hernandez:Aguadilla:PR:18.495:-67.13
 TJFA:Diego Jimenez Torres:Fajardo:PR:18.309:-65.662
 TJIG:Fernando Luis Ribas:San Juan:PR:18.457:-66.098
@@ -3351,27 +3170,27 @@ TJMZ:Eugenio Maria:Mayaguez:PR:18.256:-67.148
 TJNR:Roosevelt Roads:Roosevelt Roads:PR:18.245:-65.644
 TJPS:Mercedita:Ponce:PR:18.008:-66.563
 TJSJ:Luis Munoz Marin Int:San Juan:PR:18.439:-66.002
-TKPK:Basseterre Gldn Rock:St Kitts I:KN:17.311:-62.719
-TKPN:Newcastle St Kitts-Nevis:Nevis I:KN:17.206:-62.59
+TKPK:Basseterre Gldn Rock:St Kitts:KN:17.311:-62.719
+TKPN:Newcastle St Kitts-Nevis:Nevis:KN:17.206:-62.59
 TLPC:Vigie:Castries:LC:14.02:-60.993
 TLPL:Hewanorra:St Lucia:LC:13.733:-60.953
-TNCA:Aruba:Aruba I:AW:12.501:-70.015
-TNCB:Flamingo:Bonaire I:AN:12.131:-68.269
-TNCC:Curacao:Curacao I:AN:12.189:-68.96
-TNCE:FD Roosevelt:St Eustatius I:AN:17.496:-62.98
-TNCM:Prinses Juliana:St Maarten I:AN:18.041:-63.109
-TQPF:Wallblake:Anguilla I:AI:18.205:-63.055
+TNCA:Aruba:Aruba:AW:12.501:-70.015
+TNCB:Flamingo:Bonaire:AN:12.131:-68.269
+TNCC:Curacao:Curacao:AN:12.189:-68.96
+TNCE:FD Roosevelt:St Eustatius:AN:17.496:-62.98
+TNCM:Prinses Juliana:St Maarten:AN:18.041:-63.109
+TQPF:Wallblake:Anguilla:AI:18.205:-63.055
 TRPM:Blackburne:Plymouth:MS:16.75:-62.166
 TTCP:Scarborough Crown Pt:Scarborough:TT:11.15:-60.832
 TTPP:Piarco:Port Of Spain:TT:10.595:-61.337
 TTPT:Crown Point:Tobago:TT:11.15:-60.833
-TUPJ:Roadtown:Beef I:VI:18.445:-64.543
+TUPJ:Roadtown:Beef:VI:18.445:-64.543
 TUPW:Virgin Gorda:Virgin Gorda:VI:18.448:-64.429
 TVSB:JF Mitchell:Bequia:TT:12.988:-61.262
 TVSC:Canouan:Canouan:TT:12.699:-61.342
 TVSM:Mustique:Mustique:TT:12.888:-61.18
 TVSV:St Vincent:St Vincent:TT:13.144:-61.211
-TXKF:Bermuda:Bermuda I:BM:32.364:-64.679
+TXKF:Bermuda:Bermuda:BM:32.364:-64.679
 DAAD:Bou Saada:Bou Saada:DZ:35.332:4.206
 DAAE:Soummam:Bejaia:DZ:36.712:5.07
 DAAF:Aoulef:Aoulef:DZ:26.967:1.083
@@ -3529,6 +3348,7 @@ DRZM:Maine Soroa:Maine-Soroa:NE:13.2:12.033
 DRZR:Zinder:Zinder:NE:13.779:8.984
 DTKA:7 November:Tabarka:TN:36.98:8.877
 DTMB:Habib Bourguiba:Monastir:TN:35.758:10.755
+DTNZ:Zine Al Abidine Ben Ali:Enfidha:TN:36.076:10.439
 DTTA:Tunis Carthage:Tunis:TN:36.851:10.227
 DTTB:Bizerte:Bizerte:TN:37.25:9.8
 DTTD:Remada:Remada:TN:32.317:10.4
@@ -4152,10 +3972,10 @@ FQTT:Chingozi:Tete:MZ:-16.105:33.64
 FQUG:Ulongwe:Ulongwe:MZ:-14.705:34.352
 FQVL:Vilankulu:Vilankulu:MZ:-22.018:35.313
 FQXA:Xai Xai:Xai Xai:MZ:-25.05:33.633
-FSDA:Darros I:Darros I:SC:-5.417:53.3
+FSDA:Darros:Darros:SC:-5.417:53.3
 FSIA:Seychelles:Mahe:SC:-4.674:55.522
 FSPP:Praslin:Praslin:SC:-4.319:55.691
-FSSD:Denis I:Denis I:SC:-3.8:55.667
+FSSD:Denis:Denis:SC:-3.8:55.667
 FTTA:Sarh:Sarh:TD:9.151:18.379
 FTTB:Bongor:Bongor:TD:10.283:15.383
 FTTC:Abeche:Abeche:TD:13.847:20.844
@@ -4568,10 +4388,18 @@ HCMS:Scusciuban:Scusciuban:SO:10.3:50.233
 HCMU:Erigavo:Erigavo:SO:10.635:47.383
 HCMV:Burao:Burao:SO:9.5:45.567
 HDAM:Ambouli:Djibouti:DJ:11.547:43.16
+HDCH:Chabelley:Djibouri:DJ:11.517:43.061
+HDAS:Ali Sabieh:Ali Sabieh:DJ:11.133:42.717
+HDAG:Assa Gueyla:Assa Gueyla:DJ:12.2:42.633
+HDDK:Dikhil:Dikhil:DJ:11.1:42.35
+HDHE:Khor Angar:Khor Angar:DJ:12.433:43.3
+HDMO:Moucha:Moucha:DJ:11.717:43.2
+HDOB:Obock:Obock:DJ:11.967:43.267
 HDTJ:Tadjourah:Tadjourah:DJ:11.78:42.9
 HEAR:El Arish:El Arish:EG:31.073:33.836
 HEAT:Asyut:Asyut:EG:27.046:31.012
 HEAX:Alexandria:Alexandria:EG:31.184:29.949
+HEAZ:Almaza:Cairo:EG:30.094:31.361
 HEBA:Borg el Arab:Alexandria:EG:30.918:29.696
 HEBL:Abu Simbel:Abu Simbel:EG:22.376:31.612
 HECA:Cairo:Cairo:EG:30.122:31.406
@@ -4828,7 +4656,7 @@ VGTJ:Tezgaon:Dhaka:BD:23.778:90.383
 VGZR:Zia:Dhaka:BD:23.843:90.398
 VHHH:Hong Kong:Hong Kong:HK:22.309:113.915
 VHHX:Kai Tak:Hong Kong:HK:22.317:114.203
-VHSK:Sek Kong:Sek Kong:HK:22.436:114.08
+VHSK:Sek Kong:Hong Kong:HK:22.436:114.08
 VIAG:Kheria:Agra:IN:27.156:77.961
 VIAL:Allahabad:Allahabad:IN:25.44:81.735
 VIAR:Amritsar:Amritsar:IN:31.708:74.799
@@ -5007,7 +4835,7 @@ VVTS:Tan Son Nhat:Hochiminh:VN:10.819:106.652
 VVVH:Vinh:Vinh:VN:18.737:105.671
 VYBG:Bagan:Bagan:MM:21.178:94.929
 VYBM:Banmaw:Banmaw:MM:24.269:97.246
-VYCI:Coco I:Coco I:MM:14.142:93.368
+VYCI:Coco:Coco:MM:14.142:93.368
 VYCZ:Chanmyathazi:Mandalay:MM:21.944:96.09
 VYDW:Dawei:Dawei:MM:14.099:98.205
 VYHH:Heho:Heho:MM:20.75:96.792
@@ -5091,7 +4919,7 @@ WBGW:Lawas:Lawas:MY:4.85:115.397
 WBGZ:Bario:Bario:MY:3.737:115.47
 WBKD:Lahat Datu:Lahad Datu:MY:5.032:118.324
 WBKK:Kota Kinabalu:Kota Kinabalu:MY:5.937:116.051
-WBKL:Labuan:Labuan I:MY:5.301:115.25
+WBKL:Labuan:Labuan:MY:5.301:115.25
 WBKS:Sandakan:Sandakan:MY:5.899:118.06
 WBKW:Tawau:Tawau:MY:4.313:118.122
 WBSB:Brunei:Bandar Seri Begawan:BN:4.946:114.928
@@ -5157,7 +4985,7 @@ WMKF:Simpang:Kuala Lumpur:MY:3.112:101.703
 WMKI:Sultan Azlan Shah:Ipoh:MY:4.568:101.092
 WMKJ:Sultan Ismail:Johor Bahru:MY:1.641:103.67
 WMKK:Kuala Lumpur:Sepang:MY:2.746:101.71
-WMKL:Pulau Langkawi:Langkawi I:MY:6.33:99.729
+WMKL:Pulau Langkawi:Langkawi:MY:6.33:99.729
 WMKM:Malacca:Malacca:MY:2.263:102.252
 WMKN:Sultan Mahmood:Kuala Terengganu:MY:5.383:103.103
 WMKP:Penang:Penang:MY:5.297:100.277
@@ -5204,39 +5032,39 @@ WSSS:Changi:Singapore:SG:1.356:103.987
 NCAI:Aitutaki:Aitutaki:CK:-18.831:-159.764
 NCAT:Atiu:Atiu:CK:36:0
 NCMK:Mauke:Mauke:CK:-20.136:-157.329
-NCPY:Penrhyn:Penrhyn I:CK:-9.006:-158.036
-NCRG:Rarotonga:Rarotonga I:CK:-21.203:-159.806
+NCPY:Penrhyn:Penrhyn:CK:-9.006:-158.036
+NCRG:Rarotonga:Rarotonga:CK:-21.203:-159.806
 NFFN:Nadi:Nadi:FJ:-17.755:177.444
 NFNA:Nausori:Nausori:FJ:-18.043:178.559
 NFNL:Lambasa:Labasa:FJ:-16.467:179.34
 NFNM:Matei:Matei:FJ:-16.69:-179.882
 NFNR:Rotuma:Rotuma:FJ:-12.483:177.071
 NFTF:Fuaamotu:Nuku'alofa:TO:-21.241:-175.15
-NFTL:Ha Apai:Lifuka I:TO:-19.777:-174.341
+NFTL:Ha Apai:Lifuka:TO:-19.777:-174.341
 NFTP:Niuatoputapu:Niuatoputapu:TO:-15.977:-173.755
 NFTV:Vavaui:Vava'u:TO:-18.586:-173.963
 NGFU:Funafuti:Funafuti:TV:-8.525:179.196
-NGTA:Bonriki:Tarawa I:KI:1.382:173.147
+NGTA:Bonriki:Tarawa:KI:1.382:173.147
 NGTU:Antekana:Butaritari:KI:3.083:172.817
-NIUE:Niue:Niue I:NU:-19.08:-169.926
-NLWF:Futuna:Futuna I:WF:-14.311:-178.066
-NLWW:Hihifo:Uvea I:WF:-13.238:-176.199
+NIUE:Niue:Niue:NU:-19.08:-169.926
+NLWF:Futuna:Futuna:WF:-14.311:-178.066
+NLWW:Hihifo:Uvea:WF:-13.238:-176.199
 NSFA:Apia:Apia:WS:-13.83:-172.008
 NSTU:Pago Pago:Pago Pago:AS:-14.331:-170.71
-NTAA:Faaa:Tahiti I:PF:-17.554:-149.607
-NTAR:Rurutu Tubuai I:Rurutu Austral I:PF:-22.434:-151.361
-NTAT:Tubuai-Mataura:Tubuai Austral I:PF:-23.365:-149.524
-NTGA:Anaa:Anaa I:PF:-17.353:-145.51
-NTGB:Fangatau:Fangatau I:PF:-15.82:-140.887
+NTAA:Faaa:Tahiti:PF:-17.554:-149.607
+NTAR:Rurutu Tubuai:Rurutu Austral:PF:-22.434:-151.361
+NTAT:Tubuai-Mataura:Tubuai Austral:PF:-23.365:-149.524
+NTGA:Anaa:Anaa:PF:-17.353:-145.51
+NTGB:Fangatau:Fangatau:PF:-15.82:-140.887
 NTGC:Tikehau:Tikehau:PF:-15.12:-148.231
 NTGD:Apataki:Apataki:PF:-15.567:-146.417
-NTGE:Reao:Reao I:PF:-18.466:-136.44
+NTGE:Reao:Reao:PF:-18.466:-136.44
 NTGF:Fakarava:Fakarava:PF:-16.054:-145.657
 NTGI:Manihi:Manihi:PF:-14.437:-146.07
-NTGJ:Totegegie:Totegegie I:PF:-23.08:-134.89
+NTGJ:Totegegie:Totegegie:PF:-23.08:-134.89
 NTGK:Kaukura:Kaukura:PF:-15.663:-146.885
-NTGM:Makemo:Makemo I:PF:-16.585:-143.657
-NTGN:Napuka:Napuka I:PF:-14.177:-141.267
+NTGM:Makemo:Makemo:PF:-16.585:-143.657
+NTGN:Napuka:Napuka:PF:-14.177:-141.267
 NTGO:Tatakoto:Tatakoto:PF:-17.355:-138.445
 NTGP:Puka Puka:Puka Puka:PF:-14.81:-138.813
 NTGR:Aratika:Aratika:PF:-15.633:-145.5
@@ -5252,17 +5080,17 @@ NTKM:Takume:Takume:PF:-15.94:-142.3
 NTKR:Takaroa:Takaroa:PF:-14.456:-145.025
 NTKT:Katiu:Katiu:PF:-16.36:-144.391
 NTMD:Nuka Hiva:Nuku-Hiva:PF:-8.796:-140.229
-NTMN:Atuana:Hiva Oa I:PF:-9.769:-139.011
+NTMN:Atuana:Hiva Oa:PF:-9.769:-139.011
 NTMP:Ua Pou:Ua Pou:PF:-9.35:-140.083
-NTMU:Ua Huka:Marquesas I:PF:-8.936:-139.552
-NTTB:Bora Bora:Bora Bora I:PF:-16.444:-151.751
+NTMU:Ua Huka:Marquesas:PF:-8.936:-139.552
+NTTB:Bora Bora:Bora Bora:PF:-16.444:-151.751
 NTTG:Rangiroa:Rangiroa:PF:-14.954:-147.661
-NTTH:Fare:Huahine I:PF:-16.687:-151.022
-NTTM:Temae:Moorea I:PF:-17.49:-149.762
-NTTO:Hao:Hao I:PF:-18.075:-140.946
+NTTH:Fare:Huahine:PF:-16.687:-151.022
+NTTM:Temae:Moorea:PF:-17.49:-149.762
+NTTO:Hao:Hao:PF:-18.075:-140.946
 NTTP:Maupiti:Maupiti:PF:-16.426:-152.244
-NTTR:Uturoa:Raiatea I:PF:-16.723:-151.466
-NTTX:Mururoa:Mururoa I:PF:-21.817:-138.817
+NTTR:Uturoa:Raiatea:PF:-16.723:-151.466
+NTTX:Mururoa:Mururoa:PF:-21.817:-138.817
 NVSC:Sola Vanua Lava:Sola Vanua Lava:VU:-13.85:167.55
 NVSE:Sangafa:Emae:VU:-17.093:168.333
 NVSL:Lamap Malekula:Lamap Malekula:VU:-16.417:167.8
@@ -5270,7 +5098,7 @@ NVSS:Santo-Pekoa:Luganville:VU:-15.501:167.223
 NVVV:Bauerfield:Port Vila:VU:-17.699:168.32
 NVVW:Tanna:Tanna:VU:-19.455:169.224
 NWWD:Kone:Kone:NC:-21.054:164.837
-NWWE:Moue:Des Pins I:NC:-22.589:167.456
+NWWE:Moue:Des Pins:NC:-22.589:167.456
 NWWH:Houailou:Houailou:NC:-21.256:165.618
 NWWK:Koumac:Koumac:NC:-20.546:164.256
 NWWL:Lifou:Lifou:NC:-20.775:167.24
@@ -5287,7 +5115,7 @@ NZAP:Taupo:Taupo:NZ:-38.74:176.084
 NZAR:Ardmore:Auckland:NZ:-37.03:174.973
 NZAS:Ashburton:Ashburton:NZ:-43.903:171.797
 NZCH:Christchurch:Christchurch:NZ:-43.489:172.532
-NZCI:Tuuta:Chatham I:NZ:-43.81:-176.457
+NZCI:Tuuta:Chatham:NZ:-43.81:-176.457
 NZCM:Williams Fld:Williams Fld:AQ:-77.867:166.966
 NZCX:Coromandel:Coromandel:NZ:-36.792:175.509
 NZDA:Dargaville:Dargaville:NZ:-35.94:173.894
@@ -5322,7 +5150,7 @@ NZNS:Nelson:Nelson:NZ:-41.298:173.221
 NZNV:Invercargill:Invercargill:NZ:-46.412:168.313
 NZOH:Ohakea:Ohakea:NZ:-40.206:175.388
 NZOU:Oamaru:Oamaru:NZ:-44.97:171.082
-NZOX:Gt Barrier I:Okiwi:NZ:-36.146:175.419
+NZOX:Gt Barrier:Okiwi:NZ:-36.146:175.419
 NZPM:Palmerston North:Palmerston North:NZ:-40.321:175.617
 NZPP:Paraparaumu:Paraparaumu:NZ:-40.905:174.989
 NZQN:Frankton:Queenstown:NZ:-45.021:168.739
@@ -5428,14 +5256,14 @@ OIAI:Masjed Soleiman:Masjed Soleiman:IR:32.002:49.271
 OIAJ:Omidiyeh:Omidiyeh:IR:30.835:49.535
 OIAM:Bandar Mahshahr:Mahshahr:IR:30.559:49.15
 OIAW:Ahwaz:Ahwaz:IR:31.337:48.762
-OIBA:Abamusa I:Abumusa I:IR:25.876:55.033
+OIBA:Abamusa:Abumusa:IR:25.876:55.033
 OIBB:Bushehr:Bushehr:IR:28.945:50.835
 OIBJ:Jam Tohid:Jam:IR:27.82:52.352
-OIBK:Kish I:Kish I:IR:26.527:53.982
+OIBK:Kish:Kish:IR:26.527:53.982
 OIBL:Bandar Lengeh:Bandar Lengeh:IR:26.532:54.822
-OIBQ:Khark I:Khark I:IR:29.26:50.324
-OIBS:Sirri I:Sirri I:IR:25.91:54.539
-OIBV:Lavan I:Lavan I:IR:26.81:53.356
+OIBQ:Khark:Khark:IR:29.26:50.324
+OIBS:Sirri:Sirri:IR:25.91:54.539
+OIBV:Lavan:Lavan:IR:26.81:53.356
 OICC:Shahid Ashrafi Esfahani:Kermanshah:IR:34.345:47.159
 OICG:Ghasre-Shirin:Ghasre-Shirin:IR:34.517:45.583
 OICK:Khorram Abad:Khoram Abad:IR:33.439:48.281
@@ -5515,7 +5343,7 @@ OMAL:Al Ain:Al Ain:AE:24.262:55.609
 OMAM:Al Dhafra:Abu Dhabi:AE:24.248:54.548
 OMAQ:Qarnayn:Qarnayn:AE:24.958:52.8
 OMAR:Arzanah:Arzanah:AE:24.78:52.56
-OMAS:Das I:Das I:AE:25.146:52.874
+OMAS:Das:Das:AE:25.146:52.874
 OMAZ:Zirku:Zirku:AE:24.862:53.078
 OMDB:Dubai:Dubai:AE:25.255:55.364
 OMFJ:Fujairah:Fujairah:AE:25.112:56.324
@@ -5817,7 +5645,7 @@ CYPP:Parent:Parent:CA:47.933:-74.616
 CYPQ:Peterborough:Peterborough:CA:44.23:-78.363
 CYPR:Prince Rupert:Prince Rupert:CA:54.286:-130.445
 CYPS:Pemberton:Pemberton:CA:50.302:-122.738
-CYPT:Pelee I:Pelee I:CA:41.778:-82.678
+CYPT:Pelee:Pelee:CA:41.778:-82.678
 CYPU:Puntzi Mountain:Puntzi Mountain:CA:52.113:-124.145
 CYPW:Powell River:Powell River:CA:49.834:-124.5
 CYPX:Povungnituk:Povungnituk:CA:60.05:-77.287
@@ -5856,7 +5684,7 @@ CYRQ:Trois Rivieres:Trois-Rivieres:CA:46.353:-72.68
 CYRS:Red Sucker Lake:Red Sucker Lake:CA:54.167:-93.56
 CYRT:Rankin Inlet:Rankin Inlet:CA:62.811:-92.116
 CYRV:Revelstoke:Revelstoke:CA:50.967:-118.183
-CYSA:Sable I:Sable I:CA:43.933:-60
+CYSA:Sable:Sable:CA:43.933:-60
 CYSB:Sudbury:Sudbury:CA:46.625:-80.799
 CYSC:Sherbrooke:Sherbrooke:CA:45.438:-71.691
 CYSD:Suffield Heliport:Suffield Heliport:CA:50.267:-111.183
@@ -5892,7 +5720,7 @@ CYUI:Cape Young:Cape Young:CA:68.933:-116.916
 CYUK:Byron Bay:Byron Bay:CA:68.75:-109.066
 CYMQ:Montreal:Montreal:CA:45.468:-73.741
 CYUL:Pierre Elliot Trudeau:Montreal:CA:45.468:-73.741
-CYUQ:Jenny Lind I:Jenny Lind I:CA:68.65:-101.733
+CYUQ:Jenny Lind:Jenny Lind:CA:68.65:-101.733
 CYUS:Shepherd Bay:Shepherd Bay :CA:68.817:-93.433
 CYUT:Repulse Bay:Repulse Bay:CA:66.521:-86.225
 CYUV:Longstaff:Longstaff:CA:68.933:-75.283
@@ -5902,7 +5730,7 @@ CYVB:Bonaventure:Bonaventure:CA:48.071:-65.46
 CYVC:La Ronge:La Ronge:CA:55.151:-105.262
 CYVG:Vermilion:Vermilion:CA:53.356:-110.824
 CYVK:Vernon:Vernon:CA:50.248:-119.331
-CYVM:Broughton I:Broughton I:CA:67.546:-64.031
+CYVM:Broughton:Broughton:CA:67.546:-64.031
 CYVO:Val D'Or:Val D'Or:CA:48.053:-77.783
 CYVP:Kuujjuaq:Kuujjuaq:CA:58.096:-68.427
 CYVQ:Norman Wells:Norman Wells:CA:65.282:-126.798
@@ -6015,13 +5843,13 @@ CZVL:Villeneuve:Edmonton:CA:53.667:-113.854
 CZWH:Lac Brochet:Lac Brochet:CA:58.617:-101.469
 CZWL:Wollaston Lake:Wollaston Lake:CA:58.107:-103.172
 AGGA:Auki Gwaunaruu:Auki Gwaunaruu:SB:-8.703:160.682
-AGGC:Choiseul Bay:Taro I:SB:-6.712:156.396
+AGGC:Choiseul Bay:Taro:SB:-6.712:156.396
 AGGE:Ballalae:Ballalae:SB:-6.991:155.886
 AGGH:Henderson:Honiara:SB:-9.428:160.054
 AGGL:Graciosa Bay:Graciosa Bay:SB:-10.72:165.795
 AGGM:Munda:Munda:SB:-8.328:157.263
 AGGN:Nusatupe:Gizo:SB:-8.098:156.864
-AGGO:Mono:Sterling I:SB:-7.415:155.567
+AGGO:Mono:Sterling:SB:-7.415:155.567
 AGGS:Seghe:Seghe:SB:-8.578:157.876
 AGGT:Santa Anna:Santa Anna:SB:-10.85:162.457
 ANAU:Nauru:Nauru:NR:-0.55:166.915
@@ -6058,7 +5886,7 @@ KACJ:Souther Fld:Americus:US:32.111:-84.189
 KACK:Nantucket Mem:Nantucket:US:41.253:-70.06
 KACQ:Waseca Muni:Waseca:US:44.073:-93.553
 KACT:Waco Regl:Waco:US:31.611:-97.231
-KACV:Arcata:Arcata-Eureka:US:40.978:-124.109
+KACV:Arcata:Arcata:US:40.978:-124.109
 KACY:Atlantic City:Atlantic City:US:39.458:-74.577
 KACZ:Henderson Fld:Wallace:US:34.718:-78.004
 KADG:Lenawee Co:Adrian:US:41.869:-84.075
@@ -6210,7 +6038,7 @@ KBHB:Hancock Co:Bar Harbor:US:44.45:-68.362
 KBHC:Baxley Muni:Baxley:US:31.714:-82.394
 KBHK:Baker Muni MT:Baker:US:46.348:-104.26
 KBHM:Birmingham:Birmingham:US:33.563:-86.754
-KBID:Block Island State:Block I:US:41.168:-71.578
+KBID:Block Island State:Block:US:41.168:-71.578
 KBIE:Beatrice Muni:Beatrice:US:40.301:-96.754
 KBIF:Biggs AAF:Ft Bliss:US:31.85:-106.38
 KBIH:Bishop:Bishop:US:37.373:-118.364
@@ -6256,7 +6084,7 @@ KBPT:Jeff Co:Beaumont-Port Arthur:US:29.951:-94.021
 KBQK:Glynco Jetport:Brunswick:US:31.259:-81.466
 KBRD:Crow Wing Co Regl:Brainerd:US:46.398:-94.137
 KBRL:Burlington Regl:Burlington:US:40.783:-91.126
-KBRO:Padre I:Brownsville:US:25.907:-97.426
+KBRO:Padre:Brownsville:US:25.907:-97.426
 KBRY:Samuels Fld:Bardstown:US:37.814:-85.5
 KBST:Belfast Muni:Belfast:US:44.41:-69.012
 KBTL:WK Kellogg:Battle Creek:US:42.307:-85.252
@@ -6454,7 +6282,7 @@ KDHT:Dalhart Muni:Dalhart:US:36.023:-102.547
 KDIK:Dickinson Muni:Dickinson:US:46.797:-102.802
 KDKB:De Kalb Taylor Muni:De Kalb:US:41.932:-88.708
 KDKK:Chautauqua Co:Dunkirk:US:42.493:-79.272
-KDKX:Knoxville Downtown I:Knoxville:US:35.964:-83.874
+KDKX:Knoxville Downtown:Knoxville:US:35.964:-83.874
 KDLF:Laughlin AFB:Del Rio:US:29.359:-100.778
 KDLH:Duluth:Duluth:US:46.842:-92.194
 KDLL:Baraboo Wisconsin Dells:Baraboo:US:43.522:-89.771
@@ -6720,7 +6548,7 @@ KGQQ:Galion Muni:Galion:US:40.753:-82.724
 KGRB:Austin Straubel:Green Bay:US:44.485:-88.13
 KGRE:Greenville:Greenville:US:38.836:-89.378
 KGRF:Gray AAF:Ft Lewis-Tacoma:US:47.079:-122.581
-KGRI:Central Nebraska Regl:Grand I:US:40.968:-98.31
+KGRI:Central Nebraska Regl:Grand:US:40.968:-98.31
 KGRK:Robert Gray AAF:Ft Hood-Killeen:US:31.067:-97.829
 KGRM:Grand Marais Muni:Grand Marais:US:47.833:-90.383
 KGRN:Gordon Muni:Gordon:US:42.806:-102.175
@@ -7025,7 +6853,7 @@ KMBT:Murfreesboro Muni:Murfreesboro:US:35.877:-86.378
 KMBY:Omar N Bradley:Moberly:US:39.464:-92.428
 KMCB:Pike Co:McComb:US:31.178:-90.472
 KMCC:McClellan AFB:Sacramento:US:38.668:-121.401
-KMCD:Mackinac I:Mackinac I:US:45.865:-84.637
+KMCD:Mackinac:Mackinac:US:45.865:-84.637
 KMCE:Merced Muni:Merced:US:37.285:-120.514
 KMCF:MacDill AFB:Tampa:US:27.849:-82.521
 KMCI:Kansas City:Kansas City:US:39.298:-94.714
@@ -7085,7 +6913,7 @@ KMKJ:Mountain Empire:Marion/Wytheville:US:36.895:-81.35
 KMKL:McKellar-Sipes Regl:Jackson:US:35.6:-88.916
 KMKO:Davis Fld:Muskogee:US:35.658:-95.362
 KMKT:Mankato Muni:Mankato:US:44.222:-93.919
-KMKY:Marco I:Marco I:US:25.995:-81.673
+KMKY:Marco:Marco:US:25.995:-81.673
 KMLB:Melbourne:Melbourne:US:28.103:-80.645
 KMLC:McAlester Regl:McAlester:US:34.882:-95.784
 KMLD:Malad City:Malad City:US:42.166:-112.297
@@ -7098,7 +6926,7 @@ KMLU:Monroe Regl:Monroe:US:32.511:-92.038
 KMMH:June Lakes:Mammoth:US:37.624:-118.838
 KMMK:Meriden Markham Muni:Meriden:US:41.509:-72.83
 KMML:Ryan Fld:Marshall:US:44.45:-95.822
-KMMO:Marseilles:Marseilles I:US:41.367:-88.683
+KMMO:Marseilles:Marseilles:US:41.367:-88.683
 KMMT:McEntire Angs:Columbia:US:33.921:-80.807
 KMMU:Morristown:Morristown:US:40.799:-74.415
 KMMV:McMinnville Muni:McMinnville:US:45.194:-123.136
@@ -7193,7 +7021,7 @@ KNQX:Boca Chica Fld:Key West:US:24.576:-81.689
 KNRC:NASA Crows Landing:Crows Landing:US:37.408:-121.109
 KNRS:Imperial Beach:Imperial Beach:US:32.563:-117.11
 KNSE:Whiting Fld NAS-North:Milton:US:30.724:-87.022
-KNSI:San Nicolas Island NOLF:San Nicolas I:US:33.24:-119.458
+KNSI:San Nicolas Island NOLF:San Nicolas:US:33.24:-119.458
 KNTD:Point Mugu NAWS:Point Mugu:US:34.12:-119.121
 KNTU:Apollo Soucek Fld:Virginia Beach:US:36.821:-76.034
 KNUC:Frederick Sherman Fld:San Clemente:US:33.023:-118.588
@@ -7353,7 +7181,7 @@ KPOY:Powell Muni:Powell:US:44.868:-108.793
 KPPA:Perry Lefors Fld:Pampa:US:35.613:-100.996
 KPPF:Tri-City:Parsons:US:37.331:-95.509
 KPPQ:Pittsfield Penstone Muni:Pittsfield:US:39.639:-90.778
-KPQI:N Maine Regnl:Presque I:US:46.689:-68.045
+KPQI:N Maine Regnl:Presque:US:46.689:-68.045
 KPQL:Lott:Pascagoula:US:30.463:-88.529
 KPQN:Pipestone Muni:Pipestone:US:43.983:-96.3
 KPRB:Paso Robles Muni:Paso Robles:US:35.673:-120.627
@@ -7534,7 +7362,7 @@ KSIY:Siskiyou Co:Montague:US:41.781:-122.468
 KSJC:San Jose:San Jose:US:37.363:-121.929
 KSJN:St Johns Industrial Air Park:St Johns:US:34.518:-109.379
 KSJT:Mathis Fld:San Angelo:US:31.358:-100.496
-KSJX:Beaver I:Beaver I:US:45.691:-85.566
+KSJX:Beaver:Beaver:US:45.691:-85.566
 KSKA:Fairchild AFB:Spokane:US:47.615:-117.656
 KSKC:Waukesha:Waukesha:US:43.033:-88.233
 KSKF:Kelly Afb:San Antonio:US:29.384:-98.581
@@ -7621,7 +7449,7 @@ KTDZ:Metcalf Fld:Toledo:US:41.565:-83.482
 KTEB:Teterboro:Teterboro:US:40.85:-74.061
 KTEL:Perry Co Muni:Tell City:US:38.018:-86.691
 KTEX:Telluride Regl:Telluride:US:37.954:-107.908
-KTGI:Tangier I:Tangier:US:37.825:-75.998
+KTGI:Tangier:Tangier:US:37.825:-75.998
 KTHV:York:York:US:39.917:-76.873
 KTIK:Tinker AFB:Oklahoma City:US:35.415:-97.387
 KTIW:Tacoma Narrows:Tacoma:US:47.268:-122.578
@@ -7726,10 +7554,10 @@ KVRB:Vero Beach Muni:Vero Beach:US:27.656:-80.418
 KVSF:Hartness State:Springfield:US:43.344:-72.517
 KVTN:Miller Fld:Valentine:US:42.858:-100.547
 KVUO:Pearson Airpark:Vancouver:US:45.62:-122.656
-KVUW:Eugene I:Eugene I:US:28.25:-91.833
+KVUW:Eugene:Eugene:US:28.25:-91.833
 KVVS:Connellsville:Connellsville:US:39.959:-79.657
 KVVV:Martinson Fld:Ortonville:US:45.306:-96.424
-KWAL:Wallops Flight Facility:Wallops I:US:37.94:-75.466
+KWAL:Wallops Flight Facility:Wallops:US:37.94:-75.466
 KWBW:Wyoming Valley:Wilkes-Barre:US:41.297:-75.851
 KWDG:Enid Woodring Muni:Enid:US:36.379:-97.791
 KWEA:Parker Co:Weatherford:US:32.746:-97.682
@@ -7763,7 +7591,7 @@ KZUN:Black Rock:Zuni Pueblo:US:35.083:-108.792
 KZZV:Zanesville Muni:Zanesville:US:39.944:-81.892
 PAAP:Port Alexander:Port Alexander:US:56.25:-134.65
 PAAQ:Palmer Muni:Palmer:US:61.595:-149.089
-PABA:Barter I:Barter I:US:70.134:-143.577
+PABA:Barter:Barter:US:70.134:-143.577
 PABE:Bethel:Bethel:US:60.78:-161.838
 PABI:Ft Greely:Delta Junction Ft Greely:US:63.994:-145.722
 PABL:Buckland:Buckland:US:65.982:-161.149
@@ -7781,7 +7609,7 @@ PACV:Merle K Smithmudhole:Cordova:US:60.492:-145.478
 PACY:Yakataga:Yakataga:US:60.082:-142.494
 PACZ:Cape Romanzof:Cape Romanzof:US:61.78:-166.039
 PADE:Deering:Deering:US:66.083:-162.75
-PADK:Mitchell Fld:Adak I:US:51.878:-176.646
+PADK:Mitchell Fld:Adak:US:51.878:-176.646
 PADL:Dillingham Aprat:Dillingham:US:59.045:-158.503
 PADQ:Kodiak:Kodiak:US:57.75:-152.494
 PADT:Slana:Slana:US:62.7:-143.983
@@ -7845,7 +7673,7 @@ PAMY:Mekoryuk:Mekoryuk:US:60.371:-166.271
 PANC:Anchorage:Anchorage:US:61.174:-149.996
 ANC:Anchorage:Anchorage:US:61.174:-149.996
 PANI:Aniak:Aniak:US:61.582:-159.543
-PANT:Annette I:Annette I:US:55.042:-131.572
+PANT:Annette:Annette:US:55.042:-131.572
 PANV:Anvik:Anvik:US:62.647:-160.191
 PAOM:Nome:Nome:US:64.512:-165.445
 PAOR:Northway:Northway:US:62.961:-141.929
@@ -7869,7 +7697,7 @@ PASI:Sitka:Sitka:US:57.047:-135.362
 PASK:Selawik:Selawik:US:66.6:-159.986
 PASL:Sleetmute:Sleetmute:US:61.699:-157.152
 PASM:St Mary's:St Mary's:US:62.06:-163.302
-PASN:St Paul I:St Paul I:US:57.167:-170.22
+PASN:St Paul:St Paul:US:57.167:-170.22
 PASV:Sparrevohn Lrrs:Sparrevohn:US:61.097:-155.574
 PASW:Skwentna:Skwentna:US:61.965:-151.191
 PASX:Soldotna:Soldotna:US:60.476:-151.034
@@ -7894,13 +7722,13 @@ PAXK:Paxson:Paxson:US:63.033:-145.5
 PAYA:Yakutat:Yakutat:US:59.503:-139.66
 PAZK:Eureka:Eureka:US:61.933:-147.166
 PFYU:Ft Yukon:Ft yukon:US:66.571:-145.25
-PGAC:Guam:Guam I:US:13.55:144.833
+PGAC:Guam:Guam:US:13.55:144.833
 PGNT:Sabanettan:Tinian:US:14.967:145.6
-PGRO:Rota:Rota I:UM:14.174:145.242
-PGSN:Saipan:Saipan I:UM:15.119:145.729
-PGUA:Andersen AFB:Guam I:GU:13.584:144.93
+PGRO:Rota:Rota:UM:14.174:145.242
+PGSN:Saipan:Saipan:UM:15.119:145.729
+PGUA:Andersen AFB:Guam:GU:13.584:144.93
 PGUM:Wonpat:Guam:GU:13.483:144.796
-PGWT:West Tinian:Tinian I:UM:14.999:145.619
+PGWT:West Tinian:Tinian:UM:14.999:145.619
 PHBK:Barking Sands:Kauai:US:22.023:-159.785
 PHDH:Dillingham:Oahu:US:21.579:-158.197
 PHFS:French Frigate Shoals:French Frigate Shoals:US:23.867:-166.288
@@ -7910,7 +7738,7 @@ PHIK:Hickam:Oahu:US:21.317:-157.916
 PHJH:West Maui:Lahaina:US:20.963:-156.673
 PHJR:Barbers Point:Kapolei:US:21.307:-158.07
 PHKO:Kailua-Kona:Kailua-Kona:US:19.739:-156.046
-PHLI:Lihue:Kauai I:US:21.976:-159.339
+PHLI:Lihue:Kauai:US:21.976:-159.339
 PHMK:Kaunakakai:Kaunakakai:US:21.153:-157.096
 PHMU:Waimea Kohala:Kamuela:US:20.001:-155.668
 PHNA:Barbers Point:Oahu:US:21.308:-158.068
@@ -7923,41 +7751,41 @@ PHSF:Hawaii:Bradshaw AAF:US:19.76:-155.554
 PHTO:Hilo:Hilo:US:19.721:-155.048
 PHUP:Upolu:Hawi:US:20.265:-155.86
 PHWH:South Kona:South Kona:US:19.1:-155.75
-PJON:Johnston Atoll:Johnston I:US:16.73:-169.535
+PJON:Johnston Atoll:Johnston:US:16.73:-169.535
 PKMA:Enwetak Aux:Enewetak Atoll:MH:11.341:162.328
 PKMJ:Marshall Islands:Majuro Atoll:US:7.065:171.272
 PKRO:Dyess AAF:Kwajalein  Atoll:MH:9.397:167.471
 PKWA:Bucholz AAF:Kwajalein Atoll:US:8.72:167.732
-PLCH:Cassidy:Christmas I:KI:1.986:-157.35
-PLFA:Fanning I:Fanning I:NZ:3.85:-159.366
+PLCH:Cassidy:Christmas:KI:1.986:-157.35
+PLFA:Fanning:Fanning:NZ:3.85:-159.366
 PMDY:Henderson Fld:Midway Atoll:US:13:0
 POLI:Oliktok:Oliktok Point:US:70.5:-149.88
 PPAK:Port Allen:Port Allen:US:21.897:-159.603
 PPIZ:Point Lay:Point Lay:US:69.733:-163.005
-PTKK:Chuuk-Truk:Weno I:US:7.462:151.843
-PTPN:Pohnpei:Pohnpei I:US:6.985:158.209
-PTRO:Koror-Airai:Babelthuap I:US:7.368:134.544
-PTSA:Kosrae:Kosrae I:US:5.357:162.958
+PTKK:Chuuk-Truk:Weno:US:7.462:151.843
+PTPN:Pohnpei:Pohnpei:US:6.985:158.209
+PTRO:Koror-Airai:Babelthuap:US:7.368:134.544
+PTSA:Kosrae:Kosrae:US:5.357:162.958
 PTTK:Kosrae Carolines:Kosrae Carolines:FM:5.35:162.95
-PTYA:Yap:Yap I:US:9.499:138.082
-PWAK:Wake Fld:Wake I:UM:19.282:166.636
+PTYA:Yap:Yap:US:9.499:138.082
+PWAK:Wake Fld:Wake:UM:19.282:166.636
 RCAY:Kangshan:Kangshan:TW:22.782:120.26
 RCBS:Shang Yi:Chin Men:TW:24.432:118.359
 RCDC:Pingtung South:Pingtung:TW:22.672:120.462
 RCDI:Lung Tan:Lungtang:TW:24.855:121.238
 RCFN:Fengnin:Taitung:TW:22.755:121.102
 RCFS:Chia Tung:Chia Tung:TW:22.417:120.55
-RCGI:Lu Tao:Green I:TW:27:0
+RCGI:Lu Tao:Green:TW:27:0
 RCGM:Taoyuan:Taoyuan:TW:25.055:121.243
 RCKH:Kaohsiung:Kaohsiung:TW:22.577:120.35
 RCKU:Chiayi:Chiayi:TW:23.462:120.393
 RCKW:Hengchun:Hengchun:TW:21.933:120.833
 RCLG:Taichung:Taichung:TW:24.186:120.654
-RCLY:Lanyu:Lan Yu I:TW:22.029:121.534
+RCLY:Lanyu:Lan Yu:TW:22.029:121.534
 RCMJ:Donggang:Donggang:TW:22.467:120.433
 RCMQ:Ching Chuan Kang:Ching Chuan Kang:TW:24.265:120.62
 RCMS:Ilan:Ilan:TW:24.75:121.766
-RCMT:Matsu:Matsu:CN:26.224:120.003
+RCMT:Matsu:Matsu:TW:26.224:120.003
 RCNN:Tainan:Tainan:TW:22.95:120.206
 RCNO:Dongshi:Dongshi:TW:23.267:119.666
 RCPO:Hsinchu:Hsinchu:TW:24.818:120.939
@@ -7965,7 +7793,7 @@ RCQC:Makung:Makung:TW:23.569:119.628
 RCQS:Chihhong:Taitung:TW:22.793:121.182
 RCSQ:Pingtung North:Pingtung:TW:22.7:120.482
 RCSS:Sungshan:Taipei:TW:25.069:121.552
-RCTP:Chiang Kai Shek:Taipei:TW:25.078:121.233
+RCTP:Taoyuan:Taipei:TW:25.078:121.233
 RCUK:Pa Kuei-Bakuai:Pa Kuei-Bakuai:TW:24.933:121.3
 RCWA:Wang An:Wang An:TW:23.371:119.494
 RCYU:Hualien:Hualien:TW:24.023:121.618
@@ -8026,7 +7854,7 @@ RJFY:Kanoya:Kanoya:JP:31.368:130.845
 RJFZ:Tsuiki:Nakatsu:JP:33.685:131.04
 RJGG:Chubu Centrair:Nagoya:JP:34.513:136.482
 RJKA:Amami:Amami:JP:28.431:129.712
-RJKB:Okierabu:Okierabu I:JP:27.426:128.701
+RJKB:Okierabu:Okierabu:JP:27.426:128.701
 RJKI:Kikai:Kikai:JP:28.321:129.928
 RJKN:Tokunoshima:Tokunoshima:JP:27.836:128.881
 RJNF:Fukui:Fukui:JP:36.143:136.224
@@ -8144,10 +7972,10 @@ RKTW:Woong Cheon:Woong Cheon:KR:36.2:126.55
 RKTY:K-58:Yechon:KR:36.632:128.355
 RKXX:Nightmare Range:Nightmare Range:KR:38.067:127.35
 ROAH:Naha:Naha:JP:26.196:127.646
-RODE:Iejima:Iejima I:JP:26.729:127.762
-RODN:Kadena:Okinawa I:JP:26.356:127.768
+RODE:Iejima:Iejima:JP:26.729:127.762
+RODN:Kadena:Okinawa:JP:26.356:127.768
 ROHF:Hamby:Hamby:JP:26.3:127.766
-ROIG:Ishigaki:Ishigaki I:JP:24.344:124.187
+ROIG:Ishigaki:Ishigaki:JP:24.344:124.187
 ROKJ:Kumejima:Kumejima:JP:26.364:126.714
 ROKR:Kerama:Kerama:JP:26.168:127.293
 ROMD:Minamidaito:Minamidaito:JP:25.846:131.263
@@ -8155,12 +7983,12 @@ ROMY:Miyako:Miyakojima:JP:24.783:125.295
 RORA:Aguni:Aguni:JP:26.593:127.24
 RORE:Iejima:Iejima:JP:26.722:127.785
 RORH:Hateruma:Hateruma:JP:24.058:123.804
-RORK:Kita Daito:Kitadaito I:JP:25.945:131.327
+RORK:Kita Daito:Kitadaito:JP:25.945:131.327
 RORS:Shimoji-Shima:Shimojishima:JP:24.827:125.145
 RORT:Tarama:Tarama:JP:24.654:124.675
 RORY:Yoron:Yoron:JP:27.044:128.402
-ROTM:Futenma:Okinawa I:JP:26.274:127.756
-ROYN:Yonaguni:Yonaguni I:JP:24.467:122.978
+ROTM:Futenma:Okinawa:JP:26.274:127.756
+ROYN:Yonaguni:Yonaguni:JP:24.467:122.978
 RPLB:Subic Bay:Subic Bay:PH:14.794:120.271
 RPLC:Clarkfield Pampanga:Angeles:PH:15.186:120.56
 RPLI:Laoag:Laoag:PH:18.178:120.532
@@ -8263,7 +8091,7 @@ YBRN:Balranald:Balranald:AU:-34.624:143.578
 YBRW:Brewarrina:Brewarrina:AU:-29.974:146.817
 YBTH:Bathurst:Bathurst:AU:-33.41:149.652
 YBTL:RAAF Garbutt:Townsville:AU:-19.253:146.765
-YBWX:Barrow I:Barrow I:AU:-20.864:115.406
+YBWX:Barrow:Barrow:AU:-20.864:115.406
 YCAR:Carnarvon:Carnarvon:AU:-24.881:113.672
 YCBA:Cobar:Cobar:AU:-31.538:145.794
 YCBG:Cambridge:Hobart:AU:-42.827:147.475
@@ -8287,7 +8115,7 @@ YECH:Echuca:Echuca:AU:-36.157:144.762
 YESP:Esperance:Esperance:AU:-33.684:121.823
 YEVD:Evans Head:Evans Head:AU:-29.093:153.42
 YFBS:Forbes:Forbes:AU:-33.364:147.935
-YFLI:Flinders I:Flinders I:AU:-40.091:147.993
+YFLI:Flinders:Flinders:AU:-40.091:147.993
 YFRT:Forrest:Forrest:AU:-30.838:128.115
 YGEL:Geraldton:Geraldton:AU:-28.796:114.707
 YGLA:Gladstone:Gladstone:AU:-23.87:151.223
@@ -8305,7 +8133,7 @@ YIVO:Ivanhoe:Ivanhoe:AU:-32.883:144.31
 YJBY:Jervis Bay:Jervis Bay:AU:-35.147:150.697
 YKBY:Streaky Bay:Streaky Bay:AU:-32.836:134.293
 YKER:Kerang:Kerang:AU:-35.751:143.939
-YKII:King I:King I:AU:-39.878:143.878
+YKII:King:King:AU:-39.878:143.878
 YKSC:Kingscote:Kingscote:AU:-35.714:137.521
 YLCG:Lake Cargelligo:Lake Cargelligo:AU:-33.278:146.369
 YLEC:Leigh Creek:Leigh Creek:AU:-30.598:138.426
@@ -8375,12 +8203,12 @@ YPPD:Port Hedland:Port Hedland:AU:-20.378:118.626
 YPPF:Parafield:Adelaide:AU:-34.793:138.633
 YPPH:Perth:Perth:AU:-31.94:115.967
 YPWR:Woomera:Woomera:AU:-31.144:136.817
-YPXM:Christmas I:Christmas I:AU:-10.451:105.69
+YPXM:Christmas:Christmas:AU:-10.451:105.69
 YQLP:Quilpie:Quilpie:AU:-26.612:144.253
 YQNS:Queenstown:Queenstown:AU:-42.076:145.531
 YREN:Renmark:Renmark:AU:-34.196:140.674
 YROI:Robinvale:Robinvale:AU:-34.651:142.783
-YRTI:Rottnest I:Rottnest I:AU:-32.007:115.54
+YRTI:Rottnest:Rottnest:AU:-32.007:115.54
 YSBK:Bankstown:Sydney:AU:-33.924:150.988
 YSCB:Fairbairn:Canberra:AU:-35.307:149.195
 YSCN:Camden:Camden:AU:-34.04:150.687
@@ -8391,7 +8219,7 @@ YSHT:Shepparton:Shepparton:AU:-36.429:145.392
 YSHW:Holsworthy:Holsworthy:AU:-33.995:150.952
 YSLK:Sea Lake:Sea Lake:AU:-35.526:142.889
 YSMI:Smithton:Smithton:AU:-40.835:145.084
-YSNF:Norfolk:Norfolk I:AU:-29.042:167.939
+YSNF:Norfolk:Norfolk:AU:-29.042:167.939
 YSNW:Nowra:Nowra:AU:-34.949:150.537
 YSRI:Richmond:Richmond:AU:-33.601:150.781
 YSRN:Strahan:Strahan:AU:-42.155:145.292
@@ -8501,7 +8329,7 @@ YBCK:Blackall:Blackall:AU:-24.43:145.43
 YBCV:Charleville:Charleville:AU:-26.41:146.26
 YBDV:Birdsville:Birdsville:AU:-25.9:139.35
 YBGO:Balgo Hill:Balgo Hill:AU:-20.15:127.97
-YBHM:Hamilton I:Hamilton I:AU:-20.36:148.95
+YBHM:Hamilton:Hamilton:AU:-20.36:148.95
 YBIE:Bedourie:Bedourie:AU:-24.35:139.46
 YBKT:Burketown:Burketown:AU:-17.75:139.53
 YBMA:Mount Isa:Mount Isa:AU:-20.66:139.49
@@ -8513,7 +8341,7 @@ YBOU:Boulia:Boulia:AU:-22.91:139.9
 YBPN:Whitsunday:Proserpine:AU:-20.5:148.55
 YBRK:Rockhampton:Rockhampton:AU:-23.38:150.48
 YBRL:Borroloola:Borroloola:AU:-16.08:136.3
-YBTI:Bathurst I:Bathurst I:AU:-11.77:130.62
+YBTI:Bathurst:Bathurst:AU:-11.77:130.62
 YBTR:Blackwater:Blackwater:AU:-23.6:148.81
 YBUD:Bundaberg:Bundaberg:AU:-24.9:152.32
 YBWN:Bowen:Bowen:AU:-20.02:148.21
@@ -8527,7 +8355,7 @@ YCCY:Cloncurry:Cloncurry:AU:-20.67:140.5
 YCGO:Chillagoe:Chillagoe:AU:-17.14:144.53
 YCHT:Charters Towers:Charters Towers:AU:-20.04:146.27
 YCIN:Derby South:Curtin:AU:-17.58:123.83
-YCKI:Croker I:Croker I:AU:-11.17:132.48
+YCKI:Croker:Croker:AU:-11.17:132.48
 YCKN:Cooktown:Cooktown:AU:-15.44:145.18
 YCMT:Clerm:Clerm:AU:-22.77:147.62
 YCMU:Cunnamulla:Cunnamulla:AU:-28.03:145.62
@@ -8542,11 +8370,11 @@ YDLV:Delissaville:Delissaville:AU:-12.55:130.69
 YDMG:Doomadgee:Doomadgee:AU:-17.94:138.82
 YDOC:Dochra:Dochra:AU:-32.65:151.21
 YDYS:Dysart:Dysart:AU:-22.62:148.36
-YELD:Elcho I:Elcho I:AU:-12.02:135.57
+YELD:Elcho:Elcho:AU:-12.02:135.57
 YEML:Emerald:Emerald:AU:-23.57:148.18
 YFTZ:Fitzroy Crossing:Fitzroy Crossing:AU:-18.18:125.56
 YGAY:Gayndah:Gayndah:AU:-25.61:151.62
-YGBI:South Goulburn I:South Goulburn I:AU:-11.65:133.38
+YGBI:South Goulburn:South Goulburn:AU:-11.65:133.38
 YGDA:Goodooga:Goodooga:AU:-29.07:147.38
 YGDH:Gunnedah:Gunnedah:AU:-30.96:150.25
 YGDI:Goondiwindi:Goondiwindi:AU:-28.52:150.32
@@ -8558,7 +8386,7 @@ YGTE:Groote Eylandt:Groote Eylandt:AU:-13.98:136.46
 YGTN:Georgetown:Georgetown:AU:-18.3:143.53
 YGYM:Gympie:Gympie:AU:-26.28:152.7
 YHBA:Hervey Bay:Hervey Bay:AU:-25.32:152.88
-YHID:Horn I:Horn I:AU:-10.59:142.29
+YHID:Horn:Horn:AU:-10.59:142.29
 YHLC:Halls Creek:Halls Creek:AU:-18.23:127.67
 YHOO:Hooker Creek:Hooker Creek:AU:-18.34:130.64
 YHUG:Hughenden:Hughenden:AU:-20.82:144.23
@@ -8575,7 +8403,7 @@ YKMP:Kempsey:Kempsey:AU:-31.07:152.77
 YKOW:Kowanyama:Kowanyama:AU:-15.49:141.75
 YKRY:Kingaroy:Kingaroy:AU:-26.58:151.84
 YLEV:Lake Evella:Lake Evella:AU:-12.5:135.81
-YLHI:Lord Howe I:Lord Howe I:AU:-31.54:159.08
+YLHI:Lord Howe:Lord Howe:AU:-31.54:159.08
 YLHR:Lockhart River:Lockhart River:AU:-12.79:143.3
 YLIS:Lismore:Lismore:AU:-28.83:153.26
 YLRD:Lightning Ridge:Lightning Ridge:AU:-29.46:147.98
@@ -8589,7 +8417,7 @@ YMIT:Mitchell:Mitchell:AU:-26.48:147.94
 YMMU:Middlemount:Middlemount:AU:-22.8:148.7
 YMOR:Moree:Moree:AU:-29.5:149.84
 YMRB:Moranbah:Moranbah:AU:-22.06:148.08
-YMTI:Mornington I:Mornington I:AU:-16.66:139.18
+YMTI:Mornington:Mornington:AU:-16.66:139.18
 YMTO:Monto:Monto:AU:-24.89:151.1
 YMYB:Maryborough:Maryborough:AU:-25.51:152.72
 YNBR:Narrabri:Narrabri:AU:-30.32:149.83
@@ -8620,7 +8448,7 @@ YTGM:Thargomindah:Thargomindah:AU:-27.99:143.81
 YTNG:Thangool:Thangool:AU:-24.49:150.58
 YTRE:Taree:Taree:AU:-31.89:152.51
 YTST:Truscott:Truscott:AU:-14.09:126.38
-YTTI:Troughton I:Troughton I:AU:-13.75:126.15
+YTTI:Troughton:Troughton:AU:-13.75:126.15
 YTWB:Toowoomba:Toowoomba:AU:-27.54:151.92
 YVRD:Victoria River Downs:Victoria River Downs:AU:-16.4:131
 YWAV:Wave Hill:Wave Hill:AU:-17.4:131.12
@@ -8643,9 +8471,9 @@ KILI:Iliamna:Iliamna:US:59.754:-154.911
 KAKW:Klawock:Klawock:US:55.579:-133.076
 KMCG:McGrath:McGrath:US:62.953:-155.606
 KMRI:Merrill Fld:Anchorage:US:61.214:-149.844
-KANN:Annette I:Annette I:US:55.042:-131.572
+KANN:Annette:Annette:US:55.042:-131.572
 KSCC:Deadhorse:Deadhorse:US:70.195:-148.465
-KSNP:St Paul I:St Paul I:US:57.167:-170.22
+KSNP:St Paul:St Paul:US:57.167:-170.22
 KTAL:Ralph M Calhoun Mem:Tanana:US:65.174:-152.109
 KTKA:Talkeetna:Talkeetna:US:62.32:-150.094
 KSWD:Seward:Seward:US:60.117:-149.45
@@ -8661,3 +8489,33 @@ BIHK:Holmavik:Holmavik:IS:65.6957:-21.6961
 SNPE:Penedo:Penedo:BR:-10.2672:-36.5669
 SNED:Canavieiras:Canavieiras:BR:-15.6800:-38.9489
 SDNY:Nova Iguacu:Nova Iguacu:BR:-22.7467:-43.4647
+MM1Y:Gurrero Negro:Gurrero Negro:MX:28.026:-114.025
+MM58:Gurrero Negro:Gurrero Negro:MX:28.026:-114.025
+MM0F:Cabo San Lucas:Cabo San Lucas:MX:22.946:-109.939
+MM15:Cabo San Lucas:Cabo San Lucas:MX:22.946:-109.939
+MRCV:Cabo Velas:Cabo Velas:CR:10.356:-85.853
+MPLP:Cap Ramon Xatruch:Cap Ramon Xatruch:PA:8.407:-78.142
+SPPG:Paramonga:Paramonga:PE:-10.667:-77.833
+SPYU:Yauca:Yauca:PE:-15.619:-74.536
+SCMB:La Chimba:La Chimba:CL:-23.554:-70.396
+SCDW:Almirante Schroeders:Almirante Schroeders:CL:-53.611:-70.47
+SSTR:Torres:Torres:BR:-29.415:-49.81
+SBTR:Torres:Torres:BR:-29.415:-49.81
+SSGB:Guaratuba:Guaratuba:BR:-25.882:-48.612
+SBCB:Cabo Frio:Cabo Frio:BR:-22.922:-42.074
+SNBL:Belmonte:Belmonte:BR:-15.872:-38.872
+SNGM:Guimaraes:Guimaraes:BR:-18.862:-48.415
+SNCC:Calcoene:Calcoene:BR:2.515:-50.952
+SMNI:Maj Fernandes:Maj Fernandes:SR:5.956:-57.039
+MDMC:Monte Cristi:Monte Cristi:DO:19.865:-71.645
+MUCC:Jardines Del Rey:Jardines Del Rey:CU:22.461:-78.328
+EDWA:Bordelum:Bordelum:DE:54.627:8.93
+UG0E:Batumi:Batumi:GE:41.61:41.599
+OERB:Rabigh:Rabigh:SA:22.703:39.07
+VYGW:Gwa:Gwa:MM:17.6:94.583
+VDKK:Koh Kong:Koh Kong:KH:11.633:102.967
+ZSYT:Laishan:Laishan:CN:37.402:121.372
+RPMB:Buayan:Buayan:PH:6.106:125.235
+WAPK:Nangasuri:Nangasuri:ID:-6.066:134.274
+YBOI:Boigu:Boigu:AU:-9.233:142.218
+AGGV:Suavanao:Suavanao:SB:-7.586:158.731
