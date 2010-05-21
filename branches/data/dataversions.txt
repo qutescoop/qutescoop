@@ -1,0 +1,7 @@
+airports.dat	132
+coastline.dat	118
+counttries.dat	118
+countrycodes.dat	118
+firdisplay.dat	133
+firdisplay.sup	118
+firlist.dat	133
