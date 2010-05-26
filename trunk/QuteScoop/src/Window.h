@@ -121,11 +121,15 @@ private slots:
 
     void versionDownloaded(bool error);
     void downloadWatchdogTriggered();
+    void dataVersionDownloaded();
+    void newDataVersionsDownloaded();
+
 protected:
     virtual void closeEvent(QCloseEvent *event);
 
 private:
     void checkForUpdates();
+    void checkForDataUpdates();
 
     void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
 
@@ -143,7 +147,11 @@ private:
     MetarModel metarModel;
 
     QHttp *versionChecker;
+    QHttp *dataVersionChecker;
     QBuffer *versionBuffer;
+    QFile *dataversionBuffer;
+    QStringList filesToUpdate;
+    QList<QFile*> datadownloads;
 
     QTime timePredictTime_old;
     QDate datePredictTime_old;

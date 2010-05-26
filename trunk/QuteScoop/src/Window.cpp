@@ -17,6 +17,7 @@
  **************************************************************************/
 
 #include <QtGui>
+#include <QTemporaryFile>
 #include "GLWidget.h"
 #include "Window.h"
 #include "ClientDetails.h"
@@ -189,8 +190,10 @@ Window::Window(QWidget *parent) :
 
     versionChecker = 0;
     versionBuffer = 0;
-    if(Settings::checkForUpdates())
+    if(Settings::checkForUpdates()){
         checkForUpdates();
+        checkForDataUpdates();
+    }
 
     // restore saved states
     glWidget->restorePosition(1);
@@ -619,6 +622,134 @@ void Window::versionDownloaded(bool error) {
             }
         }
     }
+}
+
+void Window::checkForDataUpdates()
+{
+    if(dataVersionChecker != 0){
+        dataVersionChecker = 0;
+    }
+    dataVersionChecker = new QHttp(this);
+    dataversionBuffer = new QFile("dataversions.txt");
+    if(dataversionBuffer->exists()){
+        dataversionBuffer->remove();
+    }
+    dataversionBuffer->open(QIODevice::WriteOnly);
+    QUrl url("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
+    QFileInfo fileInfo(url.path());
+
+
+    dataVersionChecker->setHost(url.host());
+    connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(dataVersionDownloaded()));
+    dataVersionChecker->get(url.path(), dataversionBuffer);
+    qDebug() << "Checking for datafiles updates";
+
+
+}
+
+void Window::dataVersionDownloaded()
+{
+    qDebug() << "New version ist downloaded";    QList< QPair<QString , int> > newdata;
+    QList< QPair<QString , int> > olddata;
+    QFile oldversions(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+
+
+    dataversionBuffer->close();
+    dataversionBuffer->open(QIODevice::ReadOnly);
+    while(!dataversionBuffer->atEnd())
+    {
+        QString rawdata = QString(dataversionBuffer->readLine());
+        QStringList rawdataList = rawdata.split("%%");
+        QPair< QString , int> rawPair;
+        rawPair.first = rawdataList.first();
+        rawPair.second = rawdataList.last().toInt();
+        newdata.append(rawPair);
+        qDebug() << "Current versions are " << rawPair.first << " : " << rawPair.second;
+    }
+    dataversionBuffer->close();
+
+    oldversions.open(QIODevice::ReadOnly);
+    while(!oldversions.atEnd())
+    {
+        QString rawdata = QString(oldversions.readLine());
+        QStringList rawdataList = rawdata.split("%%");
+        QPair< QString , int> rawPair;
+        rawPair.first = rawdataList.first();
+        rawPair.second = rawdataList.last().toInt();
+        olddata.append(rawPair);
+        qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
+    }
+
+    int newfiles = newdata.size();
+    int oldfiles = olddata.size();
+
+    //collecting files to update
+    for(int i = 0; i < oldfiles; i++)
+    {
+        if(newdata.value(i).first == olddata.value(i).first)
+        {
+            if(newdata.value(i).second > olddata.value(i).second){
+                qDebug() << "New datafiles are " << newdata.value(i).first;
+                filesToUpdate.append(newdata.value(i).first);
+            }
+        }
+    }
+
+
+    if(!filesToUpdate.isEmpty())
+    {
+
+        disconnect(dataVersionChecker, 0 , this, 0);
+        connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(newDataVersionsDownloaded()));
+        QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/branches/data/%1")
+             .arg(filesToUpdate.first()));
+        datadownloads.append(new QFile(filesToUpdate.first()));
+        datadownloads.first()->open(QIODevice::WriteOnly);
+        dataVersionChecker->get(url.path(),datadownloads.first());
+        //If more then one file has to be updatet (->post(...) instead of ->get(...)
+        if(filesToUpdate.size() > 1)
+        for(int i =  1; i < filesToUpdate.size(); i++  )
+        {
+            QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/branches/data/%1")
+                 .arg(filesToUpdate.value(i)));
+            datadownloads.append(new QFile(filesToUpdate.value(i)));
+            datadownloads.value(i)->open(QIODevice::ReadOnly);
+            dataVersionChecker->post(url.path(),datadownloads.value(i));
+        }
+        qDebug() << "Downloading new datafile(s)";
+    }
+    if(filesToUpdate.isEmpty()){
+        dataversionBuffer->remove();
+    }
+
+
+}
+
+void Window::newDataVersionsDownloaded()
+{
+    qDebug() << "New datafiles downloaded";
+
+    for(int i = 0; i < filesToUpdate.size(); i++)
+    {
+        qDebug() << "Update " << filesToUpdate.value(i);
+
+        datadownloads.value(i)->close();
+        if(datadownloads.value(i)->exists())
+        {
+            QFile::remove(QString("%1%2").arg(Settings::dataDirectory()).arg(filesToUpdate.value(i)));
+            datadownloads.value(i)->copy(QString("%1%2").arg(Settings::dataDirectory()).arg(filesToUpdate.value(i)));
+            datadownloads.value(i)->remove();
+        }
+    }
+
+    if(QFile::exists("dataversions.txt"))
+    {
+        QFile::remove(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+        dataversionBuffer->copy(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+        dataversionBuffer->remove();
+    }
+
+    qDebug() << "Datafile update ... DONE";
 }
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {

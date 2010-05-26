@@ -14,7 +14,7 @@
    <string>Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <layout class="QVBoxLayout">
@@ -407,7 +407,7 @@ minimum interval)</string>
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Check for updates</string>
+             <string>Check for  programm and datafile updates</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -2499,9 +2499,7 @@ part is</string>
   <tabstop>pbTrackLineColor</tabstop>
   <tabstop>pbPlanLineColor</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>cbUseProxy</sender>
