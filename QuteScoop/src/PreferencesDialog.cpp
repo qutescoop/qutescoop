@@ -57,6 +57,7 @@ void PreferencesDialog::loadSettings() {
     editUserDefinedLocation->setText(Settings::userDownloadLocation());
     editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
     lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
+    cbSaveWhazzupData->setChecked(Settings::saveWhazzupData());
 
     gbDownloadBookings->setChecked(Settings::downloadBookings()); // must be after cbNetwork
     editBookingsLocation->setText(Settings::bookingsLocation());
@@ -335,6 +336,11 @@ void PreferencesDialog::on_cbDashedFrontAfter_currentIndexChanged(int index) {
 void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
     Settings::setUserDownloadLocation(editUserDefinedLocation->text());
     Settings::setStatusLocation(editUserDefinedLocation->text());
+}
+
+void PreferencesDialog::on_cbSaveWhazzupData_stateChanged(int state)
+{
+    Settings::setSaveWhazzupData(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbUseProxy_stateChanged(int state) {

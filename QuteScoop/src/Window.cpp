@@ -123,7 +123,7 @@ Window::Window(QWidget *parent) :
 
     Whazzup *whazzup = Whazzup::getInstance();
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
-    connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
+    //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
     connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
@@ -133,7 +133,7 @@ Window::Window(QWidget *parent) :
 
     if(Settings::downloadOnStartup()) {
         // download whazzup as soon as whazzup status download is complete
-    connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
+        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
     }
     // Always download status
     whazzup->setStatusLocation(Settings::statusLocation());
@@ -664,7 +664,7 @@ void Window::dataVersionDownloaded()
         rawPair.first = rawdataList.first();
         rawPair.second = rawdataList.last().toInt();
         newdata.append(rawPair);
-        qDebug() << "Current versions are " << rawPair.first << " : " << rawPair.second;
+        //qDebug() << "Current versions are " << rawPair.first << " : " << rawPair.second;
     }
     dataversionBuffer->close();
 
@@ -677,7 +677,7 @@ void Window::dataVersionDownloaded()
         rawPair.first = rawdataList.first();
         rawPair.second = rawdataList.last().toInt();
         olddata.append(rawPair);
-        qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
+        //qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
     }
 
     int newfiles = newdata.size();
@@ -698,7 +698,9 @@ void Window::dataVersionDownloaded()
 
     if(!filesToUpdate.isEmpty())
     {
-
+        QMessageBox::information(this, tr("New datafiles!!"), tr("There are new datafiles available and will be updateted."
+                                                                 "These changes will take effect on the next start of QuteScoop."),
+                                 QMessageBox::Ok);
         disconnect(dataVersionChecker, 0 , this, 0);
         connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(newDataVersionsDownloaded()));
         QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/branches/data/%1")

@@ -66,6 +66,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     plotFlightPlannedRoute = false;
 
     allSectorsDisplayed = false;
+    mapIsMoving = false;
 }
 
 GLWidget::~GLWidget() {
@@ -262,6 +263,7 @@ void GLWidget::newWhazzupData(bool isNew) {
 
         updateGL();
     }
+    qDebug() << "GLWidget/newWhazzupData -- finished";
 }
 
 void GLWidget::displayAllSectors(bool value) {
@@ -370,6 +372,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     if(mouseDownPos == event->pos() && event->button() == Qt::LeftButton) { // Left-Button needed on Windows explicitly
         emit mapClicked(event->x(), event->y(), event->globalPos());
     }
+    if(mapIsMoving == true)
+    {
+        emit newPosition();
+    }
 }
 
 void GLWidget::handleRotation(QMouseEvent *event) {
@@ -395,12 +401,13 @@ void GLWidget::handleRotation(QMouseEvent *event) {
     }
 
     lastPos = event->pos();
-    emit newPosition();
+    //emit newPosition();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     if(event->buttons() != 0) {
         handleRotation(event);
+        mapIsMoving = true;
     }
 }
 

@@ -54,6 +54,7 @@ private slots:
     void on_editBookingsLocation_editingFinished();
     void on_sbBookingsInterval_valueChanged(int value);
     void on_cbBookingsPeriodically_toggled(bool checked);
+    void on_cbSaveWhazzupData_stateChanged(int state);
 
     // proxy settings
     void on_cbUseProxy_stateChanged(int state);
