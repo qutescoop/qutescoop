@@ -155,6 +155,7 @@ private:
 
     QTime timePredictTime_old;
     QDate datePredictTime_old;
+    //QLabel *lblStatus;
 };
 
 #endif /*WINDOW_H_*/

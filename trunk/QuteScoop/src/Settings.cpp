@@ -172,7 +172,7 @@ void Settings::setUpdateVersionNumber(const QString& version) {
 }
 
 QString Settings::statusLocation() {
-    return getSettings()->value("download/statusLocation", "http://www.ivao.aero/whazzup/status.txt").toString();
+    return getSettings()->value("download/statusLocation", "http://status.vatsim.net/").toString();
 }
 
 void Settings::setStatusLocation(const QString& location) {
@@ -903,4 +903,14 @@ double Settings::zoomFactor() {
 
 void Settings::setZoomFactor(double value) {
     getSettings()->setValue("zoom/zoomFactor", value);
+}
+
+bool Settings::saveWhazzupData()
+{
+    return getSettings()->value("general/saveWhazzupData", false).toBool();
+}
+
+void Settings::setSaveWhazzupData(bool value)
+{
+    getSettings()->setValue("general/saveWhazzupData" , value);
 }

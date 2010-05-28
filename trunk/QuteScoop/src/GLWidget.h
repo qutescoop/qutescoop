@@ -159,6 +159,7 @@ private:
 	void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
     bool allSectorsDisplayed;
+    bool mapIsMoving;
 };
 
 #endif /*GLWIDGET_H_*/

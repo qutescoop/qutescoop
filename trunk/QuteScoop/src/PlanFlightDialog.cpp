@@ -79,23 +79,31 @@ void PlanFlightDialog::requestGenerated() {
         return;
     }
 
+    double lat1 = NavData::getInstance()->airports().key(edDep->text())->lat;
+    double lon1 = NavData::getInstance()->airports().key(edDep->text())->lon;
+
+    double lat2 = NavData::getInstance()->airports().key(edDest->text())->lat;
+    double lon2 = NavData::getInstance()->airports().key(edDest->text())->lon;
+
+    double dist = NavData::distance(lat1 , lon1, lat2, lon2);
+
     // add bogus routes
     QList<Route*> newroutes;
-    for (int i=0; i<1; i++) {
-        QStringList sl = QStringList();
-        sl.append("generated");
-        sl.append(QString("%1").arg(1000 + i));
-        sl.append(edDep->text());
-        sl.append(edDest->text());
-        sl.append(QString("%1").arg(180 - i*10));
-        sl.append(QString("%1").arg(180 + i*10));
-        sl.append("DCT");
-        sl.append("n/a");
-        sl.append("just a test");
 
-        Route *r = new Route(sl);
-        newroutes.append(r);
-    }
+    QStringList sl = QStringList();
+    sl.append("direct");
+    sl.append(QString("%1").arg(dist));
+    sl.append(edDep->text());
+    sl.append(edDest->text());
+    sl.append(QString("%1").arg(100));
+    sl.append(QString("%1").arg(999));
+    sl.append("DCT");
+    sl.append("no");
+    sl.append("Just the direct route");
+
+    Route *r = new Route(sl);
+    newroutes.append(r);
+
 
     lblGeneratedStatus->setText(QString("%1 route%2")
                                 .arg(newroutes.size())

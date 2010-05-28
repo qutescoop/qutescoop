@@ -66,7 +66,7 @@ public:
     const QDateTime& predictionBasedOnTimestamp() const { return predictionBasedOnTime; }
     const QDateTime& predictionBasedOnBookingsTimestamp() const { return predictionBasedOnBookingsTime; }
 
-    const QDateTime& updateEarliest() const { return nextUpdate; }
+    //const QDateTime& updateEarliest() const { return nextUpdate; }
 
     bool isIvao() const { return whazzupVersion == 4; }
     bool isVatsim() const { return whazzupVersion == 8; }
@@ -96,7 +96,7 @@ private:
     QDateTime bookingsTime;
     QDateTime predictionBasedOnTime;
     QDateTime predictionBasedOnBookingsTime;
-    QDateTime nextUpdate;
+    //QDateTime nextUpdate;
     WhazzupType dataType;
 };
 

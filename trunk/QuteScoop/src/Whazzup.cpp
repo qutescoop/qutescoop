@@ -192,6 +192,7 @@ void Whazzup::download() {
 
     downloadTimer->stop();
     QTime now = QTime::currentTime();
+    /*Comment out I'm not sure if that is necessary
     if(!data.isNull()) {
         if(data.updateEarliest().isValid()
                 && QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest()) > 0
@@ -201,8 +202,9 @@ void Whazzup::download() {
                     .arg(QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest())), 3000
                     );
             return; // Server said we do not need to update
-        }
-    } else if(lastDownloadTime.secsTo(now) < 30) {
+            }
+    }
+    else */if(lastDownloadTime.secsTo(now) < 30) {
         Window::getInstance()->statusBar()->showMessage(
                 QString("Whazzup checked %1s (less than 30s) ago. Skipping.")
                 .arg(lastDownloadTime.secsTo(now)), 3000
@@ -281,8 +283,13 @@ void Whazzup::whazzupDownloaded(bool error) {
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
     WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
+
+    splash->showMessage(tr("Processing Whazzup......"), Qt::AlignCenter, QColor(0, 24, 81));
+
+
     whazzupBuffer->close();
     if(!newWhazzupData.isNull()) {
+
         if(newWhazzupData.timestamp().secsTo(QDateTime::currentDateTime().toUTC()) > 60 * 30)
             emit networkMessage("Whazzup data more than 30 minutes old.");
 
@@ -290,19 +297,24 @@ void Whazzup::whazzupDownloaded(bool error) {
             data.updateFrom(newWhazzupData);
             qDebug() << "Whazzup updated from timestamp\t" << data.timestamp().toString();
 
-            // write out whazzup to a file
-            QString filename = QString("downloaded/%1_%2.whazzup")
-                      .arg(Settings::downloadNetwork())
-                      .arg(data.timestamp().toString("yyyyMMdd-HHmmss"));
-            QFile out(filename);
-            if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                out.write(whazzupBuffer->data());
-            } else {
-                qDebug() << "Info: Could not write Whazzup to disk" << out.fileName();
+
+            if(Settings::saveWhazzupData()){
+                // write out whazzup to a file
+                QString filename = QString("downloaded/%1_%2.whazzup")
+                          .arg(Settings::downloadNetwork())
+                          .arg(data.timestamp().toString("yyyyMMdd-HHmmss"));
+                QFile out(filename);
+                if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                    out.write(whazzupBuffer->data());
+                }
+                else {
+                    qDebug() << "Info: Could not write Whazzup to disk" << out.fileName();
+                }
             }
 
             emit newData(true);
-        } else {
+        }
+        else {
             Window::getInstance()->statusBar()->showMessage(
                     QString("We already have Whazzup with that Timestamp: %1")
                     .arg(data.timestamp().toString("ddd MM/dd HHmm'z'")), 3000);
@@ -311,6 +323,7 @@ void Whazzup::whazzupDownloaded(bool error) {
         }
     }
     splash->finish(Window::getInstance());
+    qDebug() << "Whazzup update totaly completed";
 }
 
 void Whazzup::downloadBookings() {

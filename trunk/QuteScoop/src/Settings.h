@@ -291,7 +291,7 @@ public:
     static void setTrackAfter(bool value);
     static bool trackAfter();
 
-    //
+    // -- General
     static bool checkForUpdates();
     static void setCheckForUpdates(bool value);
 
@@ -329,6 +329,9 @@ public:
 
     static QString dataDirectory();
     static void setDataDirectory(const QString& value);
+
+    static bool saveWhazzupData();
+    static void setSaveWhazzupData(const bool value);
 
     //zooming
     static void deleteWheelSettings();

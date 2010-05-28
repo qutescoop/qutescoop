@@ -22,6 +22,7 @@ FORMS = src/MainWindow.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui
+
 # DESTDIR = bin/
 # DEPENDPATH += ./src
 INCLUDEPATH += ./src
@@ -36,7 +37,7 @@ QT += network \
 # CONFIG += debug
 # CONFIG += release
 CONFIG += warn_off
-mac {
+mac { 
     ICON = src/Dolomynum.icns
     CONFIG += x86 \
         ppc
@@ -144,4 +145,5 @@ RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README \
     downloaded/+notes.txt \
-    data/+notes.txt
+    data/+notes.txt \
+data/dataversions.txt

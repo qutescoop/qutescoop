@@ -42,7 +42,7 @@ WhazzupData::WhazzupData():
     whazzupVersion(0),
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
-    nextUpdate(QDateTime()),
+    //nextUpdate(QDateTime()),
     dataType(UNIFIED)
 {
 }
@@ -54,8 +54,8 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
     whazzupTime(QDateTime()),
-    bookingsTime(QDateTime()),
-    nextUpdate(QDateTime())
+    bookingsTime(QDateTime())
+    //nextUpdate(QDateTime())
 {
     qDebug() << "WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     dataType = type;
@@ -170,11 +170,11 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     }
 
     // set the earliest time the server will have new data
-    if (whazzupTime.isValid() && reloadInMin > 0) {
-        nextUpdate = whazzupTime.addSecs(reloadInMin * 60);
-        nextUpdate.setTimeSpec(Qt::UTC);
+    //if (whazzupTime.isValid() && reloadInMin > 0) {
+    //    nextUpdate = whazzupTime.addSecs(reloadInMin * 60);
+    //    nextUpdate.setTimeSpec(Qt::UTC);
         //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << nextUpdate << QDateTime::currentDateTime().toUTC().secsTo(nextUpdate);
-    }
+    //}
 }
 
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
@@ -186,8 +186,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
     predictionBasedOnTime(QDateTime()),
-    predictionBasedOnBookingsTime(QDateTime()),
-    nextUpdate(QDateTime())
+    predictionBasedOnBookingsTime(QDateTime())
+    //nextUpdate(QDateTime())
 {
     qDebug() << "WhazzupData(predictTime)";
 
@@ -351,7 +351,7 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
-        nextUpdate = data.nextUpdate;
+        //nextUpdate = data.nextUpdate;
 
         pilots.clear();
         QList<QString> callsigns = data.pilots.keys();
@@ -433,6 +433,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
         Pilot *p = new Pilot(*data.bookedpilots[callsigns[i]]);
         bookedpilots[p->label] = p;
     }
+    qDebug() << "WhazzupData/updatePilotsFrom -- finished";
 }
 
 void WhazzupData::updateControllersFrom(const WhazzupData& data) {
@@ -456,6 +457,7 @@ void WhazzupData::updateControllersFrom(const WhazzupData& data) {
             *controllers[callsigns[i]] = *data.controllers[callsigns[i]];
         }
     }
+    qDebug() << "WhazzupData/updateControllersFrom -- finished";
 }
 
 void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
@@ -464,6 +466,7 @@ void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
     for (int i = 0; i < data.bookedcontrollers.size(); i++) {
         bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
     }
+    qDebug() << "WhazzupData/updateBookedControllersFrom -- finished";
 }
 
 void WhazzupData::updateFrom(const WhazzupData& data) {
@@ -485,7 +488,7 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupVersion = data.whazzupVersion;
         whazzupTime = data.whazzupTime;
-        nextUpdate = data.nextUpdate;
+        //nextUpdate = data.nextUpdate; testing
         predictionBasedOnTime = data.predictionBasedOnTime;
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
@@ -494,6 +497,7 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         bookingsTime = data.bookingsTime;
         predictionBasedOnBookingsTime = data.predictionBasedOnBookingsTime;
     }
+    qDebug() << "WhazzupData/updateFrom -- finished";
 }
 
 WhazzupData::~WhazzupData() {
@@ -547,6 +551,7 @@ QList<Controller*> WhazzupData::activeSectors() const {
         }
     }
 
+    qDebug() << "WhazzupData/activeSectors -- finished";
     return result;
 }
 
