@@ -14,7 +14,7 @@
    <string>Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <layout class="QVBoxLayout">
@@ -165,14 +165,25 @@ minimum interval)</string>
               </layout>
              </item>
              <item>
-              <widget class="QCheckBox" name="cbDownloadOnStartup">
-               <property name="text">
-                <string>Download Whazzup on Program Start</string>
-               </property>
-               <property name="checked">
-                <bool>true</bool>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <widget class="QCheckBox" name="cbDownloadOnStartup">
+                 <property name="text">
+                  <string>Download Whazzup on Program Start</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QCheckBox" name="cbSaveWhazzupData">
+                 <property name="text">
+                  <string>Save downloaded Whazzupdata on hard disk</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
@@ -2499,7 +2510,9 @@ part is</string>
   <tabstop>pbTrackLineColor</tabstop>
   <tabstop>pbPlanLineColor</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>cbUseProxy</sender>
