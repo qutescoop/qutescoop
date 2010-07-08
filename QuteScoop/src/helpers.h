@@ -28,7 +28,7 @@
                                         // This is just the revision of THIS file, not the whole working copy.
                                         // Well, better than nothing. No working copy revision information is available cross-platform :(
 
-#define VERSION_NUMBER "1.0.3 alpha 10"
+#define VERSION_NUMBER "1.0.3 alpha 11"
 #define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
 
 // mathematical constants

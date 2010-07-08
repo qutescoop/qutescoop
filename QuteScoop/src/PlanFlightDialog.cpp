@@ -69,10 +69,11 @@ void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected 
     lblGeneratedStatus->setText(QString());
     lblVrouteStatus->setText(QString());
 
-    if (cbGenerated->isChecked()) requestGenerated();
+    //if (cbGenerated->isChecked()) requestGenerated();
     if (cbVroute->isChecked()) requestVroute();
 }
 
+/* Disabled we need a better way
 void PlanFlightDialog::requestGenerated() {
     if (edDep->text().length() != 4 || edDest->text().length() != 4) {
         lblGeneratedStatus->setText(QString("bad request"));
@@ -114,7 +115,7 @@ void PlanFlightDialog::requestGenerated() {
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
     toolBox->setItemText(1, QString("Results (%1)").arg(routes.size()));
     toolBox->setCurrentIndex(1);
-}
+}*/
 
 void PlanFlightDialog::requestVroute() {
     lblVrouteStatus->setText(QString("request sent..."));

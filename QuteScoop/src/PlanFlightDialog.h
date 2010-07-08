@@ -58,7 +58,7 @@ private slots:
 private:
     PlanFlightDialog();
 
-    void requestGenerated();
+    //void requestGenerated();
     void requestVroute();
 
     QHttp *fpDownloader;
