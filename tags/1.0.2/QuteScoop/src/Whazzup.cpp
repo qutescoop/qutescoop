@@ -42,7 +42,7 @@ Whazzup::Whazzup() {
 	connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
 	
 	// init random seed to switch between URLs
-	srand(time(NULL));
+        //srand(time(NULL));
 	
 	downloadTimer = new QTimer(this);
 	connect(downloadTimer, SIGNAL(timeout()), this, SLOT(download()));
