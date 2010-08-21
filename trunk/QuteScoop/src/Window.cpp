@@ -703,7 +703,7 @@ void Window::dataVersionDownloaded()
                                  QMessageBox::Ok);
         disconnect(dataVersionChecker, 0 , this, 0);
         connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(newDataVersionsDownloaded()));
-        QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/branches/data/%1")
+        QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
              .arg(filesToUpdate.first()));
         datadownloads.append(new QFile(filesToUpdate.first()));
         datadownloads.first()->open(QIODevice::WriteOnly);
@@ -712,7 +712,7 @@ void Window::dataVersionDownloaded()
         if(filesToUpdate.size() > 1)
         for(int i =  1; i < filesToUpdate.size(); i++  )
         {
-            QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/branches/data/%1")
+            QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
                  .arg(filesToUpdate.value(i)));
             datadownloads.append(new QFile(filesToUpdate.value(i)));
             datadownloads.value(i)->open(QIODevice::ReadOnly);
