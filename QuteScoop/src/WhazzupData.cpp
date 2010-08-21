@@ -40,7 +40,7 @@ WhazzupData::WhazzupData(QBuffer* buffer):
 	whazzupTime(QDateTime())
 {
 	enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS};
-	ParserState state = STATE_NONE;
+        ParserState state = STATE_NONE;
 
 	while(buffer->canReadLine()) {
 		QString line = QString(buffer->readLine()).trimmed();
