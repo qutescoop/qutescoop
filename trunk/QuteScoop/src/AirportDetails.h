@@ -61,9 +61,8 @@ private:
     QSortFilterProxyModel *departuresSortModel;
 
     //test for sectorcheck
-    QList<Controller*> CheckSectors(void);
+    QList<Controller*> checkSectors();
 
     MetarModel* metarModel;
 };
-
 #endif /*AIRPORTDETAILS_H_*/

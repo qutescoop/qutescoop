@@ -21,14 +21,14 @@
 
 #include <math.h>
 #include <QGLWidget>
+#include <QString>
 
 // version information
-//#define VERSION_INT 114 // VERSION_INT is used as QMainWindow::saveState() and restoreState()
 #define CVS_REVISION "$Revision$" // Gets set automatically on commit of THIS file.
                                         // This is just the revision of THIS file, not the whole working copy.
                                         // Well, better than nothing. No working copy revision information is available cross-platform :(
 
-#define VERSION_NUMBER "1.0.3 alpha 11"
+#define VERSION_NUMBER "1.0.3 alpha 12"
 #define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
 
 // mathematical constants
@@ -43,6 +43,4 @@ const GLdouble Pi180 = Pi/180.0;
 
 #define VERTEX(lat, lon) glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon))
 
-QString lat2str(double lat);
-QString lon2str(double lon);
 #endif /*HELPERS_H_*/

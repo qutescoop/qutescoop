@@ -57,8 +57,8 @@ private:
     static CALLBACK_DECL tessVertexCB(const GLvoid *data);
     static CALLBACK_DECL tessErrorCB(GLenum errorCode);
     static CALLBACK_DECL tessCombineCB(const GLdouble newVertex[3],
-                                        const GLdouble *neighborVertex[4],
-                                        const GLfloat neighborWeight[4], GLdouble **outData);
+                                       const GLdouble *neighborVertex[4],
+                                       const GLfloat neighborWeight[4], GLdouble **outData);
 };
 
 #endif /*TESSELLATOR_H_*/
