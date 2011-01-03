@@ -323,7 +323,7 @@ void Whazzup::whazzupDownloaded(bool error) {
         }
     }
     splash->finish(Window::getInstance());
-    qDebug() << "Whazzup update totaly completed";
+    qDebug() << "Whazzup update completed";
 }
 
 void Whazzup::downloadBookings() {

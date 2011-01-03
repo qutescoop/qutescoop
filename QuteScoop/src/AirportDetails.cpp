@@ -26,6 +26,39 @@
 #include "NavData.h"
 #include "Window.h"
 
+// function only used here
+QString lat2str(double lat) {
+    QString result = "N";
+    if (lat < 0) {
+        result += "S";
+        lat *= -1;
+    }
+
+    int lat1 = (int)lat;
+    double lat2 = (lat - (int)lat) * 60.0;
+    result += QString("%1 %2'")
+    .arg(lat1, 2, 10, QChar('0'))
+    .arg(lat2, 2, 'f', 3, QChar('0'));
+
+    return result;
+}
+
+// function only used here
+QString lon2str(double lon) {
+    QString result = "E";
+    if (lon < 0) {
+        lon *= -1;
+        result = "W";
+    }
+
+    int lon1 = (int)lon;
+    double lon2 = (lon - (int)lon) * 60.0;
+    result += QString("%1 %2'")
+    .arg(lon1, 3, 10, QChar('0'))
+    .arg(lon2, 2, 'f', 3, QChar('0'));
+
+    return result;
+}
 
 AirportDetails *airportDetailsInstance = 0;
 
@@ -131,7 +164,7 @@ void AirportDetails::refresh(Airport* newAirport) {
 
 
     QList<Controller*> atcContent = airport->getAllControllers();
-    atcContent += CheckSectors();
+    atcContent += checkSectors();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
     // ATIS
@@ -214,7 +247,7 @@ void AirportDetails::on_pbMetar_clicked()
     }
 }
 
-QList<Controller*> AirportDetails::CheckSectors()
+QList<Controller*> AirportDetails::checkSectors()
 {
     QList<Controller*> result;
     QList<Controller*> allSectors = Whazzup::getInstance()->whazzupData().activeSectors();

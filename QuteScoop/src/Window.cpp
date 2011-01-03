@@ -45,7 +45,6 @@ Window::Window(QWidget *parent) :
     QMainWindow(parent) {
     setupUi(this);
 
-
     if(Settings::resetOnNextStart())
         QSettings().clear();
 
