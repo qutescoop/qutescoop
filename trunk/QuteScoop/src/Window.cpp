@@ -284,7 +284,7 @@ void Window::whazzupDownloaded(bool isNew) {
                        : ""
                        )
                   .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString("HHmmss'z'"))
+                        ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
                         : data.timestamp().toString("ddd MM/dd HHmm'z'"))
                   .arg(data.clients());
     setStatusText(msg);
@@ -321,11 +321,8 @@ void Window::whazzupDownloaded(bool isNew) {
         clientSelection->clearClients();
         clientSelection->close();
 
-        qDebug() << "whazzupDownloaded()/performSearch";
         performSearch();
-        qDebug() << "whazzupDownloaded()/performSearch -- finished";
 
-        qDebug() << "whazzupDownloaded()/Details";
         if (AirportDetails::getInstance(false) != 0) {
             if (AirportDetails::getInstance()->isVisible())
                 AirportDetails::getInstance()->refresh();
@@ -344,9 +341,7 @@ void Window::whazzupDownloaded(bool isNew) {
             else // not visible -> delete it...
                 ControllerDetails::getInstance()->destroyInstance();
         }
-        qDebug() << "whazzupDownloaded()/Details -- finished";
 
-        qDebug() << "whazzupDownloaded()/ListClients" << (ListClientsDialog::getInstance(false) == 0);
         if (ListClientsDialog::getInstance(false) != 0) {
             if (ListClientsDialog::getInstance()->isVisible())
                 ListClientsDialog::getInstance()->refresh();
@@ -354,23 +349,16 @@ void Window::whazzupDownloaded(bool isNew) {
                 ListClientsDialog::getInstance()->destroyInstance();
         }
 
-        qDebug() << "whazzupDownloaded()/ListClients -- finished";
-
         if(realdata.bookingsTimestamp().isValid()) {
-            qDebug() << "whazzupDownloaded()/BookedAtcDialog";
             if (BookedAtcDialog::getInstance(false) != 0) {
                 if (BookedAtcDialog::getInstance()->isVisible())
                     BookedAtcDialog::getInstance()->refresh();
                 else // not visible -> delete it...
                     BookedAtcDialog::getInstance()->destroyInstance();
             }
-
-            qDebug() << "whazzupDownloaded()/BookedAtcDialog -- finished";
         }
 
-        qDebug() << "whazzupDownloaded()/refreshFriends";
         refreshFriends();
-        qDebug() << "whazzupDownloaded()/refreshFriends -- finished";
 
         if (actionShootScreenshots->isChecked())
             shootScreenshot();
@@ -398,7 +386,8 @@ void Window::refreshFriends() {
 void Window::mapClicked(int x, int y, QPoint absolutePos) {
     QList<MapObject*> objects = glWidget->objectsAt(x, y);
     if(objects.size() == 0) {
-        on_actionHideAllWindows_triggered();
+        // closing all Windows when clicking on an empty spot?
+        //on_actionHideAllWindows_triggered();
         return;
     }
 
@@ -408,9 +397,9 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
         clientSelection->setObjects(objects);
         clientSelection->move(absolutePos);
         clientSelection->show();
-        clientSelection->raise();
-        clientSelection->activateWindow();
-        clientSelection->setFocus();
+        //clientSelection->raise();
+        //clientSelection->activateWindow();
+        //clientSelection->setFocus();
     }
 }
 
@@ -848,7 +837,22 @@ void Window::setEnableBookedAtc(bool enable) {
 void Window::performWarp()
 {
     warpTimer.stop();
-    Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+
+    if(cbNoPredict->isChecked()) {
+        qDebug() << "cbNoPredict";
+        QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
+        for (int i=0; i < downloaded.size(); i++) {
+            qDebug() << downloaded[i].second;
+            if((downloaded[i].first > selected) || (i == downloaded.size() - 1)) {
+                qDebug() << "loading from file: " << downloaded[i].second;
+                Whazzup::getInstance()->fromFile(downloaded[i].second);
+                break;
+            }
+        }
+    } else {
+        Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+    }
 }
 
 void Window::on_tbDisablePredict_clicked()
@@ -864,32 +868,18 @@ void Window::on_datePredictTime_dateChanged(QDate date)
 {
     warpTimer.stop();
 
-    if(cbNoPredict->isChecked()) {
-        qDebug() << "cbNoPredict";
-        QList<QPair<QDateTime, QString>*> downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
-        QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
-        for (int i=0; i < downloaded.size(); i++) {
-            qDebug() << downloaded[i]->second;
-            if(downloaded[i]->first < selected) {
-                Whazzup::getInstance()->fromFile(downloaded[i]->second);
-                qDebug() << "loading from file: " << downloaded[i]->second;
-                break;
-            }
-        }
-    } else {
-        QDate newDate;
-        // make month change if lastday+ or 0-
-        if (!tbRunPredict->isChecked()) {
-            if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
-                newDate = date.addMonths(1);
-            if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
-                newDate = date.addMonths(-1);
-        }
-
-        datePredictTime_old = date;
-        if(newDate.isValid())
-            datePredictTime->setDate(newDate);
+    QDate newDate;
+    // make month change if lastday+ or 0-
+    if (!tbRunPredict->isChecked()) {
+        if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
+            newDate = date.addMonths(1);
+        if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
+            newDate = date.addMonths(-1);
     }
+
+    datePredictTime_old = date;
+    if(newDate.isValid())
+        datePredictTime->setDate(newDate);
 
     warpTimer.start(1000);
 }
@@ -898,38 +888,24 @@ void Window::on_timePredictTime_timeChanged(QTime time)
 {
     warpTimer.stop();
 
-    if(cbNoPredict->isChecked()) {
-        qDebug() << "cbNoPredict";
-        QList<QPair<QDateTime, QString>*> downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
-        QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
-        for (int i=0; i < downloaded.size(); i++) {
-            qDebug() << downloaded[i]->second;
-            if(downloaded[i]->first < selected) {
-                Whazzup::getInstance()->fromFile(downloaded[i]->second);
-                qDebug() << "loading from file: " << downloaded[i]->second;
-                break;
-            }
-        }
-    } else {
-        QTime newTime;
-        if (!tbRunPredict->isChecked()) {
-            // make hour change if 59+ or 0-
-            if (timePredictTime_old.minute() == 59 && time.minute() == 0)
-                newTime = time.addSecs(60 * 60);
-            if (timePredictTime_old.minute() == 0 && time.minute() == 59)
-                newTime = time.addSecs(-60 * 60);
+    QTime newTime;
+    if (!tbRunPredict->isChecked()) {
+        // make hour change if 59+ or 0-
+        if (timePredictTime_old.minute() == 59 && time.minute() == 0)
+            newTime = time.addSecs(60 * 60);
+        if (timePredictTime_old.minute() == 0 && time.minute() == 59)
+            newTime = time.addSecs(-60 * 60);
 
-            // make date change if 23+ or 00-
-            if (timePredictTime_old.hour() == 23 && time.hour() == 0)
-                datePredictTime->setDate(datePredictTime->date().addDays(1));
-            if (timePredictTime_old.hour() == 0 && time.hour() == 23)
-                datePredictTime->setDate(datePredictTime->date().addDays(-1));
-        }
-
-        timePredictTime_old = time;
-        if (newTime.isValid())
-            timePredictTime->setTime(newTime);
+        // make date change if 23+ or 00-
+        if (timePredictTime_old.hour() == 23 && time.hour() == 0)
+            datePredictTime->setDate(datePredictTime->date().addDays(1));
+        if (timePredictTime_old.hour() == 0 && time.hour() == 23)
+            datePredictTime->setDate(datePredictTime->date().addDays(-1));
     }
+
+    timePredictTime_old = time;
+    if (newTime.isValid())
+        timePredictTime->setTime(newTime);
 
     warpTimer.start(1000);
 }

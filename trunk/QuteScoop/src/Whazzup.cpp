@@ -162,7 +162,7 @@ void Whazzup::fromFile(QString filename) {
     */
     QFile *file = new QFile(filename);
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "File Error on open";
+        qDebug() << "Error opening" << filename;
         return;
     }
     // splash screen
@@ -448,20 +448,24 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
     emit newData(true);
 }
 
-QList<QPair<QDateTime, QString>*> Whazzup::getDownloadedWhazzups() {
+QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
     // Process directory
-    QDir myDir("downloaded/");
-    QStringList list = myDir.entryList(QStringList(QString("%1_*.whazzup")
-                            .arg(Settings::downloadNetwork()))
-                            , QDir::Files | QDir::Readable);
-    qDebug() << "getDLWhazzup" << list;
+    QStringList list = QDir("downloaded/").entryList(
+                QStringList(QString("%1_*.whazzup").arg(Settings::downloadNetwork())),
+                QDir::Files | QDir::Readable);
+
+    QList <QPair <QDateTime, QString> > returnList;
     for (int i = 0; i < list.size(); i++) {
-        QRegExp dtRe = QRegExp("\\d+_(\\d{8}-\\d{6})");
-        qDebug() << list[i] << dtRe.indexIn(list[i]);
+        QRegExp dtRe = QRegExp("\\.*_(\\d{8}-\\d{6})");
+        //qDebug() << list[i] << dtRe.indexIn(list[i]);
         if (dtRe.indexIn(list[i]) > 0) {
-            qDebug() << dtRe.cap(1);
+            //qDebug() << dtRe.cap(1);
             QDateTime dt = QDateTime::fromString(dtRe.cap(1), "yyyyMMdd-HHmmss");
+            returnList.append(QPair<QDateTime, QString>(
+                    dt,
+                    QString("downloaded/%1").arg(list[i])
+            ));
         }
     }
-    return QList<QPair<QDateTime, QString>*>();
+    return returnList;
 }
