@@ -38,6 +38,7 @@ class AirportDetails : public ClientDetails, private Ui::AirportDetails
 
 public:
     static AirportDetails *getInstance(bool createIfNoInstance = true);
+    void destroyInstance();
     void refresh(Airport* airport = 0);
 
 private slots:

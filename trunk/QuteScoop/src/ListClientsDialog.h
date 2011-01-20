@@ -29,6 +29,7 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
     Q_OBJECT
 public:
     static ListClientsDialog *getInstance(bool createIfNoInstance = true);
+    void destroyInstance();
     void refresh();
 
 public slots:

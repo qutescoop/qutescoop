@@ -30,7 +30,7 @@ class PilotDetails : public ClientDetails, private Ui::PilotDetails
 
 public:
     static PilotDetails* getInstance(bool createIfNoInstance = true);
-
+    void destroyInstance();
     virtual void refresh(Pilot *pilot = 0);
 
 private slots:

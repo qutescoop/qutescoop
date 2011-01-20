@@ -22,12 +22,18 @@
 #include "Window.h"
 #include "Settings.h"
 
-ControllerDetails *controllerDetailsInstance = 0;
-
+//singleton instance
+ControllerDetails *controllerDetails = 0;
 ControllerDetails* ControllerDetails::getInstance(bool createIfNoInstance) {
-    if(controllerDetailsInstance == 0)
-        if (createIfNoInstance) controllerDetailsInstance = new ControllerDetails();
-    return controllerDetailsInstance;
+    if(controllerDetails == 0)
+        if (createIfNoInstance) controllerDetails = new ControllerDetails();
+    return controllerDetails;
+}
+
+// destroys a singleton instance
+void ControllerDetails::destroyInstance() {
+    delete controllerDetails;
+    controllerDetails = 0;
 }
 
 ControllerDetails::ControllerDetails():

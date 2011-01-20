@@ -20,13 +20,20 @@
 #include "NavData.h"
 #include "Window.h"
 
-PilotDetails *pilotDetailsInstance = 0;
-
+//singleton instance
+PilotDetails *pilotDetails = 0;
 PilotDetails* PilotDetails::getInstance(bool createIfNoInstance) {
-    if(pilotDetailsInstance == 0)
-        if (createIfNoInstance) pilotDetailsInstance = new PilotDetails();
-    return pilotDetailsInstance;
+    if(pilotDetails == 0)
+        if (createIfNoInstance) pilotDetails = new PilotDetails();
+    return pilotDetails;
 }
+
+// destroys a singleton instance
+void PilotDetails::destroyInstance() {
+    delete pilotDetails;
+    pilotDetails = 0;
+}
+
 
 PilotDetails::PilotDetails():
     ClientDetails(),

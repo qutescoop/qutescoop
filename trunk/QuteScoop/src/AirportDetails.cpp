@@ -26,6 +26,20 @@
 #include "NavData.h"
 #include "Window.h"
 
+// singleton instance
+AirportDetails *airportDetails = 0;
+AirportDetails *AirportDetails::getInstance(bool createIfNoInstance) {
+    if(airportDetails == 0)
+        if (createIfNoInstance) airportDetails = new AirportDetails();
+    return airportDetails;
+}
+
+// destroys a singleton instance
+void AirportDetails::destroyInstance() {
+    delete airportDetails;
+    airportDetails = 0;
+}
+
 // function only used here
 QString lat2str(double lat) {
     QString result = "N";
@@ -58,14 +72,6 @@ QString lon2str(double lon) {
     .arg(lon2, 2, 'f', 3, QChar('0'));
 
     return result;
-}
-
-AirportDetails *airportDetailsInstance = 0;
-
-AirportDetails *AirportDetails::getInstance(bool createIfNoInstance) {
-    if(airportDetailsInstance == 0)
-        if (createIfNoInstance) airportDetailsInstance = new AirportDetails();
-    return airportDetailsInstance;
 }
 
 AirportDetails::AirportDetails():
