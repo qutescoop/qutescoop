@@ -168,18 +168,22 @@ added
 * import/export settings from/to a .ini file - allows transfer of settings between computers.
 
 
-
 QuteScoop Changelog - Version 1.0.3 alpha 11:
 
 changed:
 * brought back the performance to the globe
 
 added:
-* datafile update, at the moment runing via svn /trunk/.../data
+* datafile update, at the moment running via svn /trunk/.../data
+
+
+QuteScoop Changelog - Version 1.0.3 beta 1:
+
+changed:
+* found the performance bug that happened on each and every Whazzup update:)
 
 
 
 
 wanted (not yet implemented):
 * control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)
-
