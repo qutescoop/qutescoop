@@ -209,8 +209,6 @@ Window::Window(QWidget *parent) :
     }
 
     // Forecast / Predict settings
-    //datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
-    //timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time());
     framePredict->hide();
     warpTimer.stop();
     connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
@@ -238,7 +236,7 @@ void Window::toggleFullscreen() {
 void Window::about() {
 
     const QString gpl(
-"<small><a href='http://www.qutescoop.org'>QuteScoop</a> - Display FSD network status<br>\
+"<small><a href='http://sourceforge.net/projects/qutescoop'>QuteScoop</a> - Display FSD network status<br>\
 Copyright (C) 2007-2009 Martin Domig <a href='mailto:martin@domig.net'>martin@domig.net</a>\
 <p>\
 This program is free software: you can redistribute it and/or modify \
@@ -602,10 +600,11 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
 }
 
 void Window::checkForUpdates() {
+    /* DISABLED
     versionChecker = new QHttp(this);
     connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
 
-    QString downloadUrl = "http://www.qutescoop.org/version.txt";
+    QString downloadUrl = "https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/version.txt";
 
     if(Settings::sendVersionInformation()) {
         // append platform, version and preferred network information to the download link
@@ -622,6 +621,7 @@ void Window::checkForUpdates() {
         downloadUrl += urlArgs;
     }
 
+    qDebug() << "Checking for new version on" << downloadUrl;
     QUrl url(downloadUrl);
     QFileInfo fileInfo(url.path());
     QString fileName = fileInfo.fileName();
@@ -635,9 +635,11 @@ void Window::checkForUpdates() {
     versionBuffer = new QBuffer;
     versionBuffer->open(QBuffer::ReadWrite);
     versionChecker->get(querystr, versionBuffer);
+    */
 }
 
 void Window::versionDownloaded(bool error) {
+    /* DISABLED
     if(!error) {
         // compare downloaded version with my own
         versionBuffer->seek(0);
@@ -651,7 +653,7 @@ void Window::versionDownloaded(bool error) {
                     // tell user that there is a newer version
                     QMessageBox::information(this, tr("New Version Available"),
                             QString("A new version of QuteScoop is available! Visit the ")
-                            + "<a href='http://www.qutescoop.org'>www.QuteScoop.org</a> for more information.<br><br>"
+                            + "<a href='http://sourceforge.net/projects/qutescoop'>sourceforge.net/projects/qutescoop</a> for more information.<br><br>"
                             + "You are using: " + VERSION_NUMBER + "<br>"
                             + "New version is: " + newVersion);
 
@@ -661,6 +663,7 @@ void Window::versionDownloaded(bool error) {
             }
         }
     }
+    */
 }
 
 void Window::checkForDataUpdates()
