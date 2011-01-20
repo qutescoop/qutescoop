@@ -1,19 +1,5 @@
 /**************************************************************************
- *  This file is part of QuteScoop.
- *  Copyright (C) 2007-2009 Martin Domig <martin@domig.net>
- *
- *  QuteScoop is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  QuteScoop is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with QuteScoop.  If not, see <http://www.gnu.org/licenses/>
+ *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
 #include <QtGui>
@@ -236,8 +222,8 @@ void Window::toggleFullscreen() {
 void Window::about() {
 
     const QString gpl(
-"<small><a href='http://sourceforge.net/projects/qutescoop'>QuteScoop</a> - Display FSD network status<br>\
-Copyright (C) 2007-2009 Martin Domig <a href='mailto:martin@domig.net'>martin@domig.net</a>\
+"<small><a href='http://sourceforge.net/projects/qutescoop'>QuteScoop</a><br>\
+developped by Martin Domig, Jonas Eberle, Markus Swarowsky.\
 <p>\
 This program is free software: you can redistribute it and/or modify \
 it under the terms of the GNU General Public License as published by \
