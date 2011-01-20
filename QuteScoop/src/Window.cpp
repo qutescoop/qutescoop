@@ -326,15 +326,24 @@ void Window::whazzupDownloaded(bool isNew) {
         qDebug() << "whazzupDownloaded()/performSearch -- finished";
 
         qDebug() << "whazzupDownloaded()/Details";
-        if (AirportDetails::getInstance(false) != 0)
+        if (AirportDetails::getInstance(false) != 0) {
             if (AirportDetails::getInstance()->isVisible())
                 AirportDetails::getInstance()->refresh();
-        if (PilotDetails::getInstance(false) != 0)
+            else // not visible -> delete it...
+                AirportDetails::getInstance()->destroyInstance();
+        }
+        if (PilotDetails::getInstance(false) != 0) {
             if (PilotDetails::getInstance()->isVisible())
                 PilotDetails::getInstance()->refresh();
-        if (ControllerDetails::getInstance(false) != 0)
+            else // not visible -> delete it...
+                PilotDetails::getInstance()->destroyInstance();
+        }
+        if (ControllerDetails::getInstance(false) != 0) {
             if (ControllerDetails::getInstance()->isVisible())
                 ControllerDetails::getInstance()->refresh();
+            else // not visible -> delete it...
+                ControllerDetails::getInstance()->destroyInstance();
+        }
         qDebug() << "whazzupDownloaded()/Details -- finished";
 
         qDebug() << "whazzupDownloaded()/ListClients" << (ListClientsDialog::getInstance(false) == 0);

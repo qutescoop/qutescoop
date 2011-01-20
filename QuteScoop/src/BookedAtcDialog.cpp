@@ -26,12 +26,18 @@
 #include "Settings.h"
 #include "ui_MainWindow.h"
 
+// singleton instance
 BookedAtcDialog *bookedAtcDialog = 0;
-
 BookedAtcDialog *BookedAtcDialog::getInstance(bool createIfNoInstance) {
     if(bookedAtcDialog == 0)
         if (createIfNoInstance) bookedAtcDialog = new BookedAtcDialog();
     return bookedAtcDialog;
+}
+
+// destroys a singleton instance
+void BookedAtcDialog::destroyInstance() {
+    delete bookedAtcDialog;
+    bookedAtcDialog = 0;
 }
 
 

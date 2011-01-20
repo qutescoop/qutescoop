@@ -26,14 +26,19 @@
 #include "Window.h"
 #include "Ping.h"
 
+// singleton instance
 ListClientsDialog *listClientsDialog = 0;
-
 ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance) {
     if(listClientsDialog == 0)
         if (createIfNoInstance) listClientsDialog = new ListClientsDialog();
     return listClientsDialog;
 }
 
+// destroys a singleton instance
+void ListClientsDialog::destroyInstance() {
+    delete listClientsDialog;
+    listClientsDialog = 0;
+}
 
 ListClientsDialog::ListClientsDialog() :
     QDialog(Window::getInstance())
