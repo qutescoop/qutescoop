@@ -50,7 +50,7 @@ public:
     QString getUserLink(const QString& id) const;
     QString getAtisLink(const QString& id) const;
 
-    QList<QPair<QDateTime, QString>*> getDownloadedWhazzups();
+    QList <QPair <QDateTime, QString> > getDownloadedWhazzups();
 
 signals:
     void newData(bool isNew);
