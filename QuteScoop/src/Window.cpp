@@ -123,8 +123,12 @@ Window::Window(QWidget *parent) :
     Whazzup *whazzup = Whazzup::getInstance();
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
-    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+
+    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));   
+    // !!! here is the performance problem !!! :
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+
+
     connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
     connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
 
@@ -269,6 +273,7 @@ void Window::downloadError(QString message) {
 }
 
 void Window::whazzupDownloaded(bool isNew) {
+    qDebug() << "whazzupDownloaded()";
     const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
     const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
@@ -298,12 +303,12 @@ void Window::whazzupDownloaded(bool isNew) {
                            : "never")
                         );
     lblWarpInfo->setText(msg);
+
     if (Whazzup::getInstance()->getPredictedTime().isValid()) {
         framePredict->show();
         timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
         datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
         if(isNew) {
-            qDebug() << "debug: Window/whazzupDownloaded/isNew";
             // recalculate prediction on new data arrived
             if(data.predictionBasedOnTimestamp() != realdata.timestamp()
                 || data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {
@@ -315,16 +320,48 @@ void Window::whazzupDownloaded(bool isNew) {
     if(isNew) {
         clientSelection->clearClients();
         clientSelection->close();
+
+        qDebug() << "whazzupDownloaded()/performSearch";
         performSearch();
+        qDebug() << "whazzupDownloaded()/performSearch -- finished";
 
-        AirportDetails::getInstance()->refresh();
-        PilotDetails::getInstance()->refresh();
-        ControllerDetails::getInstance()->refresh();
+        qDebug() << "whazzupDownloaded()/Details";
+        if (AirportDetails::getInstance(false) != 0)
+            if (AirportDetails::getInstance()->isVisible())
+                AirportDetails::getInstance()->refresh();
+        if (PilotDetails::getInstance(false) != 0)
+            if (PilotDetails::getInstance()->isVisible())
+                PilotDetails::getInstance()->refresh();
+        if (ControllerDetails::getInstance(false) != 0)
+            if (ControllerDetails::getInstance()->isVisible())
+                ControllerDetails::getInstance()->refresh();
+        qDebug() << "whazzupDownloaded()/Details -- finished";
 
-        ListClientsDialog::getInstance()->refresh();
-        if(realdata.bookingsTimestamp().isValid()) BookedAtcDialog::getInstance()->refresh();
+        qDebug() << "whazzupDownloaded()/ListClients" << (ListClientsDialog::getInstance(false) == 0);
+        if (ListClientsDialog::getInstance(false) != 0) {
+            if (ListClientsDialog::getInstance()->isVisible())
+                ListClientsDialog::getInstance()->refresh();
+            else // not visible -> delete it...
+                ListClientsDialog::getInstance()->destroyInstance();
+        }
 
+        qDebug() << "whazzupDownloaded()/ListClients -- finished";
+
+        if(realdata.bookingsTimestamp().isValid()) {
+            qDebug() << "whazzupDownloaded()/BookedAtcDialog";
+            if (BookedAtcDialog::getInstance(false) != 0) {
+                if (BookedAtcDialog::getInstance()->isVisible())
+                    BookedAtcDialog::getInstance()->refresh();
+                else // not visible -> delete it...
+                    BookedAtcDialog::getInstance()->destroyInstance();
+            }
+
+            qDebug() << "whazzupDownloaded()/BookedAtcDialog -- finished";
+        }
+
+        qDebug() << "whazzupDownloaded()/refreshFriends";
         refreshFriends();
+        qDebug() << "whazzupDownloaded()/refreshFriends -- finished";
 
         if (actionShootScreenshots->isChecked())
             shootScreenshot();
@@ -332,6 +369,8 @@ void Window::whazzupDownloaded(bool isNew) {
     downloadWatchdog.stop();
     if(Settings::downloadPeriodically())
         downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
+
+    qDebug() << "whazzupDownloaded() -- finished";
 }
 
 void Window::refreshFriends() {
@@ -341,7 +380,10 @@ void Window::refreshFriends() {
     friendsModel.setData(visitor->result());
     delete visitor;
     friendsList->reset();
-    ListClientsDialog::getInstance()->refresh();
+
+    // if uncommented, may cause performance problem
+    // (though it really should be called when the friends list DID change...)
+    //ListClientsDialog::getInstance()->refresh();
 }
 
 void Window::mapClicked(int x, int y, QPoint absolutePos) {
@@ -637,21 +679,17 @@ void Window::checkForDataUpdates()
     QUrl url("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
     QFileInfo fileInfo(url.path());
 
-
     dataVersionChecker->setHost(url.host());
     connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(dataVersionDownloaded()));
     dataVersionChecker->get(url.path(), dataversionBuffer);
-    qDebug() << "Checking for datafiles updates";
-
-
+    qDebug() << "Checking for datafile versions";
 }
 
 void Window::dataVersionDownloaded()
 {
-    qDebug() << "New version ist downloaded";    QList< QPair<QString , int> > newdata;
-    QList< QPair<QString , int> > olddata;
+    qDebug() << "Datafile versions received";
+    QList< QPair<QString , int> > newdata, olddata;
     QFile oldversions(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
-
 
     dataversionBuffer->close();
     dataversionBuffer->open(QIODevice::ReadOnly);
@@ -722,8 +760,6 @@ void Window::dataVersionDownloaded()
     if(filesToUpdate.isEmpty()){
         dataversionBuffer->remove();
     }
-
-
 }
 
 void Window::newDataVersionsDownloaded()
@@ -750,7 +786,7 @@ void Window::newDataVersionsDownloaded()
         dataversionBuffer->remove();
     }
 
-    qDebug() << "Datafile update ... DONE";
+    qDebug() << "Datafiles updated";
 }
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
