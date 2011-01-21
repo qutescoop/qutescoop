@@ -1,0 +1,7 @@
+This is where all screenshots will be saved.
+
+File name: (Network ID)_(date)-(time).*
+Network ID:
+    0: IVAO, 1:VATSIM, 2:User defined
+
+You can safely delete all files in this folder without any problems for QuteScoop.
