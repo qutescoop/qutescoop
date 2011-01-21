@@ -5,7 +5,7 @@
 #include "Ping.h"
 
 void Ping::pingReadyRead() {
-    QRegExp findMs = QRegExp("time\\W?=\\W?(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);
+    QRegExp findMs = QRegExp("(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);
     if (findMs.indexIn(pingProcess->readAll()) > 0) {
         int ping = (int) findMs.cap(1).toDouble();
         emit havePing(server, ping);
@@ -18,7 +18,7 @@ void Ping::startPing(QString server) {
     this->server = server;
 
     pingProcess = new QProcess(this);
-    connect(pingProcess, SIGNAL(readyRead()), this, SLOT(pingReadyRead()));
+    connect(pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
 
 #ifdef Q_WS_WIN
     QString pingCmd = QString("ping %1 -n 1").arg(server);
