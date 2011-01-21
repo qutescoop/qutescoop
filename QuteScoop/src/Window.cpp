@@ -372,6 +372,7 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
     if(objects.size() == 0) {
         // closing all Windows when clicking on an empty spot?
         //on_actionHideAllWindows_triggered();
+        clientSelection->close();
         return;
     }
 
@@ -704,7 +705,7 @@ void Window::dataVersionDownloaded()
         //qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
     }
 
-    int newfiles = newdata.size();
+    //int newfiles = newdata.size();
     int oldfiles = olddata.size();
 
     //collecting files to update
