@@ -96,7 +96,6 @@ AirportDetails::AirportDetails():
     departuresSortModel = new QSortFilterProxyModel;
     departuresSortModel->setDynamicSortFilter(true);
     departuresSortModel->setSourceModel(&departuresModel);
-//    departuresSortModel->sort(8, Qt::AscendingOrder);  // necessary?
     treeDepartures->setModel(departuresSortModel);
     treeDepartures->sortByColumn(8, Qt::AscendingOrder);
     treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
