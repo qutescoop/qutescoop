@@ -12,7 +12,7 @@ FORMS = src/MainWindow.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui
 
-# DESTDIR = bin/
+DESTDIR = ./
 # DEPENDPATH += ./src
 INCLUDEPATH += ./src
 MOC_DIR = ./temp
@@ -25,8 +25,8 @@ QT += network \
 
 # CONFIG += debug
 # CONFIG += release
-CONFIG += warn_off
-mac { 
+# CONFIG += warn_off
+mac {
     ICON = src/Dolomynum.icns
     CONFIG += x86 \
         ppc
@@ -135,4 +135,5 @@ OTHER_FILES += CHANGELOG \
     README \
     downloaded/+notes.txt \
     data/+notes.txt \
-data/dataversions.txt
+    data/dataversions.txt \
+    screenshots/+notes.txt
