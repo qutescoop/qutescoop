@@ -2,6 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
+#include <QMessageBox>
+#include <QDesktopServices>
 #include "ListClientsDialog.h"
 #include "ListClientsDialogModel.h"
 #include "ListClientsSortFilter.h"
@@ -53,7 +55,7 @@ ListClientsDialog::ListClientsDialog() :
     serverHeaders << "Ident" << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" <<  "Allowed";
     serversTable->setColumnCount(serverHeaders.size());
     serversTable->setHorizontalHeaderLabels(serverHeaders);
-    connect(serversTable, SIGNAL(cellClicked(int, int)), this, SLOT(serverClicked(int, int)));
+    connect(voiceServersTable, SIGNAL(cellClicked(int, int)), this, SLOT(serverClicked(int, int)));
 
     QStringList voiceServerHeaders;
     voiceServerHeaders << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" << "Type" << "Allowed" << "Information URL";
@@ -123,7 +125,7 @@ void ListClientsDialog::refresh() {
                 case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[2])); break; // name
                 case 7: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[4])); break; // type_of_voice_server
                 case 8: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[3])); break; // clients_connection_allowed
-                case 9: voiceServersTable->setItem(row, col, new QTableWidgetItem(QString("%1:18009/?opts=-R-D").arg(server[0]))); break; // Information
+                case 9: voiceServersTable->setItem(row, col, new QTableWidgetItem(QString("http://%1:18009/?opts=-R-D").arg(server[0]))); break; // Information
                 default: voiceServersTable->setItem(row, col, new QTableWidgetItem()); break;
             }
         }
@@ -195,7 +197,6 @@ void ListClientsDialog::newMapPosition() {
 }
 
 void ListClientsDialog::pingReceived(QString server, int ms) {
-    qDebug() << server << ms;
     // Servers
     for (int row = 0; row < serversTable->rowCount(); row++) {
         if (serversTable->item(row, 1)->data(Qt::DisplayRole) == QVariant(server)) {
@@ -204,11 +205,8 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
                     serversTable->item(row, col)->setBackground(QBrush(mapPingToColor(ms)));
                     serversTable->item(row, col)->setData(Qt::DisplayRole, (ms == -1? QVariant("n/a"): QVariant(ms)));
 
-                    if (col < 4) { // make 2nd and 3rd Pings
-                        Ping* ping = new Ping();
-                        connect(ping, SIGNAL(havePing(QString,int)), this, SLOT(pingReceived(QString,int)));
-                        ping->startPing(server);
-                    }
+                    pingNextFromStack();
+
                     int addForAverage = 0;
                     for (int pingCol = 2; pingCol <= col; pingCol++) {
                         if(serversTable->item(row, pingCol)->data(Qt::DisplayRole).toInt() == 0) {
@@ -236,11 +234,8 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
                     voiceServersTable->item(row, col)->setBackground(QBrush(mapPingToColor(ms)));
                     voiceServersTable->item(row, col)->setData(Qt::DisplayRole, (ms == -1? QVariant("n/a"): QVariant(ms)));
 
-                    if (col < 3) { // make 2nd and 3rd Pings
-                        Ping* ping = new Ping();
-                        connect(ping, SIGNAL(havePing(QString,int)), this, SLOT(pingReceived(QString,int)));
-                        ping->startPing(server);
-                    }
+                    pingNextFromStack();
+
                     int addForAverage = 0;
                     for (int pingCol = 1; pingCol <= col; pingCol++) {
                         if(voiceServersTable->item(row, pingCol)->data(Qt::DisplayRole).toInt() == 0) {
@@ -265,32 +260,28 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
 void ListClientsDialog::on_pbPingServers_clicked()
 {
     for (int row = 0; row < serversTable->rowCount(); row++) {
-        Ping* ping = new Ping();
-        connect(ping, SIGNAL(havePing(QString,int)), this, SLOT(pingReceived(QString,int)));
-
-        // reset Ping columns
-        for (int col = 2; col < 6; col++) {
-            serversTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
-            serversTable->item(row, col)->setBackground(QBrush());
-        }
-
-        ping->startPing(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
     }
+    pingNextFromStack();
 }
 
 void ListClientsDialog::on_pbPingVoiceServers_clicked()
 {
     for (int row = 0; row < voiceServersTable->rowCount(); row++) {
+        pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+    }
+    pingNextFromStack();
+}
+
+void ListClientsDialog::pingNextFromStack() {
+    if (!pingStack.empty()) {
         Ping* ping = new Ping();
         connect(ping, SIGNAL(havePing(QString,int)), this, SLOT(pingReceived(QString,int)));
-
-        // reset Ping columns
-        for (int col = 1; col < 5; col++) {
-            voiceServersTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
-            voiceServersTable->item(row, col)->setBackground(QBrush());
-        }
-
-        ping->startPing(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        ping->startPing(pingStack.pop());
     }
 }
 
@@ -303,4 +294,15 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 
     int red = qMin(255, qMax(0, (ms - BEST) * 255 / (WORST - BEST)));
     return QColor(red, 255 - red, 0, 70);
+}
+
+void ListClientsDialog::serverClicked(int row, int col) {
+    QUrl url = QUrl(voiceServersTable->item(row, 9)->data(Qt::DisplayRole).toString(), QUrl::TolerantMode);
+    if(QMessageBox::question(Window::getInstance(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+        if (url.isValid()) {
+            if(!QDesktopServices::openUrl(url))
+                QMessageBox::critical(Window::getInstance(), tr("Error"), tr("Could not invoke browser"));
+        } else
+            QMessageBox::critical(Window::getInstance(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
+    }
 }

@@ -27,6 +27,7 @@ private slots:
     void on_pbPingServers_clicked();
     void modelSelected(const QModelIndex& index);
     void on_editFilter_textChanged(QString str);
+    void serverClicked(int row, int col);
     void newFilter();
 
 private:
@@ -35,6 +36,8 @@ private:
     ListClientsDialogModel listClientsModel;
     ListClientsSortFilter *listClientsSortModel;
     QColor mapPingToColor(int ms);
+    QStack< QString > pingStack;
+    void pingNextFromStack();
 };
 
 #endif // LISTCLIENTSDIALOG_H
