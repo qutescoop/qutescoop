@@ -110,7 +110,7 @@ Window::Window(QWidget *parent) :
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
-    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));   
+    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
     // !!! here is the performance problem !!! :
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
@@ -372,6 +372,7 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
     if(objects.size() == 0) {
         // closing all Windows when clicking on an empty spot?
         //on_actionHideAllWindows_triggered();
+        clientSelection->clearClients();
         clientSelection->close();
         return;
     }
