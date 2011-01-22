@@ -5,10 +5,21 @@
 #include <QApplication>
 #include <QtGui>
 #include "Window.h"
+#include "logbrowser.h"
 
-//--------------------------------------------------------------
+QPointer<LogBrowser> logBrowser;
+void myMessageOutput(QtMsgType type, const char *msg)
+{
+    if(logBrowser)
+        logBrowser->outputMessage( type, msg );
+}
+
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
+
+    // The LogBrowser shows all messages - debug/warning/critical/fatal
+    //logBrowser = new LogBrowser;
+    //qInstallMsgHandler(myMessageOutput);
 
     QCoreApplication::setOrganizationName("QuteScoop");
     QCoreApplication::setOrganizationDomain("qutescoop.org");
