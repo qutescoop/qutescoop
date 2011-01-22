@@ -85,7 +85,9 @@ HEADERS += src/WhazzupData.h \
     src/ListClientsSortFilter.h \
     src/ListClientsDialogModel.h \
     src/ListClientsDialog.h \
-    src/Ping.h
+    src/Ping.h \
+    src/Logbrowser.h \
+    src/LogbrowserDialog.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -132,7 +134,9 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsSortFilter.cpp \
     src/ListClientsDialogModel.cpp \
     src/ListClientsDialog.cpp \
-    src/Ping.cpp
+    src/Ping.cpp \
+    src/Logbrowser.cpp \
+    src/LogbrowserDialog.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README \
