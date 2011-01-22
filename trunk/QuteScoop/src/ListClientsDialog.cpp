@@ -260,6 +260,11 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
 void ListClientsDialog::on_pbPingServers_clicked()
 {
     for (int row = 0; row < serversTable->rowCount(); row++) {
+        // reset Ping columns
+        for (int col = 2; col < 6; col++) {
+            serversTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
+            //serversTable->item(row, col)->setBackground(QBrush());
+        }
         pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
         pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
         pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
@@ -270,6 +275,11 @@ void ListClientsDialog::on_pbPingServers_clicked()
 void ListClientsDialog::on_pbPingVoiceServers_clicked()
 {
     for (int row = 0; row < voiceServersTable->rowCount(); row++) {
+        // reset Ping columns
+        for (int col = 1; col < 5; col++) {
+            voiceServersTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
+            //voiceServersTable->item(row, col)->setBackground(QBrush());
+        }
         pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
         pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
         pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
