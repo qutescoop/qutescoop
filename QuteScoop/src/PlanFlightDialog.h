@@ -32,23 +32,25 @@ signals:
     void fpDownloaded();
 
 private slots:
-    //void on_textRoute_textChanged();
+//    void on_textRoute_textChanged();
+    void on_pbCopyToClipboard_clicked();
     void on_cbPlot_toggled(bool checked);
     void on_edDest_textChanged(QString str);
     void on_edDep_textChanged(QString str);
     void on_buttonRequest_clicked();
-    void fpDownloaded(bool error);
-    void fpDownloading(int prog, int tot);
+    void vrouteDownloaded(bool error);
+    void vatrouteDownloaded(bool error);
     void routeSelected(const QModelIndex& index);
 
 private:
     PlanFlightDialog();
 
-    //void requestGenerated();
+    void requestGenerated();
     void requestVroute();
+    void requestVatroute();
 
-    QHttp *fpDownloader;
-    QBuffer *fpBuffer;
+    QHttp *vrouteDownloader, *vatrouteDownloader;
+    QBuffer *vrouteBuffer, *vatrouteBuffer;
     QList<Route*> routes;
 
     Route* selectedRoute;
