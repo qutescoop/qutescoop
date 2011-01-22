@@ -24,14 +24,12 @@ QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation ori
     switch(section) {
     case 0: return QString(); break;
     case 1: return QString("Provider"); break;
-    case 2: return QString("Dep"); break;
-    case 3: return QString("Dest"); break;
-    case 4: return QString("Route"); break;
-    case 5: return QString("Dist"); break;
-    case 6: return QString("FL>"); break;
-    case 7: return QString("FL<"); break;
-    case 8: return QString("Remarks"); break;
-    case 9: return QString("Last changed"); break;
+    case 2: return QString("Route"); break;
+    case 3: return QString("Dist"); break;
+    case 4: return QString("FL>"); break;
+    case 5: return QString("FL<"); break;
+    case 6: return QString("Remarks"); break;
+    case 7: return QString("Last changed"); break;
     }
 
     return QVariant();
@@ -48,24 +46,24 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
         Route* r = routes[index.row()];
         switch(index.column()) {
         case 0:
-            if (r->provider == "generated")
+            if (r->provider == "direct")
                 return QIcon(":/icons/qutescoop.png");
             else if (r->provider == "vroute")
                 return QIcon(":/routeproviders/images/vroute.png");
+            else if (r->provider == "VATroute")
+                return QIcon(":/routeproviders/images/vatroute.png");
             break;
         }
     } else if(role == Qt::DisplayRole) {
         Route* r = routes[index.row()];
         switch(index.column()) {
         case 1: return r->provider; break;
-        case 2: return r->dep; break;
-        case 3: return r->dest; break;
-        case 4: return QString("%1").arg(r->flightPlan); break; //.left(10)).arg(r->flightPlan.right(10)); break;
-        case 5: return QString("%1 NM").arg(r->routeDistance); break;
-        case 6: return r->minFl; break;
-        case 7: return r->maxFl; break;
-        case 8: return r->comments; break;
-        case 9:
+        case 2: return QString("%1").arg(r->route); break;
+        case 3: return QString("%1").arg(r->routeDistance); break;
+        case 4: return r->minFl; break;
+        case 5: return r->maxFl; break;
+        case 6: return r->comments; break;
+        case 7:
             QDateTime lastChange = QDateTime::fromString(r->lastChange, "yyyyMMddHHmmss");
             if (lastChange.isValid()) return lastChange.date();
             else return r->lastChange;
@@ -82,6 +80,7 @@ void PlanFlightRoutesModel::modelSelected(const QModelIndex& index) {
 
 bool PlanFlightRoutesModel::setData(const QModelIndex &index, const QVariant &value, int role) {
     //qDebug() << "setData" << role << value;
+    return true;
 }
 
 Qt::ItemFlags PlanFlightRoutesModel::flags(const QModelIndex &index) const {
