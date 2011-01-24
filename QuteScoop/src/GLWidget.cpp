@@ -238,8 +238,8 @@ void GLWidget::prepareDisplayLists() {
 }
 
 void GLWidget::newWhazzupData(bool isNew) {
+    qDebug() << "GLWidget/newWhazzupData() isNew=" << isNew;
     if(isNew) {
-        qDebug() << "GLWidget/newWhazzupData";
         updateAirports();
         sectorsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
 

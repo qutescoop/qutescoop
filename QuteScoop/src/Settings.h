@@ -129,9 +129,13 @@ public:
     static int metarDownloadInterval();
     static void setMetarDownloadInterval(int minutes);
 
-    //OpenGL settings
+    // OpenGL settings
     static bool enableBlend();
     static void setEnableBlend(bool value);
+
+    // Stylesheet
+    static QString stylesheet();
+    static void setStylesheet(const QString& value);
 
     // Earth and Space settings ----------------------------
     static void deleteEarthSpaceSettings();

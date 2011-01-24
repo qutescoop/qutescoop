@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
+    <width>750</width>
     <height>400</height>
    </rect>
   </property>
@@ -26,7 +26,7 @@
      <item row="0" column="1">
       <widget class="QLineEdit" name="editFilter">
        <property name="toolTip">
-        <string>wildcards (*, ?) and powerful regular expressions allowed</string>
+        <string>Filter by login or name. Wildcards (*, ?) and those powerful &quot;regular expressions&quot;.</string>
        </property>
       </widget>
      </item>
@@ -72,6 +72,9 @@
      </item>
      <item row="0" column="8">
       <widget class="QSpinBox" name="spinHours">
+       <property name="toolTip">
+        <string>Extend the filter by &lt;this value&gt;.</string>
+       </property>
        <property name="specialValueText">
         <string>ever</string>
        </property>
@@ -85,12 +88,15 @@
         <number>120</number>
        </property>
        <property name="value">
-        <number>0</number>
+        <number>3</number>
        </property>
       </widget>
      </item>
      <item row="0" column="6">
       <widget class="QTimeEdit" name="timeFilter">
+       <property name="toolTip">
+        <string>Show only bookings at this time.</string>
+       </property>
        <property name="wrapping">
         <bool>true</bool>
        </property>
@@ -105,6 +111,9 @@
      </item>
      <item row="0" column="5">
       <widget class="QDateEdit" name="dateFilter">
+       <property name="toolTip">
+        <string>Show only bookings at this date.</string>
+       </property>
        <property name="wrapping">
         <bool>true</bool>
        </property>
@@ -131,6 +140,9 @@
      </item>
      <item row="0" column="10">
       <widget class="QToolButton" name="tbPredict">
+       <property name="toolTip">
+        <string>Use this filter time as a starting point for Time Warp. Time Warp shows all bookings on the mapglobe.</string>
+       </property>
        <property name="text">
         <string>Warp to</string>
        </property>

@@ -292,10 +292,17 @@ bool Settings::enableBlend() {
 void Settings::setEnableBlend(bool value) {
     getSettings()->setValue("gl/blend", value);
 }
-//------------------
+// Stylesheet
+QString Settings::stylesheet() {
+    return getSettings()->value("display/stylesheet", QString()).toString();
+}
+
+void Settings::setStylesheet(const QString& value) {
+    getSettings()->setValue("display/stylesheet", value);
+}
+
 
 QColor Settings::backgroundColor() {
-    // the default value is the "Trolltech Purple"
     return getSettings()->value("earthSpace/backgroundColor", QColor::fromCmykF(0.39, 0.39, 0.0, 0.0)).value<QColor>();
 }
 

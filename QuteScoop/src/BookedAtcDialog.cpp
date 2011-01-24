@@ -34,11 +34,17 @@ BookedAtcDialog::BookedAtcDialog() :
 //    setWindowFlags(Qt::Tool);
 
     //bookedAtcSortModel = new QSortFilterProxyModel;
+    qDebug() << "BookedAtcDialog(): bookedAtcSortModel";
     bookedAtcSortModel = new BookedAtcSortFilter;
+    qDebug() << "BookedAtcDialog(): bookedAtcSortModel";
     bookedAtcSortModel->setDynamicSortFilter(true);
+    qDebug() << "BookedAtcDialog(): bookedAtcSortModel";
     bookedAtcSortModel->setSourceModel(&bookedAtcModel);
+    qDebug() << "BookedAtcDialog(): treeBookedAtc";
     treeBookedAtc->setModel(bookedAtcSortModel);
+    qDebug() << "BookedAtcDialog(): treeBookedAtc";
     treeBookedAtc->header()->setResizeMode(QHeaderView::Interactive);
+    qDebug() << "BookedAtcDialog(): treeBookedAtc";
     treeBookedAtc->sortByColumn(4, Qt::AscendingOrder);
 
     connect(treeBookedAtc->header(), SIGNAL(sectionClicked(int)), treeBookedAtc, SLOT(sortByColumn(int)));
@@ -46,13 +52,6 @@ BookedAtcDialog::BookedAtcDialog() :
     //connect(bookedAtcSortModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(newFilter(QModelIndex,QModelIndex))); //does not get thrown??
 
     dateFilter->setDate(QDateTime::currentDateTime().toUTC().date());
-    //dateFilter->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
-    //dateFilter->setMaximumDate(QDateTime::currentDateTime().date().addMonths(1));
-    timeFilter->setTime(QDateTime::currentDateTime().toUTC().time());
-
-    dateFilter->setDate(QDateTime::currentDateTime().toUTC().date());
-    //dateFilter->setMinimumDate(QDateTime::currentDateTime().toUTC().date().addDays(-1));
-    //dateFilter->setMaximumDate(QDateTime::currentDateTime().date().addMonths(1));
     timeFilter->setTime(QDateTime::currentDateTime().toUTC().time());
 
     QFont font = lblStatusInfo->font();
@@ -60,6 +59,8 @@ BookedAtcDialog::BookedAtcDialog() :
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
     connect(this, SIGNAL(needBookings()), Whazzup::getInstance(), SLOT(downloadBookings()));
+
+    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
     refresh();
 }
@@ -71,7 +72,6 @@ void BookedAtcDialog::refresh() {
     bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
     bookedAtcSortModel->invalidate();
-    newFilter();
 
     const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
 
@@ -83,37 +83,17 @@ void BookedAtcDialog::refresh() {
                            : "never")
                         );
     lblStatusInfo->setText(msg);
+    performSearch();
 }
 
 void BookedAtcDialog::on_editFilter_textChanged(QString searchStr)
 {
-    QRegExp regex;
-    QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
-    if(tokens.size() == 1) {
-        regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
-    } else if(tokens.size() == 0) {
-        regex = QRegExp("");
-    }
-    else {
-        QString regExpStr = "^(" + tokens.first();
-        for(int i = 1; i < tokens.size(); i++)
-            regExpStr += "|" + tokens[i];
-        regExpStr += ".*)";
-        regex = QRegExp(regExpStr, Qt::CaseInsensitive);
-    }
-
-    bookedAtcSortModel->setFilterRegExp(regex);
-    bookedAtcSortModel->setFilterKeyColumn(-1);
-    newFilter();
+    searchTimer.start(400);
 }
 
 void BookedAtcDialog::on_spinHours_valueChanged(int val)
 {
-    QDateTime from = QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC);
-    QDateTime to = from.addSecs(spinHours->value() * 3600);
-    bookedAtcSortModel->setDateTimeRange(from, to);
-    treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
-    newFilter();
+    searchTimer.start(400);
 }
 
 
@@ -138,11 +118,7 @@ void BookedAtcDialog::on_timeFilter_timeChanged(QTime time)
         return;
     }
 
-    QDateTime from = QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC);
-    QDateTime to = from.addSecs(spinHours->value() * 3600);
-    bookedAtcSortModel->setDateTimeRange(from, to);
-    treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
-    newFilter();
+    searchTimer.start(400);
 }
 
 void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
@@ -160,11 +136,38 @@ void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
         return;
     }
 
+    searchTimer.start(400);
+}
+
+void BookedAtcDialog::performSearch() {
+    searchTimer.stop();
+
+    // Text
+    QRegExp regex;
+    QStringList tokens = editFilter->text().trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
+    if(tokens.size() == 1) {
+        regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
+    } else if(tokens.size() == 0) {
+        regex = QRegExp("");
+    }
+    else {
+        QString regExpStr = "^(" + tokens.first();
+        for(int i = 1; i < tokens.size(); i++)
+            regExpStr += "|" + tokens[i];
+        regExpStr += ".*)";
+        regex = QRegExp(regExpStr, Qt::CaseInsensitive);
+    }
+
+    bookedAtcSortModel->setFilterRegExp(regex);
+    bookedAtcSortModel->setFilterKeyColumn(-1);
+
+    //Date, Time, TimeSpan
     QDateTime from = QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC);
     QDateTime to = from.addSecs(spinHours->value() * 3600);
-    bookedAtcSortModel->setDateTimeRange(from, to);
+
+    // General
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
-    newFilter();
+    boxResults->setTitle(QString("Results (%1)").arg(bookedAtcSortModel->rowCount()));
 }
 
 void BookedAtcDialog::modelSelected(const QModelIndex& index) {
@@ -175,9 +178,4 @@ void BookedAtcDialog::on_tbPredict_clicked()
 {
     hide();
     Whazzup::getInstance()->setPredictedTime(QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC));
-}
-
-void BookedAtcDialog::newFilter()
-{
-    boxResults->setTitle(QString("Results (%1)").arg(bookedAtcSortModel->rowCount()));
 }

@@ -1,5 +1,3 @@
-0
-
 Iteration 1
 * Create a work environment based on Eclipse and QT4 on Mac
 * Create a basic application that shows some OpenGL content and a menue.
@@ -80,16 +78,21 @@ Release 1.0.0
 * VATSIM VVL support can not be added due to their restrictive licensing.
 
 
-QuteScoop Changelog - up to Version 1.0.
+Version 1.0.1
+* Improved support for 3rd party networks (example MCDU)
+
+Version 1.0.2
+* Fixed a VATSIM display bug introduced by a new blank line. Patch was
+  submitted by Jonas Eberle - thanks!
+
+Version 1.0.2 alpha
+* Loading of navigation database in the XPlane 9 format. This is a free
+  database that can be downloaded from http://data.x-plane.com
+* Plotting of flight route according to the filed flight plan
+* No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are filtered.
 
 
-QuteScoop Changelog - Version 1.0.2 - 1.0.3 alpha 8
-
-REMARKS:
-* Please provide feedback how you like the ToolBoxes or if we should change to Tabs (in List Clients and Plan Flight)
-* We still need a way to map EDBB_APP -> EDDB + EDDT and so on
-* Next big thing: Replay mode (replay downloaded Whazzups, save a picture of each to allow creating videos from events et al)
-
+Version 1.0.3 alpha 8
 changed:
 * Markus' great code to identify ATC sectors above an airport!
 * Symbol for Delivery
@@ -97,7 +100,6 @@ changed:
 * Increased max. possible value for shown labels (in preferences)
 * Render dashed lines in front of/behind plane also in flightplan Plot mode
 * Replace Messageboxes by Statusbar-Messages to allow a less intrusive and smoother user experience that does not need any interaction - thought for running whole nights
-
 added:
 * Show Network (and Voice for VATSIM) Servers and ping them
 * Respect the update interval that the Whazzup server transmits
@@ -126,7 +128,6 @@ added:
 * Show _DEL in Airport Information
 * Get METAR direct from Airport Information
 * See ToolTips on most buttons and objects
-
 fixed:
 * Facilitytype for ATIS (VATSIM)
 * Restore Docks correctly on window minimize/restore
@@ -138,25 +139,8 @@ fixed:
 * Put data location in the program path (./data), not /usr/share on Unix, may be overridden through option general/dataDirectory as before
 * Set Zoom In/Out to CTRL+/- as F11 got obscured on Linux and was not applicable on Mac as well
 
-QuteScoop Changelog - Version 1.0.2
 
-* Fixed a VATSIM display bug introduced by a new blank line. Patch was
-  submitted by Jonas Eberle - thanks!
-
-QuteScoop Changelog - Version 1.0.2 alpha
-
-* Loading of navigation database in the XPlane 9 format. This is a free
-  database that can be downloaded from http://data.x-plane.com
-* Plotting of flight route according to the filed flight plan
-* No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are filtered.
-
-QuteScoop Changelog - Version 1.0.1
-
-* Improved support for 3rd party networks (example MCDU)
-
-
-QuteScoop Changelog - Version 1.0.3 alpha 9:
-
+Version 1.0.3 alpha 9:
 changed
 * bookings get not downloaded if they are not needed (code change, hopefully works in the end...)
 * disabled View/Show All Routes, this often produced a program hang, and I do not think it is important.
@@ -168,22 +152,31 @@ added
 * import/export settings from/to a .ini file - allows transfer of settings between computers.
 
 
-QuteScoop Changelog - Version 1.0.3 alpha 11:
-
+Version 1.0.3 alpha 11:
 changed:
 * brought back the performance to the globe
-
 added:
 * datafile update, at the moment running via svn /trunk/.../data
 
 
-QuteScoop Changelog - Version 1.0.3 beta 1:
-
+Version 1.0.3 beta 1:
 changed:
 * found the performance bug that happened on each and every Whazzup update:)
 
 
+Version 1.0.3 beta 2:
+added:
+* included VATroute as route database
+
+Version 1.0.3 beta 3:
+added:
+* a Debug Log browser internally in the program + Debug output to "log.txt"
+* allowing styleSheets - see under preferences ;)
+
+changed:
+* reenabled the "Show all Routes" option - it tends to run infinitely though..
+* use README in QuteScoop/About
 
 
-wanted (not yet implemented):
+WANTED (not yet implemented):
 * control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)

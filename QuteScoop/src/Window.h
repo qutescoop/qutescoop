@@ -25,6 +25,7 @@ Q_OBJECT
 
 public:
     static Window* getInstance();
+    //~Window();
     void setStatusText(QString text);
     void setProgressBar(int prog, int tot);
     void setProgressBar(bool isVisible);
@@ -40,7 +41,8 @@ public slots:
     void updateGLPilots();
 
 private slots:
-    void on_actionShootScreenshots_toggled(bool );
+    void on_actionShowRoutes_triggered(bool checked);
+    void on_actionDebugLog_triggered();
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
 
@@ -72,7 +74,8 @@ private slots:
     void on_datePredictTime_dateChanged(QDate date);
     void on_tbDisablePredict_clicked();
     void on_tbRunPredict_toggled(bool checked);
-    void performWarp();
+    void on_cbUseDownloaded_toggled(bool checked);
+    void performWarp(bool forceUseDownloaded = false);
     void runPredict();
 
     void about();
@@ -88,8 +91,6 @@ private slots:
     void openListClients();
 
     void on_searchEdit_textChanged(const QString& text);
-    void on_actionClearAllFlightPaths_triggered();
-    void on_actionDisplayAllFlightPaths_triggered();
 
     void on_metarEdit_textChanged(const QString& text);
     void on_btnRefreshMetar_clicked();
@@ -141,7 +142,9 @@ private:
 
     QTime timePredictTime_old;
     QDate datePredictTime_old;
-    //QLabel *lblStatus;
+
+    QLabel *lblStatus;
+    QProgressBar *progressBar;
 };
 
 #endif /*WINDOW_H_*/

@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QColorDialog>
 #include <QFontDialog>
+#include <QMessageBox>
 
 #include "math.h"
 
@@ -44,6 +45,7 @@ void PreferencesDialog::loadSettings() {
     editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
     lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
     cbSaveWhazzupData->setChecked(Settings::saveWhazzupData());
+    cbShootScreenshots->setChecked(Settings::shootScreenshots());
 
     gbDownloadBookings->setChecked(Settings::downloadBookings()); // must be after cbNetwork
     editBookingsLocation->setText(Settings::bookingsLocation());
@@ -82,6 +84,9 @@ void PreferencesDialog::loadSettings() {
 
     // OpenGL
     cbBlend->setChecked(Settings::enableBlend());
+
+    // stylesheet
+    tedStylesheet->setPlainText(Settings::stylesheet());
 
     // colors
     QColor color = Settings::backgroundColor().dark();
@@ -874,9 +879,14 @@ void PreferencesDialog::on_pbImportFromFile_clicked()
             this, tr("Import from File"),
             QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
     );
-    if (!fileName.isEmpty())
+    if (!fileName.isEmpty()) {
         Settings::importFromFile(fileName);
-    loadSettings();
+        QMessageBox::information(this, tr("Settings loaded. Restart required."),
+                                 tr("QuteScoop closes now. Please restart for the settings to take effect."));
+        loadSettings();
+        qApp->processEvents();
+        Window::getInstance()->close();
+    }
 }
 
 void PreferencesDialog::on_pbExportToFile_clicked()
@@ -885,6 +895,82 @@ void PreferencesDialog::on_pbExportToFile_clicked()
             this, tr("Export to File"),
             QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
     );
-    if (!fileName.isEmpty())
+    if (!fileName.isEmpty()) {
         Settings::exportToFile(fileName);
+        QMessageBox::information(this, tr("Success"), tr("Settings exported."));
+    }
+}
+
+void PreferencesDialog::on_cbShootScreenshots_toggled(bool checked)
+{
+    Settings::setShootScreenshots(checked);
+}
+
+void PreferencesDialog::on_pbStylesheetUpdate_clicked()
+{
+    Window::getInstance()->setStyleSheet(tedStylesheet->toPlainText());
+    Settings::setStylesheet(tedStylesheet->toPlainText());
+}
+
+void PreferencesDialog::on_pbStylesheetExample1_clicked()
+{
+    if (
+            QMessageBox::question(
+                    this, tr("Overwrite stylesheet?"), tr("Are you sure?"),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
+            == QMessageBox::Yes) {
+        tedStylesheet->setPlainText(QLatin1String("\
+QCheckBox::indicator:hover, QDateTimeEdit, QSpinBox, QComboBox, QAbstractItemView, QLineEdit, QSpinBox, QDoubleSpinBox, QTabWidget::pane, QGroupBox {\n\
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n\
+      stop: 0 #f6f7fa, stop: 1 #dadbde);\n\
+}\n\
+QDateTimeEdit::drop-down, QToolButton, QAbstractSpinBox::up-button, QAbstractSpinBox::down-button, QComboBox::drop-down, QTabBar::tab:selected, QPushButton, QMenuBar:selected, QMenu:selected, QComboBox:selected, QMenuBar, QMenu, QTabBar::tab  {\n\
+border: 1px solid #aaa;\n\
+padding: 3px;\n\
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n\
+      stop: 0 #dadbde, stop: 1 #f6f7fa);\n\
+}\n\
+QDialog, QMainWindow {\n\
+background: qradialgradient(spread:repeat, cx:0.55, cy:0.5, radius:0.077, fx:0.5, fy:0.5, stop:0 rgba(200, 239, 255, 255), stop:0.497326 rgba(200, 230, 230, 47), stop:1 rgba(200, 239, 235, 255))\n\
+}\n\
+QMenuBar, QMenu, QTabBar::tab {\n\
+background: QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eee, stop: 1 #fff);\n\
+}\n\
+        "));
+    }
+}
+
+void PreferencesDialog::on_pbStylesheetExample2_clicked()
+{
+    if (
+            QMessageBox::question(
+                    this, tr("Overwrite stylesheet?"), tr("Are you sure?"),
+                    QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
+            == QMessageBox::Yes) {
+        tedStylesheet->setPlainText(QLatin1String("\
+QDialog, QMainWindow {\n\
+  background: QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #bef, stop: 1 #eff);\n\
+}\n\
+QMenuBar, QMenu, QTabBar::tab {\n\
+  background: QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eff, stop: 1 #bef);\n\
+}\n\
+QDateTimeEdit::drop-down, QToolButton, QAbstractSpinBox::up-button, QAbstractSpinBox::down-button, QComboBox::drop-down, QTabBar::tab:selected, QPushButton, QMenuBar:selected, QMenu:selected, QComboBox:selected {\n\
+  color: white;\n\
+  background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #88d, stop: 0.1 #99e, stop: 0.49 #77c, stop: 0.5 #66b, stop: 1 #77c);\n\
+  border: 1px solid #339;\n\
+  border-radius: 5px;\n\
+  padding: 3px;\n\
+  padding-left: 5px;\n\
+  padding-right: 5px;\n\
+}\n\
+QCheckBox::indicator:hover, QDateTimeEdit, QSpinBox, QComboBox, QAbstractItemView, QLineEdit, QSpinBox, QDoubleSpinBox, QTabWidget::pane, QGroupBox {\n\
+  border-style: solid;\n\
+  border: 1px solid gray;\n\
+  border-radius: 5px;\n\
+}\n\
+QLabel {\n\
+  background: rgba(0,0,0,0);\n\
+}\n\
+        "));
+    }
 }

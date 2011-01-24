@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include <QtGui>
+#include <QApplication>
 #include <QTemporaryFile>
 #include "GLWidget.h"
 #include "Window.h"
@@ -17,6 +18,7 @@
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
 #include "FriendsVisitor.h"
+#include "LogbrowserDialog.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -40,6 +42,10 @@ Window::Window(QWidget *parent) :
 
     QSettings* settings = new QSettings();
     QGLFormat fmt;
+
+    // apply styleSheet
+    qDebug() << "applying styleSheet:" << Settings::stylesheet();
+    setStyleSheet(Settings::stylesheet());
 
     // Can please somebody comment on which settings are useful and which
     // should go to the preferences window? Thanks, jonas.
@@ -66,6 +72,7 @@ Window::Window(QWidget *parent) :
     // have fun :)
     //setAttribute(Qt::WA_TranslucentBackground, true);
     //glWidget->setAttribute(Qt::WA_TranslucentBackground, true);
+
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
 
     centralwidget->layout()->addWidget(glWidget);
@@ -89,8 +96,11 @@ Window::Window(QWidget *parent) :
 
     clientSelection = new ClientSelectionWidget();
 
+    // Statusbar
+    progressBar = new QProgressBar(statusbar);
+    progressBar->setMaximumWidth(200);
     setProgressBar(0);
-    lblStatus->setText("");
+    lblStatus = new QLabel(statusbar);
     statusbar->addWidget(lblStatus, 5);
     statusbar->addWidget(progressBar, 3);
     statusbar->addPermanentWidget(tbZoomIn, 0);
@@ -110,8 +120,8 @@ Window::Window(QWidget *parent) :
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
+    // these 2 get disconnected and connected again to inhibit unnecessary updates;
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
-    // !!! here is the performance problem !!! :
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
 
@@ -157,18 +167,11 @@ Window::Window(QWidget *parent) :
     connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
     connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
-//#ifndef Q_WS_MAC // lets use CTRL +/- which I think should work everywhere. No normal input characters, as these get trapped by the EditWidgets (Search etc.)
-    // F11 is Fullscreen on most Linux Displaymanagers
-    //actionZoomIn->setShortcut(QKeySequence("F11"));
-    //actionZoomOut->setShortcut(QKeySequence("F12"));
-//#endif
-
     connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
     connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
     connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
     connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
-    actionShootScreenshots->setChecked(Settings::shootScreenshots());
 
     connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
     connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
@@ -220,32 +223,19 @@ void Window::toggleFullscreen() {
 }
 
 void Window::about() {
-
-    const QString gpl(
-"<small><a href='http://sourceforge.net/projects/qutescoop'>QuteScoop</a><br>\
-developped by Martin Domig, Jonas Eberle, Markus Swarowsky.\
-<p>\
-This program is free software: you can redistribute it and/or modify \
-it under the terms of the GNU General Public License as published by \
-the Free Software Foundation, either version 3 of the License, or \
-(at your option) any later version.\
-<p>\
-This program is distributed in the hope that it will be useful, \
-but WITHOUT ANY WARRANTY; without even the implied warranty of \
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \
-GNU General Public License for more details.\
-<p>\
-You should have received a copy of the GNU General Public License \
-along with this program.  If not, see <a href='http://www.gnu.org/licenses/'>www.gnu.org/licenses</a>.</small>");
-
-    QMessageBox::about(this, tr("About QuteScoop"),
-            "<font size=\"+1\">" + VERSION_STRING + "</font><br><br>" + gpl);
+    // read README and format dynamically
+    QFile readmeFile("README.html");
+    readmeFile.open(QIODevice::ReadOnly);
+    QString readme(readmeFile.readAll());
+    QMessageBox::about(this, tr("About QuteScoop"), readme);
+    qCritical() << "hhuh";
 }
 
 void Window::networkMessage(QString message) {
-/*    QMessageBox::information(this, tr("Network Message"), message);
-      */
-    statusBar()->showMessage(message);
+//    QMessageBox::information(this, tr("Network Message"), message);
+    //statusBar()->showMessage(message);
+    //qApp->processEvents();
+    setStatusText(message);
 }
 
 void Window::downloadError(QString message) {
@@ -254,6 +244,7 @@ void Window::downloadError(QString message) {
             QString("<br><br><strong>%1</strong>").arg(message));
             */
     statusBar()->showMessage(message);
+    //qApp->processEvents();
 }
 
 void Window::whazzupDownloaded(bool isNew) {
@@ -344,7 +335,7 @@ void Window::whazzupDownloaded(bool isNew) {
 
         refreshFriends();
 
-        if (actionShootScreenshots->isChecked())
+        if (Settings::shootScreenshots())
             shootScreenshot();
     }
     downloadWatchdog.stop();
@@ -362,9 +353,11 @@ void Window::refreshFriends() {
     delete visitor;
     friendsList->reset();
 
-    // if uncommented, may cause performance problem
-    // (though it really should be called when the friends list DID change...)
-    //ListClientsDialog::getInstance()->refresh();
+    // update if visible
+    if (ListClientsDialog::getInstance(false) != 0) {
+        if (ListClientsDialog::getInstance()->isVisible())
+            ListClientsDialog::getInstance()->refresh();
+    }
 }
 
 void Window::mapClicked(int x, int y, QPoint absolutePos) {
@@ -390,7 +383,8 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
 }
 
 void Window::showOnMap(double lat, double lon) {
-    if ((lat != 0) || (lon != 0)) // exclude prefiled (non-connected) flights - do not mapcenter on Atlantic between Brazil and Angola (N0/E0)
+    // exclude prefiled flights - do not mapcenter on Atlantic between Brazil and Angola (N0/E0)
+    if ((lat != 0) || (lon != 0))
         glWidget->setMapPosition(lat, lon, 0.1);
 }
 
@@ -421,6 +415,13 @@ void Window::openListClients()
     ListClientsDialog::getInstance()->raise();
     ListClientsDialog::getInstance()->activateWindow();
     ListClientsDialog::getInstance()->setFocus();
+}
+void Window::on_actionDebugLog_triggered()
+{
+    LogBrowserDialog::getInstance()->show();
+    LogBrowserDialog::getInstance()->raise();
+    LogBrowserDialog::getInstance()->activateWindow();
+    LogBrowserDialog::getInstance()->setFocus();
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
@@ -468,48 +469,18 @@ void Window::on_actionHideAllWindows_triggered() {
     if (PlanFlightDialog::getInstance(false) != 0) PlanFlightDialog::getInstance()->close();
     if (BookedAtcDialog::getInstance(false) != 0) BookedAtcDialog::getInstance()->close();
     if (ListClientsDialog::getInstance(false) != 0) ListClientsDialog::getInstance()->close();
+    if (LogBrowserDialog::getInstance(false) != 0) LogBrowserDialog::getInstance()->close();
 
+    if(searchDock->isFloating())
+        searchDock->hide();
+    if(metarDock->isFloating())
+        metarDock->hide();
     if(metarDecoderDock->isFloating())
         metarDecoderDock->hide();
+    if(friendsDock->isFloating())
+        friendsDock->hide();
 
     clientSelection->close();
-}
-
-void Window::on_actionClearAllFlightPaths_triggered() {
-    QList<Airport*> airports = NavData::getInstance()->airports().values();
-    for(int i = 0; i < airports.size(); i++) {
-        if(airports[i] != 0) {
-            airports[i]->setDisplayFlightLines(false);
-        }
-    }
-
-    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
-    for(int i = 0; i < pilots.size(); i++) {
-        if(pilots[i] != 0) {
-            pilots[i]->displayLineFromDep = false;
-            pilots[i]->displayLineToDest = false;
-        }
-    }
-    // adjust the "plot route" tick in dialogs
-    AirportDetails::getInstance()->refresh();
-    PilotDetails::getInstance()->refresh();
-
-    // tell glWidget that there is new whazzup data (which is a lie)
-    // so it will refresh itself and clear the lines
-    glWidget->newWhazzupData();
-}
-
-void Window::on_actionDisplayAllFlightPaths_triggered() {
-    QList<Airport*> airports = NavData::getInstance()->airports().values();
-    for(int i = 0; i < airports.size(); i++) {
-        if(airports[i] != 0) {
-            airports[i]->setDisplayFlightLines(true);
-        }
-    }
-
-    // tell glWidget that there is new whazzup data (which is a lie)
-    // so it will refresh itself and clear the lines
-    glWidget->newWhazzupData();
 }
 
 void Window::on_metarEdit_textChanged(const QString& text) {
@@ -734,7 +705,7 @@ void Window::dataVersionDownloaded()
         datadownloads.append(new QFile(filesToUpdate.first()));
         datadownloads.first()->open(QIODevice::WriteOnly);
         dataVersionChecker->get(url.path(),datadownloads.first());
-        //If more then one file has to be updatet (->post(...) instead of ->get(...)
+        //If more then one file has to be updated (->post(...) instead of ->get(...)
         if(filesToUpdate.size() > 1)
         for(int i =  1; i < filesToUpdate.size(); i++  )
         {
@@ -789,11 +760,6 @@ void Window::updateMetarDecoder(const QString& airport, const QString& decodedTe
 
 void Window::downloadWatchdogTriggered() {
     downloadWatchdog.stop();
-    // try to be less intrusive and just get a new one (show a StatusMessage)
-    // relates to the sequential saving of downloaded Whazzup-files for later use
-    /*QMessageBox::warning(this, tr("Data Download Failed"),
-            QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.")
-        );*/
     statusBar()->showMessage(QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again."), 8000);
     Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
 }
@@ -825,34 +791,58 @@ void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
 }
 
-void Window::performWarp()
+void Window::performWarp(bool forceUseDownloaded)
 {
     warpTimer.stop();
 
-    if(cbNoPredict->isChecked()) {
-        qDebug() << "cbNoPredict";
+    QDateTime warpToTime = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
+    if(cbUseDownloaded->isChecked() || forceUseDownloaded) { // use downloaded Whazzups for (past) replay
+        qDebug() << "Using downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
-        QDateTime selected = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
-        for (int i=0; i < downloaded.size(); i++) {
-            qDebug() << downloaded[i].second;
-            if((downloaded[i].first > selected) || (i == downloaded.size() - 1)) {
-                qDebug() << "loading from file: " << downloaded[i].second;
-                Whazzup::getInstance()->fromFile(downloaded[i].second);
+        for (int i = downloaded.size()-1; i > -1; i--) {
+            if((downloaded[i].first <= warpToTime) || (i == 0)) {
+                // only if different
+                if (downloaded[i].first != Whazzup::getInstance()->realWhazzupData().timestamp()) {
+                    // disconnect to inhibit update because will be updated later
+                    disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+                    disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+
+                    Whazzup::getInstance()->fromFile(downloaded[i].second);
+
+                    qApp->processEvents();
+                    connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+                    connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+                }
                 break;
             }
         }
-    } else {
-        Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
     }
+    Whazzup::getInstance()->setPredictedTime(warpToTime);
+}
+
+void Window::on_cbUseDownloaded_toggled(bool checked)
+{
+    if (!checked) {
+        qDebug() << "Resetting to newest downloaded Whazzup";
+        QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        if (!downloaded.isEmpty()) {
+            // disconnect to inhibit update because will be updated later
+            //disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+            //disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+
+            Whazzup::getInstance()->fromFile(downloaded.last().second);
+
+            //qApp->processEvents();
+            //connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+            //connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+        }
+    }
+    performWarp(true);
 }
 
 void Window::on_tbDisablePredict_clicked()
 {
-    runPredictTimer.stop();
-    Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
     actionPredict->setChecked(false);
-    framePredict->hide();
-    widgetRunPredict->hide();
 }
 
 void Window::on_datePredictTime_dateChanged(QDate date)
@@ -909,7 +899,11 @@ void Window::on_actionPredict_toggled(bool value)
                                  .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
         framePredict->show();
     } else {
-        on_tbDisablePredict_clicked();
+        runPredictTimer.stop();
+        Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
+        cbUseDownloaded->setChecked(false);
+        framePredict->hide();
+        widgetRunPredict->hide();
     }
 }
 
@@ -1017,13 +1011,6 @@ void Window::updateGLPilots() {
     glWidget->updateGL();
 }
 
-void Window::setPlotFlightPlannedRoute(bool value) {
-    glWidget->plotFlightPlannedRoute = value;
-    glWidget->createPilotsList();
-    glWidget->updateGL();
-}
-
-
 void Window::on_tbRunPredict_toggled(bool checked)
 {
     if(checked) {
@@ -1067,7 +1054,56 @@ void Window::shootScreenshot() {
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
 }
 
-void Window::on_actionShootScreenshots_toggled(bool value)
+// show the active route from PlanFlightDialog
+void Window::setPlotFlightPlannedRoute(bool value) {
+    glWidget->plotFlightPlannedRoute = value;
+    glWidget->createPilotsList();
+    glWidget->updateGL();
+}
+
+void Window::on_actionShowRoutes_triggered(bool checked)
 {
-    Settings::setShootScreenshots(value);
+    qDebug() << "showRoutes()" << checked;
+    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
+    for (int i=0; i < pilots.size(); i++) {
+        pilots[i]->displayLineToDest = checked;
+        pilots[i]->displayLineFromDep = checked;
+    }
+    glWidget->newWhazzupData();
+
+    qDebug() << "showRoutes() -- finished" << checked;
+
+/*    if (checked) {
+        QList<Airport*> airports = NavData::getInstance()->airports().values();
+        for(int i = 0; i < airports.size(); i++) {
+            if(airports[i] != 0) {
+                airports[i]->setDisplayFlightLines(false);
+            }
+        }
+
+        QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
+        for(int i = 0; i < pilots.size(); i++) {
+            if(pilots[i] != 0) {
+                pilots[i]->displayLineFromDep = false;
+                pilots[i]->displayLineToDest = false;
+            }
+        }
+        // adjust the "plot route" tick in dialogs
+        AirportDetails::getInstance()->refresh();
+        PilotDetails::getInstance()->refresh();
+
+        // tell glWidget that there is new whazzup data (which is a lie)
+        // so it will refresh itself and clear the lines
+        glWidget->newWhazzupData();
+    } else {
+        QList<Airport*> airports = NavData::getInstance()->airports().values();
+        for(int i = 0; i < airports.size(); i++) {
+            if(airports[i] != 0) {
+                airports[i]->setDisplayFlightLines(true);
+            }
+        }
+
+        // tell glWidget that there is new whazzup data (which is a lie)
+        // so it will refresh itself and clear the lines
+    }*/
 }

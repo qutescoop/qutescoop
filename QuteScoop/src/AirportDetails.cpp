@@ -231,7 +231,7 @@ void AirportDetails::on_pbMetar_clicked()
         metarModel->setData(airports);
         if(metarModel->rowCount() == 1) { // means that the METAR is readily downloaded
             metarModel->modelClicked(metarModel->index(0));
-            this->lower();
+            //this->lower(); // does not what expected: lowers all of QuteScoop, not just this dialog
         } else {
             connect(metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
         }

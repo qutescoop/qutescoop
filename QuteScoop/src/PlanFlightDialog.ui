@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>781</width>
-    <height>447</height>
+    <width>698</width>
+    <height>448</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,7 +29,7 @@
         <string>Route essentials</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QLabel" name="lblDep">
           <property name="text">
            <string>De&amp;parture</string>
@@ -39,14 +39,26 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="3">
+        <item row="1" column="3">
          <widget class="QLineEdit" name="edDep">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="maxLength">
            <number>4</number>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="placeholderText">
+           <string>ICAO</string>
+          </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="lblDest">
           <property name="text">
            <string>Des&amp;tination</string>
@@ -56,12 +68,50 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="3">
+        <item row="2" column="3">
          <widget class="QLineEdit" name="edDest">
+          <property name="maximumSize">
+           <size>
+            <width>50</width>
+            <height>16777215</height>
+           </size>
+          </property>
           <property name="maxLength">
            <number>4</number>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+          <property name="placeholderText">
+           <string>ICAO</string>
+          </property>
          </widget>
+        </item>
+        <item row="3" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="0" column="0">
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -70,7 +120,7 @@
       <widget class="QGroupBox" name="groupBox_2">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>5</horstretch>
+         <horstretch>2</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
@@ -78,126 +128,6 @@
         <string>Select providers</string>
        </property>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="2">
-         <widget class="QCheckBox" name="cbGenerated">
-          <property name="text">
-           <string>direct (no route)</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="14" column="2">
-         <widget class="QCheckBox" name="cbVatroute">
-          <property name="text">
-           <string>VAT&amp;route</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="2">
-         <widget class="QCheckBox" name="cbVroute">
-          <property name="text">
-           <string>&amp;vroute</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="4">
-         <layout class="QVBoxLayout" name="verticalLayout_3">
-          <item>
-           <widget class="QLabel" name="lblAirac">
-            <property name="text">
-             <string>&amp;Airac cycle (leave blank for standard)</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-            <property name="buddy">
-             <cstring>edCycle</cstring>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="edCycle">
-            <property name="maxLength">
-             <number>4</number>
-            </property>
-            <property name="placeholderText">
-             <string>yymm</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="5">
-         <widget class="QLabel" name="lblGeneratedStatus">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>2</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="5">
-         <widget class="QLabel" name="lblVrouteStatus">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>2</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="14" column="5">
-         <widget class="QLabel" name="lblVatrouteStatus">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>2</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="font">
-           <font>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
         <item row="6" column="0">
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
@@ -269,6 +199,20 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </item>
+        <item row="7" column="0" colspan="4">
+         <widget class="Line" name="line_5">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="5">
+         <widget class="Line" name="line_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QLabel" name="pixGenerated">
           <property name="text">
@@ -282,6 +226,173 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="buddy">
            <cstring>cbGenerated</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QCheckBox" name="cbGenerated">
+          <property name="text">
+           <string>direct (no route)</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QCheckBox" name="cbVroute">
+          <property name="text">
+           <string>&amp;vroute</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="2">
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QLabel" name="lblAirac">
+            <property name="font">
+             <font>
+              <pointsize>7</pointsize>
+             </font>
+            </property>
+            <property name="text">
+             <string>Big and quite good route database, based on user input</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="toolTip">
+               <string>Based on the given Airac (nav database) cycle. Leave blank for standard.</string>
+              </property>
+              <property name="text">
+               <string>Airac cycle:</string>
+              </property>
+              <property name="buddy">
+               <cstring>edCycle</cstring>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="edCycle">
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>44</height>
+               </size>
+              </property>
+              <property name="maxLength">
+               <number>4</number>
+              </property>
+              <property name="frame">
+               <bool>true</bool>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="placeholderText">
+               <string>yymm</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item row="14" column="1">
+         <widget class="QCheckBox" name="cbVatroute">
+          <property name="text">
+           <string>VAT&amp;route</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="3">
+         <widget class="QLabel" name="lblVrouteStatus">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>2</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="3">
+         <widget class="QLabel" name="lblVatrouteStatus">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>2</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QLabel" name="lblGeneratedStatus">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>2</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="14" column="2">
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <pointsize>7</pointsize>
+           </font>
+          </property>
+          <property name="text">
+           <string>Always real-life validated routes. 
+Check their webpage for member vACCs.</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -394,10 +505,6 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>edDep</tabstop>
   <tabstop>edDest</tabstop>
-  <tabstop>cbGenerated</tabstop>
-  <tabstop>cbVroute</tabstop>
-  <tabstop>cbVatroute</tabstop>
-  <tabstop>edCycle</tabstop>
   <tabstop>buttonRequest</tabstop>
   <tabstop>treeRoutes</tabstop>
   <tabstop>pbCopyToClipboard</tabstop>
@@ -415,44 +522,12 @@ p, li { white-space: pre-wrap; }
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>770</x>
+     <x>687</x>
      <y>436</y>
     </hint>
     <hint type="destinationlabel">
      <x>439</x>
      <y>446</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbVatroute</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pixVatroute</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>356</x>
-     <y>155</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>272</x>
-     <y>150</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbVroute</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>pixVroute</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>345</x>
-     <y>96</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>280</x>
-     <y>90</y>
     </hint>
    </hints>
   </connection>
@@ -463,12 +538,28 @@ p, li { white-space: pre-wrap; }
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>385</x>
-     <y>104</y>
+     <x>369</x>
+     <y>115</y>
     </hint>
     <hint type="destinationlabel">
-     <x>445</x>
-     <y>118</y>
+     <x>508</x>
+     <y>130</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbVatroute</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pixVatroute</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>369</x>
+     <y>183</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>181</y>
     </hint>
    </hints>
   </connection>
@@ -483,8 +574,24 @@ p, li { white-space: pre-wrap; }
      <y>44</y>
     </hint>
     <hint type="destinationlabel">
-     <x>311</x>
-     <y>46</y>
+     <x>260</x>
+     <y>65</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbVroute</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pixVroute</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>369</x>
+     <y>115</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>259</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>

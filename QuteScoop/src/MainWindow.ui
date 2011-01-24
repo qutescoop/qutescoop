@@ -87,12 +87,18 @@
           </widget>
          </item>
          <item>
-          <widget class="QCheckBox" name="cbNoPredict">
+          <widget class="QCheckBox" name="cbUseDownloaded">
+           <property name="font">
+            <font>
+             <pointsize>7</pointsize>
+            </font>
+           </property>
            <property name="toolTip">
-            <string>Use only WhazzUp data from &quot;/downloaded&quot; directory. If unchecked, adds predictions for planes and controllers via flightplan data and controller bookings. If checked, only date/time from downloaded WhazzUps are selectable.</string>
+            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
            </property>
            <property name="text">
-            <string>no prediction</string>
+            <string>use downloaded
+Whazzups (replay)</string>
            </property>
           </widget>
          </item>
@@ -105,7 +111,7 @@
             </sizepolicy>
            </property>
            <property name="toolTip">
-            <string>Select a date to warp to.</string>
+            <string>Date to warp to.</string>
            </property>
            <property name="wrapping">
             <bool>true</bool>
@@ -127,7 +133,7 @@
             </sizepolicy>
            </property>
            <property name="toolTip">
-            <string>Select a time to warp to.</string>
+            <string>Time to warp to.</string>
            </property>
            <property name="wrapping">
             <bool>true</bool>
@@ -166,7 +172,7 @@
          <item>
           <widget class="QToolButton" name="tbDisablePredict">
            <property name="toolTip">
-            <string>Exit Warp mode. Return to reality.</string>
+            <string>Exit Time Warp. Return to reality.</string>
            </property>
            <property name="text">
             <string/>
@@ -226,7 +232,7 @@
              </sizepolicy>
             </property>
             <property name="toolTip">
-             <string>The next Warp will add this timespan to the old one. Select '0' for realtime (starts from now and time will be linked to real time).</string>
+             <string>Increase time by &lt;this value&gt; each &lt;interval&gt;. Select '0' for realtime (starts from now and time will be linked to real time).</string>
             </property>
             <property name="specialValueText">
              <string>realtime</string>
@@ -246,11 +252,14 @@
             <property name="minimum">
              <double>0.000000000000000</double>
             </property>
+            <property name="maximum">
+             <double>120.000000000000000</double>
+            </property>
             <property name="singleStep">
-             <double>0.500000000000000</double>
+             <double>0.200000000000000</double>
             </property>
             <property name="value">
-             <double>0.500000000000000</double>
+             <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -263,6 +272,9 @@
           </item>
           <item>
            <widget class="QDoubleSpinBox" name="spinRunPredictInterval">
+            <property name="toolTip">
+             <string>Jump to next time each &lt;this value&gt; seconds.</string>
+            </property>
             <property name="specialValueText">
              <string>none</string>
             </property>
@@ -273,13 +285,16 @@
              <string>s</string>
             </property>
             <property name="decimals">
-             <number>1</number>
+             <number>0</number>
+            </property>
+            <property name="minimum">
+             <double>1.000000000000000</double>
             </property>
             <property name="maximum">
              <double>1000.000000000000000</double>
             </property>
             <property name="singleStep">
-             <double>0.200000000000000</double>
+             <double>1.000000000000000</double>
             </property>
             <property name="value">
              <double>2.000000000000000</double>
@@ -290,26 +305,6 @@
         </widget>
        </item>
       </layout>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="lblStatus">
-      <property name="text">
-       <string>Statusbar Text, attached to statusbar at runtime. Same for progressbar.</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QProgressBar" name="progressBar">
-      <property name="maximumSize">
-       <size>
-        <width>200</width>
-        <height>16777215</height>
-       </size>
-      </property>
-      <property name="value">
-       <number>0</number>
-      </property>
      </widget>
     </item>
     <item>
@@ -376,7 +371,7 @@
      <x>0</x>
      <y>0</y>
      <width>814</width>
-     <height>27</height>
+     <height>18</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -395,7 +390,6 @@
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
     <addaction name="actionDownload"/>
-    <addaction name="actionShootScreenshots"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
@@ -413,13 +407,13 @@
     <addaction name="actionShowFriendsDock"/>
     <addaction name="actionHideAllWindows"/>
     <addaction name="separator"/>
-    <addaction name="actionDisplayAllFlightPaths"/>
-    <addaction name="actionClearAllFlightPaths"/>
+    <addaction name="actionDebugLog"/>
     <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
     <addaction name="separator"/>
     <addaction name="actionDisplayAllSectors"/>
     <addaction name="actionShowInactiveAirports"/>
+    <addaction name="actionShowRoutes"/>
    </widget>
    <widget class="QMenu" name="menuPlan">
     <property name="statusTip">
@@ -527,7 +521,7 @@
        <item>
         <widget class="QLineEdit" name="searchEdit">
          <property name="toolTip">
-          <string>Searches Map Objects and Clients. Wildcards (*, ?) and those powerful &quot;Regular Expressions&quot; (search for them on the internet) allowed</string>
+          <string>Wildcards (*, ?) and those powerful &quot;Regular Expressions&quot; (search for them on the internet) allowed</string>
          </property>
         </widget>
        </item>
@@ -535,6 +529,9 @@
      </item>
      <item>
       <widget class="QTreeView" name="searchResult">
+       <property name="toolTip">
+        <string>Search results of all airports and online pilots and controllers by ICAO, name or login.</string>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::AllEditTriggers</set>
        </property>
@@ -550,9 +547,6 @@
        <property name="sortingEnabled">
         <bool>false</bool>
        </property>
-       <attribute name="headerShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
@@ -585,19 +579,9 @@
         <number>4</number>
        </property>
        <item>
-        <widget class="QLabel" name="label_2">
-         <property name="text">
-          <string>Search:</string>
-         </property>
-         <property name="buddy">
-          <cstring>metarEdit</cstring>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLineEdit" name="metarEdit">
          <property name="toolTip">
-          <string>Wildcards (*, ?) and those powerful &quot;Regular Expressions&quot; (search for them on the internet) allowed</string>
+          <string>Request METARs here. Wildcards (*, ?) and those powerful &quot;Regular Expressions&quot; (search for them on the internet) allowed</string>
          </property>
          <property name="text">
           <string/>
@@ -606,6 +590,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="btnRefreshMetar">
+         <property name="toolTip">
+          <string>Refresh already downloaded METARs.</string>
+         </property>
          <property name="text">
           <string>Refresh</string>
          </property>
@@ -615,6 +602,9 @@
      </item>
      <item>
       <widget class="QTreeView" name="metarList">
+       <property name="toolTip">
+        <string>Downloaded METARs</string>
+       </property>
        <property name="editTriggers">
         <set>QAbstractItemView::AllEditTriggers</set>
        </property>
@@ -630,9 +620,6 @@
        <property name="sortingEnabled">
         <bool>false</bool>
        </property>
-       <attribute name="headerShowSortIndicator" stdset="0">
-        <bool>true</bool>
-       </attribute>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
@@ -655,14 +642,21 @@
      </property>
      <item>
       <widget class="QTextBrowser" name="metarText">
+       <property name="toolTip">
+        <string>Decodes METARs to plain text.</string>
+       </property>
        <property name="html">
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;table style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'UnDotum'; font-size:10pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Lucida Grande'; font-size:13pt;&quot;&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="acceptRichText">
@@ -691,7 +685,7 @@ p, li { white-space: pre-wrap; }
      <item>
       <widget class="QTreeView" name="friendsList">
        <property name="toolTip">
-        <string>Friends are identified by their network ID. As we do not have one for Booked ATC, we cannot show booked controllers here.</string>
+        <string>Friends can be added via each controller or pilot detail dialogs.</string>
        </property>
        <property name="rootIsDecorated">
         <bool>false</bool>
@@ -712,7 +706,10 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="actionAbout">
    <property name="text">
-    <string>&amp;About</string>
+    <string>&amp;About / Homepage / Wiki...</string>
+   </property>
+   <property name="shortcut">
+    <string>F1</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -720,7 +717,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionDownload">
    <property name="text">
-    <string>&amp;Download Network Status</string>
+    <string>&amp;Refresh Network Status</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -731,7 +728,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionAboutQt">
    <property name="text">
-    <string>About Q&amp;T</string>
+    <string>About Q&amp;T...</string>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -755,7 +752,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Show &amp;Search Dock</string>
+    <string>&amp;Search Dock...</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
@@ -778,34 +775,12 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
   </action>
-  <action name="actionClearAllFlightPaths">
-   <property name="text">
-    <string>&amp;Hide All Flight Routes</string>
-   </property>
-   <property name="shortcut">
-    <string>F6</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
-  <action name="actionDisplayAllFlightPaths">
-   <property name="text">
-    <string>Show &amp;All Flight Routes</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F6</string>
-   </property>
-   <property name="visible">
-    <bool>false</bool>
-   </property>
-  </action>
   <action name="actionShowMetars">
    <property name="checked">
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>Show &amp;Metar Dock</string>
+    <string>&amp;Metar Dock...</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -845,7 +820,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionShowFriendsDock">
    <property name="text">
-    <string>Show &amp;Friends Dock</string>
+    <string>&amp;Friends Dock...</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -856,12 +831,12 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Display All Sector &amp;Boundaries</string>
+    <string>Display all Sector &amp;Boundaries</string>
    </property>
   </action>
   <action name="actionPlanFlight">
    <property name="text">
-    <string>&amp;Routes</string>
+    <string>&amp;Routes...</string>
    </property>
    <property name="shortcut">
     <string>F9</string>
@@ -869,7 +844,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionBookedAtc">
    <property name="text">
-    <string>List Booked &amp;ATC</string>
+    <string>Booked &amp;ATC...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F8</string>
@@ -1051,24 +1026,47 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionListClients">
    <property name="text">
-    <string>List &amp;Clients and Servers</string>
+    <string>&amp;Clients and Servers...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F5</string>
    </property>
   </action>
-  <action name="actionShootScreenshots">
+  <action name="actionDebugLog">
+   <property name="text">
+    <string>Show Debug &amp;Log...</string>
+   </property>
+  </action>
+  <action name="actionShowRoutes">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Save Screenshots</string>
+    <string>Show all &amp;Routes</string>
    </property>
-   <property name="toolTip">
-    <string>Saves screenshots to &quot;/screenshots&quot; directory whenever a new map display is generated.</string>
+   <property name="shortcut">
+    <string>F6</string>
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>searchEdit</tabstop>
+  <tabstop>searchResult</tabstop>
+  <tabstop>metarEdit</tabstop>
+  <tabstop>btnRefreshMetar</tabstop>
+  <tabstop>metarList</tabstop>
+  <tabstop>metarText</tabstop>
+  <tabstop>friendsList</tabstop>
+  <tabstop>cbUseDownloaded</tabstop>
+  <tabstop>datePredictTime</tabstop>
+  <tabstop>timePredictTime</tabstop>
+  <tabstop>tbRunPredict</tabstop>
+  <tabstop>tbDisablePredict</tabstop>
+  <tabstop>dsRunPredictStep</tabstop>
+  <tabstop>spinRunPredictInterval</tabstop>
+  <tabstop>tbZoomIn</tabstop>
+  <tabstop>tbZoomOut</tabstop>
+ </tabstops>
  <resources/>
  <connections>
   <connection>
@@ -1099,7 +1097,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>109</y>
+     <y>326</y>
     </hint>
    </hints>
   </connection>
@@ -1115,7 +1113,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>392</y>
+     <y>768</y>
     </hint>
    </hints>
   </connection>
@@ -1131,7 +1129,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>542</y>
+     <y>215</y>
     </hint>
    </hints>
   </connection>

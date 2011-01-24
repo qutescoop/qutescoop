@@ -22,7 +22,7 @@ signals:
     void needBookings();
 
 private slots:
-    void newFilter();
+    void performSearch();
     void modelSelected(const QModelIndex& index);
     void on_tbPredict_clicked();
     void on_dateFilter_dateChanged(QDate date);
@@ -38,6 +38,8 @@ private:
 
     QTime timeFilter_old;
     QDate dateFilter_old;
+
+    QTimer searchTimer;
 };
 
 #endif // BOOKEDATCDIALOG_H

@@ -178,12 +178,25 @@ minimum interval)</string>
                </item>
                <item>
                 <widget class="QCheckBox" name="cbSaveWhazzupData">
+                 <property name="toolTip">
+                  <string>Saves downloaded status data to /downloaded. Can be used to record whole evenings. Replay with Time Warp and &quot;use downloaded&quot;.</string>
+                 </property>
                  <property name="text">
-                  <string>Save downloaded Whazzupdata on hard disk</string>
+                  <string>Save Whazzups</string>
                  </property>
                 </widget>
                </item>
               </layout>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="cbShootScreenshots">
+               <property name="toolTip">
+                <string>Saves screenshots to /screenshots whenever new data is displayed. Together with &quot;Save Whazzups&quot;, this allows to make movies of whole evenings.</string>
+               </property>
+               <property name="text">
+                <string>Save &amp;screenshots</string>
+               </property>
+              </widget>
              </item>
             </layout>
            </widget>
@@ -418,7 +431,7 @@ minimum interval)</string>
              <bool>true</bool>
             </property>
             <property name="text">
-             <string>Check for  programm and datafile updates</string>
+             <string>Check for program and datafile updates</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -428,7 +441,10 @@ minimum interval)</string>
           <item>
            <widget class="QCheckBox" name="cbSendVersionInfo">
             <property name="enabled">
-             <bool>true</bool>
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>Disabled due to server move</string>
             </property>
             <property name="text">
              <string>Send version number, platform and preferred network to server</string>
@@ -790,7 +806,7 @@ p, li { white-space: pre-wrap; }
           <item>
            <widget class="QPushButton" name="pbImportFromFile">
             <property name="toolTip">
-             <string>Reads settings from .ini file.</string>
+             <string>Reads settings from .ini file. This does not replace your current settings, but gets merged with it. That means, only values present in the new .ini will actually be changed.</string>
             </property>
             <property name="text">
              <string>Import settings from file</string>
@@ -1139,6 +1155,72 @@ Please give us feedback if you encounter such situations - we are researching th
             </property>
             <property name="checked">
              <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="gbStylesheet">
+         <property name="title">
+          <string>Stylesheet</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_11">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLabel" name="label_18">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;See &lt;/span&gt;&lt;a href=&quot;http://doc.qt.nokia.com/latest/stylesheet.html&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;http://doc.qt.nokia.com/latest/stylesheet.html&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt; for information on Qt stylesheets. Let us know if you have a cool one for QuteScoop ;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="textFormat">
+               <enum>Qt::RichText</enum>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+              <property name="openExternalLinks">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pbStylesheetExample1">
+              <property name="styleSheet">
+               <string notr="true"/>
+              </property>
+              <property name="text">
+               <string>Example 1</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pbStylesheetExample2">
+              <property name="text">
+               <string>Example 2</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="tedStylesheet"/>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pbStylesheetUpdate">
+            <property name="text">
+             <string>&amp;Update</string>
             </property>
            </widget>
           </item>
@@ -2465,13 +2547,28 @@ part is</string>
   </layout>
  </widget>
  <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>cbNetwork</tabstop>
+  <tabstop>editUserDefinedLocation</tabstop>
+  <tabstop>cbDownloadPeriodically</tabstop>
+  <tabstop>spinBoxDownloadInterval</tabstop>
+  <tabstop>cbDownloadOnStartup</tabstop>
+  <tabstop>cbSaveWhazzupData</tabstop>
+  <tabstop>cbShootScreenshots</tabstop>
+  <tabstop>gbDownloadBookings</tabstop>
+  <tabstop>editBookingsLocation</tabstop>
+  <tabstop>cbBookingsPeriodically</tabstop>
+  <tabstop>sbBookingsInterval</tabstop>
   <tabstop>cbUseProxy</tabstop>
   <tabstop>editProxyServer</tabstop>
-  <tabstop>editProxyPort</tabstop>
   <tabstop>editProxyUser</tabstop>
+  <tabstop>editProxyPort</tabstop>
   <tabstop>editProxyPassword</tabstop>
   <tabstop>cbCheckForUpdates</tabstop>
   <tabstop>cbSendVersionInfo</tabstop>
+  <tabstop>rbNone</tabstop>
+  <tabstop>rbTeamSpeak</tabstop>
+  <tabstop>rbVRC</tabstop>
   <tabstop>editVoiceCallsign</tabstop>
   <tabstop>editVoiceUser</tabstop>
   <tabstop>editVoicePassword</tabstop>
@@ -2479,36 +2576,77 @@ part is</string>
   <tabstop>cbShowFixes</tabstop>
   <tabstop>editNavdir</tabstop>
   <tabstop>browseNavdirButton</tabstop>
+  <tabstop>sbZoomFactor</tabstop>
+  <tabstop>pbWheelCalibrate</tabstop>
   <tabstop>cbResetConfiguration</tabstop>
+  <tabstop>pbExportToFile</tabstop>
+  <tabstop>pbImportFromFile</tabstop>
   <tabstop>cbLineSmoothing</tabstop>
   <tabstop>cbDotSmoothing</tabstop>
   <tabstop>sbMaxTextLabels</tabstop>
-  <tabstop>buttonResetEarthSpace</tabstop>
-  <tabstop>buttonResetPilot</tabstop>
-  <tabstop>buttonBox</tabstop>
-  <tabstop>tabWidget</tabstop>
-  <tabstop>rbVRC</tabstop>
-  <tabstop>rbNone</tabstop>
-  <tabstop>rbTeamSpeak</tabstop>
   <tabstop>pbBackgroundColor</tabstop>
+  <tabstop>pbGlobeColor</tabstop>
   <tabstop>pbGridLineColor</tabstop>
+  <tabstop>sbGridLineStrength</tabstop>
   <tabstop>pbCoastLineColor</tabstop>
+  <tabstop>sbCoastLineStrength</tabstop>
   <tabstop>pbCountryLineColor</tabstop>
+  <tabstop>sbCountryLineStrength</tabstop>
+  <tabstop>buttonResetEarthSpace</tabstop>
+  <tabstop>cbBlend</tabstop>
+  <tabstop>pbStylesheetExample1</tabstop>
+  <tabstop>pbStylesheetExample2</tabstop>
+  <tabstop>tedStylesheet</tabstop>
+  <tabstop>pbStylesheetUpdate</tabstop>
+  <tabstop>pbInactAirportFontColor</tabstop>
+  <tabstop>pbInactAirportFont</tabstop>
+  <tabstop>pbInactAirportDotColor</tabstop>
+  <tabstop>sbInactAirportDotSize</tabstop>
+  <tabstop>pbAirportFontColor</tabstop>
+  <tabstop>pbAirportFont</tabstop>
+  <tabstop>pbAirportDotColor</tabstop>
+  <tabstop>sbAirportDotSize</tabstop>
+  <tabstop>pbAppBorderLineColor</tabstop>
+  <tabstop>sbAppBorderLineStrength</tabstop>
+  <tabstop>pbAppColorCenter</tabstop>
+  <tabstop>pbAppColorMargin</tabstop>
+  <tabstop>pbTwrColorCenter</tabstop>
+  <tabstop>pbTwrColorMargin</tabstop>
+  <tabstop>pbGndBorderLineColor</tabstop>
+  <tabstop>sbGndBorderLineStrength</tabstop>
+  <tabstop>pbGndFillColor</tabstop>
   <tabstop>buttonResetAirport</tabstop>
+  <tabstop>cbFilterTraffic</tabstop>
   <tabstop>spFilterDistance</tabstop>
   <tabstop>spFilterArriving</tabstop>
-  <tabstop>cbFilterTraffic</tabstop>
   <tabstop>cbShowCongestion</tabstop>
   <tabstop>sbCongestionMinimum</tabstop>
   <tabstop>pbCongestionBorderLineColor</tabstop>
   <tabstop>sbCongestionBorderLineStrength</tabstop>
   <tabstop>buttonResetAirportTraffic</tabstop>
+  <tabstop>pbFirFontColor</tabstop>
+  <tabstop>pbFirFont</tabstop>
   <tabstop>pbFirBorderLineColor</tabstop>
+  <tabstop>sbFirBorderLineStrength</tabstop>
+  <tabstop>pbFirFillColor</tabstop>
   <tabstop>cbReadSupFile</tabstop>
   <tabstop>buttonResetFir</tabstop>
   <tabstop>pbPilotFontColor</tabstop>
+  <tabstop>pbPilotFont</tabstop>
+  <tabstop>pbPilotDotColor</tabstop>
+  <tabstop>sbPilotDotSize</tabstop>
+  <tabstop>pbTimeLineColor</tabstop>
+  <tabstop>sbTimeLineStrength</tabstop>
+  <tabstop>spinBoxTimeline</tabstop>
+  <tabstop>cbTrackFront</tabstop>
+  <tabstop>cbTrackAfter</tabstop>
   <tabstop>pbTrackLineColor</tabstop>
+  <tabstop>sbTrackLineStrength</tabstop>
+  <tabstop>cbDashedFrontAfter</tabstop>
   <tabstop>pbPlanLineColor</tabstop>
+  <tabstop>sbPlanLineStrength</tabstop>
+  <tabstop>buttonResetPilot</tabstop>
+  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>
@@ -2521,12 +2659,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>122</x>
-     <y>505</y>
+     <x>97</x>
+     <y>444</y>
     </hint>
    </hints>
   </connection>
@@ -2537,12 +2675,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>122</x>
-     <y>539</y>
+     <x>97</x>
+     <y>470</y>
     </hint>
    </hints>
   </connection>
@@ -2553,12 +2691,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>351</x>
-     <y>505</y>
+     <x>330</x>
+     <y>444</y>
     </hint>
    </hints>
   </connection>
@@ -2569,12 +2707,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>351</x>
-     <y>539</y>
+     <x>330</x>
+     <y>470</y>
     </hint>
    </hints>
   </connection>
@@ -2585,12 +2723,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>277</x>
-     <y>505</y>
+     <x>274</x>
+     <y>444</y>
     </hint>
    </hints>
   </connection>
@@ -2601,12 +2739,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>277</x>
-     <y>539</y>
+     <x>274</x>
+     <y>470</y>
     </hint>
    </hints>
   </connection>
@@ -2617,12 +2755,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
-     <x>417</x>
-     <y>505</y>
+     <x>396</x>
+     <y>444</y>
     </hint>
    </hints>
   </connection>
@@ -2633,12 +2771,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>171</x>
-     <y>447</y>
+     <x>193</x>
+     <y>418</y>
     </hint>
     <hint type="destinationlabel">
      <x>572</x>
-     <y>539</y>
+     <y>470</y>
     </hint>
    </hints>
   </connection>
@@ -2649,12 +2787,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>323</x>
-     <y>253</y>
+     <x>191</x>
+     <y>202</y>
     </hint>
     <hint type="destinationlabel">
-     <x>404</x>
-     <y>256</y>
+     <x>253</x>
+     <y>203</y>
     </hint>
    </hints>
   </connection>
@@ -2665,12 +2803,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>165</x>
-     <y>582</y>
+     <x>187</x>
+     <y>529</y>
     </hint>
     <hint type="destinationlabel">
-     <x>256</x>
-     <y>637</y>
+     <x>278</x>
+     <y>553</y>
     </hint>
    </hints>
   </connection>
@@ -2681,12 +2819,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>251</y>
+     <x>141</x>
+     <y>221</y>
     </hint>
     <hint type="destinationlabel">
-     <x>285</x>
-     <y>337</y>
+     <x>411</x>
+     <y>274</y>
     </hint>
    </hints>
   </connection>
@@ -2697,12 +2835,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>251</y>
+     <x>141</x>
+     <y>221</y>
     </hint>
     <hint type="destinationlabel">
      <x>571</x>
-     <y>337</y>
+     <y>277</y>
     </hint>
    </hints>
   </connection>
@@ -2713,8 +2851,8 @@ part is</string>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>591</x>
-     <y>683</y>
+     <x>593</x>
+     <y>633</y>
     </hint>
     <hint type="destinationlabel">
      <x>540</x>
@@ -2729,12 +2867,12 @@ part is</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>89</x>
-     <y>80</y>
+     <x>79</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>136</y>
+     <x>335</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2749,8 +2887,8 @@ part is</string>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>170</y>
+     <x>335</x>
+     <y>136</y>
     </hint>
    </hints>
   </connection>
@@ -2765,8 +2903,8 @@ part is</string>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>204</y>
+     <x>335</x>
+     <y>162</y>
     </hint>
    </hints>
   </connection>
@@ -2777,12 +2915,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>97</x>
-     <y>251</y>
+     <x>119</x>
+     <y>221</y>
     </hint>
     <hint type="destinationlabel">
-     <x>147</x>
-     <y>302</y>
+     <x>169</x>
+     <y>245</y>
     </hint>
    </hints>
   </connection>
@@ -2793,12 +2931,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>473</y>
+     <x>142</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
-     <x>365</x>
-     <y>500</y>
+     <x>289</x>
+     <y>415</y>
     </hint>
    </hints>
   </connection>
@@ -2809,12 +2947,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>148</x>
-     <y>448</y>
+     <x>144</x>
+     <y>378</y>
     </hint>
     <hint type="destinationlabel">
-     <x>283</x>
-     <y>450</y>
+     <x>216</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>
@@ -2825,12 +2963,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>147</x>
-     <y>448</y>
+     <x>144</x>
+     <y>378</y>
     </hint>
     <hint type="destinationlabel">
-     <x>499</x>
-     <y>450</y>
+     <x>391</x>
+     <y>379</y>
     </hint>
    </hints>
   </connection>
@@ -2841,12 +2979,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>473</y>
+     <x>142</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
-     <x>485</x>
-     <y>544</y>
+     <x>503</x>
+     <y>454</y>
     </hint>
    </hints>
   </connection>
@@ -2857,12 +2995,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>473</y>
+     <x>142</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
      <x>571</x>
-     <y>545</y>
+     <y>451</y>
     </hint>
    </hints>
   </connection>
@@ -2873,12 +3011,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>139</x>
-     <y>448</y>
+     <x>144</x>
+     <y>378</y>
     </hint>
     <hint type="destinationlabel">
-     <x>382</x>
-     <y>455</y>
+     <x>291</x>
+     <y>382</y>
     </hint>
    </hints>
   </connection>
@@ -2889,12 +3027,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>473</y>
+     <x>142</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
-     <x>498</x>
-     <y>507</y>
+     <x>413</x>
+     <y>421</y>
     </hint>
    </hints>
   </connection>
@@ -2905,12 +3043,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>112</x>
-     <y>473</y>
+     <x>135</x>
+     <y>421</y>
     </hint>
     <hint type="destinationlabel">
-     <x>381</x>
-     <y>545</y>
+     <x>420</x>
+     <y>454</y>
     </hint>
    </hints>
   </connection>
@@ -2925,8 +3063,8 @@ part is</string>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>136</y>
+     <x>335</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2941,8 +3079,8 @@ part is</string>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>170</y>
+     <x>335</x>
+     <y>136</y>
     </hint>
    </hints>
   </connection>
@@ -2957,8 +3095,8 @@ part is</string>
      <y>80</y>
     </hint>
     <hint type="destinationlabel">
-     <x>249</x>
-     <y>204</y>
+     <x>335</x>
+     <y>162</y>
     </hint>
    </hints>
   </connection>
@@ -2973,8 +3111,8 @@ part is</string>
      <y>316</y>
     </hint>
     <hint type="destinationlabel">
-     <x>299</x>
-     <y>339</y>
+     <x>379</x>
+     <y>319</y>
     </hint>
    </hints>
   </connection>
@@ -2989,8 +3127,8 @@ part is</string>
      <y>315</y>
     </hint>
     <hint type="destinationlabel">
-     <x>259</x>
-     <y>378</y>
+     <x>189</x>
+     <y>346</y>
     </hint>
    </hints>
   </connection>
@@ -3005,8 +3143,8 @@ part is</string>
      <y>315</y>
     </hint>
     <hint type="destinationlabel">
-     <x>532</x>
-     <y>377</y>
+     <x>257</x>
+     <y>347</y>
     </hint>
    </hints>
   </connection>
@@ -3021,8 +3159,8 @@ part is</string>
      <y>317</y>
     </hint>
     <hint type="destinationlabel">
-     <x>73</x>
-     <y>350</y>
+     <x>82</x>
+     <y>319</y>
     </hint>
    </hints>
   </connection>
