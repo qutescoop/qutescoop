@@ -106,8 +106,6 @@ void MetarModel::downloadMetarFor(Airport* airport) {
         return;
 
     QUrl url(location);
-    QFileInfo fileInfo(url.path());
-    QString fileName = fileInfo.fileName();
 
     downloader.setHost(url.host(), url.port() != -1 ? url.port() : 80);
     if (!url.userName().isEmpty())

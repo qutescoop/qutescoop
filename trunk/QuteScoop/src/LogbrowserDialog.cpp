@@ -1,14 +1,28 @@
+/**************************************************************************
+ *  This file is part of QuteScoop. See README for license
+ **************************************************************************/
+
 #include "Logbrowserdialog.h"
 
 #include <QApplication>
 #include <QtGui>
 #include <QtCore>
 
+LogBrowserDialog *logbrowserDialogInstance = 0;
+
+LogBrowserDialog *LogBrowserDialog::getInstance(bool createIfNoInstance) {
+    if(logbrowserDialogInstance == 0)
+        if (createIfNoInstance) logbrowserDialogInstance = new LogBrowserDialog();
+    return logbrowserDialogInstance;
+}
+
 LogBrowserDialog::LogBrowserDialog(QWidget *parent)
     : QDialog(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
+
+    layout->addWidget(new QLabel(tr("Debug messages are shown here while this dialog is open. See also 'log.txt'."), this));
 
     browser = new QTextBrowser(this);
     layout->addWidget(browser);
@@ -40,7 +54,7 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
 
 LogBrowserDialog::~LogBrowserDialog()
 {
-
+    qInstallMsgHandler(0);
 }
 
 
@@ -97,29 +111,4 @@ void LogBrowserDialog::slotSave()
     QTextStream stream(&file);
     stream << browser->toPlainText();
     file.close();
-}
-
-
-void LogBrowserDialog::closeEvent(QCloseEvent *e)
-{
-    QMessageBox::StandardButton answer = QMessageBox::question(
-                this,
-                tr("Close Log Browser?"),
-                tr("Do you really want to close the log browser?"),
-                QMessageBox::Yes | QMessageBox::No
-                );
-
-    if (answer == QMessageBox::Yes)
-        e->accept();
-    else
-        e->ignore();
-}
-
-
-void LogBrowserDialog::keyPressEvent(QKeyEvent *e)
-{
-    // ignore all keyboard events
-    // protects against accidentally closing of the dialog
-    // without asking the user
-    e->ignore();
 }

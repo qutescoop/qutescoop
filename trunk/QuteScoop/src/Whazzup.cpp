@@ -156,6 +156,7 @@ void Whazzup::fromFile(QString filename) {
     QSplashScreen *splash = new QSplashScreen(pixmap);
     splash->show();
     splash->showMessage("Loading Whazzup from file...", Qt::AlignCenter, QColor(0, 24, 81));
+    splash->repaint();
 
     if(whazzupBuffer != 0)
         whazzupBuffer->close();
@@ -285,7 +286,7 @@ void Whazzup::whazzupDownloaded(bool error) {
 
 
             if(Settings::saveWhazzupData()){
-                // write out whazzup to a file
+                // write out Whazzup to a file
                 QString filename = QString("downloaded/%1_%2.whazzup")
                           .arg(Settings::downloadNetwork())
                           .arg(data.timestamp().toString("yyyyMMdd-HHmmss"));
@@ -424,14 +425,16 @@ QString Whazzup::getAtisLink(const QString& id) const {
 }
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
-    this->predictedTime = predictedTime;
-    if (Settings::downloadBookings() && !data.bookingsTimestamp().isValid()) {
-        emit needBookings();
-    }
+    if (this->predictedTime != predictedTime) {
+        this->predictedTime = predictedTime;
+        if (Settings::downloadBookings() && !data.bookingsTimestamp().isValid()) {
+            emit needBookings();
+        }
 
-    WhazzupData newdata = WhazzupData(predictedTime, data);
-    predictedData.updateFrom(newdata);
-    emit newData(true);
+        WhazzupData newdata = WhazzupData(predictedTime, data);
+        predictedData.updateFrom(newdata);
+        emit newData(true);
+    }
 }
 
 QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
@@ -439,14 +442,14 @@ QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
     QStringList list = QDir("downloaded/").entryList(
                 QStringList(QString("%1_*.whazzup").arg(Settings::downloadNetwork())),
                 QDir::Files | QDir::Readable);
+    list.sort();
 
     QList <QPair <QDateTime, QString> > returnList;
     for (int i = 0; i < list.size(); i++) {
         QRegExp dtRe = QRegExp("\\.*_(\\d{8}-\\d{6})");
-        //qDebug() << list[i] << dtRe.indexIn(list[i]);
         if (dtRe.indexIn(list[i]) > 0) {
-            //qDebug() << dtRe.cap(1);
             QDateTime dt = QDateTime::fromString(dtRe.cap(1), "yyyyMMdd-HHmmss");
+            dt.setTimeSpec(Qt::UTC);
             returnList.append(QPair<QDateTime, QString>(
                     dt,
                     QString("downloaded/%1").arg(list[i])

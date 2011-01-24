@@ -26,8 +26,16 @@ private slots:
     void on_pbExportToFile_clicked();
     void on_pbImportFromFile_clicked();
 
+    // screenshots
+    void on_cbShootScreenshots_toggled(bool checked);
+
     // OpenGL settings
     void on_cbBlend_toggled(bool checked);
+
+    // stylesheet
+    void on_pbStylesheetUpdate_clicked();
+    void on_pbStylesheetExample2_clicked();
+    void on_pbStylesheetExample1_clicked();
 
     // download settings
     void on_cbShowFixes_toggled(bool checked);

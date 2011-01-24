@@ -86,7 +86,6 @@ HEADERS += src/WhazzupData.h \
     src/ListClientsDialogModel.h \
     src/ListClientsDialog.h \
     src/Ping.h \
-    src/Logbrowser.h \
     src/LogbrowserDialog.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
@@ -135,11 +134,10 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsDialogModel.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
-    src/Logbrowser.cpp \
     src/LogbrowserDialog.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
-    README \
+    README.html \
     downloaded/+notes.txt \
     data/+notes.txt \
     data/dataversions.txt \

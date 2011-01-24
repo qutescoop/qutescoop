@@ -1,3 +1,7 @@
+/**************************************************************************
+ *  This file is part of QuteScoop. See README for license
+ **************************************************************************/
+
 #ifndef LOGBROWSERDIALOG_H
 #define LOGBROWSERDIALOG_H
 
@@ -11,7 +15,7 @@ class LogBrowserDialog : public QDialog
     Q_OBJECT
 
 public:
-    LogBrowserDialog(QWidget *parent = 0);
+    static LogBrowserDialog *getInstance(bool createIfNoInstance = true);
     ~LogBrowserDialog();
 
 public slots:
@@ -22,11 +26,11 @@ protected slots:
     void slotCopy();
 
 protected:
-    virtual void keyPressEvent( QKeyEvent *e );
-    virtual void closeEvent( QCloseEvent *e );
-
     QTextBrowser *browser;
     QPushButton *clearButton, *saveButton, *copyButton;
+
+private:
+    LogBrowserDialog(QWidget *parent = 0);
 };
 
 #endif // LOGBROWSERDIALOG_H
