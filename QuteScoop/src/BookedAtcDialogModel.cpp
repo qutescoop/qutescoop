@@ -9,9 +9,11 @@
 #include <QMessageBox>
 #include "Window.h"
 
-void BookedAtcDialogModel::setClients(const QList<BookedController*>& controllers) {
+void BookedAtcDialogModel::setClients(const QList<BookedController*> &controllers) {
     this->controllers = controllers;
-    reset();
+
+    // causing major lag ?
+    //reset();
 }
 
 QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -82,12 +84,12 @@ void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {
     if(controllers[index.row()] != 0) {
         if(!controllers[index.row()]->link.isEmpty()) {
             QUrl url = QUrl(controllers[index.row()]->link, QUrl::TolerantMode);
-            if(QMessageBox::question(Window::getInstance(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+            if(QMessageBox::question(qApp->activeWindow(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
                 if (url.isValid()) {
                     if(!QDesktopServices::openUrl(url))
-                        QMessageBox::critical(Window::getInstance(), tr("Error"), tr("Could not invoke browser"));
+                        QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("Could not invoke browser"));
                 } else
-                    QMessageBox::critical(Window::getInstance(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
+                    QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
             }
         }
         //controllers[index.row()]->showDetailsDialog();

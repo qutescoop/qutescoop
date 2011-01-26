@@ -16,9 +16,11 @@
 
 // singleton instance
 ListClientsDialog *listClientsDialog = 0;
-ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance) {
+ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(listClientsDialog == 0)
-        if (createIfNoInstance) listClientsDialog = new ListClientsDialog();
+        if (createIfNoInstance) {
+            if (parent != 0) listClientsDialog = new ListClientsDialog(parent);
+        }
     return listClientsDialog;
 }
 
@@ -28,13 +30,15 @@ void ListClientsDialog::destroyInstance() {
     listClientsDialog = 0;
 }
 
-ListClientsDialog::ListClientsDialog() :
-    QDialog(Window::getInstance())
+ListClientsDialog::ListClientsDialog(QWidget *parent) :
+    QDialog(parent)
 {
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
 
     listClientsSortModel = new ListClientsSortFilter;
+
+    // slows down considerably
     listClientsSortModel->setDynamicSortFilter(true);
     listClientsSortModel->setSourceModel(&listClientsModel);
     treeListClients->setModel(listClientsSortModel);
@@ -49,7 +53,7 @@ ListClientsDialog::ListClientsDialog() :
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    connect(Window::getInstance()->glWidget, SIGNAL(newPosition()), this, SLOT(newMapPosition()));
+    connect(qobject_cast<Window *>(this->parent())->glWidget, SIGNAL(newPosition()), this, SLOT(newMapPosition()));
 
     QStringList serverHeaders;
     serverHeaders << "Ident" << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" <<  "Allowed";
@@ -63,10 +67,12 @@ ListClientsDialog::ListClientsDialog() :
     voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
 
     refresh();
+
+    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 }
 
 void ListClientsDialog::refresh() {
-    const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
+    const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
     // Clients
     QList<Client*> clients;
@@ -160,10 +166,13 @@ void ListClientsDialog::refresh() {
     toolBox->setItemEnabled(2, voiceServers.size() > 0);
 }
 
-void ListClientsDialog::on_editFilter_textChanged(QString searchStr)
-{
+void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
+    searchTimer.start(1000);
+}
+
+void ListClientsDialog::performSearch() {
     QRegExp regex;
-    QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
+    QStringList tokens = editFilter->text().trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
     if(tokens.size() == 1) {
         regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
     } else if(tokens.size() == 0) {
@@ -308,11 +317,11 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 
 void ListClientsDialog::serverClicked(int row, int col) {
     QUrl url = QUrl(voiceServersTable->item(row, 9)->data(Qt::DisplayRole).toString(), QUrl::TolerantMode);
-    if(QMessageBox::question(Window::getInstance(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+    if(QMessageBox::question(this, tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
         if (url.isValid()) {
             if(!QDesktopServices::openUrl(url))
-                QMessageBox::critical(Window::getInstance(), tr("Error"), tr("Could not invoke browser"));
+                QMessageBox::critical(this, tr("Error"), tr("Could not invoke browser"));
         } else
-            QMessageBox::critical(Window::getInstance(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
+            QMessageBox::critical(this, tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
     }
 }

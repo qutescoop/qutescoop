@@ -15,7 +15,7 @@ class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
     Q_OBJECT
 
 public:
-    static PreferencesDialog *getInstance(bool createIfNoInstance = true);
+    static PreferencesDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
 
 private slots:
     //
@@ -152,7 +152,7 @@ private slots:
     void on_sbZoomFactor_valueChanged(double );
 
 private:
-    PreferencesDialog();
+    PreferencesDialog(QWidget *parent);
 
     bool settingsLoaded;
 

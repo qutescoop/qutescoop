@@ -196,7 +196,7 @@ bool Controller::couldBeAtcCallsign() const {
 }
 
 void Controller::showDetailsDialog() {
-    ControllerDetails *infoDialog = ControllerDetails::getInstance();
+    ControllerDetails *infoDialog = ControllerDetails::getInstance(true, Window::getInstance(true));
 
     infoDialog->refresh(this);
     infoDialog->show();

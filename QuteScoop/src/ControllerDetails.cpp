@@ -10,9 +10,11 @@
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;
-ControllerDetails* ControllerDetails::getInstance(bool createIfNoInstance) {
+ControllerDetails* ControllerDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(controllerDetails == 0)
-        if (createIfNoInstance) controllerDetails = new ControllerDetails();
+        if (createIfNoInstance) {
+            if (parent != 0) controllerDetails = new ControllerDetails(parent);
+        }
     return controllerDetails;
 }
 
@@ -22,15 +24,15 @@ void ControllerDetails::destroyInstance() {
     controllerDetails = 0;
 }
 
-ControllerDetails::ControllerDetails():
-    ClientDetails(),
+ControllerDetails::ControllerDetails(QWidget *parent):
+    ClientDetails(parent),
     controller(0)
 {
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-    connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
+    connect(this, SIGNAL(showOnMap(double, double)), qobject_cast<Window *>(this->parent()), SLOT(showOnMap(double, double)));
 }
 
 void ControllerDetails::refresh(Controller *newController) {

@@ -74,7 +74,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 }
 
 void Pilot::showDetailsDialog() {
-    PilotDetails *infoDialog = PilotDetails::getInstance();
+    PilotDetails *infoDialog = PilotDetails::getInstance(true, Window::getInstance(true));
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -426,7 +426,7 @@ void Pilot::toggleDisplayPath() {
         displayLineFromDep = true;
         displayLineToDest = true;
     }
-    PilotDetails::getInstance()->refresh();
+    PilotDetails::getInstance(true)->refresh();
 }
 
 void Pilot::plotFlightPath() const {

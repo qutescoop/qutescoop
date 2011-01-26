@@ -2,17 +2,19 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "Logbrowserdialog.h"
+#include "LogBrowserDialog.h"
 
-#include <QApplication>
 #include <QtGui>
-#include <QtCore>
+
+#include "Window.h"
 
 LogBrowserDialog *logbrowserDialogInstance = 0;
 
-LogBrowserDialog *LogBrowserDialog::getInstance(bool createIfNoInstance) {
+LogBrowserDialog *LogBrowserDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(logbrowserDialogInstance == 0)
-        if (createIfNoInstance) logbrowserDialogInstance = new LogBrowserDialog();
+        if (createIfNoInstance) {
+            if (parent != 0) logbrowserDialogInstance = new LogBrowserDialog(parent);
+        }
     return logbrowserDialogInstance;
 }
 
@@ -34,21 +36,24 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
     buttonLayout->addStretch(10);
 
     clearButton = new QPushButton(this);
-    clearButton->setText("clear");
+    clearButton->setText("Clear");
     buttonLayout->addWidget(clearButton);
     connect(clearButton, SIGNAL(clicked()), browser, SLOT(clear()));
 
     saveButton = new QPushButton(this);
-    saveButton->setText("save output");
+    saveButton->setText("Save output");
     buttonLayout->addWidget(saveButton);
     connect(saveButton, SIGNAL(clicked()), this, SLOT(slotSave()));
 
     copyButton = new QPushButton(this);
-    copyButton->setText("copy to clipboard");
+    copyButton->setText("Copy to clipboard");
     buttonLayout->addWidget(copyButton);
     connect(copyButton, SIGNAL(clicked()), this, SLOT(slotCopy()));
 
     resize(600, 400);
+
+    connect(this, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int))
+            , qobject_cast<Window *>(this->parent()), SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
 }
 
 
@@ -90,7 +95,7 @@ void LogBrowserDialog::slotSave()
     QString saveFileName = QFileDialog::getSaveFileName(
                 this,
                 tr("Save Log Output"),
-                tr("%1/logfile.txt").arg(QDir::homePath()),
+                tr("log.txt"),
                 tr("Text Files (*.txt);;All Files (*)")
                 );
 
@@ -99,12 +104,8 @@ void LogBrowserDialog::slotSave()
 
     QFile file(saveFileName);
     if(!file.open(QIODevice::WriteOnly)) {
-        QMessageBox::warning(
-                    this,
-                    tr("Error"),
-                    QString(tr("<nobr>File '%1'<br/>cannot be opened for writing.<br/><br/>"
-                               "The log output could <b>not</b> be saved!</nobr>"))
-                    .arg(saveFileName));
+        emit hasGuiMessage(QString("File '%1' cannot be written. The log could not be saved!")
+                           .arg(saveFileName), GuiMessage::CriticalUserInteraction);
         return;
     }
 

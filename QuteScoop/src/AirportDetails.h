@@ -23,7 +23,7 @@ class AirportDetails : public ClientDetails, private Ui::AirportDetails
     Q_OBJECT
 
 public:
-    static AirportDetails *getInstance(bool createIfNoInstance = true);
+    static AirportDetails *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     void refresh(Airport* airport = 0);
 
@@ -37,7 +37,7 @@ private slots:
     void departureSelected(const QModelIndex& index);
 
 private:
-    AirportDetails();
+    AirportDetails(QWidget *parent);
 
     AirportDetailsAtcModel atcModel;
     AirportDetailsArrivalsModel arrivalsModel;

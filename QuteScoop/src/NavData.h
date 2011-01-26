@@ -13,43 +13,43 @@
 class NavData
 {
 public:
-	static NavData* getInstance();
+    static NavData* getInstance();
 
-	const QHash<QString, Airport*>& airports() const;
-	const QList<Airport*>& airportsTrafficSorted() const;
+    const QHash<QString, Airport*>& airports() const;
+    const QList<Airport*>& airportsTrafficSorted() const;
     const QHash<QString, Sector*>& sectors() const;
-	QList<Airport*> airportsAt(double lat, double lon, double maxDist);
+    QList<Airport*> airportsAt(double lat, double lon, double maxDist);
 
     const Airac& getAirac() const { return airac; }
 
-	static double distance(double lat1, double lon1, double lat2, double lon2);
-	static void distanceTo(double lat, double lon, double dist, double heading, double *latTo, double *lonTo);
-	static double courseTo(double lat1, double lon1, double lat2, double lon2);
-	static void greatCirclePlotTo(double lat1, double lon1,
-									double lat2, double lon2,
-									double fraction,
-									double *lat, double *lon);
+    static double distance(double lat1, double lon1, double lat2, double lon2);
+    static void distanceTo(double lat, double lon, double dist, double heading, double *latTo, double *lonTo);
+    static double courseTo(double lat1, double lon1, double lat2, double lon2);
+    static void greatCirclePlotTo(double lat1, double lon1,
+                                    double lat2, double lon2,
+                                    double fraction,
+                                    double *lat, double *lon);
     static void plotPath(double lat1, double lon1, double lat2, double lon2);
 
-	QString countryName(const QString& countryCode) const { return countryCodes[countryCode]; }
+    QString countryName(const QString& countryCode) const { return countryCodes[countryCode]; }
 
-	void updateData(const WhazzupData& whazzupData);
-	void accept(MapObjectVisitor* visitor);
+    void updateData(const WhazzupData& whazzupData);
+    void accept(MapObjectVisitor* visitor);
 
 private:
-	NavData();
+    NavData();
 
-	void loadDatabase(const QString& directory);
-	void loadAirports(const QString& filename);
+    void loadDatabase(const QString& directory);
+    void loadAirports(const QString& filename);
     void loadSectors();
-	void loadCountryCodes(const QString& filename);
+    void loadCountryCodes(const QString& filename);
 
-	QHash<QString, Airport*> airportMap;
-	QList<Airport*> airportsListTrafficSorted; // holds airports sorted by congestion descending
+    QHash<QString, Airport*> airportMap;
+    QList<Airport*> airportsListTrafficSorted; // holds airports sorted by congestion descending
     QHash<QString, Sector*> sectorMap;
-	QHash<QString, QString> countryCodes;
+    QHash<QString, QString> countryCodes;
 
-	Airac airac;
+    Airac airac;
 };
 
 #endif /*NAVDATA_H_*/

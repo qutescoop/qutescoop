@@ -15,7 +15,7 @@ class ControllerDetails: public ClientDetails, private Ui::ControllerDetails
     Q_OBJECT
 
 public:
-    static ControllerDetails* getInstance(bool createIfNoInstance = true);
+    static ControllerDetails* getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     void refresh(Controller* controller = 0);
 
@@ -24,7 +24,7 @@ private slots:
     void on_btnJoinChannel_clicked();
 
 private:
-    ControllerDetails();
+    ControllerDetails(QWidget *parent);
     Controller* controller;
 };
 

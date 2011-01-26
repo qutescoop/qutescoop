@@ -9,7 +9,9 @@
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
     this->clients = clients;
-    reset();
+
+    // causing major lag?
+    //reset();
 }
 
 QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -25,7 +27,7 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
         case 1: return QString("Rating");
         case 2: return QString("Name");
         case 3: return QString("Online");
-        case 4: return QString("Dist from Here");
+        case 4: return QString("NM from map center");
         case 5: return QString("Server");
         case 6: return QString("Controller Info / Flight Status"); //if Controller/Pilot
         case 7: return QString("Admin Rating"); //IVAO
@@ -58,11 +60,11 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
             case 2: return c->realName;
             case 3: return c->onlineTime();
             case 4:
-                return (int) NavData::distance(
+                if (Window::getInstance(false) != 0) return (int) NavData::distance(
                                 c->lat, c->lon,
-                                Window::getInstance()->glWidget->currentPosition().first,
-                                Window::getInstance()->glWidget->currentPosition().second)
-                             ;
+                                Window::getInstance(true)->glWidget->currentPosition().first,
+                                Window::getInstance(true)->glWidget->currentPosition().second);
+                else return "n/a";
             case 5: return c->server;
             case 6: // Controller Info / Flight Status
                 if(co != 0)
@@ -95,5 +97,6 @@ int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
 
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {
-    clients[index.row()]->showDetailsDialog();
+    if (clients[index.row()] != 0)
+        clients[index.row()]->showDetailsDialog();
 }

@@ -4,7 +4,7 @@
 
 #include <QtGui>
 #include <QApplication>
-#include <QTemporaryFile>
+//#include <QTemporaryFile>
 #include "GLWidget.h"
 #include "Window.h"
 #include "ClientDetails.h"
@@ -18,14 +18,15 @@
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
 #include "FriendsVisitor.h"
-#include "LogbrowserDialog.h"
+#include "LogBrowserDialog.h"
 
 // singleton instance
 Window *windowInstance = 0;
 
-Window* Window::getInstance() {
+Window* Window::getInstance(bool createIfNoInstance) {
     if(windowInstance == 0)
-        windowInstance = new Window;
+        if (createIfNoInstance)
+            windowInstance = new Window;
     return windowInstance;
 }
 
@@ -35,6 +36,8 @@ Window::Window(QWidget *parent) :
 
     if(Settings::resetOnNextStart())
         QSettings().clear();
+
+    setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
 
     // Playing with toolbar
     //addToolBar(toolBar = new QToolBar());
@@ -96,10 +99,10 @@ Window::Window(QWidget *parent) :
 
     clientSelection = new ClientSelectionWidget();
 
-    // Statusbar
+    // Status- & ProgressBar
     progressBar = new QProgressBar(statusbar);
     progressBar->setMaximumWidth(200);
-    setProgressBar(0);
+    progressBar->hide();
     lblStatus = new QLabel(statusbar);
     statusbar->addWidget(lblStatus, 5);
     statusbar->addWidget(progressBar, 3);
@@ -117,16 +120,14 @@ Window::Window(QWidget *parent) :
     qDebug() << "Expecting data directory at" << Settings::dataDirectory() << "(Option: general/dataDirectory)";
 
     Whazzup *whazzup = Whazzup::getInstance();
+    connect(whazzup, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
+            this, SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates;
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
-
-
-    connect(whazzup, SIGNAL(networkMessage(QString)), this, SLOT(networkMessage(QString)));
-    connect(whazzup, SIGNAL(downloadError(QString)), this, SLOT(downloadError(QString)));
 
     connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
 
@@ -223,28 +224,80 @@ void Window::toggleFullscreen() {
 }
 
 void Window::about() {
-    // read README and format dynamically
-    QFile readmeFile("README.html");
+    QFile readmeFile(qApp->applicationDirPath() + "/README.html");
     readmeFile.open(QIODevice::ReadOnly);
-    QString readme(readmeFile.readAll());
-    QMessageBox::about(this, tr("About QuteScoop"), readme);
-    qCritical() << "hhuh";
+    QMessageBox::about(this, tr("About QuteScoop"), readmeFile.readAll());
 }
 
-void Window::networkMessage(QString message) {
-//    QMessageBox::information(this, tr("Network Message"), message);
-    //statusBar()->showMessage(message);
-    //qApp->processEvents();
-    setStatusText(message);
-}
-
-void Window::downloadError(QString message) {
-/*    QMessageBox::critical(this, tr("Download Failed"),
-            tr("Data download failed:") +
-            QString("<br><br><strong>%1</strong>").arg(message));
-            */
-    statusBar()->showMessage(message);
-    //qApp->processEvents();
+void Window::showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType, QString id, int progress, int total) {
+    switch (msgType) {
+    case GuiMessage::Splash:
+        qDebug() << "guiMessage[Splash]" << id << msg;
+        QMessageBox::information(this, id, msg);
+        break;
+    case GuiMessage::ProgressBar:
+        qDebug() << "guiMessage[ProgressBar]" << id << msg << progress << total;
+        if (!msg.isEmpty()) lblStatus->setText(msg);
+        progressBar->setWhatsThis(id);
+        progressBar->show();
+        progressBar->setMaximum(total);
+        progressBar->setValue(progress);
+        break;
+    case GuiMessage::Temporary:
+        qDebug() << "guiMessage[Temporary]" << id << msg;
+        lblStatus->setText(msg);
+        new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
+        break;
+    case GuiMessage::InformationUserAttention:
+        qDebug() << "guiMessage[Information]" << id << msg;
+        QMessageBox::information(this, id, msg);
+        break;
+    case GuiMessage::Persistent:
+        qDebug() << "guiMessage[Persistent]" << id << msg;
+        lblStatus->setWhatsThis(msg);
+        lblStatus->setText(msg);
+        break;
+    case GuiMessage::Warning:
+        lblStatus->setText(msg);
+        new GuiMessage(this, msg, msgType, id, 0, 0, 8000);
+        qWarning() << "guiMessage[Warning]" << id << msg;
+        break;
+    case GuiMessage::ErrorUserAttention:
+        qWarning() << "guiMessage[Error]" << id << msg;
+        QMessageBox::warning(this, id, msg);
+        break;
+    case GuiMessage::CriticalUserInteraction:
+        qCritical() << "guiMessage[Critical]" << id << msg;
+        QMessageBox::critical(this, id, msg);
+        break;
+    case GuiMessage::FatalUserInteraction:
+        qFatal("guiMessage[Fatal]" + id.toAscii() + " " + msg.toAscii());
+        QMessageBox::critical(this, id, msg);
+        break;
+    case GuiMessage::Remove:
+        qDebug() << "guiMessage[Remove]" << id;
+        // remove Persistent
+        if (msg == lblStatus->whatsThis()) {
+            lblStatus->setText(QString());
+            lblStatus->setWhatsThis(QString());
+        }
+        // remove Temporary: restore Presistent
+        if (msg == lblStatus->text()) lblStatus->setText(lblStatus->whatsThis());
+        // remove ProgressBar
+        if (id == progressBar->whatsThis()) {
+            progressBar->hide();
+            lblStatus->setText(lblStatus->whatsThis());
+        }
+        break;
+    case GuiMessage::_Update: // worker function
+        qDebug() << "guiMessage[Update]";
+        /*QMapIterator<QDateTime, GuiMessage> i(guiMessages);
+        while (i.hasNext()) {
+            i.next();
+            GuiMessage gM = i.value();
+            qDebug() << i.key() << gM.msg;
+        }*/
+    }
 }
 
 void Window::whazzupDownloaded(bool isNew) {
@@ -262,7 +315,7 @@ void Window::whazzupDownloaded(bool isNew) {
                         ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
                         : data.timestamp().toString("ddd MM/dd HHmm'z'"))
                   .arg(data.clients());
-    setStatusText(msg);
+    showGuiMessage(msg, GuiMessage::Persistent, "status");
 
     msg = QString("Whazzup %1, bookings %2 updated")
                   .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
@@ -299,37 +352,37 @@ void Window::whazzupDownloaded(bool isNew) {
         performSearch();
 
         if (AirportDetails::getInstance(false) != 0) {
-            if (AirportDetails::getInstance()->isVisible())
-                AirportDetails::getInstance()->refresh();
+            if (AirportDetails::getInstance(true)->isVisible())
+                AirportDetails::getInstance(true)->refresh();
             else // not visible -> delete it...
-                AirportDetails::getInstance()->destroyInstance();
+                AirportDetails::getInstance(true)->destroyInstance();
         }
         if (PilotDetails::getInstance(false) != 0) {
-            if (PilotDetails::getInstance()->isVisible())
-                PilotDetails::getInstance()->refresh();
+            if (PilotDetails::getInstance(true)->isVisible())
+                PilotDetails::getInstance(true)->refresh();
             else // not visible -> delete it...
-                PilotDetails::getInstance()->destroyInstance();
+                PilotDetails::getInstance(true)->destroyInstance();
         }
         if (ControllerDetails::getInstance(false) != 0) {
-            if (ControllerDetails::getInstance()->isVisible())
-                ControllerDetails::getInstance()->refresh();
+            if (ControllerDetails::getInstance(true)->isVisible())
+                ControllerDetails::getInstance(true)->refresh();
             else // not visible -> delete it...
-                ControllerDetails::getInstance()->destroyInstance();
+                ControllerDetails::getInstance(true)->destroyInstance();
         }
 
         if (ListClientsDialog::getInstance(false) != 0) {
-            if (ListClientsDialog::getInstance()->isVisible())
-                ListClientsDialog::getInstance()->refresh();
+            if (ListClientsDialog::getInstance(true)->isVisible())
+                ListClientsDialog::getInstance(true)->refresh();
             else // not visible -> delete it...
-                ListClientsDialog::getInstance()->destroyInstance();
+                ListClientsDialog::getInstance(true)->destroyInstance();
         }
 
         if(realdata.bookingsTimestamp().isValid()) {
             if (BookedAtcDialog::getInstance(false) != 0) {
-                if (BookedAtcDialog::getInstance()->isVisible())
-                    BookedAtcDialog::getInstance()->refresh();
+                if (BookedAtcDialog::getInstance(true)->isVisible())
+                    BookedAtcDialog::getInstance(true)->refresh();
                 else // not visible -> delete it...
-                    BookedAtcDialog::getInstance()->destroyInstance();
+                    BookedAtcDialog::getInstance(true)->destroyInstance();
             }
         }
 
@@ -355,8 +408,8 @@ void Window::refreshFriends() {
 
     // update if visible
     if (ListClientsDialog::getInstance(false) != 0) {
-        if (ListClientsDialog::getInstance()->isVisible())
-            ListClientsDialog::getInstance()->refresh();
+        if (ListClientsDialog::getInstance(true)->isVisible())
+            ListClientsDialog::getInstance(true)->refresh();
     }
 }
 
@@ -389,39 +442,39 @@ void Window::showOnMap(double lat, double lon) {
 }
 
 void Window::openPreferences() {
-    PreferencesDialog::getInstance()->show();
-    PreferencesDialog::getInstance()->raise();
-    PreferencesDialog::getInstance()->activateWindow();
-    PreferencesDialog::getInstance()->setFocus();
+    PreferencesDialog::getInstance(true, this)->show();
+    PreferencesDialog::getInstance(true)->raise();
+    PreferencesDialog::getInstance(true)->activateWindow();
+    PreferencesDialog::getInstance(true)->setFocus();
 }
 
 void Window::openPlanFlight() {
-    PlanFlightDialog::getInstance()->show();
-    PlanFlightDialog::getInstance()->raise();
-    PlanFlightDialog::getInstance()->activateWindow();
-    PlanFlightDialog::getInstance()->setFocus();
+    PlanFlightDialog::getInstance(true, this)->show();
+    PlanFlightDialog::getInstance(true)->raise();
+    PlanFlightDialog::getInstance(true)->activateWindow();
+    PlanFlightDialog::getInstance(true)->setFocus();
 }
 
 void Window::openBookedAtc() {
-    BookedAtcDialog::getInstance()->show();
-    BookedAtcDialog::getInstance()->raise();
-    BookedAtcDialog::getInstance()->activateWindow();
-    BookedAtcDialog::getInstance()->setFocus();
+    BookedAtcDialog::getInstance(true, this)->show();
+    BookedAtcDialog::getInstance(true)->raise();
+    BookedAtcDialog::getInstance(true)->activateWindow();
+    BookedAtcDialog::getInstance(true)->setFocus();
 }
 
 void Window::openListClients()
 {
-    ListClientsDialog::getInstance()->show();
-    ListClientsDialog::getInstance()->raise();
-    ListClientsDialog::getInstance()->activateWindow();
-    ListClientsDialog::getInstance()->setFocus();
+    ListClientsDialog::getInstance(true, this)->show();
+    ListClientsDialog::getInstance(true)->raise();
+    ListClientsDialog::getInstance(true)->activateWindow();
+    ListClientsDialog::getInstance(true)->setFocus();
 }
 void Window::on_actionDebugLog_triggered()
 {
-    LogBrowserDialog::getInstance()->show();
-    LogBrowserDialog::getInstance()->raise();
-    LogBrowserDialog::getInstance()->activateWindow();
-    LogBrowserDialog::getInstance()->setFocus();
+    LogBrowserDialog::getInstance(true, this)->show();
+    LogBrowserDialog::getInstance(true)->raise();
+    LogBrowserDialog::getInstance(true)->activateWindow();
+    LogBrowserDialog::getInstance(true)->setFocus();
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
@@ -451,7 +504,7 @@ void Window::performSearch() {
 }
 
 void Window::closeEvent(QCloseEvent *event) {
-    Settings::saveState(saveState()); //was: VERSION_INT
+    Settings::saveState(saveState()); //was: (VERSION_INT) but that should not harm
     Settings::saveSize(size());
     Settings::savePosition(pos());
 
@@ -462,14 +515,14 @@ void Window::closeEvent(QCloseEvent *event) {
 }
 
 void Window::on_actionHideAllWindows_triggered() {
-    if (PilotDetails::getInstance(false) != 0) PilotDetails::getInstance()->close();
-    if (ControllerDetails::getInstance(false) != 0) ControllerDetails::getInstance()->close();
-    if (AirportDetails::getInstance(false) != 0) AirportDetails::getInstance()->close();
-    if (PreferencesDialog::getInstance(false) != 0) PreferencesDialog::getInstance()->close();
-    if (PlanFlightDialog::getInstance(false) != 0) PlanFlightDialog::getInstance()->close();
-    if (BookedAtcDialog::getInstance(false) != 0) BookedAtcDialog::getInstance()->close();
-    if (ListClientsDialog::getInstance(false) != 0) ListClientsDialog::getInstance()->close();
-    if (LogBrowserDialog::getInstance(false) != 0) LogBrowserDialog::getInstance()->close();
+    if (PilotDetails::getInstance(false) != 0) PilotDetails::getInstance(true)->close();
+    if (ControllerDetails::getInstance(false) != 0) ControllerDetails::getInstance(true)->close();
+    if (AirportDetails::getInstance(false) != 0) AirportDetails::getInstance(true)->close();
+    if (PreferencesDialog::getInstance(false) != 0) PreferencesDialog::getInstance(true)->close();
+    if (PlanFlightDialog::getInstance(false) != 0) PlanFlightDialog::getInstance(true)->close();
+    if (BookedAtcDialog::getInstance(false) != 0) BookedAtcDialog::getInstance(true)->close();
+    if (ListClientsDialog::getInstance(false) != 0) ListClientsDialog::getInstance(true)->close();
+    if (LogBrowserDialog::getInstance(false) != 0) LogBrowserDialog::getInstance(true)->close();
 
     if(searchDock->isFloating())
         searchDock->hide();
@@ -563,7 +616,7 @@ void Window::checkForUpdates() {
     versionChecker = new QHttp(this);
     connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
 
-    QString downloadUrl = "https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/version.txt";
+    QString downloadUrl = "http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/version.txt";
 
     if(Settings::sendVersionInformation()) {
         // append platform, version and preferred network information to the download link
@@ -582,8 +635,6 @@ void Window::checkForUpdates() {
 
     qDebug() << "Checking for new version on" << downloadUrl;
     QUrl url(downloadUrl);
-    QFileInfo fileInfo(url.path());
-    QString fileName = fileInfo.fileName();
     versionChecker->setHost(url.host(), url.port() != -1 ? url.port() : 80);
     Settings::applyProxySetting(versionChecker);
 
@@ -625,128 +676,164 @@ void Window::versionDownloaded(bool error) {
     */
 }
 
-void Window::checkForDataUpdates()
-{
-    if(dataVersionChecker != 0){
-        dataVersionChecker = 0;
+void Window::checkForDataUpdates() {
+    if(dataVersionsAndFilesDownloader != 0) {
+        dataVersionsAndFilesDownloader = 0;
     }
-    dataVersionChecker = new QHttp(this);
-    dataversionBuffer = new QFile("dataversions.txt");
-    if(dataversionBuffer->exists()){
-        dataversionBuffer->remove();
-    }
-    dataversionBuffer->open(QIODevice::WriteOnly);
-    QUrl url("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
-    QFileInfo fileInfo(url.path());
+    dataVersionsAndFilesDownloader = new QHttp(this);
+    QUrl url("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
+    dataVersionsAndFilesDownloader->setHost(url.host());
+    Settings::applyProxySetting(dataVersionsAndFilesDownloader);
 
-    dataVersionChecker->setHost(url.host());
-    connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(dataVersionDownloaded()));
-    dataVersionChecker->get(url.path(), dataversionBuffer);
-    qDebug() << "Checking for datafile versions";
+    connect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
+
+    dataVersionsBuffer = new QBuffer;
+    dataVersionsBuffer->open(QBuffer::ReadWrite);
+
+    dataVersionsAndFilesDownloader->get(url.path(), dataVersionsBuffer);
+    qDebug() << "Checking for datafile versions:" << url.toString();
 }
 
-void Window::dataVersionDownloaded()
-{
-    qDebug() << "Datafile versions received";
-    QList< QPair<QString , int> > newdata, olddata;
-    QFile oldversions(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+void Window::dataVersionsDownloaded(bool error) {
+    disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
+    if(dataVersionsBuffer == 0)
+        return;
 
-    dataversionBuffer->close();
-    dataversionBuffer->open(QIODevice::ReadOnly);
-    while(!dataversionBuffer->atEnd())
-    {
-        QString rawdata = QString(dataversionBuffer->readLine());
-        QStringList rawdataList = rawdata.split("%%");
-        QPair< QString , int> rawPair;
-        rawPair.first = rawdataList.first();
-        rawPair.second = rawdataList.last().toInt();
-        newdata.append(rawPair);
-        //qDebug() << "Current versions are " << rawPair.first << " : " << rawPair.second;
+    if(error) {
+        showGuiMessage(dataVersionsAndFilesDownloader->errorString(), GuiMessage::Warning, "Datafile download");
+        return;
     }
-    dataversionBuffer->close();
+    QList< QPair< QString, int> > serverDataVersionsList, localDataVersionsList;
 
-    oldversions.open(QIODevice::ReadOnly);
-    while(!oldversions.atEnd())
-    {
-        QString rawdata = QString(oldversions.readLine());
-        QStringList rawdataList = rawdata.split("%%");
-        QPair< QString , int> rawPair;
-        rawPair.first = rawdataList.first();
-        rawPair.second = rawdataList.last().toInt();
-        olddata.append(rawPair);
+    dataVersionsBuffer->seek(0);
+    while(dataVersionsBuffer->canReadLine()) {
+        QStringList splitLine = QString(dataVersionsBuffer->readLine()).split("%%");
+        QPair< QString, int> rawPair;
+        rawPair.first = splitLine.first();
+        rawPair.second = splitLine.last().toInt();
+        if (splitLine.size() == 2) // only xx%%xx accepted
+            serverDataVersionsList.append(rawPair);
+        //qDebug() << "Server versions are " << rawPair.first << " : " << rawPair.second;
+    }
+
+    QFile localVersionsFile(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+    if (!localVersionsFile.open(QIODevice::ReadOnly | QIODevice::Text))  {
+        showGuiMessage(QString("Could not read %1.\nThus we are updating all datafiles.")
+                       .arg(localVersionsFile.fileName()),
+                       GuiMessage::InformationUserAttention, "Complete datafiles update necessary");
+    }
+    while(!localVersionsFile.atEnd()) {
+        QStringList splitLine = QString(localVersionsFile.readLine()).split("%%");
+        QPair< QString, int> rawPair;
+        rawPair.first = splitLine.first();
+        rawPair.second = splitLine.last().toInt();
+        if (splitLine.size() == 2) // only xx%%xx accepted
+            localDataVersionsList.append(rawPair);
         //qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
     }
-
-    //int newfiles = newdata.size();
-    int oldfiles = olddata.size();
+    localVersionsFile.close();
 
     //collecting files to update
-    for(int i = 0; i < oldfiles; i++)
-    {
-        if(newdata.value(i).first == olddata.value(i).first)
-        {
-            if(newdata.value(i).second > olddata.value(i).second){
-                qDebug() << "New datafiles are " << newdata.value(i).first;
-                filesToUpdate.append(newdata.value(i).first);
-            }
+    connect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
+            this, SLOT(dataFilesRequestFinished(int,bool)));
+    connect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
+            this, SLOT(dataFilesDownloaded(bool)));
+    for(int i = 0; i < serverDataVersionsList.size(); i++) {
+        // download also files that are locally not available
+        if(serverDataVersionsList[i].second >
+           localDataVersionsList.value(i, QPair< QString, int>(QString(), 0)).second){
+            dataFilesToDownload.append(new QFile(QString("%1%2.newFromServer")
+                                                 .arg(Settings::dataDirectory())
+                                                 .arg(serverDataVersionsList[i].first)));
+            QUrl url(QString("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
+                 .arg(serverDataVersionsList[i].first));
+            dataVersionsAndFilesDownloader->get(url.path(), dataFilesToDownload.last());
+            //qDebug() << "Downloading datafile" << url.toString();
         }
     }
-
-
-    if(!filesToUpdate.isEmpty())
-    {
-        QMessageBox::information(this, tr("New datafiles!!"), tr("There are new datafiles available and will be updateted."
-                                                                 "These changes will take effect on the next start of QuteScoop."),
-                                 QMessageBox::Ok);
-        disconnect(dataVersionChecker, 0 , this, 0);
-        connect(dataVersionChecker, SIGNAL(done(bool)), this, SLOT(newDataVersionsDownloaded()));
-        QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
-             .arg(filesToUpdate.first()));
-        datadownloads.append(new QFile(filesToUpdate.first()));
-        datadownloads.first()->open(QIODevice::WriteOnly);
-        dataVersionChecker->get(url.path(),datadownloads.first());
-        //If more then one file has to be updated (->post(...) instead of ->get(...)
-        if(filesToUpdate.size() > 1)
-        for(int i =  1; i < filesToUpdate.size(); i++  )
-        {
-            QUrl url(QString("https://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
-                 .arg(filesToUpdate.value(i)));
-            datadownloads.append(new QFile(filesToUpdate.value(i)));
-            datadownloads.value(i)->open(QIODevice::ReadOnly);
-            dataVersionChecker->post(url.path(),datadownloads.value(i));
-        }
-        qDebug() << "Downloading new datafile(s)";
-    }
-    if(filesToUpdate.isEmpty()){
-        dataversionBuffer->remove();
+    if (!dataFilesToDownload.isEmpty())
+        showGuiMessage(QString("New sector-/ airport- or geography-files are available. They will be downloaded now."),
+                       GuiMessage::InformationUserAttention, "New datafiles");
+    else {
+        disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
+                this, SLOT(dataFilesRequestFinished(int,bool)));
+        disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
+                this, SLOT(dataFilesDownloaded(bool)));
+        dataVersionsAndFilesDownloader->abort();
+        delete dataVersionsAndFilesDownloader;
+        delete dataVersionsBuffer;
     }
 }
 
-void Window::newDataVersionsDownloaded()
-{
-    qDebug() << "New datafiles downloaded";
+void Window::dataFilesRequestFinished(int id, bool error) {
+    if (error) {
+        showGuiMessage(QString("Error downloading %1:\n%2")
+                       .arg(dataVersionsAndFilesDownloader->currentRequest().path())
+                       .arg(dataVersionsAndFilesDownloader->errorString()),
+                       GuiMessage::CriticalUserInteraction, "New datafiles");
+        return;
+    }
+    showGuiMessage(QString("Downloaded %1")
+                   .arg(dataVersionsAndFilesDownloader->currentRequest().path()),
+                   GuiMessage::InformationUserAttention, "New datafiles");
+}
 
-    for(int i = 0; i < filesToUpdate.size(); i++)
-    {
-        qDebug() << "Update " << filesToUpdate.value(i);
+void Window::dataFilesDownloaded(bool error) {
+    disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
+            this, SLOT(dataFilesRequestFinished(int,bool)));
+    disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
+            this, SLOT(dataFilesDownloaded(bool)));
+    if(dataVersionsBuffer == 0)
+        return;
 
-        datadownloads.value(i)->close();
-        if(datadownloads.value(i)->exists())
-        {
-            QFile::remove(QString("%1%2").arg(Settings::dataDirectory()).arg(filesToUpdate.value(i)));
-            datadownloads.value(i)->copy(QString("%1%2").arg(Settings::dataDirectory()).arg(filesToUpdate.value(i)));
-            datadownloads.value(i)->remove();
+    if(error) {
+        showGuiMessage(QString("New sector- / airport- / geography-files could not be downloaded.\n%1")
+                       .arg(dataVersionsAndFilesDownloader->errorString()),
+                       GuiMessage::CriticalUserInteraction, "New datafiles");
+        return;
+    }
+
+    showGuiMessage("All scheduled files have been downloaded.\nThese changes will take effect on the next start of QuteScoop.",
+                   GuiMessage::InformationUserAttention, "New datafiles");
+
+    int errors = 0;
+    for(int i = 0; i < dataFilesToDownload.size(); i++) {
+        dataFilesToDownload[i]->flush();
+        dataFilesToDownload[i]->close();
+
+        if(dataFilesToDownload[i]->exists()) {
+            QString datafileFilePath = dataFilesToDownload[i]->fileName().remove(".newFromServer");
+            if (QFile::exists(datafileFilePath) && !QFile::remove(datafileFilePath)) {
+                showGuiMessage(QString("Unable to delete\n%1")
+                               .arg(datafileFilePath), GuiMessage::CriticalUserInteraction, "New datafiles");
+                errors++;
+            }
+            if (!dataFilesToDownload[i]->rename(datafileFilePath)) {
+                showGuiMessage(QString("Unable to move downloaded file to\n%1")
+                               .arg(datafileFilePath), GuiMessage::CriticalUserInteraction, "New datafiles");
+                errors++;
+            }
         }
+
+        delete dataFilesToDownload[i];
     }
 
-    if(QFile::exists("dataversions.txt"))
-    {
-        QFile::remove(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
-        dataversionBuffer->copy(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
-        dataversionBuffer->remove();
-    }
+    if (errors == 0) {
+        QFile localDataVersionsFile(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+        if (localDataVersionsFile.open(QIODevice::WriteOnly))
+            localDataVersionsFile.write(dataVersionsBuffer->data());
+        else
+            showGuiMessage(QString("Error writing %1").arg(localDataVersionsFile.fileName()),
+                           GuiMessage::CriticalUserInteraction, "New datafiles");
+    } else
+        showGuiMessage(QString("Errors occured. All datafiles will be redownloaded on next launch of QuteScoop."),
+                       GuiMessage::CriticalUserInteraction, "New datafiles");
 
-    qDebug() << "Datafiles updated";
+    dataVersionsBuffer->close();
+    delete dataVersionsBuffer;
+    dataVersionsAndFilesDownloader->abort();
+    delete dataVersionsAndFilesDownloader;
+    dataFilesToDownload.clear();
 }
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
@@ -760,32 +847,11 @@ void Window::updateMetarDecoder(const QString& airport, const QString& decodedTe
 
 void Window::downloadWatchdogTriggered() {
     downloadWatchdog.stop();
-    statusBar()->showMessage(QString("I failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again."), 8000);
+    showGuiMessage("Failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.",
+                   GuiMessage::ErrorUserAttention, "Whazzup-download failed.");
     Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
 }
 
-void Window::setStatusText(QString text) {
-    lblStatus->setText(text);
-}
-
-void Window::setProgressBar(bool isVisible) {
-    progressBar->setVisible(isVisible);
-}
-
-void Window::setProgressBar(int prog, int tot) {
-    if (prog == tot) {
-        progressBar->setVisible(false);
-    } else {
-        progressBar->setVisible(true);
-        if (tot == 0) {
-            progressBar->setFormat(QString("%1 bytes").arg(prog));
-            progressBar->setValue(0);
-        } else {
-            progressBar->setFormat("%p%");
-            progressBar->setValue(100 * prog / tot);
-        }
-    }
-}
 
 void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
@@ -827,14 +893,14 @@ void Window::on_cbUseDownloaded_toggled(bool checked)
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
         if (!downloaded.isEmpty()) {
             // disconnect to inhibit update because will be updated later
-            //disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
-            //disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+            disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+            disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
             Whazzup::getInstance()->fromFile(downloaded.last().second);
 
-            //qApp->processEvents();
-            //connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
-            //connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+            qApp->processEvents();
+            connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+            connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
         }
     }
     performWarp(true);
@@ -1045,13 +1111,22 @@ void Window::runPredict() {
 
 void Window::shootScreenshot() {
     // screenshot (only works if QuteScoop Window is shown on top)
-    QString filename = QString("screenshots/%1_%2")
+    QString filename = QString(qApp->applicationDirPath() + "/screenshots/%1_%2")
               .arg(Settings::downloadNetwork())
               .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss"));
-    QPixmap *pixmap = new QPixmap(QPixmap::grabWindow(Window::getInstance()->glWidget->winId()));
-    pixmap->save(QString("%1.png").arg(filename), "png");
-    delete pixmap;
+
+    QPixmap::grabWindow(glWidget->winId()).save(QString("%1.png").arg(filename), "png");
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
+
+/*    QPixmap::grabWidget(glWidget).save(QString("%1-variant2.png").arg(filename), "png");
+    qDebug() << "shot screenie" << QString("%1-variant2.png").arg(filename); //fixme
+
+    glWidget->grabFrameBuffer(true).save(QString("%1-variant3.png").arg(filename), "png");
+    qDebug() << "shot screenie" << QString("%1-variant3.png").arg(filename); //fixme
+
+    glWidget->renderPixmap().save(QString("%1-variant4.png").arg(filename), "png");
+    qDebug() << "shot screenie" << QString("%1-variant4.png").arg(filename); //fixme
+    */
 }
 
 // show the active route from PlanFlightDialog
@@ -1089,8 +1164,8 @@ void Window::on_actionShowRoutes_triggered(bool checked)
             }
         }
         // adjust the "plot route" tick in dialogs
-        AirportDetails::getInstance()->refresh();
-        PilotDetails::getInstance()->refresh();
+        AirportDetails::getInstance(true)->refresh();
+        PilotDetails::getInstance(true)->refresh();
 
         // tell glWidget that there is new whazzup data (which is a lie)
         // so it will refresh itself and clear the lines

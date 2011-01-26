@@ -292,8 +292,7 @@ void Airport::addDelivery(Controller* client) {
 
 
 void Airport::showDetailsDialog() {
-    AirportDetails *infoDialog = AirportDetails::getInstance();
-
+    AirportDetails *infoDialog = AirportDetails::getInstance(true, Window::getInstance(true));
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -374,7 +373,7 @@ void Airport::setDisplayFlightLines(bool show) {
         arrivals[i]->displayLineToDest = show;
     for(int i = 0; i < departures.size(); i++)
         departures[i]->displayLineFromDep = show;
-    AirportDetails::getInstance()->refresh();
+    AirportDetails::getInstance(true)->refresh();
 }
 
 void Airport::refreshAfterUpdate() {

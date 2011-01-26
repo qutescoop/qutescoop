@@ -23,6 +23,15 @@ QT += network \
     opengl \
     xml
 
+# If precompiled headers are not possible, qmake should deactivate it.
+# If compiling/linking problems arise, this should be deactivated.
+# Please do not check in this .pro file with this option enabled.
+CONFIG += precompile_header
+PRECOMPILED_HEADER = src/_pch.h
+precompile_header:!isEmpty(PRECOMPILED_HEADER) {
+    message("Using precompiled headers.")
+}
+
 # CONFIG += debug
 # CONFIG += release
 # CONFIG += warn_off
@@ -86,7 +95,9 @@ HEADERS += src/WhazzupData.h \
     src/ListClientsDialogModel.h \
     src/ListClientsDialog.h \
     src/Ping.h \
-    src/LogbrowserDialog.h
+    src/LogBrowserDialog.h \
+    src/GuiMessage.h
+
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -134,7 +145,7 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsDialogModel.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
-    src/LogbrowserDialog.cpp
+    src/LogBrowserDialog.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \

@@ -866,18 +866,18 @@ void GLWidget::rightClick(const QPoint& pos) {
         }
 
         if(countRelevant > 1) {
-            Window::getInstance()->statusBar()->showMessage("Too many objects under cursor", 3000);
+            emit hasGuiMessage("Too many objects under cursor");
             return; // area too crowded
         }
     }
     if(countRelevant == 0) {
-        Window::getInstance()->statusBar()->showMessage("No object under cursor", 3000);
+        emit hasGuiMessage("No object under cursor");
         return;
     }
     if(countRelevant != 1) return; // ambiguous search result
 
     if(airport != 0) {
-        Window::getInstance()->statusBar()->showMessage(QString("Toggled routes for %1").arg(airport->label), 2000);
+        emit hasGuiMessage(QString("Toggled routes for %1").arg(airport->label));
         airport->toggleFlightLines();
         createPilotsList();
         updateGL();
@@ -886,7 +886,7 @@ void GLWidget::rightClick(const QPoint& pos) {
 
     if(pilot != 0) {
         // display flight path for pilot
-        Window::getInstance()->statusBar()->showMessage(QString("Toggled route for %1").arg(pilot->label), 2000);
+        emit hasGuiMessage(QString("Toggled route for %1").arg(pilot->label));
         pilot->toggleDisplayPath();
         createPilotsList();
         updateGL();
@@ -979,7 +979,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 }
 
 void GLWidget::rememberPosition(int nr) {
-    Window::getInstance()->statusBar()->showMessage(QString("Remembered position %1").arg(nr), 2000);
+    emit hasGuiMessage(QString("Remembered position %1").arg(nr));
     Settings::setRememberedMapPosition(xRot, yRot, zRot, zoom, nr);
 }
 

@@ -14,6 +14,8 @@
 #include <QTimer>
 
 #include "WhazzupData.h"
+#include "Window.h"
+#include "GuiMessage.h"
 
 class WhazzupData;
 
@@ -40,8 +42,8 @@ public:
 
 signals:
     void newData(bool isNew);
-    void networkMessage(QString message);
-    void downloadError(QString message);
+    void hasGuiMessage(QString, GuiMessage::GuiMessageType = GuiMessage::Temporary,
+                       QString = QString(), int = 0, int = 0);
     void statusDownloaded();
     void needBookings();
 

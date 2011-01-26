@@ -14,11 +14,12 @@
 class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
     Q_OBJECT
 public:
-    static ListClientsDialog *getInstance(bool createIfNoInstance = true);
+    static ListClientsDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     void refresh();
 
 public slots:
+    void performSearch();
     void newMapPosition();
     void pingReceived(QString, int);
 
@@ -31,13 +32,15 @@ private slots:
     void newFilter();
 
 private:
-    ListClientsDialog();
+    ListClientsDialog(QWidget *parent);
 
     ListClientsDialogModel listClientsModel;
     ListClientsSortFilter *listClientsSortModel;
     QColor mapPingToColor(int ms);
     QStack< QString > pingStack;
     void pingNextFromStack();
+
+    QTimer searchTimer;
 };
 
 #endif // LISTCLIENTSDIALOG_H

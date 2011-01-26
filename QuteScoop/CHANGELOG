@@ -172,11 +172,34 @@ Version 1.0.3 beta 3:
 added:
 * a Debug Log browser internally in the program + Debug output to "log.txt"
 * allowing styleSheets - see under preferences ;)
-
 changed:
 * reenabled the "Show all Routes" option - it tends to run infinitely though..
 * use README in QuteScoop/About
 
 
-WANTED (not yet implemented):
-* control thread priority (QS sometimes uses a lot of CPU for updates; we should be able to run at lower priority)
+Version 1.0.3 beta 4:
+changed:
+* preventing unnecessary calls to Main Window instance (I feel that this happened
+  e.g. when opening BookedAtcDialog and caused major lags)
+* underlying data model for BookedAtcModel and ListClientsDialog is less
+  "automatic", thus preventing unnecessary filter operations. This results in a
+  welcome speed-up in these "data-heavy" dialogs.
+* restructured datafile downloader: added more feedback on the progress and if
+  an error occurs.
+* preparations to move to a new organisation of files which is necessary for
+  packaging QuteScoop for Mac and Linux (/data needs to go to %ApplicationData%)
+added:
+* First steps of GUI message handler controlling StatusBar, ProgressBar and
+  MessageBoxes (not finished yet) [GuiMessage.h]:
+  Its intention is to find a solution to the problem of concurring user
+  messages, e.g. "There is a new Whazzup downloading, one notification of Bookings
+  not available should be shown while one datafile from disk is not writable
+  and if all that is over Whazzup status shall be displayed again."...
+  This is not yet finished!
+
+
+
+
+
+See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
+general project status and planned features.

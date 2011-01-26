@@ -14,9 +14,11 @@
 
 // singleton instance
 BookedAtcDialog *bookedAtcDialog = 0;
-BookedAtcDialog *BookedAtcDialog::getInstance(bool createIfNoInstance) {
+BookedAtcDialog *BookedAtcDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(bookedAtcDialog == 0)
-        if (createIfNoInstance) bookedAtcDialog = new BookedAtcDialog();
+        if (createIfNoInstance) {
+            if (parent != 0) bookedAtcDialog = new BookedAtcDialog(parent);
+        }
     return bookedAtcDialog;
 }
 
@@ -27,32 +29,27 @@ void BookedAtcDialog::destroyInstance() {
 }
 
 
-BookedAtcDialog::BookedAtcDialog() :
-    QDialog(Window::getInstance())
+BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
+    QDialog(parent)
 {
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
 
     //bookedAtcSortModel = new QSortFilterProxyModel;
-    qDebug() << "BookedAtcDialog(): bookedAtcSortModel";
+    qDebug() << "BookedAtcDialog(): bookedAtcSortModel1";
     bookedAtcSortModel = new BookedAtcSortFilter;
-    qDebug() << "BookedAtcDialog(): bookedAtcSortModel";
+
+    // slows down considerably
     bookedAtcSortModel->setDynamicSortFilter(true);
-    qDebug() << "BookedAtcDialog(): bookedAtcSortModel";
     bookedAtcSortModel->setSourceModel(&bookedAtcModel);
-    qDebug() << "BookedAtcDialog(): treeBookedAtc";
+    qDebug() << "BookedAtcDialog(): treeBookedAtc1";
     treeBookedAtc->setModel(bookedAtcSortModel);
-    qDebug() << "BookedAtcDialog(): treeBookedAtc";
     treeBookedAtc->header()->setResizeMode(QHeaderView::Interactive);
-    qDebug() << "BookedAtcDialog(): treeBookedAtc";
     treeBookedAtc->sortByColumn(4, Qt::AscendingOrder);
 
     connect(treeBookedAtc->header(), SIGNAL(sectionClicked(int)), treeBookedAtc, SLOT(sortByColumn(int)));
     connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
     //connect(bookedAtcSortModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(newFilter(QModelIndex,QModelIndex))); //does not get thrown??
-
-    dateFilter->setDate(QDateTime::currentDateTime().toUTC().date());
-    timeFilter->setTime(QDateTime::currentDateTime().toUTC().time());
 
     QFont font = lblStatusInfo->font();
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
@@ -62,18 +59,28 @@ BookedAtcDialog::BookedAtcDialog() :
 
     connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
+    qDebug() << "BookedAtcDialog(): calling refresh";
+    dateFilter->setDate(QDateTime::currentDateTime().toUTC().date());
+    timeFilter->setTime(QDateTime::currentDateTime().toUTC().time());
     refresh();
 }
 
 void BookedAtcDialog::refresh() {
-    if(Settings::downloadBookings() && !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
+    //bookedAtcSortModel->setDynamicSortFilter(false);
+
+    if(Settings::downloadBookings() &&
+       !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
         emit needBookings();
 
+    qDebug() << "BookedAtcDialog/refresh(): setting clients";
     bookedAtcModel.setClients(Whazzup::getInstance()->realWhazzupData().getBookedControllers());
-    treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+    qDebug() << "BookedAtcDialog/refresh(): resizing headers";
     bookedAtcSortModel->invalidate();
+    treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
+    qDebug() << "BookedAtcDialog/refresh(): getting Whazzup";
     const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
+    qDebug() << "BookedAtcDialog/refresh(): ready";
 
     QString msg = QString("Bookings %1 updated")
                   .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
@@ -83,17 +90,20 @@ void BookedAtcDialog::refresh() {
                            : "never")
                         );
     lblStatusInfo->setText(msg);
-    performSearch();
+
+//    bookedAtcSortModel->setDynamicSortFilter(true);
+
+    searchTimer.start(5);
 }
 
 void BookedAtcDialog::on_editFilter_textChanged(QString searchStr)
 {
-    searchTimer.start(400);
+    searchTimer.start(1000);
 }
 
 void BookedAtcDialog::on_spinHours_valueChanged(int val)
 {
-    searchTimer.start(400);
+    searchTimer.start(1000);
 }
 
 
@@ -118,7 +128,7 @@ void BookedAtcDialog::on_timeFilter_timeChanged(QTime time)
         return;
     }
 
-    searchTimer.start(400);
+    searchTimer.start(1000);
 }
 
 void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
@@ -136,12 +146,14 @@ void BookedAtcDialog::on_dateFilter_dateChanged(QDate date)
         return;
     }
 
-    searchTimer.start(400);
+    searchTimer.start(1000);
 }
 
 void BookedAtcDialog::performSearch() {
     searchTimer.stop();
+    //bookedAtcSortModel->setDynamicSortFilter(false);
 
+    qDebug() << "BookedAtcDialog/performSearch(): building RegExp";
     // Text
     QRegExp regex;
     QStringList tokens = editFilter->text().trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
@@ -158,16 +170,25 @@ void BookedAtcDialog::performSearch() {
         regex = QRegExp(regExpStr, Qt::CaseInsensitive);
     }
 
-    bookedAtcSortModel->setFilterRegExp(regex);
+    qDebug() << "BookedAtcDialog/performSearch(): setting RegExp" << regex.pattern();
     bookedAtcSortModel->setFilterKeyColumn(-1);
+    bookedAtcSortModel->setFilterRegExp(regex);
 
     //Date, Time, TimeSpan
     QDateTime from = QDateTime(dateFilter->date(), timeFilter->time(), Qt::UTC);
     QDateTime to = from.addSecs(spinHours->value() * 3600);
+    qDebug() << "BookedAtcDialog/performSearch(): setting Date" << from << to;
+    bookedAtcSortModel->setDateTimeRange(from, to);
 
+
+    qDebug() << "BookedAtcDialog/performSearch(): applying filter";
+    //bookedAtcSortModel->setDynamicSortFilter(true);
     // General
+    qDebug() << "BookedAtcDialog/performSearch(): resizing headers";
     treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+    qDebug() << "BookedAtcDialog/performSearch(): rowCount()";
     boxResults->setTitle(QString("Results (%1)").arg(bookedAtcSortModel->rowCount()));
+    qDebug() << "BookedAtcDialog/performSearch() -- finished";
 }
 
 void BookedAtcDialog::modelSelected(const QModelIndex& index) {

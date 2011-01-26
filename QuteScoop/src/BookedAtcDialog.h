@@ -14,7 +14,7 @@
 class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
     Q_OBJECT
 public:
-    static BookedAtcDialog *getInstance(bool createIfNoInstance = true);
+    static BookedAtcDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     void refresh();
 
@@ -31,7 +31,7 @@ private slots:
     void on_editFilter_textChanged(QString str);
 
 private:
-    BookedAtcDialog();
+    BookedAtcDialog(QWidget *parent);
 
     BookedAtcDialogModel bookedAtcModel;
     BookedAtcSortFilter *bookedAtcSortModel;

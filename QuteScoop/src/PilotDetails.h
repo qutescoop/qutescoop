@@ -15,7 +15,7 @@ class PilotDetails : public ClientDetails, private Ui::PilotDetails
     Q_OBJECT
 
 public:
-    static PilotDetails* getInstance(bool createIfNoInstance = true);
+    static PilotDetails* getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     virtual void refresh(Pilot *pilot = 0);
 
@@ -27,7 +27,7 @@ private slots:
     void on_buttonAddFriend_clicked();
 
 private:
-    PilotDetails();
+    PilotDetails(QWidget *parent);
 
     Pilot *pilot;
 };
