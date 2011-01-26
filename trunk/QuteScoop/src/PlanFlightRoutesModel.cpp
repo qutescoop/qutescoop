@@ -47,11 +47,14 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
         switch(index.column()) {
         case 0:
             if (r->provider == "direct")
-                return QIcon(":/icons/qutescoop.png");
+                return QPixmap(":/icons/qutescoop.png").
+                        scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             else if (r->provider == "vroute")
-                return QIcon(":/routeproviders/images/vroute.png");
+                return QPixmap(":/routeproviders/images/vroute.png").
+                        scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             else if (r->provider == "VATroute")
-                return QIcon(":/routeproviders/images/vatroute.png");
+                return QPixmap(":/routeproviders/images/vatroute.png").
+                        scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             break;
         }
     } else if(role == Qt::DisplayRole) {

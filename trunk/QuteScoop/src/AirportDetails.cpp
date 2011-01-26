@@ -14,9 +14,11 @@
 
 // singleton instance
 AirportDetails *airportDetails = 0;
-AirportDetails *AirportDetails::getInstance(bool createIfNoInstance) {
+AirportDetails *AirportDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(airportDetails == 0)
-        if (createIfNoInstance) airportDetails = new AirportDetails();
+        if (createIfNoInstance) {
+            if (parent != 0) airportDetails = new AirportDetails(parent);
+        }
     return airportDetails;
 }
 
@@ -60,15 +62,15 @@ QString lon2str(double lon) {
     return result;
 }
 
-AirportDetails::AirportDetails():
-    ClientDetails(),
+AirportDetails::AirportDetails(QWidget *parent):
+    ClientDetails(parent),
     airport(0)
 {
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-    connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
+    connect(this, SIGNAL(showOnMap(double, double)), qobject_cast<Window *>(this->parent()), SLOT(showOnMap(double, double)));
 
     // ATC list
     atcSortModel = new QSortFilterProxyModel;
@@ -103,7 +105,7 @@ AirportDetails::AirportDetails():
     connect(treeDepartures->header(), SIGNAL(sectionClicked(int)), treeDepartures, SLOT(sortByColumn(int)));
     connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)), this, SLOT(departureSelected(const QModelIndex&)));
 
-    metarModel = new MetarModel();
+    metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
     refresh();
 }
@@ -208,7 +210,7 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked)
 {
     if(airport->showFlightLines != checked) {
         airport->setDisplayFlightLines(checked);
-        Window::getInstance()->updateGLPilots();
+        qobject_cast<Window *>(this->parent())->updateGLPilots();
     }
 }
 
@@ -307,4 +309,3 @@ QList<Controller*> AirportDetails::checkSectors()
 
     return result;
 }
-

@@ -2,7 +2,7 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "time.h"
+#include "Whazzup.h"
 
 #include <QHttp>
 #include <QDebug>
@@ -11,9 +11,9 @@
 #include <QTimer>
 #include <QDir>
 #include <QtGui>
+#include "time.h"
 
 #include "Settings.h"
-#include "Whazzup.h"
 #include "Window.h"
 
 Whazzup *whazzupInstance = 0;
@@ -56,8 +56,6 @@ void Whazzup::setStatusLocation(const QString& statusLocation) {
     qDebug() << "Downloading network status from\t" << statusLocation;
 
     QUrl url(statusLocation);
-    QFileInfo fileInfo(url.path());
-    QString fileName = fileInfo.fileName();
 
     statusDownloader->abort();
     statusDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
@@ -80,7 +78,7 @@ void Whazzup::statusDownloaded(bool error) {
         return;
 
     if(error) {
-        emit downloadError(statusDownloader->errorString());
+        emit hasGuiMessage(statusDownloader->errorString(), GuiMessage::Warning);
         return;
     }
 
@@ -124,7 +122,7 @@ void Whazzup::statusDownloaded(bool error) {
     }
 
     if(!message.isEmpty())
-        emit networkMessage(message);
+        emit hasGuiMessage(message, GuiMessage::Warning);
 
     delete statusBuffer;
     statusBuffer = 0;
@@ -133,7 +131,7 @@ void Whazzup::statusDownloaded(bool error) {
     qDebug() << "Got network status:\t" << urls.size() << "Whazzup URLs";
 
     if(urls.size() == 0){
-        emit networkMessage("No Whazzup URLs found. Try again later.");
+        emit hasGuiMessage("No Whazzup-URLs found. Try again later.", GuiMessage::Warning);
     } else {
         emit statusDownloaded();
     }
@@ -151,27 +149,22 @@ void Whazzup::fromFile(QString filename) {
         qDebug() << "Error opening" << filename;
         return;
     }
-    // splash screen
-    QPixmap pixmap(":/splash/splash");
-    QSplashScreen *splash = new QSplashScreen(pixmap);
-    splash->show();
-    splash->showMessage("Loading Whazzup from file...", Qt::AlignCenter, QColor(0, 24, 81));
-    splash->repaint();
+    emit hasGuiMessage("Loading Whazzup from file...");
 
-    if(whazzupBuffer != 0)
+    if(whazzupBuffer != 0) {
         whazzupBuffer->close();
         delete whazzupBuffer;
+    }
     whazzupBuffer = new QBuffer;
     whazzupBuffer->open(QBuffer::WriteOnly);
     whazzupBuffer->write(file->readAll());
     whazzupBuffer->close();
     whazzupDownloaded(false);
-    splash->finish(Window::getInstance());
 }
 
 void Whazzup::download() {
     if(urls.size() == 0) {
-        emit downloadError("No Whazzup URLs in network status. Trying to get a new network status.");
+        emit hasGuiMessage("No Whazzup URLs in network status. Trying to get a new network status.", GuiMessage::ErrorUserAttention);
         setStatusLocation(Settings::statusLocation());
         qDebug() << "no Whazzup URLs available";
         return;
@@ -179,37 +172,28 @@ void Whazzup::download() {
 
     downloadTimer->stop();
     QTime now = QTime::currentTime();
-    /*Comment out I'm not sure if that is necessary
+    /* unnecessary. Also might be error-prone with Time Warp and "Use Downloaded"
     if(!data.isNull()) {
         if(data.updateEarliest().isValid()
                 && QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest()) > 0
                 && Settings::downloadNetwork() == data.network()) {
-            Window::getInstance()->statusBar()->showMessage(
-                    QString("Server said new data available in %1s. Skipping.")
-                    .arg(QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest())), 3000
-                    );
+            emit hasGuiMessage(QString("Server said new data available in %1s. Skipping.")
+                               .arg(QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest())), GuiMessage::Temporary);
             return; // Server said we do not need to update
             }
-    }
-    else */if(lastDownloadTime.secsTo(now) < 30) {
-        Window::getInstance()->statusBar()->showMessage(
-                QString("Whazzup checked %1s (less than 30s) ago. Skipping.")
-                .arg(lastDownloadTime.secsTo(now)), 3000
-                );
+    }*/
+
+    if(lastDownloadTime.secsTo(now) < 30) {
+        emit hasGuiMessage(QString("Whazzup checked %1s (less than 30s) ago. Skipping.")
+                           .arg(lastDownloadTime.secsTo(now)), GuiMessage::Temporary);
         qDebug() << "Whazzup already checked less than 30 seconds ago. Skipping.";
         return; // don't allow download intervals < 30s
     }
     lastDownloadTime = now;
 
-    int index = rand() % urls.size();
-    QString fileLocation = urls[index];
+    QUrl url(urls[qrand() % urls.size()]);
 
-    QUrl url(fileLocation);
-    QFileInfo fileInfo(url.path());
-    QString fileName = fileInfo.fileName();
-
-    Window::getInstance()->setStatusText(QString("Updating whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)));
-    qDebug() << "Downloading Whazzup from\t" << fileLocation;
+    emit hasGuiMessage(QString("Updating whazzup from %1").arg(url.toString(QUrl::RemoveUserInfo)), GuiMessage::ProgressBar, "whazzupDownload");
 
     if(whazzupDownloader != 0) {
         whazzupDownloader->abort();
@@ -235,15 +219,13 @@ void Whazzup::download() {
 }
 
 void Whazzup::whazzupDownloading(int prog, int tot) {
-    Window::getInstance()->setProgressBar(prog, tot);
+    emit hasGuiMessage("", GuiMessage::ProgressBar, "whazzupDownload", prog, tot);
 }
 
 void Whazzup::whazzupDownloaded(bool error) {
-    //qDebug() << "Whazzup received";
-    Window::getInstance()->setProgressBar(false);
+    emit hasGuiMessage("", GuiMessage::Remove, "whazzupDownload");
     if(whazzupBuffer == 0) {
-        emit downloadError("Download Error. Buffer unavailable.");
-        emit newData(false); // update statusbar
+        emit hasGuiMessage("Download Error. Buffer unavailable.", GuiMessage::ErrorUserAttention);
         return;
     }
 
@@ -251,34 +233,26 @@ void Whazzup::whazzupDownloaded(bool error) {
         downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
 
     if(whazzupBuffer->data().isEmpty()) {
-        emit networkMessage("No data in Whazzup.");
-        emit newData(false); // update statusbar
+        emit hasGuiMessage("No data in Whazzup.", GuiMessage::Warning);
         return;
     }
 
     if(error) {
-        emit downloadError(statusDownloader->errorString());
-        emit newData(false); // update statusbar
+        emit hasGuiMessage(whazzupDownloader->errorString(), GuiMessage::Warning);
         return;
     }
-    // splash screen
-    QPixmap pixmap(":/splash/splash");
-    QSplashScreen *splash = new QSplashScreen(pixmap);
-    splash->show();
-    splash->showMessage("Processing Whazzup...", Qt::AlignCenter, QColor(0, 24, 81));
+    emit hasGuiMessage("Processing Whazzup", GuiMessage::Persistent, "whazzupProcess");
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
     WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
 
-    splash->showMessage(tr("Processing Whazzup......"), Qt::AlignCenter, QColor(0, 24, 81));
-
-
     whazzupBuffer->close();
     if(!newWhazzupData.isNull()) {
 
         if(newWhazzupData.timestamp().secsTo(QDateTime::currentDateTime().toUTC()) > 60 * 30)
-            emit networkMessage("Whazzup data more than 30 minutes old.");
+            emit hasGuiMessage("Whazzup data more than 30 minutes old.", GuiMessage::Warning);
 
         if(newWhazzupData.timestamp() != data.timestamp()) {
             data.updateFrom(newWhazzupData);
@@ -287,7 +261,7 @@ void Whazzup::whazzupDownloaded(bool error) {
 
             if(Settings::saveWhazzupData()){
                 // write out Whazzup to a file
-                QString filename = QString("downloaded/%1_%2.whazzup")
+                QString filename = QString(qApp->applicationDirPath() + "/downloaded/%1_%2.whazzup")
                           .arg(Settings::downloadNetwork())
                           .arg(data.timestamp().toString("yyyyMMdd-HHmmss"));
                 QFile out(filename);
@@ -302,26 +276,19 @@ void Whazzup::whazzupDownloaded(bool error) {
             emit newData(true);
         }
         else {
-            Window::getInstance()->statusBar()->showMessage(
-                    QString("We already have Whazzup with that Timestamp: %1")
-                    .arg(data.timestamp().toString("ddd MM/dd HHmm'z'")), 3000);
-            //qDebug() << "We already have Whazzup with that Timestamp\t" << data.timestamp().toString();
-            emit newData(false);
+            emit hasGuiMessage(QString("We already have Whazzup with that Timestamp: %1")
+                               .arg(data.timestamp().toString("ddd MM/dd HHmm'z'")));
         }
     }
-    splash->finish(Window::getInstance());
-    qDebug() << "Whazzup update completed";
+    emit hasGuiMessage("", GuiMessage::Remove, "whazzupProcess");
 }
 
 void Whazzup::downloadBookings() {
     QUrl url(Settings::bookingsLocation());
-    QFileInfo fileInfo(url.path());
-    QString fileName = fileInfo.fileName();
 
     bookingsTimer->stop();
 
-    Window::getInstance()->setStatusText(QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
-    qDebug() << "Downloading ATC bookings from\t" << url.toString(QUrl::RemoveUserInfo);
+    emit hasGuiMessage(QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)), GuiMessage::ProgressBar, "bookingsDownload");
 
     if(bookingsDownloader != 0) {
         bookingsDownloader->abort();
@@ -346,15 +313,13 @@ void Whazzup::downloadBookings() {
 }
 
 void Whazzup::bookingsDownloading(int prog, int tot) {
-    Window::getInstance()->setProgressBar(prog, tot);
+    emit hasGuiMessage("", GuiMessage::ProgressBar, "bookingsDownload", prog, tot);
 }
 
 void Whazzup::bookingsDownloaded(bool error) {
-    //qDebug() << "Bookings received";
-    Window::getInstance()->setProgressBar(false);
+    emit hasGuiMessage("", GuiMessage::Remove, "bookingsDownload");
     if(bookingsBuffer == 0) {
-        emit downloadError("Download Error. Buffer unavailable.");
-        emit newData(false); // update statusbar
+        emit hasGuiMessage("Download Error. Buffer unavailable.", GuiMessage::ErrorUserAttention);
         return;
     }
 
@@ -364,34 +329,28 @@ void Whazzup::bookingsDownloaded(bool error) {
 
     bookingsBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     if(bookingsBuffer->data().isEmpty()) {
-        emit networkMessage("No data in Bookings.");
-        emit newData(false); // update statusbar
+        emit hasGuiMessage("No data in Bookings.", GuiMessage::Warning);
         return;
     }
 
     if(error) {
-        emit downloadError(bookingsDownloader->errorString());
-        emit newData(false); // update statusbar
+        emit hasGuiMessage(bookingsDownloader->errorString(), GuiMessage::Warning);
         return;
     }
-
-    // splash screen
-    QPixmap pixmap(":/splash/splash");
-    QSplashScreen *splash = new QSplashScreen(pixmap);
-    splash->show();
-    splash->showMessage("Processing Bookings...", Qt::AlignCenter, QColor(0, 24, 81));
+    emit hasGuiMessage("Processing Bookings", GuiMessage::Persistent, "bookingsProcess");
+    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
 
     WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
     if(!newBookingsData.isNull()) {
         if(newBookingsData.bookingsTimestamp().secsTo(QDateTime::currentDateTime().toUTC()) > 60 * 60 * 3)
-                emit networkMessage("Bookings data more than 3 hours old.");
+            emit hasGuiMessage("Bookings data more than 3 hours old.", GuiMessage::Warning);
 
         if(newBookingsData.bookingsTimestamp() != data.bookingsTimestamp()) {
             data.updateFrom(newBookingsData);
             qDebug() << "Bookings updated from timestamp\t" << data.bookingsTimestamp().toString();
 
-            QFile out(QString("downloaded/%1_%2.bookings")
+            QFile out(QString(qApp->applicationDirPath() + "/downloaded/%1_%2.bookings")
                       .arg(Settings::downloadNetwork())
                       .arg(data.bookingsTimestamp().toString("yyMMdd-HHmmss")));
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -402,14 +361,12 @@ void Whazzup::bookingsDownloaded(bool error) {
 
             emit newData(true);
         } else {
-            Window::getInstance()->statusBar()->showMessage(
-                    QString("We already have Bookings with that Timestamp: %1")
-                    .arg(data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")), 3000);
+            emit hasGuiMessage(QString("We already have Bookings with that Timestamp: %1")
+                               .arg(data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")));
             //qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
-            emit newData(false);
         }
     }
-    splash->finish(Window::getInstance());
+    emit hasGuiMessage("", GuiMessage::Remove, "bookingsProcess");
 }
 
 QString Whazzup::getUserLink(const QString& id) const {
@@ -426,6 +383,7 @@ QString Whazzup::getAtisLink(const QString& id) const {
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
     if (this->predictedTime != predictedTime) {
+        emit hasGuiMessage("Calculating Warp...", GuiMessage::Persistent, "warpProcess");
         this->predictedTime = predictedTime;
         if (Settings::downloadBookings() && !data.bookingsTimestamp().isValid()) {
             emit needBookings();
@@ -433,13 +391,14 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
 
         WhazzupData newdata = WhazzupData(predictedTime, data);
         predictedData.updateFrom(newdata);
+        emit hasGuiMessage("", GuiMessage::Remove, "warpProcess");
         emit newData(true);
     }
 }
 
 QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
     // Process directory
-    QStringList list = QDir("downloaded/").entryList(
+    QStringList list = QDir(qApp->applicationDirPath() + "/downloaded/").entryList(
                 QStringList(QString("%1_*.whazzup").arg(Settings::downloadNetwork())),
                 QDir::Files | QDir::Readable);
     list.sort();
@@ -452,7 +411,7 @@ QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
             dt.setTimeSpec(Qt::UTC);
             returnList.append(QPair<QDateTime, QString>(
                     dt,
-                    QString("downloaded/%1").arg(list[i])
+                    QString(qApp->applicationDirPath() + "/downloaded/%1").arg(list[i])
             ));
         }
     }

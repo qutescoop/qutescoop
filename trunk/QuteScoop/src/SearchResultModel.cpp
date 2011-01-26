@@ -72,7 +72,8 @@ void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double
     double lat = content[index.row()]->lat;
     double lon = content[index.row()]->lon;
 
-    Window::getInstance()->showOnMap(lat, lon);
+    if (Window::getInstance(false) != 0)
+        Window::getInstance(true)->showOnMap(lat, lon);
 }
 
 void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the Details, as is the case on the map

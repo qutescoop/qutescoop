@@ -23,12 +23,10 @@ class PlanFlightDialog : public QDialog, private Ui::PlanFlightDialog {
     Q_OBJECT
 
 public:
-    static PlanFlightDialog *getInstance(bool createIfNoInstance = true);
+    static PlanFlightDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void plotPlannedRoute() const;
 
 signals:
-    void networkMessage(QString message);
-    void downloadError(QString message);
     void fpDownloaded();
 
 private slots:
@@ -43,7 +41,7 @@ private slots:
     void routeSelected(const QModelIndex& index);
 
 private:
-    PlanFlightDialog();
+    PlanFlightDialog(QWidget *parent);
 
     void requestGenerated();
     void requestVroute();

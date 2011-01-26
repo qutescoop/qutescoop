@@ -8,9 +8,11 @@
 
 //singleton instance
 PilotDetails *pilotDetails = 0;
-PilotDetails* PilotDetails::getInstance(bool createIfNoInstance) {
+PilotDetails* PilotDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(pilotDetails == 0)
-        if (createIfNoInstance) pilotDetails = new PilotDetails();
+        if (createIfNoInstance) {
+            if (parent != 0) pilotDetails = new PilotDetails(parent);
+        }
     return pilotDetails;
 }
 
@@ -21,15 +23,15 @@ void PilotDetails::destroyInstance() {
 }
 
 
-PilotDetails::PilotDetails():
-    ClientDetails(),
+PilotDetails::PilotDetails(QWidget *parent):
+    ClientDetails(parent),
     pilot(0)
 {
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-    connect(this, SIGNAL(showOnMap(double, double)), Window::getInstance(), SLOT(showOnMap(double, double)));
+    connect(this, SIGNAL(showOnMap(double, double)), qobject_cast<Window *>(this->parent()), SLOT(showOnMap(double, double)));
 }
 
 void PilotDetails::refresh(Pilot *newPilot) {
@@ -159,6 +161,6 @@ void PilotDetails::on_cbPlotRoute_toggled(bool checked)
 {
     if (pilot->displayLineToDest != checked) {
         pilot->toggleDisplayPath();
-        Window::getInstance()->updateGLPilots();
+        qobject_cast<Window *>(this->parent())->updateGLPilots();
     }
 }

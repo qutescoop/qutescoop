@@ -23,7 +23,7 @@ signals:
     void showOnMap(double lat, double lon);
 
 protected:
-    ClientDetails();
+    ClientDetails(QWidget *parent);
     void setMapObject(MapObject *object);
 
 protected slots:

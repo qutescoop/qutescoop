@@ -18,17 +18,17 @@
 #include "ListClientsDialog.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
+#include "GuiMessage.h"
+
+
 
 class Window : public QMainWindow, private Ui::MainWindow {
 
 Q_OBJECT
 
 public:
-    static Window* getInstance();
+    static Window* getInstance(bool createIfNoInstance = false);
     //~Window();
-    void setStatusText(QString text);
-    void setProgressBar(int prog, int tot);
-    void setProgressBar(bool isVisible);
     void setEnableBookedAtc(bool enable);
     void setPlotFlightPlannedRoute(bool value);
     void shootScreenshot();
@@ -39,6 +39,9 @@ public slots:
     void updateMetarDecoder(const QString& airport, const QString& decodedText);
     void refreshFriends();
     void updateGLPilots();
+
+    // the message system
+    void showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType = GuiMessage::Temporary, QString id = QString(), int progress = 0, int total = 0);
 
 private slots:
     void on_actionShowRoutes_triggered(bool checked);
@@ -80,8 +83,6 @@ private slots:
 
     void about();
 
-    void networkMessage(QString message);
-    void downloadError(QString message);
     void toggleFullscreen();
     void whazzupDownloaded(bool isNew = true);
     void mapClicked(int x, int y, QPoint absolutePos);
@@ -108,8 +109,11 @@ private slots:
 
     void versionDownloaded(bool error);
     void downloadWatchdogTriggered();
-    void dataVersionDownloaded();
-    void newDataVersionsDownloaded();
+
+    // datafiles update
+    void dataVersionsDownloaded(bool error);
+    void dataFilesRequestFinished(int id, bool error);
+    void dataFilesDownloaded(bool error);
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
@@ -134,17 +138,19 @@ private:
     MetarModel metarModel;
 
     QHttp *versionChecker;
-    QHttp *dataVersionChecker;
     QBuffer *versionBuffer;
-    QFile *dataversionBuffer;
-    QStringList filesToUpdate;
-    QList<QFile*> datadownloads;
+
+    QHttp *dataVersionsAndFilesDownloader;
+    QBuffer *dataVersionsBuffer;
+    QList<QFile*> dataFilesToDownload;
 
     QTime timePredictTime_old;
     QDate datePredictTime_old;
 
     QLabel *lblStatus;
     QProgressBar *progressBar;
+
+    QMultiMap< QDateTime, GuiMessage > guiMessages;
 };
 
 #endif /*WINDOW_H_*/

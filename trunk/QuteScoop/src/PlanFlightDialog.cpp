@@ -18,14 +18,16 @@
 
 PlanFlightDialog *planFlightDialogInstance = 0;
 
-PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance) {
+PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(planFlightDialogInstance == 0)
-        if (createIfNoInstance) planFlightDialogInstance = new PlanFlightDialog();
+        if (createIfNoInstance) {
+            if (parent != 0) planFlightDialogInstance = new PlanFlightDialog(parent);
+        }
     return planFlightDialogInstance;
 }
 
-PlanFlightDialog::PlanFlightDialog():
-    QDialog(Window::getInstance())
+PlanFlightDialog::PlanFlightDialog(QWidget *parent):
+    QDialog(parent)
 {
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
@@ -41,8 +43,6 @@ PlanFlightDialog::PlanFlightDialog():
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
     connect(treeRoutes, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
-    connect(this, SIGNAL(networkMessage(QString)), Window::getInstance(), SLOT(networkMessage(QString)));
-    connect(this, SIGNAL(downloadError(QString)), Window::getInstance(), SLOT(downloadError(QString)));
 
     lblPlotStatus->setText(QString(""));
     linePlotStatus->setVisible(false);
@@ -76,7 +76,8 @@ void PlanFlightDialog::requestGenerated() {
     r->dep = edDep->text();
     r->dest = edDest->text();
     r->route = QString("DCT");
-    r->comments = QString("Just the direct route");
+    r->comments = QString("just for reference");
+    r->lastChange = QString("just now");
 
     r->calculateWaypointsAndDistance();
 
@@ -316,7 +317,7 @@ void PlanFlightDialog::routeSelected(const QModelIndex& index) {
         return;
     }
     selectedRoute = routes[routesSortModel->mapToSource(index).row()];
-    if(cbPlot->isChecked()) Window::getInstance()->setPlotFlightPlannedRoute(true);
+    if(cbPlot->isChecked()) qobject_cast<Window *>(this->parent())->setPlotFlightPlannedRoute(true);
 }
 
 void PlanFlightDialog::plotPlannedRoute() const {
@@ -354,7 +355,7 @@ void PlanFlightDialog::plotPlannedRoute() const {
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked)
 {
-    Window::getInstance()->setPlotFlightPlannedRoute(checked);
+    qobject_cast<Window *>(this->parent())->setPlotFlightPlannedRoute(checked);
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);
 }
@@ -377,7 +378,7 @@ void PlanFlightDialog::on_textRoute_textChanged()
         selectedRoute = new Route(sl);
     }
     selectedRoute->flightPlan = textRoute->toPlainText();
-    if(cbPlot->isChecked()) Window::getInstance()->setPlotFlightPlannedRoute(true);
+    if(cbPlot->isChecked()) qobject_cast<Window *>(this->parent())->setPlotFlightPlannedRoute(true);
 }
 */
 

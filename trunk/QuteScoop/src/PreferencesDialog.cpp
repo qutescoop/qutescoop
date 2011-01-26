@@ -16,14 +16,16 @@
 
 PreferencesDialog *preferencesDialogInstance = 0;
 
-PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance) {
+PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(preferencesDialogInstance == 0)
-        if (createIfNoInstance) preferencesDialogInstance = new PreferencesDialog();
+        if (createIfNoInstance) {
+            if (parent != 0) preferencesDialogInstance = new PreferencesDialog(parent);
+        }
     return preferencesDialogInstance;
 }
 
-PreferencesDialog::PreferencesDialog():
-    QDialog(Window::getInstance()),
+PreferencesDialog::PreferencesDialog(QWidget *parent):
+    QDialog(parent),
     settingsLoaded(false)
 {
     setupUi(this);
@@ -856,7 +858,7 @@ void PreferencesDialog::on_sbZoomFactor_valueChanged(double value)
 void PreferencesDialog::on_gbDownloadBookings_toggled(bool checked)
 {
     Settings::setDownloadBookings(checked);
-    Window::getInstance()->setEnableBookedAtc(checked);
+    qobject_cast<Window *>(this->parent())->setEnableBookedAtc(checked);
 }
 
 void PreferencesDialog::on_cbTrackFront_toggled(bool checked)
@@ -885,7 +887,7 @@ void PreferencesDialog::on_pbImportFromFile_clicked()
                                  tr("QuteScoop closes now. Please restart for the settings to take effect."));
         loadSettings();
         qApp->processEvents();
-        Window::getInstance()->close();
+        qobject_cast<Window *>(this->parent())->close();
     }
 }
 
@@ -908,7 +910,7 @@ void PreferencesDialog::on_cbShootScreenshots_toggled(bool checked)
 
 void PreferencesDialog::on_pbStylesheetUpdate_clicked()
 {
-    Window::getInstance()->setStyleSheet(tedStylesheet->toPlainText());
+    qobject_cast<Window *>(this->parent())->setStyleSheet(tedStylesheet->toPlainText());
     Settings::setStylesheet(tedStylesheet->toPlainText());
 }
 

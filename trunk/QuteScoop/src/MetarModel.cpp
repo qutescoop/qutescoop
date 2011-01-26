@@ -3,10 +3,7 @@
  **************************************************************************/
 
 #include <QUrl>
-#include <QFileInfo>
 #include <QDebug>
-#include <QMessageBox>
-#include <QDialog>
 
 #include "MetarModel.h"
 #include "Settings.h"
@@ -124,7 +121,7 @@ void MetarModel::modelClicked(const QModelIndex& index) {
     Airport *a = metarList[index.row()];
     if(a == 0) return;
 
-    Window::getInstance()->updateMetarDecoder(a->label,
+    qobject_cast<Window *>(qApp->allWidgets().first())->updateMetarDecoder(a->label,
             a->metar.encoded + "<hr>" + a->metar.decodedHtml());
 }
 

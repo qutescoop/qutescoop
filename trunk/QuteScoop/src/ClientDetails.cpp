@@ -9,39 +9,39 @@
 
 #include <QTimer>
 
-ClientDetails::ClientDetails():
-	QDialog(Window::getInstance())
+ClientDetails::ClientDetails(QWidget *parent):
+        QDialog(parent)
 {
-	setModal(false);
+    setModal(false);
 }
 
 void ClientDetails::setMapObject(MapObject *object) {
-	lat = object->lat;
-	lon = object->lon;
-	Client *c = dynamic_cast<Client*>(object);
-	if(c != 0) {
-		userId = c->userId;
-		callsign = c->label;
-	} else {
-		userId = QString();
-		callsign = QString();
-	}
+    lat = object->lat;
+    lon = object->lon;
+    Client *c = dynamic_cast<Client*>(object);
+    if(c != 0) {
+        userId = c->userId;
+        callsign = c->label;
+    } else {
+        userId = QString();
+        callsign = QString();
+    }
 }
 
 void ClientDetails::showOnMap() {
-	emit showOnMap(lat, lon);
+    emit showOnMap(lat, lon);
 }
 
 void ClientDetails::friendClicked() {
-	if(!userId.isEmpty()) {
-		QStringList friends = Settings::friends();
-		if(friends.contains(userId)) {
-			// was friend, remove it
-			Settings::removeFriend(userId);
-		} else {
-			// new friend
-			Settings::addFriend(userId);
-		}
-	}
-	Window::getInstance()->refreshFriends();
+    if(!userId.isEmpty()) {
+        QStringList friends = Settings::friends();
+        if(friends.contains(userId)) {
+            // was friend, remove it
+            Settings::removeFriend(userId);
+        } else {
+            // new friend
+            Settings::addFriend(userId);
+        }
+    }
+    qobject_cast<Window *>(this->parent())->refreshFriends();
 }
