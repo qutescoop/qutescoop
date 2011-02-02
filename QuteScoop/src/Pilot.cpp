@@ -66,7 +66,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
 
     // anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
-    if(planRoute.count('/') > 4)
+    if(planRoute.count("/") > 4)
         planRoute.replace(QRegExp("[/]"), " ");
 
     if(planRoute.isEmpty())
@@ -253,7 +253,7 @@ QString Pilot::rank() const {
 }
 
 QString Pilot::aircraftType() const {
-    QStringList acftSegments = planAircraft.split('/');
+    QStringList acftSegments = planAircraft.split("/");
 
     if(network == IVAO && acftSegments.size() >= 2) {
         return acftSegments[1];

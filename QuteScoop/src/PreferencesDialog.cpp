@@ -8,6 +8,7 @@
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "math.h"
 
@@ -68,18 +69,29 @@ void PreferencesDialog::loadSettings() {
     editProxyUser->setText(Settings::proxyUser());
     editProxyPassword->setText(Settings::proxyPassword());
 
-    cbReadSupFile->setChecked(Settings::useSupFile());
+    // directories
+    lblCalculatedApplicationDataDirectory->setText(QString("Testing availablility and writability of these locations:\n1) %1\n2) %2")
+                                                   .arg(QCoreApplication::applicationDirPath())
+                                                   .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation)));
+    lblApplicationDataDirectory->setText(Settings::applicationDataDirectory());
+    lblScreenshotsDirectory->setText(Settings::applicationDataDirectory("screenshots/"));
 
-    spinBoxTimeline->setValue(Settings::timelineSeconds());
-    cbLineSmoothing->setChecked(Settings::displaySmoothLines());
-    cbDotSmoothing->setChecked(Settings::displaySmoothDots());
 
+    // XPlane-Navdata
     editNavdir->setText(Settings::navdataDirectory());
     editNavdir->setEnabled(Settings::useNavdata());
     browseNavdirButton->setEnabled(Settings::useNavdata());
     cbUseNavDatabase->setChecked(Settings::useNavdata());
     cbShowFixes->setChecked(Settings::showFixes());
 
+    // Display
+    cbReadSupFile->setChecked(Settings::useSupFile());
+
+    spinBoxTimeline->setValue(Settings::timelineSeconds());
+    cbLineSmoothing->setChecked(Settings::displaySmoothLines());
+    cbDotSmoothing->setChecked(Settings::displaySmoothDots());
+
+    // Show routes
     cbDashedFrontAfter->setCurrentIndex(0);
     if(!Settings::dashedTrackInFront())
         cbDashedFrontAfter->setCurrentIndex(1);
@@ -366,6 +378,13 @@ void PreferencesDialog::on_cbLineSmoothing_stateChanged(int state) {
 
 void PreferencesDialog::on_cbDotSmoothing_stateChanged(int state) {
     Settings::setDisplaySmoothDots(state == Qt::Checked);
+}
+
+void PreferencesDialog::on_pbRetestApplicationDataDirectory_clicked()
+{
+    Settings::setApplicationDataDirectory(Settings::calculateApplicationDataDirectory());
+    lblApplicationDataDirectory->setText(Settings::applicationDataDirectory());
+    lblScreenshotsDirectory->setText(Settings::applicationDataDirectory("screenshots/"));
 }
 
 void PreferencesDialog::on_editNavdir_editingFinished() {
@@ -976,3 +995,4 @@ QLabel {\n\
         "));
     }
 }
+

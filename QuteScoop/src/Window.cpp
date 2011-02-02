@@ -95,8 +95,6 @@ Window::Window(QWidget *parent) :
             << "\t| gl/accumbuffer" << glWidget->format().accum()
             << "\t| gl/accumsize" << glWidget->format().accumBufferSize();
 
-
-
     clientSelection = new ClientSelectionWidget();
 
     // Status- & ProgressBar
@@ -117,15 +115,13 @@ Window::Window(QWidget *parent) :
     connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
     connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
 
-    qDebug() << "Expecting data directory at" << Settings::dataDirectory() << "(Option: general/dataDirectory)";
-
     Whazzup *whazzup = Whazzup::getInstance();
     connect(whazzup, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
             this, SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
-    // these 2 get disconnected and connected again to inhibit unnecessary updates;
+    // these 2 get disconnected and connected again to inhibit unnecessary updates:
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
@@ -200,8 +196,8 @@ Window::Window(QWidget *parent) :
 
     // Forecast / Predict settings
     framePredict->hide();
-    warpTimer.stop();
-    connect(&warpTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
+    editPredictTimer.stop();
+    connect(&editPredictTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
     runPredictTimer.stop();
     connect(&runPredictTimer, SIGNAL(timeout()), this, SLOT(runPredict()));
     widgetRunPredict->hide();
@@ -211,6 +207,11 @@ Window::Window(QWidget *parent) :
     lblWarpInfo->setFont(font); //make it a bit smaller than standard text
 
     setEnableBookedAtc(Settings::downloadBookings());
+
+    //LogBrowser
+#ifdef QT_NO_DEBUG_OUTPUT
+    menuView->removeAction(actionDebugLog);
+#endif
 }
 
 void Window::toggleFullscreen() {
@@ -236,7 +237,7 @@ void Window::showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType, QSt
         QMessageBox::information(this, id, msg);
         break;
     case GuiMessage::ProgressBar:
-        qDebug() << "guiMessage[ProgressBar]" << id << msg << progress << total;
+        //qDebug() << "guiMessage[ProgressBar]" << id << msg << progress << total;
         if (!msg.isEmpty()) lblStatus->setText(msg);
         progressBar->setWhatsThis(id);
         progressBar->show();
@@ -334,13 +335,12 @@ void Window::whazzupDownloaded(bool isNew) {
 
     if (Whazzup::getInstance()->getPredictedTime().isValid()) {
         framePredict->show();
-        timePredictTime->setTime(Whazzup::getInstance()->getPredictedTime().time());
-        datePredictTime->setDate(Whazzup::getInstance()->getPredictedTime().date());
+        dateTimePredict->setDateTime(Whazzup::getInstance()->getPredictedTime());
         if(isNew) {
             // recalculate prediction on new data arrived
             if(data.predictionBasedOnTimestamp() != realdata.timestamp()
                 || data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {
-                Whazzup::getInstance()->setPredictedTime(QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC));
+                Whazzup::getInstance()->setPredictedTime(dateTimePredict->dateTime());
             }
         }
     }
@@ -716,7 +716,7 @@ void Window::dataVersionsDownloaded(bool error) {
         //qDebug() << "Server versions are " << rawPair.first << " : " << rawPair.second;
     }
 
-    QFile localVersionsFile(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+    QFile localVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
     if (!localVersionsFile.open(QIODevice::ReadOnly | QIODevice::Text))  {
         showGuiMessage(QString("Could not read %1.\nThus we are updating all datafiles.")
                        .arg(localVersionsFile.fileName()),
@@ -742,8 +742,7 @@ void Window::dataVersionsDownloaded(bool error) {
         // download also files that are locally not available
         if(serverDataVersionsList[i].second >
            localDataVersionsList.value(i, QPair< QString, int>(QString(), 0)).second){
-            dataFilesToDownload.append(new QFile(QString("%1%2.newFromServer")
-                                                 .arg(Settings::dataDirectory())
+            dataFilesToDownload.append(new QFile(Settings::applicationDataDirectory("data/%1.newFromServer")
                                                  .arg(serverDataVersionsList[i].first)));
             QUrl url(QString("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
                  .arg(serverDataVersionsList[i].first));
@@ -819,7 +818,7 @@ void Window::dataFilesDownloaded(bool error) {
     }
 
     if (errors == 0) {
-        QFile localDataVersionsFile(QString("%1dataversions.txt").arg(Settings::dataDirectory()));
+        QFile localDataVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
         if (localDataVersionsFile.open(QIODevice::WriteOnly))
             localDataVersionsFile.write(dataVersionsBuffer->data());
         else
@@ -859,9 +858,9 @@ void Window::setEnableBookedAtc(bool enable) {
 
 void Window::performWarp(bool forceUseDownloaded)
 {
-    warpTimer.stop();
+    editPredictTimer.stop();
 
-    QDateTime warpToTime = QDateTime(datePredictTime->date(), timePredictTime->time(), Qt::UTC);
+    QDateTime warpToTime = dateTimePredict->dateTime();
     if(cbUseDownloaded->isChecked() || forceUseDownloaded) { // use downloaded Whazzups for (past) replay
         qDebug() << "Using downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
@@ -875,7 +874,8 @@ void Window::performWarp(bool forceUseDownloaded)
 
                     Whazzup::getInstance()->fromFile(downloaded[i].second);
 
-                    qApp->processEvents();
+                    // keep GUI responsive - leads to hangups?
+                    //qApp->processEvents();
                     connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
                     connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
                 }
@@ -888,8 +888,8 @@ void Window::performWarp(bool forceUseDownloaded)
 
 void Window::on_cbUseDownloaded_toggled(bool checked)
 {
+    qDebug() << "cbUseDownloaded_toggled()" << checked;
     if (!checked) {
-        qDebug() << "Resetting to newest downloaded Whazzup";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
         if (!downloaded.isEmpty()) {
             // disconnect to inhibit update because will be updated later
@@ -898,7 +898,8 @@ void Window::on_cbUseDownloaded_toggled(bool checked)
 
             Whazzup::getInstance()->fromFile(downloaded.last().second);
 
-            qApp->processEvents();
+            // keep GUI responsive - leads to hangups?
+            //qApp->processEvents();
             connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
             connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
         }
@@ -908,69 +909,115 @@ void Window::on_cbUseDownloaded_toggled(bool checked)
 
 void Window::on_tbDisablePredict_clicked()
 {
+    qDebug() << "Window::tbDisablePredict_clicked()";
     actionPredict->setChecked(false);
 }
 
-void Window::on_datePredictTime_dateChanged(QDate date)
+void Window::on_actionPredict_toggled(bool enabled)
 {
-    warpTimer.stop();
-
-    QDate newDate;
-    // make month change if lastday+ or 0-
-    if (!tbRunPredict->isChecked()) {
-        if (datePredictTime_old.day() == datePredictTime_old.daysInMonth() && date.day() == 1)
-            newDate = date.addMonths(1);
-        if (datePredictTime_old.day() == 1 && date.day() == date.daysInMonth())
-            newDate = date.addMonths(-1);
-    }
-
-    datePredictTime_old = date;
-    if(newDate.isValid())
-        datePredictTime->setDate(newDate);
-
-    warpTimer.start(1000);
-}
-
-void Window::on_timePredictTime_timeChanged(QTime time)
-{
-    warpTimer.stop();
-
-    QTime newTime;
-    if (!tbRunPredict->isChecked()) {
-        // make hour change if 59+ or 0-
-        if (timePredictTime_old.minute() == 59 && time.minute() == 0)
-            newTime = time.addSecs(60 * 60);
-        if (timePredictTime_old.minute() == 0 && time.minute() == 59)
-            newTime = time.addSecs(-60 * 60);
-
-        // make date change if 23+ or 00-
-        if (timePredictTime_old.hour() == 23 && time.hour() == 0)
-            datePredictTime->setDate(datePredictTime->date().addDays(1));
-        if (timePredictTime_old.hour() == 0 && time.hour() == 23)
-            datePredictTime->setDate(datePredictTime->date().addDays(-1));
-    }
-
-    timePredictTime_old = time;
-    if (newTime.isValid())
-        timePredictTime->setTime(newTime);
-
-    warpTimer.start(1000);
-}
-
-void Window::on_actionPredict_toggled(bool value)
-{
-    if(value) {
-        datePredictTime->setDate(QDateTime::currentDateTime().toUTC().date());
-        timePredictTime->setTime(QDateTime::currentDateTime().toUTC().time()
-                                 .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove second fraction
+    qDebug() << "Window::actionPredict_toggled()" << enabled;
+    if(enabled) {
+        dateTimePredict->setDateTime(
+                QDateTime::currentDateTime().toUTC()
+                .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove seconds
         framePredict->show();
     } else {
+        tbRunPredict->setChecked(false);
         runPredictTimer.stop();
+
         Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
         cbUseDownloaded->setChecked(false);
         framePredict->hide();
         widgetRunPredict->hide();
     }
+}
+
+void Window::on_tbRunPredict_toggled(bool checked)
+{
+    if(checked) {
+        dateTimePredict->setEnabled(false);
+        widgetRunPredict->show();
+        if(!Whazzup::getInstance()->getPredictedTime().isValid())
+            performWarp();
+        runPredictTimer.start(1000);
+    } else {
+        runPredictTimer.stop();
+        widgetRunPredict->hide();
+        dateTimePredict->setEnabled(true);
+    }
+}
+
+void Window::runPredict() {
+    runPredictTimer.stop();
+    QDateTime to;
+    if (dsRunPredictStep->value() == 0) { // real time selected
+        to = QDateTime::currentDateTime().toUTC();
+    } else {
+        to = Whazzup::getInstance()->getPredictedTime().addSecs(
+                static_cast<int>(dsRunPredictStep->value()*60));
+    }
+
+    // setting dateTimePredict without "niceify"
+    disconnect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    dateTimePredict->setDateTime(to);
+    connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+
+    performWarp();
+    runPredictTimer.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
+}
+
+void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime)
+{
+    // some niceify on the default behaviour, making the sections depend on each other
+    disconnect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    editPredictTimer.stop();
+
+    // make year change if M 12+ or 0-
+    if ((dateTimePredict_old.date().month() == 12)
+        && (dateTime.date().month() == 1))
+        dateTime = dateTime.addYears(1);
+    if ((dateTimePredict_old.date().month() == 1)
+        && (dateTime.date().month() == 12))
+        dateTime = dateTime.addYears(-1);
+
+    // make month change if d lastday+ or 0-
+    if ((dateTimePredict_old.date().day() == dateTimePredict_old.date().daysInMonth())
+        && (dateTime.date().day() == 1)) {
+        dateTime = dateTime.addMonths(1);
+    }
+    if ((dateTimePredict_old.date().day() == 1)
+        && (dateTime.date().day() == dateTime.date().daysInMonth())) {
+        dateTime = dateTime.addMonths(-1);
+        dateTime = dateTime.addDays( // compensate for month lengths
+                dateTime.date().daysInMonth()
+                - dateTimePredict_old.date().daysInMonth());
+    }
+
+    // make day change if h 23+ or 00-
+    if ((dateTimePredict_old.time().hour() == 23)
+        && (dateTime.time().hour() == 0))
+        dateTime = dateTime.addDays(1);
+    if ((dateTimePredict_old.time().hour() == 0)
+        && (dateTime.time().hour() == 23))
+        dateTime = dateTime.addDays(-1);
+
+    // make hour change if m 59+ or 0-
+    if ((dateTimePredict_old.time().minute() == 59)
+        && (dateTime.time().minute() == 0))
+        dateTime = dateTime.addSecs(60 * 60);
+    if ((dateTimePredict_old.time().minute() == 0)
+        && (dateTime.time().minute() == 59))
+        dateTime = dateTime.addSecs(-60 * 60);
+
+    dateTimePredict_old = dateTime;
+
+    if(dateTime.isValid()
+        && (dateTime != dateTimePredict->dateTime())) {
+        dateTimePredict->setDateTime(dateTime);
+    }
+
+    connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    editPredictTimer.start(1000);
 }
 
 void Window::on_actionRecallMapPosition_triggered()
@@ -1077,44 +1124,12 @@ void Window::updateGLPilots() {
     glWidget->updateGL();
 }
 
-void Window::on_tbRunPredict_toggled(bool checked)
-{
-    if(checked) {
-        widgetRunPredict->show();
-        if(!Whazzup::getInstance()->getPredictedTime().isValid())
-            performWarp();
-        runPredictTimer.start(1000);
-    } else {
-        widgetRunPredict->hide();
-        runPredictTimer.stop();
-    }
-}
-
-void Window::runPredict() {
-    runPredictTimer.stop();
-    QDateTime to;
-    if (dsRunPredictStep->value() == 0) { // real time selected
-        to = QDateTime::currentDateTime().toUTC();
-        datePredictTime->setEnabled(false);
-        timePredictTime->setEnabled(false);
-    } else {
-        to = Whazzup::getInstance()->getPredictedTime().addSecs(static_cast<int>(dsRunPredictStep->value()*60));
-        datePredictTime->setEnabled(true);
-        timePredictTime->setEnabled(true);
-    }
-    datePredictTime->setDate(to.date());
-    timePredictTime->setTime(to.time());
-    warpTimer.stop();
-    performWarp();
-    runPredictTimer.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
-}
-
 void Window::shootScreenshot() {
-    // screenshot (only works if QuteScoop Window is shown on top)
     QString filename = QString(qApp->applicationDirPath() + "/screenshots/%1_%2")
               .arg(Settings::downloadNetwork())
               .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss"));
 
+    // variant 1: only works if QuteScoop Window is shown on top
     QPixmap::grabWindow(glWidget->winId()).save(QString("%1.png").arg(filename), "png");
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
 
@@ -1182,3 +1197,4 @@ void Window::on_actionShowRoutes_triggered(bool checked)
         // so it will refresh itself and clear the lines
     }*/
 }
+

@@ -8,6 +8,8 @@
 
 #include <QSettings>
 #include <QApplication>
+#include <QDesktopServices>
+#include <QMessageBox>
 
 QSettings *settings_instance = 0;
 
@@ -34,6 +36,70 @@ void Settings::importFromFile(QString fileName) {
     delete settings_file;
 }
 
+
+// data directory
+QIODevice::OpenMode Settings::testDirectory(QString &dir) {
+    QIODevice::OpenMode capabilities = QIODevice::NotOpen;
+    QFile testFile(dir + "/test");
+    if (testFile.open(QIODevice::ReadWrite)) {
+        capabilities |= QIODevice::ReadWrite;
+    } else if (testFile.open(QIODevice::ReadOnly)) {
+        capabilities |= QIODevice::ReadOnly;
+    }
+    qDebug() << "Settings::testDirectory()" << dir << capabilities;
+    if (testFile.exists()) {
+        testFile.close();
+        testFile.remove();
+    }
+    return capabilities;
+}
+
+QString Settings::calculateApplicationDataDirectory() {
+    //qDebug() << "Data:" << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+                    // on Mac: /Users/<user>/Library/Application Support/QuteScoop/QuteScoop
+                    // on Ubuntu: /home/<user>/.local/share/data/QuteScoop/QuteScoop
+                    // on WinXP 32: C:\Dokumente und Einstellungen\<user>\Lokale Einstellungen\Anwendungsdaten\QuteScoop\QuteScoop
+                    // on Win7 64: \Users\<user>\AppData\local\QuteScoop\QuteScoop
+
+    QStringList dirs; // all directories to check, first one preferred
+    dirs.append(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
+    dirs.append(QCoreApplication::applicationDirPath());
+
+    QList< QIODevice::OpenMode> dirCapabilities;
+    for(int i = 0; i < dirs.size(); i++)
+        dirCapabilities.append(testDirectory(dirs[i]));
+
+    for (int i = 0; i < dirs.size(); i++) {
+        if (dirCapabilities[i].testFlag(QIODevice::ReadWrite)) {
+            return dirs[i];
+        } else if (dirCapabilities[i].testFlag(QIODevice::ReadOnly)) {
+            QMessageBox::warning(0, "Warning", QString(
+                    "The data directory at %1 was found but is readonly. This means that neither automatic sectorfile-download "
+                    "nor saving logs, screenshots or downloaded Whazzups will work.\n"
+                    "Preferrably, data should be in %2 and this location should be writable.")
+                                 .arg(dirs[i]).arg(dirs.first()));
+            return dirs[i];
+        }
+    }
+    QMessageBox::critical(0, "Critical", QString("No data directory, neither read- nor writable, was found. QuteScoop "
+                                                 "might be behaving unexpectedly.\n"
+                                                 "Preferrably, data should be in %1 and this location should be writable.\n"
+                                                 "As a second option, QuteScoop checks if required data is found where the "
+                                                 "QuteScoop executable resides.").arg(dirs.first()));
+    return QString();
+}
+
+QString Settings::applicationDataDirectory(const QString &compose) {
+    return QString("%1/%2")
+            .arg(getSettings()->value("general/calculatedApplicationDataDirectory", QVariant()).toString())
+            .arg(compose);
+}
+
+void Settings::setApplicationDataDirectory(const QString &value) {
+    getSettings()->setValue("general/calculatedApplicationDataDirectory", value);
+}
+
+//
 
 bool Settings::shootScreenshots() {
     return getSettings()->value("screenshots/shootScreenshots", false).toBool();
@@ -764,19 +830,6 @@ bool Settings::resetOnNextStart() {
 
 void Settings::setResetOnNextStart(bool value) {
     getSettings()->setValue("general/resetConfiguration", value);
-}
-
-
-QString Settings::dataDirectory() {
-//#ifdef Q_WS_X11 // removed for convenience
-//	return getSettings()->value("general/dataDirectory", "/usr/share/qutescoop/data/").toString();
-//#else
-    return getSettings()->value("general/dataDirectory", QCoreApplication::applicationDirPath() + "/data/").toString();
-//#endif
-}
-
-void Settings::setDataDirectory(const QString& value) {
-    getSettings()->setValue("general/dataDirectory", value);
 }
 
 Settings::VoiceType Settings::voiceType() {

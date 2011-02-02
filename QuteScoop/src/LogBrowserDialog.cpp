@@ -7,6 +7,8 @@
 #include <QtGui>
 
 #include "Window.h"
+#include "helpers.h"
+#include "Settings.h"
 
 LogBrowserDialog *logbrowserDialogInstance = 0;
 
@@ -24,9 +26,13 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
 
-    layout->addWidget(new QLabel(tr("Debug messages are shown here while this dialog is open. See also 'log.txt'."), this));
+    layout->addWidget(new QLabel(QString("Debug messages are shown here while this dialog is open.\nComplete log in '%1'.")
+                                 .arg(Settings::applicationDataDirectory("log.txt")), this));
 
     browser = new QTextBrowser(this);
+    browser->append(QString("LogBrowser on %1").arg(VERSION_STRING));
+    browser->append(QString("Expecting application data directory at %1 (gets calculated on each start)")
+                    .arg(Settings::applicationDataDirectory()));
     layout->addWidget(browser);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
@@ -52,14 +58,13 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
 
     resize(600, 400);
 
-    connect(this, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int))
-            , qobject_cast<Window *>(this->parent()), SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
+    connect(this, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
+            qobject_cast<Window *>(this->parent()), SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
 }
 
 
 LogBrowserDialog::~LogBrowserDialog()
 {
-    qInstallMsgHandler(0);
 }
 
 

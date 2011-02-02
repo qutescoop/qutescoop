@@ -13,6 +13,9 @@
 #include "Whazzup.h"
 #include "Window.h"
 #include "Ping.h"
+#ifdef QT_DEBUG
+#include "../tests/modeltest/modeltest.h"
+#endif
 
 // singleton instance
 ListClientsDialog *listClientsDialog = 0;
@@ -36,11 +39,17 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     setupUi(this);
 //    setWindowFlags(Qt::Tool);
 
+#ifdef QT_DEBUG
+    qDebug() << "ListClientsDialog(): ModelTest listClientsDialogModel";
+    //new ModelTest(listClientsDialogModel, this);
+#endif
+
     listClientsSortModel = new ListClientsSortFilter;
 
-    // slows down considerably
     listClientsSortModel->setDynamicSortFilter(true);
     listClientsSortModel->setSourceModel(&listClientsModel);
+
+    treeListClients->setUniformRowHeights(true);
     treeListClients->setModel(listClientsSortModel);
 
     treeListClients->header()->setResizeMode(QHeaderView::Interactive);
@@ -66,9 +75,8 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     voiceServersTable->setColumnCount(voiceServerHeaders.size());
     voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
 
+    connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
     refresh();
-
-    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 }
 
 void ListClientsDialog::refresh() {
@@ -87,10 +95,6 @@ void ListClientsDialog::refresh() {
     }
 
     listClientsModel.setClients(clients);
-    listClientsSortModel->invalidate();
-    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
-
-    newFilter();
 
     // Servers
     serversTable->clearContents();
@@ -157,17 +161,19 @@ void ListClientsDialog::refresh() {
 
     // Set Item Titles
     toolBox->setItemText(0, QString("C&lients (%1)").arg(clients.size()));
-    //toolBox->setItemEnabled(0, clients.size() > 0); // never disable
+    //toolBox->setItemEnabled(0, clients.size() > 0); // at least one needs to be shown...
 
     toolBox->setItemText(1, QString("&Servers (%1)").arg(servers.size()));
     toolBox->setItemEnabled(1, servers.size() > 0);
 
     toolBox->setItemText(2, QString("&Voice Servers (%1)").arg(voiceServers.size()));
     toolBox->setItemEnabled(2, voiceServers.size() > 0);
+
+    performSearch();
 }
 
 void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
-    searchTimer.start(1000);
+    editFilterTimer.start(1000);
 }
 
 void ListClientsDialog::performSearch() {
@@ -188,21 +194,19 @@ void ListClientsDialog::performSearch() {
 
     listClientsSortModel->setFilterRegExp(regex);
     listClientsSortModel->setFilterKeyColumn(-1);
-    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
-    newFilter();
+    //treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
+
+    // General
+    boxResults->setTitle(QString("Results (%1)").arg(listClientsSortModel->rowCount()));
 }
 
 void ListClientsDialog::modelSelected(const QModelIndex& index) {
     listClientsModel.modelSelected(listClientsSortModel->mapToSource(index));
 }
 
-void ListClientsDialog::newFilter() {
-    boxResults->setTitle(QString("Results (%1)").arg(listClientsSortModel->rowCount()));
-}
-
 void ListClientsDialog::newMapPosition() {
     if(this->isVisible()) listClientsSortModel->invalidate();
-    treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
+    //treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
 }
 
 void ListClientsDialog::pingReceived(QString server, int ms) {

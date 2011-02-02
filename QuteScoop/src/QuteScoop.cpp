@@ -10,6 +10,7 @@
 #include "NavData.h"
 #include "LogBrowserDialog.h"
 #include "helpers.h"
+#include "Settings.h"
 
 void myMessageOutput(QtMsgType type, const char *msg)
 {
@@ -18,10 +19,10 @@ void myMessageOutput(QtMsgType type, const char *msg)
         LogBrowserDialog::getInstance(true)->outputMessage(type, msg);
 
     // log.txt output
-    QFile logFile(qApp->applicationDirPath() + "/log.txt");
+    QFile logFile(Settings::applicationDataDirectory("log.txt"));
     logFile.open(QIODevice::Append | QIODevice::Text);
     if (logFile.write(QByteArray::number(type).append(": ").append(msg).append("\n")) < 0)
-        qCritical() << "Error writig to logfile";
+        qCritical() << "Error writing to logfile";
     if (logFile.isOpen()) logFile.close();
 
     // normal output
@@ -41,7 +42,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
         qFatal(msg);
         break;
     }
-    qApp->processEvents();
+    //qApp->processEvents();
     qInstallMsgHandler(myMessageOutput);
 }
 
@@ -53,8 +54,12 @@ int main(int argc, char *argv[]) {
     app.setApplicationVersion(VERSION_STRING);
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
 
+    // directories
+    Settings::setApplicationDataDirectory(
+            QFileInfo(Settings::calculateApplicationDataDirectory()).absoluteFilePath());
+
     // Overwrite logfile and start with VERSION_STRING
-    QFile logFile(qApp->applicationDirPath() + "/log.txt");
+    QFile logFile(Settings::applicationDataDirectory("log.txt"));
     logFile.open(QIODevice::WriteOnly | QIODevice::Text);
     logFile.write(QByteArray(VERSION_STRING.toAscii()).append("\n"));
     if (logFile.isOpen()) logFile.close();
@@ -62,16 +67,7 @@ int main(int argc, char *argv[]) {
     qRegisterMetaType<QtMsgType>("QtMsgType");
     qInstallMsgHandler(myMessageOutput);
 
-    // some debugging
-    qDebug() << "we are looking for locations that are nice to use for downloaded data and other stuff, especially on Mac and Linux";
-    qDebug() << "here are some that might be useful:";
-    qDebug() << "Home:" << QDesktopServices::storageLocation(QDesktopServices::HomeLocation);
-    qDebug() << "Documents:" << QDesktopServices::storageLocation(QDesktopServices::DocumentsLocation);
-    qDebug() << "Data:" << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-                    // on Mac: /Users/<user>/Library/Application Support/QuteScoop/QuteScoop
-                    // on Ubuntu: /home/<user>/.local/share/data/QuteScoop/QuteScoop
-                    // on WinXP 32: C:\Dokumente und Einstellungen\<user>\Lokale Einstellungen\Anwendungsdaten\QuteScoop\QuteScoop
-                    // on Win7 64: \Users\<user>\AppData\local\QuteScoop\QuteScoop
+    qDebug() << "Expecting application data directory at" << Settings::applicationDataDirectory() << "(gets calculated on each start)";
 
     // splash screen
     QPixmap pixmap(":/splash/splash");

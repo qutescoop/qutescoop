@@ -5,7 +5,7 @@
 #ifndef LISTCLIENTSDIALOG_H
 #define LISTCLIENTSDIALOG_H
 
-#include <QSortFilterProxyModel>
+//#include <QSortFilterProxyModel>
 
 #include "ListClientsDialogModel.h"
 #include "ListClientsSortFilter.h"
@@ -29,7 +29,6 @@ private slots:
     void modelSelected(const QModelIndex& index);
     void on_editFilter_textChanged(QString str);
     void serverClicked(int row, int col);
-    void newFilter();
 
 private:
     ListClientsDialog(QWidget *parent);
@@ -37,10 +36,10 @@ private:
     ListClientsDialogModel listClientsModel;
     ListClientsSortFilter *listClientsSortModel;
     QColor mapPingToColor(int ms);
-    QStack< QString > pingStack;
+    QStack <QString> pingStack;
     void pingNextFromStack();
 
-    QTimer searchTimer;
+    QTimer editFilterTimer;
 };
 
 #endif // LISTCLIENTSDIALOG_H

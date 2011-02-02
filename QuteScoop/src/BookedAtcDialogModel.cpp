@@ -10,10 +10,10 @@
 #include "Window.h"
 
 void BookedAtcDialogModel::setClients(const QList<BookedController*> &controllers) {
+    qDebug() << "BookedAtcDialogModel/setClients()";
+    beginResetModel();
     this->controllers = controllers;
-
-    // causing major lag ?
-    //reset();
+    endResetModel();
 }
 
 QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -40,10 +40,13 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
 }
 
 QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
+    // keep GUI responsive
+    //qApp->processEvents();
+
     if(!index.isValid())
         return QVariant();
 
-    if(index.row() >= controllers.size())
+    if((index.row() > rowCount(index)) || (index.column() > columnCount(index)))
         return QVariant();
 
     if(role == Qt::DisplayRole) {
@@ -92,6 +95,6 @@ void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {
                     QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
             }
         }
-        //controllers[index.row()]->showDetailsDialog();
+        controllers[index.row()]->showDetailsDialog();
     }
 }

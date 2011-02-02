@@ -262,7 +262,7 @@ QString Controller::mapLabel() const {
 QString Controller::voiceLink() const {
     switch(Settings::voiceType()) {
         case Settings::TEAMSPEAK: {
-            QStringList serverChannel = voiceServer.split('/');
+            QStringList serverChannel = voiceServer.split("/");
             return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
                 .arg(serverChannel.first())
                 .arg(Settings::voiceCallsign())

@@ -60,7 +60,7 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="7">
+     <item row="0" column="6">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>for</string>
@@ -70,7 +70,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="8">
+     <item row="0" column="7">
       <widget class="QSpinBox" name="spinHours">
        <property name="toolTip">
         <string>Extend the filter by &lt;this value&gt;.</string>
@@ -92,40 +92,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="6">
-      <widget class="QTimeEdit" name="timeFilter">
-       <property name="toolTip">
-        <string>Show only bookings at this time.</string>
-       </property>
-       <property name="wrapping">
-        <bool>true</bool>
-       </property>
-       <property name="time">
-        <time>
-         <hour>23</hour>
-         <minute>59</minute>
-         <second>59</second>
-        </time>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QDateEdit" name="dateFilter">
-       <property name="toolTip">
-        <string>Show only bookings at this date.</string>
-       </property>
-       <property name="wrapping">
-        <bool>true</bool>
-       </property>
-       <property name="calendarPopup">
-        <bool>true</bool>
-       </property>
-       <property name="timeSpec">
-        <enum>Qt::UTC</enum>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="9">
+     <item row="0" column="8">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -138,7 +105,7 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="10">
+     <item row="0" column="9">
       <widget class="QToolButton" name="tbPredict">
        <property name="toolTip">
         <string>Use this filter time as a starting point for Time Warp. Time Warp shows all bookings on the mapglobe.</string>
@@ -151,6 +118,22 @@
        </property>
        <property name="arrowType">
         <enum>Qt::RightArrow</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QDateTimeEdit" name="dateTimeFilter">
+       <property name="wrapping">
+        <bool>true</bool>
+       </property>
+       <property name="displayFormat">
+        <string>ddd MM/dd yyyy HHmm'z'</string>
+       </property>
+       <property name="calendarPopup">
+        <bool>true</bool>
+       </property>
+       <property name="timeSpec">
+        <enum>Qt::UTC</enum>
        </property>
       </widget>
      </item>

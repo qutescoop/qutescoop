@@ -16,9 +16,16 @@
 class Settings
 {
 public:
+    // export/import
     static void exportToFile(QString fileName);
     static void importFromFile(QString fileName);
 
+    // data directory
+    static QIODevice::OpenMode testDirectory(QString& dir); // NotOpen / ReadOnly / ReadWrite
+    static QString calculateApplicationDataDirectory();
+    static QString applicationDataDirectory(const QString& compose = QString());
+    static void setApplicationDataDirectory(const QString& value);
+    //
     static void saveState(const QByteArray& state);
     static QByteArray getSavedState();
 
@@ -316,9 +323,6 @@ public:
 
     static QString voicePassword();
     static void setVoicePassword(const QString& value);
-
-    static QString dataDirectory();
-    static void setDataDirectory(const QString& value);
 
     static bool saveWhazzupData();
     static void setSaveWhazzupData(const bool value);

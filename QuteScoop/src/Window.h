@@ -73,8 +73,7 @@ private slots:
     void on_actionHideAllWindows_triggered();
 
     void on_actionPredict_toggled(bool );
-    void on_timePredictTime_timeChanged(QTime date);
-    void on_datePredictTime_dateChanged(QDate date);
+    void on_dateTimePredict_dateTimeChanged(QDateTime date);
     void on_tbDisablePredict_clicked();
     void on_tbRunPredict_toggled(bool checked);
     void on_cbUseDownloaded_toggled(bool checked);
@@ -132,7 +131,7 @@ private:
     ClientSelectionWidget *clientSelection;
 
     SearchResultModel searchResultModel, friendsModel;
-    QTimer searchTimer, metarTimer, warpTimer, runPredictTimer;
+    QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer;
     QTimer downloadWatchdog;
     QSortFilterProxyModel *metarSortModel, *friendsSortModel;
     MetarModel metarModel;
@@ -144,8 +143,7 @@ private:
     QBuffer *dataVersionsBuffer;
     QList<QFile*> dataFilesToDownload;
 
-    QTime timePredictTime_old;
-    QDate datePredictTime_old;
+    QDateTime dateTimePredict_old;
 
     QLabel *lblStatus;
     QProgressBar *progressBar;

@@ -444,7 +444,7 @@ void GLWidget::createCoastlineList() {
     qglColor(Settings::coastLineColor());
     glLineWidth(Settings::coastLineStrength());
 
-    LineReader lineReader(Settings::dataDirectory() + "coastline.dat");
+    LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
     QList<QPair<double, double> > line = lineReader.readLine();
     while (!line.isEmpty()) {
         glBegin(GL_LINE_STRIP);
@@ -731,7 +731,7 @@ void GLWidget::createCountriesList() {
     // countries
     qglColor(Settings::countryLineColor());
     glLineWidth(Settings::countryLineStrength());
-    LineReader countries = LineReader(Settings::dataDirectory() + "countries.dat");
+    LineReader countries = LineReader(Settings::applicationDataDirectory("data/countries.dat"));
     QList<QPair<double, double> > line = countries.readLine();
     while (!line.isEmpty()) {
         glBegin(GL_LINE_STRIP);

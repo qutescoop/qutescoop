@@ -26,6 +26,9 @@ private slots:
     void on_pbExportToFile_clicked();
     void on_pbImportFromFile_clicked();
 
+    // data directory
+    void on_pbRetestApplicationDataDirectory_clicked();
+
     // screenshots
     void on_cbShootScreenshots_toggled(bool checked);
 
