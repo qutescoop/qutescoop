@@ -128,7 +128,6 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     lblName->setText(QString("%1\n%2").arg(airport->city).arg(airport->name));
 
-    QLocale locale(airport->countryCode.toLower());
     int utcDev = (int) (airport->lon/180*12 + 0.5); // lets estimate the deviation from UTC and round that
     QString lt = Whazzup::getInstance()->whazzupData().timestamp().addSecs(utcDev*3600).time().toString("HH:mm");
     lblCountry->setText(QString("%1 (%2)")

@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include <QDebug>
+#include <QApplication>
 
 #include "WhazzupData.h"
 
@@ -49,6 +50,9 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
     ParserState state = STATE_NONE;
     while(buffer->canReadLine()) {
+        // keep GUI responsive - leads to hangups?
+        qApp->processEvents();
+
         QString line = QString(buffer->readLine()).trimmed();
         if(line.isEmpty())
             continue;
@@ -185,7 +189,10 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     dataType = data.dataType;
     // so now lets fake some controllers
     QList<BookedController*> bc = data.getBookedControllers();
-    for (int i=0; i<bc.size(); i++) {
+    for (int i = 0; i < bc.size(); i++) {
+        // keep GUI responsive - leads to hangups?
+        qApp->processEvents();
+
         if (bc[i] == 0) continue;
         if (bc[i]->starts() <= predictTime && bc[i]->ends() >= predictTime) { // only ones booked for the selected time
             QStringList sl;
@@ -230,6 +237,9 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked (to allow for smoother realtime simulation).
     QList<Controller*> c = data.getControllers();
     for (int i = 0; i < c.size(); i++) {
+        // keep GUI responsive - leads to hangups?
+        //qApp->processEvents();
+
         QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
         if(c[i]->assumeOnlineUntil.isValid()) {
             if(predictionBasedOnTime.secsTo(c[i]->assumeOnlineUntil) > 0) // use only if we catched him before his stated leave-time.
@@ -248,6 +258,9 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     int altitude = 0;
 
     for (int i=0; i < p.size(); i++) {
+        // keep GUI responsive - leads to hangups?
+        //qApp->processEvents();
+
         if (p[i] == 0)
             continue;
         if (!p[i]->eta().isValid())
@@ -514,6 +527,9 @@ QList<Controller*> WhazzupData::activeSectors() const {
 
     QList<Controller*> controllerList = controllers.values();
     for(int i = 0; i < controllerList.size(); i++) {
+        // keep GUI responsive - leads to hangups?
+        //qApp->processEvents();
+
         QString icao = controllerList[i]->getCenter();
         if(icao.isNull() || icao.isEmpty())
             continue;

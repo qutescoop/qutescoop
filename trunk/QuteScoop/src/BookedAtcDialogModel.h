@@ -20,12 +20,12 @@ public:
 	
 	virtual QVariant data(const QModelIndex &index, int role) const;
 	virtual QVariant headerData(int section, Qt::Orientation orientation,
-	                         int role = Qt::DisplayRole) const;
+								int role = Qt::DisplayRole) const;
 	
 public slots:
 	void setClients(const QList<BookedController*>& controllers);
 	void modelSelected(const QModelIndex& index);
-  
+
 private:
 	QList<BookedController*> controllers;
 };

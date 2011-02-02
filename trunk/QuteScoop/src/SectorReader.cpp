@@ -15,28 +15,28 @@ SectorReader::~SectorReader() {
 }
 
 void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
-        sectors.clear();
+    sectors.clear();
     idIcaoMapping.clear();
 
-        loadSectorlist(sectors);
-        loadSectordisplay(sectors, Settings::dataDirectory() + "firdisplay.dat");
+    loadSectorlist(sectors);
+    loadSectordisplay(sectors, Settings::applicationDataDirectory("data/firdisplay.dat"));
     if(Settings::useSupFile())
-                loadSectordisplay(sectors, Settings::dataDirectory() + "firdisplay.sup");
+        loadSectordisplay(sectors, Settings::applicationDataDirectory("data/firdisplay.sup"));
 }
 
 void SectorReader::loadSectorlist(QHash<QString, Sector*>& sectors) {
-    FileReader *fileReader = new FileReader(Settings::dataDirectory() + "firlist.dat");
+    FileReader *fileReader = new FileReader(Settings::applicationDataDirectory("data/firlist.dat"));
 
     QString line = fileReader->nextLine();
     while(!line.isNull()) {
-                Sector *sector = new Sector(line.split(':'));
-                if(sector->isNull()) {
-                        delete sector;
+        Sector *sector = new Sector(line.split(':'));
+        if(sector->isNull()) {
+            delete sector;
             continue;
         }
 
-                sectors[sector->icao()] = sector;
-                idIcaoMapping.insert(sector->id(), sector->icao());
+        sectors[sector->icao()] = sector;
+        idIcaoMapping.insert(sector->id(), sector->icao());
         line = fileReader->nextLine();
     }
 
@@ -47,7 +47,7 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
 {
     FileReader *fileReader = new FileReader(filename);
 
-        QString workingSectorId;
+    QString workingSectorId;
     QList<QPair<double, double> > pointList;
 
     QString line = fileReader->nextLine();
@@ -63,10 +63,10 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
                 QList<QString> SectorIcaos = idIcaoMapping.values(workingSectorId);
                 for(int i = 0; i < SectorIcaos.size(); i++)
                 {
-                if(sectors.contains(SectorIcaos[i])) // be conservative as a segfault was reported on Mac OS
-                {
-                    sectors[SectorIcaos[i]]->setPointList(pointList);
-                }
+                    if(sectors.contains(SectorIcaos[i])) // be conservative as a segfault was reported on Mac OS
+                    {
+                        sectors[SectorIcaos[i]]->setPointList(pointList);
+                    }
                 }
             }
             workingSectorId = line.right(line.length() - QString("DISPLAY_LIST_").length());

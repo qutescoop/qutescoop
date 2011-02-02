@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>604</width>
-    <height>644</height>
+    <height>718</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -189,14 +189,25 @@ minimum interval)</string>
               </layout>
              </item>
              <item>
-              <widget class="QCheckBox" name="cbShootScreenshots">
-               <property name="toolTip">
-                <string>Saves screenshots to /screenshots whenever new data is displayed. Together with &quot;Save Whazzups&quot;, this allows to make movies of whole evenings.</string>
-               </property>
-               <property name="text">
-                <string>Save &amp;screenshots</string>
-               </property>
-              </widget>
+              <layout class="QHBoxLayout" name="horizontalLayout_9">
+               <item>
+                <widget class="QCheckBox" name="cbShootScreenshots">
+                 <property name="toolTip">
+                  <string>Saves screenshots whenever new map data is displayed. Together with &quot;Save Whazzups&quot; and &quot;Time Warp&quot; with &quot;Use downloaded&quot;, this allows to make movies of whole evenings.</string>
+                 </property>
+                 <property name="text">
+                  <string>Save &amp;screenshots to:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lblScreenshotsDirectory">
+                 <property name="text">
+                  <string>DYNAMIC</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </widget>
@@ -625,6 +636,65 @@ minimum interval)</string>
              </size>
             </property>
            </spacer>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_5">
+         <property name="title">
+          <string>Directories</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_12">
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QLabel" name="label_20">
+              <property name="text">
+               <string>Location used for all program directories:</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblApplicationDataDirectory">
+              <property name="text">
+               <string/>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_8">
+            <item>
+             <widget class="QPushButton" name="pbRetestApplicationDataDirectory">
+              <property name="text">
+               <string>&amp;Retest</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="lblCalculatedApplicationDataDirectory">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="text">
+               <string>Testing availablility and writability of these locations:
+1) DYNAMIC
+2) DYNAMIC</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -2554,7 +2624,6 @@ part is</string>
   <tabstop>spinBoxDownloadInterval</tabstop>
   <tabstop>cbDownloadOnStartup</tabstop>
   <tabstop>cbSaveWhazzupData</tabstop>
-  <tabstop>cbShootScreenshots</tabstop>
   <tabstop>gbDownloadBookings</tabstop>
   <tabstop>editBookingsLocation</tabstop>
   <tabstop>cbBookingsPeriodically</tabstop>
@@ -2572,6 +2641,7 @@ part is</string>
   <tabstop>editVoiceCallsign</tabstop>
   <tabstop>editVoiceUser</tabstop>
   <tabstop>editVoicePassword</tabstop>
+  <tabstop>pbRetestApplicationDataDirectory</tabstop>
   <tabstop>cbUseNavDatabase</tabstop>
   <tabstop>cbShowFixes</tabstop>
   <tabstop>editNavdir</tabstop>
@@ -2581,6 +2651,7 @@ part is</string>
   <tabstop>cbResetConfiguration</tabstop>
   <tabstop>pbExportToFile</tabstop>
   <tabstop>pbImportFromFile</tabstop>
+  <tabstop>buttonBox</tabstop>
   <tabstop>cbLineSmoothing</tabstop>
   <tabstop>cbDotSmoothing</tabstop>
   <tabstop>sbMaxTextLabels</tabstop>
@@ -2646,7 +2717,6 @@ part is</string>
   <tabstop>pbPlanLineColor</tabstop>
   <tabstop>sbPlanLineStrength</tabstop>
   <tabstop>buttonResetPilot</tabstop>
-  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>

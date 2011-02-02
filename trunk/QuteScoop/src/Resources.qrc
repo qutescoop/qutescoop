@@ -1,6 +1,9 @@
 <RCC>
     <qresource prefix="/icons">
         <file>qutescoop.png</file>
+        <file>images/viewmag-16.png</file>
+        <file>images/viewmag+16.png</file>
+        <file>images/step.png</file>
     </qresource>
     <qresource prefix="/routeproviders">
         <file>images/vroute.png</file>

@@ -5,7 +5,7 @@
 #ifndef BOOKEDATCDIALOG_H
 #define BOOKEDATCDIALOG_H
 
-#include <QSortFilterProxyModel>
+//#include <QSortFilterProxyModel>
 
 #include "BookedAtcDialogModel.h"
 #include "BookedAtcSortFilter.h"
@@ -22,11 +22,10 @@ signals:
     void needBookings();
 
 private slots:
+    void on_dateTimeFilter_dateTimeChanged(QDateTime date);
     void performSearch();
     void modelSelected(const QModelIndex& index);
     void on_tbPredict_clicked();
-    void on_dateFilter_dateChanged(QDate date);
-    void on_timeFilter_timeChanged(QTime date);
     void on_spinHours_valueChanged(int val);
     void on_editFilter_textChanged(QString str);
 
@@ -36,10 +35,9 @@ private:
     BookedAtcDialogModel bookedAtcModel;
     BookedAtcSortFilter *bookedAtcSortModel;
 
-    QTime timeFilter_old;
-    QDate dateFilter_old;
+    QDateTime dateTimeFilter_old;
 
-    QTimer searchTimer;
+    QTimer editFilterTimer;
 };
 
 #endif // BOOKEDATCDIALOG_H

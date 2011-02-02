@@ -242,7 +242,7 @@ void Whazzup::whazzupDownloaded(bool error) {
         return;
     }
     emit hasGuiMessage("Processing Whazzup", GuiMessage::Persistent, "whazzupProcess");
-    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    qApp->processEvents();
 
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
@@ -338,7 +338,7 @@ void Whazzup::bookingsDownloaded(bool error) {
         return;
     }
     emit hasGuiMessage("Processing Bookings", GuiMessage::Persistent, "bookingsProcess");
-    qApp->processEvents(QEventLoop::ExcludeUserInputEvents);
+    qApp->processEvents();
 
     WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();

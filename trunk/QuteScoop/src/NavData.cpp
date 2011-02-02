@@ -14,9 +14,9 @@
 NavData *instance = 0;
 
 NavData::NavData() {
-    loadAirports(Settings::dataDirectory() + "airports.dat");
+    loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
-    loadCountryCodes(Settings::dataDirectory() + "countrycodes.dat");
+    loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
     loadDatabase(Settings::navdataDirectory());
 }
 

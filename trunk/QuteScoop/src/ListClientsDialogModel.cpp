@@ -8,10 +8,10 @@
 #include "NavData.h"
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
+    qDebug() << "ListClientsDialogModel/setClients()";
+    beginResetModel();
     this->clients = clients;
-
-    // causing major lag?
-    //reset();
+    endResetModel();
 }
 
 QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
@@ -37,10 +37,13 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
 }
 
 QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const {
+    // keep GUI responsive
+    //qApp->processEvents();
+
     if(!index.isValid())
         return QVariant();
 
-    if(index.row() >= clients.size())
+    if((index.row() > rowCount(index)) || (index.column() > columnCount(index)))
         return QVariant();
 
     Client* c = clients[index.row()];

@@ -154,7 +154,7 @@ added
 
 Version 1.0.3 alpha 11:
 changed:
-* brought back the performance to the globe
+* brought back performance to the globe
 added:
 * datafile update, at the moment running via svn /trunk/.../data
 
@@ -198,8 +198,21 @@ added:
   This is not yet finished!
 
 
-
-
+Version 1.0.3 beta 5:
+changed:
+* previous beta had some crashes now in the "data heavy" dialogs. Hopefully fixed now.
+* Combined date+time fields in main window (Warp mode) + Booked ATC.
+* Disabling warp via button works again.
+* Time Warp and replaying from downloaded Whazzups works as expected
+added:
+* LogBrowser also outputs readable version string.
+* First signs of icons within QuteScoop. We need more ;)
+* QuteScoop subdirectories can now be in %APPDATA% or besides the executable.
+  The actual path gets determined on each program start. (See Debug Log Browser).
+* (develop:) A project file for the BitRock InstallBuilder Qt is included - this
+  will hopefully save us lots of work by automatically packaging for all platforms.
+  We have applied for a free license - keep fingers crossed ;)
+* (develop:) Qt-project files for each platform. See notes within these files.
 
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
