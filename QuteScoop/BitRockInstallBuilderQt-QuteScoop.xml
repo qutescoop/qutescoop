@@ -2,10 +2,12 @@
     <shortName>QuteScoop</shortName>
     <fullName>QuteScoop</fullName>
     <version>1.0.3 beta 5</version>
+    <readmeFile>README.html</readmeFile>
     <licenseFile>COPYING</licenseFile>
     <logoImage>src/qutescoop.png</logoImage>
     <wmImage>src/qutescoop.png</wmImage>
-    <compressionAlgorithm>lzma</compressionAlgorithm>
+    <debianCustomPackageDirectory>DIST-unix/debian</debianCustomPackageDirectory>
+    <description>jhvk,jhv</description>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
     <installationScope>user</installationScope>
@@ -13,11 +15,10 @@
     <osxApplicationBundleIcon>src/Dolomynum.icns</osxApplicationBundleIcon>
     <outputDirectory>DIST</outputDirectory>
     <readmeFileEncoding>utf-8</readmeFileEncoding>
-    <registerWithPackageDatabase>1</registerWithPackageDatabase>
     <release>${product_version}</release>
-    <requireInstallationByRootUser>1</requireInstallationByRootUser>
     <saveRelativePaths>1</saveRelativePaths>
     <singleInstanceCheck>1</singleInstanceCheck>
+    <summary>jzgjzg</summary>
     <vendor>QuteScoop</vendor>
     <windowsExecutableIcon>src/Dolomynum.ico</windowsExecutableIcon>
     <windowsResourceFileVersion>${product_version}</windowsResourceFileVersion>
@@ -31,8 +32,8 @@
             <desktopShortcutList>
                 <shortcut>
                     <comment>Text that will appear on Tooltip</comment>
-                    <exec>${installdir}\QuteScoop.exe</exec>
-                    <icon>D:/Eigene Dateien/Software/Qt/QuteScoop/trunk/QuteScoop/src/qutescoop.png</icon>
+                    <exec>${installdir}/QuteScoop</exec>
+                    <icon>/src/qutescoop.png</icon>
                     <name>${product_fullname}</name>
                     <path></path>
                     <platforms>all</platforms>
@@ -65,6 +66,9 @@
                         </distributionFile>
                         <distributionFile>
                             <origin>DIST-unix/COPYING</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>DIST-unix/QuteScoop</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>

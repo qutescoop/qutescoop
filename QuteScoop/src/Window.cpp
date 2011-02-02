@@ -4,7 +4,6 @@
 
 #include <QtGui>
 #include <QApplication>
-//#include <QTemporaryFile>
 #include "GLWidget.h"
 #include "Window.h"
 #include "ClientDetails.h"
@@ -862,7 +861,7 @@ void Window::performWarp(bool forceUseDownloaded)
 
     QDateTime warpToTime = dateTimePredict->dateTime();
     if(cbUseDownloaded->isChecked() || forceUseDownloaded) { // use downloaded Whazzups for (past) replay
-        qDebug() << "Using downloaded Whazzups";
+        qDebug() << "Window::performWarp() Looking for downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
         for (int i = downloaded.size()-1; i > -1; i--) {
             if((downloaded[i].first <= warpToTime) || (i == 0)) {
@@ -874,8 +873,6 @@ void Window::performWarp(bool forceUseDownloaded)
 
                     Whazzup::getInstance()->fromFile(downloaded[i].second);
 
-                    // keep GUI responsive - leads to hangups?
-                    //qApp->processEvents();
                     connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
                     connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
                 }
@@ -888,22 +885,13 @@ void Window::performWarp(bool forceUseDownloaded)
 
 void Window::on_cbUseDownloaded_toggled(bool checked)
 {
-    qDebug() << "cbUseDownloaded_toggled()" << checked;
+    qDebug() << "Window::cbUseDownloaded_toggled()" << checked;
     if (!checked) {
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
-        if (!downloaded.isEmpty()) {
-            // disconnect to inhibit update because will be updated later
-            disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
-            disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
-
+        if (!downloaded.isEmpty())
             Whazzup::getInstance()->fromFile(downloaded.last().second);
-
-            // keep GUI responsive - leads to hangups?
-            //qApp->processEvents();
-            connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
-            connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
-        }
     }
+    qApp->processEvents();
     performWarp(true);
 }
 
@@ -1125,9 +1113,10 @@ void Window::updateGLPilots() {
 }
 
 void Window::shootScreenshot() {
-    QString filename = QString(qApp->applicationDirPath() + "/screenshots/%1_%2")
-              .arg(Settings::downloadNetwork())
-              .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss"));
+    QString filename = Settings::applicationDataDirectory(
+            QString("screenshots/%1_%2")
+            .arg(Settings::downloadNetwork())
+            .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss")));
 
     // variant 1: only works if QuteScoop Window is shown on top
     QPixmap::grabWindow(glWidget->winId()).save(QString("%1.png").arg(filename), "png");
