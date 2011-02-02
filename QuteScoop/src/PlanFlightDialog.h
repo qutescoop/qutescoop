@@ -31,6 +31,7 @@ signals:
 
 private slots:
 //    void on_textRoute_textChanged();
+    void on_pbVatsimPrefile_clicked();
     void on_pbCopyToClipboard_clicked();
     void on_cbPlot_toggled(bool checked);
     void on_edDest_textChanged(QString str);
