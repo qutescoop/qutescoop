@@ -388,3 +388,19 @@ void PlanFlightDialog::on_pbCopyToClipboard_clicked()
         QApplication::clipboard()->setText(selectedRoute->route);
     }
 }
+
+void PlanFlightDialog::on_pbVatsimPrefile_clicked()
+{
+    if(selectedRoute != 0) {
+        QUrl url = QUrl(QString("http://www.vatsim.net/fp/?1=I&5=%1&9=%2&8=%3&voice=/V/")
+                        .arg(selectedRoute->dep)
+                        .arg(selectedRoute->dest)
+                        .arg(selectedRoute->route)
+                        , QUrl::TolerantMode);
+        if (url.isValid()) {
+            if(!QDesktopServices::openUrl(url))
+                QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("Could not invoke browser"));
+        } else
+            QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
+    }
+}

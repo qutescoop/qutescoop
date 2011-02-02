@@ -465,6 +465,16 @@ Check their webpage for member vACCs.</string>
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="pbVatsimPrefile">
+          <property name="toolTip">
+           <string>Launches prefile page in your browser.</string>
+          </property>
+          <property name="text">
+           <string>VATSIM prefile</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
