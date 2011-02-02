@@ -261,9 +261,10 @@ void Whazzup::whazzupDownloaded(bool error) {
 
             if(Settings::saveWhazzupData()){
                 // write out Whazzup to a file
-                QString filename = QString(qApp->applicationDirPath() + "/downloaded/%1_%2.whazzup")
-                          .arg(Settings::downloadNetwork())
-                          .arg(data.timestamp().toString("yyyyMMdd-HHmmss"));
+                QString filename = Settings::applicationDataDirectory(
+                        QString("downloaded/%1_%2.whazzup")
+                        .arg(Settings::downloadNetwork())
+                        .arg(data.timestamp().toString("yyyyMMdd-HHmmss")));
                 QFile out(filename);
                 if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
                     out.write(whazzupBuffer->data());
@@ -350,9 +351,10 @@ void Whazzup::bookingsDownloaded(bool error) {
             data.updateFrom(newBookingsData);
             qDebug() << "Bookings updated from timestamp\t" << data.bookingsTimestamp().toString();
 
-            QFile out(QString(qApp->applicationDirPath() + "/downloaded/%1_%2.bookings")
-                      .arg(Settings::downloadNetwork())
-                      .arg(data.bookingsTimestamp().toString("yyMMdd-HHmmss")));
+            QFile out(Settings::applicationDataDirectory(
+                    QString("downloaded/%1_%2.bookings")
+                    .arg(Settings::downloadNetwork())
+                    .arg(data.bookingsTimestamp().toString("yyMMdd-HHmmss"))));
             if (out.open(QIODevice::WriteOnly | QIODevice::Text)) {
                 out.write(bookingsBuffer->data());
             } else {
@@ -398,9 +400,9 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
 
 QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
     // Process directory
-    QStringList list = QDir(qApp->applicationDirPath() + "/downloaded/").entryList(
-                QStringList(QString("%1_*.whazzup").arg(Settings::downloadNetwork())),
-                QDir::Files | QDir::Readable);
+    QStringList list = QDir(Settings::applicationDataDirectory("downloaded/")).entryList(
+            QStringList(QString("%1_*.whazzup").arg(Settings::downloadNetwork())),
+            QDir::Files | QDir::Readable);
     list.sort();
 
     QList <QPair <QDateTime, QString> > returnList;
@@ -411,7 +413,7 @@ QList <QPair <QDateTime, QString> > Whazzup::getDownloadedWhazzups() {
             dt.setTimeSpec(Qt::UTC);
             returnList.append(QPair<QDateTime, QString>(
                     dt,
-                    QString(qApp->applicationDirPath() + "/downloaded/%1").arg(list[i])
+                    Settings::applicationDataDirectory(QString("downloaded/%1").arg(list[i]))
             ));
         }
     }

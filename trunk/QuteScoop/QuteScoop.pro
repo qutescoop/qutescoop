@@ -7,11 +7,15 @@ CONFIG *= qt
 #CONFIG += release
 CONFIG *= warn_off
 TARGET = QuteScoop
+win32:PLATFORM = "win32"
+macx:PLATFORM = "macx"
+unix:PLATFORM = "unix"
 
 QT *= core gui network opengl xml
 
 CONFIG(debug,release|debug) {
     !build_pass:message("DEBUG")
+    DEBUGRELEASE = "debug"
     DESTDIR = ./
 
     # If precompiled headers are not possible, qmake should deactivate it.
@@ -23,12 +27,11 @@ CONFIG(debug,release|debug) {
     }
 }
 
-# Included for release
+# Included for release/dist
 CONFIG(release,release|debug) {
     !build_pass:message("RELEASE")
-    win32:DESTDIR = ./DIST-win32
-    macx:DESTDIR = ./DIST-macx
-    unix:DESTDIR = ./DIST-unix
+    DEBUGRELEASE = "release"
+    DESTDIR = ./DIST-$${PLATFORM}
     # Add a "make install" target for deploying Qt/compiler/QuteScoop files.
     # Qt library files
     myQtLib.path = $$DESTDIR
@@ -211,7 +214,7 @@ OTHER_FILES += CHANGELOG \
     screenshots/+notes.txt
 
 # temp files
-#MOC_DIR = ./temp
-#UI_DIR = ./temp
-#OBJECTS_DIR = ./temp
-#RCC_DIR = ./temp
+MOC_DIR =       ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+UI_DIR =        ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+OBJECTS_DIR =   ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+RCC_DIR =       ./temp/$${PLATFORM}-$${DEBUGRELEASE}
