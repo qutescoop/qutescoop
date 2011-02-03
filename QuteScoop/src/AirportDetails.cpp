@@ -17,7 +17,8 @@ AirportDetails *airportDetails = 0;
 AirportDetails *AirportDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(airportDetails == 0)
         if (createIfNoInstance) {
-            if (parent != 0) airportDetails = new AirportDetails(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            airportDetails = new AirportDetails(parent);
         }
     return airportDetails;
 }

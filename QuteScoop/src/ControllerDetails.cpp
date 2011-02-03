@@ -13,7 +13,8 @@ ControllerDetails *controllerDetails = 0;
 ControllerDetails* ControllerDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(controllerDetails == 0)
         if (createIfNoInstance) {
-            if (parent != 0) controllerDetails = new ControllerDetails(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            controllerDetails = new ControllerDetails(parent);
         }
     return controllerDetails;
 }

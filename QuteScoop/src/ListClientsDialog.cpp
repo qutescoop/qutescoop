@@ -22,7 +22,8 @@ ListClientsDialog *listClientsDialog = 0;
 ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(listClientsDialog == 0)
         if (createIfNoInstance) {
-            if (parent != 0) listClientsDialog = new ListClientsDialog(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            listClientsDialog = new ListClientsDialog(parent);
         }
     return listClientsDialog;
 }

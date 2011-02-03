@@ -4,7 +4,6 @@
 
 #include "Controller.h"
 #include "ControllerDetails.h"
-#include "Window.h"
 #include "NavData.h"
 #include "Settings.h"
 
@@ -196,7 +195,7 @@ bool Controller::couldBeAtcCallsign() const {
 }
 
 void Controller::showDetailsDialog() {
-    ControllerDetails *infoDialog = ControllerDetails::getInstance(true, Window::getInstance(true));
+    ControllerDetails *infoDialog = ControllerDetails::getInstance(true);
 
     infoDialog->refresh(this);
     infoDialog->show();

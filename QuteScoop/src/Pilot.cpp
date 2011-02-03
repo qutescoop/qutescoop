@@ -4,7 +4,6 @@
 
 #include "Pilot.h"
 #include "PilotDetails.h"
-#include "Window.h"
 #include "NavData.h"
 #include "helpers.h"
 #include "Settings.h"
@@ -74,7 +73,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 }
 
 void Pilot::showDetailsDialog() {
-    PilotDetails *infoDialog = PilotDetails::getInstance(true, Window::getInstance(true));
+    PilotDetails *infoDialog = PilotDetails::getInstance(true);
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -426,7 +425,8 @@ void Pilot::toggleDisplayPath() {
         displayLineFromDep = true;
         displayLineToDest = true;
     }
-    PilotDetails::getInstance(true)->refresh();
+    if (PilotDetails::getInstance(false) != 0)
+        PilotDetails::getInstance(true)->refresh();
 }
 
 void Pilot::plotFlightPath() const {

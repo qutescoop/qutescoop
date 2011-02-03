@@ -6,7 +6,6 @@
 #include "Tessellator.h"
 #include "helpers.h"
 #include "AirportDetails.h"
-#include "Window.h"
 #include "Settings.h"
 
 #include <QList>
@@ -77,58 +76,50 @@ void Airport::addDeparture(Pilot* client) {
 }
 
 const GLuint& Airport::getAppBorderDisplayList() {
-    if(appBorderDisplayList == 0)
-        createAppDisplayLists();
+    if(appBorderDisplayList != 0)
+        return appBorderDisplayList;
 
-    return appBorderDisplayList;
-}
-
-const GLuint& Airport::getAppDisplayList() {
-    if(appDisplayList == 0)
-        createAppDisplayLists();
-
-    return appDisplayList;
-}
-
-void Airport::createAppDisplayLists() {
-    // prepare points for the circle
-    GLdouble circle_distort = cos(lat * Pi180);
-    QList<QPair<double, double> > points;
-    for(int i = 0; i <= 360; i += 10) {
-        double x = lat + Nm2Deg(40) * circle_distort * cos(i * Pi180);
-        double y = lon + Nm2Deg(40) * sin(i * Pi180);
-        points.append(QPair<double, double>(x, y));
-    }
-
-    // This draws an APP controller 'big filled circle' at x, y coordinates
-    appDisplayList = glGenLists(1);
-    glNewList(appDisplayList, GL_COMPILE);
-
-    QColor colorMiddle = Settings::appCenterColor();
-    QColor colorBorder = Settings::appMarginColor();
     QColor borderLine = Settings::appBorderLineColor();
-
-    glBegin(GL_TRIANGLE_FAN);
-    glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
-    glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
-    glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
-    for(int i = 0; i < points.size(); i++) {
-        VERTEX(points[i].first, points[i].second);
-    }
-    glEnd();
-    glEndList();
-
-    // border line
     appBorderDisplayList = glGenLists(1);
     glNewList(appBorderDisplayList, GL_COMPILE);
     glLineWidth(Settings::appBorderLineStrength());
     glBegin(GL_LINE_LOOP);
     glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
-    for (int i = 0; i < points.size(); i++) {
-        VERTEX(points[i].first, points[i].second);
+    GLdouble circle_distort = cos(lat * Pi180);
+    for(int i = 0; i <= 360; i += 10) {
+        double x = lat + Nm2Deg(40) * circle_distort * cos(i * Pi180);
+        double y = lon + Nm2Deg(40) * sin(i * Pi180);
+        VERTEX(x, y);
     }
     glEnd();
     glEndList();
+    return appBorderDisplayList;
+}
+
+const GLuint& Airport::getAppDisplayList() {
+    if(appDisplayList != 0)
+        return appDisplayList;
+
+    appDisplayList = glGenLists(1);
+    glNewList(appDisplayList, GL_COMPILE);
+
+    QColor colorMiddle = Settings::appCenterColor();
+    QColor colorBorder = Settings::appMarginColor();
+
+    glBegin(GL_TRIANGLE_FAN);
+    glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
+    glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
+    glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
+    GLdouble circle_distort = cos(lat * Pi180);
+    for(int i = 0; i <= 360; i += 10) {
+        double x = lat + Nm2Deg(40) * circle_distort * cos(i * Pi180);
+        double y = lon + Nm2Deg(40) * sin(i * Pi180);
+        VERTEX(x, y);
+    }
+    glEnd();
+    glEndList();
+
+    return appDisplayList;
 }
 
 const GLuint& Airport::getTwrDisplayList() {
@@ -292,7 +283,7 @@ void Airport::addDelivery(Controller* client) {
 
 
 void Airport::showDetailsDialog() {
-    AirportDetails *infoDialog = AirportDetails::getInstance(true, Window::getInstance(true));
+    AirportDetails *infoDialog = AirportDetails::getInstance(true);
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -369,11 +360,15 @@ void Airport::toggleFlightLines() {
 
 void Airport::setDisplayFlightLines(bool show) {
     showFlightLines = show;
-    for(int i = 0; i < arrivals.size(); i++)
-        arrivals[i]->displayLineToDest = show;
-    for(int i = 0; i < departures.size(); i++)
-        departures[i]->displayLineFromDep = show;
-    AirportDetails::getInstance(true)->refresh();
+    for(int i = 0; i < arrivals.size(); i++) {
+        if (arrivals[i] != 0)
+            arrivals[i]->displayLineToDest = show;
+    }
+    for(int i = 0; i < departures.size(); i++) {
+        if (departures[i] != 0)
+            departures[i]->displayLineFromDep = show;
+    }
+    //AirportDetails::getInstance(true)->refresh();
 }
 
 void Airport::refreshAfterUpdate() {
