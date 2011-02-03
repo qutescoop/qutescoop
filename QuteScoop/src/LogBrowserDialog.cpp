@@ -27,13 +27,18 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
 
-    layout->addWidget(new QLabel(QString("Debug messages are shown here while this dialog is open.\nComplete log in '%1'.")
-                                 .arg(Settings::applicationDataDirectory("log.txt")), this));
+    layout->addWidget(new QLabel(QString("Debug messages are shown here while this dialog is open."), this));
 
     browser = new QTextBrowser(this);
-    browser->append(QString("LogBrowser on %1").arg(VERSION_STRING));
-    browser->append(QString("Expecting application data directory at %1 (gets calculated on each start)")
-                    .arg(Settings::applicationDataDirectory()));
+    // adding log.txt contents to the browser (log.txt contains all debug messages up to this time)
+    QFile logFile (Settings::applicationDataDirectory("log.txt"));
+    browser->append(QString("-> CONTENTS of %1: <-\n").arg(logFile.fileName()));
+    if (logFile.open(QIODevice::ReadOnly)) {
+        browser->append(logFile.readAll());
+        logFile.close();
+    }
+    browser->append("-> LogBrowserDialog receiving live debug messages: <-\n");
+
     layout->addWidget(browser);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;

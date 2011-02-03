@@ -23,7 +23,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
     logFile.open(QIODevice::Append | QIODevice::Text);
     if (logFile.write(QByteArray::number(type).append(": ").append(msg).append("\n")) < 0)
         qCritical() << "Error writing to logfile";
-    if (logFile.isOpen()) logFile.close();
+    if (logFile.isOpen()) logFile.close(); // gets opened and closed on EACH write.
+                                //I guess this is best to not lose contents during a crash.
 
     // normal output
     qInstallMsgHandler(0);
@@ -62,6 +63,7 @@ int main(int argc, char *argv[]) {
     QFile logFile(Settings::applicationDataDirectory("log.txt"));
     logFile.open(QIODevice::WriteOnly | QIODevice::Text);
     logFile.write(QByteArray(VERSION_STRING.toAscii()).append("\n"));
+    logFile.write("message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n\n");
     if (logFile.isOpen()) logFile.close();
     // catch all messages
     qRegisterMetaType<QtMsgType>("QtMsgType");
