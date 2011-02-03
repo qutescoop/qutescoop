@@ -9,10 +9,12 @@
 //singleton instance
 PilotDetails *pilotDetails = 0;
 PilotDetails* PilotDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if(pilotDetails == 0)
+    if(pilotDetails == 0) {
         if (createIfNoInstance) {
-            if (parent != 0) pilotDetails = new PilotDetails(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            pilotDetails = new PilotDetails(parent);
         }
+    }
     return pilotDetails;
 }
 

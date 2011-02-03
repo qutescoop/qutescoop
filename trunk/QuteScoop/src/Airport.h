@@ -72,8 +72,6 @@ public:
     Metar metar;
 
 private:
-    void createAppDisplayLists();
-
     bool active;
     //QList<Controller*> centers;
     QList<Controller*> approaches;

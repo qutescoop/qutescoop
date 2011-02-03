@@ -21,7 +21,8 @@ PlanFlightDialog *planFlightDialogInstance = 0;
 PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(planFlightDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent != 0) planFlightDialogInstance = new PlanFlightDialog(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            planFlightDialogInstance = new PlanFlightDialog(parent);
         }
     return planFlightDialogInstance;
 }

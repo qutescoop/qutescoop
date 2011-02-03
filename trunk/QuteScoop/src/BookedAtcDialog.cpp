@@ -19,8 +19,11 @@
 // singleton instance
 BookedAtcDialog *bookedAtcDialog = 0;
 BookedAtcDialog *BookedAtcDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if(bookedAtcDialog == 0 && createIfNoInstance) {
-        if (parent != 0) bookedAtcDialog = new BookedAtcDialog(parent);
+    if(bookedAtcDialog == 0) {
+        if (createIfNoInstance) {
+            if (parent == 0) parent = Window::getInstance(true);
+            bookedAtcDialog = new BookedAtcDialog(parent);
+        }
     }
     return bookedAtcDialog;
 }

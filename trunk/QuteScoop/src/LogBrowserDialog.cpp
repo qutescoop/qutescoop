@@ -15,7 +15,8 @@ LogBrowserDialog *logbrowserDialogInstance = 0;
 LogBrowserDialog *LogBrowserDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(logbrowserDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent != 0) logbrowserDialogInstance = new LogBrowserDialog(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            logbrowserDialogInstance = new LogBrowserDialog(parent);
         }
     return logbrowserDialogInstance;
 }

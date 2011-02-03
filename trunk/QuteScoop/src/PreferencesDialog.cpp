@@ -20,7 +20,8 @@ PreferencesDialog *preferencesDialogInstance = 0;
 PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(preferencesDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent != 0) preferencesDialogInstance = new PreferencesDialog(parent);
+            if (parent == 0) parent = Window::getInstance(true);
+            preferencesDialogInstance = new PreferencesDialog(parent);
         }
     return preferencesDialogInstance;
 }
