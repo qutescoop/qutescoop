@@ -215,7 +215,7 @@ added:
 * (develop:) Qt-project files for each platform. See notes within these files.
 
 
-Version 1.5 rc 1:
+Version 2.0rc2:
 fixed:
 * crashs during route resolving ("Show all routes" etc.).
 changed:
