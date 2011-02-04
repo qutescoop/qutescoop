@@ -47,6 +47,9 @@ public:
     QList<QStringList> serverList() const { return connectedServerList; }
     QList<QStringList> voiceServerList() const { return connectedVoiceServerList; }
     int version() const { return whazzupVersion; }
+
+    QDateTime updateEarliest;
+    //const QDateTime& updateEarliest() const { return updateEarliest; }
     const QDateTime& timestamp() const { return whazzupTime; }
     const QDateTime& bookingsTimestamp() const { return bookingsTime; }
     const QDateTime& predictionBasedOnTimestamp() const { return predictionBasedOnTime; }
@@ -76,8 +79,8 @@ private:
     QList<QStringList> connectedServerList;
     QList<QStringList> connectedVoiceServerList;
     int whazzupVersion;
-    QDateTime whazzupTime;
-    QDateTime bookingsTime;
+
+    QDateTime whazzupTime, bookingsTime;
     QDateTime predictionBasedOnTime;
     QDateTime predictionBasedOnBookingsTime;
     WhazzupType dataType;

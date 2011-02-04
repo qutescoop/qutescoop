@@ -13,9 +13,6 @@
 #include "Whazzup.h"
 #include "Window.h"
 #include "Ping.h"
-#ifdef QT_DEBUG
-#include "../tests/modeltest/modeltest.h"
-#endif
 
 // singleton instance
 ListClientsDialog *listClientsDialog = 0;

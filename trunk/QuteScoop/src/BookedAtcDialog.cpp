@@ -12,10 +12,6 @@
 #include "Settings.h"
 #include "ui_MainWindow.h"
 
-#ifdef QT_DEBUG
-#include "../tests/modeltest/modeltest.h"
-#endif
-
 // singleton instance
 BookedAtcDialog *bookedAtcDialog = 0;
 BookedAtcDialog *BookedAtcDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
