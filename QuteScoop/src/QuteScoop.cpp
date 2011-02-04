@@ -51,7 +51,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
 }
 
 int main(int argc, char *argv[]) {
-    QT_REQUIRE_VERSION(argc, argv, "4.6.0")
+    QT_REQUIRE_VERSION(argc, argv, "4.7.0")
     QApplication app(argc, argv);
     // catch all messages
     qRegisterMetaType<QtMsgType>("QtMsgType");

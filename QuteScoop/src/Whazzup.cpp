@@ -172,17 +172,6 @@ void Whazzup::download() {
     downloadTimer->stop();
     QTime now = QTime::currentTime();
 
-    /* unnecessary. Also might be error-prone with Time Warp and "Use Downloaded"
-    if(!data.isNull()) {
-        if(data.updateEarliest().isValid()
-                && QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest()) > 0
-                && Settings::downloadNetwork() == data.network()) {
-            emit hasGuiMessage(QString("Server said new data available in %1s. Skipping.")
-                               .arg(QDateTime::currentDateTime().toUTC().secsTo(data.updateEarliest())), GuiMessage::Temporary);
-            return; // Server said we do not need to update
-            }
-    }*/
-
     if(lastDownloadTime.secsTo(now) < 30) {
         emit hasGuiMessage(QString("Whazzup checked %1s (less than 30s) ago. Skipping.")
                            .arg(lastDownloadTime.secsTo(now)), GuiMessage::Temporary);
@@ -225,19 +214,19 @@ void Whazzup::whazzupDownloaded(bool error) {
     emit hasGuiMessage("", GuiMessage::Remove, "whazzupDownload");
     if(whazzupBuffer == 0) {
         emit hasGuiMessage("Download Error. Buffer unavailable.", GuiMessage::ErrorUserAttention);
+        downloadTimer->start(30 * 1000); // try again in 30s
         return;
     }
 
-    if(Settings::downloadPeriodically())
-        downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
-
     if(whazzupBuffer->data().isEmpty()) {
         emit hasGuiMessage("No data in Whazzup.", GuiMessage::Warning);
+        downloadTimer->start(30 * 1000); // try again in 30s
         return;
     }
 
     if(error) {
         emit hasGuiMessage(whazzupDownloader->errorString(), GuiMessage::Warning);
+        downloadTimer->start(30 * 1000); // try again in 30s
         return;
     }
     emit hasGuiMessage("Processing Whazzup", GuiMessage::Persistent, "whazzupProcess");
@@ -279,6 +268,19 @@ void Whazzup::whazzupDownloaded(bool error) {
                                .arg(data.timestamp().toString("ddd MM/dd HHmm'z'")));
         }
     }
+
+    if(Settings::downloadPeriodically()) {
+        const int serverNextUpdateInSec = QDateTime::currentDateTimeUtc().secsTo(data.updateEarliest);
+        if (data.updateEarliest.isValid() &&
+            (Settings::downloadInterval() * 60 < serverNextUpdateInSec)) {
+            downloadTimer->start(serverNextUpdateInSec * 1000 + 20000); // 20s after later than reported from server
+                                                                        // to adjust for inconsistently set clocks
+            qDebug() << "Whazzup::whazzupDownloaded() correcting next update to"
+                    << serverNextUpdateInSec << "s to respect the server's minimum interval";
+        } else
+            downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
+    }
+
     emit hasGuiMessage("", GuiMessage::Remove, "whazzupProcess");
 }
 

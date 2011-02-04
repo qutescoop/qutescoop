@@ -29,7 +29,7 @@ WhazzupData::WhazzupData():
     whazzupVersion(0),
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
-    //updateEarliest(QDateTime()),
+    updateEarliest(QDateTime()),
     dataType(UNIFIED)
 {
 }
@@ -41,8 +41,8 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
     whazzupTime(QDateTime()),
-    bookingsTime(QDateTime())
-    //updateEarliest(QDateTime())
+    bookingsTime(QDateTime()),
+    updateEarliest(QDateTime())
 {
     qDebug() << "WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     dataType = type;
@@ -160,11 +160,10 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     }
 
     // set the earliest time the server will have new data
-    //if (whazzupTime.isValid() && reloadInMin > 0) {
-    //    updateEarliest = whazzupTime.addSecs(reloadInMin * 60);
-    //    updateEarliest.setTimeSpec(Qt::UTC);
-        //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << updateEarliest << QDateTime::currentDateTime().toUTC().secsTo(updateEarliest);
-    //}
+    if (whazzupTime.isValid() && reloadInMin > 0) {
+        updateEarliest = whazzupTime.addSecs(reloadInMin * 60).toUTC();
+        //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << updateEarliest << QDateTime::currentDateTimeUtc().secsTo(updateEarliest);
+    }
 }
 
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
@@ -176,8 +175,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
     predictionBasedOnTime(QDateTime()),
-    predictionBasedOnBookingsTime(QDateTime())
-    //updateEarliest(QDateTime())
+    predictionBasedOnBookingsTime(QDateTime()),
+    updateEarliest(QDateTime())
 {
     qDebug() << "WhazzupData(predictTime)";
 
@@ -350,7 +349,7 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
-        //updateEarliest = data.updateEarliest;
+        updateEarliest = data.updateEarliest;
 
         pilots.clear();
         QList<QString> callsigns = data.pilots.keys();
@@ -487,7 +486,7 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupVersion = data.whazzupVersion;
         whazzupTime = data.whazzupTime;
-        //updateEarliest = data.updateEarliest; testing
+        updateEarliest = data.updateEarliest;
         predictionBasedOnTime = data.predictionBasedOnTime;
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
