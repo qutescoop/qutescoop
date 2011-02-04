@@ -214,5 +214,18 @@ added:
   We have applied for a free license - keep fingers crossed ;)
 * (develop:) Qt-project files for each platform. See notes within these files.
 
+
+Version 1.5 rc 1:
+fixed:
+* crashs during route resolving ("Show all routes" etc.).
+changed:
+* caching results of route calculations for performance.
+* although I loved the GUI-responsiveness during long CPU-operations, I removed it
+  because it tends to introduce instability.
+added:
+* data-directories will now be checked on program start. If anything is wrong,
+  QuteScoop can move files to the correct locations.
+* more information on the compiling and running environment in the debug log browser.
+
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.

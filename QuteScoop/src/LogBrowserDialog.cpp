@@ -24,6 +24,10 @@ LogBrowserDialog *LogBrowserDialog::getInstance(bool createIfNoInstance, QWidget
 LogBrowserDialog::LogBrowserDialog(QWidget *parent)
     : QDialog(parent)
 {
+    resize(600, 400);
+    setWindowTitle("Debug Log");
+    setWindowFlags(Qt::Tool);
+
     QVBoxLayout *layout = new QVBoxLayout;
     setLayout(layout);
 
@@ -62,8 +66,6 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent)
     buttonLayout->addWidget(copyButton);
     connect(copyButton, SIGNAL(clicked()), this, SLOT(slotCopy()));
 
-    resize(600, 400);
-
     connect(this, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
             qobject_cast<Window *>(this->parent()), SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
 }
@@ -74,25 +76,10 @@ LogBrowserDialog::~LogBrowserDialog()
 }
 
 
-void LogBrowserDialog::outputMessage(QtMsgType type, const QString &msg)
+void LogBrowserDialog::outputMessage(const QString &msg)
 {
-    switch (type) {
-    case QtDebugMsg:
-        browser->append(msg);
-        break;
-
-    case QtWarningMsg:
-        browser->append(tr("-- WARNING: %1").arg(msg));
-        break;
-
-    case QtCriticalMsg:
-        browser->append(tr("-- CRITICAL: %1").arg(msg));
-        break;
-
-    case QtFatalMsg:
-        browser->append(tr("-- FATAL: %1").arg(msg));
-        break;
-    }
+    browser->append(msg);
+    browser->repaint();
 }
 
 

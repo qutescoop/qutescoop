@@ -58,7 +58,6 @@ public:
     void addGround(Controller* client);
     void addDelivery(Controller* client);
 
-    void toggleFlightLines();
     void setDisplayFlightLines(bool show);
     bool showFlightLines;
     void refreshAfterUpdate();

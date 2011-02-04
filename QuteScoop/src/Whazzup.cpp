@@ -166,12 +166,12 @@ void Whazzup::download() {
     if(urls.size() == 0) {
         emit hasGuiMessage("No Whazzup URLs in network status. Trying to get a new network status.", GuiMessage::ErrorUserAttention);
         setStatusLocation(Settings::statusLocation());
-        qDebug() << "no Whazzup URLs available";
         return;
     }
 
     downloadTimer->stop();
     QTime now = QTime::currentTime();
+
     /* unnecessary. Also might be error-prone with Time Warp and "Use Downloaded"
     if(!data.isNull()) {
         if(data.updateEarliest().isValid()
@@ -186,7 +186,6 @@ void Whazzup::download() {
     if(lastDownloadTime.secsTo(now) < 30) {
         emit hasGuiMessage(QString("Whazzup checked %1s (less than 30s) ago. Skipping.")
                            .arg(lastDownloadTime.secsTo(now)), GuiMessage::Temporary);
-        qDebug() << "Whazzup already checked less than 30 seconds ago. Skipping.";
         return; // don't allow download intervals < 30s
     }
     lastDownloadTime = now;
@@ -242,7 +241,6 @@ void Whazzup::whazzupDownloaded(bool error) {
         return;
     }
     emit hasGuiMessage("Processing Whazzup", GuiMessage::Persistent, "whazzupProcess");
-    qApp->processEvents();
 
     whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
     whazzupBuffer->seek(0);
@@ -339,7 +337,6 @@ void Whazzup::bookingsDownloaded(bool error) {
         return;
     }
     emit hasGuiMessage("Processing Bookings", GuiMessage::Persistent, "bookingsProcess");
-    qApp->processEvents();
 
     WhazzupData newBookingsData(bookingsBuffer, WhazzupData::ATCBOOKINGS);
     bookingsBuffer->close();
@@ -365,7 +362,6 @@ void Whazzup::bookingsDownloaded(bool error) {
         } else {
             emit hasGuiMessage(QString("We already have Bookings with that Timestamp: %1")
                                .arg(data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")));
-            //qDebug() << "We already have Bookings with that Timestamp\t" << data.bookingsTimestamp().toString();
         }
     }
     emit hasGuiMessage("", GuiMessage::Remove, "bookingsProcess");

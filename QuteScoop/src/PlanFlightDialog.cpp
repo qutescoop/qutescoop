@@ -31,6 +31,7 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     QDialog(parent)
 {
     setupUi(this);
+    setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
     selectedRoute = 0;

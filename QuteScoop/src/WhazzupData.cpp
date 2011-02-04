@@ -29,7 +29,7 @@ WhazzupData::WhazzupData():
     whazzupVersion(0),
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime()),
-    //nextUpdate(QDateTime()),
+    //updateEarliest(QDateTime()),
     dataType(UNIFIED)
 {
 }
@@ -42,7 +42,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     whazzupVersion(0),
     whazzupTime(QDateTime()),
     bookingsTime(QDateTime())
-    //nextUpdate(QDateTime())
+    //updateEarliest(QDateTime())
 {
     qDebug() << "WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     dataType = type;
@@ -161,9 +161,9 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 
     // set the earliest time the server will have new data
     //if (whazzupTime.isValid() && reloadInMin > 0) {
-    //    nextUpdate = whazzupTime.addSecs(reloadInMin * 60);
-    //    nextUpdate.setTimeSpec(Qt::UTC);
-        //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << nextUpdate << QDateTime::currentDateTime().toUTC().secsTo(nextUpdate);
+    //    updateEarliest = whazzupTime.addSecs(reloadInMin * 60);
+    //    updateEarliest.setTimeSpec(Qt::UTC);
+        //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << updateEarliest << QDateTime::currentDateTime().toUTC().secsTo(updateEarliest);
     //}
 }
 
@@ -177,7 +177,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     bookingsTime(QDateTime()),
     predictionBasedOnTime(QDateTime()),
     predictionBasedOnBookingsTime(QDateTime())
-    //nextUpdate(QDateTime())
+    //updateEarliest(QDateTime())
 {
     qDebug() << "WhazzupData(predictTime)";
 
@@ -350,7 +350,7 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
-        //nextUpdate = data.nextUpdate;
+        //updateEarliest = data.updateEarliest;
 
         pilots.clear();
         QList<QString> callsigns = data.pilots.keys();
@@ -487,7 +487,7 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupVersion = data.whazzupVersion;
         whazzupTime = data.whazzupTime;
-        //nextUpdate = data.nextUpdate; testing
+        //updateEarliest = data.updateEarliest; testing
         predictionBasedOnTime = data.predictionBasedOnTime;
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
@@ -521,7 +521,7 @@ WhazzupData::~WhazzupData() {
 }
 
 QList<Controller*> WhazzupData::activeSectors() const {
-    qDebug() << "WhazzupData/activeSectors";
+    qDebug() << "WhazzupData::activeSectors()";
     QList<Controller*> result;
     QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
 
@@ -553,7 +553,7 @@ QList<Controller*> WhazzupData::activeSectors() const {
         }
     }
 
-    qDebug() << "WhazzupData/activeSectors -- finished";
+    qDebug() << "WhazzupData::activeSectors() -- finished";
     return result;
 }
 

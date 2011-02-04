@@ -116,6 +116,7 @@ QList<Airport*> NavData::airportsAt(double lat, double lon, double maxDist) {
 }
 
 void NavData::updateData(const WhazzupData& whazzupData) {
+    qDebug() << "NavData::updateData()";
     QList<Airport*> airportList = airportMap.values();
     for(int i = 0; i < airportList.size(); i++) {
         if(airportList[i] != 0)
@@ -214,6 +215,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             }
         }
     }
+    qDebug() << "NavData::updateData() -- finished";
 }
 
 void NavData::accept(MapObjectVisitor* visitor) {

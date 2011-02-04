@@ -31,6 +31,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
     settingsLoaded(false)
 {
     setupUi(this);
+    setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
     cbNetwork->addItems(QStringList() << "IVAO" << "VATSIM" << "User Defined Network");
@@ -58,24 +59,15 @@ void PreferencesDialog::loadSettings() {
 
     sbMaxTextLabels->setValue(Settings::maxLabels());
 
-    bool b = Settings::useProxy();
-    cbUseProxy->setChecked(b);
-    editProxyServer->setEnabled(b); lblProxyServer->setEnabled(b);
-    editProxyPort->setEnabled(b); lblProxyPort->setEnabled(b);
-    editProxyUser->setEnabled(b); lblProxyUser->setEnabled(b);
-    editProxyPassword->setEnabled(b); lblProxyPassword->setEnabled(b);
-
+    groupBoxProxy->setChecked(Settings::useProxy());
     editProxyServer->setText(Settings::proxyServer());
     editProxyPort->setText(QString("%1").arg(Settings::proxyPort()));
     editProxyUser->setText(Settings::proxyUser());
     editProxyPassword->setText(Settings::proxyPassword());
 
     // directories
-    lblCalculatedApplicationDataDirectory->setText(QString("Testing availablility and writability of these locations:\n1) %1\n2) %2")
-                                                   .arg(QCoreApplication::applicationDirPath())
-                                                   .arg(QDesktopServices::storageLocation(QDesktopServices::DataLocation)));
-    lblApplicationDataDirectory->setText(Settings::applicationDataDirectory());
     lblScreenshotsDirectory->setText(Settings::applicationDataDirectory("screenshots/"));
+    lblDownloadedDirectory->setText(Settings::applicationDataDirectory("downloaded/"));
 
 
     // XPlane-Navdata
@@ -349,8 +341,8 @@ void PreferencesDialog::on_cbSaveWhazzupData_stateChanged(int state)
     Settings::setSaveWhazzupData(state == Qt::Checked);
 }
 
-void PreferencesDialog::on_cbUseProxy_stateChanged(int state) {
-    Settings::setUseProxy(state == Qt::Checked);
+void PreferencesDialog::on_groupBoxProxy_toggled(bool checked) {
+    Settings::setUseProxy(checked);
 }
 
 void PreferencesDialog::on_editProxyServer_editingFinished() {
@@ -379,13 +371,6 @@ void PreferencesDialog::on_cbLineSmoothing_stateChanged(int state) {
 
 void PreferencesDialog::on_cbDotSmoothing_stateChanged(int state) {
     Settings::setDisplaySmoothDots(state == Qt::Checked);
-}
-
-void PreferencesDialog::on_pbRetestApplicationDataDirectory_clicked()
-{
-    Settings::setApplicationDataDirectory(Settings::calculateApplicationDataDirectory());
-    lblApplicationDataDirectory->setText(Settings::applicationDataDirectory());
-    lblScreenshotsDirectory->setText(Settings::applicationDataDirectory("screenshots/"));
 }
 
 void PreferencesDialog::on_editNavdir_editingFinished() {
@@ -996,4 +981,5 @@ QLabel {\n\
         "));
     }
 }
+
 

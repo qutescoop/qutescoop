@@ -39,8 +39,8 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
+    setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
-    qDebug() << "BookedAtcDialog(): bookedAtcSortModel1";
     bookedAtcSortModel = new BookedAtcSortFilter;
 
     bookedAtcSortModel->setDynamicSortFilter(true);

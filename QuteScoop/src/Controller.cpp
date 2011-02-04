@@ -7,6 +7,8 @@
 #include "NavData.h"
 #include "Settings.h"
 
+#include <QDebug>
+
 Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
     Client(stringList, whazzup)
 {

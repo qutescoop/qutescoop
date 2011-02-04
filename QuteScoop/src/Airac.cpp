@@ -236,6 +236,7 @@ Waypoint* Airac::getNextWaypoint(QStringList& workingList, double lat, double lo
 }
 
 QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, double lon) const {
+    qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;
     if(plan.isEmpty()) return result;
 
@@ -289,7 +290,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
         if(i>0) debugStr += "-";
         debugStr += result[i]->label;
     }
-    qDebug() << "Resolved\t" << plan << "to\t" << debugStr;
+    qDebug() << "Airac::resolveFlightPlan() -- finished:" << debugStr;
 
     return result;
 }
