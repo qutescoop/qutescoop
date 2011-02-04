@@ -107,6 +107,7 @@ QPair<double, double> GLWidget::currentPosition() {
 }
 
 void GLWidget::prepareDisplayLists() {
+    qDebug() << "GLWidget::prepareDisplayLists() ";
 
     // FIR polygons
     if(sectorPolygonsList == 0)
@@ -235,21 +236,23 @@ void GLWidget::prepareDisplayLists() {
             }
         glEndList();
     }
+    qDebug() << "GLWidget::prepareDisplayLists() ";
 }
 
 void GLWidget::newWhazzupData(bool isNew) {
-    qDebug() << "GLWidget/newWhazzupData() isNew=" << isNew;
+    qDebug() << "GLWidget::newWhazzupData() isNew=" << isNew;
     if(isNew) {
         updateAirports();
-        sectorsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
 
+        sectorsToDraw = Whazzup::getInstance()->whazzupData().activeSectors();
         createPilotsList();
         createAirportsList();
         prepareDisplayLists();
 
+        qDebug() << "GLWidget::newWhazzupData() updateGL";
         updateGL();
     }
-    qDebug() << "GLWidget/newWhazzupData -- finished";
+    qDebug() << "GLWidget::newWhazzupData -- finished";
 }
 
 void GLWidget::displayAllSectors(bool value) {
@@ -485,6 +488,7 @@ void GLWidget::createGridlinesList() {
 }
 
 void GLWidget::createPilotsList() {
+    qDebug() << "GLWidget::createPilotsList() ";
     makeCurrent();
 
     if(pilotsList == 0)
@@ -525,7 +529,7 @@ void GLWidget::createPilotsList() {
     // flight paths
     pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
     for (int i = 0; i < pilots.size(); i++) {
-        const Pilot *p = pilots[i];
+        Pilot *p = pilots[i];
         p->plotFlightPath();
     }
 
@@ -534,9 +538,11 @@ void GLWidget::createPilotsList() {
         PlanFlightDialog::getInstance()->plotPlannedRoute();
 
     glEndList();
+    qDebug() << "GLWidget::createPilotsList() -- finished";
 }
 
 void GLWidget::createAirportsList() {
+    qDebug() << "GLWidget::createAirportsList() ";
     makeCurrent();
     if(airportsList == 0)
         airportsList = glGenLists(1);
@@ -602,6 +608,7 @@ void GLWidget::createAirportsList() {
         }
     }
     glEndList();
+    qDebug() << "GLWidget::createAirportsList() -- finished";
 }
 
 bool GLWidget::pointIsVisible(double lat, double lon, int *px, int *py) const {
@@ -878,7 +885,7 @@ void GLWidget::rightClick(const QPoint& pos) {
 
     if(airport != 0) {
         emit hasGuiMessage(QString("Toggled routes for %1").arg(airport->label));
-        airport->toggleFlightLines();
+        airport->setDisplayFlightLines(!airport->showFlightLines);
         createPilotsList();
         updateGL();
         return;

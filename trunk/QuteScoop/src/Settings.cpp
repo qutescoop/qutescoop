@@ -37,66 +37,156 @@ void Settings::importFromFile(QString fileName) {
 }
 
 
-// data directory
+// returns NotOpen / ReadOnly / ReadWrite
 QIODevice::OpenMode Settings::testDirectory(QString &dir) {
     QIODevice::OpenMode capabilities = QIODevice::NotOpen;
-    QFile testFile(dir + "/test");
-    if (testFile.open(QIODevice::ReadWrite)) {
-        capabilities |= QIODevice::ReadWrite;
-    } else if (testFile.open(QIODevice::ReadOnly)) {
-        capabilities |= QIODevice::ReadOnly;
+    if (QDir(dir).exists()) {
+        QFile testFile(dir + "/test");
+        if (testFile.open(QIODevice::ReadWrite)) {
+            capabilities |= QIODevice::ReadWrite;
+            testFile.close();
+            testFile.remove();
+        } else {
+            capabilities |= QIODevice::ReadOnly;
+        }
     }
     qDebug() << "Settings::testDirectory()" << dir << capabilities;
-    if (testFile.exists()) {
-        testFile.close();
-        testFile.remove();
-    }
     return capabilities;
 }
 
-QString Settings::calculateApplicationDataDirectory() {
-    //qDebug() << "Data:" << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-                    // on Mac: /Users/<user>/Library/Application Support/QuteScoop/QuteScoop
-                    // on Ubuntu: /home/<user>/.local/share/data/QuteScoop/QuteScoop
-                    // on WinXP 32: C:\Dokumente und Einstellungen\<user>\Lokale Einstellungen\Anwendungsdaten\QuteScoop\QuteScoop
-                    // on Win7 64: \Users\<user>\AppData\local\QuteScoop\QuteScoop
+// priority:
+// 1) DataLocation ('dirs.first()') has subdirs and is writeable
+    // on Mac: /Users/<user>/Library/Application Support/QuteScoop/QuteScoop
+    // on Ubuntu: /home/<user>/.local/share/data/QuteScoop/QuteScoop
+    // on WinXP 32: C:\Dokumente und Einstellungen\<user>\Lokale Einstellungen\Anwendungsdaten\QuteScoop\QuteScoop
+    // on Win7 64: \Users\<user>\AppData\local\QuteScoop\QuteScoop
+// 2) other location in 'dirs' has subdirs and is writeable
+// 3) any location has subdirs
+// 3a) if DataLocation is writeable: copy data there
+// 4) if all that fails: fall back to executable-directory
+void Settings::calculateApplicationDataDirectory() {
+    QStringList dirs; // possible locations, 1st preferred
+    dirs << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    dirs << QCoreApplication::applicationDirPath();
 
-    QStringList dirs; // all directories to check, first one preferred
-    dirs.append(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
-    dirs.append(QCoreApplication::applicationDirPath());
+    QStringList subdirs; // needed subDirs
+    subdirs << "data" << "downloaded" << "screenshots";
 
     QList< QIODevice::OpenMode> dirCapabilities;
-    for(int i = 0; i < dirs.size(); i++)
-        dirCapabilities.append(testDirectory(dirs[i]));
-
     for (int i = 0; i < dirs.size(); i++) {
-        if (dirCapabilities[i].testFlag(QIODevice::ReadWrite)) {
-            return dirs[i];
-        } else if (dirCapabilities[i].testFlag(QIODevice::ReadOnly)) {
-            QMessageBox::warning(0, "Warning", QString(
-                    "The data directory at %1 was found but is readonly. This means that neither automatic sectorfile-download "
-                    "nor saving logs, screenshots or downloaded Whazzups will work.\n"
-                    "Preferrably, data should be in %2 and this location should be writable.")
-                                 .arg(dirs[i]).arg(dirs.first()));
-            return dirs[i];
+        dirCapabilities << QIODevice::ReadWrite; // init, might be diminished by the AND-combine
+        // looking for capabilities of the subdirs
+        for (int j = 0; j < subdirs.size(); j++) {
+            QString dir = QString("%1/%2").arg(dirs[i], subdirs[j]);
+            dirCapabilities[i] &= testDirectory(dir); // AND-combine: returns lowest capability
+        }
+        qDebug() << "Settings::calculateApplicationsDirectory():" << dirs[i] << "has capabilities:" << dirCapabilities[i];
+        if (i == 0) { // preferred location writeable - no further need to look
+            if (dirCapabilities[0].testFlag(QIODevice::ReadWrite)) {
+                getSettings()->setValue("general/calculatedApplicationDataDirectory", dirs[0]);
+                return;
+            }
+        } else { // another location is writeable - also OK.
+            if (dirCapabilities[i].testFlag(QIODevice::ReadWrite)) {
+                getSettings()->setValue("general/calculatedApplicationDataDirectory", dirs[i]);
+                return;
+            }
         }
     }
-    QMessageBox::critical(0, "Critical", QString("No data directory, neither read- nor writable, was found. QuteScoop "
-                                                 "might be behaving unexpectedly.\n"
-                                                 "Preferrably, data should be in %1 and this location should be writable.\n"
-                                                 "As a second option, QuteScoop checks if required data is found where the "
-                                                 "QuteScoop executable resides.").arg(dirs.first()));
-    return QString();
+
+    // last ressort: looking for readable subdirs
+    for (int i = 0; i < dirs.size(); i++) {
+        if (dirCapabilities[i].testFlag(QIODevice::ReadOnly)) { // we found the data at least readonly
+            QString warningStr(QString(
+                    "The directories '%1' where found at '%2' but are readonly. This means that neither automatic sectorfile-download "
+                    "nor saving logs, screenshots or downloaded Whazzups will work.\n"
+                    "Preferrably, data should be at '%3' and this location should be writable.")
+                                 .arg(subdirs.join("', '"))
+                                 .arg(dirs[i])
+                                 .arg(dirs.first()));
+            qWarning() << warningStr;
+            QMessageBox::warning(0, "Warning", warningStr);
+
+            // data found in other location than the preferred one and
+            // preferred location creatable or already existing: Copy data directories/files there?
+            if ((i != 0) && (QDir(dirs.first()).exists() || QDir().mkpath(dirs.first()))) {
+                QString questionStr(QString(
+                        "The preferred data directory '%1' exists or could be created.\n"
+                        "Do you want QuteScoop to install its data files there [recommended]?")
+                                     .arg(dirs.first()));
+                qDebug() << questionStr;
+                if (QMessageBox::question(0, "Install data files?", questionStr, QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)
+                    == QMessageBox::Yes) {
+                    QString copyErrors;
+                    for (int j = 0; j < subdirs.size(); j++) {
+                        QString sourceDir = QString("%1/%2").arg(dirs[i], subdirs[j]);
+                        QString destDir = QString("%1/%2").arg(dirs.first(), subdirs[j]);
+
+                        // subdirectory exists or could be created
+                        if (QDir(destDir).exists()
+                            || QDir(dirs.first()).mkpath(subdirs[j])) {
+                            QStringList fileNames = QDir(sourceDir)
+                                                    .entryList(QDir::NoDotAndDotDot | QDir::Files | QDir::NoSymLinks | QDir::Readable);
+                            QMessageBox::information(0, "Copying", QString("Now copying files\n'%1'\n to directory '%2'")
+                                                     .arg(fileNames.join("',\n'"), destDir));
+                            foreach(const QString &fileName, fileNames) {
+                                QString sourceFilePath = QString("%1/%2").arg(sourceDir, fileName);
+                                QString destFilePath = QString("%1/%2").arg(destDir, fileName);
+                                if (QFile::exists(destFilePath)) // remove if file is already existing
+                                    if (!QFile::remove(destFilePath))
+                                        QMessageBox::critical(0, "Error", QString(
+                                                "Error removing existing file '%1'. Please consider removing it by hand.")
+                                                              .arg(destFilePath));
+                                if (QFile::copy(sourceFilePath, destFilePath)) {
+                                    qDebug() << "copied" << sourceFilePath << "to" << destFilePath;
+                                } else {
+                                    copyErrors.append(QString("Error copying file '%1' to '%2'\n").arg(sourceFilePath, destFilePath));
+                                    qDebug() << "Error copying file" << sourceFilePath << "to" << destFilePath;
+                                }
+                            }
+                        } else { // error creating subdirectory
+                            copyErrors.append(QString("Error creating directory '%1'\n").arg(destDir));
+                            qDebug() << QString("Error creating %1").arg(destDir);
+                        }
+                    }
+                    if (copyErrors.isEmpty()) {
+                        QMessageBox::information(0, "Success",
+                                                 QString("Data files installed. QuteScoop will now use '%1' as data directory.")
+                                                 .arg(dirs.first()));
+                        qDebug() << "Datafiles installed to" << dirs.first();
+                        getSettings()->setValue("general/calculatedApplicationDataDirectory", dirs.first());
+                        return;
+                    } else { // errors during the copy operations
+                        QMessageBox::critical(0, "Error", QString("The following errors occurred during copy:\n %1\n"
+                                                                  "When in doubt if important files where left out, "
+                                                                  "delete the new data directory and let "
+                                                                  "QuteScoop copy the files again.")
+                                              .arg(copyErrors));
+                    }
+                }
+            }
+            getSettings()->setValue("general/calculatedApplicationDataDirectory", dirs[i]);
+            return;
+        }
+    }
+
+    QString criticalStr = QString("No complete data directory, neither read- nor writable, was found. QuteScoop "
+                                  "might be behaving unexpectedly.\n"
+                                  "Preferrably, '%1' should have the subdirectories '%2' and "
+                                  "these locations should be writable.\n"
+                                  "QuteScoop will look for the data files in the following locations, too:\n"
+                                  "'%3'")
+           .arg(dirs.first(), subdirs.join("', '"), QStringList(dirs.mid(1, -1)).join("',\n'"));
+    QMessageBox::critical(0, "Critical", criticalStr);
+    qCritical() << criticalStr;
+    getSettings()->setValue("general/calculatedApplicationDataDirectory", QCoreApplication::applicationDirPath());
+    return;
 }
 
-QString Settings::applicationDataDirectory(const QString &compose) {
+QString Settings::applicationDataDirectory(const QString &composeFilePath) {
     return QString("%1/%2")
             .arg(getSettings()->value("general/calculatedApplicationDataDirectory", QVariant()).toString())
-            .arg(compose);
-}
-
-void Settings::setApplicationDataDirectory(const QString &value) {
-    getSettings()->setValue("general/calculatedApplicationDataDirectory", value);
+            .arg(composeFilePath);
 }
 
 //

@@ -68,6 +68,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     airport(0)
 {
     setupUi(this);
+    setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));

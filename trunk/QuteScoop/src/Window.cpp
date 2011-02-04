@@ -298,10 +298,11 @@ void Window::showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType, QSt
             qDebug() << i.key() << gM.msg;
         }*/
     }
+    lblStatus->repaint();
 }
 
 void Window::whazzupDownloaded(bool isNew) {
-    qDebug() << "whazzupDownloaded()";
+    qDebug() << "Window::whazzupDownloaded() isNew =" << isNew;
     const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
     const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
@@ -394,7 +395,7 @@ void Window::whazzupDownloaded(bool isNew) {
     if(Settings::downloadPeriodically())
         downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
 
-    qDebug() << "whazzupDownloaded() -- finished";
+    qDebug() << "Window::whazzupDownloaded() -- finished";
 }
 
 void Window::refreshFriends() {
@@ -1142,48 +1143,39 @@ void Window::setPlotFlightPlannedRoute(bool value) {
 
 void Window::on_actionShowRoutes_triggered(bool checked)
 {
-    qDebug() << "showRoutes()" << checked;
-    QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
-    for (int i=0; i < pilots.size(); i++) {
-        pilots[i]->displayLineToDest = checked;
-        pilots[i]->displayLineFromDep = checked;
-    }
-    glWidget->newWhazzupData();
-
-    qDebug() << "showRoutes() -- finished" << checked;
-
-/*    if (checked) {
+    showGuiMessage("Toggled ALL routes", GuiMessage::Temporary, "calcRoutes");
+    if (checked) {
         QList<Airport*> airports = NavData::getInstance()->airports().values();
         for(int i = 0; i < airports.size(); i++) {
-            if(airports[i] != 0) {
-                airports[i]->setDisplayFlightLines(false);
-            }
+            if(airports[i] != 0)
+                airports[i]->setDisplayFlightLines(checked);
         }
 
-        QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
+        /*QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
         for(int i = 0; i < pilots.size(); i++) {
             if(pilots[i] != 0) {
-                pilots[i]->displayLineFromDep = false;
-                pilots[i]->displayLineToDest = false;
+                pilots[i]->displayLineFromDep = checked;
+                pilots[i]->displayLineToDest = checked;
             }
-        }
-        // adjust the "plot route" tick in dialogs
-        AirportDetails::getInstance(true)->refresh();
-        PilotDetails::getInstance(true)->refresh();
-
-        // tell glWidget that there is new whazzup data (which is a lie)
-        // so it will refresh itself and clear the lines
-        glWidget->newWhazzupData();
+        }*/
     } else {
         QList<Airport*> airports = NavData::getInstance()->airports().values();
         for(int i = 0; i < airports.size(); i++) {
-            if(airports[i] != 0) {
-                airports[i]->setDisplayFlightLines(true);
-            }
+            if(airports[i] != 0)
+                airports[i]->setDisplayFlightLines(checked);
         }
+    }
+    // adjust the "plot route" tick in dialogs
+    if (AirportDetails::getInstance(false) != 0)
+        AirportDetails::getInstance(true)->refresh();
+    if (PilotDetails::getInstance(false) != 0)
+        PilotDetails::getInstance(true)->refresh();
 
-        // tell glWidget that there is new whazzup data (which is a lie)
-        // so it will refresh itself and clear the lines
-    }*/
+    // map update
+    glWidget->createPilotsList();
+    glWidget->updateGL();
+    //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
+
+    showGuiMessage("Toggled ALL routes", GuiMessage::Remove, "calcRoutes");
 }
 

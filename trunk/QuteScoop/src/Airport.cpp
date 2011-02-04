@@ -64,6 +64,7 @@ void Airport::resetWhazzupStatus() {
 void Airport::addArrival(Pilot* client) {
     if(!arrivals.contains(client)) {
         arrivals.append(client);
+        if (showFlightLines) client->displayLineToDest = true;
         active = true;
     }
 }
@@ -71,6 +72,7 @@ void Airport::addArrival(Pilot* client) {
 void Airport::addDeparture(Pilot* client) {
     if(!departures.contains(client)) {
         departures.append(client);
+        if (showFlightLines) client->displayLineFromDep = true;
         active = true;
     }
 }
@@ -352,10 +354,6 @@ QString Airport::mapLabel() const {
     else result += QString("%1").arg(numFilteredDepartures());
 
     return result;
-}
-
-void Airport::toggleFlightLines() {
-    setDisplayFlightLines(!showFlightLines);
 }
 
 void Airport::setDisplayFlightLines(bool show) {

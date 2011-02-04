@@ -24,7 +24,7 @@ signals:
                        QString = QString(), int = 0, int = 0);
 
 public slots:
-    void outputMessage( QtMsgType type, const QString &msg );
+    void outputMessage(const QString &msg);
 
 protected slots:
     void slotSave();

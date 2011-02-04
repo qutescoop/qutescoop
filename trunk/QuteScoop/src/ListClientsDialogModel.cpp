@@ -8,7 +8,7 @@
 #include "NavData.h"
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
-    qDebug() << "ListClientsDialogModel/setClients()";
+    qDebug() << "ListClientsDialogModel::setClients()";
     beginResetModel();
     this->clients = clients;
     endResetModel();

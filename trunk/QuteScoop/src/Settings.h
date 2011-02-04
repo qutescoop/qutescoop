@@ -22,9 +22,8 @@ public:
 
     // data directory
     static QIODevice::OpenMode testDirectory(QString& dir); // NotOpen / ReadOnly / ReadWrite
-    static QString calculateApplicationDataDirectory();
-    static QString applicationDataDirectory(const QString& compose = QString());
-    static void setApplicationDataDirectory(const QString& value);
+    static void calculateApplicationDataDirectory();
+    static QString applicationDataDirectory(const QString& composeFilePath = QString());
     //
     static void saveState(const QByteArray& state);
     static QByteArray getSavedState();

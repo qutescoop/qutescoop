@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>604</width>
-    <height>718</height>
+    <height>649</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,6 +16,9 @@
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+  </property>
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
   </property>
   <layout class="QVBoxLayout">
    <item>
@@ -61,29 +64,6 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <spacer name="horizontalSpacer_7">
-               <property name="orientation">
-                <enum>Qt::Horizontal</enum>
-               </property>
-               <property name="sizeHint" stdset="0">
-                <size>
-                 <width>40</width>
-                 <height>20</height>
-                </size>
-               </property>
-              </spacer>
-             </item>
-             <item row="1" column="1" colspan="2">
-              <widget class="QLineEdit" name="editUserDefinedLocation">
-               <property name="enabled">
-                <bool>false</bool>
-               </property>
-               <property name="text">
-                <string>http://www.network.com/status.txt</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
               <widget class="QLabel" name="lbluserDefinedLocation">
                <property name="enabled">
                 <bool>false</bool>
@@ -94,6 +74,16 @@ Location</string>
                </property>
                <property name="buddy">
                 <cstring>editUserDefinedLocation</cstring>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="editUserDefinedLocation">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>http://www.network.com/status.txt</string>
                </property>
               </widget>
              </item>
@@ -129,6 +119,17 @@ Location</string>
                 </widget>
                </item>
                <item>
+                <widget class="QCheckBox" name="cbDownloadOnStartup">
+                 <property name="text">
+                  <string>Download Whazzup 
+on Program &amp;Start</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
                 <spacer name="horizontalSpacer_18">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
@@ -141,69 +142,53 @@ Location</string>
                  </property>
                 </spacer>
                </item>
-               <item>
-                <widget class="QLabel" name="label_13">
-                 <property name="text">
-                  <string>(Respects the server's
-minimum interval)</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="horizontalSpacer_11">
-                 <property name="orientation">
-                  <enum>Qt::Horizontal</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>40</width>
-                   <height>20</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
               </layout>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
-               <item>
-                <widget class="QCheckBox" name="cbDownloadOnStartup">
-                 <property name="text">
-                  <string>Download Whazzup on Program Start</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="0" column="0">
                 <widget class="QCheckBox" name="cbSaveWhazzupData">
                  <property name="toolTip">
                   <string>Saves downloaded status data to /downloaded. Can be used to record whole evenings. Replay with Time Warp and &quot;use downloaded&quot;.</string>
                  </property>
                  <property name="text">
-                  <string>Save Whazzups</string>
+                  <string>Save &amp;Whazzups to:</string>
                  </property>
                 </widget>
                </item>
-              </layout>
-             </item>
-             <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_9">
-               <item>
+               <item row="0" column="1">
+                <widget class="QLabel" name="lblDownloadedDirectory">
+                 <property name="text">
+                  <string>DYNAMIC</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                 <property name="textInteractionFlags">
+                  <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
                 <widget class="QCheckBox" name="cbShootScreenshots">
                  <property name="toolTip">
                   <string>Saves screenshots whenever new map data is displayed. Together with &quot;Save Whazzups&quot; and &quot;Time Warp&quot; with &quot;Use downloaded&quot;, this allows to make movies of whole evenings.</string>
                  </property>
                  <property name="text">
-                  <string>Save &amp;screenshots to:</string>
+                  <string>Save &amp;Screenshots to:</string>
                  </property>
                 </widget>
                </item>
-               <item>
+               <item row="1" column="1">
                 <widget class="QLabel" name="lblScreenshotsDirectory">
                  <property name="text">
                   <string>DYNAMIC</string>
+                 </property>
+                 <property name="wordWrap">
+                  <bool>true</bool>
+                 </property>
+                 <property name="textInteractionFlags">
+                  <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                  </property>
                 </widget>
                </item>
@@ -215,7 +200,7 @@ minimum interval)</string>
           <item row="9" column="0">
            <widget class="QGroupBox" name="gbDownloadBookings">
             <property name="title">
-             <string>ATC Bookings</string>
+             <string>ATC &amp;Bookings</string>
             </property>
             <property name="checkable">
              <bool>true</bool>
@@ -303,20 +288,16 @@ minimum interval)</string>
        <item>
         <widget class="QGroupBox" name="groupBoxProxy">
          <property name="title">
-          <string>Proxy Settings</string>
+          <string>Use HTTP Proxy</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
          <layout class="QGridLayout">
-          <item row="0" column="0" colspan="5">
-           <widget class="QCheckBox" name="cbUseProxy">
-            <property name="toolTip">
-             <string>Applies to all network communication.</string>
-            </property>
-            <property name="text">
-             <string>Use HTTP Proxy</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
+          <item row="0" column="0">
            <widget class="QLabel" name="lblProxyServer">
             <property name="enabled">
              <bool>false</bool>
@@ -329,14 +310,14 @@ minimum interval)</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="1">
+          <item row="0" column="1">
            <widget class="QLineEdit" name="editProxyServer">
             <property name="enabled">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="1" column="2">
+          <item row="0" column="2">
            <widget class="QLabel" name="lblProxyPort">
             <property name="enabled">
              <bool>false</bool>
@@ -349,7 +330,7 @@ minimum interval)</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="3">
+          <item row="0" column="3">
            <widget class="QLineEdit" name="editProxyPort">
             <property name="enabled">
              <bool>false</bool>
@@ -368,7 +349,7 @@ minimum interval)</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="0">
+          <item row="1" column="0">
            <widget class="QLabel" name="lblProxyUser">
             <property name="enabled">
              <bool>false</bool>
@@ -384,14 +365,14 @@ minimum interval)</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
+          <item row="1" column="1">
            <widget class="QLineEdit" name="editProxyUser">
             <property name="enabled">
              <bool>false</bool>
             </property>
            </widget>
           </item>
-          <item row="2" column="2">
+          <item row="1" column="2">
            <widget class="QLabel" name="lblProxyPassword">
             <property name="enabled">
              <bool>false</bool>
@@ -404,7 +385,7 @@ minimum interval)</string>
             </property>
            </widget>
           </item>
-          <item row="2" column="3" colspan="2">
+          <item row="1" column="3" colspan="2">
            <widget class="QLineEdit" name="editProxyPassword">
             <property name="enabled">
              <bool>false</bool>
@@ -414,7 +395,7 @@ minimum interval)</string>
             </property>
            </widget>
           </item>
-          <item row="1" column="4">
+          <item row="0" column="4">
            <spacer>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -441,8 +422,11 @@ minimum interval)</string>
             <property name="enabled">
              <bool>true</bool>
             </property>
+            <property name="toolTip">
+             <string>Checks for new datafile releases on the server on each progam start.</string>
+            </property>
             <property name="text">
-             <string>Check for program and datafile updates</string>
+             <string>Check for datafile updates</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -641,70 +625,32 @@ minimum interval)</string>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
-         <property name="title">
-          <string>Directories</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_12">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <item>
-             <widget class="QLabel" name="label_20">
-              <property name="text">
-               <string>Location used for all program directories:</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="lblApplicationDataDirectory">
-              <property name="text">
-               <string/>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_8">
-            <item>
-             <widget class="QPushButton" name="pbRetestApplicationDataDirectory">
-              <property name="text">
-               <string>&amp;Retest</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="lblCalculatedApplicationDataDirectory">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Testing availablility and writability of these locations:
-1) DYNAMIC
-2) DYNAMIC</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBoxDatabase">
          <property name="title">
           <string>Navigation Database</string>
          </property>
          <layout class="QVBoxLayout" name="_4">
+          <item>
+           <widget class="QLabel" name="label_5">
+            <property name="text">
+             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;QuteScoop can use the navigation database for X-Plane 9.00 or later &lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;(Get it for free at &lt;/span&gt;&lt;a href=&quot;http://data.x-plane.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;data.x-plane.com&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;).&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QCheckBox" name="cbUseNavDatabase">
             <property name="text">
@@ -730,7 +676,7 @@ minimum interval)</string>
             <item>
              <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Database Directory:</string>
+               <string>Database Directory (point to /Resources):</string>
               </property>
               <property name="buddy">
                <cstring>editNavdir</cstring>
@@ -754,30 +700,6 @@ minimum interval)</string>
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_5">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Directory must contain the navigation database for &lt;span style=&quot; font-weight:600;&quot;&gt;X-Plane 9.00 or later&lt;/span&gt; &lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;(Get it for free at &lt;a href=&quot;http://data.x-plane.com&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;data.x-plane.com&lt;/span&gt;&lt;/a&gt;)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-            <property name="openExternalLinks">
-             <bool>true</bool>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -2624,14 +2546,15 @@ part is</string>
   <tabstop>spinBoxDownloadInterval</tabstop>
   <tabstop>cbDownloadOnStartup</tabstop>
   <tabstop>cbSaveWhazzupData</tabstop>
+  <tabstop>cbShootScreenshots</tabstop>
   <tabstop>gbDownloadBookings</tabstop>
   <tabstop>editBookingsLocation</tabstop>
   <tabstop>cbBookingsPeriodically</tabstop>
   <tabstop>sbBookingsInterval</tabstop>
-  <tabstop>cbUseProxy</tabstop>
+  <tabstop>groupBoxProxy</tabstop>
   <tabstop>editProxyServer</tabstop>
-  <tabstop>editProxyUser</tabstop>
   <tabstop>editProxyPort</tabstop>
+  <tabstop>editProxyUser</tabstop>
   <tabstop>editProxyPassword</tabstop>
   <tabstop>cbCheckForUpdates</tabstop>
   <tabstop>cbSendVersionInfo</tabstop>
@@ -2641,7 +2564,6 @@ part is</string>
   <tabstop>editVoiceCallsign</tabstop>
   <tabstop>editVoiceUser</tabstop>
   <tabstop>editVoicePassword</tabstop>
-  <tabstop>pbRetestApplicationDataDirectory</tabstop>
   <tabstop>cbUseNavDatabase</tabstop>
   <tabstop>cbShowFixes</tabstop>
   <tabstop>editNavdir</tabstop>
@@ -2651,7 +2573,6 @@ part is</string>
   <tabstop>cbResetConfiguration</tabstop>
   <tabstop>pbExportToFile</tabstop>
   <tabstop>pbImportFromFile</tabstop>
-  <tabstop>buttonBox</tabstop>
   <tabstop>cbLineSmoothing</tabstop>
   <tabstop>cbDotSmoothing</tabstop>
   <tabstop>sbMaxTextLabels</tabstop>
@@ -2713,143 +2634,16 @@ part is</string>
   <tabstop>cbTrackAfter</tabstop>
   <tabstop>pbTrackLineColor</tabstop>
   <tabstop>sbTrackLineStrength</tabstop>
-  <tabstop>cbDashedFrontAfter</tabstop>
   <tabstop>pbPlanLineColor</tabstop>
   <tabstop>sbPlanLineStrength</tabstop>
+  <tabstop>cbDashedFrontAfter</tabstop>
   <tabstop>buttonResetPilot</tabstop>
+  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lblProxyServer</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>97</x>
-     <y>444</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lblProxyUser</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>97</x>
-     <y>470</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lblProxyPort</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>330</x>
-     <y>444</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>lblProxyPassword</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>330</x>
-     <y>470</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editProxyServer</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>274</x>
-     <y>444</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editProxyUser</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>274</x>
-     <y>470</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editProxyPort</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>396</x>
-     <y>444</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbUseProxy</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editProxyPassword</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>193</x>
-     <y>418</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>572</x>
-     <y>470</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>cbDownloadPeriodically</sender>
    <signal>toggled(bool)</signal>
@@ -2858,27 +2652,11 @@ part is</string>
    <hints>
     <hint type="sourcelabel">
      <x>191</x>
-     <y>202</y>
+     <y>186</y>
     </hint>
     <hint type="destinationlabel">
      <x>253</x>
-     <y>203</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>cbCheckForUpdates</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>cbSendVersionInfo</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>187</x>
-     <y>529</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>278</x>
-     <y>553</y>
+     <y>187</y>
     </hint>
    </hints>
   </connection>
@@ -2889,12 +2667,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>141</x>
-     <y>221</y>
+     <x>130</x>
+     <y>253</y>
     </hint>
     <hint type="destinationlabel">
-     <x>411</x>
-     <y>274</y>
+     <x>339</x>
+     <y>306</y>
     </hint>
    </hints>
   </connection>
@@ -2905,12 +2683,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>141</x>
-     <y>221</y>
+     <x>130</x>
+     <y>253</y>
     </hint>
     <hint type="destinationlabel">
      <x>571</x>
-     <y>277</y>
+     <y>309</y>
     </hint>
    </hints>
   </connection>
@@ -2926,7 +2704,7 @@ part is</string>
     </hint>
     <hint type="destinationlabel">
      <x>540</x>
-     <y>670</y>
+     <y>648</y>
     </hint>
    </hints>
   </connection>
@@ -2941,7 +2719,7 @@ part is</string>
      <y>82</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
+     <x>204</x>
      <y>110</y>
     </hint>
    </hints>
@@ -2953,11 +2731,11 @@ part is</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>72</x>
-     <y>80</y>
+     <x>79</x>
+     <y>82</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
+     <x>204</x>
      <y>136</y>
     </hint>
    </hints>
@@ -2969,11 +2747,11 @@ part is</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>54</x>
-     <y>80</y>
+     <x>65</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
+     <x>204</x>
      <y>162</y>
     </hint>
    </hints>
@@ -2985,12 +2763,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>119</x>
-     <y>221</y>
+     <x>130</x>
+     <y>253</y>
     </hint>
     <hint type="destinationlabel">
-     <x>169</x>
-     <y>245</y>
+     <x>130</x>
+     <y>277</y>
     </hint>
    </hints>
   </connection>
@@ -3001,8 +2779,8 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>421</y>
+     <x>131</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
      <x>289</x>
@@ -3017,7 +2795,7 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
+     <x>131</x>
      <y>378</y>
     </hint>
     <hint type="destinationlabel">
@@ -3033,7 +2811,7 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
+     <x>131</x>
      <y>378</y>
     </hint>
     <hint type="destinationlabel">
@@ -3049,8 +2827,8 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>421</y>
+     <x>131</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
      <x>503</x>
@@ -3065,8 +2843,8 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>421</y>
+     <x>131</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
      <x>571</x>
@@ -3081,7 +2859,7 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>144</x>
+     <x>131</x>
      <y>378</y>
     </hint>
     <hint type="destinationlabel">
@@ -3097,12 +2875,12 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>142</x>
-     <y>421</y>
+     <x>131</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
-     <x>413</x>
-     <y>421</y>
+     <x>395</x>
+     <y>420</y>
     </hint>
    </hints>
   </connection>
@@ -3113,8 +2891,8 @@ part is</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>135</x>
-     <y>421</y>
+     <x>131</x>
+     <y>420</y>
     </hint>
     <hint type="destinationlabel">
      <x>420</x>
@@ -3130,10 +2908,10 @@ part is</string>
    <hints>
     <hint type="sourcelabel">
      <x>119</x>
-     <y>80</y>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
+     <x>204</x>
      <y>110</y>
     </hint>
    </hints>
@@ -3146,10 +2924,10 @@ part is</string>
    <hints>
     <hint type="sourcelabel">
      <x>119</x>
-     <y>80</y>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
+     <x>204</x>
      <y>136</y>
     </hint>
    </hints>
@@ -3162,10 +2940,10 @@ part is</string>
    <hints>
     <hint type="sourcelabel">
      <x>119</x>
-     <y>80</y>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>335</x>
+     <x>204</x>
      <y>162</y>
     </hint>
    </hints>
@@ -3181,8 +2959,8 @@ part is</string>
      <y>316</y>
     </hint>
     <hint type="destinationlabel">
-     <x>379</x>
-     <y>319</y>
+     <x>459</x>
+     <y>316</y>
     </hint>
    </hints>
   </connection>
@@ -3198,7 +2976,7 @@ part is</string>
     </hint>
     <hint type="destinationlabel">
      <x>189</x>
-     <y>346</y>
+     <y>343</y>
     </hint>
    </hints>
   </connection>
@@ -3214,7 +2992,7 @@ part is</string>
     </hint>
     <hint type="destinationlabel">
      <x>257</x>
-     <y>347</y>
+     <y>344</y>
     </hint>
    </hints>
   </connection>
@@ -3230,7 +3008,167 @@ part is</string>
     </hint>
     <hint type="destinationlabel">
      <x>82</x>
-     <y>319</y>
+     <y>316</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShootScreenshots</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lblScreenshotsDirectory</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>137</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>315</x>
+     <y>244</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbSaveWhazzupData</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lblDownloadedDirectory</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>63</x>
+     <y>222</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>324</x>
+     <y>212</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>editProxyServer</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>38</x>
+     <y>380</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>140</x>
+     <y>406</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>editProxyUser</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>62</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>174</x>
+     <y>432</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>editProxyPassword</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>81</x>
+     <y>380</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>501</x>
+     <y>441</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>editProxyPort</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>93</x>
+     <y>381</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>367</x>
+     <y>411</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lblProxyServer</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>48</x>
+     <y>380</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>52</x>
+     <y>402</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lblProxyUser</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>73</x>
+     <y>432</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lblProxyPort</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>105</x>
+     <y>379</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>293</x>
+     <y>404</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>groupBoxProxy</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>lblProxyPassword</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>121</x>
+     <y>383</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>313</x>
+     <y>433</y>
     </hint>
    </hints>
   </connection>

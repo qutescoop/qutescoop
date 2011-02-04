@@ -38,12 +38,8 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
+    setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
-
-#ifdef QT_DEBUG
-    qDebug() << "ListClientsDialog(): ModelTest listClientsDialogModel";
-    //new ModelTest(listClientsDialogModel, this);
-#endif
 
     listClientsSortModel = new ListClientsSortFilter;
 

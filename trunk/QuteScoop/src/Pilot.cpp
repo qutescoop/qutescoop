@@ -8,6 +8,8 @@
 #include "helpers.h"
 #include "Settings.h"
 
+#include <QDebug>
+
 Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     Client(stringList, whazzup),
     onGround(false),
@@ -429,7 +431,7 @@ void Pilot::toggleDisplayPath() {
         PilotDetails::getInstance(true)->refresh();
 }
 
-void Pilot::plotFlightPath() const {
+void Pilot::plotFlightPath() {
     if(displayLineToDest && Settings::trackFront() && Settings::trackLineStrength() != 0.0)
         plotPathToDest();
 
@@ -440,9 +442,7 @@ void Pilot::plotFlightPath() const {
         plotPlannedLine();
 }
 
-void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) const {
-
-    // always start plotting at the origin
+void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) {
     VERTEX(lat1, lon1);
 
     double d = NavData::distance(lat1, lon1, lat2, lon2);
@@ -467,7 +467,7 @@ void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) const {
     } while(currentFraction < 1);
 }
 
-void Pilot::plotPathFromDep() const {
+void Pilot::plotPathFromDep() {
     if(Settings::trackLineStrength() == 0)
         return;
 
@@ -497,7 +497,7 @@ void Pilot::plotPathFromDep() const {
     glLineStipple(1, 0xFFFF);
 }
 
-void Pilot::plotPathToDest() const {
+void Pilot::plotPathToDest() {
     if(Settings::trackLineStrength() == 0)
         return;
 
@@ -518,10 +518,10 @@ void Pilot::plotPathToDest() const {
     glLineStipple(1, 0xFFFF);
 }
 
-void Pilot::plotPlannedLine() const {
+void Pilot::plotPlannedLine() {
     if(Settings::planLineStrength() == 0)
         return;
-    QList<Waypoint*> points = resolveFlightplan();
+    QList<Waypoint*> points = routeWaypoints();
     Airport* dep = depAirport();
     if(dep != 0) {
         Waypoint* depWp = new Waypoint(dep->label, dep->lat, dep->lon);
@@ -624,12 +624,26 @@ void Pilot::plotPlannedLine() const {
     glLineStipple(1, 0xFFFF);
 }
 
-QList<Waypoint*> Pilot::resolveFlightplan() const {
-    QList<Waypoint*> result;
+QList<Waypoint*> Pilot::routeWaypoints() {
+    if (!routeWaypointsCache.isEmpty()
+        && (planDep == routeWaypointsPlanDepCache)
+        && (planDest == routeWaypointsPlanDestCache)
+        && (planRoute == routeWaypointsPlanRouteCache)) {
+        return routeWaypointsCache; // no changes
+    }
 
     Airport *dep = depAirport();
-    if(dep == 0) return QList<Waypoint*>();
+    routeWaypointsPlanDepCache = planDep;
+    routeWaypointsPlanDestCache = planDest;
+    routeWaypointsPlanRouteCache = planRoute;
 
-    QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
-    return NavData::getInstance()->getAirac().resolveFlightplan(list, dep->lat, dep->lon);
+    //QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
+    qDebug() << "Pilot::routeWaypoints()" << label;
+    if (dep != 0) {
+        routeWaypointsCache = NavData::getInstance()->getAirac().resolveFlightplan(
+                waypoints(), dep->lat, dep->lon);
+    } else
+        routeWaypointsCache = QList<Waypoint*>();
+
+    return routeWaypointsCache;
 }

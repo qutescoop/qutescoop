@@ -26,9 +26,6 @@ private slots:
     void on_pbExportToFile_clicked();
     void on_pbImportFromFile_clicked();
 
-    // data directory
-    void on_pbRetestApplicationDataDirectory_clicked();
-
     // screenshots
     void on_cbShootScreenshots_toggled(bool checked);
 
@@ -54,7 +51,7 @@ private slots:
     void on_cbSaveWhazzupData_stateChanged(int state);
 
     // proxy settings
-    void on_cbUseProxy_stateChanged(int state);
+    void on_groupBoxProxy_toggled(bool );
     void on_editProxyServer_editingFinished();
     void on_editProxyPort_editingFinished();
     void on_editProxyUser_editingFinished();
