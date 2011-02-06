@@ -6,6 +6,7 @@
 #define LISTCLIENTSDIALOG_H
 
 #include <QSortFilterProxyModel>
+#include <QStack>
 
 #include "ListClientsDialogModel.h"
 #include "ui_ListClientsDialog.h"
