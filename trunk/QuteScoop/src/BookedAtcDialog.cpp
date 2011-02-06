@@ -37,34 +37,28 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
+    bookedAtcModel = new BookedAtcDialogModel;
     bookedAtcSortModel = new BookedAtcSortFilter;
-
     bookedAtcSortModel->setDynamicSortFilter(true);
-    bookedAtcSortModel->setSourceModel(&bookedAtcModel);
-
+    bookedAtcSortModel->setSourceModel(bookedAtcModel);
     treeBookedAtc->setUniformRowHeights(true);
     treeBookedAtc->setModel(bookedAtcSortModel);
-
-    treeBookedAtc->header()->setResizeMode(QHeaderView::Interactive);
-    treeBookedAtc->sortByColumn(4, Qt::AscendingOrder);
-
-    connect(treeBookedAtc->header(), SIGNAL(sectionClicked(int)), treeBookedAtc, SLOT(sortByColumn(int)));
     connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
-    //connect(bookedAtcSortModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(newFilter(QModelIndex,QModelIndex))); //does not get thrown??
+
+    dateTimeFilter->setDateTime(QDateTime::currentDateTime().toUTC());
+    connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
     QFont font = lblStatusInfo->font();
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    dateTimeFilter->setDateTime(QDateTime::currentDateTime().toUTC());
-
-    connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
-    performSearch();
     connect(this, SIGNAL(needBookings()), Whazzup::getInstance(), SLOT(downloadBookings()));
     refresh();
 }
 
 void BookedAtcDialog::refresh() {
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+
     if(Settings::downloadBookings() &&
        !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
         emit needBookings();
@@ -72,7 +66,7 @@ void BookedAtcDialog::refresh() {
     const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
 
     qDebug() << "BookedAtcDialog/refresh(): setting clients";
-    bookedAtcModel.setClients(data.getBookedControllers());
+    bookedAtcModel->setClients(data.getBookedControllers());
 
     QString msg = QString("Bookings %1 updated")
                   .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
@@ -86,6 +80,8 @@ void BookedAtcDialog::refresh() {
     qDebug() << "BookedAtcDialog/refresh() -- finished";
 
     editFilterTimer.start(5);
+
+    qApp->restoreOverrideCursor();
 }
 
 void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime)
@@ -153,6 +149,7 @@ void BookedAtcDialog::on_spinHours_valueChanged(int val)
 }
 
 void BookedAtcDialog::performSearch() {
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     editFilterTimer.stop();
 
     // Text
@@ -172,25 +169,21 @@ void BookedAtcDialog::performSearch() {
         regex = QRegExp(regExpStr, Qt::CaseInsensitive);
     }
 
-    qDebug() << "BookedAtcDialog/performSearch(): setting RegExp" << regex.pattern();
     bookedAtcSortModel->setFilterKeyColumn(-1);
     bookedAtcSortModel->setFilterRegExp(regex);
 
     //Date, Time, TimeSpan
     QDateTime from = dateTimeFilter->dateTime();
     QDateTime to = from.addSecs(spinHours->value() * 3600);
-    qDebug() << "BookedAtcDialog/performSearch(): setting Date" << from << to;
     bookedAtcSortModel->setDateTimeRange(from, to);
 
-    // General
-    //qDebug() << "BookedAtcDialog/performSearch(): resizing headers";
-    //treeBookedAtc->header()->resizeSections(QHeaderView::ResizeToContents);
     boxResults->setTitle(QString("Results (%1)").arg(bookedAtcSortModel->rowCount()));
+    qApp->restoreOverrideCursor();
     qDebug() << "BookedAtcDialog/performSearch() -- finished";
 }
 
 void BookedAtcDialog::modelSelected(const QModelIndex& index) {
-    bookedAtcModel.modelSelected(bookedAtcSortModel->mapToSource(index));
+    bookedAtcModel->modelSelected(bookedAtcSortModel->mapToSource(index));
 }
 
 void BookedAtcDialog::on_tbPredict_clicked()
