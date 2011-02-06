@@ -5,10 +5,9 @@
 #ifndef LISTCLIENTSDIALOG_H
 #define LISTCLIENTSDIALOG_H
 
-//#include <QSortFilterProxyModel>
+#include <QSortFilterProxyModel>
 
 #include "ListClientsDialogModel.h"
-#include "ListClientsSortFilter.h"
 #include "ui_ListClientsDialog.h"
 
 class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
@@ -16,11 +15,10 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
 public:
     static ListClientsDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
-    void refresh();
 
 public slots:
+    void refresh();
     void performSearch();
-    void newMapPosition();
     void pingReceived(QString, int);
 
 private slots:
@@ -28,13 +26,14 @@ private slots:
     void on_pbPingServers_clicked();
     void modelSelected(const QModelIndex& index);
     void on_editFilter_textChanged(QString str);
-    void serverClicked(int row, int col);
+    void voiceServerClicked(int row, int col);
 
 private:
     ListClientsDialog(QWidget *parent);
 
-    ListClientsDialogModel listClientsModel;
-    ListClientsSortFilter *listClientsSortModel;
+    ListClientsDialogModel *clientsModel;
+    //ListClientsSortFilter *listClientsSortModel;
+    QSortFilterProxyModel *clientsProxyModel;
     QColor mapPingToColor(int ms);
     QStack <QString> pingStack;
     void pingNextFromStack();

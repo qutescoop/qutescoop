@@ -13,7 +13,7 @@ class ListClientsDialogModel : public QAbstractTableModel {
     Q_OBJECT
 
 public:
-    ListClientsDialogModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
+    ListClientsDialogModel(QObject *parent = 0) : QAbstractTableModel(parent), clients(QList<Client*>()) {}
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;

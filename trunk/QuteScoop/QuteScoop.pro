@@ -150,7 +150,6 @@ HEADERS += src/WhazzupData.h \
     src/PlanFlightRoutesModel.h \
     src/BookedAtcSortFilter.h \
     src/helpers.h \
-    src/ListClientsSortFilter.h \
     src/ListClientsDialogModel.h \
     src/ListClientsDialog.h \
     src/Ping.h \
@@ -200,7 +199,6 @@ SOURCES += src/WhazzupData.cpp \
     src/Route.cpp \
     src/PlanFlightRoutesModel.cpp \
     src/BookedAtcSortFilter.cpp \
-    src/ListClientsSortFilter.cpp \
     src/ListClientsDialogModel.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
