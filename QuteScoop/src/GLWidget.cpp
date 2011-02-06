@@ -643,8 +643,8 @@ void GLWidget::renderLabels() {
 
     // Airport labels
     objects.clear();
-    QList<Airport*> airportList = NavData::getInstance()->airportsTrafficSorted(); //ordered by congestion, big airport's labels will always be drawn first
-    for(int i = 0; i < airportList.size(); i++) {
+    QList<Airport*> airportList = NavData::getInstance()->activeAirports().values(); //ordered by congestion ascending, big airport's labels will always be drawn first
+    for(int i = airportList.size() - 1; i > -1; i--) { // from up to down
         if(airportList[i] == 0) continue;
         if(airportList[i]->isActive()) objects.append(airportList[i]);
     }

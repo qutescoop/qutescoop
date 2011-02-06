@@ -153,8 +153,8 @@ void AirportDetails::refresh(Airport* newAirport) {
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // set titles
-    groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals()).arg(airport->getArrivals().size()));
-    groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures()).arg(airport->getDepartures().size()));
+    groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals).arg(airport->getArrivals().size()));
+    groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures).arg(airport->getDepartures().size()));
 
 
     QList<Controller*> atcContent = airport->getAllControllers();

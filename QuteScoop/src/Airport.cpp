@@ -59,6 +59,8 @@ void Airport::resetWhazzupStatus() {
     deliveries.clear();
     arrivals.clear();
     departures.clear();
+    numFilteredArrivals = 0;
+    numFilteredDepartures = 0;
 }
 
 void Airport::addArrival(Pilot* client) {
@@ -312,46 +314,16 @@ bool Airport::matches(const QRegExp& regex) const {
     return MapObject::matches(regex);
 }
 
-int Airport::numFilteredArrivals() const {
-    int numFilteredArrivals = 0;
-    if(Settings::filterTraffic()) { // Airport traffic filtered
-        for (int i=0; i < arrivals.count(); i++){
-            if(
-                (arrivals[i]->distanceToDestination() < Settings::filterDistance())
-                ||
-                (arrivals[i]->distanceToDestination() / arrivals[i]->groundspeed < Settings::filterArriving())
-                ) {
-                numFilteredArrivals++;
-            }
-        }
-    } else
-        return arrivals.size();
-    return numFilteredArrivals;
-}
-
-int Airport::numFilteredDepartures() const {
-    int numFilteredDepartures = 0;
-    if(Settings::filterTraffic()) { // Airport traffic filtered
-        for (int i=0; i < departures.count(); i++){
-            if(departures[i]->distanceFromDeparture() < Settings::filterDistance()) {
-                numFilteredDepartures++;
-            }
-        }
-    } else
-        return departures.size();
-    return numFilteredDepartures;
-}
-
 QString Airport::mapLabel() const {
     QString result = label;
-    if(!this->active || numFilteredArrivals() + numFilteredDepartures() == 0)
+    if(!this->active || numFilteredArrivals + numFilteredDepartures == 0)
         return label;
 
-    if(!numFilteredArrivals()) result += " -/";
-    else result += QString(" %1/").arg(numFilteredArrivals());
+    if(!numFilteredArrivals) result += " -/";
+    else result += QString(" %1/").arg(numFilteredArrivals);
 
-    if(!numFilteredDepartures()) result += "-";
-    else result += QString("%1").arg(numFilteredDepartures());
+    if(!numFilteredDepartures) result += "-";
+    else result += QString("%1").arg(numFilteredDepartures);
 
     return result;
 }

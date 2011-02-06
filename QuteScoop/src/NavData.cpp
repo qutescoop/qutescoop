@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <QDebug>
+#include <QApplication>
 
 #include "NavData.h"
 #include "FileReader.h"
@@ -21,8 +22,8 @@ NavData::NavData() {
 }
 
 void NavData::loadAirports(const QString& filename) {
-    airportMap.clear();
-    airportsListTrafficSorted.clear();
+    airportHash.clear();
+    activeAirportsCongestionMap.clear();
     FileReader fileReader(filename);
     while (!fileReader.atEnd()) {
         QString line = fileReader.nextLine();
@@ -30,7 +31,7 @@ void NavData::loadAirports(const QString& filename) {
             return;
         Airport *airport = new Airport(line.split(':'));
         if (airport != 0 && !airport->isNull())
-            airportMap[airport->label] = airport;
+            airportHash[airport->label] = airport;
     }
 }
 
@@ -50,7 +51,7 @@ void NavData::loadCountryCodes(const QString& filename) {
 
 void NavData::loadSectors() {
     SectorReader sectorReader;
-    sectorReader.loadSectors(sectorMap);
+    sectorReader.loadSectors(sectorHash);
 }
 
 NavData* NavData::getInstance() {
@@ -58,18 +59,6 @@ NavData* NavData::getInstance() {
         instance = new NavData();
     }
     return instance;
-}
-
-const QHash<QString, Airport*>& NavData::airports() const {
-    return airportMap;
-}
-
-const QList<Airport*>& NavData::airportsTrafficSorted() const {
-    return airportsListTrafficSorted;
-}
-
-const QHash<QString, Sector*>& NavData::sectors() const {
-    return sectorMap;
 }
 
 #define IS_NAN(x) (x != x)
@@ -105,7 +94,7 @@ void NavData::distanceTo(double lat, double lon, double dist, double heading, do
 
 QList<Airport*> NavData::airportsAt(double lat, double lon, double maxDist) {
     QList<Airport*> result;
-    QList<Airport*> airports = airportMap.values();
+    QList<Airport*> airports = airportHash.values();
     for(int i = 0; i < airports.size(); i++) {
         if(distance(airports[i]->lat, airports[i]->lon, lat, lon) <= maxDist) {
             result.append(airports[i]);
@@ -116,110 +105,95 @@ QList<Airport*> NavData::airportsAt(double lat, double lon, double maxDist) {
 }
 
 void NavData::updateData(const WhazzupData& whazzupData) {
-    qDebug() << "NavData::updateData()";
-    QList<Airport*> airportList = airportMap.values();
-    for(int i = 0; i < airportList.size(); i++) {
-        if(airportList[i] != 0)
-            airportList[i]->resetWhazzupStatus();
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+    qDebug() << "NavData::updateData() on" << airportHash.size() << "airports";
+    foreach (Airport *a, activeAirportsCongestionMap.values()) {
+        a->resetWhazzupStatus();
     }
 
+    QSet<Airport*> newActiveAirportsSet;
     QList<Pilot*> allpilots = whazzupData.getAllPilots();
     for(int i = 0; i < allpilots.size(); i++) {
         Pilot *p = allpilots[i];
         if(p == 0) continue;
-        if(airportMap.contains(p->planDep) && airportMap[p->planDep] != 0)
-            airportMap[p->planDep]->addDeparture(p);
+
+        Airport *dep = airportHash.value(p->planDep, 0);
+        if(dep != 0) {
+            dep->addDeparture(p);
+            newActiveAirportsSet.insert(dep);
+            if(Settings::filterTraffic()) { // Airport traffic filtered
+                if(p->distanceFromDeparture() < Settings::filterDistance())
+                    dep->numFilteredDepartures++;
+            }
+        }
         else if(p->flightStatus() == Pilot::BUSH) { // no flightplan yet?
-            QList<Airport*> aa = airportsAt(p->lat, p->lon, 3);
-            if(aa.size() != 0) {
-                if(aa[0] != 0) {
-                    airportMap[aa[0]->label]->addDeparture(p);
-                }
+            QList<Airport*> aA = airportsAt(p->lat, p->lon, 3);
+            if(!aA.isEmpty()) {
+                aA.first()->addDeparture(p);
+                newActiveAirportsSet.insert(aA.first());
             }
         }
 
-        if(airportMap.contains(p->planDest) && airportMap[p->planDest] != 0)
-            airportMap[p->planDest]->addArrival(p);
+        Airport *dest = airportHash.value(p->planDest, 0);
+        if(dest != 0) {
+            dest->addArrival(p);
+            newActiveAirportsSet.insert(dest);
+            if(Settings::filterTraffic()) { // Airport traffic filtered
+                if((p->distanceToDestination() < Settings::filterDistance())
+                    || (p->distanceToDestination() / p->groundspeed < Settings::filterArriving()))
+                    dest->numFilteredArrivals++;
+            }
+        }
     }
 
     for(int i = 0; i < whazzupData.getControllers().size(); i++) {
         Controller *c = dynamic_cast<Controller*>(whazzupData.getControllers()[i]);
 
         QString icao = c->getApproach();
-        if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
-            airportMap[icao]->addApproach(c);
+        if(!icao.isNull() && airportHash.contains(icao)) {
+            airportHash[icao]->addApproach(c);
+            newActiveAirportsSet.insert(airportHash[icao]);
         }
 
         icao = c->getTower();
-        if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
-            airportMap[icao]->addTower(c);
+        if(!icao.isNull() && airportHash.contains(icao)) {
+            airportHash[icao]->addTower(c);
+            newActiveAirportsSet.insert(airportHash[icao]);
         }
 
         icao = c->getGround();
-        if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
-            airportMap[icao]->addGround(c);
+        if(!icao.isNull() && airportHash.contains(icao)) {
+            airportHash[icao]->addGround(c);
+            newActiveAirportsSet.insert(airportHash[icao]);
         }
 
         icao = c->getDelivery();
-        if(!icao.isNull() && airportMap.contains(icao) && airportMap[icao] != 0) {
-            airportMap[icao]->addDelivery(c);
-        }
-
-        /* We looking for a better and a exacter way
-        if(c->label.right(4) == "_FSS" || c->label.right(4) == "_CTR")
-        {
-            // calculate covered airports (by a circle around the geometrical centre of the FIR)
-            double coverLat, coverLon;
-            int coverRange;
-            if (c->sector != 0) {
-                qDebug() << "checking equdistant Point for FIR" << c->label; //fixme
-                QPair<double, double> center = c->sector->equidistantPoint();
-                coverLat = center.first;
-                coverLon = center.second;
-                coverRange = c->sector->maxDistanceFromCenter();
-            } else {
-                coverLat = c->lat;
-                coverLon = c->lon;
-                coverRange = c->visualRange;
-            }
-
-            QList<Airport*> aps = NavData::getInstance()->airportsAt(coverLat, coverLon, coverRange);
-            qDebug() << QString("%1 at %2/%3 (%4 NM) covering %5 airports")
-                    .arg(c->label)
-                    .arg(coverLat)
-                    .arg(coverLon)
-                    .arg(coverRange)
-                    .arg(aps.size());
-            for(int j = 0; j < aps.size(); j++) {
-                aps[j]->addCenter(c);
-            }
-
-        }*/
-    }
-
-    airportsListTrafficSorted.clear(); // we gonna fill it again here
-    for(int i = 0; i < airportList.size(); i++) {
-        if(airportList[i] != 0)
-            airportList[i]->refreshAfterUpdate();
-
-        // fill them in the airportsTrafficSorted List - sorted descending
-        int congestion = airportList[i]->numFilteredArrivals() + airportList[i]->numFilteredDepartures(); // sort key
-        airportsListTrafficSorted.append(airportList[i]);
-        if(congestion > 0) {
-            for(int h=0; h < airportsListTrafficSorted.size() - 1; h++) { // find the point to insert
-                if (airportsListTrafficSorted[h]->numFilteredArrivals()
-                    + airportsListTrafficSorted[h]->numFilteredDepartures() < congestion) { // move inserted item before that one
-                        airportsListTrafficSorted.move(airportsListTrafficSorted.size() - 1, h);
-                        break;
-                }
-            }
+        if(!icao.isNull() && airportHash.contains(icao)) {
+            airportHash[icao]->addDelivery(c);
+            newActiveAirportsSet.insert(airportHash[icao]);
         }
     }
+
+    // call refreshAfterUpdate() on airports that were, but are not any more, active
+    foreach(Airport *a, activeAirportsCongestionMap) {
+        if (!newActiveAirportsSet.contains(a)) // not yet the newly active ones
+            a->refreshAfterUpdate();
+    }
+
+    // new method with MultiMap. Tests show: 450ms vs. 3800ms for 800 pilots :)
+    activeAirportsCongestionMap.clear();
+    foreach(Airport *a, newActiveAirportsSet) {
+        a->refreshAfterUpdate();
+        int congestion = a->numFilteredArrivals + a->numFilteredDepartures; // sort key
+        activeAirportsCongestionMap.insert(congestion, a);
+    }
+
     qDebug() << "NavData::updateData() -- finished";
+    qApp->restoreOverrideCursor();
 }
 
 void NavData::accept(MapObjectVisitor* visitor) {
-    QList<Airport*> airports = airportMap.values();
+    QList<Airport*> airports = airportHash.values();
     for(int i = 0; i < airports.size(); i++) {
         if(airports[i] != 0)
             visitor->visit(airports[i]);
