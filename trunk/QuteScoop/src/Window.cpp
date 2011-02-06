@@ -830,12 +830,14 @@ void Window::dataFilesDownloaded(bool error) {
 }
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
+    qDebug() << "updateMetarDecoder()";
     metarDecoderDock->setWindowTitle("METAR for " + airport);
     metarText->setText(decodedText);
     metarDecoderDock->show();
     metarDecoderDock->raise();
     metarDecoderDock->activateWindow(); // ?? it gets on top only after the second click from AirportDialog...
     metarDecoderDock->setFocus(); // Don't understand how I can bring this nasty on top of all other. A simple click on the titlebar and it is done.
+    qDebug() << "updateMetarDecoder() -- finished";
 }
 
 void Window::downloadWatchdogTriggered() {
