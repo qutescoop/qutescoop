@@ -32,7 +32,7 @@ private slots:
 private:
     BookedAtcDialog(QWidget *parent);
 
-    BookedAtcDialogModel bookedAtcModel;
+    BookedAtcDialogModel *bookedAtcModel;
     BookedAtcSortFilter *bookedAtcSortModel;
 
     QDateTime dateTimeFilter_old;
