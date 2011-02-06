@@ -227,5 +227,15 @@ added:
   QuteScoop can move files to the correct locations.
 * more information on the compiling and running environment in the debug log browser.
 
+Version 2.0rc3:
+fixed:
+* crash after Metar download
+changed:
+* MAJOR improvements on update times. Brought one important function in the Whazzup
+  data updates down to ~10% of the CPU cycles needed before :)
+* small improvements of "List clients"
+added:
+* show an "hourglass" during CPU-intensive operations
+
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
