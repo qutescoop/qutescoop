@@ -6,6 +6,8 @@
 #define NAVDATA_H_
 
 #include <QHash>
+#include <QHash>
+#include <QMultiMap>
 #include "Airport.h"
 #include "Sector.h"
 #include "Airac.h"
@@ -15,9 +17,9 @@ class NavData
 public:
     static NavData* getInstance();
 
-    const QHash<QString, Airport*>& airports() const;
-    const QList<Airport*>& airportsTrafficSorted() const;
-    const QHash<QString, Sector*>& sectors() const;
+    const QHash<QString, Airport*>& airports() const { return airportHash; }
+    const QMultiMap<int, Airport*>& activeAirports() const { return activeAirportsCongestionMap; }
+    const QHash<QString, Sector*>& sectors() const { return sectorHash; }
     QList<Airport*> airportsAt(double lat, double lon, double maxDist);
 
     const Airac& getAirac() const { return airac; }
@@ -44,9 +46,9 @@ private:
     void loadSectors();
     void loadCountryCodes(const QString& filename);
 
-    QHash<QString, Airport*> airportMap;
-    QList<Airport*> airportsListTrafficSorted; // holds airports sorted by congestion descending
-    QHash<QString, Sector*> sectorMap;
+    QHash<QString, Airport*> airportHash;
+    QMultiMap<int, Airport*> activeAirportsCongestionMap; // holds activeAirports sorted by congestion ascending
+    QHash<QString, Sector*> sectorHash;
     QHash<QString, QString> countryCodes;
 
     Airac airac;
