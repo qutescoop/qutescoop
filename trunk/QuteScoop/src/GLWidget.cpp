@@ -591,7 +591,7 @@ void GLWidget::createAirportsList() {
         for(int i = 0; i < airportList.size(); i++) {
             if(airportList[i] == 0) continue;
             if(!airportList[i]->isActive()) continue;
-            int congested = airportList[i]->numFilteredArrivals() + airportList[i]->numFilteredDepartures();
+            int congested = airportList[i]->numFilteredArrivals + airportList[i]->numFilteredDepartures;
             if(congested < Settings::airportCongestionMinimum()) continue;
             GLdouble circle_distort = cos(airportList[i]->lat * Pi180);
             QList<QPair<double, double> > points;
