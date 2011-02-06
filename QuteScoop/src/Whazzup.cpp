@@ -146,7 +146,7 @@ void Whazzup::fromFile(QString filename) {
     */
     QFile *file = new QFile(filename);
     if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Error opening" << filename;
+        emit hasGuiMessage(QString("Error opening %1").arg(filename), GuiMessage::Warning);
         return;
     }
     emit hasGuiMessage("Loading Whazzup from file...");
