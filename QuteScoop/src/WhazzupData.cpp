@@ -44,7 +44,8 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     bookingsTime(QDateTime()),
     updateEarliest(QDateTime())
 {
-    qDebug() << "WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
+    qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     dataType = type;
     int reloadInMin;
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
@@ -164,6 +165,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
         updateEarliest = whazzupTime.addSecs(reloadInMin * 60).toUTC();
         //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << updateEarliest << QDateTime::currentDateTimeUtc().secsTo(updateEarliest);
     }
+    qApp->restoreOverrideCursor();
 }
 
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
@@ -178,7 +180,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     predictionBasedOnBookingsTime(QDateTime()),
     updateEarliest(QDateTime())
 {
-    qDebug() << "WhazzupData(predictTime)";
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+    qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
 
     whazzupVersion = data.whazzupVersion;
     whazzupTime = predictTime;
@@ -325,6 +328,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     }
     connectedClients = controllers.size() + pilots.size();
     qDebug() << "Warped to\t" << predictTime.toString() << "\t- Faked and inserted\t" << connectedClients << "clients";
+    qApp->restoreOverrideCursor();
 }
 
 WhazzupData::WhazzupData(const WhazzupData& data) {
