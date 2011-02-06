@@ -56,11 +56,8 @@ QString Client::getField(const QStringList& list, int index) {
 QString Client::onlineTime() const {
     if (timeConnected.isNull())
         return QString("not connected");
-    int secondsOnline = timeConnected.secsTo(Whazzup::getInstance()->whazzupData().timestamp());
-    int minutesOnline = secondsOnline / 60;
-    int hoursOnline = secondsOnline / 3600;
-    QTime result = QTime(hoursOnline % 24, minutesOnline % 60, secondsOnline % 60);
-    return result.toString("HH:mm");
+    return QDateTime::fromTime_t(Whazzup::getInstance()->whazzupData().timestamp().toTime_t()
+                                  - timeConnected.toTime_t()).toString("HH:mm");
 }
 
 QString Client::displayName(bool withLink) const {
