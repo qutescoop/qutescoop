@@ -6,7 +6,6 @@
 #include <QDesktopServices>
 #include "ListClientsDialog.h"
 #include "ListClientsDialogModel.h"
-#include "ListClientsSortFilter.h"
 #include "Settings.h"
 #include "Controller.h"
 #include "Pilot.h"
@@ -38,42 +37,46 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
-    listClientsSortModel = new ListClientsSortFilter;
-
-    listClientsSortModel->setDynamicSortFilter(true);
-    listClientsSortModel->setSourceModel(&listClientsModel);
-
+    // clients
+    clientsModel = new ListClientsDialogModel;
+    clientsProxyModel = new QSortFilterProxyModel;
+    clientsProxyModel->setDynamicSortFilter(true);
+    clientsProxyModel->setSourceModel(clientsModel);
     treeListClients->setUniformRowHeights(true);
-    treeListClients->setModel(listClientsSortModel);
+    treeListClients->setModel(clientsProxyModel);
 
-    treeListClients->header()->setResizeMode(QHeaderView::Interactive);
-    treeListClients->sortByColumn(0, Qt::AscendingOrder);
+    treeListClients->setColumnWidth(0, 100);
+    treeListClients->setColumnWidth(1, 100);
+    treeListClients->setColumnWidth(2, 200);
+    treeListClients->setColumnWidth(3, 100);
 
-    connect(treeListClients->header(), SIGNAL(sectionClicked(int)), treeListClients, SLOT(sortByColumn(int)));
     connect(treeListClients, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
 
+    // servers
+    QStringList serverHeaders;
+    serverHeaders << "Ident" << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description";
+    serversTable->setColumnCount(serverHeaders.size());
+    serversTable->setHorizontalHeaderLabels(serverHeaders);
+    connect(voiceServersTable, SIGNAL(cellClicked(int, int)), this, SLOT(voiceServerClicked(int, int)));
+
+    // voiceServers
+    QStringList voiceServerHeaders;
+    voiceServerHeaders << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description";
+    voiceServersTable->setColumnCount(voiceServerHeaders.size());
+    voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
+
+    // General
     QFont font = lblStatusInfo->font();
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    connect(qobject_cast<Window *>(this->parent())->glWidget, SIGNAL(newPosition()), this, SLOT(newMapPosition()));
-
-    QStringList serverHeaders;
-    serverHeaders << "Ident" << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" <<  "Allowed";
-    serversTable->setColumnCount(serverHeaders.size());
-    serversTable->setHorizontalHeaderLabels(serverHeaders);
-    connect(voiceServersTable, SIGNAL(cellClicked(int, int)), this, SLOT(serverClicked(int, int)));
-
-    QStringList voiceServerHeaders;
-    voiceServerHeaders << "URL" << "Ping" << "Ping" << "Ping" << QString::fromUtf8("Ø Ping") << "Location" << "Description" << "Type" << "Allowed" << "Information URL";
-    voiceServersTable->setColumnCount(voiceServerHeaders.size());
-    voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
-
     connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
-    refresh();
+
+    QTimer::singleShot(100, this, SLOT(refresh())); // delayed time-consuming insertion of clients to open the window now
 }
 
 void ListClientsDialog::refresh() {
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
     // Clients
@@ -88,21 +91,19 @@ void ListClientsDialog::refresh() {
         clients << dynamic_cast<Client*> (cs[i]);
     }
 
-    listClientsModel.setClients(clients);
+    clientsModel->setClients(clients);
 
     // Servers
     serversTable->clearContents();
     QList<QStringList> servers = data.serverList();
     serversTable->setRowCount(servers.size());
     for (int row = 0; row < servers.size(); row++) {
-        QStringList server = servers[row];
         for (int col = 0; col < serversTable->columnCount(); col++) {
             switch(col) {
-                case 0: serversTable->setItem(row, col, new QTableWidgetItem(server[0])); break; // ident
-                case 1: serversTable->setItem(row, col, new QTableWidgetItem(server[1])); break; // hostname_or_IP
-                case 6: serversTable->setItem(row, col, new QTableWidgetItem(server[2])); break; // location
-                case 7: serversTable->setItem(row, col, new QTableWidgetItem(server[3])); break; // name
-                case 8: serversTable->setItem(row, col, new QTableWidgetItem(server[4])); break; // clients_connection_allowed
+                case 0: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][0])); break; // ident
+                case 1: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][1])); break; // hostname_or_IP
+                case 6: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][2])); break; // location
+                case 7: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][3])); break; // name
                 default: serversTable->setItem(row, col, new QTableWidgetItem()); break;
             }
         }
@@ -121,15 +122,11 @@ void ListClientsDialog::refresh() {
     QList<QStringList> voiceServers = data.voiceServerList();
     voiceServersTable->setRowCount(voiceServers.size());
     for (int row = 0; row < voiceServers.size(); row++) {
-        QStringList server = voiceServers[row];
         for (int col=0; col < voiceServersTable->columnCount(); col++) {
             switch(col) {
-                case 0: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[0])); break; // hostname_or_IP
-                case 5: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[1])); break; // location
-                case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[2])); break; // name
-                case 7: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[4])); break; // type_of_voice_server
-                case 8: voiceServersTable->setItem(row, col, new QTableWidgetItem(server[3])); break; // clients_connection_allowed
-                case 9: voiceServersTable->setItem(row, col, new QTableWidgetItem(QString("http://%1:18009/?opts=-R-D").arg(server[0]))); break; // Information
+                case 0: voiceServersTable->setItem(row, col, new QTableWidgetItem(voiceServers[row][0])); break; // hostname_or_IP
+                case 5: voiceServersTable->setItem(row, col, new QTableWidgetItem(voiceServers[row][1])); break; // location
+                case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(voiceServers[row][2])); break; // name
                 default: voiceServersTable->setItem(row, col, new QTableWidgetItem()); break;
             }
         }
@@ -155,7 +152,6 @@ void ListClientsDialog::refresh() {
 
     // Set Item Titles
     toolBox->setItemText(0, QString("C&lients (%1)").arg(clients.size()));
-    //toolBox->setItemEnabled(0, clients.size() > 0); // at least one needs to be shown...
 
     toolBox->setItemText(1, QString("&Servers (%1)").arg(servers.size()));
     toolBox->setItemEnabled(1, servers.size() > 0);
@@ -164,6 +160,7 @@ void ListClientsDialog::refresh() {
     toolBox->setItemEnabled(2, voiceServers.size() > 0);
 
     performSearch();
+    qApp->restoreOverrideCursor();
 }
 
 void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
@@ -171,6 +168,10 @@ void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
 }
 
 void ListClientsDialog::performSearch() {
+    editFilterTimer.stop();
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    qDebug() << "ListClientsDialog::performSearch()";
     QRegExp regex;
     QStringList tokens = editFilter->text().trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
     if(tokens.size() == 1) {
@@ -186,21 +187,17 @@ void ListClientsDialog::performSearch() {
         regex = QRegExp(regExpStr, Qt::CaseInsensitive);
     }
 
-    listClientsSortModel->setFilterRegExp(regex);
-    listClientsSortModel->setFilterKeyColumn(-1);
-    //treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
+    clientsProxyModel->setFilterRegExp(regex);
+    clientsProxyModel->setFilterKeyColumn(-1);
 
     // General
-    boxResults->setTitle(QString("Results (%1)").arg(listClientsSortModel->rowCount()));
+    boxResults->setTitle(QString("Results (%1)").arg(clientsProxyModel->rowCount()));
+    qApp->restoreOverrideCursor();
+    qDebug() << "ListClientsDialog::performSearch() -- finished";
 }
 
 void ListClientsDialog::modelSelected(const QModelIndex& index) {
-    listClientsModel.modelSelected(listClientsSortModel->mapToSource(index));
-}
-
-void ListClientsDialog::newMapPosition() {
-    if(this->isVisible()) listClientsSortModel->invalidate();
-    //treeListClients->header()->resizeSections(QHeaderView::ResizeToContents);
+    clientsModel->modelSelected(clientsProxyModel->mapToSource(index));
 }
 
 void ListClientsDialog::pingReceived(QString server, int ms) {
@@ -270,11 +267,11 @@ void ListClientsDialog::on_pbPingServers_clicked()
         // reset Ping columns
         for (int col = 2; col < 6; col++) {
             serversTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
-            //serversTable->item(row, col)->setBackground(QBrush());
+            serversTable->item(row, col)->setBackground(QBrush());
         }
-        pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
-        pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
-        pingStack.push(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
     }
     pingNextFromStack();
 }
@@ -285,19 +282,19 @@ void ListClientsDialog::on_pbPingVoiceServers_clicked()
         // reset Ping columns
         for (int col = 1; col < 5; col++) {
             voiceServersTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
-            //voiceServersTable->item(row, col)->setBackground(QBrush());
+            voiceServersTable->item(row, col)->setBackground(QBrush());
         }
-        pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
-        pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
-        pingStack.push(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
     }
     pingNextFromStack();
 }
 
 void ListClientsDialog::pingNextFromStack() {
     if (!pingStack.empty()) {
-        Ping* ping = new Ping();
-        connect(ping, SIGNAL(havePing(QString,int)), this, SLOT(pingReceived(QString,int)));
+        Ping *ping = new Ping();
+        connect(ping, SIGNAL(havePing(QString,int)), SLOT(pingReceived(QString,int)));
         ping->startPing(pingStack.pop());
     }
 }
@@ -309,12 +306,15 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
     if(ms == -1) // "n/a"
         return QColor(255, 0, 0, 70);
 
-    int red = qMin(255, qMax(0, (ms - BEST) * 255 / (WORST - BEST)));
-    return QColor(red, 255 - red, 0, 70);
+    int red = qMin(230, qMax(0, (ms - BEST) * 255 / (WORST - BEST)));
+    return QColor(red, 230 - red, 0, 70);
 }
 
-void ListClientsDialog::serverClicked(int row, int col) {
-    QUrl url = QUrl(voiceServersTable->item(row, 9)->data(Qt::DisplayRole).toString(), QUrl::TolerantMode);
+void ListClientsDialog::voiceServerClicked(int row, int col) {
+    QUrl url = QUrl(
+            QString("http://%1:18009/?opts=-R-D")
+                .arg(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString())
+            , QUrl::TolerantMode);
     if(QMessageBox::question(this, tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
         if (url.isValid()) {
             if(!QDesktopServices::openUrl(url))
