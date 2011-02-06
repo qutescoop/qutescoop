@@ -405,12 +405,6 @@ void Window::refreshFriends() {
     friendsModel.setData(visitor->result());
     delete visitor;
     friendsList->reset();
-
-    // update if visible
-    if (ListClientsDialog::getInstance(false) != 0) {
-        if (ListClientsDialog::getInstance(true)->isVisible())
-            ListClientsDialog::getInstance(true)->refresh();
-    }
 }
 
 void Window::mapClicked(int x, int y, QPoint absolutePos) {
