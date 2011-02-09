@@ -59,7 +59,7 @@ void Sector::compileDisplayLists() {
     color = Settings::firBorderLineColor().rgba();
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     for (int i = 0; i < _points.size(); i++) {
-        VERTEX(_points[i].first, _points[i].second);
+        VERTEXhigh(_points[i].first, _points[i].second);
     }
     glEnd();
 

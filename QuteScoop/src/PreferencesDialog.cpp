@@ -41,6 +41,7 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
 
 void PreferencesDialog::loadSettings() {
     settingsLoaded = false;
+    QColor color;
 
     spinBoxDownloadInterval->setValue(Settings::downloadInterval());
     cbDownloadOnStartup->setChecked(Settings::downloadOnStartup());
@@ -79,10 +80,7 @@ void PreferencesDialog::loadSettings() {
 
     // Display
     cbReadSupFile->setChecked(Settings::useSupFile());
-
     spinBoxTimeline->setValue(Settings::timelineSeconds());
-    cbLineSmoothing->setChecked(Settings::displaySmoothLines());
-    cbDotSmoothing->setChecked(Settings::displaySmoothDots());
 
     // Show routes
     cbDashedFrontAfter->setCurrentIndex(0);
@@ -90,13 +88,30 @@ void PreferencesDialog::loadSettings() {
         cbDashedFrontAfter->setCurrentIndex(1);
 
     // OpenGL
-    cbBlend->setChecked(Settings::enableBlend());
+    glStippleLines->setChecked(Settings::glStippleLines());
+    cbBlend->setChecked(Settings::glBlending);
+    cbLineSmoothing->setChecked(Settings::displaySmoothLines());
+    cbDotSmoothing->setChecked(Settings::displaySmoothDots());
+    cbLighting->setChecked(Settings::glLighting());
+    glEarthShininess->setValue(Settings::earthShininess());
+    glLights->setValue(Settings::glLights());
+    glLightsSpread->setValue(Settings::glLightsSpread());
+
+    color = Settings::sunLightColor();
+    pbSunLightColor->setText(color.name());
+    pbSunLightColor->setPalette(QPalette(color));
+
+    color = Settings::specularColor();
+    pbSpecularLightColor->setText(color.name());
+    pbSpecularLightColor->setPalette(QPalette(color));
 
     // stylesheet
     tedStylesheet->setPlainText(Settings::stylesheet());
 
-    // colors
-    QColor color = Settings::backgroundColor().dark();
+    // earthspace
+    sbEarthGridEach->setValue(Settings::earthGridEach());
+
+    color = Settings::backgroundColor();
     pbBackgroundColor->setText(color.name());
     pbBackgroundColor->setPalette(QPalette(color));
 
@@ -399,8 +414,8 @@ void PreferencesDialog::on_pbBackgroundColor_clicked() {
     QRgb rgba = QColorDialog::getRgba(Settings::backgroundColor().rgba(), &ok, this);
     if(ok) {
         QColor color = QColor::fromRgba(rgba);
-        pbBackgroundColor->setText(color.dark().name());
-        pbBackgroundColor->setPalette(QPalette(color.dark()));
+        pbBackgroundColor->setText(color.name());
+        pbBackgroundColor->setPalette(QPalette(color));
         Settings::setBackgroundColor(color);
     }
 }
@@ -462,7 +477,15 @@ void PreferencesDialog::on_sbCoastLineStrength_valueChanged(double value) {
 }
 
 void PreferencesDialog::on_buttonResetEarthSpace_clicked() {
-    Settings::deleteEarthSpaceSettings();
+    QSettings settings;
+    settings.beginGroup("earthSpace");
+    settings.remove("");
+    settings.endGroup();
+
+    settings.beginGroup("gl");
+    settings.remove("");
+    settings.endGroup();
+
     loadSettings();
 }
 
@@ -635,11 +658,6 @@ void PreferencesDialog::on_pbAirportDotColor_clicked() {
 
 void PreferencesDialog::on_sbAirportDotSize_valueChanged(double value) {
     Settings::setAirportDotSize(value);
-}
-
-void PreferencesDialog::on_buttonResetAirport_clicked() {
-    Settings::deleteAirportSettings();
-    loadSettings();
 }
 
 void PreferencesDialog::on_pbPilotFontColor_clicked() {
@@ -825,13 +843,14 @@ void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double va
 
 void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
 {
+    Settings::deleteAirportSettings();
     Settings::deleteAirportTrafficSettings();
     loadSettings();
 }
 
 void PreferencesDialog::on_cbBlend_toggled(bool checked)
 {
-    Settings::setEnableBlend(checked);
+    Settings::setGlBlending(checked);
 }
 
 void PreferencesDialog::on_editBookingsLocation_editingFinished()
@@ -983,3 +1002,89 @@ QLabel {\n\
 }
 
 
+
+void PreferencesDialog::on_cbLighting_toggled(bool checked)
+{
+    Settings::setEnableLighting(checked);
+}
+
+void PreferencesDialog::on_pbSunLightColor_clicked()
+{
+    bool ok;
+    QRgb rgba = QColorDialog::getRgba(Settings::sunLightColor().rgba(), &ok, this);
+    if(ok) {
+        QColor color = QColor::fromRgba(rgba);
+        pbSunLightColor->setText(color.name());
+        pbSunLightColor->setPalette(QPalette(color));
+        Settings::setSunLightColor(color);
+    }
+}
+
+void PreferencesDialog::on_pbSpecularLightColor_clicked()
+{
+    bool ok;
+    QRgb rgba = QColorDialog::getRgba(Settings::specularColor().rgba(), &ok, this);
+    if(ok) {
+        QColor color = QColor::fromRgba(rgba);
+        pbSpecularLightColor->setText(color.name());
+        pbSpecularLightColor->setPalette(QPalette(color));
+        Settings::setSpecularColor(color);
+    }
+
+}
+
+void PreferencesDialog::on_glLights_valueChanged(int value)
+{
+    Settings::setGlLights(value);
+    if (value == 1)
+        glLightsSpread->setEnabled(false);
+    else
+        glLightsSpread->setEnabled(true);
+}
+void PreferencesDialog::on_glEarthShininess_valueChanged(int value)
+{
+    Settings::setEarthShininess(value);
+}
+void PreferencesDialog::on_glLightsSpread_valueChanged(int value)
+{
+    Settings::setGlLightsSpread(value);
+}
+
+void PreferencesDialog::on_pbReinitOpenGl_clicked()
+{
+    if (Window::getInstance(false) != 0) {
+        Window::getInstance(true)->glWidget->initializeGL();
+        Window::getInstance(true)->glWidget->updateGL();
+    }
+}
+
+void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value)
+{
+    Settings::setEarthGridEach(value);
+}
+
+
+void PreferencesDialog::on_applyAirports_clicked()
+{
+    if (Window::getInstance(false) != 0) {
+        Window::getInstance(true)->glWidget->createAirportsList();
+        Window::getInstance(true)->glWidget->prepareDisplayLists();
+        Window::getInstance(true)->glWidget->updateGL();
+    }
+
+}
+
+void PreferencesDialog::on_applyPilots_clicked()
+{
+    if (Window::getInstance(false) != 0) {
+        Window::getInstance(true)->glWidget->createPilotsList();
+        Window::getInstance(true)->glWidget->prepareDisplayLists();
+        Window::getInstance(true)->glWidget->updateGL();
+    }
+}
+
+
+void PreferencesDialog::on_glStippleLines_toggled(bool checked)
+{
+    Settings::setGlStippleLines(checked);
+}

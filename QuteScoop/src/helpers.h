@@ -9,24 +9,31 @@
 #include <QGLWidget>
 #include <QString>
 
-// version information
+/* version information */
 #define CVS_REVISION "$Revision$" // Gets set automatically on commit of THIS file.
                                         // This is just the revision of THIS file, not the whole working copy.
                                         // Well, better than nothing. No working copy revision information is available cross-platform :(
 
-#define VERSION_NUMBER "2.0rc3"
+#define VERSION_NUMBER "2.0rc"
 #define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
 
-// mathematical constants
+/* mathematical constants */
 const GLdouble Pi = 3.14159265358979323846;
 const GLdouble Pi180 = Pi/180.0;
 
+/* 3D-calculations */
 #define SX(lat, lon) (cos((lat) * Pi180) * sin((lon) * Pi180))
 #define SY(lat, lon) (-sin((lat) * Pi180))
 #define SZ(lat, lon) (cos((lat) * Pi180) * cos((lon) * Pi180))
+#define VERTEX(lat, lon) glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon))
+// higher VERTEX: 30km AGL (used for polygons to prevent intersecting with the globe)
+#define SXhigh(lat, lon) (cos((lat) * Pi180) * sin((lon) * Pi180)) * 1.005
+#define SYhigh(lat, lon) (-sin((lat) * Pi180)) * 1.005
+#define SZhigh(lat, lon) (cos((lat) * Pi180) * cos((lon) * Pi180)) * 1.005
+#define VERTEXhigh(lat, lon) glVertex3f(SXhigh(lat, lon), SYhigh(lat, lon), SZhigh(lat, lon))
 
+/* units */
 #define Nm2Deg(miles) (miles / 60.0)
 
-#define VERTEX(lat, lon) glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon))
 
 #endif /*HELPERS_H_*/

@@ -14,7 +14,7 @@ Tessellator::Tessellator()
     gluTessCallback(tess, GLU_TESS_BEGIN,	CALLBACK_CAST tessBeginCB);
     gluTessCallback(tess, GLU_TESS_END,		CALLBACK_CAST tessEndCB);
     gluTessCallback(tess, GLU_TESS_ERROR,	CALLBACK_CAST tessErrorCB);
-    gluTessCallback(tess, GLU_TESS_VERTEX,	CALLBACK_CAST tessVertexCB);	
+    gluTessCallback(tess, GLU_TESS_VERTEX,	CALLBACK_CAST tessVertexCB);
     gluTessCallback(tess, GLU_TESS_COMBINE, CALLBACK_CAST tessCombineCB);
 }
 
@@ -42,9 +42,9 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
     for(int i = 0; i < points.size(); i++) {
         GLdouble *p = new GLdouble[3];
         pointList.append(p);
-        p[0] = SX(points[i].first, points[i].second);
-        p[1] = SY(points[i].first, points[i].second);
-        p[2] = SZ(points[i].first, points[i].second);
+        p[0] = SXhigh(points[i].first, points[i].second);
+        p[1] = SYhigh(points[i].first, points[i].second);
+        p[2] = SZhigh(points[i].first, points[i].second);
         gluTessVertex(tess, p, p);
     }
     gluTessEndContour(tess);

@@ -31,26 +31,20 @@ Window* Window::getInstance(bool createIfNoInstance) {
 
 Window::Window(QWidget *parent) :
     QMainWindow(parent) {
-    setupUi(this);
-
     if(Settings::resetOnNextStart())
         QSettings().clear();
 
+    setupUi(this);
+    setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
 
-    // Playing with toolbar
-    //addToolBar(toolBar = new QToolBar());
-    //toolBar->addWidget(new QLabel("test", toolBar));
-
     QSettings* settings = new QSettings();
-    QGLFormat fmt;
 
     // apply styleSheet
     qDebug() << "applying styleSheet:" << Settings::stylesheet();
     setStyleSheet(Settings::stylesheet());
 
-    // Can please somebody comment on which settings are useful and which
-    // should go to the preferences window? Thanks, jonas.
+    QGLFormat fmt;
     fmt.setDirectRendering(settings->value("gl/directrendering", fmt.defaultFormat().directRendering()).toBool());
     fmt.setDoubleBuffer(settings->value("gl/doublebuffer", fmt.defaultFormat().doubleBuffer()).toBool());
     fmt.setStencil(settings->value("gl/stencilbuffer", fmt.defaultFormat().stencil()).toBool());
@@ -68,31 +62,9 @@ Window::Window(QWidget *parent) :
     fmt.setAccum(settings->value("gl/accumbuffer", fmt.defaultFormat().accum()).toBool());
     if (fmt.defaultFormat().accumBufferSize() > 0)
         fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
-    //fmt.setRgba(true);
+    fmt.setRgba(true);
     glWidget = new GLWidget(fmt);
-
-    // have fun :)
-    //setAttribute(Qt::WA_TranslucentBackground, true);
-    //glWidget->setAttribute(Qt::WA_TranslucentBackground, true);
-
-    setAttribute(Qt::WA_AlwaysShowToolTips, true);
-
     centralwidget->layout()->addWidget(glWidget);
-    qDebug() << "OpenGL support: " << glWidget->format().hasOpenGL()
-            << "\t| version: " << glWidget->format().openGLVersionFlags()
-            << "\nActually applied options (config has options to overwrite):"
-            << "\ngl/directrendering" << glWidget->format().directRendering()
-            << "\t| gl/doublebuffer" << glWidget->format().doubleBuffer()
-            << "\t| gl/stencilbuffer" << glWidget->format().stencil()
-            << "\t| gl/stencilsize" << glWidget->format().stencilBufferSize()
-            << "\ngl/depthbuffer" << glWidget->format().depth()
-            << "\t| gl/depthsize" << glWidget->format().depthBufferSize()
-            << "\t| gl/alphabuffer" << glWidget->format().alpha()
-            << "\t| gl/alphasize" << glWidget->format().alphaBufferSize()
-            << "\ngl/samplebuffers" << glWidget->format().sampleBuffers()
-            << "\t| gl/samples" << glWidget->format().samples()
-            << "\t| gl/accumbuffer" << glWidget->format().accum()
-            << "\t| gl/accumsize" << glWidget->format().accumBufferSize();
 
     clientSelection = new ClientSelectionWidget();
 
@@ -185,13 +157,10 @@ Window::Window(QWidget *parent) :
 
     // restore saved states
     glWidget->restorePosition(1);
-    if(restoreState(Settings::getSavedState())) { //was: VERSION_INT
-        QSize savedSize = Settings::getSavedSize();
-        if(!savedSize.isNull()) resize(savedSize);
-
-        QPoint savedPos = Settings::getSavedPosition();
-        if(!savedPos.isNull()) move(savedPos);
-    }
+    restoreState(Settings::getSavedState());
+    restoreGeometry(Settings::getSavedGeometry());
+    //if(!Settings::getSavedSize().isNull()) resize(savedSize);
+    //if(!Settings::getSavedPos().isNull()) move(savedPos);
 
     // Forecast / Predict settings
     framePredict->hide();
@@ -499,13 +468,13 @@ void Window::performSearch() {
 
 void Window::closeEvent(QCloseEvent *event) {
     Settings::saveState(saveState()); //was: (VERSION_INT) but that should not harm
-    Settings::saveSize(size());
-    Settings::savePosition(pos());
-
+    Settings::saveGeometry(saveGeometry()); // added this cause maximized wasn't saved
+    //Settings::saveSize(size());
+    //Settings::savePosition(pos());
     on_actionHideAllWindows_triggered();
 
-    QMainWindow::closeEvent(event);
-    exit(0);
+    glWidget->shutDownAnimation();
+    event->ignore();
 }
 
 void Window::on_actionHideAllWindows_triggered() {

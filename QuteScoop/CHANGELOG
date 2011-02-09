@@ -237,5 +237,19 @@ changed:
 added:
 * show an "hourglass" during CPU-intensive operations
 
+Version 2.0rc4:
+fixed:
+* inactive airport labels get shown again. Stopped working due to the faster update
+  code from 2.0rc3.
+added:
+* EARTH HAS SUN day/night SHADOW. Configurable through "Preferences" with various
+  lighting options.
+* new OpenGL-options in preferences to adjust performance on low-end machines.
+* on shutdown fly away from spinning earth ;)
+changed:
+* standard values for most settings adapted. New standard color scheme.
+* increased visiblity distance for all objects. This might be configurable through
+  "Preferences" if you ask for it ;)
+
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
