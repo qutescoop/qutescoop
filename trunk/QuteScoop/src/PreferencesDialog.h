@@ -30,7 +30,16 @@ private slots:
     void on_cbShootScreenshots_toggled(bool checked);
 
     // OpenGL settings
+    void on_glStippleLines_toggled(bool checked);
+    void on_glEarthShininess_valueChanged(int value);
+    void on_glLights_valueChanged(int value);
+    void on_sbEarthGridEach_valueChanged(int );
     void on_cbBlend_toggled(bool checked);
+    void on_glLightsSpread_valueChanged(int value);
+    void on_pbSpecularLightColor_clicked();
+    void on_pbSunLightColor_clicked();
+    void on_cbLighting_toggled(bool checked);
+    void on_pbReinitOpenGl_clicked();
 
     // stylesheet
     void on_pbStylesheetUpdate_clicked();
@@ -99,7 +108,6 @@ private slots:
     void on_pbFirFillColor_clicked();
 
     // Airport
-    void on_buttonResetAirport_clicked();
     void on_pbAirportDotColor_clicked();
     void on_sbAirportDotSize_valueChanged(double value);
     void on_pbAirportFontColor_clicked();
@@ -118,6 +126,7 @@ private slots:
     void on_pbInactAirportDotColor_clicked();
     void on_pbInactAirportFont_clicked();
     void on_pbInactAirportFontColor_clicked();
+    void on_applyAirports_clicked();
 
     // Aircraft
     void on_buttonResetPilot_clicked();
@@ -134,6 +143,7 @@ private slots:
     void on_cbDashedFrontAfter_currentIndexChanged(int index);
     void on_cbTrackAfter_toggled(bool checked);
     void on_cbTrackFront_toggled(bool checked);
+    void on_applyPilots_clicked();
 
     // voice
     void on_rbNone_clicked(bool value);

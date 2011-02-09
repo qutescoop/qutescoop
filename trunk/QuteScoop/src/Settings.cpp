@@ -200,7 +200,7 @@ void Settings::setShootScreenshots(bool value) {
 }
 
 int Settings::downloadInterval() {
-    return getSettings()->value("download/interval", 5).toInt();
+    return getSettings()->value("download/interval", 2).toInt();
 }
 
 void Settings::setDownloadInterval(int value) {
@@ -257,7 +257,7 @@ void Settings::setBookingsInterval(int value) {
 
 //
 bool Settings::useSupFile() {
-    return getSettings()->value("data/useSupFile", false).toBool();
+    return getSettings()->value("data/useSupFile", true).toBool();
 }
 
 void Settings::setUseSupFile(bool value) {
@@ -265,7 +265,7 @@ void Settings::setUseSupFile(bool value) {
 }
 
 int Settings::downloadNetwork() {
-    return getSettings()->value("download/network", 0).toInt();
+    return getSettings()->value("download/network", 1).toInt();
 }
 
 void Settings::setDownloadNetwork(int i) {
@@ -306,7 +306,7 @@ void Settings::setSendVersionInformation(bool value) {
 }
 
 QString Settings::updateVersionNumber() {
-    return getSettings()->value("download/updateVersionNumber").toString();
+    return getSettings()->value("download/updateVersionNumber", "-1").toString();
 }
 
 void Settings::setUpdateVersionNumber(const QString& version) {
@@ -384,30 +384,6 @@ void Settings::setTimelineSeconds(int value) {
     getSettings()->setValue("display/timelineSeconds", value);
 }
 
-bool Settings::displaySmoothLines() {
-    return getSettings()->value("display/smoothLines", true).toBool();
-}
-
-void Settings::setDisplaySmoothLines(bool value) {
-    getSettings()->setValue("display/smoothLines", value);
-}
-
-bool Settings::displaySmoothDots() {
-    return getSettings()->value("display/smoothDots", true).toBool();
-}
-
-void Settings::setDisplaySmoothDots(bool value) {
-    getSettings()->setValue("display/smoothDots", value);
-}
-
-int Settings::maxLabels() {
-    return getSettings()->value("display/maxLabels", 80).toInt();
-}
-
-void Settings::setMaxLabels(int maxLabels) {
-    getSettings()->setValue("display/maxLabels", maxLabels);
-}
-
 QString Settings::navdataDirectory() {
     return getSettings()->value("database/path").toString();
 }
@@ -417,7 +393,7 @@ void Settings::setNavdataDirectory(const QString& directory) {
 }
 
 bool Settings::useNavdata() {
-    return getSettings()->value("database/use", true).toBool();
+    return getSettings()->value("database/use", false).toBool();
 }
 
 void Settings::setUseNavdata(bool value) {
@@ -425,7 +401,7 @@ void Settings::setUseNavdata(bool value) {
 }
 
 bool Settings::showFixes() {
-    return getSettings()->value("database/showfixes", true).toBool();
+    return getSettings()->value("database/showfixes", false).toBool();
 }
 
 void Settings::setShowFixes(bool value) {
@@ -441,13 +417,105 @@ void Settings::setMetarDownloadInterval(int minutes) {
 }
 
 // OpenGL
-bool Settings::enableBlend() {
-    return getSettings()->value("gl/blend", true).toBool();
+bool Settings::displaySmoothLines() {
+    return getSettings()->value("gl/smoothLines", true).toBool();
 }
 
-void Settings::setEnableBlend(bool value) {
+void Settings::setDisplaySmoothLines(bool value) {
+    getSettings()->setValue("gl/smoothLines", value);
+}
+
+bool Settings::glStippleLines() {
+    return getSettings()->value("gl/stippleLines", false).toBool();
+}
+
+void Settings::setGlStippleLines(bool value) {
+    getSettings()->setValue("gl/stippleLines", value);
+}
+
+bool Settings::displaySmoothDots() {
+    return getSettings()->value("gl/smoothDots", true).toBool();
+}
+
+void Settings::setDisplaySmoothDots(bool value) {
+    getSettings()->setValue("gl/smoothDots", value);
+}
+
+int Settings::maxLabels() {
+    return getSettings()->value("gl/maxLabels", 150).toInt();
+}
+
+void Settings::setMaxLabels(int maxLabels) {
+    getSettings()->setValue("gl/maxLabels", maxLabels);
+}
+
+bool Settings::glBlending() {
+    return getSettings()->value("gl/blend", true).toBool();
+}
+void Settings::setGlBlending(bool value) {
     getSettings()->setValue("gl/blend", value);
 }
+
+int Settings::glCirclePointEach() {
+    return getSettings()->value("gl/circlePointEach", 3).toInt();
+}
+void Settings::setGlCirclePointEach(int value) {
+    getSettings()->setValue("gl/circlePointEach", value);
+}
+
+bool Settings::glLighting() {
+    return getSettings()->value("gl/lighting", true).toBool();
+}
+void Settings::setEnableLighting(bool value) {
+    getSettings()->setValue("gl/lighting", value);
+}
+
+int Settings::glLights() {
+    return getSettings()->value("gl/lights", 6).toInt();
+}
+void Settings::setGlLights(int value) {
+    getSettings()->setValue("gl/lights", value);
+}
+
+int Settings::glLightsSpread() {
+    return getSettings()->value("gl/lightsSpread", 25).toInt();
+}
+void Settings::setGlLightsSpread(int value) {
+    getSettings()->setValue("gl/lightsSpread", value);
+}
+
+bool Settings::glTextures() {
+    return getSettings()->value("gl/earthTexture", false).toBool();
+}
+void Settings::setGlTextures(bool value) {
+    getSettings()->setValue("gl/earthTexture", value);
+}
+
+QColor Settings::sunLightColor() {
+    return getSettings()->value("gl/sunLightColor", QColor::fromRgb(255, 249, 201)).value<QColor>();
+}
+
+void Settings::setSunLightColor(const QColor& color) {
+    getSettings()->setValue("gl/sunLightColor", color);
+}
+
+QColor Settings::specularColor() {
+    return getSettings()->value("gl/sunSpecularColor", QColor::fromRgb(50, 22, 3)).value<QColor>();
+}
+
+void Settings::setSpecularColor(const QColor& color) {
+    getSettings()->setValue("gl/sunSpecularColor", color);
+}
+
+double Settings::earthShininess() {
+    return getSettings()->value("gl/earthShininess", 25).toDouble();
+}
+
+void Settings::setEarthShininess(double strength) {
+    getSettings()->setValue("gl/earthShininess", strength);
+}
+
+
 // Stylesheet
 QString Settings::stylesheet() {
     return getSettings()->value("display/stylesheet", QString()).toString();
@@ -457,9 +525,16 @@ void Settings::setStylesheet(const QString& value) {
     getSettings()->setValue("display/stylesheet", value);
 }
 
+// earthspace
+int Settings::earthGridEach() {
+    return getSettings()->value("earthSpace/earthGridEach", 30).toInt();
+}
+void Settings::setEarthGridEach(int value) {
+    getSettings()->setValue("earthSpace/earthGridEach", value);
+}
 
 QColor Settings::backgroundColor() {
-    return getSettings()->value("earthSpace/backgroundColor", QColor::fromCmykF(0.39, 0.39, 0.0, 0.0)).value<QColor>();
+    return getSettings()->value("earthSpace/backgroundColor", QColor::fromRgbF(0, 0, 0)).value<QColor>();
 }
 
 void Settings::setBackgroundColor(const QColor& color) {
@@ -467,7 +542,7 @@ void Settings::setBackgroundColor(const QColor& color) {
 }
 
 QColor Settings::globeColor() {
-    return getSettings()->value("earthSpace/globeColor", QColor::fromRgbF(0, 0, 0.2, 1)).value<QColor>();
+    return getSettings()->value("earthSpace/globeColor", QColor::fromRgb(0, 56, 124)).value<QColor>();
 }
 
 void Settings::setGlobeColor(const QColor& color) {
@@ -475,7 +550,7 @@ void Settings::setGlobeColor(const QColor& color) {
 }
 
 QColor Settings::gridLineColor() {
-    return getSettings()->value("earthSpace/gridLineColor", QColor::fromRgbF(0.2, 0.2, 0.2, 1)).value<QColor>();
+    return getSettings()->value("earthSpace/gridLineColor", QColor::fromRgbF(0, 0, 0, 0.7)).value<QColor>();
 }
 
 void Settings::setGridLineColor(const QColor& color) {
@@ -491,7 +566,7 @@ void Settings::setGridLineStrength(double strength) {
 }
 
 QColor Settings::countryLineColor() {
-    return getSettings()->value("earthSpace/countryLineColor", QColor::fromRgbF(0.4, 0.4, 0.4, 1)).value<QColor>();
+    return getSettings()->value("earthSpace/countryLineColor", QColor::fromRgb(102, 102, 102, 200)).value<QColor>();
 }
 
 void Settings::setCountryLineColor(const QColor& color) {
@@ -507,7 +582,7 @@ void Settings::setCountryLineStrength(double strength) {
 }
 
 QColor Settings::coastLineColor() {
-    return getSettings()->value("earthSpace/coastLineColor", QColor::fromRgbF(0.3, 0.3, 0.3, 1)).value<QColor>();
+    return getSettings()->value("earthSpace/coastLineColor", QColor::fromRgb(76, 76, 76, 200)).value<QColor>();
 }
 
 void Settings::setCoastLineColor(const QColor& color) {
@@ -529,6 +604,8 @@ void Settings::deleteEarthSpaceSettings() {
     settings.endGroup();
 }
 
+
+// fir
 void Settings::deleteFirSettings() {
     QSettings settings;
     settings.beginGroup("firDisplay");
@@ -536,9 +613,8 @@ void Settings::deleteFirSettings() {
     settings.endGroup();
 }
 
-
 QColor Settings::firBorderLineColor() {
-    return getSettings()->value("firDisplay/borderLineColor", QColor::fromRgbF(1.0, 0.0, 0.0, 1)).value<QColor>();
+    return getSettings()->value("firDisplay/borderLineColor", QColor::fromRgbF(0.0, 0.0, 1.0)).value<QColor>();
 }
 
 void Settings::setFirBorderLineColor(const QColor& color) {
@@ -546,7 +622,7 @@ void Settings::setFirBorderLineColor(const QColor& color) {
 }
 
 double Settings::firBorderLineStrength() {
-    return getSettings()->value("firDisplay/borderLineStrength", 2).toDouble();
+    return getSettings()->value("firDisplay/borderLineStrength", 1.5).toDouble();
 }
 
 void Settings::setFirBorderLineStrength(double strength) {
@@ -562,7 +638,7 @@ void Settings::setFirFontColor(const QColor& color) {
 }
 
 QColor Settings::firFillColor() {
-    return getSettings()->value("firDisplay/fillColor", QColor::fromRgbF(0.5, 0.0, 0.0, 1)).value<QColor>();
+    return getSettings()->value("firDisplay/fillColor", QColor::fromRgb(42, 163, 214, 100)).value<QColor>();
 }
 
 void Settings::setFirFillColor(const QColor& color) {
@@ -572,7 +648,7 @@ void Settings::setFirFillColor(const QColor& color) {
 QFont Settings::firFont() {
     QFont defaultFont;
     defaultFont.setBold(true);
-    defaultFont.setPixelSize(12);
+    defaultFont.setPixelSize(9);
     QFont result = getSettings()->value("firDisplay/font", defaultFont).value<QFont>();
     result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
     return result;
@@ -582,6 +658,7 @@ void Settings::setFirFont(const QFont& font) {
     getSettings()->setValue("firDisplay/font", font);
 }
 
+//airport
 void Settings::deleteAirportSettings() {
     QSettings settings;
     settings.beginGroup("airportDisplay");
@@ -590,7 +667,7 @@ void Settings::deleteAirportSettings() {
 }
 
 QColor Settings::airportFontColor() {
-    return getSettings()->value("airportDisplay/fontColor", QColor::fromRgbF(0.1, 1.0, 0.1, 1)).value<QColor>();
+    return getSettings()->value("airportDisplay/fontColor", QColor::fromRgb(120, 255, 87)).value<QColor>();
 }
 
 void Settings::setAirportFontColor(const QColor& color) {
@@ -598,7 +675,7 @@ void Settings::setAirportFontColor(const QColor& color) {
 }
 
 QColor Settings::airportDotColor() {
-    return getSettings()->value("airportDisplay/dotColor", QColor::fromRgbF(0.6, 0.6, 0.6, 1)).value<QColor>();
+    return getSettings()->value("airportDisplay/dotColor", QColor::fromRgb(85, 170, 255)).value<QColor>();
 }
 
 void Settings::setAirportDotColor(const QColor& color) {
@@ -606,7 +683,7 @@ void Settings::setAirportDotColor(const QColor& color) {
 }
 
 double Settings::airportDotSize() {
-    return getSettings()->value("airportDisplay/dotSizer", 0.8).toDouble();
+    return getSettings()->value("airportDisplay/dotSizer", 4).toDouble();
 }
 
 void Settings::setAirportDotSize(double value) {
@@ -616,6 +693,7 @@ void Settings::setAirportDotSize(double value) {
 QFont Settings::airportFont() {
     QFont defaultResult;
     defaultResult.setPixelSize(9);
+    defaultResult.setBold(true);
     QFont result = getSettings()->value("airportDisplay/font", defaultResult).value<QFont>();
     result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
     return result;
@@ -626,7 +704,7 @@ void Settings::setAirportFont(const QFont& font) {
 }
 
 QColor Settings::inactiveAirportFontColor() {
-    return getSettings()->value("airportDisplay/inactiveFontColor", QColor::fromRgbF(0.1, 0.6, 0.1, 1)).value<QColor>();
+    return getSettings()->value("airportDisplay/inactiveFontColor", QColor::fromRgbF(0.4, 0.4, 0.4, 1)).value<QColor>();
 }
 
 void Settings::setInactiveAirportFontColor(const QColor& color) {
@@ -634,7 +712,7 @@ void Settings::setInactiveAirportFontColor(const QColor& color) {
 }
 
 QColor Settings::inactiveAirportDotColor() {
-    return getSettings()->value("airportDisplay/inactiveDotColor", QColor::fromRgbF(0.3, 0.3, 0.3, 1)).value<QColor>();
+    return getSettings()->value("airportDisplay/inactiveDotColor", QColor::fromRgbF(0.5, 0.5, 0.5, 1)).value<QColor>();
 }
 
 void Settings::setInactiveAirportDotColor(const QColor& color) {
@@ -642,7 +720,7 @@ void Settings::setInactiveAirportDotColor(const QColor& color) {
 }
 
 double Settings::inactiveAirportDotSize() {
-    return getSettings()->value("airportDisplay/inactiveDotSizer", 0.2).toDouble();
+    return getSettings()->value("airportDisplay/inactiveDotSizer", 2).toDouble();
 }
 
 void Settings::setInactiveAirportDotSize(double value) {
@@ -651,7 +729,7 @@ void Settings::setInactiveAirportDotSize(double value) {
 
 QFont Settings::inactiveAirportFont() {
     QFont defaultResult;
-    defaultResult.setPixelSize(8);
+    defaultResult.setPixelSize(7);
     QFont result = getSettings()->value("airportDisplay/inactiveFont", defaultResult).value<QFont>();
     result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
     return result;
@@ -662,7 +740,7 @@ void Settings::setInactiveAirportFont(const QFont& font) {
 }
 
 bool Settings::showInactiveAirports() {
-    return getSettings()->value("airportDisplay/showInactive", true).toBool();
+    return getSettings()->value("airportDisplay/showInactive", false).toBool(); // time-intensive function
 }
 
 void Settings::setShowInactiveAirports(const bool& value) {
@@ -670,7 +748,7 @@ void Settings::setShowInactiveAirports(const bool& value) {
 }
 
 QColor Settings::appBorderLineColor() {
-    return getSettings()->value("airportDisplay/appBorderLineColor", QColor::fromRgbF(0.0, 0.0, 1.0, 1)).value<QColor>();
+    return getSettings()->value("airportDisplay/appBorderLineColor", QColor::fromRgb(255, 255, 127)).value<QColor>();
 }
 
 void Settings::setAppBorderLineColor(const QColor& color) {
@@ -686,7 +764,7 @@ void Settings::setAppBorderLineStrength(double value) {
 }
 
 QColor Settings::appCenterColor() {
-    return getSettings()->value("airportDisplay/appCenterColor", QColor::fromRgbF(0.0, 0.0, 1.0, 1)).value<QColor>();
+    return getSettings()->value("airportDisplay/appCenterColor", QColor::fromRgbF(0.0, 0.0, 1.0, 0.0)).value<QColor>();
 }
 
 void Settings::setAppCenterColor(const QColor& color) {
@@ -694,7 +772,7 @@ void Settings::setAppCenterColor(const QColor& color) {
 }
 
 QColor Settings::appMarginColor() {
-    return getSettings()->value("airportDisplay/appMarginColor", QColor::fromRgbF(0.0, 0.0, 0.8, 0.6)).value<QColor>();
+    return getSettings()->value("airportDisplay/appMarginColor", QColor::fromRgb(85, 170, 255)).value<QColor>();
 }
 
 void Settings::setAppMarginColor(const QColor& color) {
@@ -702,7 +780,7 @@ void Settings::setAppMarginColor(const QColor& color) {
 }
 
 QColor Settings::twrMarginColor() {
-    return getSettings()->value("airportDisplay/twrMarginColor", QColor::fromRgbF(0.6, 0.6, 0.0, 0.6)).value<QColor>();
+    return getSettings()->value("airportDisplay/twrMarginColor", QColor::fromRgb(255, 255, 127)).value<QColor>();
 }
 
 void Settings::setTwrMarginColor(const QColor& color) {
@@ -710,7 +788,7 @@ void Settings::setTwrMarginColor(const QColor& color) {
 }
 
 QColor Settings::twrCenterColor() {
-    return getSettings()->value("airportDisplay/twrCenterColor", QColor::fromRgbF(0.8, 0.8, 0.0, 1.0)).value<QColor>();
+    return getSettings()->value("airportDisplay/twrCenterColor", QColor::fromRgbF(0.8, 0.8, 0.0, 0.0)).value<QColor>();
 }
 
 void Settings::setTwrCenterColor(const QColor& color) {
@@ -718,7 +796,7 @@ void Settings::setTwrCenterColor(const QColor& color) {
 }
 
 QColor Settings::gndBorderLineColor() {
-    return getSettings()->value("airportDisplay/gndBorderLineColor", QColor::fromRgbF(1.0, 0.0, 1.0, 1.0)).value<QColor>();
+    return getSettings()->value("airportDisplay/gndBorderLineColor", QColor::fromRgb(179, 0, 179)).value<QColor>();
 }
 
 void Settings::setGndBorderLineColor(const QColor& color) {
@@ -726,7 +804,7 @@ void Settings::setGndBorderLineColor(const QColor& color) {
 }
 
 double Settings::gndBorderLineStrength() {
-    return getSettings()->value("airportDisplay/gndBorderLineStrength", 1.2).toDouble();
+    return getSettings()->value("airportDisplay/gndBorderLineStrength", 1.0).toDouble();
 }
 
 void Settings::setGndBorderLineStrength(double value) {
@@ -734,7 +812,7 @@ void Settings::setGndBorderLineStrength(double value) {
 }
 
 QColor Settings::gndFillColor() {
-    return getSettings()->value("airportDisplay/gndFillColor", QColor::fromRgbF(0.7, 0.0, 0.7, 0.8)).value<QColor>();
+    return getSettings()->value("airportDisplay/gndFillColor", QColor::fromRgb(255, 255, 127)).value<QColor>();
 }
 
 void Settings::setGndFillColor(const QColor& color) {
@@ -748,8 +826,10 @@ void Settings::deleteAircraftSettings() {
     settings.endGroup();
 }
 
+
+// pilot
 QColor Settings::pilotFontColor() {
-    return getSettings()->value("pilotDisplay/fontColor", QColor::fromRgbF(1, 1, 1, 1)).value<QColor>();
+    return getSettings()->value("pilotDisplay/fontColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
 }
 
 void Settings::setPilotFontColor(const QColor& color) {
@@ -758,7 +838,7 @@ void Settings::setPilotFontColor(const QColor& color) {
 
 QFont Settings::pilotFont() {
     QFont defaultFont;
-    defaultFont.setPixelSize(10);
+    defaultFont.setPixelSize(8);
     return getSettings()->value("pilotDisplay/font", defaultFont).value<QFont>();
 }
 
@@ -767,7 +847,7 @@ void Settings::setPilotFont(const QFont& font) {
 }
 
 QColor Settings::pilotDotColor() {
-    return getSettings()->value("pilotDisplay/dotColor", QColor::fromRgbF(1, 1, 1, 1)).value<QColor>();
+    return getSettings()->value("pilotDisplay/dotColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
 }
 
 void Settings::setPilotDotColor(const QColor& color) {
@@ -775,7 +855,7 @@ void Settings::setPilotDotColor(const QColor& color) {
 }
 
 double Settings::pilotDotSize() {
-    return getSettings()->value("pilotDisplay/dotSize", 2.5).toDouble();
+    return getSettings()->value("pilotDisplay/dotSize", 3).toDouble();
 }
 
 void Settings::setPilotDotSize(double value) {
@@ -783,7 +863,7 @@ void Settings::setPilotDotSize(double value) {
 }
 
 QColor Settings::timeLineColor() {
-    return getSettings()->value("pilotDisplay/timeLineColor", QColor::fromRgbF(0.8, 0.8, 0.8, 0.8)).value<QColor>();
+    return getSettings()->value("pilotDisplay/timeLineColor", QColor::fromRgb(143, 0, 71)).value<QColor>();
 }
 
 void Settings::setTimeLineColor(const QColor& color) {
@@ -791,7 +871,7 @@ void Settings::setTimeLineColor(const QColor& color) {
 }
 
 QColor Settings::trackLineColor() {
-    return getSettings()->value("pilotDisplay/trackLineColor", QColor::fromRgbF(0.8, 0.8, 0.8, 0.6)).value<QColor>();
+    return getSettings()->value("pilotDisplay/trackLineColor", QColor::fromRgb(170, 255, 127)).value<QColor>();
 }
 
 void Settings::setTrackLineColor(const QColor& color) {
@@ -799,7 +879,7 @@ void Settings::setTrackLineColor(const QColor& color) {
 }
 
 QColor Settings::planLineColor() {
-    return getSettings()->value("pilotDisplay/planLineColor", QColor::fromRgbF(0.0, 0.8, 0.0, 0.8)).value<QColor>();
+    return getSettings()->value("pilotDisplay/planLineColor", QColor::fromRgb(255, 170, 0)).value<QColor>();
 }
 
 void Settings::setPlanLineColor(const QColor& color) {
@@ -827,11 +907,11 @@ void Settings::setTrackAfter(bool value) {
 }
 
 bool Settings::trackAfter() {
-    return getSettings()->value("pilotDisplay/trackAfter", true).toBool();
+    return getSettings()->value("pilotDisplay/trackAfter", false).toBool();
 }
 
 double Settings::timeLineStrength() {
-    return getSettings()->value("pilotDisplay/timeLineStrength", 0.8).toDouble();
+    return getSettings()->value("pilotDisplay/timeLineStrength", 1.0).toDouble();
 }
 
 void Settings::setTimeLineStrength(double value) {
@@ -839,7 +919,7 @@ void Settings::setTimeLineStrength(double value) {
 }
 
 double Settings::trackLineStrength() {
-    return getSettings()->value("pilotDisplay/trackLineStrength", 2.0).toDouble();
+    return getSettings()->value("pilotDisplay/trackLineStrength", 0).toDouble();
 }
 
 void Settings::setTrackLineStrength(double value) {
@@ -847,7 +927,7 @@ void Settings::setTrackLineStrength(double value) {
 }
 
 double Settings::planLineStrength() {
-    return getSettings()->value("pilotDisplay/planLineStrength", 0.9).toDouble();
+    return getSettings()->value("pilotDisplay/planLineStrength", 1).toDouble();
 }
 
 void Settings::setPlanLineStrength(double value) {
@@ -877,6 +957,14 @@ void Settings::saveState(const QByteArray& state) {
 
 QByteArray Settings::getSavedState() {
     return getSettings()->value("mainWindowState/state", QByteArray()).toByteArray();
+}
+
+void Settings::saveGeometry(const QByteArray& state) {
+    getSettings()->setValue("mainWindowState/geometry", state);
+}
+
+QByteArray Settings::getSavedGeometry() {
+    return getSettings()->value("mainWindowState/geometry", QByteArray()).toByteArray();
 }
 
 void Settings::saveSize(const QSize& size) {
@@ -923,7 +1011,7 @@ void Settings::setResetOnNextStart(bool value) {
 }
 
 Settings::VoiceType Settings::voiceType() {
-    return (VoiceType) getSettings()->value("voice/type", TEAMSPEAK).toInt();
+    return (VoiceType) getSettings()->value("voice/type", NONE).toInt();
 }
 
 void Settings::setVoiceType(Settings::VoiceType type) {
@@ -963,7 +1051,7 @@ void Settings::deleteAirportTrafficSettings() {
 }
 
 bool Settings::filterTraffic() {
-    return getSettings()->value("airportTraffic/filterTraffic", false).toBool();
+    return getSettings()->value("airportTraffic/filterTraffic", true).toBool();
 }
 
 void Settings::setFilterTraffic(bool v) {
@@ -971,7 +1059,7 @@ void Settings::setFilterTraffic(bool v) {
 }
 
 int Settings::filterDistance() {
-    return getSettings()->value("airportTraffic/filterDistance", 50).toInt();
+    return getSettings()->value("airportTraffic/filterDistance", 5).toInt();
 }
 
 void Settings::setFilterDistance(int v) {
@@ -994,7 +1082,7 @@ void Settings::setAirportCongestion(bool value) {
 }
 
 int Settings::airportCongestionMinimum() {
-    return getSettings()->value("airportTraffic/minimumMovements", 5).toInt();
+    return getSettings()->value("airportTraffic/minimumMovements", 8).toInt();
 }
 
 void Settings::setAirportCongestionMinimum(int value) {
@@ -1010,7 +1098,7 @@ void Settings::setAirportCongestionBorderLineColor(const QColor& color) {
 }
 
 double Settings::airportCongestionBorderLineStrength() {
-    return getSettings()->value("airportTraffic/borderLineStrength", 1.5).toDouble();
+    return getSettings()->value("airportTraffic/borderLineStrength", 3).toDouble();
 }
 
 void Settings::setAirportCongestionBorderLineStrength(double value) {
@@ -1050,3 +1138,4 @@ void Settings::setSaveWhazzupData(bool value)
 {
     getSettings()->setValue("general/saveWhazzupData" , value);
 }
+

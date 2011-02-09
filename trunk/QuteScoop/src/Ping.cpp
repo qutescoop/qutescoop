@@ -12,6 +12,7 @@ void Ping::pingReadyRead() {
     } else {
         emit havePing(server, -1);
     }
+    delete pingProcess;
 }
 
 void Ping::startPing(QString server) {
@@ -21,13 +22,13 @@ void Ping::startPing(QString server) {
     connect(pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
 
 #ifdef Q_WS_WIN
-    QString pingCmd = QString("ping %1 -n 1").arg(server);
+    QString pingCmd = QString("ping -n 1 %1").arg(server);
 #endif
 #ifdef Q_WS_X11
-    QString pingCmd = QString("ping %1 -c1").arg(server);
+    QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
 #ifdef Q_WS_MAC
-    QString pingCmd = QString("ping %1 -c1").arg(server);
+    QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
     pingProcess->start(pingCmd);
 }

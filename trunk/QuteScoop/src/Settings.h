@@ -28,6 +28,9 @@ public:
     static void saveState(const QByteArray& state);
     static QByteArray getSavedState();
 
+    static void saveGeometry(const QByteArray& state);
+    static QByteArray getSavedGeometry();
+
     static void saveSize(const QSize& size);
     static QSize getSavedSize();
 
@@ -136,8 +139,35 @@ public:
     static void setMetarDownloadInterval(int minutes);
 
     // OpenGL settings
-    static bool enableBlend();
-    static void setEnableBlend(bool value);
+    static bool glStippleLines();
+    static void setGlStippleLines(bool value);
+
+    static bool glBlending();
+    static void setGlBlending(bool value);
+
+    static bool glLighting();
+    static void setEnableLighting(bool value);
+
+    static int glLights();
+    static void setGlLights(int value);
+
+    static int glLightsSpread();
+    static void setGlLightsSpread(int value);
+
+    static int glCirclePointEach();
+    static void setGlCirclePointEach(int value);
+
+    static bool glTextures();
+    static void setGlTextures(bool value);
+
+    static QColor sunLightColor();
+    static void setSunLightColor(const QColor& color);
+
+    static QColor specularColor();
+    static void setSpecularColor(const QColor& color);
+
+    static double earthShininess();
+    static void setEarthShininess(double strength);
 
     // Stylesheet
     static QString stylesheet();
@@ -145,6 +175,9 @@ public:
 
     // Earth and Space settings ----------------------------
     static void deleteEarthSpaceSettings();
+
+    static int earthGridEach();
+    static void setEarthGridEach(int value);
 
     static QColor backgroundColor();
     static void setBackgroundColor(const QColor& color);

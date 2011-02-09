@@ -31,6 +31,8 @@ public:
     QPair<double, double> currentPosition();
 
 public slots:
+    void initializeGL();
+    void glInfo();
     void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
     // updating the statusbar as well - we do not want a full GL update here sometimes
     void setMapPosition(double lat, double lon, double newZoom);
@@ -41,6 +43,9 @@ public slots:
     void zoomIn(double factor);
     void zoomOut(double factor);
 
+    // Return a list of all clients at given lat/lon, within radius miles
+    QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
+
     void rememberPosition(int nr);
     void restorePosition(int nr);
 
@@ -48,9 +53,11 @@ public slots:
     void showInactiveAirports(bool value);
 
     void createPilotsList();
+    void createAirportsList();
+    void createFixesList();
+    void prepareDisplayLists();
 
-    // Return a list of all clients at given lat/lon, within radius miles
-    QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
+    void shutDownAnimation();
 
 signals:
     void mapClicked(int x, int y, QPoint absolutePos);
@@ -59,7 +66,6 @@ signals:
                        QString = QString(), int = 0, int = 0);
 
 protected:
-    void initializeGL();
     void paintGL();
     void resizeGL(int width, int height);
     void mouseDoubleClickEvent(QMouseEvent *event);
@@ -76,37 +82,33 @@ private:
     void handleRotation(QMouseEvent *event);
 
     void determineActiveSectors();
-    void updateAirports();
 
-    /**
-	 * Convert mouse coordinatex (x/y) into lat/lon on the globe.
+	/**
+	 * Convert mouse coordinates (x/y) into lat/lon on the globe.
 	 * Returns false if the mouse is not on the globe (but pointing on space),
 	 * true otherwise
 	 */
-    bool mouse2latlon(int x, int y, double& lat, double& lon) const;
+	bool mouse2latlon(int x, int y, double& lat, double& lon) const;
 
-    GLuint orbList;
-    void createOrbList();
+	const QPair<double, double> sunZenith(const QDateTime &dt);
+
+	bool earth2D;
+	GLuint earthList;
+	GLUquadricObj *earthQuad;
     GLuint coastlineList;
-    void createCoastlineList();
     GLuint gridlinesList;
-    void createGridlinesList();
     GLuint countriesList;
-    void createCountriesList();
     GLuint pilotsList;
     GLuint airportsList;
     GLuint airportsInactiveList;
-    void createAirportsList();
-
     GLuint fixesList;
-    void createFixesList();
-
     GLuint sectorPolygonsList;
     GLuint airportControllersList;
     GLuint sectorPolygonBorderLinesList;
     GLuint appBorderLinesList;
     GLuint congestionsList;
-    void prepareDisplayLists();
+
+    GLuint earthTexture;
 
     QList<Controller*> sectorsToDraw;
 
@@ -114,9 +116,7 @@ private:
     double airportLabelZoomTreshold;
     double inactiveAirportLabelZoomTreshold;
     double controllerLabelZoomTreshold;
-
     double inactiveAirportDotZoomTreshold;
-
     double fixZoomTreshold;
 
     double xRot;
@@ -147,6 +147,9 @@ private:
 
     bool allSectorsDisplayed;
     bool mapIsMoving;
+
+    qint64 shutDownAnim_t;
+    QTimer *animationTimer;
 };
 
 #endif /*GLWIDGET_H_*/
