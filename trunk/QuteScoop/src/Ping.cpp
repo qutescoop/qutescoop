@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include "Ping.h"
+#include <QDebug>
 
 void Ping::pingReadyRead() {
     QRegExp findMs = QRegExp("(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);
@@ -12,7 +13,6 @@ void Ping::pingReadyRead() {
     } else {
         emit havePing(server, -1);
     }
-    delete pingProcess;
 }
 
 void Ping::startPing(QString server) {
@@ -30,5 +30,6 @@ void Ping::startPing(QString server) {
 #ifdef Q_WS_MAC
     QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
+    qDebug() << "Ping::startPing() executing" << pingCmd;
     pingProcess->start(pingCmd);
 }
