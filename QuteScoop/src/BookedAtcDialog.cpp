@@ -189,5 +189,5 @@ void BookedAtcDialog::modelSelected(const QModelIndex& index) {
 void BookedAtcDialog::on_tbPredict_clicked()
 {
     close();
-    Whazzup::getInstance()->setPredictedTime(dateTimeFilter->dateTime());
+    Whazzup::getInstance()->setPredictedTime(dateTimeFilter->dateTime());   
 }

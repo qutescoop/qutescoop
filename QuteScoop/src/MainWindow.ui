@@ -127,7 +127,7 @@ Whazzups (replay)</string>
             <string>run</string>
            </property>
            <property name="icon">
-            <iconset resource="Resources.qrc">
+            <iconset>
              <normaloff>:/icons/images/step.png</normaloff>:/icons/images/step.png</iconset>
            </property>
            <property name="iconSize">
@@ -310,7 +310,7 @@ Whazzups (replay)</string>
        <string>-</string>
       </property>
       <property name="icon">
-       <iconset resource="Resources.qrc">
+       <iconset>
         <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
       </property>
      </widget>
@@ -342,7 +342,7 @@ Whazzups (replay)</string>
        <string>+</string>
       </property>
       <property name="icon">
-       <iconset resource="Resources.qrc">
+       <iconset>
         <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
       </property>
      </widget>
@@ -355,7 +355,7 @@ Whazzups (replay)</string>
      <x>0</x>
      <y>0</y>
      <width>814</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -532,6 +532,9 @@ Whazzups (replay)</string>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -605,6 +608,9 @@ Whazzups (replay)</string>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -635,6 +641,7 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
@@ -774,7 +781,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionZoomIn">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
    </property>
    <property name="text">
@@ -786,7 +793,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionZoomOut">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
    </property>
    <property name="text">
@@ -1065,9 +1072,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>tbZoomIn</tabstop>
   <tabstop>tbZoomOut</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionShowMetars</sender>
