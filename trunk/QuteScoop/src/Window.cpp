@@ -816,7 +816,6 @@ void Window::downloadWatchdogTriggered() {
     Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
 }
 
-
 void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
 }
@@ -864,7 +863,8 @@ void Window::on_cbUseDownloaded_toggled(bool checked)
 void Window::on_tbDisablePredict_clicked()
 {
     qDebug() << "Window::tbDisablePredict_clicked()";
-    actionPredict->setChecked(false);
+    //actionPredict->setChecked(false);
+    this->on_actionPredict_toggled(false);
 }
 
 void Window::on_actionPredict_toggled(bool enabled)
