@@ -30,9 +30,10 @@ To add an airport, simply add a line with the same formatting. Avoid having two 
 
 COASTLINE.DAT and COUNTRIES.DAT
 
-These are the world coastline (continents, islands, large lakes etc) and country borders, drawn as simple lines on the globe. Each line contains either a pair of decimal latitude and longitude values separated by a colon, or the 'end' word. Lines are drawn between subsequent lat-lon pairs. The 'end' word means the beginning of a new line strip (i.e. the new lat-lon pair is not connected to the previous one with a line).
+These are the world coastline (continents, islands, large lakes etc) and country borders, drawn as closed polygons on the globe. Each line contains either a pair of decimal latitude and longitude values separated by a colon, or the 'end' word. Lines are drawn between subsequent lat-lon pairs. The 'end' word means the beginning of a new polygon. At the end, a line is drawn to the beginning to close the polygon.
 
-The resolution is what I consider optimal for Dolomynum, however users can create more or less complex files if they find suitable data and convert it to the format used by Dolomynum. The current files are based on World Data Base II from the USGS Coastline Extractor - http://rimmer.ngdc.noaa.gov/coast/
+The current files are based on World Data Base II from the USGS Coastline Extractor - http://rimmer.ngdc.noaa.gov/coast/ and adapted: some very fine
+points (<2 NM from each other) has been striped and lines aranged to be closed polygons.
 
 
 ------
@@ -48,7 +49,7 @@ Bucharest 	- name of the sector
 RO 		- ISO code of the country where this airspace is
 45.9	 	- position of the label - decimal latitude (north is positive, south is negative)
 25.6	 	- position of the label - decimal longitude (east is positive, west is negative)
-186		- Display List ID, a number that uniquely identifies the shape in firdisplay.dat that is displayed when this sector is active 
+186		- Display List ID, a number that uniquely identifies the shape in firdisplay.dat that is displayed when this sector is active
 
 
 To create a new sector, you must add a new line with the same formatting. To create aliases to existing sectors (different codes identifying the same airspace), use the same Display List ID (186 in the above example). If you want to add a new airspace, you should first add its shape to firdisplay.dat with a previously unused Display List ID (you can use any ID between 100 and 9999).
