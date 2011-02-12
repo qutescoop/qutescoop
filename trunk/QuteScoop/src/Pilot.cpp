@@ -470,9 +470,12 @@ void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) {
 void Pilot::plotPathFromDep() {
     if(Settings::trackLineStrength() == 0)
         return;
+    if (lat == 0 && lon == 0)
+        return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
 
     Airport *dep = depAirport();
-    if(dep == 0) return; // dont know where to plot to - abort
+    if(dep == 0)
+        return; // dont know where to plot to - abort
 
     double currLat = dep->lat;
     double currLon = dep->lon;
@@ -502,7 +505,10 @@ void Pilot::plotPathToDest() {
         return;
 
     Airport *dest = destAirport();
-    if(dest == 0) return; // dont know where to plot to - abort
+    if(dest == 0)
+        return; // dont know where to plot to - abort
+    if (lat == 0 && lon == 0)
+        return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
 
     QColor lineCol = Settings::trackLineColor();
     glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
@@ -521,6 +527,8 @@ void Pilot::plotPathToDest() {
 void Pilot::plotPlannedLine() {
     if(Settings::planLineStrength() == 0)
         return;
+    if (lat == 0 && lon == 0)
+        return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
     QList<Waypoint*> points = routeWaypoints();
     Airport* dep = depAirport();
     if(dep != 0) {
@@ -625,8 +633,8 @@ void Pilot::plotPlannedLine() {
 }
 
 QList<Waypoint*> Pilot::routeWaypoints() {
-    if (!routeWaypointsCache.isEmpty()
-        && (planDep == routeWaypointsPlanDepCache)
+    //qDebug() << "Pilot::routeWaypoints()" << label;
+    if ((planDep == routeWaypointsPlanDepCache) // we might have cached the route already
         && (planDest == routeWaypointsPlanDestCache)
         && (planRoute == routeWaypointsPlanRouteCache)) {
         return routeWaypointsCache; // no changes
@@ -637,13 +645,12 @@ QList<Waypoint*> Pilot::routeWaypoints() {
     routeWaypointsPlanDestCache = planDest;
     routeWaypointsPlanRouteCache = planRoute;
 
-    //QStringList list = planRoute.split(' ', QString::SkipEmptyParts);
-    qDebug() << "Pilot::routeWaypoints()" << label;
     if (dep != 0) {
         routeWaypointsCache = NavData::getInstance()->getAirac().resolveFlightplan(
                 waypoints(), dep->lat, dep->lon);
     } else
         routeWaypointsCache = QList<Waypoint*>();
 
+    //qDebug() << "Pilot::routeWaypoints() -- finished" << label;
     return routeWaypointsCache;
 }

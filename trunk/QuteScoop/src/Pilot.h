@@ -93,12 +93,12 @@ public:
 
     QList<Waypoint*> routeWaypoints();
 
+    QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
+    QString routeWaypointsPlanDepCache, routeWaypointsPlanDestCache, routeWaypointsPlanRouteCache;
 private:
     void plotPathToDest();
     void plotPathFromDep();
     void plotPlannedLine();
-    QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
-    QString routeWaypointsPlanDepCache, routeWaypointsPlanDestCache, routeWaypointsPlanRouteCache;
 };
 
 #endif /*PILOT_H_*/

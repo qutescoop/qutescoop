@@ -3,7 +3,6 @@
  **************************************************************************/
 
 #include <QDebug>
-#include <QApplication>
 
 #include "WhazzupData.h"
 
@@ -15,15 +14,7 @@
 #include "Settings.h"
 #include "helpers.h"
 
-/*
-TODO:
-It was a bad idea to pull Bookings and Whazzup in one WhazzupData instance.
-We should instead hold one instance for each type.
-*/
-
 WhazzupData::WhazzupData():
-    connectedClients(0),
-    connectedServers(0),
     connectedServerList(QList<QStringList>()),
     connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
@@ -35,8 +26,6 @@ WhazzupData::WhazzupData():
 }
 
 WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
-    connectedClients(0),
-    connectedServers(0),
     connectedServerList(QList<QStringList>()),
     connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
@@ -103,9 +92,9 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 if(list.size() != 2)
                     continue;
                 if(line.startsWith("CONNECTED CLIENTS")) {
-                    connectedClients = list[1].trimmed().toInt();
+                    //connectedClients = list[1].trimmed().toInt(); // we do not trust the server any more. Take clients() instead.
                 } else if(line.startsWith("CONNECTED SERVERS")) {
-                    connectedServers = list[1].trimmed().toInt();
+                    //connectedServers = list[1].trimmed().toInt(); // not important. Take serverList.size() instead
                 } else if(line.startsWith("BOOKING")) {
                     // always "1" for bookings, but we select already by the whazzup location
                 } else if(line.startsWith("UPDATE")) {
@@ -169,8 +158,6 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
 }
 
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
-    connectedClients(0),
-    connectedServers(0),
     connectedServerList(QList<QStringList>()),
     connectedVoiceServerList(QList<QStringList>()),
     whazzupVersion(0),
@@ -326,9 +313,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
 
         pilots[np->label] = np;
     }
-    connectedClients = controllers.size() + pilots.size();
-    qDebug() << "Warped to\t" << predictTime.toString() << "\t- Faked and inserted\t" << connectedClients << "clients";
     qApp->restoreOverrideCursor();
+    qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";
 }
 
 WhazzupData::WhazzupData(const WhazzupData& data) {
@@ -341,14 +327,12 @@ WhazzupData& WhazzupData::operator=(const WhazzupData& data) {
 }
 
 void WhazzupData::assignFrom(const WhazzupData& data) {
-    qDebug() << "WhazzupData/assignFrom";
+    qDebug() << "WhazzupData::assignFrom()";
     if(this == &data)
         return;
 
     if (data.dataType == WHAZZUP || data.dataType == UNIFIED) {
         if(dataType == ATCBOOKINGS) dataType = UNIFIED;
-        connectedClients = data.connectedClients;
-        connectedServers = data.connectedServers;
         connectedServerList = data.connectedServerList;
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupTime = data.whazzupTime;
@@ -383,63 +367,65 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
         bookingsTime = QDateTime(data.bookingsTime);
         predictionBasedOnBookingsTime = QDateTime(data.predictionBasedOnBookingsTime);
     }
+    qDebug() << "WhazzupData::assignFrom() -- finished";
 }
 
 void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
-    qDebug() << "WhazzupData/updatePilotsFrom";
+    qDebug() << "WhazzupData::updatePilotsFrom()";
     QList<QString> callsigns = pilots.keys();
-    for(int i = 0; i < callsigns.size(); i++) {
+    for(int i = 0; i < callsigns.size(); i++) { // remove pilots that are no longer there
         if(!data.pilots.contains(callsigns[i])) {
-            // remove pilots that are no longer there
-            delete pilots[callsigns[i]];
+            foreach (Pilot *p, pilots.values(callsigns[i])) // there might be several...
+                delete p;
             pilots.remove(callsigns[i]);
         }
     }
     callsigns = data.pilots.keys();
     for(int i = 0; i < callsigns.size(); i++) {
-        if(!pilots.contains(callsigns[i])) {
+        if(!pilots.contains(callsigns[i])) { // new pilots
             // create a new copy of new pilot
             Pilot *p = new Pilot(*data.pilots[callsigns[i]]);
-            pilots[p->label] = p;
-        } else {
-            // pilot already exists, assign values from data
-            bool showFrom = pilots[callsigns[i]]->displayLineFromDep;
-            bool showTo = pilots[callsigns[i]]->displayLineToDest;
-            QList<QPair<double, double> > track = pilots[callsigns[i]]->oldPositions;
-            double oldLat = pilots[callsigns[i]]->lat;
-            double oldLon = pilots[callsigns[i]]->lon;
-            QString oldDest = pilots[callsigns[i]]->planDest;
+            pilots[callsigns[i]] = p;
+        } else { // existing pilots: data saved in the object needs to be transferred
+            data.pilots[callsigns[i]]->displayLineFromDep = pilots[callsigns[i]]->displayLineFromDep;
+            data.pilots[callsigns[i]]->displayLineToDest  = pilots[callsigns[i]]->displayLineToDest;
+            data.pilots[callsigns[i]]->oldPositions       = pilots[callsigns[i]]->oldPositions;
+            data.pilots[callsigns[i]]->routeWaypointsCache          = pilots[callsigns[i]]->routeWaypointsCache;
+            data.pilots[callsigns[i]]->routeWaypointsPlanDepCache   = pilots[callsigns[i]]->routeWaypointsPlanDepCache;
+            data.pilots[callsigns[i]]->routeWaypointsPlanDestCache  = pilots[callsigns[i]]->routeWaypointsPlanDestCache;
+            data.pilots[callsigns[i]]->routeWaypointsPlanRouteCache = pilots[callsigns[i]]->routeWaypointsPlanRouteCache;
 
+            if ((pilots[callsigns[i]]->lat != 0 || pilots[callsigns[i]]->lon != 0) &&
+                (pilots[callsigns[i]]->lat != data.pilots[callsigns[i]]->lat ||
+                 pilots[callsigns[i]]->lon != data.pilots[callsigns[i]]->lon))
+            data.pilots[callsigns[i]]->oldPositions.append(
+                    QPair<double, double> (pilots[callsigns[i]]->lat, pilots[callsigns[i]]->lon));
             *pilots[callsigns[i]] = *data.pilots[callsigns[i]];
-            pilots[callsigns[i]]->displayLineFromDep = showFrom;
-            pilots[callsigns[i]]->displayLineToDest = showTo;
-
-            if(pilots[callsigns[i]]->planDest != oldDest) {
-                // if flightplan (=destination) changed, clear the flight path
-                pilots[callsigns[i]]->oldPositions.clear();
-            } else {
-                double newLat = pilots[callsigns[i]]->lat;
-                double newLon = pilots[callsigns[i]]->lon;
-                if(!(oldLat == 0 && oldLon == 0) // dont add 0/0 to the waypoint list.
-                    && (oldLat != newLat || oldLon != newLon))
-                        track.append(QPair<double, double>(oldLat, oldLon));
-
-                pilots[callsigns[i]]->oldPositions = track;
-            }
         }
     }
 
-    bookedpilots.clear();
+    callsigns = bookedpilots.keys();
+    for(int i = 0; i < callsigns.size(); i++) { // remove pilots that are no longer there
+        if(!data.bookedpilots.contains(callsigns[i])) {
+            foreach (Pilot *p, bookedpilots.values(callsigns[i])) // there might be several...
+                delete p;
+            bookedpilots.remove(callsigns[i]);
+        }
+    }
     callsigns = data.bookedpilots.keys();
     for(int i = 0; i < callsigns.size(); i++) {
-        Pilot *p = new Pilot(*data.bookedpilots[callsigns[i]]);
-        bookedpilots[p->label] = p;
+        if(!bookedpilots.contains(callsigns[i])) { // new pilots
+            Pilot *p = new Pilot(*data.bookedpilots[callsigns[i]]);
+            bookedpilots[callsigns[i]] = p;
+        } else { // existing pilots
+            *bookedpilots[callsigns[i]] = *data.bookedpilots[callsigns[i]];
+        }
     }
-    qDebug() << "WhazzupData/updatePilotsFrom -- finished";
+    qDebug() << "WhazzupData::updatePilotsFrom() -- finished";
 }
 
 void WhazzupData::updateControllersFrom(const WhazzupData& data) {
-    qDebug() << "WhazzupData/updateControllersFrom";
+    qDebug() << "WhazzupData::updateControllersFrom()";
     QList<QString> callsigns = controllers.keys();
     for(int i = 0; i < callsigns.size(); i++) {
         if(!data.controllers.contains(callsigns[i])) {
@@ -459,20 +445,20 @@ void WhazzupData::updateControllersFrom(const WhazzupData& data) {
             *controllers[callsigns[i]] = *data.controllers[callsigns[i]];
         }
     }
-    qDebug() << "WhazzupData/updateControllersFrom -- finished";
+    qDebug() << "WhazzupData::updateControllersFrom() -- finished";
 }
 
 void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
-    qDebug() << "WhazzupData/updateBookedControllersFrom";
+    qDebug() << "WhazzupData::updateBookedControllersFrom()";
     bookedcontrollers.clear();
     for (int i = 0; i < data.bookedcontrollers.size(); i++) {
         bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
     }
-    qDebug() << "WhazzupData/updateBookedControllersFrom -- finished";
+    qDebug() << "WhazzupData::updateBookedControllersFrom() -- finished";
 }
 
 void WhazzupData::updateFrom(const WhazzupData& data) {
-    qDebug() << "WhazzupData/updateFrom";
+    qDebug() << "WhazzupData::updateFrom()";
     if(this == &data)
         return;
 
@@ -484,8 +470,6 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         updatePilotsFrom(data);
         updateControllersFrom(data);
 
-        connectedClients = data.connectedClients;
-        connectedServers = data.connectedServers;
         connectedServerList = data.connectedServerList;
         connectedVoiceServerList = data.connectedVoiceServerList;
         whazzupVersion = data.whazzupVersion;
@@ -499,7 +483,7 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         bookingsTime = data.bookingsTime;
         predictionBasedOnBookingsTime = data.predictionBasedOnBookingsTime;
     }
-    qDebug() << "WhazzupData/updateFrom -- finished";
+    qDebug() << "WhazzupData::updateFrom() -- finished";
 }
 
 WhazzupData::~WhazzupData() {

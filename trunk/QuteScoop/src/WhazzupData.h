@@ -42,8 +42,7 @@ public:
     Pilot* getPilot(const QString& callsign) const { if(pilots[callsign] != 0) return pilots[callsign]; else return bookedpilots[callsign]; }
     Controller* getController(const QString& callsign) const { return controllers[callsign]; }
 
-    int clients() const { return connectedClients; }
-    int servers() const { return connectedServers; }
+    int clients() const { return controllers.size() + pilots.size(); }
     QList<QStringList> serverList() const { return connectedServerList; }
     QList<QStringList> voiceServerList() const { return connectedVoiceServerList; }
     int version() const { return whazzupVersion; }
@@ -74,8 +73,6 @@ private:
     QHash<QString, Pilot*> bookedpilots; // honestly, there could be same callsigns in the bookings, but it is easier like that (searching...)
     QHash<QString, Controller*> controllers;
     QList<BookedController*> bookedcontrollers;
-    int connectedClients;
-    int connectedServers;
     QList<QStringList> connectedServerList;
     QList<QStringList> connectedVoiceServerList;
     int whazzupVersion;
