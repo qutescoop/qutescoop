@@ -2,11 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <math.h>
-#include <QDebug>
-#include <QApplication>
-
 #include "NavData.h"
+
 #include "FileReader.h"
 #include "SectorReader.h"
 #include "helpers.h"

@@ -5,13 +5,7 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include <QString>
-#include <QColor>
-#include <QFont>
-#include <QHttp>
-#include <QByteArray>
-#include <QStringList>
-#include <QSettings>
+#include "_pch.h"
 
 class Settings
 {

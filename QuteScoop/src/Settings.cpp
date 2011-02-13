@@ -3,13 +3,9 @@
  **************************************************************************/
 
 #include "Settings.h"
+
 #include "Whazzup.h"
 #include "Window.h"
-
-#include <QSettings>
-#include <QApplication>
-#include <QDesktopServices>
-#include <QMessageBox>
 
 QSettings *settings_instance = 0;
 

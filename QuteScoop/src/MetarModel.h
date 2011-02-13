@@ -5,8 +5,7 @@
 #ifndef METARMODEL_H_
 #define METARMODEL_H_
 
-#include <QAbstractListModel>
-#include <QHttp>
+#include "_pch.h"
 
 #include "Metar.h"
 #include "Airport.h"

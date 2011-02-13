@@ -2,10 +2,9 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QDebug>
+#include "Airway.h"
 
 #include "NavData.h"
-#include "Airway.h"
 
 Airway::Segment::Segment(Waypoint* from, Waypoint* to) {
 	this->from = from;

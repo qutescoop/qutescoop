@@ -2,11 +2,9 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QDebug>
-#include <QPair>
+#include "Sector.h"
 
 #include "Settings.h"
-#include "Sector.h"
 #include "Tessellator.h"
 #include "NavData.h"
 #include "helpers.h"
@@ -46,7 +44,7 @@ void Sector::compileDisplayLists() {
     // filled polygon
     polygon = glGenLists(1);
     glNewList(polygon, GL_COMPILE);
-    QColor color = Settings::firFillColor();// was: .rgba(); // fixes a transparency bug for me - please test
+    QColor color = Settings::firFillColor();
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     Tessellator().tessellate(_points);
     glEndList();
@@ -85,51 +83,3 @@ void Sector::setPointList(const QList<QPair<double, double> >& points)
         _points.append(_points.first());
 
 }
-
-/*Looking for better way
-QPair<double, double> Sector::equidistantPoint()
-{
-    if(_equidistantPoint != QPair<double, double>(181, 91)) {
-        return _equidistantPoint;
-    }
-    if (_points.size() == 0)
-        return _equidistantPoint;
-
-    QPair<double, double> topLeft = _points[0];
-    QPair<double, double> bottomRight = _points[0];
-    for(int i = 1; i < _points.size(); i++) {
-        if(_points[i].first < topLeft.first)
-            topLeft.first = _points[i].first;
-        else if(_points[i].first > bottomRight.first)
-            bottomRight.first = _points[i].first;
-
-        if(_points[i].second < topLeft.second)
-            topLeft.second = _points[i].second;
-        else if(_points[i].second > bottomRight.second)
-            bottomRight.second = _points[i].second;
-    }
-
-    // does not account for FIRs spanning 179E/179W ;)
-    _equidistantPoint = QPair<double, double>((topLeft.first + bottomRight.first) / 2, (topLeft.second + bottomRight.second) / 2);
-    return _equidistantPoint;
-}
-
-int Sector::maxDistanceFromCenter() {
-    if(_maxDistFromCenter != 0)
-        return _maxDistFromCenter;
-
-    if(_points.size() == 0)
-        return -1;
-
-    QPair<double, double> c = equidistantPoint();
-
-    double maxDist = NavData::distance(c.first, c.second, _points[0].first, _points[0].second);
-    for(int i = 1; i < _points.size(); i++) {
-        if(NavData::distance(c.first, c.second, _points[i].first, _points[i].second) > maxDist) {
-            maxDist = NavData::distance(c.first, c.second, _points[i].first, _points[i].second);
-        }
-    }
-
-    _maxDistFromCenter = (int) maxDist;
-    return _maxDistFromCenter;
-}*/

@@ -2,11 +2,11 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QDebug>
+#include "Client.h"
 
 #include "Whazzup.h"
-#include "Client.h"
 #include "Settings.h"
+
 
 Client::Client(const QStringList& stringList, const WhazzupData* whazzup)
 {

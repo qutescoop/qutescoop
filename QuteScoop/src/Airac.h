@@ -5,9 +5,7 @@
 #ifndef AIRAC_H_
 #define AIRAC_H_
 
-#include <QHash>
-#include <QString>
-#include <QList>
+#include "_pch.h"
 
 #include "Waypoint.h"
 #include "NavAid.h"

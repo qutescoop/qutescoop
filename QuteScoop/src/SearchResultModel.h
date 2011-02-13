@@ -5,8 +5,8 @@
 #ifndef SEARCHRESULTMODEL_H_
 #define SEARCHRESULTMODEL_H_
 
-#include <QAbstractListModel>
-#include <QList>
+#include "_pch.h"
+
 #include "MapObject.h"
 
 class SearchResultModel: public QAbstractListModel {

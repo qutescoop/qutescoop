@@ -4,11 +4,7 @@
 #ifndef FILEREADER_H_
 #define FILEREADER_H_
 
-#include <QFile>
-#include <QString>
-#include <QList>
-#include <QPair>
-#include <QTextStream>
+#include "_pch.h"
 
 class FileReader
 {

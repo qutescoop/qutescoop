@@ -5,8 +5,7 @@
 #ifndef PING_H
 #define PING_H
 
-#include <QObject>
-#include <QProcess>
+#include "_pch.h"
 
 class Ping: public QObject
 {

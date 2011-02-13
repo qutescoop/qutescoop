@@ -3,10 +3,6 @@
  **************************************************************************/
 
 #include "AirportDetails.h"
-#include <QLocale>
-#include <QHeaderView>
-#include <QPolygon>
-#include <math.h>
 
 #include "helpers.h"
 #include "NavData.h"

@@ -5,9 +5,8 @@
 #ifndef GUIMESSAGE_H
 #define GUIMESSAGE_H
 
-#include <QString>
-#include <QDateTime>
-#include <QTimer>
+#include "_pch.h"
+
 //#include "Window.h"
 
 class GuiMessage : QObject {

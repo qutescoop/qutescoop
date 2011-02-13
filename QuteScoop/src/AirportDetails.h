@@ -5,9 +5,10 @@
 #ifndef AIRPORTDETAILS_H_
 #define AIRPORTDETAILS_H_
 
-#include <QSortFilterProxyModel>
-
 #include "ui_AirportDetails.h"
+
+#include "_pch.h"
+
 #include "ClientDetails.h"
 #include "Airport.h"
 #include "MetarModel.h"

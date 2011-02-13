@@ -5,8 +5,8 @@
 #ifndef PLANFLIGHTSROUTEMODEL_H_
 #define PLANFLIGHTSROUTEMODEL_H_
 
-#include <QAbstractTableModel>
-#include <QList>
+#include "_pch.h"
+
 #include "Route.h"
 
 class PlanFlightRoutesModel : public QAbstractTableModel {

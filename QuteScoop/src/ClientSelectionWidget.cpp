@@ -2,9 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QFocusEvent>
-#include <QListWidgetItem>
-#include <QDebug>
+#include "Client.h"
+
 #include "ClientSelectionWidget.h"
 
 ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):

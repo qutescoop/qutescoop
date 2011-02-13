@@ -5,9 +5,7 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
-#include <math.h>
-#include <QGLWidget>
-#include <QString>
+#include "_pch.h"
 
 /* version information */
 #define CVS_REVISION "$Revision$" // Gets set automatically on commit of THIS file.

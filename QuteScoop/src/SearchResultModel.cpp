@@ -3,8 +3,8 @@
  **************************************************************************/
 
 #include "SearchResultModel.h"
+
 #include "Window.h"
-#include <QFont>
 
 int SearchResultModel::rowCount(const QModelIndex &parent) const {
 	return content.count();

@@ -5,11 +5,11 @@
 #ifndef LISTCLIENTSDIALOG_H
 #define LISTCLIENTSDIALOG_H
 
-#include <QSortFilterProxyModel>
-#include <QStack>
+#include "ui_ListClientsDialog.h"
+
+#include "_pch.h"
 
 #include "ListClientsDialogModel.h"
-#include "ui_ListClientsDialog.h"
 
 class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
     Q_OBJECT

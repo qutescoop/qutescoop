@@ -5,10 +5,7 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-#include <QStringList>
-#include <QString>
-#include <QDialog>
-#include <QDateTime>
+#include "_pch.h"
 
 #include "MapObject.h"
 #include "WhazzupData.h"

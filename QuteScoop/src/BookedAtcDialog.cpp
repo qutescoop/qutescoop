@@ -2,15 +2,13 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QHeaderView>
-
 #include "BookedAtcDialog.h"
+
 #include "BookedAtcDialogModel.h"
 #include "BookedAtcSortFilter.h"
 #include "Whazzup.h"
 #include "Window.h"
 #include "Settings.h"
-#include "ui_MainWindow.h"
 
 // singleton instance
 BookedAtcDialog *bookedAtcDialog = 0;

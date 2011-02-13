@@ -5,10 +5,7 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
-#include <QGLFormat>
-#include <QGLWidget>
-#include <QHash>
-#include <QList>
+#include "_pch.h"
 
 #include "MapObject.h"
 #include "Sector.h"
@@ -92,40 +89,22 @@ private:
 
 	const QPair<double, double> sunZenith(const QDateTime &dt);
 
-	bool earth2D;
-	GLuint earthList;
 	GLUquadricObj *earthQuad;
-    GLuint coastlineList;
-    GLuint gridlinesList;
-    GLuint countriesList;
-    GLuint pilotsList;
-    GLuint airportsList;
-    GLuint airportsInactiveList;
-    GLuint fixesList;
-    GLuint sectorPolygonsList;
-    GLuint airportControllersList;
-    GLuint sectorPolygonBorderLinesList;
-    GLuint appBorderLinesList;
-    GLuint congestionsList;
+	GLuint earthList, coastlinesList, continentsList, countriesList, gridlinesList;
+	GLuint pilotsList, airportsList, airportsInactiveList;
+	GLuint fixesList;
+	GLuint sectorPolygonsList, sectorPolygonBorderLinesList, airportControllersList, appBorderLinesList,
+		congestionsList;
+	bool allSectorsDisplayed;
 
-    GLuint earthTexture;
+	QList<Controller*> sectorsToDraw;
 
-    QList<Controller*> sectorsToDraw;
+    double pilotLabelZoomTreshold, airportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
+        inactiveAirportDotZoomTreshold, controllerLabelZoomTreshold, fixZoomTreshold;
 
-    double pilotLabelZoomTreshold;
-    double airportLabelZoomTreshold;
-    double inactiveAirportLabelZoomTreshold;
-    double controllerLabelZoomTreshold;
-    double inactiveAirportDotZoomTreshold;
-    double fixZoomTreshold;
-
-    double xRot;
-    double yRot;
-    double zRot;
-    double zoom;
-    double aspectRatio;
-    QPoint lastPos;
-    QPoint mouseDownPos;
+    double xRot, yRot, zRot, zoom, aspectRatio;
+    QPoint lastPos, mouseDownPos;
+    bool mapIsMoving;
 
     bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
 
@@ -138,15 +117,11 @@ private:
         QRectF _rect;
         MapObject *_object;
     };
-    QList<FontRectangle> fontRectangles;
-    QList<FontRectangle> allFontRectangles;
+    QList<FontRectangle> fontRectangles, allFontRectangles;
     bool shouldDrawLabel(const FontRectangle& rect);
 
     void renderLabels();
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
-
-    bool allSectorsDisplayed;
-    bool mapIsMoving;
 
     qint64 shutDownAnim_t;
     QTimer *animationTimer;

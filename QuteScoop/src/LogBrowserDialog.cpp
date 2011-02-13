@@ -4,7 +4,7 @@
 
 #include "LogBrowserDialog.h"
 
-#include <QtGui>
+#include "_pch.h"
 
 #include "Window.h"
 #include "helpers.h"

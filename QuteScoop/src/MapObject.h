@@ -5,8 +5,7 @@
 #ifndef MAPOBJECT_H_
 #define MAPOBJECT_H_
 
-#include <QObject>
-#include <QDialog>
+#include "_pch.h"
 
 #include "ClientDetails.h"
 

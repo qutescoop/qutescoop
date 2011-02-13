@@ -3,11 +3,14 @@
  **************************************************************************/
 
 #include "Controller.h"
+
+#include "_pch.h"
+
+#include "Client.h"
 #include "ControllerDetails.h"
 #include "NavData.h"
 #include "Settings.h"
 
-#include <QDebug>
 
 Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
     Client(stringList, whazzup)

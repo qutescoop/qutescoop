@@ -3,10 +3,8 @@
  **************************************************************************/
 
 #include "PlanFlightRoutesModel.h"
+
 #include "PlanFlightDialog.h"
-#include <QtCore>
-#include <QIcon>
-#include <QMessageBox>
 
 void PlanFlightRoutesModel::setClients(const QList<Route*>& newroutes) {
     routes = newroutes;

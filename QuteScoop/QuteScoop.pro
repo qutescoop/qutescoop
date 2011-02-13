@@ -20,7 +20,7 @@ CONFIG(debug,release|debug) {
 
     # If precompiled headers are not possible, qmake should deactivate it.
     # If compiling/linking problems arise, this should be deactivated.
-    #CONFIG += precompile_header
+    CONFIG += precompile_header
     PRECOMPILED_HEADER = src/_pch.h
     precompile_header:!isEmpty(PRECOMPILED_HEADER) {
         !build_pass:message("Using precompiled headers.")
@@ -105,7 +105,8 @@ FORMS = src/MainWindow.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui
 
-HEADERS += src/WhazzupData.h \
+HEADERS += src/_pch.h \
+    src/WhazzupData.h \
     src/Whazzup.h \
     src/Waypoint.h \
     src/Tessellator.h \

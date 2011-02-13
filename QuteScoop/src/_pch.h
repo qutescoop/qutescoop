@@ -4,7 +4,13 @@
 
 /* This is the control file for pre-compiled headers. PCHs should be
    automatically controlled by qmake (so this should not harm if your
-   compiler chain does not support it). */
+   compiler chain does not support it).
+   They work like this: Get compiled first and the resulting binary is used
+   for linking in each file that includes this. If you only use 1 little,
+   isolated Qt module it is cheaper to just include it.
+   If you think the module will include more code, it tends to be cheaper to
+   include these precompiled headers.
+*/
 
 #ifndef _PCH_H
 #define _PCH_H
@@ -15,12 +21,10 @@
 
 #include <QtCore>
 #include <QtGui>
-#include "Settings.h"
-#include "Whazzup.h"
-#include "NavData.h"
-#include "helpers.h"
-//#include "Window.h"
+#include <QtNetwork>
+#include <QtOpenGL>
+#include <QDebug>
 
-#endif
+#endif // __cplusplus
 
 #endif // _PCH_H

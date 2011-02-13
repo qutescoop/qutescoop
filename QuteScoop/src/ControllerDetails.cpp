@@ -2,9 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QMessageBox>
-
 #include "ControllerDetails.h"
+
 #include "Window.h"
 #include "Settings.h"
 
