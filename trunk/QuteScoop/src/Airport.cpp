@@ -3,12 +3,11 @@
  **************************************************************************/
 
 #include "Airport.h"
+
 #include "Tessellator.h"
 #include "helpers.h"
 #include "AirportDetails.h"
 #include "Settings.h"
-
-#include <QList>
 
 Airport::Airport() {
     appDisplayList = 0;

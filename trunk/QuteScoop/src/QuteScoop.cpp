@@ -2,10 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QApplication>
-#include <QDebug>
-#include <QtGui>
-#include <QMetaType>
+#include "_pch.h"
+
 #include "Window.h"
 #include "NavData.h"
 #include "LogBrowserDialog.h"

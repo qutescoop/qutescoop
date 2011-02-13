@@ -3,7 +3,6 @@
  **************************************************************************/
 
 #include "Ping.h"
-#include <QDebug>
 
 void Ping::pingReadyRead() {
     QRegExp findMs = QRegExp("(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);

@@ -2,16 +2,11 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QtGui>
-#include <QtOpenGL>
-#include <QFontMetricsF>
-#include <QDebug>
-#include <math.h>
+#include "GLWidget.h"
 
 #include "helpers.h"
-#include "GLWidget.h"
 #include "LineReader.h"
-
+#include "Tessellator.h"
 #include "Pilot.h"
 #include "Controller.h"
 #include "Whazzup.h"
@@ -24,31 +19,13 @@
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
-        earth2D(false),
-        xRot(0),
-        yRot(0),
-        zRot(0),
-        zoom(2),
-        aspectRatio(1),
-        earthList(0),
-        coastlineList(0),
-        gridlinesList(0),
-        countriesList(0),
-        pilotsList(0),
-        airportsList(0),
-        airportsInactiveList(0),
-        fixesList(0),
-        sectorPolygonsList(0),
-        airportControllersList(0),
-        sectorPolygonBorderLinesList(0),
-        appBorderLinesList(0),
-        congestionsList(0),
-        pilotLabelZoomTreshold(0.7),
-        airportLabelZoomTreshold(1),
-        inactiveAirportDotZoomTreshold(0.15),
-        inactiveAirportLabelZoomTreshold(0.3),
-        controllerLabelZoomTreshold(2),
-        fixZoomTreshold(0.05),
+        xRot(0), yRot(0), zRot(0), zoom(2), aspectRatio(1),
+        earthList(0), coastlinesList(0), continentsList(0), countriesList(0), gridlinesList(0),
+        pilotsList(0), airportsList(0), airportsInactiveList(0), congestionsList(0), fixesList(0),
+        sectorPolygonsList(0), sectorPolygonBorderLinesList(0), airportControllersList(0), appBorderLinesList(0),
+        pilotLabelZoomTreshold(0.7), airportLabelZoomTreshold(1),
+        inactiveAirportDotZoomTreshold(0.15), inactiveAirportLabelZoomTreshold(0.3),
+        controllerLabelZoomTreshold(2), fixZoomTreshold(0.05),
         plotFlightPlannedRoute(false),
         allSectorsDisplayed(false),
         mapIsMoving(false),
@@ -61,7 +38,8 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 GLWidget::~GLWidget() {
     makeCurrent();
     glDeleteLists(earthList, 1);
-    glDeleteLists(coastlineList, 1);
+    glDeleteLists(coastlinesList, 1);
+    glDeleteLists(continentsList, 1);
     glDeleteLists(gridlinesList, 1);
     glDeleteLists(countriesList, 1);
     glDeleteLists(pilotsList, 1);
@@ -285,27 +263,21 @@ const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) {
                                  -((double) dateTime.time().hour() + (double) dateTime.time().minute() / 60.0f) * 15.0f - 180.0f);
 }
 
-void GLWidget::createObjects() {
+void GLWidget::createObjects(){
     // earth
+    qDebug() << "GLWidget::createObjects() earth";
     earthQuad = gluNewQuadric();
     gluQuadricDrawStyle(earthQuad, GLU_FILL); // FILL, LINE, SILHOUETTE or POINT
     gluQuadricNormals(earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     earthList = glGenLists(1);
     glNewList(earthList, GL_COMPILE);
     qglColor(Settings::globeColor());
-    if (Settings::glLighting()) { // lighting, draw globe
-        gluSphere(earthQuad, 1, qRound(360 / Settings::glCirclePointEach()), // draw a globe with radius, slicesX, stacksZ
-                  qRound(180 / Settings::glCirclePointEach()));
-        earth2D = false;
-        qDebug() << "GLWidget::createObjects() compiling earth as 3D-sphere";
-    } else { // no lighting, draw disc
-        gluDisk(earthQuad, 0, 1, qRound(360 / Settings::glCirclePointEach()), 1); // no lighting, no texture
-        earth2D = true;
-        qDebug() << "GLWidget::createObjects() compiling earth as 2D-disc";
-    }
+    gluSphere(earthQuad, 1, qRound(360 / Settings::glCirclePointEach()), // draw a globe with radius, slicesX, stacksZ
+              qRound(180 / Settings::glCirclePointEach()));
     glEndList();
 
     // grid
+    qDebug() << "GLWidget::createObjects() gridLines";
     gridlinesList = glGenLists(1);
     glNewList(gridlinesList, GL_COMPILE);
     if (Settings::gridLineStrength() > 0.0) {
@@ -314,28 +286,38 @@ void GLWidget::createObjects() {
         glLineWidth(Settings::gridLineStrength());
         for (int lon = 0; lon < 180; lon += Settings::earthGridEach()) {
             glBegin(GL_LINE_LOOP);
-            for (int lat = 0; lat < 360; lat += Settings::glCirclePointEach()) VERTEX(lat, lon);
+            for (int lat = 0; lat < 360; lat += Settings::glCirclePointEach())
+                VERTEX(lat, lon);
             glEnd();
         }
         // parallels
         for (int lat = -90 + Settings::earthGridEach(); lat < 90; lat += Settings::earthGridEach()) {
             glBegin(GL_LINE_LOOP);
-            for (int lon = -180; lon < 180; lon += qCeil(Settings::glCirclePointEach() / qCos(lat * Pi180))) VERTEX(lat, lon);
+            for (int lon = -180; lon < 180;
+                 lon += qCeil(Settings::glCirclePointEach() / qCos(lat * Pi180)))
+                VERTEX(lat, lon);
             glEnd();
         }
     }
     glEndList();
 
     // coastlines
-    coastlineList = glGenLists(1);
-    glNewList(coastlineList, GL_COMPILE);
+    qDebug() << "GLWidget::createObjects() coastLines";
+    coastlinesList = glGenLists(1);
+    glNewList(coastlinesList, GL_COMPILE);
     if (Settings::coastLineStrength() > 0.0) {
         qglColor(Settings::coastLineColor());
         glLineWidth(Settings::coastLineStrength());
         LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
         QList<QPair<double, double> > line = lineReader.readLine();
         while (!line.isEmpty()) {
-            glBegin(GL_LINE_STRIP);
+            //for (int i = 0; i < line.size() / 2; i++) // clockwise or counterclockwise matters for tesselating and lighting...
+            //    line.swap(i, line.size() - 1 - i);
+            // here could the "filled continents"-code arrive soon...
+            // But we need an enhanced Tesselator, it looks quite ugly, but you can try it out:
+            // Tessellator().tessellate(line);
+
+            glBegin(GL_LINE_LOOP);
             for (int i = 0; i < line.size(); i++)
                 VERTEX(line[i].first, line[i].second);
             glEnd();
@@ -344,7 +326,24 @@ void GLWidget::createObjects() {
     }
     glEndList();
 
+    // filled continents / islands
+    qDebug() << "GLWidget::createObjects() continents";
+    continentsList = glGenLists(1);
+    glNewList(continentsList, GL_COMPILE);
+    if (false) { // disabled but here are the first signs off continent rendering...
+        qglColor(Settings::coastLineColor());
+        LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
+        QList<QPair<double, double> > points = lineReader.readLine(); // always holding exactly 1 continent
+        while (!points.isEmpty()) {
+            qglColor(QColor(qrand() % 255, qrand() % 255, qrand() % 255));
+            Tessellator().tessellateSphere(points, Settings::glCirclePointEach());
+            points = lineReader.readLine();
+        }
+    }
+    glEndList();
+
     // countries
+    qDebug() << "GLWidget::createObjects() countries";
     countriesList = glGenLists(1);
     glNewList(countriesList, GL_COMPILE);
     if (Settings::countryLineStrength() > 0.0) {
@@ -355,10 +354,8 @@ void GLWidget::createObjects() {
         glBegin(GL_LINE);
         while (!line.isEmpty()) {
             glBegin(GL_LINE_STRIP);
-            for (int i = 0; i < line.size(); i++) {
-                QPair<double, double> p = line[i];
-                VERTEX(p.first, p.second);
-            }
+            for (int i = 0; i < line.size(); i++)
+                VERTEX(line[i].first, line[i].second);
             glEnd();
             line = countries.readLine();
         }
@@ -367,7 +364,8 @@ void GLWidget::createObjects() {
     glEndList();
 
     // fixes
-    if(!NavData::getInstance()->getAirac().isEmpty())
+    qDebug() << "GLWidget::createObjects() fixes";
+    if(!NavData::getInstance()->getAirac().isEmpty() && Settings::showFixes())
         createFixesList();
 }
 
@@ -453,7 +451,7 @@ void GLWidget::initializeGL() {
         if (Settings::glLights() > 1)
             adjustSunDiffuse.lighter(100 / Settings::glLightsSpread() * 180); // ...and increase again by their distribution
         const GLfloat sunDiffuse[] = {adjustSunDiffuse.redF(), adjustSunDiffuse.greenF(), adjustSunDiffuse.blueF(), adjustSunDiffuse.alphaF()};
-        const GLfloat sunSpecular[] = {1, 1, 1, 1};
+        //const GLfloat sunSpecular[] = {1, 1, 1, 1};
         for (int light = 0; light < 8; light++) {
             if (light < Settings::glLights()) {
                 glLightfv(GL_LIGHT0 + light, GL_AMBIENT, sunAmbient); // GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR, GL_POSITION, GL_SPOT_CUTOFF,
@@ -483,28 +481,25 @@ void GLWidget::paintGL() {
     //qint64 started = QDateTime::currentMSecsSinceEpoch(); // for method execution time calculation. See last line of method.
     //qDebug() << "GLWidget::paintGL()";
 
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    if (earth2D) { // draw just a disc instead of the globe. Call it here, before transformations become active.
-        glLoadIdentity();
-        glTranslatef(0.0, 0.0, -9.9);
-        glCallList(earthList);
-    };
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	if (shutDownAnim_t != 0) { // we are animatimg...
-		int elapsed = (QDateTime::currentMSecsSinceEpoch() - shutDownAnim_t) / 30;
-		int elapsed2 = elapsed * elapsed;
-		xRot += elapsed / 10.0;
-		yRot += elapsed / 20.0;
-		zRot += elapsed / 15.0;
-		zoom += elapsed2 / 6000.0;
+		quint16 elapsed = (QDateTime::currentMSecsSinceEpoch() - shutDownAnim_t); // 1 elapsed = 1ms
+		GLfloat x = 0.003f * (GLfloat) elapsed * (qCos(elapsed / 1400.0f) - 1.0f)
+						* qSin(elapsed / 1000.0f);
+		GLfloat y = 0.017f * (GLfloat) elapsed * (qCos(elapsed / 4500.0f) - 0.97f);
+		glTranslatef(x, y, 0.0);
+
+		xRot += elapsed / 160.0f;
+		yRot += elapsed / 250.0f;
+		zRot += elapsed / 130.0f;
+		double zoomTo = 2.0f + (float) elapsed * (float) elapsed / 150000.0f;
+		zoom = zoom + (zoomTo - zoom) / 10.0;
 		resetZoom();
-		glTranslatef(0.0003 * elapsed2 *(qCos(elapsed / 70.0) - 1),
-					 0.03 * elapsed * (qCos(elapsed / 100.0) - 1),
-					 0);
-		if (elapsed > 250)
+
+		if (elapsed > 7500)
 			qApp->exit(0);
-		animationTimer->start(50);
+		animationTimer->start(30);
 	}
 	glTranslatef(0.0, 0.0, -10.0);
 	glRotated(xRot, 1.0, 0.0, 0.0);
@@ -530,13 +525,12 @@ void GLWidget::paintGL() {
         }
     }
 
-	if (!earth2D)
-		glCallList(earthList);
-
+	glCallList(earthList);
 	if (Settings::glLighting())
-		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHTING); // light only primitives, not overlay (which does not have glNormals calculated)
+	glCallList(coastlinesList);
+	glCallList(continentsList);
 	glCallList(countriesList);
-	glCallList(coastlineList);
 	glCallList(gridlinesList);
 
 	glCallList(sectorPolygonsList);
@@ -557,11 +551,6 @@ void GLWidget::paintGL() {
 	if (Settings::glLighting())
 		glEnable(GL_LIGHTING);
 
-	// moon ;)... - won't work easily because we clip anything behind z=-10 (the earth's center)
-	//glTranslated(1.5, 0, 0);
-	//glColor4d(1, 0, 0, 1);
-	//gluSphere(gluNewQuadric(), 0.2, 64, 32);
-
     glFlush(); // seems to be advisable as I understand it. http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
     //qDebug() << "GLWidget::paintGL() -- finished in" << QDateTime::currentMSecsSinceEpoch() - started << "ms";
 }
@@ -575,8 +564,9 @@ void GLWidget::resizeGL(int width, int height) {
 void GLWidget::resetZoom() {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-0.5 * zoom * aspectRatio, +0.5 * zoom * aspectRatio,
-            +0.5 * zoom, -0.5 * zoom, 0, 10);
+    glOrtho(-0.5 * zoom * aspectRatio, +0.5 * zoom * aspectRatio, // clipping left/right/bottom/top/near/far
+            +0.5 * zoom, -0.5 * zoom, 8, 10); // or gluPerspective for perspective viewing
+    //gluPerspective(zoom, aspectRatio, 8, 10);
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -678,7 +668,8 @@ void GLWidget::createPilotsList() {
     qglColor(Settings::pilotDotColor());
     for (int i = 0; i < pilots.size(); i++) {
         const Pilot *p = pilots[i];
-        VERTEX(p->lat, p->lon);
+        if (p->lat != 0 && p->lon != 0)
+            VERTEX(p->lat, p->lon);
     }
     glEnd();
 
@@ -865,29 +856,26 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
         if(o == 0) continue;
 
         int x, y;
-        double lat = o->lat;
-        double lon = o->lon;
-        if(pointIsVisible(lat, lon, &x, &y)) {
+        if(pointIsVisible(o->lat, o->lon, &x, &y)) {
             QString text = o->mapLabel();
             QRectF rect = fontMetrics.boundingRect(text);
-            int drawX, drawY;
-            drawX = static_cast<int>(x - rect.width() / 2); // center horizontally
-            drawY = static_cast<int>(y - rect.height() - 5); // some px above dot
+            int drawX = x - rect.width() / 2; // center horizontally
+            int drawY = y - rect.height() - 5; // some px above dot
             rect.moveTo(drawX, drawY);
 
             FontRectangle fontRect = FontRectangle(rect, o);
             allFontRectangles.append(fontRect);
             if(shouldDrawLabel(fontRect)) {
                 qglColor(color);
-                renderText(drawX, static_cast<int>(drawY + rect.height()), text, font);
-                fontRectangles.append(fontRect); // let's add it not only when it it's drawn but always to get more selection for nearby objects
+                renderText(drawX, (drawY + rect.height()), text, font);
+                fontRectangles.append(fontRect);
             }
         }
     }
 }
 
 bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
-    int shrinkCheckRectByFactor = static_cast<int>(1.5); // be less conservative in edge overlap-checking
+    int shrinkCheckRectByFactor = 2; // be less conservative in edge overlap-checking
     for(int i = 0; i < fontRectangles.size(); i++) {
         QRectF checkrect = fontRectangles[i].rect();
         checkrect.setWidth(checkrect.width() / shrinkCheckRectByFactor); // make them smaller to allow a tiny bit of intersect

@@ -2,10 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QUrl>
-#include <QDebug>
-
 #include "MetarModel.h"
+
 #include "Settings.h"
 #include "Whazzup.h"
 #include "Window.h"

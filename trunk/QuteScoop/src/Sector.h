@@ -5,12 +5,8 @@
 #ifndef SECTOR_H_
 #define SECTOR_H_
 
-#include <QStringList>
-#include <QString>
-#include <QGLWidget>
-#include <QList>
-#include <QPair>
-#include <QPolygon>
+#include "_pch.h"
+
 
 class Sector
 {
@@ -33,11 +29,6 @@ public:
 
 	GLuint getPolygon();
 	GLuint getBorderLine();
-
-    //Working on better way; Markus
-    //QPair<double, double> equidistantPoint(); // finds a point which is suitable to draw the minimum circle that encloses the whole FIR
-    //int maxDistanceFromCenter();
-
 private:
 	void compileDisplayLists();
 

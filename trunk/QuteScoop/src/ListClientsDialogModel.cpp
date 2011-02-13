@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include "ListClientsDialogModel.h"
+
 #include "Whazzup.h"
 #include "NavData.h"
 

@@ -2,9 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QDebug>
-
 #include "SectorReader.h"
+
 #include "FileReader.h"
 #include "Settings.h"
 

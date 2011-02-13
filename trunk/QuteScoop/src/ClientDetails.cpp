@@ -3,11 +3,10 @@
  **************************************************************************/
 
 #include "ClientDetails.h"
+
 #include "Settings.h"
 #include "Client.h"
 #include "Window.h"
-
-#include <QTimer>
 
 ClientDetails::ClientDetails(QWidget *parent):
         QDialog(parent)

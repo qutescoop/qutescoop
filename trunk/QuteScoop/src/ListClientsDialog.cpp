@@ -2,9 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QMessageBox>
-#include <QDesktopServices>
 #include "ListClientsDialog.h"
+
 #include "ListClientsDialogModel.h"
 #include "Settings.h"
 #include "Controller.h"

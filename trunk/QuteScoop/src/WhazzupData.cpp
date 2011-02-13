@@ -2,8 +2,6 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QDebug>
-
 #include "WhazzupData.h"
 
 #include "Sector.h"

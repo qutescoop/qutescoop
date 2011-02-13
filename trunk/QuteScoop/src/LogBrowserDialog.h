@@ -5,7 +5,8 @@
 #ifndef LOGBROWSERDIALOG_H
 #define LOGBROWSERDIALOG_H
 
-#include <QDialog>
+#include "_pch.h"
+
 #include "GuiMessage.h"
 
 class QTextBrowser;

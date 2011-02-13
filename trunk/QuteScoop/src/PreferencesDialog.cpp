@@ -4,14 +4,6 @@
 
 #include "PreferencesDialog.h"
 
-#include <QFileDialog>
-#include <QColorDialog>
-#include <QFontDialog>
-#include <QMessageBox>
-#include <QDesktopServices>
-
-#include "math.h"
-
 #include "Settings.h"
 #include "Window.h"
 
@@ -1087,4 +1079,5 @@ void PreferencesDialog::on_applyPilots_clicked()
 void PreferencesDialog::on_glStippleLines_toggled(bool checked)
 {
     Settings::setGlStippleLines(checked);
+    cbDashedFrontAfter->setEnabled(checked);
 }

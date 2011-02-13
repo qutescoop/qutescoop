@@ -936,6 +936,9 @@ Please give us feedback if you encounter such situations - we are researching th
               <property name="text">
                <string>Dashed Lines</string>
               </property>
+              <property name="checked">
+               <bool>true</bool>
+              </property>
              </widget>
             </item>
            </layout>
@@ -2660,7 +2663,7 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="5" rowspan="2">
+            <item row="1" column="6" rowspan="2">
              <widget class="QComboBox" name="cbDashedFrontAfter">
               <property name="currentIndex">
                <number>-1</number>
@@ -2670,11 +2673,11 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="4" rowspan="2">
+            <item row="1" column="5" rowspan="2">
              <widget class="QLabel" name="lblDashed">
               <property name="text">
                <string>Dashed
-part is</string>
+part is...</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -2696,6 +2699,21 @@ part is</string>
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="1" column="4" rowspan="2">
+             <widget class="QLabel" name="label_28">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>activate &quot;Dashed Lines&quot; in Display (General)/OpenGL for this to take effect:</string>
+              </property>
+              <property name="wordWrap">
+               <bool>true</bool>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

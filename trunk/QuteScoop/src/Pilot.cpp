@@ -3,12 +3,11 @@
  **************************************************************************/
 
 #include "Pilot.h"
+
 #include "PilotDetails.h"
 #include "NavData.h"
 #include "helpers.h"
 #include "Settings.h"
-
-#include <QDebug>
 
 Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     Client(stringList, whazzup),

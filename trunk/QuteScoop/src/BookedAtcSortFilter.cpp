@@ -3,9 +3,8 @@
  **************************************************************************/
 
 #include "BookedAtcSortFilter.h"
+
 #include "BookedAtcDialog.h"
-#include <QDebug>
-#include <QDateTime>
 
 bool BookedAtcSortFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const {
     if (!this->from.isNull() && !this->to.isNull()) {

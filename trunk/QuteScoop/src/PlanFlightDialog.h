@@ -5,18 +5,10 @@
 #ifndef PLANFLIGHTDIALOG_H
 #define PLANFLIGHTDIALOG_H
 
-#include <QStringList>
-#include <QList>
-#include <QHttp>
-#include <QBuffer>
-#include <QSortFilterProxyModel>
-#include <QItemDelegate>
-
-#include <QtCore>
-
-#include <QtGui/QDialog>
-
 #include "ui_PlanFlightDialog.h"
+
+#include "_pch.h"
+
 #include "PlanFlightRoutesModel.h"
 
 class PlanFlightDialog : public QDialog, private Ui::PlanFlightDialog {

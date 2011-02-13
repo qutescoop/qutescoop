@@ -4,14 +4,7 @@
 
 #include "Whazzup.h"
 
-#include <QHttp>
-#include <QDebug>
-#include <QUrl>
-#include <QFileInfo>
-#include <QTimer>
-#include <QDir>
-#include <QtGui>
-#include "time.h"
+#include "_pch.h"
 
 #include "Settings.h"
 #include "Window.h"
@@ -35,7 +28,7 @@ Whazzup::Whazzup() {
     connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
 
     // init random seed to switch between URLs
-    srand(time(0));
+    srand(QDateTime::currentDateTime().toTime_t());
 
     downloadTimer = new QTimer(this);
     bookingsTimer = new QTimer(this);

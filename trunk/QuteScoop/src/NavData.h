@@ -5,9 +5,8 @@
 #ifndef NAVDATA_H_
 #define NAVDATA_H_
 
-#include <QHash>
-#include <QHash>
-#include <QMultiMap>
+#include "_pch.h"
+
 #include "Airport.h"
 #include "Sector.h"
 #include "Airac.h"

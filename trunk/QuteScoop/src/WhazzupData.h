@@ -5,9 +5,7 @@
 #ifndef WHAZZUPDATA_H_
 #define WHAZZUPDATA_H_
 
-#include <QBuffer>
-#include <QDateTime>
-#include <QHash>
+#include "_pch.h"
 
 #include "MapObjectVisitor.h"
 

@@ -5,13 +5,7 @@
 #ifndef WHAZZUP_H_
 #define WHAZZUP_H_
 
-#include <QStringList>
-#include <QList>
-#include <QPair>
-#include <QHttp>
-#include <QBuffer>
-#include <QTime>
-#include <QTimer>
+#include "_pch.h"
 
 #include "WhazzupData.h"
 #include "Window.h"

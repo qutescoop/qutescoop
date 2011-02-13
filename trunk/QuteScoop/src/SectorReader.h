@@ -4,9 +4,7 @@
 #ifndef SECTORREADER_H_
 #define SECTORREADER_H_
 
-#include <QHash>
-#include <QString>
-#include <QMultiMap>
+#include "_pch.h"
 
 #include "Sector.h"
 

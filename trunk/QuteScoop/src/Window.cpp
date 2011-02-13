@@ -2,10 +2,11 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include <QtGui>
-#include <QApplication>
-#include "GLWidget.h"
 #include "Window.h"
+
+#include "_pch.h"
+
+#include "GLWidget.h"
 #include "ClientDetails.h"
 #include "helpers.h"
 #include "Settings.h"
@@ -35,6 +36,12 @@ Window::Window(QWidget *parent) :
         QSettings().clear();
 
     setupUi(this);
+    // restore saved states
+    restoreState(Settings::getSavedState());
+    restoreGeometry(Settings::getSavedGeometry());
+    //if(!Settings::getSavedSize().isNull()) resize(savedSize);
+    //if(!Settings::getSavedPos().isNull()) move(savedPos);
+
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
 
@@ -64,6 +71,7 @@ Window::Window(QWidget *parent) :
         fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
     fmt.setRgba(true);
     glWidget = new GLWidget(fmt);
+    glWidget->restorePosition(1); // loading default (=1) map position
     centralwidget->layout()->addWidget(glWidget);
 
     clientSelection = new ClientSelectionWidget();
@@ -154,13 +162,6 @@ Window::Window(QWidget *parent) :
         checkForUpdates();
         checkForDataUpdates();
     }
-
-    // restore saved states
-    glWidget->restorePosition(1);
-    restoreState(Settings::getSavedState());
-    restoreGeometry(Settings::getSavedGeometry());
-    //if(!Settings::getSavedSize().isNull()) resize(savedSize);
-    //if(!Settings::getSavedPos().isNull()) move(savedPos);
 
     // Forecast / Predict settings
     framePredict->hide();

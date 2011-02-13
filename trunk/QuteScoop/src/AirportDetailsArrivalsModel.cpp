@@ -4,9 +4,6 @@
 
 #include "AirportDetailsArrivalsModel.h"
 
-#include <QtAlgorithms>
-#include <QDebug>
-
 void AirportDetailsArrivalsModel::setClients(const QList<Pilot*>& pilots) {
     this->pilots = pilots;
     reset();

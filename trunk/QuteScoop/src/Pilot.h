@@ -5,7 +5,7 @@
 #ifndef PILOT_H_
 #define PILOT_H_
 
-#include <QList>
+#include "_pch.h"
 
 #include "Airport.h"
 #include "Client.h"

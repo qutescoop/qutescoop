@@ -3,13 +3,8 @@
  **************************************************************************/
 
 #include "PlanFlightDialog.h"
-#include "ui_PlanFlightDialog.h"
 
-#include <QDebug>
-#include <QtGui>
-#include <QtCore>
-#include <qdom.h>
-
+#include <QtXml/QDomDocument>
 #include "Settings.h"
 #include "Route.h"
 #include "Window.h"

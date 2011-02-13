@@ -5,8 +5,7 @@
 #ifndef BOOKEDATCSORTFILTER_H
 #define BOOKEDATCSORTFILTER_H
 
-#include <QSortFilterProxyModel>
-#include <QtCore>
+#include "_pch.h"
 
 class BookedAtcSortFilter : public QSortFilterProxyModel {
 
