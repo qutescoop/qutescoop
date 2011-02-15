@@ -273,7 +273,7 @@ void GLWidget::createObjects(){
     gluQuadricNormals(earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     gluQuadricOrientation(earthQuad, GLU_OUTSIDE); // GLU_INSIDE
     if (Settings::glTextures()) {
-        QString earthTexFile = QString("%1/textures/earth.jpg").arg(qApp->applicationDirPath());
+        QString earthTexFile = Settings::applicationDataDirectory("textures/earth.jpg");
         QPixmap earthTexPm = QPixmap(earthTexFile);
         if (earthTexPm.isNull())
             qWarning() << "Unable to load texture file" << earthTexFile;
