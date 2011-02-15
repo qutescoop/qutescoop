@@ -86,8 +86,6 @@ public:
     static void applyProxySetting(QHttp *http);
 
     // Airport traffic settings --------------------------------
-    static void deleteAirportTrafficSettings();
-
     static bool filterTraffic();
     static void setFilterTraffic(bool v);
 
@@ -168,8 +166,6 @@ public:
     static void setStylesheet(const QString& value);
 
     // Earth and Space settings ----------------------------
-    static void deleteEarthSpaceSettings();
-
     static int earthGridEach();
     static void setEarthGridEach(int value);
 
@@ -198,8 +194,6 @@ public:
     static void setCountryLineStrength(double strength);
 
     // FIR settings ----------------------------------
-    static void deleteFirSettings();
-
     static QColor firBorderLineColor();
     static void setFirBorderLineColor(const QColor& color);
 
@@ -216,8 +210,6 @@ public:
     static void setFirFont(const QFont& font);
 
     // Airport Settings ----------------------------------
-    static void deleteAirportSettings();
-
     static QColor airportFontColor();
     static void setAirportFontColor(const QColor& color);
 
@@ -273,8 +265,6 @@ public:
     static void setGndFillColor(const QColor& color);
 
     // Aircraft Settings -----------------------------------
-    static void deleteAircraftSettings();
-
     static QColor pilotFontColor();
     static void setPilotFontColor(const QColor& color);
 
@@ -354,8 +344,6 @@ public:
     static void setSaveWhazzupData(const bool value);
 
     //zooming
-    static void deleteWheelSettings();
-
     static int wheelMax();
     static void setWheelMax(const int value);
 

@@ -1,0 +1,4 @@
+Textures:
+* earth.jpg - Earth's texture at 2048x1024px
+
+You can exchange textures at your own will. Keep the dimension at a power of 2 (2048, 4096, 8192...). The debug log will tell you if the texture was too big, but it does not necessarily tell you if there was another error.

@@ -251,5 +251,10 @@ changed:
 * increased visiblity distance for all objects. This might be configurable through
   "Preferences" if you ask for it ;)
 
+Version 2.0rc5:
+added:
+* Textured Earth. Works good with lighting. You can exchange the texture to your liking
+  (see ./textures/+notes.txt).
+
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
