@@ -69,11 +69,16 @@ CONFIG(release,release|debug) {
     downloadedFiles.files += ./downloaded/+notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
     screenshotsFiles.files += ./screenshots/+notes.txt
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${screenShotFiles.files}")
+    texturesFiles.path = $$DESTDIR/textures
+    texturesFiles.files += ./textures/+notes.txt
+    texturesFiles.files += ./textures/earth.jpg
+    texturesFiles.files += ./textures/renameForHigherResolution_earth.jpg
+    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} \
+        $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
 
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
-    INSTALLS *= rootFiles dataFiles downloadedFiles screenshotsFiles myQtLib myCompilerLib
+    INSTALLS *= rootFiles dataFiles downloadedFiles screenshotsFiles texturesFiles myQtLib myCompilerLib
 }
 
 macx { # could be "mac" also, I am not sure
@@ -210,7 +215,8 @@ OTHER_FILES += CHANGELOG \
     downloaded/+notes.txt \
     data/+notes.txt \
     data/dataversions.txt \
-    screenshots/+notes.txt
+    screenshots/+notes.txt \
+    textures/+notes.txt
 
 # temp files
 MOC_DIR =       ./temp/$${PLATFORM}-$${DEBUGRELEASE}

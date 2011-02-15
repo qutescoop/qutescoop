@@ -20,7 +20,7 @@
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
         xRot(0), yRot(0), zRot(0), zoom(2), aspectRatio(1),
-        earthList(0), coastlinesList(0), continentsList(0), countriesList(0), gridlinesList(0),
+        earthList(0), coastlinesList(0), countriesList(0), gridlinesList(0),
         pilotsList(0), airportsList(0), airportsInactiveList(0), congestionsList(0), fixesList(0),
         sectorPolygonsList(0), sectorPolygonBorderLinesList(0), airportControllersList(0), appBorderLinesList(0),
         pilotLabelZoomTreshold(0.7), airportLabelZoomTreshold(1),
@@ -31,15 +31,24 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         mapIsMoving(false),
         shutDownAnim_t(0)
 {
+    setAutoFillBackground(false);
     setMouseTracking(true);
-    emit newPosition();
+
+    glGenTextures(1, &earthTex);
+
+    // call default (=1) map position
+    Settings::getRememberedMapPosition(&xRot, &yRot, &zRot, &zoom, 1);
+    normalizeAngle(&xRot);
+    normalizeAngle(&yRot);
+    normalizeAngle(&zRot);
+    resetZoom();
+    //emit newPosition();
 }
 
 GLWidget::~GLWidget() {
     makeCurrent();
     glDeleteLists(earthList, 1);
     glDeleteLists(coastlinesList, 1);
-    glDeleteLists(continentsList, 1);
     glDeleteLists(gridlinesList, 1);
     glDeleteLists(countriesList, 1);
     glDeleteLists(pilotsList, 1);
@@ -52,6 +61,7 @@ GLWidget::~GLWidget() {
     glDeleteLists(sectorPolygonBorderLinesList, 1);
     glDeleteLists(congestionsList, 1);
 
+    glDeleteTextures(1, &earthTex);
     gluDeleteQuadric(earthQuad);
 
     QList<Airport*> airportList = NavData::getInstance()->airports().values();
@@ -65,19 +75,11 @@ GLWidget::~GLWidget() {
     }
 }
 
-QSize GLWidget::minimumSizeHint() const {
-    return QSize(150, 200);
-}
-
-QSize GLWidget::sizeHint() const {
-    return QSize(600, 700);
-}
-
 void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
-    xRot = 360 - lat;
-    yRot = 360 - lon;
+    xRot = 270 - lat;
+    zRot = lon;
     normalizeAngle(&xRot);
-    normalizeAngle(&yRot);
+    normalizeAngle(&zRot);
     zoom = newZoom;
     resetZoom();
     updateGL();
@@ -85,8 +87,8 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
 }
 
 QPair<double, double> GLWidget::currentPosition() {
-    double lat = 360 - xRot;
-    double lon = 360 - yRot;
+    double lat = 270 - xRot;
+    double lon = zRot;
     while (lat > 180) lat -= 360;
     while (lat < -180) lat += 360;
     if (lat > 90) lat = 180 - lat;
@@ -269,6 +271,16 @@ void GLWidget::createObjects(){
     earthQuad = gluNewQuadric();
     gluQuadricDrawStyle(earthQuad, GLU_FILL); // FILL, LINE, SILHOUETTE or POINT
     gluQuadricNormals(earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
+    gluQuadricOrientation(earthQuad, GLU_OUTSIDE); // GLU_INSIDE
+    if (Settings::glTextures()) {
+        QString earthTexFile = QString("%1/textures/earth.jpg").arg(qApp->applicationDirPath());
+        QPixmap earthTexPm = QPixmap(earthTexFile);
+        if (earthTexPm.isNull())
+            qWarning() << "Unable to load texture file" << earthTexFile;
+        earthTex = bindTexture(earthTexPm, GL_TEXTURE_2D,
+                               GL_RGB, QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
+        gluQuadricTexture(earthQuad, GL_TRUE); // prepare texture coordinates
+    }
     earthList = glGenLists(1);
     glNewList(earthList, GL_COMPILE);
     qglColor(Settings::globeColor());
@@ -311,33 +323,11 @@ void GLWidget::createObjects(){
         LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
         QList<QPair<double, double> > line = lineReader.readLine();
         while (!line.isEmpty()) {
-            //for (int i = 0; i < line.size() / 2; i++) // clockwise or counterclockwise matters for tesselating and lighting...
-            //    line.swap(i, line.size() - 1 - i);
-            // here could the "filled continents"-code arrive soon...
-            // But we need an enhanced Tesselator, it looks quite ugly, but you can try it out:
-            // Tessellator().tessellate(line);
-
             glBegin(GL_LINE_LOOP);
             for (int i = 0; i < line.size(); i++)
                 VERTEX(line[i].first, line[i].second);
             glEnd();
             line = lineReader.readLine();
-        }
-    }
-    glEndList();
-
-    // filled continents / islands
-    qDebug() << "GLWidget::createObjects() continents";
-    continentsList = glGenLists(1);
-    glNewList(continentsList, GL_COMPILE);
-    if (false) { // disabled but here are the first signs off continent rendering...
-        qglColor(Settings::coastLineColor());
-        LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
-        QList<QPair<double, double> > points = lineReader.readLine(); // always holding exactly 1 continent
-        while (!points.isEmpty()) {
-            qglColor(QColor(qrand() % 255, qrand() % 255, qrand() % 255));
-            Tessellator().tessellateSphere(points, Settings::glCirclePointEach());
-            points = lineReader.readLine();
         }
     }
     glEndList();
@@ -465,15 +455,17 @@ void GLWidget::initializeGL() {
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, modelAmbient); // GL_LIGHT_MODEL_AMBIENT, GL_LIGHT_MODEL_COLOR_CONTROL,
         //glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE); // ...GL_LIGHT_MODEL_LOCAL_VIEWER, GL_LIGHT_MODEL_TWO_SIDE
 
-		glEnable(GL_LIGHTING);
 		glShadeModel(GL_SMOOTH); // SMOOTH or FLAT
-	} else {
-		glDisable(GL_LIGHTING);
+	}
+	if (Settings::glTextures()) {
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 
 	createObjects();
 
-	QTimer::singleShot(3000, this, SLOT(glInfo()));
+	qDebug() << "OpenGL support: " << context()->format().hasOpenGL()
+			<< "\t| version: " << format().openGLVersionFlags();
 	qDebug() << "GLWidget::initializeGL() -- finished";
 }
 
@@ -507,6 +499,7 @@ void GLWidget::paintGL() {
 	glRotated(zRot, 0.0, 0.0, 1.0);
 
     if (Settings::glLighting()) {
+        glEnable(GL_LIGHTING);
         // moving sun's position
         QPair<double, double> zenith = sunZenith(Whazzup::getInstance()->whazzupData().timestamp().isValid()?
                                                  Whazzup::getInstance()->whazzupData().timestamp():
@@ -524,18 +517,20 @@ void GLWidget::paintGL() {
             }
         }
     }
-
-	glCallList(earthList);
-	if (Settings::glLighting())
-		glDisable(GL_LIGHTING); // light only primitives, not overlay (which does not have glNormals calculated)
-	glCallList(coastlinesList);
-	glCallList(continentsList);
-	glCallList(countriesList);
-	glCallList(gridlinesList);
+    if (Settings::glTextures())
+        glEnable(GL_TEXTURE_2D);
+    glCallList(earthList);
+    if (Settings::glTextures())
+        glDisable(GL_TEXTURE_2D);
+    if (Settings::glLighting())
+        glDisable(GL_LIGHTING); // light only earth, not overlay
+    glCallList(coastlinesList);
+    glCallList(countriesList);
+    glCallList(gridlinesList);
 
 	glCallList(sectorPolygonsList);
-	glCallList(airportControllersList);
 	glCallList(sectorPolygonBorderLinesList);
+	glCallList(airportControllersList);
 	glCallList(appBorderLinesList);
 	if(Settings::showAirportCongestion())
 		glCallList(congestionsList);
@@ -548,8 +543,6 @@ void GLWidget::paintGL() {
 	glCallList(pilotsList);
 
 	renderLabels();
-	if (Settings::glLighting())
-		glEnable(GL_LIGHTING);
 
     glFlush(); // seems to be advisable as I understand it. http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
     //qDebug() << "GLWidget::paintGL() -- finished in" << QDateTime::currentMSecsSinceEpoch() - started << "ms";
@@ -594,6 +587,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     if(mapIsMoving == true)
     {
         emit newPosition();
+        mapIsMoving = false;
     }
 }
 
@@ -601,30 +595,20 @@ void GLWidget::handleRotation(QMouseEvent *event) {
     const double zoomFactor = zoom / 10;
 
     double dx = (event->x() - lastPos.x()) * zoomFactor / aspectRatio;
-
-    // compensate for longitude differences, but only if xRot < 80¡
-    // otherwise we get a division by (almost) zero, crashing the application
-    const double limit = cos(80 * Pi180);
-    double xfactor = cos(xRot * Pi180);
-    if(fabs(xfactor) > limit)
-        dx /= xfactor;
-
     double dy = (-event->y() + lastPos.y()) * zoomFactor;
 
-    if ((event->buttons() & Qt::LeftButton) || (event->buttons() & Qt::RightButton)) {
-        xRot = xRot + dy;
-        yRot = yRot + dx;
-        normalizeAngle(&xRot);
-        normalizeAngle(&yRot);
-        updateGL();
-    }
+    xRot = xRot + dy;
+    zRot = zRot + dx;
+    normalizeAngle(&xRot);
+    normalizeAngle(&zRot);
+    updateGL();
 
     lastPos = event->pos();
-    //emit newPosition();
+    emit newPosition();
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    if(event->buttons() != 0) {
+    if((event->buttons() & Qt::LeftButton) || (event->buttons() & Qt::RightButton)) {
         handleRotation(event);
         mapIsMoving = true;
     }
@@ -952,8 +936,8 @@ bool GLWidget::mouse2latlon(int x, int y, double& lat, double& lon) const {
 
     // Determine x0 y0 z0 (the new Cartesian coordinates after derotation)
     double x0 = ys * sin(theta) - zs * cos(theta);
-    double y0 = ys * cos(theta) + zs * sin(theta);
-    double z0 = xs;
+    double y0 = -xs;
+    double z0 = ys * cos(theta) + zs * sin(theta);
 
     // After derotation, we can determine lat/lon as follows:
     lat = -atan(y0 / sqrt(1 - (y0*y0))) * 180 / Pi;
@@ -964,7 +948,7 @@ bool GLWidget::mouse2latlon(int x, int y, double& lat, double& lon) const {
         lon += 180;
 
     // Furthermore:
-    lon -= yRot;
+    lon -= zRot;
     if (lon < -180) lon += 360;
     if (lon > 180) lon -= 360;
 
@@ -1117,7 +1101,8 @@ void GLWidget::rememberPosition(int nr) {
 void GLWidget::restorePosition(int nr) {
     Settings::getRememberedMapPosition(&xRot, &yRot, &zRot, &zoom, nr);
     normalizeAngle(&xRot);
-    normalizeAngle(&yRot);
+    normalizeAngle(&zRot);
+
     resetZoom();
     updateGL();
     emit newPosition();
@@ -1125,16 +1110,11 @@ void GLWidget::restorePosition(int nr) {
 
 void GLWidget::scrollBy(int moveByX, int moveByY) {
     double lat, lon;
-    int fakeMousePosX = static_cast<int>(width() * (0.5 + (float) moveByX / 6));
-    int fakeMousePosY = static_cast<int>(height() * (0.5 + (float) moveByY / 6));
+    int fakeMousePosX = (width() * (0.5 + (float) moveByX / 6));
+    int fakeMousePosY = (height() * (0.5 + (float) moveByY / 6));
     mouse2latlon(fakeMousePosX, fakeMousePosY, lat, lon);
     setMapPosition(lat, lon, zoom);
     updateGL();
-}
-
-void GLWidget::glInfo() {
-	qDebug() << "OpenGL support: " << context()->format().hasOpenGL()
-			<< "\t| version: " << format().openGLVersionFlags();
 }
 
 void GLWidget::shutDownAnimation() {

@@ -1,13 +1,46 @@
 <project>
     <shortName>qutescoop</shortName>
     <fullName>QuteScoop</fullName>
-    <version>2.0rc4</version>
+    <version>2.0rc5</version>
     <installerFilename>${platform_name}-${product_shortname}-${product_version}-installer.${platform_exec_suffix}</installerFilename>
     <readmeFile>README.html</readmeFile>
     <licenseFile>COPYING</licenseFile>
     <logoImage>src/qutescoop.png</logoImage>
     <wmImage>src/qutescoop.png</wmImage>
+    <initializationActionList>
+        <setInstallerVariable name="userDataLocation" value="~/.local/share/data/QuteScoop/QuteScoop/">
+            <ruleList>
+                <platformTest type="linux"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="userDataLocation" value="~/Library/Application Support/QuteScoop/QuteScoop/">
+            <ruleList>
+                <platformTest type="osx"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="userDataLocation" value="${windows_folder_local_appdata}/QuteScoop/QuteScoop/">
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="systemDataLocation" value="/usr/local/share/data/QuteScoop/QuteScoop/">
+            <ruleList>
+                <platformTest type="linux"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="systemDataLocation" value="/Library/Application Support/QuteScoop/QuteScoop/">
+            <ruleList>
+                <platformTest type="osx"/>
+            </ruleList>
+        </setInstallerVariable>
+        <setInstallerVariable name="systemDataLocation" value="${windows_folder_appdata}/QuteScoop/QuteScoop/">
+            <ruleList>
+                <platformTest type="windows"/>
+            </ruleList>
+        </setInstallerVariable>
+    </initializationActionList>
     <debianCustomPackageDirectory>DIST-unix/DEBIAN</debianCustomPackageDirectory>
+    <defaultInstallationMode>qt</defaultInstallationMode>
     <description>application description goes here</description>
     <enableRollback>1</enableRollback>
     <enableTimestamp>1</enableTimestamp>
@@ -149,6 +182,9 @@
                         <distributionDirectory>
                             <origin>DIST-win32/screenshots</origin>
                         </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>DIST-win32/textures</origin>
+                        </distributionDirectory>
                     </distributionFileList>
                 </folder>
                 <folder>
@@ -165,6 +201,9 @@
                         </distributionDirectory>
                         <distributionDirectory>
                             <origin>DIST-unix/screenshots</origin>
+                        </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>DIST-unix/textures</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
@@ -183,7 +222,16 @@
                         <distributionDirectory>
                             <origin>DIST-macx/screenshots</origin>
                         </distributionDirectory>
+                        <distributionDirectory>
+                            <origin>DIST-macx/textures</origin>
+                        </distributionDirectory>
                     </distributionFileList>
+                </folder>
+                <folder>
+                    <description>userDataLocaton</description>
+                    <destination>${userDataLocation}</destination>
+                    <name>userDataLocation</name>
+                    <platforms>all</platforms>
                 </folder>
             </folderList>
             <startMenuShortcutList>

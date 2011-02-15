@@ -71,7 +71,6 @@ Window::Window(QWidget *parent) :
         fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
     fmt.setRgba(true);
     glWidget = new GLWidget(fmt);
-    glWidget->restorePosition(1); // loading default (=1) map position
     centralwidget->layout()->addWidget(glWidget);
 
     clientSelection = new ClientSelectionWidget();
@@ -146,8 +145,9 @@ Window::Window(QWidget *parent) :
     connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
     connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
     connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
-    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
+
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
+    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
 
     connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
     connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
@@ -1087,17 +1087,9 @@ void Window::shootScreenshot() {
 
     // variant 1: only works if QuteScoop Window is shown on top
     QPixmap::grabWindow(glWidget->winId()).save(QString("%1.png").arg(filename), "png");
+//    glWidget->renderPixmap().save(QString("%1-openGL.png").arg(filename), "png", true);
+//    glWidget->grabFrameBuffer(true).save(QString("%1-frameBuffer.png").arg(filename), "png");
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
-
-/*    QPixmap::grabWidget(glWidget).save(QString("%1-variant2.png").arg(filename), "png");
-    qDebug() << "shot screenie" << QString("%1-variant2.png").arg(filename); //fixme
-
-    glWidget->grabFrameBuffer(true).save(QString("%1-variant3.png").arg(filename), "png");
-    qDebug() << "shot screenie" << QString("%1-variant3.png").arg(filename); //fixme
-
-    glWidget->renderPixmap().save(QString("%1-variant4.png").arg(filename), "png");
-    qDebug() << "shot screenie" << QString("%1-variant4.png").arg(filename); //fixme
-    */
 }
 
 // show the active route from PlanFlightDialog

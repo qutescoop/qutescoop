@@ -21,15 +21,14 @@ public:
     GLWidget(QGLFormat format, QWidget *parent = 0);
     ~GLWidget();
 
-    QSize minimumSizeHint() const;
-    QSize sizeHint() const;
+//    QSize minimumSizeHint() const { return QSize(150, 200); }
+//    QSize sizeHint() const { return QSize(600, 700); }
 
     bool plotFlightPlannedRoute;
     QPair<double, double> currentPosition();
 
 public slots:
     void initializeGL();
-    void glInfo();
     void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
     // updating the statusbar as well - we do not want a full GL update here sometimes
     void setMapPosition(double lat, double lon, double newZoom);
@@ -90,7 +89,8 @@ private:
 	const QPair<double, double> sunZenith(const QDateTime &dt);
 
 	GLUquadricObj *earthQuad;
-	GLuint earthList, coastlinesList, continentsList, countriesList, gridlinesList;
+	GLuint earthTex;
+	GLuint earthList, coastlinesList, countriesList, gridlinesList;
 	GLuint pilotsList, airportsList, airportsInactiveList;
 	GLuint fixesList;
 	GLuint sectorPolygonsList, sectorPolygonBorderLinesList, airportControllersList, appBorderLinesList,

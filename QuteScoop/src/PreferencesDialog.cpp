@@ -80,6 +80,7 @@ void PreferencesDialog::loadSettings() {
         cbDashedFrontAfter->setCurrentIndex(1);
 
     // OpenGL
+    glTextures->setChecked(Settings::glTextures());
     glStippleLines->setChecked(Settings::glStippleLines());
     cbBlend->setChecked(Settings::glBlending);
     cbLineSmoothing->setChecked(Settings::displaySmoothLines());
@@ -528,7 +529,10 @@ void PreferencesDialog::on_pbFirFillColor_clicked() {
 }
 
 void PreferencesDialog::on_buttonResetFir_clicked() {
-    Settings::deleteFirSettings();
+    QSettings settings;
+    settings.beginGroup("firDisplay");
+    settings.remove("");
+    settings.endGroup();
     loadSettings();
 }
 
@@ -733,7 +737,10 @@ void PreferencesDialog::on_sbPlanLineStrength_valueChanged(double value) {
 }
 
 void PreferencesDialog::on_buttonResetPilot_clicked() {
-    Settings::deleteAircraftSettings();
+    QSettings settings;
+    settings.beginGroup("pilotDisplay");
+    settings.remove("");
+    settings.endGroup();
     loadSettings();
 }
 
@@ -835,8 +842,15 @@ void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double va
 
 void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
 {
-    Settings::deleteAirportSettings();
-    Settings::deleteAirportTrafficSettings();
+    QSettings settings;
+    settings.beginGroup("airportDisplay");
+    settings.remove("");
+    settings.endGroup();
+
+    settings.beginGroup("airportTraffic");
+    settings.remove("");
+    settings.endGroup();
+
     loadSettings();
 }
 
@@ -863,7 +877,12 @@ void PreferencesDialog::on_sbBookingsInterval_valueChanged(int value)
 // zooming
 void PreferencesDialog::on_pbWheelCalibrate_clicked()
 {
-    Settings::deleteWheelSettings();
+    QSettings settings;
+    settings.beginGroup("mouseWheel");
+    settings.remove("");
+    settings.endGroup();
+
+    loadSettings();
 }
 
 void PreferencesDialog::on_sbZoomFactor_valueChanged(double value)
@@ -1080,4 +1099,9 @@ void PreferencesDialog::on_glStippleLines_toggled(bool checked)
 {
     Settings::setGlStippleLines(checked);
     cbDashedFrontAfter->setEnabled(checked);
+}
+
+void PreferencesDialog::on_glTextures_toggled(bool checked)
+{
+    Settings::setGlTextures(checked);
 }

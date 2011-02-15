@@ -948,7 +948,7 @@ Please give us feedback if you encounter such situations - we are researching th
             <item>
              <widget class="QGroupBox" name="groupBoxEarthSpace">
               <property name="title">
-               <string>Earth, Sun and Space</string>
+               <string>Space and Earth</string>
               </property>
               <layout class="QGridLayout" name="_8">
                <item row="0" column="0">
@@ -999,6 +999,9 @@ Please give us feedback if you encounter such situations - we are researching th
                </item>
                <item row="1" column="1">
                 <widget class="QPushButton" name="pbGlobeColor">
+                 <property name="toolTip">
+                  <string>The Earth's standard color. This will also affect the texture, if chosen.</string>
+                 </property>
                  <property name="autoFillBackground">
                   <bool>true</bool>
                  </property>
@@ -1166,13 +1169,33 @@ Please give us feedback if you encounter such situations - we are researching th
                  </property>
                 </widget>
                </item>
+               <item row="1" column="3">
+                <widget class="QCheckBox" name="glTextures">
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="toolTip">
+                  <string>Overlay a picture over the whole Earth. This is loaded from ./textures/earth.jpg - if you want to change it, pay attention to have width and height at a power of 2 (1024, 2048, 4096...).
+The texture is affected by the colour chosen for the Globe.</string>
+                 </property>
+                 <property name="text">
+                  <string>Textured</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
             <item>
              <widget class="QGroupBox" name="cbLighting">
+              <property name="toolTip">
+               <string>This enables OpenGL lighting. The sunrays will hit the Earth from the specified sources with the specified colour. You can adjust the effect by choosing a darker light colour.</string>
+              </property>
               <property name="title">
-               <string>Scene lit by Sun</string>
+               <string>Earth lit by Sun</string>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -2771,7 +2794,7 @@ part is...</string>
         </font>
        </property>
        <property name="text">
-        <string>Some settings require a restart or network update to take effect. Information on most of the items is provided my 'mouse-over'.</string>
+        <string>Some settings require a restart or network update to take effect. Information on most of the items is provided via 'mouse-over'.</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>
