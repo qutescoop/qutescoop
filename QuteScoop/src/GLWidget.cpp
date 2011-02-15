@@ -278,7 +278,7 @@ void GLWidget::createObjects(){
         if (earthTexPm.isNull())
             qWarning() << "Unable to load texture file" << earthTexFile;
         earthTex = bindTexture(earthTexPm, GL_TEXTURE_2D,
-                               GL_RGB, QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
+                               GL_RGBA, QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
         gluQuadricTexture(earthQuad, GL_TRUE); // prepare texture coordinates
     }
     earthList = glGenLists(1);
@@ -517,8 +517,10 @@ void GLWidget::paintGL() {
             }
         }
     }
-    if (Settings::glTextures())
+    if (Settings::glTextures()) {
         glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, earthTex);
+    }
     glCallList(earthList);
     if (Settings::glTextures())
         glDisable(GL_TEXTURE_2D);
@@ -1118,6 +1120,8 @@ void GLWidget::scrollBy(int moveByX, int moveByY) {
 }
 
 void GLWidget::shutDownAnimation() {
+	if (shutDownAnim_t != 0)
+		qApp->exit(0);
 	shutDownAnim_t = QDateTime::currentMSecsSinceEpoch();
 	animationTimer = new QTimer(this);
 	connect(animationTimer, SIGNAL(timeout()), this, SLOT(updateGL()));
