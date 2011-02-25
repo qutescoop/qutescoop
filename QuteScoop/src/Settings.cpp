@@ -46,7 +46,7 @@ QIODevice::OpenMode Settings::testDirectory(QString &dir) {
             capabilities |= QIODevice::ReadOnly;
         }
     }
-    qDebug() << "Settings::testDirectory()" << dir << capabilities;
+    //qDebug() << "Settings::testDirectory()" << dir << capabilities;
     return capabilities;
 }
 
@@ -66,7 +66,7 @@ void Settings::calculateApplicationDataDirectory() {
     dirs << QCoreApplication::applicationDirPath();
 
     QStringList subdirs; // needed subDirs
-    subdirs << "data" << "downloaded" << "screenshots";
+    subdirs << "data" << "downloaded" << "screenshots" << "textures"; // 'texture' does not have to be writeable
 
     QList< QIODevice::OpenMode> dirCapabilities;
     for (int i = 0; i < dirs.size(); i++) {
@@ -76,7 +76,7 @@ void Settings::calculateApplicationDataDirectory() {
             QString dir = QString("%1/%2").arg(dirs[i], subdirs[j]);
             dirCapabilities[i] &= testDirectory(dir); // AND-combine: returns lowest capability
         }
-        qDebug() << "Settings::calculateApplicationsDirectory():" << dirs[i] << "has capabilities:" << dirCapabilities[i];
+        //qDebug() << "Settings::calculateApplicationsDirectory():" << dirs[i] << "has capabilities:" << dirCapabilities[i];
         if (i == 0) { // preferred location writeable - no further need to look
             if (dirCapabilities[0].testFlag(QIODevice::ReadWrite)) {
                 getSettings()->setValue("general/calculatedApplicationDataDirectory", dirs[0]);

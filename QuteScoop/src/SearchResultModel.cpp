@@ -12,33 +12,33 @@ int SearchResultModel::rowCount(const QModelIndex &parent) const {
 
 int SearchResultModel::columnCount(const QModelIndex &parent) const {
 	return 1;
-} 
+}
 
 QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 	if(!index.isValid())
 		return QVariant();
-	
+
 	if(index.row() >= content.size())
 		return QVariant();
-	
+
 	if(role == Qt::DisplayRole) {
 		MapObject* o = content[index.row()];
 		switch(index.column()) {
-            case 0: return o->toolTip(); break;
+			case 0: return o->toolTip(); break;
 		}
 	}
 
-    if(role == Qt::FontRole) {
+	if(role == Qt::FontRole) {
 		QFont result;
-        //prefiled italic
-        if(dynamic_cast<Pilot*>(content[index.row()])) {
-            Pilot *p = dynamic_cast<Pilot*>(content[index.row()]);
-            if(p->flightStatus() == Pilot::PREFILED) {
+		//prefiled italic
+		if(dynamic_cast<Pilot*>(content[index.row()])) {
+			Pilot *p = dynamic_cast<Pilot*>(content[index.row()]);
+			if(p->flightStatus() == Pilot::PREFILED) {
 				result.setItalic(true);
-            }
-        }
-        
-        //friends bold
+			}
+		}
+
+		//friends bold
 		Client *c = dynamic_cast<Client*>(content[index.row()]);
 		if(c != 0) {
 			if(c->isFriend()) {
@@ -47,7 +47,7 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 		}
 		return result;
 	}
-	
+
 	return QVariant();
 }
 
@@ -69,11 +69,11 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 }
 
 void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center
-    double lat = content[index.row()]->lat;
-    double lon = content[index.row()]->lon;
-
-    if (Window::getInstance(false) != 0)
-        Window::getInstance(true)->showOnMap(lat, lon);
+    if (content[index.row()]->lat != 0 || content[index.row()]->lon != 0) {
+        if (Window::getInstance(false) != 0)
+            Window::getInstance(true)->glWidget->setMapPosition(content[index.row()]->lat,
+                                                                content[index.row()]->lon, 0.1);
+    }
 }
 
 void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the Details, as is the case on the map

@@ -55,6 +55,7 @@ CONFIG(release,release|debug) {
     # QuteScoop additional files
     rootFiles.path = $$DESTDIR
     rootFiles.files += README.html COPYING CHANGELOG
+    unix: rootFiles.files += QuteScoop.sh
     dataFiles.path = $$DESTDIR/data
     dataFiles.files += ./data/+notes.txt
     dataFiles.files += ./data/airports.dat
@@ -71,8 +72,8 @@ CONFIG(release,release|debug) {
     screenshotsFiles.files += ./screenshots/+notes.txt
     texturesFiles.path = $$DESTDIR/textures
     texturesFiles.files += ./textures/+notes.txt
-    texturesFiles.files += ./textures/earth.jpg
-    texturesFiles.files += ./textures/renameForHigherResolution_earth.jpg
+    texturesFiles.files += ./textures/earth.png
+    texturesFiles.files += ./textures/renameForHigherResolution_earth.png
     !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} \
         $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
 

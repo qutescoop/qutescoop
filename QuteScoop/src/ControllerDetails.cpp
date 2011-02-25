@@ -33,7 +33,6 @@ ControllerDetails::ControllerDetails(QWidget *parent):
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-    connect(this, SIGNAL(showOnMap(double, double)), qobject_cast<Window *>(this->parent()), SLOT(showOnMap(double, double)));
 }
 
 void ControllerDetails::refresh(Controller *newController) {

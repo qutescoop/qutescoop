@@ -399,12 +399,6 @@ void Window::mapClicked(int x, int y, QPoint absolutePos) {
     }
 }
 
-void Window::showOnMap(double lat, double lon) {
-    // exclude prefiled flights - do not mapcenter on Atlantic between Brazil and Angola (N0/E0)
-    if ((lat != 0) || (lon != 0))
-        glWidget->setMapPosition(lat, lon, 0.1);
-}
-
 void Window::openPreferences() {
     PreferencesDialog::getInstance(true, this)->show();
     PreferencesDialog::getInstance(true)->raise();
