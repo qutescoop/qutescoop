@@ -35,7 +35,6 @@ public:
     GLWidget *glWidget;
 
 public slots:
-    void showOnMap(double lat, double lon);
     void updateMetarDecoder(const QString& airport, const QString& decodedText);
     void refreshFriends();
     void updateGLPilots();

@@ -1,4 +1,6 @@
 Textures:
-* earth.jpg - Earth's texture at 2048x1024px
+* earth.png - Earth's texture at 2048x1024px
+* renameForHigherResolution_earth.png - the same at 4096x2048px
 
-You can exchange textures at your own will. Keep the dimension at a power of 2 (2048, 4096, 8192...). The debug log will tell you if the texture was too big, but it does not necessarily tell you if there was another error.
+You can exchange textures at your own will. Keep all dimensions at a power of 2 (2048, 4096, 8192...).
+The debug log will tell you if there was an error loading it.

@@ -18,9 +18,6 @@ class ClientDetails : public QDialog
 public:
     virtual void refresh() {}
 
-signals:
-    void showOnMap(double lat, double lon);
-
 protected:
     ClientDetails(QWidget *parent);
     void setMapObject(MapObject *object);

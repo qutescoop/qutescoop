@@ -28,7 +28,9 @@ void ClientDetails::setMapObject(MapObject *object) {
 }
 
 void ClientDetails::showOnMap() {
-    emit showOnMap(lat, lon);
+    if ((lat != 0 || lon != 0) && Window::getInstance(false)) {
+        Window::getInstance(true)->glWidget->setMapPosition(lat, lon, 0.1);
+    }
 }
 
 void ClientDetails::friendClicked() {

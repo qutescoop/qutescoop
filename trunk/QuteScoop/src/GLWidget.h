@@ -29,7 +29,7 @@ public:
 
 public slots:
     void initializeGL();
-    void newWhazzupData(bool isNew = true); // could be solved more elegantly, but it gets called for
+    void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
     // updating the statusbar as well - we do not want a full GL update here sometimes
     void setMapPosition(double lat, double lon, double newZoom);
     void scrollBy(int moveByX, int moveByY);
@@ -50,7 +50,6 @@ public slots:
 
     void createPilotsList();
     void createAirportsList();
-    void createFixesList();
     void prepareDisplayLists();
 
     void shutDownAnimation();
@@ -73,17 +72,8 @@ protected:
 
 private:
     void createObjects();
-    void normalizeAngle(double *angle) const;
     void resetZoom();
     void handleRotation(QMouseEvent *event);
-
-    void determineActiveSectors();
-
-	/**
-	 * Convert mouse coordinates (x/y) into lat/lon on the globe.
-	 * Returns false if the mouse is not on the globe (but pointing on space),
-	 * true otherwise
-	 */
 	bool mouse2latlon(int x, int y, double& lat, double& lon) const;
 
 	const QPair<double, double> sunZenith(const QDateTime &dt);
@@ -124,7 +114,8 @@ private:
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
     qint64 shutDownAnim_t;
-    QTimer *animationTimer;
+
+    void drawCoordinateAxii();
 };
 
 #endif /*GLWIDGET_H_*/
