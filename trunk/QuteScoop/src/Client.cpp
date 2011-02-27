@@ -54,10 +54,12 @@ QString Client::getField(const QStringList& list, int index) {
 }
 
 QString Client::onlineTime() const {
-    if (timeConnected.isNull())
+    if (!timeConnected.isValid())
         return QString("not connected");
-    return QDateTime::fromTime_t(Whazzup::getInstance()->whazzupData().timestamp().toTime_t()
-                                  - timeConnected.toTime_t()).toString("HH:mm");
+    return QDateTime::fromTime_t(               // this will get wrapped by 24h but that should not be a problem...
+            Whazzup::getInstance()->whazzupData().timestamp().toTime_t()
+            - timeConnected.toTime_t()
+            ).toUTC().toString("HH:mm");
 }
 
 QString Client::displayName(bool withLink) const {
