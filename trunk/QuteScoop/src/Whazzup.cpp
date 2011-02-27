@@ -271,8 +271,8 @@ void Whazzup::whazzupDownloaded(bool error) {
         const int serverNextUpdateInSec = QDateTime::currentDateTimeUtc().secsTo(data.updateEarliest);
         if (data.updateEarliest.isValid() &&
             (Settings::downloadInterval() * 60 < serverNextUpdateInSec)) {
-            downloadTimer->start(serverNextUpdateInSec * 1000 + 20000); // 20s after later than reported from server
-                                                                        // to adjust for inconsistently set clocks
+            downloadTimer->start(serverNextUpdateInSec * 1000 + 60000); // 1min after later than reported from server
+                                                                        // - seems to report 0000z when actually updates at 0000:59z
             qDebug() << "Whazzup::whazzupDownloaded() correcting next update to"
                     << serverNextUpdateInSec << "s to respect the server's minimum interval";
         } else
