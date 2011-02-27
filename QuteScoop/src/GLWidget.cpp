@@ -455,8 +455,8 @@ void GLWidget::createObjects(){
             qWarning() << "Unable to load texture file" << earthTexFile;
         else {
             GLint max_texture_size; glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
-            qDebug() << "OpenGL reported MAX_TEXTURE_SIZE as" << max_texture_size << "// trying to bind a" <<
-                    earthTexIm.width() << "x" << earthTexIm.height() << "texture";
+            qDebug() << "OpenGL reported MAX_TEXTURE_SIZE as" << max_texture_size << "// trying to bind" <<
+                    earthTexFile << "as" << earthTexIm.width() << "x" << earthTexIm.height() << "px texture";
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
@@ -696,21 +696,27 @@ void GLWidget::paintGL() {
 	glLoadIdentity();
 	if (shutDownAnim_t != 0) { // we are animatimg...
 		quint16 elapsed = (QDateTime::currentMSecsSinceEpoch() - shutDownAnim_t); // 1 elapsed = 1ms
-		if (elapsed > 5000)
+		if (elapsed > 6000)
 			qApp->exit(0);
 		else
 			QTimer::singleShot(20, this, SLOT(updateGL())); // aim for 50 fps
+		// move
 		GLfloat x = 0.006f * (GLfloat) elapsed * (qCos(elapsed / 1400.0f) - 1.0f)
-						* qSin(elapsed / 1000.0f);
-		GLfloat y = 0.02f * (GLfloat) elapsed * (qCos(elapsed / 4500.0f) - 0.97f);
+						* qSin(elapsed / 800.0f);
+		GLfloat y = 0.02f  * (GLfloat) elapsed * (qCos(elapsed / 4500.0f) - 0.97f);
 		glTranslatef(x, y, 0.0);
-
+		// rotate
 		xRot += elapsed / 160.0f;
 		yRot += elapsed / 250.0f;
 		zRot += elapsed / 130.0f;
 		double zoomTo = 2.0f + (float) elapsed * (float) elapsed / 150000.0f;
 		zoom = zoom + (zoomTo - zoom) / 10.0;
 		resetZoom();
+		// morph space color
+		qglClearColor(QColor(
+				Settings::backgroundColor().red()   + (150 - Settings::backgroundColor().red())   * elapsed/6000.,
+				Settings::backgroundColor().green() + (200 - Settings::backgroundColor().green()) * elapsed/6000.,
+				Settings::backgroundColor().blue()  + (255 - Settings::backgroundColor().blue())  * elapsed/6000.));
 	}
 	glTranslatef(0.0, 0.0, -10.0);
 	glRotated(xRot, 1.0, 0.0, 0.0);

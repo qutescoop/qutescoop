@@ -102,6 +102,10 @@ void Whazzup::statusDownloaded(bool error) {
             urls.append(list[1]);
         else if("gzurl0" == list[0])
             gzurls.append(list[1]);
+        else if("moveto0" == list[0]) // this URL is obsolete. Try that one instead.
+            // do something with it?
+            qDebug() << "status.txt suggested to use" << list[0] <<
+                    "!!! We do not handle that automatically, please update the status-URL by hand.";
         else if("metar0" == list[0])
             metarUrl = list[1];
         else if("taf0" == list[0])
