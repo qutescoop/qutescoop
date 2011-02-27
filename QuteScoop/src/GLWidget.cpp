@@ -701,27 +701,29 @@ void GLWidget::paintGL() {
 		else
 			QTimer::singleShot(20, this, SLOT(updateGL())); // aim for 50 fps
 		// move
-		GLfloat x = 0.006f * (GLfloat) elapsed * (qCos(elapsed / 1400.0f) - 1.0f)
-						* qSin(elapsed / 800.0f);
-		GLfloat y = 0.02f  * (GLfloat) elapsed * (qCos(elapsed / 4500.0f) - 0.97f);
-		glTranslatef(x, y, 0.0);
+		GLfloat x = 0.006 * (GLfloat) elapsed * (qCos(elapsed / 1400.) - 1.)
+						* qSin(elapsed / 800.);
+		GLfloat y = 0.02  * (GLfloat) elapsed * (qCos(elapsed / 4500.) - 0.97);
+		glTranslatef(x, y, 0);
 		// rotate
-		xRot += elapsed / 160.0f;
-		yRot += elapsed / 250.0f;
-		zRot += elapsed / 130.0f;
-		double zoomTo = 2.0f + (float) elapsed * (float) elapsed / 150000.0f;
-		zoom = zoom + (zoomTo - zoom) / 10.0;
+		xRot += elapsed / 160.;
+		yRot += elapsed / 250.;
+		zRot += elapsed / 130.;
+		double zoomTo = 2. + (float) elapsed * (float) elapsed / 150000.;
+		zoom = zoom + (zoomTo - zoom) / 10.;
 		resetZoom();
 		// morph space color
+		const QColor from = Settings::backgroundColor();
+		const QColor to   = Settings::sunLightColor();
 		qglClearColor(QColor(
-				Settings::backgroundColor().red()   + (150 - Settings::backgroundColor().red())   * elapsed/6000.,
-				Settings::backgroundColor().green() + (200 - Settings::backgroundColor().green()) * elapsed/6000.,
-				Settings::backgroundColor().blue()  + (255 - Settings::backgroundColor().blue())  * elapsed/6000.));
+				from.red()   + (to.red()   - from.red())   * qMin(1., elapsed/4000.),
+				from.green() + (to.green() - from.green()) * qMin(1., elapsed/4000.),
+				from.blue()  + (to.blue()  - from.blue())  * qMin(1., elapsed/4000.)));
 	}
-	glTranslatef(0.0, 0.0, -10.0);
-	glRotated(xRot, 1.0, 0.0, 0.0);
-	glRotated(yRot, 0.0, 1.0, 0.0);
-	glRotated(zRot, 0.0, 0.0, 1.0);
+	glTranslatef(0, 0, -10);
+	glRotated(xRot, 1, 0, 0);
+	glRotated(yRot, 0, 1, 0);
+	glRotated(zRot, 0, 0, 1);
 
     if (Settings::glLighting()) {
         glEnable(GL_LIGHTING);

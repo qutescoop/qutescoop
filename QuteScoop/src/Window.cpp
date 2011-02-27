@@ -858,8 +858,7 @@ void Window::on_cbUseDownloaded_toggled(bool checked)
 void Window::on_tbDisablePredict_clicked()
 {
     qDebug() << "Window::tbDisablePredict_clicked()";
-    //actionPredict->setChecked(false);
-    this->on_actionPredict_toggled(false);
+    actionPredict->setChecked(false);
 }
 
 void Window::on_actionPredict_toggled(bool enabled)
