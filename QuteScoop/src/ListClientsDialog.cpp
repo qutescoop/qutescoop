@@ -43,6 +43,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     clientsProxyModel->setSourceModel(clientsModel);
     treeListClients->setUniformRowHeights(true);
     treeListClients->setModel(clientsProxyModel);
+    treeListClients->sortByColumn(0, Qt::AscendingOrder);
 
     treeListClients->setColumnWidth(0, 100);
     treeListClients->setColumnWidth(1, 100);

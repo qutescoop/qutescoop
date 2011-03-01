@@ -30,6 +30,7 @@ private slots:
 
     // OpenGL settings
     void on_glTextures_toggled(bool checked);
+    void on_glTextureEarth_currentIndexChanged(QString );
     void on_glStippleLines_toggled(bool checked);
     void on_glEarthShininess_valueChanged(int value);
     void on_glLights_valueChanged(int value);

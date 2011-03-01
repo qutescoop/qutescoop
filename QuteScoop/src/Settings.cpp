@@ -10,8 +10,10 @@
 QSettings *settings_instance = 0;
 
 QSettings* Settings::getSettings() {
-    if(settings_instance == 0)
+    if(settings_instance == 0) {
         settings_instance = new QSettings();
+        qDebug() << "Expecting settings at" << settings_instance->fileName();
+    }
     return settings_instance;
 }
 
@@ -485,6 +487,12 @@ bool Settings::glTextures() {
 }
 void Settings::setGlTextures(bool value) {
     getSettings()->setValue("gl/earthTexture", value);
+}
+QString Settings::glTextureEarth() {
+    return getSettings()->value("gl/textureEarth", "earth2048x1024").toString();
+}
+void Settings::setGlTextureEarth(QString value) {
+    getSettings()->setValue("gl/textureEarth", value);
 }
 
 QColor Settings::sunLightColor() {

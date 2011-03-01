@@ -67,7 +67,7 @@ double NavData::distance(double lat1, double lon1, double lat2, double lon2) {
     lon2 *= Pi180;
 
     double result = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon1-lon2));
-    if(IS_NAN(result))
+    if(qIsNaN(result))
         return 0;
     return result * 60.0 / Pi180;
 }

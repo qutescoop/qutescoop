@@ -257,7 +257,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         if(p[i]->destAirport() == 0)
             continue; // sorry, no magic available yet. Just let him fly the last heading until etaPlan()? Does not make sense
         if(p[i]->etd() > predictTime || p[i]->eta() < predictTime) {
-            if (p[i]->flightStatus() == Pilot::PREFILED && p[i]->etd() > predictTime) { // we want prefiled before their departure as in non-Warped view
+            if (p[i]->flightStatus() == Pilot::PREFILED && p[i]->etd() > predictTime) { // we want prefiled before their
+                                                                                        //departure as in non-Warped view
                 Pilot* np = new Pilot(*p[i]);
                 np->whazzupTime = QDateTime(predictTime);
                 bookedpilots[np->label] = np; // just copy him over
@@ -508,34 +509,10 @@ WhazzupData::~WhazzupData() {
 QList<Controller*> WhazzupData::activeSectors() const {
     qDebug() << "WhazzupData::activeSectors()";
     QList<Controller*> result;
-    QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
-
     QList<Controller*> controllerList = controllers.values();
     for(int i = 0; i < controllerList.size(); i++) {
-        // keep GUI responsive - leads to hangups?
-        //qApp->processEvents();
-
-        QString icao = controllerList[i]->getCenter();
-        if(icao.isNull() || icao.isEmpty())
-            continue;
-
-        while(!sectors.contains(icao) && !icao.isEmpty()) {
-            int p = icao.lastIndexOf('_');
-            if(p == -1) {
-//                qDebug() << "Unknown Sector/FIR\t" << icao << "\tPlease provide sector information if you can";
-                icao = "";
-                continue;
-            }
-            else {
-                icao = icao.left(p);
-            }
-        }
-        if(!icao.isEmpty() && sectors.contains(icao)) {
-            controllerList[i]->sector = sectors[icao];
-            controllerList[i]->lat = sectors[icao]->lat();
-            controllerList[i]->lon = sectors[icao]->lon();
+        if (controllerList[i]->sector != 0)
             result.append(controllerList[i]);
-        }
     }
 
     qDebug() << "WhazzupData::activeSectors() -- finished";

@@ -12,6 +12,7 @@
 #include "Airport.h"
 #include "WhazzupData.h"
 #include "GuiMessage.h"
+#include "ClientSelectionWidget.h"
 
 class GLWidget : public QGLWidget
 {
@@ -26,6 +27,7 @@ public:
 
     bool plotFlightPlannedRoute;
     QPair<double, double> currentPosition();
+    ClientSelectionWidget *clientSelection;
 
 public slots:
     void initializeGL();
@@ -34,10 +36,8 @@ public slots:
     void setMapPosition(double lat, double lon, double newZoom);
     void scrollBy(int moveByX, int moveByY);
     void rightClick(const QPoint& pos);
-    void zoomIn()  { return zoomIn(0.6);  }
-    void zoomOut() { return zoomOut(0.6); }
     void zoomIn(double factor);
-    void zoomOut(double factor);
+    void zoomTo(double zoom);
 
     // Return a list of all clients at given lat/lon, within radius miles
     QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
@@ -72,11 +72,35 @@ protected:
 
 private:
     void createObjects();
+
     void resetZoom();
     void handleRotation(QMouseEvent *event);
-	bool mouse2latlon(int x, int y, double& lat, double& lon) const;
+    bool mouse2latlon(int x, int y, double& lat, double& lon) const;
+    bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
 
-	const QPair<double, double> sunZenith(const QDateTime &dt);
+    void drawSelectionRectangle();
+    void drawCoordinateAxii();
+
+    const QPair<double, double> sunZenith(const QDateTime &dt);
+
+    void renderLabels();
+    void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
+
+    class FontRectangle {
+    public:
+        FontRectangle(QRectF rectangle, MapObject *mapObject): _rect(rectangle), _object(mapObject) {}
+        const QRectF& rect() const { return _rect; }
+        MapObject* object() const { return _object; }
+    private:
+        QRectF _rect;
+        MapObject *_object;
+    };
+    bool shouldDrawLabel(const FontRectangle& rect);
+    QList<FontRectangle> fontRectangles, allFontRectangles;
+
+    QPoint lastPos, mouseDownPos;
+    bool mapIsMoving, isRectangleSelecting;
+    double xRot, yRot, zRot, zoom, aspectRatio;
 
 	GLUquadricObj *earthQuad;
 	GLuint earthTex;
@@ -92,30 +116,7 @@ private:
     double pilotLabelZoomTreshold, airportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
         inactiveAirportDotZoomTreshold, controllerLabelZoomTreshold, fixZoomTreshold;
 
-    double xRot, yRot, zRot, zoom, aspectRatio;
-    QPoint lastPos, mouseDownPos;
-    bool mapIsMoving;
-
-    bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
-
-    class FontRectangle {
-    public:
-        FontRectangle(QRectF rectangle, MapObject *mapObject): _rect(rectangle), _object(mapObject) {}
-        const QRectF& rect() const { return _rect; }
-        MapObject* object() const { return _object; }
-    private:
-        QRectF _rect;
-        MapObject *_object;
-    };
-    QList<FontRectangle> fontRectangles, allFontRectangles;
-    bool shouldDrawLabel(const FontRectangle& rect);
-
-    void renderLabels();
-    void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
-
     qint64 shutDownAnim_t;
-
-    void drawCoordinateAxii();
 };
 
 #endif /*GLWIDGET_H_*/

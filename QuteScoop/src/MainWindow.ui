@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>QuteScoop</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="Resources.qrc">
+    <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
@@ -128,7 +132,7 @@ Whazzups (replay)</string>
            </property>
            <property name="icon">
             <iconset resource="Resources.qrc">
-             <normaloff>:/icons/images/step.png</normaloff>:/icons/images/step.png</iconset>
+             <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -156,11 +160,12 @@ Whazzups (replay)</string>
            <property name="text">
             <string>Unwarp</string>
            </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
+           </property>
            <property name="toolButtonStyle">
             <enum>Qt::ToolButtonTextUnderIcon</enum>
-           </property>
-           <property name="arrowType">
-            <enum>Qt::UpArrow</enum>
            </property>
           </widget>
          </item>
@@ -300,8 +305,11 @@ Whazzups (replay)</string>
         <height>24</height>
        </size>
       </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="toolTip">
-       <string>Zoom out.</string>
+       <string>Zoom out. Right click to reset zoom.</string>
       </property>
       <property name="text">
        <string>-</string>
@@ -309,6 +317,9 @@ Whazzups (replay)</string>
       <property name="icon">
        <iconset resource="Resources.qrc">
         <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
+      </property>
+      <property name="popupMode">
+       <enum>QToolButton::InstantPopup</enum>
       </property>
      </widget>
     </item>
@@ -332,8 +343,11 @@ Whazzups (replay)</string>
         <height>24</height>
        </size>
       </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
       <property name="toolTip">
-       <string>Zoom in.</string>
+       <string>Zoom in. Right click to reset zoom.</string>
       </property>
       <property name="text">
        <string>+</string>
@@ -341,6 +355,9 @@ Whazzups (replay)</string>
       <property name="icon">
        <iconset resource="Resources.qrc">
         <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
+      </property>
+      <property name="popupMode">
+       <enum>QToolButton::InstantPopup</enum>
       </property>
      </widget>
     </item>
@@ -352,7 +369,7 @@ Whazzups (replay)</string>
      <x>0</x>
      <y>0</y>
      <width>814</width>
-     <height>18</height>
+     <height>25</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -440,6 +457,7 @@ Whazzups (replay)</string>
     </widget>
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
+    <addaction name="actionZoomReset"/>
     <addaction name="separator"/>
     <addaction name="actionMoveLeft"/>
     <addaction name="actionMoveRight"/>
@@ -461,6 +479,10 @@ Whazzups (replay)</string>
      <width>524287</width>
      <height>524287</height>
     </size>
+   </property>
+   <property name="windowIcon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/search16.png</normaloff>:/icons/images/search16.png</iconset>
    </property>
    <property name="allowedAreas">
     <set>Qt::AllDockWidgetAreas</set>
@@ -535,6 +557,10 @@ Whazzups (replay)</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="metarDock">
+   <property name="windowIcon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
+   </property>
    <property name="windowTitle">
     <string>METAR</string>
    </property>
@@ -608,6 +634,10 @@ Whazzups (replay)</string>
    </widget>
   </widget>
   <widget class="QDockWidget" name="metarDecoderDock">
+   <property name="windowIcon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
+   </property>
    <property name="windowTitle">
     <string>METAR Decoder</string>
    </property>
@@ -628,22 +658,25 @@ Whazzups (replay)</string>
         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Ubuntu'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'UnDotum'; font-size:10pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'UnDotum';&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Lucida Grande'; font-size:13pt;&quot;&gt;&lt;/p&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="acceptRichText">
@@ -658,6 +691,10 @@ p, li { white-space: pre-wrap; }
    </widget>
   </widget>
   <widget class="QDockWidget" name="friendsDock">
+   <property name="windowIcon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/friends16.png</normaloff>:/icons/images/friends16.png</iconset>
+   </property>
    <property name="windowTitle">
     <string>Friends</string>
    </property>
@@ -692,6 +729,10 @@ p, li { white-space: pre-wrap; }
    </widget>
   </widget>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;About QuteScoop...</string>
    </property>
@@ -703,6 +744,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionDownload">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/refresh16.png</normaloff>:/icons/images/refresh16.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Refresh Network Status</string>
    </property>
@@ -722,6 +767,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/preferences16.png</normaloff>:/icons/images/preferences16.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Preferences...</string>
    </property>
@@ -735,6 +784,10 @@ p, li { white-space: pre-wrap; }
   <action name="actionShowSearch">
    <property name="checked">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/search16.png</normaloff>:/icons/images/search16.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Search Dock...</string>
@@ -750,6 +803,10 @@ p, li { white-space: pre-wrap; }
    <property name="checkable">
     <bool>false</bool>
    </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/fullscreen16.png</normaloff>:/icons/images/fullscreen16.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Toggle Fullscreen</string>
    </property>
@@ -763,6 +820,10 @@ p, li { white-space: pre-wrap; }
   <action name="actionShowMetars">
    <property name="checked">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Metar Dock...</string>
@@ -812,6 +873,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionShowFriendsDock">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/friends16.png</normaloff>:/icons/images/friends16.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Friends Dock...</string>
    </property>
@@ -823,11 +888,19 @@ p, li { white-space: pre-wrap; }
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/sector16.png</normaloff>:/icons/images/sector16.png</iconset>
+   </property>
    <property name="text">
-    <string>Display all Sector &amp;Boundaries</string>
+    <string>Display &amp;all Sectors</string>
    </property>
   </action>
   <action name="actionPlanFlight">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/flyer16.png</normaloff>:/icons/images/flyer16.png</iconset>
+   </property>
    <property name="text">
     <string>&amp;Routes...</string>
    </property>
@@ -836,6 +909,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionBookedAtc">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/bookedAtc16.png</normaloff>:/icons/images/bookedAtc16.png</iconset>
+   </property>
    <property name="text">
     <string>Booked &amp;ATC...</string>
    </property>
@@ -846,6 +923,10 @@ p, li { white-space: pre-wrap; }
   <action name="actionShowInactiveAirports">
    <property name="checkable">
     <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/inactiveAirports16.png</normaloff>:/icons/images/inactiveAirports16.png</iconset>
    </property>
    <property name="text">
     <string>Show I&amp;nactive Airports</string>
@@ -860,6 +941,10 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="checked">
     <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/timewarp16.png</normaloff>:/icons/images/timewarp16.png</iconset>
    </property>
    <property name="text">
     <string>&amp;Time Warp</string>
@@ -989,6 +1074,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionMoveLeft">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/arrowleft16.png</normaloff>:/icons/images/arrowleft16.png</iconset>
+   </property>
    <property name="text">
     <string>Move ←</string>
    </property>
@@ -997,6 +1086,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionMoveRight">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/arrowright16.png</normaloff>:/icons/images/arrowright16.png</iconset>
+   </property>
    <property name="text">
     <string>Move →</string>
    </property>
@@ -1005,6 +1098,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionMoveUp">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/arrowup16.png</normaloff>:/icons/images/arrowup16.png</iconset>
+   </property>
    <property name="text">
     <string>Move ↑</string>
    </property>
@@ -1013,6 +1110,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionMoveDown">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/arrowdown16.png</normaloff>:/icons/images/arrowdown16.png</iconset>
+   </property>
    <property name="text">
     <string>Move ↓</string>
    </property>
@@ -1029,6 +1130,10 @@ p, li { white-space: pre-wrap; }
    </property>
   </action>
   <action name="actionDebugLog">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/log16.png</normaloff>:/icons/images/log16.png</iconset>
+   </property>
    <property name="text">
     <string>Show Debug &amp;Log...</string>
    </property>
@@ -1040,11 +1145,27 @@ p, li { white-space: pre-wrap; }
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/routes16.png</normaloff>:/icons/images/routes16.png</iconset>
+   </property>
    <property name="text">
     <string>Show all &amp;Routes</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
+   </property>
+  </action>
+  <action name="actionZoomReset">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/viewmag16.png</normaloff>:/icons/images/viewmag16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset &amp;Zoom</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+0</string>
    </property>
   </action>
  </widget>
@@ -1096,7 +1217,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>768</y>
+     <y>764</y>
     </hint>
    </hints>
   </connection>
@@ -1113,6 +1234,38 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>143</x>
      <y>215</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionZoomIn</sender>
+   <signal>triggered()</signal>
+   <receiver>tbZoomIn</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>598</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionZoomOut</sender>
+   <signal>triggered()</signal>
+   <receiver>tbZoomOut</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>222</x>
+     <y>421</y>
     </hint>
    </hints>
   </connection>

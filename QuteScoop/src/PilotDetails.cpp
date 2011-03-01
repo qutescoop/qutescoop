@@ -5,6 +5,7 @@
 #include "PilotDetails.h"
 #include "NavData.h"
 #include "Window.h"
+#include "Whazzup.h"
 
 //singleton instance
 PilotDetails *pilotDetails = 0;
@@ -47,8 +48,7 @@ void PilotDetails::refresh(Pilot *newPilot) {
         return;
     }
     setMapObject(pilot);
-
-    setWindowTitle(pilot->label);
+    setWindowTitle(pilot->toolTip());
 
     // Pilot Information
     lblPilotInfo->setText(QString("<strong>PILOT: %1</strong>%2")

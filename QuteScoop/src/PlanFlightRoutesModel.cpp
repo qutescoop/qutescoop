@@ -44,7 +44,7 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
         Route* r = routes[index.row()];
         switch(index.column()) {
         case 0:
-            if (r->provider == "direct")
+            if (r->provider == "user")
                 return QPixmap(":/icons/qutescoop.png").
                         scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
             else if (r->provider == "vroute")

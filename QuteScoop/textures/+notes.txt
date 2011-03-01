@@ -1,6 +1,5 @@
 Textures:
-* earth.png - Earth's texture at 2048x1024px
-* renameForHigherResolution_earth.png - the same at 4096x2048px
-
-You can exchange textures at your own will. Keep all dimensions at a power of 2 (2048, 4096, 8192...).
-The debug log will tell you if there was an error loading it.
+You can add textures here in all supported formats that get reported in View/Debug Log when opening Preferences.
+Depending on your graphics card, it might be necessary that width and height are a power of 2 (1024, 2048, 4096...) pixels.
+The Preferences Dialog will let you choose between all available textures.
+The debug log will tell you if there was an error loading the texture.

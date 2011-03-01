@@ -36,7 +36,6 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
     }
     if (label.right(5) == "_ATIS") facilityType = 2; // dont know who wants to book it, but well...
 
-    // fixme: this does not seem to be the quickest method...
     else if (label.right(4) == "_DEL") {
         if (NavData::getInstance()->airports().contains(this->getDelivery())) {
             countryCode = NavData::getInstance()->airports()[this->getDelivery()]->countryCode;
@@ -121,95 +120,67 @@ QString BookedController::facilityString() const {
 QString BookedController::getCenter() {
     if(!isATC())
         return QString();
-
-    QStringList segments = label.split('_');
+    QStringList list = label.split('_');
 
     // allow only _FSS* and _CTR*
-    if(!segments.last().startsWith("CTR") && !segments.last().startsWith("FSS"))
-        return QString();
-    segments.removeLast();
-
-    // ignore _T* and _X* positions
-    if(segments.last().startsWith("T_") || segments.last().startsWith("T1_")
-            || segments.last().startsWith("T2_") || segments.last().startsWith("T3_") ||
-            segments.last().startsWith("X"))
-        return QString();
-
-    // now create LOVV_N from LOVV and N, then return it
-    QString result = segments.first();
-    segments.removeFirst();
-    while(!segments.isEmpty()) {
-        result += "_" + segments.first();
-        segments.removeFirst();
+    if(list.last().startsWith("CTR") || list.last().startsWith("FSS")) {
+        list.removeLast();
+        QString result = list.join("_");
+        if(NavData::getInstance()->sectors().contains(result)) {
+            lat = NavData::getInstance()->sectors()[result]->lat(); // fix my coordinates so that user can find me on the map
+            lon = NavData::getInstance()->sectors()[result]->lon();
+        }
+        return result;
     }
-
-    if(NavData::getInstance()->sectors().contains(result)) {
-        Sector *f = NavData::getInstance()->sectors()[result];
-        lat = f->lat(); // fix my coordinates so that user can find me on the map
-        lon = f->lon();
-    }
-    return result;
+    return QString();
 }
 
 QString BookedController::getApproach() const {
     if(!isATC())
         return QString();
-
-    if(!couldBeAtcCallsign()) return QString();
     QStringList list = label.split('_');
     if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+
+        // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
+        if(list.first() == "EDBB")
+            return "EDDI"; // map EDBB -> EDDI
+        if(list.first() == "NY")
+            return "KLGA"; // map NY -> KLGA
         return list.first();
     }
-
     return QString();
 }
 
 QString BookedController::getTower() const {
     if(!isATC())
         return QString();
-
-    if(!couldBeAtcCallsign()) return QString();
     QStringList list = label.split('_');
     if(list.last().startsWith("TWR")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
         return list.first();
     }
-
     return QString();
 }
 
 QString BookedController::getGround() const {
     if(!isATC())
         return QString();
-
     QStringList list = label.split('_');
-    if(list.size() > 3) return QString();
-    if(list.size() == 3 &&
-            (list[1].startsWith("X") || list[1].startsWith("T")))
-        return QString();
-
     if(list.last().startsWith("GND")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
         return list.first();
     }
-
     return QString();
 }
 
 QString BookedController::getDelivery() const {
     if(!isATC())
         return QString();
-
     QStringList list = label.split('_');
-    if(list.size() > 3) return QString();
-    if(list.size() == 3 &&
-            (list[1].startsWith("X") || list[1].startsWith("T")))
-        return QString();
-
     if(list.last().startsWith("DEL")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
@@ -217,19 +188,6 @@ QString BookedController::getDelivery() const {
     }
 
     return QString();
-}
-
-bool BookedController::couldBeAtcCallsign() const {
-    QStringList list = label.split('_');
-    if(list.size() > 4 || list.size() <= 1) return false; // ignore XXXX_A_B_C_D_CTR and bogus
-    if(list.size() == 3 && // ignore LOVV_T_CTR and LOVV_X_CTR
-            (list[1].startsWith("X") || list[1].startsWith("T")))
-        return false;
-    if(list.size() == 4 && // ignore XXXX_X_N_CTR
-            (list[2].startsWith("X") || list[2].startsWith("T")))
-        return false;
-
-    return true;
 }
 
 void BookedController::showDetailsDialog() {
@@ -273,19 +231,21 @@ QString BookedController::rank() const {
 }
 
 QString BookedController::toolTip() const {
-    QString r = rank();
-    QString result = label + " (";
-    if(!isObserver() && !frequency.isEmpty()) {
+    QString result = label;
+    if (sector != 0)
+        result += " [" + sector->name() + "]";
+    result += " (";
+    if(!isObserver() && !frequency.isEmpty())
         result += frequency + ", ";
-    }
     result += realName;
-    if(!r.isEmpty()) result += ", " + r;
+    if(!rank().isEmpty())
+        result += ", " + rank();
     result += ")";
     return result;
 }
 
 QString BookedController::mapLabel() const {
-    if(label.endsWith("_CTR")) // hack to make _CTR labels smaller
+    if(label.endsWith("_CTR") || label.endsWith("_FSS"))
         return label.left(label.length() - 4);
     return label;
 }

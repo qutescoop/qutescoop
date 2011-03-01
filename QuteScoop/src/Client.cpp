@@ -98,9 +98,8 @@ bool Client::matches(const QRegExp& regex) const {
 }
 
 QString Client::toolTip() const {
-    QString r = rank();
     QString result = label + " (" + realName;
-    if(!r.isEmpty()) result += ", " + r;
+    if(!rank().isEmpty()) result += ", " + rank();
     result += ")";
     return result;
 }
