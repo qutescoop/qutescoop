@@ -8,17 +8,21 @@
 
 #include "GLWidget.h"
 #include "ClientDetails.h"
-#include "helpers.h"
-#include "Settings.h"
-#include "SearchResultModel.h"
-#include "SearchVisitor.h"
-#include "MetarSearchVisitor.h"
-#include "NavData.h"
 #include "PilotDetails.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
-#include "FriendsVisitor.h"
 #include "LogBrowserDialog.h"
+#include "PreferencesDialog.h"
+#include "PlanFlightDialog.h"
+#include "BookedAtcDialog.h"
+#include "ListClientsDialog.h"
+#include "Whazzup.h"
+#include "Settings.h"
+#include "SearchVisitor.h"
+#include "MetarSearchVisitor.h"
+#include "NavData.h"
+#include "FriendsVisitor.h"
+#include "helpers.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -73,8 +77,6 @@ Window::Window(QWidget *parent) :
     glWidget = new GLWidget(fmt);
     centralwidget->layout()->addWidget(glWidget);
 
-    clientSelection = new ClientSelectionWidget();
-
     // Status- & ProgressBar
     progressBar = new QProgressBar(statusbar);
     progressBar->setMaximumWidth(200);
@@ -103,8 +105,6 @@ Window::Window(QWidget *parent) :
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
-    connect(glWidget, SIGNAL(mapClicked(int, int, QPoint)), this, SLOT(mapClicked(int, int, QPoint)));
-
     if(Settings::downloadOnStartup()) {
         // download whazzup as soon as whazzup status download is complete
         connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
@@ -115,7 +115,6 @@ Window::Window(QWidget *parent) :
     searchResult->setModel(&searchResultModel);
     connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)), &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
     connect(searchResult, SIGNAL(clicked(const QModelIndex&)), &searchResultModel, SLOT(modelClicked(const QModelIndex&)));
-    connect(searchResult->header(), SIGNAL(sectionClicked(int)), searchResult, SLOT(sortByColumn(int)));
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
     metarSortModel = new QSortFilterProxyModel;
@@ -142,8 +141,6 @@ Window::Window(QWidget *parent) :
     connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
     connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
 
-    connect(actionZoomIn, SIGNAL(triggered()), glWidget, SLOT(zoomIn()));
-    connect(actionZoomOut, SIGNAL(triggered()), glWidget, SLOT(zoomOut()));
     connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
 
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
@@ -219,8 +216,9 @@ void Window::showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType, QSt
         new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
         break;
     case GuiMessage::InformationUserAttention:
-        qDebug() << "guiMessage[Information]" << id << msg;
-        QMessageBox::information(this, id, msg);
+        qDebug() << "guiMessage[Temporary]" << id << msg;
+        lblStatus->setText(msg);
+        new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
         break;
     case GuiMessage::Persistent:
         qDebug() << "guiMessage[Persistent]" << id << msg;
@@ -233,8 +231,9 @@ void Window::showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType, QSt
         qWarning() << "guiMessage[Warning]" << id << msg;
         break;
     case GuiMessage::ErrorUserAttention:
-        qWarning() << "guiMessage[Error]" << id << msg;
-        QMessageBox::warning(this, id, msg);
+        qDebug() << "guiMessage[Temporary]" << id << msg;
+        lblStatus->setText(msg);
+        new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
         break;
     case GuiMessage::CriticalUserInteraction:
         qCritical() << "guiMessage[Critical]" << id << msg;
@@ -316,8 +315,8 @@ void Window::whazzupDownloaded(bool isNew) {
     }
 
     if(isNew) {
-        clientSelection->clearClients();
-        clientSelection->close();
+        glWidget->clientSelection->clearClients();
+        glWidget->clientSelection->close();
 
         performSearch();
 
@@ -375,28 +374,6 @@ void Window::refreshFriends() {
     friendsModel.setData(visitor->result());
     delete visitor;
     friendsList->reset();
-}
-
-void Window::mapClicked(int x, int y, QPoint absolutePos) {
-    QList<MapObject*> objects = glWidget->objectsAt(x, y);
-    if(objects.size() == 0) {
-        // closing all Windows when clicking on an empty spot?
-        //on_actionHideAllWindows_triggered();
-        clientSelection->clearClients();
-        clientSelection->close();
-        return;
-    }
-
-    if(objects.size() == 1) {
-        objects[0]->showDetailsDialog();
-    } else {
-        clientSelection->setObjects(objects);
-        clientSelection->move(absolutePos);
-        clientSelection->show();
-        //clientSelection->raise();
-        //clientSelection->activateWindow();
-        //clientSelection->setFocus();
-    }
 }
 
 void Window::openPreferences() {
@@ -491,7 +468,7 @@ void Window::on_actionHideAllWindows_triggered() {
     if(friendsDock->isFloating())
         friendsDock->hide();
 
-    clientSelection->close();
+    glWidget->clientSelection->close();
 }
 
 void Window::on_metarEdit_textChanged(const QString& text) {
@@ -968,38 +945,31 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime)
     editPredictTimer.start(1000);
 }
 
-void Window::on_actionRecallMapPosition_triggered()
-{
+void Window::on_actionRecallMapPosition_triggered(){
     glWidget->restorePosition(1);
 }
 
-void Window::on_actionRecallMapPosition7_triggered()
-{
+void Window::on_actionRecallMapPosition7_triggered(){
     glWidget->restorePosition(7);
 }
 
-void Window::on_actionRecallMapPosition6_triggered()
-{
+void Window::on_actionRecallMapPosition6_triggered(){
     glWidget->restorePosition(6);
 }
 
-void Window::on_actionRecallMapPosition5_triggered()
-{
+void Window::on_actionRecallMapPosition5_triggered(){
     glWidget->restorePosition(5);
 }
 
-void Window::on_actionRecallMapPosition4_triggered()
-{
+void Window::on_actionRecallMapPosition4_triggered(){
     glWidget->restorePosition(4);
 }
 
-void Window::on_actionRecallMapPosition3_triggered()
-{
+void Window::on_actionRecallMapPosition3_triggered(){
     glWidget->restorePosition(3);
 }
 
-void Window::on_actionRecallMapPosition2_triggered()
-{
+void Window::on_actionRecallMapPosition2_triggered(){
     glWidget->restorePosition(2);
 }
 
@@ -1007,64 +977,60 @@ void Window::on_actionRememberPosition_triggered() {
     glWidget->rememberPosition(1);
 }
 
-void Window::on_actionRememberMapPosition7_triggered()
-{
+void Window::on_actionRememberMapPosition7_triggered(){
     glWidget->rememberPosition(7);
 }
 
-void Window::on_actionRememberMapPosition6_triggered()
-{
+void Window::on_actionRememberMapPosition6_triggered(){
     glWidget->rememberPosition(6);
 }
 
-void Window::on_actionRememberMapPosition5_triggered()
-{
+void Window::on_actionRememberMapPosition5_triggered(){
     glWidget->rememberPosition(5);
 }
 
-void Window::on_actionRememberMapPosition4_triggered()
-{
+void Window::on_actionRememberMapPosition4_triggered(){
     glWidget->rememberPosition(4);
 }
 
-void Window::on_actionRememberMapPosition3_triggered()
-{
+void Window::on_actionRememberMapPosition3_triggered(){
     glWidget->rememberPosition(3);
 }
 
-void Window::on_actionRememberMapPosition2_triggered()
-{
+void Window::on_actionRememberMapPosition2_triggered(){
     glWidget->rememberPosition(2);
 }
 
-void Window::on_actionMoveLeft_triggered()
-{
+void Window::on_actionMoveLeft_triggered(){
     glWidget->scrollBy(-1, 0);
 }
 
-void Window::on_actionMoveRight_triggered()
-{
+void Window::on_actionMoveRight_triggered(){
     glWidget->scrollBy(1, 0);
 }
 
-void Window::on_actionMoveUp_triggered()
-{
+void Window::on_actionMoveUp_triggered(){
     glWidget->scrollBy(0, -1);
 }
 
-void Window::on_actionMoveDown_triggered()
-{
+void Window::on_actionMoveDown_triggered(){
     glWidget->scrollBy(0, 1);
 }
-
-void Window::on_tbZoomIn_clicked()
-{
-    glWidget->zoomIn();
+void Window::on_tbZoomIn_clicked(){
+    glWidget->zoomIn(.6);
 }
-
-void Window::on_tbZoomOut_clicked()
-{
-    glWidget->zoomOut();
+void Window::on_tbZoomOut_clicked(){
+    glWidget->zoomIn(-.6);
+}
+// we use this to catch right-clicks on the buttons
+void Window::on_tbZoomOut_customContextMenuRequested(QPoint pos){
+    glWidget->zoomTo(2.);
+}
+void Window::on_tbZoomIn_customContextMenuRequested(QPoint pos){
+    glWidget->zoomTo(2.);
+}
+void Window::on_actionZoomReset_triggered(){
+    glWidget->zoomTo(2.);
 }
 
 void Window::updateGLPilots() {
@@ -1085,13 +1051,6 @@ void Window::shootScreenshot() {
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
 }
 
-// show the active route from PlanFlightDialog
-void Window::setPlotFlightPlannedRoute(bool value) {
-    glWidget->plotFlightPlannedRoute = value;
-    glWidget->createPilotsList();
-    glWidget->updateGL();
-}
-
 void Window::on_actionShowRoutes_triggered(bool checked)
 {
     showGuiMessage("Toggled ALL routes", GuiMessage::Temporary, "calcRoutes");
@@ -1101,14 +1060,6 @@ void Window::on_actionShowRoutes_triggered(bool checked)
             if(airports[i] != 0)
                 airports[i]->setDisplayFlightLines(checked);
         }
-
-        /*QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
-        for(int i = 0; i < pilots.size(); i++) {
-            if(pilots[i] != 0) {
-                pilots[i]->displayLineFromDep = checked;
-                pilots[i]->displayLineToDest = checked;
-            }
-        }*/
     } else {
         QList<Airport*> airports = NavData::getInstance()->airports().values();
         for(int i = 0; i < airports.size(); i++) {
@@ -1129,4 +1080,3 @@ void Window::on_actionShowRoutes_triggered(bool checked)
 
     showGuiMessage("Toggled ALL routes", GuiMessage::Remove, "calcRoutes");
 }
-

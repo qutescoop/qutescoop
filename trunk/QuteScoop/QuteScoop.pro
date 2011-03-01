@@ -72,8 +72,16 @@ CONFIG(release,release|debug) {
     screenshotsFiles.files += ./screenshots/+notes.txt
     texturesFiles.path = $$DESTDIR/textures
     texturesFiles.files += ./textures/+notes.txt
-    texturesFiles.files += ./textures/earth.png
-    texturesFiles.files += ./textures/renameForHigherResolution_earth.png
+    texturesFiles.files += ./textures/1024px-continents.png
+    texturesFiles.files += ./textures/1024px-toposhaded.png
+    texturesFiles.files += ./textures/1440px-elevation.png
+    texturesFiles.files += ./textures/2048px.png
+    texturesFiles.files += ./textures/2048px-color.png
+    texturesFiles.files += ./textures/2048px-contrast.png
+    texturesFiles.files += ./textures/2048px-lights.png
+    texturesFiles.files += ./textures/2048px-toposhaded.png
+    texturesFiles.files += ./textures/4096px.png
+    texturesFiles.files += ./textures/4096px-color.png
     !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} \
         $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
 

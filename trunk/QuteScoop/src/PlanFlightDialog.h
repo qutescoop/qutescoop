@@ -22,7 +22,9 @@ signals:
     void fpDownloaded();
 
 private slots:
-//    void on_textRoute_textChanged();
+    void on_edGenerated_textChanged(QString );
+    void on_bDestDetails_clicked();
+    void on_bDepDetails_clicked();
     void on_pbVatsimPrefile_clicked();
     void on_pbCopyToClipboard_clicked();
     void on_cbPlot_toggled(bool checked);

@@ -14,8 +14,6 @@
 #include "Settings.h"
 #include "Waypoint.h"
 #include "PlanFlightDialog.h"
-#include "ListClientsDialog.h"
-#include "Window.h"
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
@@ -28,7 +26,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         controllerLabelZoomTreshold(2), fixZoomTreshold(0.05),
         plotFlightPlannedRoute(false),
         allSectorsDisplayed(false),
-        mapIsMoving(false),
+        mapIsMoving(false), isRectangleSelecting(false),
         shutDownAnim_t(0)
 {
     setAutoFillBackground(false);
@@ -40,6 +38,8 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     zRot = modPositive(zRot, 360.);
     resetZoom();
     emit newPosition();
+
+    clientSelection = new ClientSelectionWidget();
 }
 
 GLWidget::~GLWidget() {
@@ -319,17 +319,15 @@ void GLWidget::prepareDisplayLists() {
 
     // make sure all the lists are there to avoid nested glNewList calls
     for(int i = 0; i < sectorsToDraw.size(); i++) {
-        Sector *f = sectorsToDraw[i]->sector;
-        if(f == 0) continue;
-        f->getPolygon();
+        if(sectorsToDraw[i]->sector == 0) continue;
+        sectorsToDraw[i]->sector->getPolygon();
     }
 
     // create a list of lists
     glNewList(sectorPolygonsList, GL_COMPILE);
     for(int i = 0; i < sectorsToDraw.size(); i++) {
-        Sector *f = sectorsToDraw[i]->sector;
-        if(f == 0) continue;
-        glCallList(f->getPolygon());
+        if(sectorsToDraw[i]->sector == 0) continue;
+        glCallList(sectorsToDraw[i]->sector->getPolygon());
     }
     glEndList();
 
@@ -389,17 +387,14 @@ void GLWidget::prepareDisplayLists() {
     if(!allSectorsDisplayed) {
         // first, make sure all lists are there
         for(int i = 0; i < sectorsToDraw.size(); i++) {
-            Sector *f = sectorsToDraw[i]->sector;
-            if(f == 0) continue;
-            f->getBorderLine();
+            if(sectorsToDraw[i]->sector == 0) continue;
+            sectorsToDraw[i]->sector->getBorderLine();
         }
-
         if(Settings::firBorderLineStrength() > 0) {
             glNewList(sectorPolygonBorderLinesList, GL_COMPILE);
             for(int i = 0; i < sectorsToDraw.size(); i++) {
-                Sector *f = sectorsToDraw[i]->sector;
-                if(f == 0) continue;
-                glCallList(f->getBorderLine());
+                if(sectorsToDraw[i]->sector == 0) continue;
+                glCallList(sectorsToDraw[i]->sector->getBorderLine());
             }
             glEndList();
         }
@@ -410,7 +405,6 @@ void GLWidget::prepareDisplayLists() {
             if(sectors[i] == 0) continue;
             sectors[i]->getBorderLine();
         }
-
         glNewList(sectorPolygonBorderLinesList, GL_COMPILE);
         for(int i = 0; i < sectors.size(); i++) {
             if(sectors[i] == 0) continue;
@@ -449,7 +443,7 @@ void GLWidget::createObjects(){
     gluQuadricNormals(earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     gluQuadricOrientation(earthQuad, GLU_OUTSIDE); // GLU_INSIDE
     if (Settings::glTextures()) {
-        QString earthTexFile = Settings::applicationDataDirectory("textures/earth.png");
+        QString earthTexFile = Settings::applicationDataDirectory(QString("textures/%1").arg(Settings::glTextureEarth()));
         QImage earthTexIm = QImage(earthTexFile);
         if (earthTexIm.isNull())
             qWarning() << "Unable to load texture file" << earthTexFile;
@@ -510,7 +504,7 @@ void GLWidget::createObjects(){
         LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
         QList<QPair<double, double> > line = lineReader.readLine();
         while (!line.isEmpty()) {
-            glBegin(GL_LINE_LOOP);
+            glBegin(GL_LINE_STRIP);
             for (int i = 0; i < line.size(); i++)
                 VERTEX(line[i].first, line[i].second);
             glEnd();
@@ -701,9 +695,9 @@ void GLWidget::paintGL() {
 		else
 			QTimer::singleShot(20, this, SLOT(updateGL())); // aim for 50 fps
 		// move
-		GLfloat x = 0.006 * (GLfloat) elapsed * (qCos(elapsed / 1400.) - 1.)
+		GLfloat x = 0.004 * (GLfloat) elapsed * (qCos(elapsed / 1400.) - 1.)
 						* qSin(elapsed / 800.);
-		GLfloat y = 0.02  * (GLfloat) elapsed * (qCos(elapsed / 4500.) - 0.97);
+		GLfloat y = 0.012  * (GLfloat) elapsed * (qCos(elapsed / 4500.) - 0.97);
 		glTranslatef(x, y, 0);
 		// rotate
 		xRot += elapsed / 160.;
@@ -773,8 +767,11 @@ void GLWidget::paintGL() {
 
 	renderLabels();
 
+	if (isRectangleSelecting)
+		drawSelectionRectangle();
+
     //drawCoordinateAxii(); // use this to see where the axii are (x = red, y = green, z = blue)
-    glFlush(); // seems to be advisable as I understand it. http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
+    glFlush(); // http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
 
     // just for performance measurement:
     //qDebug() << "GLWidget::paintGL() -- finished in" << QDateTime::currentMSecsSinceEpoch() - started << "ms";
@@ -790,26 +787,59 @@ void GLWidget::resizeGL(int width, int height) {
 // SLOTS: mouse, key... and general user-map interaction
 //
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    if((event->buttons() & Qt::LeftButton) || (event->buttons() & Qt::RightButton)) {
-        handleRotation(event);
+    if(event->buttons().testFlag(Qt::RightButton) || event->buttons().testFlag(Qt::MiddleButton)) { // rotate
         mapIsMoving = true;
+        handleRotation(event);
+    } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
+        isRectangleSelecting = true;
+        updateGL();
     }
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
     QToolTip::hideText();
-    lastPos = mouseDownPos = event->pos();
+    if (mapIsMoving || isRectangleSelecting) {
+        mapIsMoving = false;
+        isRectangleSelecting = false;
+        updateGL();
+    }
+    if (!isRectangleSelecting)
+        lastPos = mouseDownPos = event->pos();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     QToolTip::hideText();
-
-    if(mouseDownPos == event->pos() && event->button() == Qt::LeftButton) { // Left-Button needed on Windows explicitly
-        emit mapClicked(event->x(), event->y(), event->globalPos());
-    }
-    if(mapIsMoving == true) {
+    if (mapIsMoving) {
         emit newPosition();
         mapIsMoving = false;
+    } else if (isRectangleSelecting) {
+        isRectangleSelecting = false;
+        if (event->pos() != mouseDownPos) {
+            double downLat, downLon;
+            if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
+                double currLat, currLon;
+                if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
+                    setMapPosition((downLat + currLat) / 2., (downLon + currLon) / 2.,
+                                   qMax(NavData::distance(downLat, downLon, downLat, currLon), // the greater of deltaLat / deltaLon
+                                        NavData::distance(downLat, downLon, currLat, downLon))/ 4000.);
+                }
+            }
+        } else
+            updateGL();
+    } else if (mouseDownPos == event->pos() && event->button() == Qt::LeftButton) { // Left-Button needed on Windows explicitly
+        QList<MapObject*> objects = objectsAt(event->x(), event->y());
+        if (objects.size() == 0) {
+            clientSelection->clearClients();
+            clientSelection->close();
+        } else if (objects.size() == 1) {
+            objects[0]->showDetailsDialog();
+        } else {
+            clientSelection->setObjects(objects);
+            clientSelection->move(event->globalPos());
+            clientSelection->show();
+            clientSelection->raise();
+            clientSelection->setFocus();
+        }
     }
 }
 
@@ -828,7 +858,6 @@ void GLWidget::rightClick(const QPoint& pos) {
             pilot = p;
             countRelevant++;
         }
-
         Airport *a = dynamic_cast<Airport*>(objects[i]);
         if(a != 0) {
             if(airport != 0)
@@ -837,7 +866,6 @@ void GLWidget::rightClick(const QPoint& pos) {
             countRelevant++;
             break; // priorise airports
         }
-
         if(countRelevant > 1) {
             emit hasGuiMessage("Too many objects under cursor");
             return; // area too crowded
@@ -848,7 +876,6 @@ void GLWidget::rightClick(const QPoint& pos) {
         return;
     }
     if(countRelevant != 1) return; // ambiguous search result
-
     if(airport != 0) {
         emit hasGuiMessage(QString("Toggled routes for %1").arg(airport->label));
         airport->setDisplayFlightLines(!airport->showFlightLines);
@@ -856,7 +883,6 @@ void GLWidget::rightClick(const QPoint& pos) {
         updateGL();
         return;
     }
-
     if(pilot != 0) {
         // display flight path for pilot
         emit hasGuiMessage(QString("Toggled route for %1").arg(pilot->label));
@@ -870,9 +896,14 @@ void GLWidget::rightClick(const QPoint& pos) {
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     QToolTip::hideText();
     lastPos = mouseDownPos = QPoint(); // fake to disallow mapClicked()
-    double lat, lon;
-    if (mouse2latlon(event->x(), event->y(), lat, lon))
-        setMapPosition(lat, lon, zoom);
+    if (event->buttons().testFlag(Qt::LeftButton)) {
+        double lat, lon;
+        if (mouse2latlon(event->x(), event->y(), lat, lon))
+            setMapPosition(lat, lon, zoom);
+    } else if (event->button() == Qt::RightButton)
+        zoomIn(-.6);
+    else if (event->button() == Qt::MiddleButton)
+        zoomTo(2.);
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event) {
@@ -910,12 +941,13 @@ void GLWidget::zoomIn(double factor) {
     resetZoom();
     updateGL();
 }
-
-void GLWidget::zoomOut(double factor) {
-    zoom += zoom * 0.2f * factor * Settings::zoomFactor();
+void GLWidget::zoomTo(double zoom) {
+    this->zoom = zoom;
     resetZoom();
     updateGL();
 }
+
+
 
 /////////////////////////////
 // rendering text
@@ -927,12 +959,22 @@ void GLWidget::renderLabels() {
 
     // FIR labels
     QList<MapObject*> objects;
-    for(int i = 0; i < sectorsToDraw.size(); i++) objects.append(sectorsToDraw[i]);
+    QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();
+    for(int i = 0; i < controllers.size(); i++) // draw all CTR+FSS labels, also if sector unknown
+        if (!controllers[i]->getCenter().isNull())
+            objects.append(controllers[i]);
     renderLabels(objects, Settings::firFont(), controllerLabelZoomTreshold, Settings::firFontColor());
+    if(allSectorsDisplayed) {
+        qglColor(Settings::firFontColor());
+        foreach (Sector *sector, NavData::getInstance()->sectors())
+            renderText(SX(sector->lat(), sector->lon()), SY(sector->lat(), sector->lon()), SZ(sector->lat(), sector->lon()),
+                       sector->icao(), Settings::firFont());
+    }
 
     // Airport labels
     objects.clear();
-    QList<Airport*> airportList = NavData::getInstance()->activeAirports().values(); //ordered by congestion ascending, big airport's labels will always be drawn first
+    QList<Airport*> airportList = NavData::getInstance()->activeAirports().values(); //ordered by congestion ascending,
+                                                                        //big airport's labels will always be drawn first
     for(int i = airportList.size() - 1; i > -1; i--) { // from up to down
         if(airportList[i] == 0) continue; // if we look carefully, we should be able to get rid of this
         if(airportList[i]->isActive()) objects.append(airportList[i]);
@@ -1075,8 +1117,60 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 }
 
 /////////////////////////
+// draw helper functions
+/////////////////////////
+
+void GLWidget::drawSelectionRectangle() {
+	QPoint current = mapFromGlobal(QCursor::pos());
+	double downLat, downLon;
+	if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
+		double currLat, currLon;
+		if (mouse2latlon(current.x(), current.y(), currLat, currLon)) {
+			glColor4f(0., 1., 1., .5);
+			glBegin(GL_POLYGON);
+			NavData::plotPath(downLat, downLon, currLat, downLon);
+			NavData::plotPath(currLat, downLon, currLat, currLon);
+			NavData::plotPath(currLat, currLon, downLat, currLon);
+			NavData::plotPath(downLat, currLon, downLat, downLon);
+			glEnd();
+			glLineWidth(2.);
+			glColor4f(0., 1., 1., 1.);
+			glBegin(GL_LINE_LOOP);
+			NavData::plotPath(downLat, downLon, currLat, downLon);
+			NavData::plotPath(currLat, downLon, currLat, currLon);
+			NavData::plotPath(currLat, currLon, downLat, currLon);
+			NavData::plotPath(downLat, currLon, downLat, downLon);
+			glEnd();
+		}
+	}
+}
+
+void GLWidget::drawCoordinateAxii() { // just for debugging. Visualization of the axii. red=x/green=y/blue=z
+	glPushMatrix(); glLoadIdentity();
+	glTranslatef(0, 0, -9);
+	glRotated(xRot, 1, 0, 0); glRotated(yRot, 0, 1, 0); glRotated(zRot, 0, 0, 1);
+	GLUquadricObj *q = gluNewQuadric(); gluQuadricNormals(q, GLU_SMOOTH);
+
+	glEnable(GL_DEPTH_TEST); glEnable(GL_LIGHTING);
+
+	glColor3f(0, 0, 0); gluSphere(q, 0.02, 64, 32); // center
+	glRotatef(90, 0, 1, 0);
+	glColor3f(1, 0, 0); gluCylinder(q, 0.02, 0.0, 0.3, 64, 1); // x-axis
+	glRotatef(90, 0, -1, 0);
+	glRotatef(90, -1, 0, 0);
+	glColor3f(0, 1, 0); gluCylinder(q, 0.02, 0.0, 0.3, 64, 1); // y-axis
+	glRotatef(90, 1, 0, 0);
+	glColor3f(0, 0, 1); gluCylinder(q, 0.02, 0.0, 0.3, 64, 1); // z-axis
+
+    glDisable(GL_LIGHTING); glDisable(GL_DEPTH_TEST);
+    glPopMatrix();
+}
+
+
+
+/////////////////////////
 // uncategorized
-////////////////
+/////////////////////////
 
 void GLWidget::shutDownAnimation() {
 	if (shutDownAnim_t != 0)
@@ -1109,25 +1203,4 @@ void GLWidget::displayAllSectors(bool value) {
 void GLWidget::showInactiveAirports(bool value) {
     Settings::setShowInactiveAirports(value);
     newWhazzupData(true);
-}
-
-void GLWidget::drawCoordinateAxii() { // just for debugging. Visualization of the axii. red=x/green=y/blue=z
-	glPushMatrix(); glLoadIdentity();
-	glTranslatef(0, 0, -9);
-	glRotated(xRot, 1, 0, 0); glRotated(yRot, 0, 1, 0); glRotated(zRot, 0, 0, 1);
-	GLUquadricObj *q = gluNewQuadric(); gluQuadricNormals(q, GLU_SMOOTH);
-
-	glEnable(GL_DEPTH_TEST); glEnable(GL_LIGHTING);
-
-	glColor3f(0, 0, 0); gluSphere(q, 0.02, 64, 32); // center
-	glRotatef(90, 0, 1, 0);
-	glColor3f(1, 0, 0); gluCylinder(q, 0.02, 0.0, 0.3, 64, 1); // x-axis
-	glRotatef(90, 0, -1, 0);
-	glRotatef(90, -1, 0, 0);
-	glColor3f(0, 1, 0); gluCylinder(q, 0.02, 0.0, 0.3, 64, 1); // y-axis
-	glRotatef(90, 1, 0, 0);
-	glColor3f(0, 0, 1); gluCylinder(q, 0.02, 0.0, 0.3, 64, 1); // z-axis
-
-    glDisable(GL_LIGHTING); glDisable(GL_DEPTH_TEST);
-    glPopMatrix();
 }

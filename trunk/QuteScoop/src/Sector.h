@@ -8,23 +8,22 @@
 #include "_pch.h"
 
 
-class Sector
-{
+class Sector {
 public:
     Sector();
     Sector(QStringList strings);
     ~Sector();
 
-	bool isNull() const;
-	
+    bool isNull() const;
+
 	const QString& icao() const { return _icao; }
 	const QString& name() const { return _name; }
 	const QString& countryCode() const { return _countryCode; }
 	const QString& id() const { return _id; }
 	const double& lat() const { return _lat; }
 	const double& lon() const { return _lon; }
-    const QList<QPair<double, double> > sector() const { return _points; }
-	
+	const QList<QPair<double, double> > sector() const { return _points; }
+
 	void setPointList(const QList<QPair<double, double> >& points);
 
 	GLuint getPolygon();
@@ -36,9 +35,6 @@ private:
 	QString _icao, _name, _countryCode, _id;
 	double _lat, _lon;
 	GLuint polygon, borderline;
-
-    QPair<double, double> _equidistantPoint;
-    int _maxDistFromCenter;
 };
 
 #endif /*SECTOR_H_*/

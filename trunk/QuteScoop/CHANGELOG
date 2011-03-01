@@ -77,7 +77,6 @@ Release 1.0.0
 * FIR border line strength setting had no effect
 * VATSIM VVL support can not be added due to their restrictive licensing.
 
-
 Version 1.0.1
 * Improved support for 3rd party networks (example MCDU)
 
@@ -91,7 +90,6 @@ Version 1.0.2 alpha
 * Plotting of flight route according to the filed flight plan
 * No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are filtered.
 
-
 Version 1.0.3 alpha 8
 changed:
 * Markus' great code to identify ATC sectors above an airport!
@@ -99,9 +97,9 @@ changed:
 * Zoom accelerated if mouse wheel driver supports it, zoom factor configurable
 * Increased max. possible value for shown labels (in preferences)
 * Render dashed lines in front of/behind plane also in flightplan Plot mode
-* Replace Messageboxes by Statusbar-Messages to allow a less intrusive and smoother user experience that does not need any interaction - thought for running whole nights
+* Replace Messageboxes by Statusbar-Messages to allow a less intrusive and smoother user experience that does not need any interaction
 added:
-* Show Network (and Voice for VATSIM) Servers and ping them
+* Show network (and voice for VATSIM) servers and ping them
 * Respect the update interval that the Whazzup server transmits
 * Show ATC bookings in list (VATSIM only so far)
 * Do Time Warping: Jump to a date and time and see the expected ATC coverage AND traffic situation
@@ -115,7 +113,6 @@ added:
 * Show inactive airports when zoomed in (switchable via Menu)
 * Filter airport traffic to only show traffic in the vicinity of airport (configurable)
 * Show rings of airport congestion around airports (configurable)
-* Show _CTR and _FSS stations as ATC in Airport Information, if their sector boundaries are somewhat near to the airport (experimental)
 * Doubleclick to center map, right or left drag to pan
 * Key commands for pan and zoom
 * Remember and recall 7 Map Positions
@@ -245,16 +242,41 @@ added:
 * EARTH HAS SUN day/night SHADOW. Configurable through "Preferences" with various
   lighting options.
 * new OpenGL-options in preferences to adjust performance on low-end machines.
-* on shutdown fly away from spinning earth ;)
+* shutdown animation: fly away from spinning earth ;)
 changed:
 * standard values for most settings adapted. New standard color scheme.
 * increased visiblity distance for all objects. This might be configurable through
   "Preferences" if you ask for it ;)
 
-Version 2.0rc5:
+Version 2.0rc6:
 added:
 * Textured Earth. Works good with lighting. You can exchange the texture to your liking
   (see ./textures/+notes.txt).
 
+Version 2.0rc7:
+fixed:
+* online timespans are corrected (UTC vs. local time bug) (regression).
+* consistent Time Warp en-/disabling from menu vs. via the button or F8 key.
+changed:
+* remove filtering of ATC stations with _T or _X in the middle (I don't know why we
+  added it once...)
+* remove automatic selection of objects on mouseclick in congested areas (removed
+  progressbar from selection listbox)
+* texture selection in Preferences dialog. You can add new textures, see
+  textures/+notes.txt
+* show name of sector in tooltip if we know it from firlist.dat.
+* show sector label at least if we do not have sector data (CTR, FSS).
+added:
+* selection rectangle allows zooming to a given area directly (left click and drag,
+  right drag is panning as before).
+* right click on zoom icons, press CTRL+0 or right double click on the map to reset zoom.
+* direct access to Airport Details of departure/destination from Plan Route Dialog.
+* you can enter your own routes in Plan Route Dialog to calculate distance and plot
+  them.
+* show all sector labels on "View/Display all Sectors" (support for sector file creators).
+* some more icons from the great Crystal Project iconset from Everaldo Coelho, released
+  under LGPL.
+
+Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.

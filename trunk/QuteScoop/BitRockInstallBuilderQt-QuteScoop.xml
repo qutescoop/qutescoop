@@ -1,7 +1,7 @@
 <project>
     <shortName>qutescoop</shortName>
     <fullName>QuteScoop</fullName>
-    <version>2.0rc6</version>
+    <version>2.0rc7</version>
     <installerFilename>${platform_name}-${product_shortname}-${product_version}-installer.${platform_exec_suffix}</installerFilename>
     <readmeFile>README.html</readmeFile>
     <licenseFile>COPYING</licenseFile>
@@ -39,6 +39,7 @@
             </ruleList>
         </setInstallerVariable>
     </initializationActionList>
+    <compressionAlgorithm>lzma</compressionAlgorithm>
     <debianCustomPackageDirectory>DIST-unix/DEBIAN</debianCustomPackageDirectory>
     <defaultInstallationMode>qt</defaultInstallationMode>
     <description>application description goes here</description>
@@ -66,7 +67,7 @@
             <desktopShortcutList>
                 <shortcut>
                     <comment>${product_fullname}</comment>
-                    <exec>${installdir}/QuteScoop</exec>
+                    <exec>${installdir}/QuteScoop.sh</exec>
                     <icon>${installdir}/qutescoop.png</icon>
                     <name>${product_fullname}</name>
                     <path>${installdir}</path>
@@ -106,6 +107,9 @@
                         </distributionFile>
                         <distributionFile>
                             <origin>src/qutescoop.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>DIST-unix/QuteScoop.sh</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -259,6 +263,16 @@
         </component>
     </componentList>
     <finalPageActionList>
+        <readFile>
+            <name>changelog_txt</name>
+            <path>${installdir}/CHANGELOG</path>
+            <show>0</show>
+        </readFile>
+        <showText>
+            <explanation>Show CHANGELOG</explanation>
+            <text>${changelog_txt}</text>
+            <title>CHANGELOG</title>
+        </showText>
         <launchBrowser>
             <explanation>View the QuteScoop Wiki</explanation>
             <url>http://sourceforge.net/apps/mediawiki/qutescoop/</url>
@@ -268,7 +282,7 @@
             <url>http://sourceforge.net/projects/qutescoop</url>
         </launchBrowser>
         <launchBrowser>
-            <explanation>Visit the most active QuteScoop-development forum</explanation>
+            <explanation>Visit the most active QuteScoop-users forum (German, but no problem to use English)</explanation>
             <url>http://board.vacc-sag.org/49/28031/newpost.php</url>
         </launchBrowser>
     </finalPageActionList>

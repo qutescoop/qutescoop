@@ -48,7 +48,6 @@ public:
     Sector *sector;
 
 private:
-    bool couldBeAtcCallsign() const;
 };
 
 #endif /*CONTROLLER_H_*/

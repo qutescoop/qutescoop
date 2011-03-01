@@ -1184,6 +1184,16 @@ The texture is affected by the colour chosen for the Globe.</string>
                  <property name="text">
                   <string>Textured</string>
                  </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="4">
+                <widget class="QComboBox" name="glTextureEarth">
+                 <property name="toolTip">
+                  <string>More information in textures/+notes.txt. Check View/Debug Log if you experience problems.</string>
+                 </property>
                 </widget>
                </item>
               </layout>
@@ -1290,7 +1300,7 @@ The texture is affected by the colour chosen for the Globe.</string>
                   <enum>Qt::Horizontal</enum>
                  </property>
                  <property name="tickPosition">
-                  <enum>QSlider::TicksBothSides</enum>
+                  <enum>QSlider::TicksBelow</enum>
                  </property>
                  <property name="tickInterval">
                   <number>1</number>
@@ -2915,12 +2925,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>237</x>
-     <y>210</y>
+     <x>191</x>
+     <y>178</y>
     </hint>
     <hint type="destinationlabel">
-     <x>328</x>
-     <y>212</y>
+     <x>253</x>
+     <y>179</y>
     </hint>
    </hints>
   </connection>
@@ -2931,12 +2941,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>283</y>
+     <x>114</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
-     <x>330</x>
-     <y>344</y>
+     <x>339</x>
+     <y>296</y>
     </hint>
    </hints>
   </connection>
@@ -2947,28 +2957,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>283</y>
+     <x>114</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
-     <x>767</x>
-     <y>363</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>buttonBox</sender>
-   <signal>clicked(QAbstractButton*)</signal>
-   <receiver>PreferencesDialog</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>787</x>
-     <y>729</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>540</x>
-     <y>648</y>
+     <x>765</x>
+     <y>299</y>
     </hint>
    </hints>
   </connection>
@@ -2979,12 +2973,12 @@ part is...</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>77</y>
+     <x>60</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>152</x>
-     <y>108</y>
+     <x>204</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -2995,12 +2989,12 @@ part is...</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>77</y>
+     <x>60</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>152</x>
-     <y>143</y>
+     <x>204</x>
+     <y>136</y>
     </hint>
    </hints>
   </connection>
@@ -3011,12 +3005,12 @@ part is...</string>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>77</y>
+     <x>60</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>152</x>
-     <y>178</y>
+     <x>204</x>
+     <y>162</y>
     </hint>
    </hints>
   </connection>
@@ -3027,12 +3021,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>283</y>
+     <x>114</x>
+     <y>243</y>
     </hint>
     <hint type="destinationlabel">
-     <x>92</x>
-     <y>313</y>
+     <x>114</x>
+     <y>267</y>
     </hint>
    </hints>
   </connection>
@@ -3043,12 +3037,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>456</y>
+     <x>83</x>
+     <y>400</y>
     </hint>
     <hint type="destinationlabel">
-     <x>263</x>
-     <y>462</y>
+     <x>300</x>
+     <y>395</y>
     </hint>
    </hints>
   </connection>
@@ -3059,12 +3053,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>84</x>
-     <y>415</y>
+     <x>118</x>
+     <y>358</y>
     </hint>
     <hint type="destinationlabel">
-     <x>292</x>
-     <y>418</y>
+     <x>227</x>
+     <y>359</y>
     </hint>
    </hints>
   </connection>
@@ -3075,12 +3069,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>84</x>
-     <y>415</y>
+     <x>118</x>
+     <y>358</y>
     </hint>
     <hint type="destinationlabel">
-     <x>519</x>
-     <y>418</y>
+     <x>402</x>
+     <y>359</y>
     </hint>
    </hints>
   </connection>
@@ -3091,12 +3085,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>456</y>
+     <x>83</x>
+     <y>400</y>
     </hint>
     <hint type="destinationlabel">
-     <x>673</x>
-     <y>509</y>
+     <x>686</x>
+     <y>434</y>
     </hint>
    </hints>
   </connection>
@@ -3107,12 +3101,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>456</y>
+     <x>83</x>
+     <y>400</y>
     </hint>
     <hint type="destinationlabel">
-     <x>757</x>
-     <y>509</y>
+     <x>754</x>
+     <y>431</y>
     </hint>
    </hints>
   </connection>
@@ -3123,12 +3117,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>84</x>
-     <y>415</y>
+     <x>118</x>
+     <y>358</y>
     </hint>
     <hint type="destinationlabel">
-     <x>390</x>
-     <y>422</y>
+     <x>302</x>
+     <y>362</y>
     </hint>
    </hints>
   </connection>
@@ -3139,12 +3133,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>456</y>
+     <x>83</x>
+     <y>400</y>
     </hint>
     <hint type="destinationlabel">
-     <x>395</x>
-     <y>456</y>
+     <x>406</x>
+     <y>400</y>
     </hint>
    </hints>
   </connection>
@@ -3155,12 +3149,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>456</y>
+     <x>83</x>
+     <y>400</y>
     </hint>
     <hint type="destinationlabel">
-     <x>582</x>
-     <y>509</y>
+     <x>603</x>
+     <y>434</y>
     </hint>
    </hints>
   </connection>
@@ -3171,12 +3165,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
-     <y>77</y>
+     <x>119</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>152</x>
-     <y>108</y>
+     <x>204</x>
+     <y>110</y>
     </hint>
    </hints>
   </connection>
@@ -3187,12 +3181,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
-     <y>77</y>
+     <x>119</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>152</x>
-     <y>143</y>
+     <x>204</x>
+     <y>136</y>
     </hint>
    </hints>
   </connection>
@@ -3203,12 +3197,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>120</x>
-     <y>77</y>
+     <x>119</x>
+     <y>68</y>
     </hint>
     <hint type="destinationlabel">
-     <x>152</x>
-     <y>178</y>
+     <x>204</x>
+     <y>162</y>
     </hint>
    </hints>
   </connection>
@@ -3223,8 +3217,8 @@ part is...</string>
      <y>316</y>
     </hint>
     <hint type="destinationlabel">
-     <x>571</x>
-     <y>332</y>
+     <x>651</x>
+     <y>298</y>
     </hint>
    </hints>
   </connection>
@@ -3239,8 +3233,8 @@ part is...</string>
      <y>315</y>
     </hint>
     <hint type="destinationlabel">
-     <x>235</x>
-     <y>391</y>
+     <x>189</x>
+     <y>325</y>
     </hint>
    </hints>
   </connection>
@@ -3255,8 +3249,8 @@ part is...</string>
      <y>315</y>
     </hint>
     <hint type="destinationlabel">
-     <x>340</x>
-     <y>369</y>
+     <x>257</x>
+     <y>326</y>
     </hint>
    </hints>
   </connection>
@@ -3271,8 +3265,8 @@ part is...</string>
      <y>317</y>
     </hint>
     <hint type="destinationlabel">
-     <x>109</x>
-     <y>332</y>
+     <x>82</x>
+     <y>298</y>
     </hint>
    </hints>
   </connection>
@@ -3283,12 +3277,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>217</x>
-     <y>274</y>
+     <x>251</x>
+     <y>235</y>
     </hint>
     <hint type="destinationlabel">
-     <x>603</x>
-     <y>274</y>
+     <x>754</x>
+     <y>235</y>
     </hint>
    </hints>
   </connection>
@@ -3299,12 +3293,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>143</x>
-     <y>239</y>
+     <x>177</x>
+     <y>211</y>
     </hint>
     <hint type="destinationlabel">
-     <x>571</x>
-     <y>239</y>
+     <x>754</x>
+     <y>211</y>
     </hint>
    </hints>
   </connection>
@@ -3315,12 +3309,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>49</x>
-     <y>498</y>
+     <x>60</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>280</x>
-     <y>452</y>
+     <x>371</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -3331,12 +3325,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>73</x>
-     <y>498</y>
+     <x>84</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>280</x>
-     <y>487</y>
+     <x>371</x>
+     <y>425</y>
     </hint>
    </hints>
   </connection>
@@ -3347,12 +3341,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>498</y>
+     <x>103</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>581</x>
-     <y>487</y>
+     <x>766</x>
+     <y>425</y>
     </hint>
    </hints>
   </connection>
@@ -3363,12 +3357,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>104</x>
-     <y>498</y>
+     <x>115</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>514</x>
-     <y>477</y>
+     <x>493</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -3379,12 +3373,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>59</x>
-     <y>498</y>
+     <x>70</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>102</x>
-     <y>452</y>
+     <x>97</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -3395,12 +3389,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>88</x>
-     <y>498</y>
+     <x>99</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>119</x>
-     <y>487</y>
+     <x>97</x>
+     <y>425</y>
     </hint>
    </hints>
   </connection>
@@ -3411,12 +3405,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>116</x>
-     <y>498</y>
+     <x>127</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>448</x>
-     <y>477</y>
+     <x>427</x>
+     <y>399</y>
     </hint>
    </hints>
   </connection>
@@ -3427,12 +3421,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>132</x>
-     <y>498</y>
+     <x>143</x>
+     <y>436</y>
     </hint>
     <hint type="destinationlabel">
-     <x>448</x>
-     <y>512</y>
+     <x>427</x>
+     <y>425</y>
     </hint>
    </hints>
   </connection>
@@ -3443,12 +3437,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>569</x>
-     <y>124</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>565</x>
-     <y>156</y>
+     <x>512</x>
+     <y>143</y>
     </hint>
    </hints>
   </connection>
@@ -3459,12 +3453,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>658</x>
-     <y>278</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>587</x>
-     <y>279</y>
+     <x>512</x>
+     <y>232</y>
     </hint>
    </hints>
   </connection>
@@ -3475,12 +3469,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>522</x>
-     <y>276</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>587</x>
-     <y>314</y>
+     <x>512</x>
+     <y>257</y>
     </hint>
    </hints>
   </connection>
@@ -3491,12 +3485,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>562</x>
-     <y>286</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>678</x>
-     <y>279</y>
+     <x>600</x>
+     <y>232</y>
     </hint>
    </hints>
   </connection>
@@ -3507,12 +3501,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>631</x>
-     <y>124</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>678</x>
-     <y>167</y>
+     <x>600</x>
+     <y>143</y>
     </hint>
    </hints>
   </connection>
@@ -3523,12 +3517,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>467</x>
-     <y>128</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>500</x>
-     <y>190</y>
+     <x>512</x>
+     <y>173</y>
     </hint>
    </hints>
   </connection>
@@ -3539,12 +3533,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>529</x>
-     <y>124</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>476</x>
-     <y>228</y>
+     <x>512</x>
+     <y>198</y>
     </hint>
    </hints>
   </connection>
@@ -3555,12 +3549,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>627</x>
-     <y>126</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>629</x>
-     <y>182</y>
+     <x>623</x>
+     <y>173</y>
     </hint>
    </hints>
   </connection>
@@ -3571,12 +3565,12 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>729</x>
-     <y>127</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>717</x>
-     <y>234</y>
+     <x>623</x>
+     <y>198</y>
     </hint>
    </hints>
   </connection>
@@ -3587,12 +3581,44 @@ part is...</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>752</x>
-     <y>140</y>
+     <x>501</x>
+     <y>121</y>
     </hint>
     <hint type="destinationlabel">
-     <x>695</x>
-     <y>299</y>
+     <x>623</x>
+     <y>257</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>clicked(QAbstractButton*)</signal>
+   <receiver>PreferencesDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>745</x>
+     <y>709</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>679</x>
+     <y>735</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>glTextures</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>glTextureEarth</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>253</x>
+     <y>158</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>343</x>
+     <y>160</y>
     </hint>
    </hints>
   </connection>

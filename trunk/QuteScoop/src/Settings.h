@@ -152,6 +152,9 @@ public:
     static bool glTextures();
     static void setGlTextures(bool value);
 
+    static QString glTextureEarth();
+    static void setGlTextureEarth(QString value);
+
     static QColor sunLightColor();
     static void setSunLightColor(const QColor& color);
 

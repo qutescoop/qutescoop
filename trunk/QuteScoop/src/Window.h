@@ -10,12 +10,6 @@
 #include "_pch.h"
 
 #include "GLWidget.h"
-#include "Whazzup.h"
-#include "ClientSelectionWidget.h"
-#include "PreferencesDialog.h"
-#include "PlanFlightDialog.h"
-#include "BookedAtcDialog.h"
-#include "ListClientsDialog.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
 #include "GuiMessage.h"
@@ -30,7 +24,6 @@ public:
     static Window* getInstance(bool createIfNoInstance = false);
     //~Window();
     void setEnableBookedAtc(bool enable);
-    void setPlotFlightPlannedRoute(bool value);
     void shootScreenshot();
     GLWidget *glWidget;
 
@@ -43,10 +36,14 @@ public slots:
     void showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType = GuiMessage::Temporary, QString id = QString(), int progress = 0, int total = 0);
 
 private slots:
+    void on_tbZoomIn_customContextMenuRequested(QPoint pos);
+    void on_actionZoomReset_triggered();
     void on_actionShowRoutes_triggered(bool checked);
     void on_actionDebugLog_triggered();
+
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
+    void on_tbZoomOut_customContextMenuRequested(QPoint pos);
 
     void on_actionMoveDown_triggered();
     void on_actionMoveUp_triggered();
@@ -83,7 +80,6 @@ private slots:
 
     void toggleFullscreen();
     void whazzupDownloaded(bool isNew = true);
-    void mapClicked(int x, int y, QPoint absolutePos);
     void openPreferences();
     void openPlanFlight();
     void openBookedAtc();
@@ -125,9 +121,6 @@ private:
     // singleton
     Window(QWidget *parent = 0);
     void createActions();
-
-    //QToolBar *toolBar;
-    ClientSelectionWidget *clientSelection;
 
     SearchResultModel searchResultModel, friendsModel;
     QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer;

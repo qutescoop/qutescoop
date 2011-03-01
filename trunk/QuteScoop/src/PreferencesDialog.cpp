@@ -81,6 +81,18 @@ void PreferencesDialog::loadSettings() {
 
     // OpenGL
     glTextures->setChecked(Settings::glTextures());
+
+    QDir texDir = QDir(Settings::applicationDataDirectory("textures/"));
+    QStringList nameFilters;
+    foreach(QByteArray fmt, QImageReader::supportedImageFormats())
+        nameFilters.append("*." + fmt);
+    texDir.setNameFilters(nameFilters);
+    qDebug() << "Supported texture formats:"
+            << QImageReader::supportedImageFormats() << ". See"
+            << Settings::applicationDataDirectory("textures/+notes.txt") << "for more information.";
+    glTextureEarth->addItems(texDir.entryList());
+    glTextureEarth->setCurrentIndex(glTextureEarth->findText(Settings::glTextureEarth()));
+
     glStippleLines->setChecked(Settings::glStippleLines());
     cbBlend->setChecked(Settings::glBlending);
     cbLineSmoothing->setChecked(Settings::displaySmoothLines());
@@ -386,7 +398,7 @@ void PreferencesDialog::on_editNavdir_editingFinished() {
 }
 
 void PreferencesDialog::on_browseNavdirButton_clicked() {
-    QFileDialog* dialog = new QFileDialog(this, tr("Select Database Directory"),
+    QFileDialog* dialog = new QFileDialog(this, "Select Database Directory",
             Settings::navdataDirectory());
     dialog->setFileMode(QFileDialog::DirectoryOnly);
     int result = dialog->exec();
@@ -863,28 +875,27 @@ void PreferencesDialog::on_cbTrackAfter_toggled(bool checked)
 void PreferencesDialog::on_pbImportFromFile_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(
-            this, tr("Import from File"),
-            QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
+            this, "Import from File",
+            QApplication::applicationDirPath(), "Settings Files (*.ini);; All Files (*.*)"
     );
     if (!fileName.isEmpty()) {
         Settings::importFromFile(fileName);
-        QMessageBox::information(this, tr("Settings loaded. Restart required."),
-                                 tr("QuteScoop closes now. Please restart for the settings to take effect."));
+        QMessageBox::information(this, "Settings loaded. Restart required.",
+                                 "QuteScoop closes now. Please restart for the settings to take effect.");
         loadSettings();
-        qApp->processEvents();
-        qobject_cast<Window *>(this->parent())->close();
+        qApp->quit();
     }
 }
 
 void PreferencesDialog::on_pbExportToFile_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(
-            this, tr("Export to File"),
-            QApplication::applicationDirPath(), tr("Settings Files (*.ini);; All Files (*.*)")
+            this, "Export to File",
+            QApplication::applicationDirPath(), "Settings Files (*.ini);; All Files (*.*)"
     );
     if (!fileName.isEmpty()) {
         Settings::exportToFile(fileName);
-        QMessageBox::information(this, tr("Success"), tr("Settings exported."));
+        QMessageBox::information(this, "Success", "Settings exported.");
     }
 }
 
@@ -903,7 +914,7 @@ void PreferencesDialog::on_pbStylesheetExample1_clicked()
 {
     if (
             QMessageBox::question(
-                    this, tr("Overwrite stylesheet?"), tr("Are you sure?"),
+                    this, "Overwrite stylesheet?", "Are you sure?",
                     QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
             == QMessageBox::Yes) {
         tedStylesheet->setPlainText(QLatin1String("\
@@ -931,7 +942,7 @@ void PreferencesDialog::on_pbStylesheetExample2_clicked()
 {
     if (
             QMessageBox::question(
-                    this, tr("Overwrite stylesheet?"), tr("Are you sure?"),
+                    this, "Overwrite stylesheet?", "Are you sure?",
                     QMessageBox::Yes | QMessageBox::No, QMessageBox::No)
             == QMessageBox::Yes) {
         tedStylesheet->setPlainText(QLatin1String("\
@@ -1050,4 +1061,9 @@ void PreferencesDialog::on_glStippleLines_toggled(bool checked)
 void PreferencesDialog::on_glTextures_toggled(bool checked)
 {
     Settings::setGlTextures(checked);
+}
+
+void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex)
+{
+    Settings::setGlTextureEarth(tex);
 }

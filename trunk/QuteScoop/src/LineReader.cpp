@@ -7,26 +7,21 @@
 
 const QList<QPair<double, double> >& LineReader::readLine() {
 	currentLine.clear();
-
-	if(atEnd()) return currentLine;
-
-	do {
+	while(!atEnd()) {
 		QString line = nextLine();
-		if(line == "end" || line.isNull()) {
+		if(line == "end" || line.isNull())
 			break;
-		}
-		
+
 		QStringList list = line.split(':');
 		if(list.size() != 2) continue;
-		
+
 		bool ok = true;
 		double lat = list[0].toDouble(&ok);
 		if(!ok) continue;
 		double lon = list[1].toDouble(&ok);
 		if(!ok) continue;
-	
+
 		currentLine.append(QPair<double, double>(lat, lon));
-	} while(!atEnd());
-	
+	}
 	return currentLine;
 }

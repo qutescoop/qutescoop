@@ -12,8 +12,6 @@
 Sector::Sector() {
     polygon = 0;
     borderline = 0;
-    _maxDistFromCenter = 0;
-    _equidistantPoint = QPair<double, double>(181,91);
 }
 
 bool Sector::isNull() const {
@@ -31,8 +29,7 @@ Sector::Sector(QStringList strings) {
 
     polygon = 0;
     borderline = 0;
-    _maxDistFromCenter = 0;
-    _equidistantPoint = QPair<double, double>(181,91);
+    if (_icao == "RU-NWC_FSS") qDebug() << "RU-NWC Controller:getCenter" << strings;
 }
 
 Sector::~Sector() {

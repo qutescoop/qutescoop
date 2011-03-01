@@ -28,21 +28,17 @@ void ClientDetails::setMapObject(MapObject *object) {
 }
 
 void ClientDetails::showOnMap() {
-    if ((lat != 0 || lon != 0) && Window::getInstance(false)) {
+    if ((lat != 0 || lon != 0) && Window::getInstance(false))
         Window::getInstance(true)->glWidget->setMapPosition(lat, lon, 0.1);
-    }
 }
 
 void ClientDetails::friendClicked() {
     if(!userId.isEmpty()) {
         QStringList friends = Settings::friends();
-        if(friends.contains(userId)) {
-            // was friend, remove it
+        if(friends.contains(userId)) // was friend, remove
             Settings::removeFriend(userId);
-        } else {
-            // new friend
+        else // new friend
             Settings::addFriend(userId);
-        }
     }
     qobject_cast<Window *>(this->parent())->refreshFriends();
 }

@@ -6,6 +6,7 @@
 
 #include "Window.h"
 #include "Settings.h"
+#include "Whazzup.h"
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;
@@ -36,15 +37,13 @@ ControllerDetails::ControllerDetails(QWidget *parent):
 }
 
 void ControllerDetails::refresh(Controller *newController) {
-    if(newController != 0) {
+    if(newController != 0)
         controller = newController;
-    } else {
+    else
         controller = Whazzup::getInstance()->whazzupData().getController(callsign);
-    }
     if(controller == 0) return;
     setMapObject(controller);
-
-    setWindowTitle(controller->label);
+    setWindowTitle(controller->toolTip());
 
     // Controller Information
     QString controllerInfo = QString("<strong>ATC: %1</strong><br>").arg(controller->displayName(true));
