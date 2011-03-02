@@ -33,7 +33,7 @@ public slots:
     void initializeGL();
     void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
     // updating the statusbar as well - we do not want a full GL update here sometimes
-    void setMapPosition(double lat, double lon, double newZoom);
+    void setMapPosition(double lat, double lon, double newZoom, bool updateGL = true);
     void scrollBy(int moveByX, int moveByY);
     void rightClick(const QPoint& pos);
     void zoomIn(double factor);

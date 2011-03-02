@@ -95,7 +95,7 @@ void PreferencesDialog::loadSettings() {
     qDebug() << "Supported texture formats:"
             << QImageReader::supportedImageFormats() << ". See"
             << Settings::applicationDataDirectory("textures/+notes.txt") << "for more information.";
-    QString tex = Settings::glTextureEarth(); // cache cause adding to the list will trigger writing
+    const QString tex = Settings::glTextureEarth(); // cache cause adding to the list will trigger writing
     glTextureEarth->addItems(texDir.entryList());
     glTextureEarth->setCurrentIndex(glTextureEarth->findText(tex));
 
