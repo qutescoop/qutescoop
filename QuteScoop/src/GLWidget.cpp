@@ -100,7 +100,14 @@ void GLWidget::handleRotation(QMouseEvent *event) {
     emit newPosition();
 }
 
-bool GLWidget::mouse2latlon(int x, int y, double& lat, double& lon) const {
+bool GLWidget::mouseOnGlobe(int x, int y) const {
+    double xGl = (2. * x / width()  - 1.) * aspectRatio * zoom / 2;
+    double zGl = (2. * y / height() - 1.) * zoom / 2;
+    double yGl = sqrt(1 - (xGl*xGl) - (zGl*zGl)); // As the radius of globe is 1
+    return !qIsNaN(yGl);
+}
+
+bool GLWidget::mouse2latlon(int x, int y, double &lat, double &lon) const {
     // Converts screen mouse coordinates into latitude/longitude of the map.
     // returns false if x/y is not on the globe
     // Basis: Euler angles.
@@ -730,7 +737,7 @@ void GLWidget::paintGL() {
                                SZ(zenith.first, zenith.second), 0}; // sun has parallel light -> dist=0
         glLightfv(GL_LIGHT0, GL_POSITION, sunVertex0); // light 0 always has the real (center) position
         if (Settings::glLights() > 1) {
-            for (int light = 1; light < Settings::glLights(); light++) { // setting the other light's position
+            for (int light = 1; light < Settings::glLights(); light++) { // setting the other lights' positions
                 double fraction = 2*M_PI / (Settings::glLights() - 1) * light;
                 double spreadLat = zenith.first  + qSin(fraction) * Settings::glLightsSpread();
                 double spreadLon = zenith.second + qCos(fraction) * Settings::glLightsSpread();
@@ -898,7 +905,6 @@ void GLWidget::rightClick(const QPoint& pos) {
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     QToolTip::hideText();
-    lastPos = mouseDownPos = QPoint(); // fake to disallow mapClicked()
     if (event->buttons().testFlag(Qt::LeftButton)) {
         double lat, lon;
         if (mouse2latlon(event->x(), event->y(), lat, lon))
@@ -1061,67 +1067,57 @@ bool GLWidget::shouldDrawLabel(const FontRectangle& rect) {
 
 QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
     QList<MapObject*> result;
-
-    // scan text labels
-    for(int i = 0; i < allFontRectangles.size(); i++) {
-        if(allFontRectangles[i].rect().contains(x, y))
-            result.append(allFontRectangles[i].object());
+    foreach (FontRectangle fr, allFontRectangles) { // scan text labels
+        if(fr.rect().contains(x, y))
+            result.append(fr.object());
     }
 
     double lat, lon; if(!mouse2latlon(x, y, lat, lon)) // returns false if not on globe
         return result;
 
-    if(radius == 0) radius = 30*zoom;
-    double radiusDeg = Nm2Deg(radius);
+    double radiusDeg = Nm2Deg((radius == 0? 30. * zoom: radius));
     radiusDeg *= radiusDeg;
 
-    QList<Airport*> airportList = NavData::getInstance()->airports().values();
-    for (int i = 0; i < airportList.size(); i++) {
-        Airport* a = airportList[i];
+    foreach (Airport* a, NavData::getInstance()->airports().values()) {
         if(a == 0) continue;
         if(a->isActive()) {
             double x = a->lat - lat;
             double y = a->lon - lon;
-            if(x*x + y*y <= radiusDeg) {
+            if(x*x + y*y < radiusDeg) {
                 result.removeAll(a);
                 result.append(a);
             }
         }
     }
-
-    QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();
     QList<MapObject*> observers;
-    for(int i = 0; i < controllers.size(); i++) {
-        Controller *c = controllers[i];
+    foreach (Controller *c, Whazzup::getInstance()->whazzupData().getControllers()) {
         double x = c->lat - lat;
         double y = c->lon - lon;
-        if(x*x + y*y <= radiusDeg) {
-            if(c->isObserver())
+        if(x*x + y*y < radiusDeg) {
+            if(c->isObserver()) {
+                observers.removeAll(c);
                 observers.append(c);
-            else {
+            } else {
                 result.removeAll(c);
                 result.append(c);
             }
         }
     }
-
     QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().getPilots();
     for(int i = 0; i < pilots.size(); i++) {
         Pilot *p = pilots[i];
         double x = p->lat - lat;
         double y = p->lon - lon;
-        if(x*x + y*y <= radiusDeg) {
+        if(x*x + y*y < radiusDeg) {
             result.removeAll(p);
             result.append(p);
         }
     }
-
-    result += observers;
-    return result;
+    return result + observers;
 }
 
 /////////////////////////
-// draw helper functions
+// draw-helper functions
 /////////////////////////
 
 void GLWidget::drawSelectionRectangle() {
