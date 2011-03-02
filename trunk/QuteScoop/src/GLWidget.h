@@ -75,7 +75,8 @@ private:
 
     void resetZoom();
     void handleRotation(QMouseEvent *event);
-    bool mouse2latlon(int x, int y, double& lat, double& lon) const;
+    bool mouseOnGlobe(int x, int y) const;
+    bool mouse2latlon(int x, int y, double &lat, double &lon) const;
     bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
 
     void drawSelectionRectangle();
