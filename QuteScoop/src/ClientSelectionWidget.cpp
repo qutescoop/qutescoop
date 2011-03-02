@@ -13,7 +13,7 @@ ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):
     setWindowFlags(Qt::FramelessWindowHint);
     setFocusPolicy(Qt::StrongFocus);
     connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
-//    connect(listWidget, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
+    connect(listWidget, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
 }
 
 void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {

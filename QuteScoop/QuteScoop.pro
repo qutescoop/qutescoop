@@ -43,8 +43,8 @@ CONFIG(release,release|debug) {
     !build_pass:message("Library files added to 'install': $${myQtLib.files}")
 
     # Compiler libraries
+    myCompilerLib.path = $$DESTDIR
     win32-g++ { # For MingW
-        myCompilerLib.path = $$DESTDIR
         myCompilerLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}mingwm10.dll
         myCompilerLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}libgcc_s_dw2-1.dll
         !build_pass:message("MingW compiler libraries added to 'install': $${myCompilerLib.files}")
@@ -54,8 +54,8 @@ CONFIG(release,release|debug) {
 
     # QuteScoop additional files
     rootFiles.path = $$DESTDIR
-    rootFiles.files += README.html COPYING CHANGELOG
-    unix: rootFiles.files += QuteScoop.sh
+    rootFiles.files += ./README.html ./COPYING ./CHANGELOG
+    unix: rootFiles.files += ./QuteScoop.sh ./src/qutescoop.png
     dataFiles.path = $$DESTDIR/data
     dataFiles.files += ./data/+notes.txt
     dataFiles.files += ./data/airports.dat
