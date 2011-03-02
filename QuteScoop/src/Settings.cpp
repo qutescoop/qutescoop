@@ -424,7 +424,7 @@ void Settings::setDisplaySmoothLines(bool value) {
 }
 
 bool Settings::glStippleLines() {
-    return getSettings()->value("gl/stippleLines", false).toBool();
+    return getSettings()->value("gl/stippleLines", true).toBool();
 }
 
 void Settings::setGlStippleLines(bool value) {
@@ -879,7 +879,7 @@ void Settings::setTrackAfter(bool value) {
 }
 
 bool Settings::trackAfter() {
-    return getSettings()->value("pilotDisplay/trackAfter", false).toBool();
+    return getSettings()->value("pilotDisplay/trackAfter", true).toBool();
 }
 
 double Settings::timeLineStrength() {

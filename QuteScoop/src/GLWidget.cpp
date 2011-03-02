@@ -74,12 +74,13 @@ GLWidget::~GLWidget() {
 // The scene is then rotated by xRot/yRot/zRot. When looking onto N0/E0, -90°/0°/0°
 // This looks a bit anarchic, but it fits the automatically created texture coordinates.
 // call drawCoordinateAxii() inside paintGL() to se where the axii are.
-void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
+void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updateGL) {
     xRot = modPositive(270. - lat, 360.);
     zRot = modPositive(     - lon, 360.);
     zoom = newZoom;
     resetZoom();
-    updateGL();
+    if (updateGL)
+        this->updateGL();
     emit newPosition();
 }
 
@@ -820,13 +821,15 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
                 double currLat, currLon;
                 if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
                     setMapPosition((downLat + currLat) / 2., (downLon + currLon) / 2.,
-                                   qMax(NavData::distance(downLat, downLon, downLat, currLon), // the greater of deltaLat / deltaLon
-                                        NavData::distance(downLat, downLon, currLat, downLon))/ 4000.);
+                                   qMax(NavData::distance(downLat, downLon,
+                                                          downLat, currLon),
+                                        NavData::distance(downLat, downLon,
+                                                          currLat, downLon)) / 4000.);
                 }
             }
         } else
             updateGL();
-    } else if (mouseDownPos == event->pos() && event->button() == Qt::LeftButton) { // Left-Button needed on Windows explicitly
+    } else if (mouseDownPos == event->pos() && event->button() == Qt::LeftButton) {
         QList<MapObject*> objects = objectsAt(event->x(), event->y());
         if (objects.size() == 0) {
             clientSelection->clearClients();
@@ -840,12 +843,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
             clientSelection->raise();
             clientSelection->setFocus();
         }
+    } else if (mouseDownPos == event->pos() && event->button() == Qt::RightButton) {
+        rightClick(event->pos());
     }
 }
 
 void GLWidget::rightClick(const QPoint& pos) {
-    mouseDownPos = QPoint(); // make sure that we don't handle mouse-up for this right-click
-
     QList<MapObject*> objects = objectsAt(pos.x(), pos.y());
     int countRelevant = 0;
     Pilot *pilot = 0;
@@ -899,10 +902,14 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     if (event->buttons().testFlag(Qt::LeftButton)) {
         double lat, lon;
         if (mouse2latlon(event->x(), event->y(), lat, lon))
-            setMapPosition(lat, lon, zoom);
-    } else if (event->button() == Qt::RightButton)
+            setMapPosition(lat, lon, zoom, false);
+        zoomIn(.6);
+    } else if (event->button() == Qt::RightButton) {
+        double lat, lon;
+        if (mouse2latlon(event->x(), event->y(), lat, lon))
+            setMapPosition(lat, lon, zoom, false);
         zoomIn(-.6);
-    else if (event->button() == Qt::MiddleButton)
+    } else if (event->button() == Qt::MiddleButton)
         zoomTo(2.);
 }
 
@@ -919,7 +926,8 @@ bool GLWidget::event(QEvent *event) {
     if(event->type() == QEvent::ToolTip) {
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(event);
         QList<MapObject*> objects = objectsAt(helpEvent->pos().x(), helpEvent->pos().y());
-        if(objects.isEmpty()) QToolTip::hideText();
+        if(objects.isEmpty())
+            QToolTip::hideText();
         else {
             QString toolTip;
             for(int i = 0; i < objects.size(); i++) {
@@ -929,15 +937,11 @@ bool GLWidget::event(QEvent *event) {
             QToolTip::showText(helpEvent->globalPos(), toolTip);
         }
     }
-    if(event->type() == QEvent::ContextMenu) {
-        QContextMenuEvent *contextEvent = static_cast<QContextMenuEvent *>(event);
-        rightClick(contextEvent->pos());
-    }
     return QGLWidget::event(event);
 }
 
 void GLWidget::zoomIn(double factor) {
-    zoom -= zoom * 0.2f * factor * Settings::zoomFactor();
+    zoom -= zoom * .2 * factor * Settings::zoomFactor();
     resetZoom();
     updateGL();
 }

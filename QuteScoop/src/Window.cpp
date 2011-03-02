@@ -76,6 +76,8 @@ Window::Window(QWidget *parent) :
     fmt.setRgba(true);
     glWidget = new GLWidget(fmt);
     centralwidget->layout()->addWidget(glWidget);
+    connect (glWidget, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
+             this, SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
 
     // Status- & ProgressBar
     progressBar = new QProgressBar(statusbar);
@@ -113,8 +115,10 @@ Window::Window(QWidget *parent) :
     whazzup->setStatusLocation(Settings::statusLocation());
 
     searchResult->setModel(&searchResultModel);
-    connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)), &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
-    connect(searchResult, SIGNAL(clicked(const QModelIndex&)), &searchResultModel, SLOT(modelClicked(const QModelIndex&)));
+    connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)),
+            &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
+    connect(searchResult, SIGNAL(clicked(const QModelIndex&)),
+            &searchResultModel, SLOT(modelClicked(const QModelIndex&)));
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
     metarSortModel = new QSortFilterProxyModel;
@@ -122,9 +126,12 @@ Window::Window(QWidget *parent) :
     metarSortModel->setSourceModel(&metarModel);
     metarList->setModel(metarSortModel);
 
-    connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
-    connect(metarList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(metarDoubleClicked(const QModelIndex&)));
-    connect(metarList->header(), SIGNAL(sectionClicked(int)), metarList, SLOT(sortByColumn(int)));
+    connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)),
+            this, SLOT(metarDoubleClicked(const QModelIndex&)));
+    connect(metarList, SIGNAL(clicked(const QModelIndex&)),
+            this, SLOT(metarDoubleClicked(const QModelIndex&)));
+    connect(metarList->header(), SIGNAL(sectionClicked(int)),
+            metarList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
     friendsSortModel = new QSortFilterProxyModel;
@@ -132,26 +139,36 @@ Window::Window(QWidget *parent) :
     friendsSortModel->setSourceModel(&friendsModel);
     friendsList->setModel(friendsSortModel);
 
-    connect(friendsList, SIGNAL(doubleClicked(const QModelIndex&)), this, SLOT(friendDoubleClicked(const QModelIndex&)));
-    connect(friendsList, SIGNAL(clicked(const QModelIndex&)), this, SLOT(friendClicked(const QModelIndex&)));
-    connect(friendsList->header(), SIGNAL(sectionClicked(int)), friendsList, SLOT(sortByColumn(int)));
+    connect(friendsList, SIGNAL(doubleClicked(const QModelIndex&)),
+            this, SLOT(friendDoubleClicked(const QModelIndex&)));
+    connect(friendsList, SIGNAL(clicked(const QModelIndex&)),
+            this, SLOT(friendClicked(const QModelIndex&)));
+    connect(friendsList->header(), SIGNAL(sectionClicked(int)),
+            friendsList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
     connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
     connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
-    connect(&downloadWatchdog, SIGNAL(timeout()), this, SLOT(downloadWatchdogTriggered()));
+    connect(&downloadWatchdog, SIGNAL(timeout()),
+            this, SLOT(downloadWatchdogTriggered()));
 
-    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), glWidget, SLOT(displayAllSectors(bool)));
+    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)),
+            glWidget, SLOT(displayAllSectors(bool)));
 
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
-    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)), glWidget, SLOT(showInactiveAirports(bool)));
+    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)),
+            glWidget, SLOT(showInactiveAirports(bool)));
 
-    connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
-    connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
-    connect(metarDecoderDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(metarDecoderDockMoved(Qt::DockWidgetArea)));
+    connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
+            this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
+    connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
+            this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
+    connect(metarDecoderDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
+            this, SLOT(metarDecoderDockMoved(Qt::DockWidgetArea)));
     metarDecoderDock->hide();
 
-    connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)), this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
+    connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
+            this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
 
     versionChecker = 0;
     versionBuffer = 0;
