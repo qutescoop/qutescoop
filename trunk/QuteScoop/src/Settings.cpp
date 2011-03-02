@@ -489,7 +489,7 @@ void Settings::setGlTextures(bool value) {
     getSettings()->setValue("gl/earthTexture", value);
 }
 QString Settings::glTextureEarth() {
-    return getSettings()->value("gl/textureEarth", "earth2048x1024").toString();
+    return getSettings()->value("gl/textureEarth", "2048px.png").toString();
 }
 void Settings::setGlTextureEarth(QString value) {
     getSettings()->setValue("gl/textureEarth", value);
