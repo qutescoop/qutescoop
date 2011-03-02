@@ -3,7 +3,6 @@
     <fullName>QuteScoop</fullName>
     <version>2.0rc7</version>
     <installerFilename>${platform_name}-${product_shortname}-${product_version}-installer.${platform_exec_suffix}</installerFilename>
-    <readmeFile>README.html</readmeFile>
     <licenseFile>COPYING</licenseFile>
     <logoImage>src/qutescoop.png</logoImage>
     <wmImage>src/qutescoop.png</wmImage>
@@ -39,7 +38,6 @@
             </ruleList>
         </setInstallerVariable>
     </initializationActionList>
-    <compressionAlgorithm>lzma</compressionAlgorithm>
     <debianCustomPackageDirectory>DIST-unix/DEBIAN</debianCustomPackageDirectory>
     <defaultInstallationMode>qt</defaultInstallationMode>
     <description>application description goes here</description>
@@ -106,7 +104,7 @@
                             <origin>DIST-unix/QuteScoop</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>src/qutescoop.png</origin>
+                            <origin>DIST-unix/qutescoop.png</origin>
                         </distributionFile>
                         <distributionFile>
                             <origin>DIST-unix/QuteScoop.sh</origin>
@@ -263,6 +261,10 @@
         </component>
     </componentList>
     <finalPageActionList>
+        <launchBrowser>
+            <explanation>Show README</explanation>
+            <url>${installdir}/README.html</url>
+        </launchBrowser>
         <readFile>
             <name>changelog_txt</name>
             <path>${installdir}/CHANGELOG</path>
@@ -272,6 +274,7 @@
             <explanation>Show CHANGELOG</explanation>
             <text>${changelog_txt}</text>
             <title>CHANGELOG</title>
+            <width>800</width>
         </showText>
         <launchBrowser>
             <explanation>View the QuteScoop Wiki</explanation>
@@ -282,7 +285,7 @@
             <url>http://sourceforge.net/projects/qutescoop</url>
         </launchBrowser>
         <launchBrowser>
-            <explanation>Visit the most active QuteScoop-users forum (German, but no problem to use English)</explanation>
+            <explanation>Visit the most active QuteScoop-users forum</explanation>
             <url>http://board.vacc-sag.org/49/28031/newpost.php</url>
         </launchBrowser>
     </finalPageActionList>

@@ -17,6 +17,11 @@ PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance, QWidg
         }
     return preferencesDialogInstance;
 }
+// destroys a singleton instance
+void PreferencesDialog::destroyInstance() {
+    delete preferencesDialogInstance;
+    preferencesDialogInstance = 0;
+}
 
 PreferencesDialog::PreferencesDialog(QWidget *parent):
     QDialog(parent),
@@ -90,8 +95,9 @@ void PreferencesDialog::loadSettings() {
     qDebug() << "Supported texture formats:"
             << QImageReader::supportedImageFormats() << ". See"
             << Settings::applicationDataDirectory("textures/+notes.txt") << "for more information.";
+    QString tex = Settings::glTextureEarth(); // cache cause adding to the list will trigger writing
     glTextureEarth->addItems(texDir.entryList());
-    glTextureEarth->setCurrentIndex(glTextureEarth->findText(Settings::glTextureEarth()));
+    glTextureEarth->setCurrentIndex(glTextureEarth->findText(tex));
 
     glStippleLines->setChecked(Settings::glStippleLines());
     cbBlend->setChecked(Settings::glBlending);
@@ -1052,18 +1058,15 @@ void PreferencesDialog::on_applyPilots_clicked()
 }
 
 
-void PreferencesDialog::on_glStippleLines_toggled(bool checked)
-{
+void PreferencesDialog::on_glStippleLines_toggled(bool checked) {
     Settings::setGlStippleLines(checked);
     cbDashedFrontAfter->setEnabled(checked);
 }
 
-void PreferencesDialog::on_glTextures_toggled(bool checked)
-{
+void PreferencesDialog::on_glTextures_toggled(bool checked) {
     Settings::setGlTextures(checked);
 }
 
-void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex)
-{
+void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
     Settings::setGlTextureEarth(tex);
 }
