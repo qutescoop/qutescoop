@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/icons">
-        <file alias="program">qutescoop.png</file>
+        <file>qutescoop.png</file>
         <file>images/viewmag-16.png</file>
         <file>images/viewmag+16.png</file>
         <file>images/viewmag16.png</file>
