@@ -327,6 +327,14 @@ added:
   servers.
 * firlist.dat: NY_JBC (New York Oceanic).
 
+Version 2.0rc9:
+fixed:
+* size of one texture
+changed:
+* some default values to adapt better to lighting.
+added:
+* see icons of textures in Preferences dialog.
+
 Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
