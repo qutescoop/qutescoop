@@ -32,35 +32,31 @@
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
-        <string>Search:</string>
+        <string>Search</string>
        </property>
        <property name="buddy">
         <cstring>editFilter</cstring>
        </property>
       </widget>
      </item>
-     <item row="0" column="4">
+     <item row="0" column="3">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Filter time:</string>
+        <string>filter time</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
        </property>
       </widget>
      </item>
-     <item row="0" column="2">
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item row="0" column="6">
+     <item row="0" column="5">
       <widget class="QLabel" name="label_3">
        <property name="text">
         <string>for</string>
@@ -70,7 +66,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="7">
+     <item row="0" column="6">
       <widget class="QSpinBox" name="spinHours">
        <property name="toolTip">
         <string>Extend the filter by &lt;this value&gt;.</string>
@@ -92,7 +88,7 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="8">
+     <item row="0" column="7">
       <spacer name="horizontalSpacer_2">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -105,23 +101,24 @@
        </property>
       </spacer>
      </item>
-     <item row="0" column="9">
+     <item row="0" column="8">
       <widget class="QToolButton" name="tbPredict">
        <property name="toolTip">
         <string>Use this filter time as a starting point for Time Warp. Time Warp shows all bookings on the mapglobe.</string>
        </property>
        <property name="text">
-        <string>Warp to</string>
+        <string>warp to</string>
+       </property>
+       <property name="icon">
+        <iconset resource="Resources.qrc">
+         <normaloff>:/icons/images/timewarp16.png</normaloff>:/icons/images/timewarp16.png</iconset>
        </property>
        <property name="toolButtonStyle">
         <enum>Qt::ToolButtonTextBesideIcon</enum>
        </property>
-       <property name="arrowType">
-        <enum>Qt::RightArrow</enum>
-       </property>
       </widget>
      </item>
-     <item row="0" column="5">
+     <item row="0" column="4">
       <widget class="QDateTimeEdit" name="dateTimeFilter">
        <property name="wrapping">
         <bool>true</bool>

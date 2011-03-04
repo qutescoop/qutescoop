@@ -24,13 +24,12 @@ public:
     const Airac& getAirac() const { return airac; }
 
     static double distance(double lat1, double lon1, double lat2, double lon2);
-    static void distanceTo(double lat, double lon, double dist, double heading, double *latTo, double *lonTo);
+    static QPair<double, double> pointDistanceBearing(double lat, double lon, double dist, double heading);
     static double courseTo(double lat1, double lon1, double lat2, double lon2);
-    static void greatCirclePlotTo(double lat1, double lon1,
-                                    double lat2, double lon2,
-                                    double fraction,
-                                    double *lat, double *lon);
-    static void plotPath(double lat1, double lon1, double lat2, double lon2);
+    static QPair<double, double> greatCircleFraction(double lat1, double lon1,
+                                    double lat2, double lon2, double fraction);
+    static QList<QPair<double, double> > greatCirclePoints(double lat1, double lon1, double lat2, double lon2, double pointEachNm = 30.);
+    static void plotPointsOnEarth(const QList<QPair<double, double> > &points);
 
     QString countryName(const QString& countryCode) const { return countryCodes[countryCode]; }
 

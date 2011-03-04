@@ -24,7 +24,7 @@
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Controller Information</string>
+      <string>Controller information</string>
      </property>
      <layout class="QVBoxLayout">
       <property name="margin">
@@ -55,7 +55,7 @@
         <item>
          <widget class="QPushButton" name="btnJoinChannel">
           <property name="text">
-           <string>Join Channel</string>
+           <string>join channel</string>
           </property>
           <property name="flat">
            <bool>false</bool>
@@ -102,8 +102,8 @@
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>414</width>
-           <height>125</height>
+           <width>410</width>
+           <height>105</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout">
@@ -138,7 +138,7 @@
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
        <property name="text">
-        <string>&amp;Show on Map</string>
+        <string>show on &amp;map</string>
        </property>
        <property name="shortcut">
         <string>S</string>
@@ -151,7 +151,7 @@
      <item>
       <widget class="QPushButton" name="buttonAddFriend">
        <property name="text">
-        <string>Add Friend</string>
+        <string>add friend</string>
        </property>
       </widget>
      </item>

@@ -192,15 +192,27 @@ QString Settings::applicationDataDirectory(const QString &composeFilePath) {
 bool Settings::shootScreenshots() {
     return getSettings()->value("screenshots/shootScreenshots", false).toBool();
 }
-
 void Settings::setShootScreenshots(bool value) {
     getSettings()->setValue("screenshots/shootScreenshots", value);
+}
+
+int Settings::screenshotMethod() {
+    return getSettings()->value("screenshots/method", 0).toInt();
+}
+void Settings::setScreenshotMethod(int value) {
+    getSettings()->setValue("screenshots/method", value);
+}
+
+QString Settings::screenshotFormat() {
+    return getSettings()->value("screenshots/format", "png").toString();
+}
+void Settings::setScreenshotFormat(const QString &value) {
+    getSettings()->setValue("screenshots/format", value);
 }
 
 int Settings::downloadInterval() {
     return getSettings()->value("download/interval", 2).toInt();
 }
-
 void Settings::setDownloadInterval(int value) {
     getSettings()->setValue("download/interval", value);
 }
@@ -842,46 +854,6 @@ void Settings::setTimeLineColor(const QColor& color) {
     getSettings()->setValue("pilotDisplay/timeLineColor", color);
 }
 
-QColor Settings::trackLineColor() {
-    return getSettings()->value("pilotDisplay/trackLineColor", QColor::fromRgb(170, 255, 127)).value<QColor>();
-}
-
-void Settings::setTrackLineColor(const QColor& color) {
-    getSettings()->setValue("pilotDisplay/trackLineColor", color);
-}
-
-QColor Settings::planLineColor() {
-    return getSettings()->value("pilotDisplay/planLineColor", QColor::fromRgb(255, 170, 0)).value<QColor>();
-}
-
-void Settings::setPlanLineColor(const QColor& color) {
-    getSettings()->setValue("pilotDisplay/planLineColor", color);
-}
-
-void Settings::setDashedTrackInFront(bool value) {
-    getSettings()->setValue("pilotDisplay/dashedTrackInFront", value);
-}
-
-bool Settings::dashedTrackInFront() {
-    return getSettings()->value("pilotDisplay/dashedTrackInFront", true).toBool();
-}
-
-void Settings::setTrackFront(bool value) {
-    getSettings()->setValue("pilotDisplay/trackFront", value);
-}
-
-bool Settings::trackFront() {
-    return getSettings()->value("pilotDisplay/trackFront", true).toBool();
-}
-
-void Settings::setTrackAfter(bool value) {
-    getSettings()->setValue("pilotDisplay/trackAfter", value);
-}
-
-bool Settings::trackAfter() {
-    return getSettings()->value("pilotDisplay/trackAfter", true).toBool();
-}
-
 double Settings::timeLineStrength() {
     return getSettings()->value("pilotDisplay/timeLineStrength", 1.0).toDouble();
 }
@@ -890,26 +862,55 @@ void Settings::setTimeLineStrength(double value) {
     getSettings()->setValue("pilotDisplay/timeLineStrength", value);
 }
 
-double Settings::trackLineStrength() {
-    return getSettings()->value("pilotDisplay/trackLineStrength", 0).toDouble();
+QColor Settings::depLineColor() {
+    return getSettings()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127)).value<QColor>();
 }
 
-void Settings::setTrackLineStrength(double value) {
-    getSettings()->setValue("pilotDisplay/trackLineStrength", value);
+void Settings::setDepLineColor(const QColor& color) {
+    getSettings()->setValue("pilotDisplay/depLineColor", color);
 }
 
-double Settings::planLineStrength() {
-    return getSettings()->value("pilotDisplay/planLineStrength", 1).toDouble();
+QColor Settings::destLineColor() {
+    return getSettings()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0)).value<QColor>();
 }
 
-void Settings::setPlanLineStrength(double value) {
-    getSettings()->setValue("pilotDisplay/planLineStrength", value);
+void Settings::setDestLineColor(const QColor& color) {
+    getSettings()->setValue("pilotDisplay/destLineColor", color);
+}
+
+void Settings::setDepLineDashed(bool value) {
+    getSettings()->setValue("pilotDisplay/depLineDashed", value);
+}
+
+bool Settings::depLineDashed() {
+    return getSettings()->value("pilotDisplay/depLineDashed", false).toBool();
+}
+
+void Settings::setDestLineDashed(bool value) {
+    getSettings()->setValue("pilotDisplay/destLineDashed", value);
+}
+
+bool Settings::destLineDashed() {
+    return getSettings()->value("pilotDisplay/destLineDashed", true).toBool();
+}
+
+double Settings::depLineStrength() {
+    return getSettings()->value("pilotDisplay/depLineStrength", 1.).toDouble();
+}
+
+void Settings::setDepLineStrength(double value) {
+    getSettings()->setValue("pilotDisplay/depLineStrength", value);
+}
+
+double Settings::destLineStrength() {
+    return getSettings()->value("pilotDisplay/destLineStrength", 1.).toDouble();
+}
+
+void Settings::setDestLineStrength(double value) {
+    getSettings()->setValue("pilotDisplay/destLineStrength", value);
 }
 
 void Settings::getRememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom, int nr) {
-    if(xrot == 0 || yrot == 0 || zrot == 0 || zoom == 0)
-        return;
-
     *xrot = getSettings()->value("defaultMapPosition/xrot" + QString("%1").arg(nr), *xrot).toDouble();
     // ignore yRot: no Earth tilting
     //*yrot = getSettings()->value("defaultMapPosition/yrot" + QString("%1").arg(nr), *yrot).toDouble();

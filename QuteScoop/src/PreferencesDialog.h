@@ -28,6 +28,8 @@ private slots:
 
     // screenshots
     void on_cbShootScreenshots_toggled(bool checked);
+    void on_cbScreenshotFormat_currentIndexChanged(QString value);
+    void on_cbScreenshotMethod_currentIndexChanged(int index);
 
     // OpenGL settings
     void on_glTextures_toggled(bool checked);
@@ -138,13 +140,12 @@ private slots:
     void on_sbPilotDotSize_valueChanged(double value);
     void on_pbTimeLineColor_clicked();
     void on_sbTimeLineStrength_valueChanged(double value);
-    void on_pbTrackLineColor_clicked();
-    void on_sbTrackLineStrength_valueChanged(double value);
-    void on_pbPlanLineColor_clicked();
-    void on_sbPlanLineStrength_valueChanged(double value);
-    void on_cbDashedFrontAfter_currentIndexChanged(int index);
-    void on_cbTrackAfter_toggled(bool checked);
-    void on_cbTrackFront_toggled(bool checked);
+    void on_pbDepLineColor_clicked();
+    void on_pbDestLineColor_clicked();
+    void on_sbDepLineStrength_valueChanged(double value);
+    void on_sbDestLineStrength_valueChanged(double value);
+    void on_cbDepLineDashed_toggled(bool checked);
+    void on_cbDestLineDashed_toggled(bool checked);
     void on_applyPilots_clicked();
 
     // voice

@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Clients and Servers</string>
+   <string>Clients and servers</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
@@ -41,7 +41,7 @@
         <x>0</x>
         <y>0</y>
         <width>732</width>
-        <height>404</height>
+        <height>418</height>
        </rect>
       </property>
       <attribute name="label">
@@ -59,8 +59,14 @@
          </item>
          <item row="0" column="0">
           <widget class="QLabel" name="label">
+           <property name="font">
+            <font>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
            <property name="text">
-            <string>Search:</string>
+            <string>Search</string>
            </property>
            <property name="buddy">
             <cstring>editFilter</cstring>
@@ -130,7 +136,7 @@
         <x>0</x>
         <y>0</y>
         <width>125</width>
-        <height>144</height>
+        <height>131</height>
        </rect>
       </property>
       <attribute name="label">
@@ -145,7 +151,7 @@
             <string>Find the &quot;ping&quot; to the server, that is the time (in milliseconds) a packet needs to travel between you and the server. This is also called &quot;network lag&quot;</string>
            </property>
            <property name="text">
-            <string>&amp;Ping Servers</string>
+            <string>&amp;ping servers</string>
            </property>
           </widget>
          </item>
@@ -206,11 +212,11 @@
         <x>0</x>
         <y>0</y>
         <width>125</width>
-        <height>144</height>
+        <height>131</height>
        </rect>
       </property>
       <attribute name="label">
-       <string>&amp;Voice Servers</string>
+       <string>&amp;Voice servers</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <item>
@@ -221,7 +227,7 @@
             <string>Find the &quot;ping&quot; to the server, that is the time (in milliseconds) a packet needs to travel between you and the server. This is also called &quot;network lag&quot;</string>
            </property>
            <property name="text">
-            <string>&amp;Ping Servers</string>
+            <string>&amp;ping servers</string>
            </property>
           </widget>
          </item>

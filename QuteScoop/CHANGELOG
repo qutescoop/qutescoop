@@ -285,8 +285,8 @@ added:
 
 Version 2.0rc7:
 fixed:
-* online timespans are corrected (UTC vs. local time bug) (regression).
-* consistent Time Warp en-/disabling from menu vs. via the button or F8 key.
+* online timespans corrected (UTC vs. local time bug) (regression).
+* consistent Time Warp en-/disabling via menu, button or F8 key.
 changed:
 * remove filtering of ATC stations with _T or _X in the middle (I don't 
   know it was added once...)
@@ -309,6 +309,23 @@ added:
   file creators).
 * some more icons from the great Crystal Project iconset from Everaldo 
   Coelho, released under LGPL.
+
+Version 2.0rc8:
+changed:
+* lots of internal code refactoring with clarity and performance in mind.
+* cleaner options for route plotting. Should now be easier to grasp. If you
+  plot routes for one airport, new pilots to/from that airport will also
+  be plotted (convenience function to monitor one airport, e.g. for air-
+  port controllers)
+* hold zoom buttons for continuous zoom.
+added:
+* selectable screenshot method and -imageformat.
+* zoom by dragging with middle mouse button (the best method ever I guess).
+* allow to find controllers by their frequency or sector/FIR name (aka
+  "London") when searching.
+* show connected clients for servers and opened voice channels for voice
+  servers.
+* firlist.dat: NY_JBC (New York Oceanic).
 
 Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for

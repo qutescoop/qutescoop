@@ -7,25 +7,26 @@
 
 #include "_pch.h"
 
+// typedefs: needed to get the QPair template running inside foreach's
+typedef QPair<double, double> DoublePair;
+
 // modulo, but always positive, not like fmod()
 static double inline modPositive(double x, double y) {
-    if (0 == y)
+    if (qFuzzyIsNull(y))
         return x;
     return x - y * floor(x/y);
 }
-
 
 /* version information */
 #define CVS_REVISION "$Revision$" // Gets set automatically on commit of THIS file.
                                         // This is just the revision of THIS file, not the whole working copy.
                                         // Well, better than nothing. No working copy revision information is available cross-platform :(
 
-#define VERSION_NUMBER "2.0rc7.1"
+#define VERSION_NUMBER "2.0rc8"
 #define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
 
 /* mathematical constants */
-const GLdouble Pi = 3.14159265358979323846;
-const GLdouble Pi180 = Pi/180.0;
+const double Pi180 = M_PI/180.;
 
 /* 3D-calculations */
 #define SX(lat, lon)  cos((lat) * Pi180) * sin((lon) * Pi180)

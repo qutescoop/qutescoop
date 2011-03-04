@@ -26,14 +26,13 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 
     QStringList atisLines = atisMessage.split(QString::fromUtf8("^§")); // needed due to source encoded in UTF8 -
                                                                             // found after some headache...
-    if(atisLines.size() >= 1) {
-        voiceServer = atisLines[0];
-        QString atis = "";
-        for(int i = 1; i < atisLines.size(); i++) {
-            if(i > 1) atis += "<br>";
-            atis += atisLines[i];
-        }
-        atisMessage = atis;
+    atisMessage = "";
+    while (!atisLines.isEmpty()) {
+        QString line = atisLines.takeFirst();
+        if (line.startsWith("$ "))
+            voiceChannel = line.mid(2);
+        else
+            atisMessage += line + "<br>";
     }
 
     // do some magic for Controller Info like "online until"...
@@ -197,7 +196,7 @@ QString Controller::rank() const {
     }
 }
 
-QString Controller::toolTip() const {
+QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Name, C1)
     QString result = label;
     if (sector != 0)
         result += " [" + sector->name() + "]";
@@ -211,31 +210,28 @@ QString Controller::toolTip() const {
     return result;
 }
 
-QString Controller::mapLabel() const {
+QString Controller::mapLabel() const { // LOVV
     if(label.endsWith("_CTR") || label.endsWith("_FSS"))
         return label.left(label.length() - 4);
     return label;
 }
 
+bool Controller::matches(const QRegExp& regex) const {
+    if (frequency.contains(regex)) return true;
+    if (atisMessage.contains(regex)) return true;
+    if (sector != 0)
+        if (sector->name().contains(regex)) return true;
+    return MapObject::matches(regex);
+}
+
 QString Controller::voiceLink() const {
-    switch(Settings::voiceType()) {
-        case Settings::TEAMSPEAK: {
-            QStringList serverChannel = voiceServer.split("/");
-            return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
-                .arg(serverChannel.first())
-                .arg(Settings::voiceCallsign())
-                .arg(Settings::voiceUser()).arg(Settings::voicePassword())
-                .arg(serverChannel.last());
-        }
-
-        case Settings::VRC:
-            // insert something useful here - I dont know how vatsim voice works.
-            // should return something like vrc://server?user=user ...
-            // ...or something else that can be passed to system(). See ControllerDetails.cpp on how this is used
-            return QString();
-
-        case Settings::NONE:
-        default:
-            return QString();
-    }
+    if (Settings::voiceType() == Settings::TEAMSPEAK) {
+        QStringList serverChannel = voiceChannel.split("/");
+        return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
+            .arg(serverChannel.first())
+            .arg(Settings::voiceCallsign())
+            .arg(Settings::voiceUser()).arg(Settings::voicePassword())
+            .arg(serverChannel.last());
+    } else
+        return QString();
 }

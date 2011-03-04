@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>698</width>
-    <height>568</height>
+    <width>800</width>
+    <height>573</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,7 +70,7 @@
         <item row="2" column="0">
          <widget class="QLabel" name="lblDest">
           <property name="text">
-           <string>Des&amp;tination</string>
+           <string>des&amp;tination</string>
           </property>
           <property name="buddy">
            <cstring>edDest</cstring>
@@ -80,7 +80,7 @@
         <item row="0" column="0">
          <widget class="QLabel" name="lblDep">
           <property name="text">
-           <string>De&amp;parture</string>
+           <string>de&amp;parture</string>
           </property>
           <property name="buddy">
            <cstring>edDep</cstring>
@@ -268,7 +268,10 @@ p, li { white-space: pre-wrap; }
                <string>Based on the given Airac (nav database) cycle. Leave blank for standard.</string>
               </property>
               <property name="text">
-               <string>Airac cycle:</string>
+               <string>Airac cycle</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
               <property name="buddy">
                <cstring>edCycle</cstring>
@@ -407,11 +410,11 @@ Check their webpage for member vACCs.</string>
          </widget>
         </item>
         <item row="0" column="4">
-         <layout class="QVBoxLayout" name="verticalLayout_4">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QLabel" name="label_3">
             <property name="text">
-             <string>Your route:</string>
+             <string>your route</string>
             </property>
             <property name="wordWrap">
              <bool>true</bool>
@@ -431,7 +434,7 @@ Check their webpage for member vACCs.</string>
    <item>
     <widget class="QPushButton" name="buttonRequest">
      <property name="text">
-      <string>R&amp;equest</string>
+      <string>r&amp;equest</string>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -480,7 +483,7 @@ Check their webpage for member vACCs.</string>
         <item>
          <widget class="QPushButton" name="pbCopyToClipboard">
           <property name="text">
-           <string>&amp;Copy to clipboard</string>
+           <string>&amp;copy to clipboard</string>
           </property>
          </widget>
         </item>
@@ -504,7 +507,8 @@ Check their webpage for member vACCs.</string>
      <item>
       <widget class="QCheckBox" name="cbPlot">
        <property name="text">
-        <string>&amp;Plot route (see Preferences/Special)</string>
+        <string>&amp;plot route
+(see Preferences/Special)</string>
        </property>
       </widget>
      </item>
@@ -524,7 +528,7 @@ Check their webpage for member vACCs.</string>
         </sizepolicy>
        </property>
        <property name="text">
-        <string>Plotted OK.</string>
+        <string>plotted OK.</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>

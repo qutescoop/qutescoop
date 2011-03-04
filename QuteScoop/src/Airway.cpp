@@ -169,12 +169,11 @@ QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) co
 
 Waypoint* Airway::getClosestPointTo(double lat, double lon) const {
 	Waypoint* result = 0;
-	double minDist = 9999;
+	double minDist = 9999.;
 	for(int i = 0; i < waypoints.size(); i++) {
 		double d = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
-		if(d == 0) {
+		if(qFuzzyIsNull(d))
 			return waypoints[i];
-		}
 		if(d < minDist) {
 			minDist = d;
 			result = waypoints[i];

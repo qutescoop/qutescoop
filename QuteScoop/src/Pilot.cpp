@@ -12,8 +12,7 @@
 Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     Client(stringList, whazzup),
     onGround(false),
-    displayLineFromDep(false),
-    displayLineToDest(false)
+    showDepDestLine(false)
 {
     whazzupTime = QDateTime(whazzup->timestamp()); // need some local reference to that
 
@@ -132,7 +131,7 @@ Pilot::FlightStatus Pilot::flightStatus() const {
         return EN_ROUTE;
     if(!flying && groundspeed > 0 && arriving)
         return GROUND_ARR;
-    if(!flying && lat == 0 && lon == 0) // must be before BLOCKED
+    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) // must be before BLOCKED
         return PREFILED;
     if(!flying && groundspeed == 0 && arriving)
         return BLOCKED;
@@ -401,160 +400,38 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
 
 QStringList Pilot::waypoints() const {
     QStringList result = planRoute.split(QRegExp("([\\s\\+\\-\\.\\,]|//)"), QString::SkipEmptyParts);
-    if(result.isEmpty()) {
+    if(result.isEmpty())
         result.append("");
-    }
     return result;
 }
 
-void Pilot::positionInFuture(double *futureLat, double *futureLon, int seconds) const {
-    if(groundspeed == 0) {
-        *futureLat = lat;
-        *futureLon = lon;
-        return;
-    }
-
+QPair<double, double> Pilot::positionInFuture(int seconds) const {
     double dist = (double)groundspeed * ((double)seconds / 3600.0);
-    NavData::distanceTo(lat, lon, dist, trueHeading, futureLat, futureLon);
+    return NavData::pointDistanceBearing(lat, lon, dist, trueHeading);
 }
 
-void Pilot::toggleDisplayPath() {
-    if(displayLineToDest) {
-        displayLineFromDep = false;
-        displayLineToDest = false;
-    } else {
-        displayLineFromDep = true;
-        displayLineToDest = true;
-    }
-    if (PilotDetails::getInstance(false) != 0)
-        PilotDetails::getInstance(true)->refresh();
-}
-
-void Pilot::plotFlightPath() {
-    if(displayLineToDest && Settings::trackFront() && Settings::trackLineStrength() != 0.0)
-        plotPathToDest();
-
-    if(displayLineFromDep && Settings::trackAfter() && Settings::trackLineStrength() != 0.0)
-        plotPathFromDep();
-
-    if((displayLineToDest || displayLineFromDep) && Settings::planLineStrength() != 0.0)
-        plotPlannedLine();
-}
-
-void Pilot::plotPath(double lat1, double lon1, double lat2, double lon2) {
-    VERTEX(lat1, lon1);
-
-    double d = NavData::distance(lat1, lon1, lat2, lon2);
-    if(d < 1) return; // less than 1 mile - not worth plotting
-
-    double fractionIncrement = 30 / d; // one dot every 30nm
-    if(fractionIncrement > 1) fractionIncrement = 1;
-    double currentFraction = 0;
-
-    double myLat = lat1;
-    double myLon = lon1;
-    do {
-        currentFraction += fractionIncrement;
-        if(currentFraction > 1) currentFraction = 1;
-
-        if(currentFraction < 1) {
-            // don't plot last dot - we do that in the caller. Avoids plotting vertices twice
-            NavData::greatCirclePlotTo(lat1, lon1, lat2, lon2, currentFraction, &myLat, &myLon);
-            VERTEX(myLat, myLon);
-        }
-
-    } while(currentFraction < 1);
-}
-
-void Pilot::plotPathFromDep() {
-    if(Settings::trackLineStrength() == 0)
-        return;
-    if (lat == 0 && lon == 0)
-        return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
-
-    Airport *dep = depAirport();
-    if(dep == 0)
-        return; // dont know where to plot to - abort
-
-    double currLat = dep->lat;
-    double currLon = dep->lon;
-
-    if(!Settings::dashedTrackInFront())
-        glLineStipple(3, 0xAAAA);
-
-    QColor lineCol = Settings::trackLineColor();
-    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-    glLineWidth(Settings::trackLineStrength());
-    glBegin(GL_LINE_STRIP);
-
-        for(int i = 0; i < oldPositions.size(); i++) {
-            plotPath(currLat, currLon, oldPositions[i].first, oldPositions[i].second);
-            currLat = oldPositions[i].first;
-            currLon = oldPositions[i].second;
-        }
-
-        plotPath(currLat, currLon, lat, lon);
-        VERTEX(lat, lon);
-    glEnd();
-    glLineStipple(1, 0xFFFF);
-}
-
-void Pilot::plotPathToDest() {
-    if(Settings::trackLineStrength() == 0)
+void Pilot::plotDepDestLine() {
+    //if (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))
+    //    return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
+    QList<Waypoint*> waypoints = routeWaypoints();
+    if(depAirport() != 0)
+        waypoints.prepend(new Waypoint(depAirport()->label, depAirport()->lat, depAirport()->lon));
+    if(destAirport() != 0)
+        waypoints.append(new Waypoint(destAirport()->label, destAirport()->lat, destAirport()->lon));
+    if(waypoints.size() < 1) // either dep or dest should be known
         return;
 
-    Airport *dest = destAirport();
-    if(dest == 0)
-        return; // dont know where to plot to - abort
-    if (lat == 0 && lon == 0)
-        return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
-
-    QColor lineCol = Settings::trackLineColor();
-    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-
-    if(Settings::dashedTrackInFront())
-        glLineStipple(3, 0xAAAA);
-
-    glLineWidth(Settings::trackLineStrength());
-    glBegin(GL_LINE_STRIP);
-        plotPath(lat, lon, dest->lat, dest->lon);
-        VERTEX(dest->lat, dest->lon);
-    glEnd();
-    glLineStipple(1, 0xFFFF);
-}
-
-void Pilot::plotPlannedLine() {
-    if(Settings::planLineStrength() == 0)
-        return;
-    if (lat == 0 && lon == 0)
-        return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
-    QList<Waypoint*> points = routeWaypoints();
-    Airport* dep = depAirport();
-    if(dep != 0) {
-        Waypoint* depWp = new Waypoint(dep->label, dep->lat, dep->lon);
-        points.prepend(depWp);
-    }
-    Airport* dest = destAirport();
-    if(dest != 0) {
-        Waypoint* destWp = new Waypoint(dest->label, dest->lat, dest->lon);
-        points.append(destWp);
-    }
-
-    if(points.size() < 2)
-        return;
-
-    // find the nextPoint on his route after the present plane position
-    int nextPoint = 1; // first point as default
+    int nextPoint = qMin(1, waypoints.size()); // find the nextPoint on his route after the present plane position
     // calculate first point behind plane
-    if(lat == 0 && lon == 0) {
+    if(qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) {
         nextPoint = 1; // prefiled flight or no known position
     } else {
         // find the point that is nearest to the plane
-        double minDist = NavData::distance(lat, lon, points[0]->lat, points[0]->lon);
+        double minDist = NavData::distance(lat, lon, waypoints[0]->lat, waypoints[0]->lon);
         int minPoint = 0; // next to departure as default
-        for(int i = 1; i < points.size(); i++) {
-            if(NavData::distance(lat, lon, points[i]->lat, points[i]->lon) < minDist) {
-                minDist = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
+        for(int i = 1; i < waypoints.size(); i++) {
+            if(NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon) < minDist) {
+                minDist = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
                 minPoint = i;
             }
         }
@@ -562,16 +439,16 @@ void Pilot::plotPlannedLine() {
         // with the nearest point, look which one is the next point ahead - saves from trouble with zig-zag routes
         if(minPoint == 0) {
             nextPoint = 1;
-        } else if(minPoint == points.size() - 1) {
-            nextPoint = points.size() - 1;
+        } else if(minPoint == waypoints.size() - 1) {
+            nextPoint = waypoints.size() - 1;
         } else {
             nextPoint = minPoint + 1; // default
             // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
             int courseRoute, courseToPlane, courseDeviation;
             for(int i = minPoint - 1; i <= minPoint; i++) {
-                courseRoute = (int) NavData::courseTo(points[i]->lat, points[i]->lon, points[i + 1]->lat, points[i + 1]->lon);
-                courseToPlane = (int) NavData::courseTo(points[i]->lat, points[i]->lon, lat, lon);
-                courseDeviation = (abs(courseRoute - courseToPlane)) % 360;
+                courseRoute = (int) NavData::courseTo(waypoints[i]->lat, waypoints[i]->lon, waypoints[i + 1]->lat, waypoints[i + 1]->lon);
+                courseToPlane = (int) NavData::courseTo(waypoints[i]->lat, waypoints[i]->lon, lat, lon);
+                courseDeviation = (qAbs(courseRoute - courseToPlane)) % 360;
                 if (courseDeviation > 90) {
                     nextPoint = i;
                     break;
@@ -580,56 +457,50 @@ void Pilot::plotPlannedLine() {
         }
     }
 
-    // prepare the line
-    QColor lineCol = Settings::planLineColor();
-    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-    glLineWidth(Settings::planLineStrength());
-
-    double currLat = points[0]->lat, currLon = points[0]->lon;
-    if(Settings::trackAfter()) {
-        if(!Settings::dashedTrackInFront())
-            glLineStipple(3, 0xAAAA);
-
-        // actually draw the line
-        glBegin(GL_LINE_STRIP);
-            VERTEX(points[0]->lat, points[0]->lon);
-
-            // route before plane
-            for(int i = 0; i < nextPoint; i++) {
-                if(Settings::trackFront())
-                    plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
-                currLat = points[i]->lat; currLon = points[i]->lon;
-            }
-            // part between: draw to plane if position valid
-            if(lat != 0 && lon != 0) {
-                if(Settings::trackAfter())
-                    plotPath(currLat, currLon, lat, lon);
-                currLat = lat; currLon = lon;
-            }
-            VERTEX(currLat, currLon);
-        glEnd();
+    QList<DoublePair> points; // these are the points that really get drawn
+    if (depAirport() != 0) { // Dep -> plane
+        if (Settings::depLineStrength() > 0. && (showDepDestLine || depAirport()->showFlightLines)) {
+            for (int i = 0; i < nextPoint; i++)
+                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
+        }
     }
 
-    if(Settings::trackFront()) {
-        // change line type
-        if(Settings::dashedTrackInFront())
+    if (!qFuzzyIsNull(lat) && !qFuzzyIsNull(lon)) { // plane ok: draw to plane and reset list for DestLine
+        points.append(DoublePair(lat, lon));
+
+        if (Settings::depLineDashed())
             glLineStipple(3, 0xAAAA);
-        else
+        QColor lineCol = Settings::depLineColor();
+        glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
+        glLineWidth(Settings::depLineStrength());
+        glBegin(GL_LINE_STRIP);
+        NavData::plotPointsOnEarth(points);
+        glEnd();
+        if(Settings::depLineDashed())
             glLineStipple(1, 0xFFFF);
 
-        // route behind plane
-        glBegin(GL_LINE_STRIP);
-            currLat = lat; currLon = lon;
-            VERTEX(currLat, currLon);
-            for(int i = nextPoint; i < points.size(); i++) {
-                plotPath(currLat, currLon, points[i]->lat, points[i]->lon);
-                currLat = points[i]->lat; currLon = points[i]->lon;
-            }
-            VERTEX(currLat, currLon);
-        glEnd();
+        points.clear();
+        points.append(DoublePair(lat, lon));
     }
-    glLineStipple(1, 0xFFFF);
+
+    if (destAirport() != 0) { // plane -> Dest
+        if (Settings::destLineStrength() > 0. && (showDepDestLine || destAirport()->showFlightLines)) {
+            for (int i = nextPoint; i < waypoints.size(); i++)
+                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
+            if (Settings::destLineDashed())
+                glLineStipple(3, 0xAAAA);
+            QColor lineCol = Settings::destLineColor();
+            glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
+            glLineWidth(Settings::destLineStrength());
+            glBegin(GL_LINE_STRIP);
+            NavData::plotPointsOnEarth(points);
+            glEnd();
+            if(Settings::destLineDashed())
+                glLineStipple(1, 0xFFFF);
+        }
+    }
 }
+
 
 QList<Waypoint*> Pilot::routeWaypoints() {
     //qDebug() << "Pilot::routeWaypoints()" << label;
