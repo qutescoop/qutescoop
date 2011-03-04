@@ -192,6 +192,9 @@ double NavData::courseTo(double lat1, double lon1, double lat2, double lon2) {
 
 QPair<double, double> NavData::greatCircleFraction(double lat1, double lon1, double lat2, double lon2,
                                   double f) {
+    if (qFuzzyCompare(lat1, lat2) && qFuzzyCompare(lon1, lon2))
+        return QPair<double, double>(lat1, lon1);
+
     lat1 *= Pi180;
     lon1 *= Pi180;
     lat2 *= Pi180;
@@ -219,8 +222,10 @@ void NavData::loadDatabase(const QString& directory) {
 
 QList<QPair<double, double> > NavData::greatCirclePoints(double lat1, double lon1, double lat2, double lon2,
                                                          double pointEachNm) { // omits last point
-    double fractionIncrement = qMin(1., pointEachNm / NavData::distance(lat1, lon1, lat2, lon2));
     QList<QPair<double, double> > result;
+    if (qFuzzyCompare(lat1, lat2) && qFuzzyCompare(lon1, lon2))
+        return (result << QPair<double, double>(lat1, lon1));
+    double fractionIncrement = qMin(1., pointEachNm / NavData::distance(lat1, lon1, lat2, lon2));
     for (double currentFraction = 0.; currentFraction < 1.; currentFraction += fractionIncrement)
         result.append(greatCircleFraction(lat1, lon1, lat2, lon2, currentFraction));
     return result;

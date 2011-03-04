@@ -282,7 +282,7 @@
         </launchBrowser>
         <launchBrowser>
             <explanation>View the QuteScoop project page</explanation>
-            <url>http://sourceforge.net/projects/qutescoop</url>
+            <url>http://qutescoop.sourceforge.net</url>
         </launchBrowser>
         <launchBrowser>
             <explanation>Visit the most active QuteScoop-users forum</explanation>

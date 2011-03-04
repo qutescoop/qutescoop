@@ -10,6 +10,8 @@
 #include "helpers.h"
 #include "Settings.h"
 
+
+/* logging */
 QFile *logFile = new QFile();
 QByteArray cacheLogByteArray;
 void myMessageOutput(QtMsgType type, const char *msg)
@@ -26,7 +28,9 @@ void myMessageOutput(QtMsgType type, const char *msg)
     // log.txt output
     if (logFile->isWritable()) {
         logFile->write(output.append("\n"));
-        logFile->flush(); // make sure the last messages before a crash are written
+        // deactivate this during testing if you are sending a lot of debug messages.
+        logFile->flush(); // make sure all messages are written. Mind the DebugLogBrowser that
+                    // depends on finding a complete file when opened.
     } else // write to buffer while logFile not yet available
         cacheLogByteArray.append(output.append("\n"));
 
@@ -48,6 +52,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
     qInstallMsgHandler(myMessageOutput);
 }
 
+
+/* main */
 int main(int argc, char *argv[]) {
     QT_REQUIRE_VERSION(argc, argv, "4.7.0")
     QApplication app(argc, argv);
@@ -64,7 +70,8 @@ int main(int argc, char *argv[]) {
 
     // some initial debug logging
     cacheLogByteArray.append(VERSION_STRING + "\n");
-    cacheLogByteArray.append(QString("Compiled on Qt %1, running on Qt %2.\n").arg(QT_VERSION_STR, qVersion()));
+    cacheLogByteArray.append(QString("Compiled on Qt %1, running on Qt %2.\n")
+                             .arg(QT_VERSION_STR, qVersion()));
 #ifdef QT_NO_DEBUG
     cacheLogByteArray.append("COMPILED IN RELEASE MODE - this is best performance-wise.\n");
 #endif
@@ -72,9 +79,11 @@ int main(int argc, char *argv[]) {
     cacheLogByteArray.append("COMPILED IN DEBUG MODE - performance might be degraded.\n");
 #endif
 #ifdef QT_NO_DEBUG_OUTPUT
-    cacheLogByteArray.append("COMPILED WITHOUT DEBUG OUTPUT - no debug messages will be captured.\n");
+    cacheLogByteArray.append(
+             "COMPILED WITHOUT DEBUG OUTPUT - no debug messages will be captured.\n");
 #endif
-    cacheLogByteArray.append("message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n\n");
+    cacheLogByteArray.append(
+             "message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n\n");
 
     // directories
     Settings::calculateApplicationDataDirectory();
@@ -85,7 +94,8 @@ int main(int argc, char *argv[]) {
     logFile->write(cacheLogByteArray); // debug messages ended up there until now
     logFile->flush();
 
-    qDebug() << "Expecting application data directory at" << Settings::applicationDataDirectory() << "(gets calculated on each start)";
+    qDebug() << "Expecting application data directory at" 
+             << Settings::applicationDataDirectory() << "(gets calculated on each start)";
 
     // splash screen
     QPixmap pixmap(":/splash/splash");
