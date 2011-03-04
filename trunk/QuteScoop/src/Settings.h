@@ -34,6 +34,12 @@ public:
     static bool shootScreenshots();
     static void setShootScreenshots(bool value);
 
+    static int screenshotMethod();
+    static void setScreenshotMethod(int value);
+
+    static QString screenshotFormat();
+    static void setScreenshotFormat(const QString &value);
+
     static int downloadInterval();
     static void setDownloadInterval(int value);
 
@@ -283,29 +289,26 @@ public:
     static QColor timeLineColor();
     static void setTimeLineColor(const QColor& color);
 
-    static QColor trackLineColor();
-    static void setTrackLineColor(const QColor& color);
+    static QColor depLineColor();
+    static void setDepLineColor(const QColor& color);
 
-    static QColor planLineColor();
-    static void setPlanLineColor(const QColor& color);
+    static QColor destLineColor();
+    static void setDestLineColor(const QColor& color);
 
     static double timeLineStrength();
     static void setTimeLineStrength(double value);
 
-    static double trackLineStrength();
-    static void setTrackLineStrength(double value);
+    static double depLineStrength();
+    static void setDepLineStrength(double value);
 
-    static double planLineStrength();
-    static void setPlanLineStrength(double value);
+    static double destLineStrength();
+    static void setDestLineStrength(double value);
 
-    static void setDashedTrackInFront(bool value);
-    static bool dashedTrackInFront();
+    static bool depLineDashed();
+    static void setDepLineDashed(bool value);
 
-    static void setTrackFront(bool value);
-    static bool trackFront();
-
-    static void setTrackAfter(bool value);
-    static bool trackAfter();
+    static bool destLineDashed();
+    static void setDestLineDashed(bool value);
 
     // -- General
     static bool checkForUpdates();

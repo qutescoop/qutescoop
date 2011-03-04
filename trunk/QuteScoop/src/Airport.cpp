@@ -65,7 +65,6 @@ void Airport::resetWhazzupStatus() {
 void Airport::addArrival(Pilot* client) {
     if(!arrivals.contains(client)) {
         arrivals.append(client);
-        if (showFlightLines) client->displayLineToDest = true;
         active = true;
     }
 }
@@ -73,7 +72,6 @@ void Airport::addArrival(Pilot* client) {
 void Airport::addDeparture(Pilot* client) {
     if(!departures.contains(client)) {
         departures.append(client);
-        if (showFlightLines) client->displayLineFromDep = true;
         active = true;
     }
 }
@@ -146,7 +144,6 @@ const GLuint& Airport::getTwrDisplayList() {
     }
 
     glBegin(GL_TRIANGLE_FAN);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
     glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
     glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
     glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
@@ -229,7 +226,6 @@ const GLuint& Airport::getDelDisplayList() {
     }
 
     glBegin(GL_TRIANGLE_FAN);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE);
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
     for(int i = 0; i < points.size(); i++) {
@@ -295,21 +291,14 @@ void Airport::showDetailsDialog() {
 }
 
 QList<Controller*> Airport::getAllControllers() const {
-    QList<Controller*> result;
-
-    //result += centers;
-    result += approaches;
-    result += towers;
-    result += grounds;
-    result += deliveries;
-
-    return result;
+    return QList<Controller*> () << approaches << towers << grounds << deliveries;
+    // << centers;
 }
 
 bool Airport::matches(const QRegExp& regex) const {
-    if(name.contains(regex)) return true;
-    if(city.contains(regex)) return true;
-    if(countryCode.contains(regex)) return true;
+    if (name.contains(regex)) return true;
+    if (city.contains(regex)) return true;
+    if (countryCode.contains(regex)) return true;
     return MapObject::matches(regex);
 }
 
@@ -318,31 +307,13 @@ QString Airport::mapLabel() const {
     if(!this->active || numFilteredArrivals + numFilteredDepartures == 0)
         return label;
 
-    if(!numFilteredArrivals) result += " -/";
-    else result += QString(" %1/").arg(numFilteredArrivals);
-
-    if(!numFilteredDepartures) result += "-";
-    else result += QString("%1").arg(numFilteredDepartures);
-
+    if (Settings::filterTraffic())
+        result += QString(" %1/%2").arg(numFilteredArrivals? QString::number(numFilteredArrivals): "-")
+                  .arg(numFilteredDepartures? QString::number(numFilteredDepartures): "-");
+    else
+        result += QString(" %1/%2").arg(arrivals.isEmpty()? "-": QString::number(arrivals.size()))
+                  .arg(departures.isEmpty()? "-": QString::number(departures.size()));
     return result;
-}
-
-void Airport::setDisplayFlightLines(bool show) {
-    showFlightLines = show;
-    for(int i = 0; i < arrivals.size(); i++) {
-        if (arrivals[i] != 0)
-            arrivals[i]->displayLineToDest = show;
-    }
-    for(int i = 0; i < departures.size(); i++) {
-        if (departures[i] != 0)
-            departures[i]->displayLineFromDep = show;
-    }
-    //AirportDetails::getInstance(true)->refresh();
-}
-
-void Airport::refreshAfterUpdate() {
-    if(showFlightLines)
-        setDisplayFlightLines(true);
 }
 
 QString Airport::toolTip() const {

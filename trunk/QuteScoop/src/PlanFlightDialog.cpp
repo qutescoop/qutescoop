@@ -45,6 +45,8 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
     connect(treeRoutes, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
 
+    pbVatsimPrefile->setVisible(Settings::downloadNetwork() == 1); // only for VATSIM
+
     lblPlotStatus->setText(QString(""));
     linePlotStatus->setVisible(false);
     gbResults->setTitle("Results");
@@ -313,35 +315,20 @@ void PlanFlightDialog::routeSelected(const QModelIndex& index) {
 
 void PlanFlightDialog::plotPlannedRoute() const {
     if(selectedRoute == 0) {
-        lblPlotStatus->setText("No route to plot");
+        lblPlotStatus->setText("no route to plot");
         return;
     }
-
-    lblPlotStatus->setText(QString("Route waypoints (calculated): %1").arg(selectedRoute->waypointsStr));
-
+    lblPlotStatus->setText(QString("waypoints (calculated): %1").arg(selectedRoute->waypointsStr));
     if(selectedRoute->waypoints.size() < 2)
         return;
-
-    QColor lineCol = QColor(255, 0, 0, 255);//Settings::planLineColor();
-    glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-
-    glLineWidth(Settings::planLineStrength() * 2 + 2);
-    if(!Settings::dashedTrackInFront())
-        glLineStipple(3, 0xAAAA);
-
+    glColor4f(1., 0., 0., 1.);
+    glLineWidth(3.);
     glBegin(GL_LINE_STRIP);
-        double currLat = selectedRoute->waypoints[0]->lat;
-        double currLon = selectedRoute->waypoints[0]->lon;
-        for(int i = 0; i < selectedRoute->waypoints.size(); i++) {
-            NavData::plotPath(currLat, currLon,
-                              selectedRoute->waypoints[i]->lat, selectedRoute->waypoints[i]->lon);
-            currLat = selectedRoute->waypoints[i]->lat;
-            currLon = selectedRoute->waypoints[i]->lon;
-        }
-        VERTEX(currLat, currLon);
-
+    QList<DoublePair> points;
+    foreach (Waypoint *wp, selectedRoute->waypoints)
+        points.append(DoublePair(wp->lat, wp->lon));
+    NavData::plotPointsOnEarth(points);
     glEnd();
-    glLineStipple(1, 0xFFFF);
 }
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {

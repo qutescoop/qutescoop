@@ -1050,40 +1050,37 @@ void Window::on_actionZoomReset_triggered(){
     glWidget->zoomTo(2.);
 }
 
-void Window::updateGLPilots() {
-    glWidget->createPilotsList();
-    glWidget->updateGL();
-}
-
 void Window::shootScreenshot() {
     QString filename = Settings::applicationDataDirectory(
             QString("screenshots/%1_%2")
             .arg(Settings::downloadNetwork())
             .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss")));
 
-    // variant 1: only works if QuteScoop Window is shown on top
-    QPixmap::grabWindow(glWidget->winId()).save(QString("%1.png").arg(filename), "png");
-//    glWidget->renderPixmap().save(QString("%1-openGL.png").arg(filename), "png", true);
-//    glWidget->grabFrameBuffer(true).save(QString("%1-frameBuffer.png").arg(filename), "png");
+    if (Settings::screenshotMethod() == 0)
+        QPixmap::grabWindow(glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+                                                    Settings::screenshotFormat().toAscii());
+    else if (Settings::screenshotMethod() == 1)
+        glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+                                      Settings::screenshotFormat().toAscii(), true);
+    else if (Settings::screenshotMethod() == 2)
+        glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+                                             Settings::screenshotFormat().toAscii());
     qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
 }
 
-void Window::on_actionShowRoutes_triggered(bool checked)
-{
-    showGuiMessage("Toggled ALL routes", GuiMessage::Temporary, "calcRoutes");
-    if (checked) {
-        QList<Airport*> airports = NavData::getInstance()->airports().values();
-        for(int i = 0; i < airports.size(); i++) {
-            if(airports[i] != 0)
-                airports[i]->setDisplayFlightLines(checked);
-        }
-    } else {
-        QList<Airport*> airports = NavData::getInstance()->airports().values();
-        for(int i = 0; i < airports.size(); i++) {
-            if(airports[i] != 0)
-                airports[i]->setDisplayFlightLines(checked);
+void Window::on_actionShowRoutes_triggered(bool checked) {
+    showGuiMessage("Toggled ALL routes");
+    foreach (Airport *a, NavData::getInstance()->airports().values()) {
+        if(a != 0) // synonym to "toggle routes" on all airports
+            a->showFlightLines = checked;
+    }
+    if (!checked) { // when disabled, this shall clear all routes
+        foreach (Pilot *p, Whazzup::getInstance()->whazzupData().getAllPilots()) {
+            if(p != 0) // synonym to "toggle routes" on all airports
+                p->showDepDestLine = false;
         }
     }
+
     // adjust the "plot route" tick in dialogs
     if (AirportDetails::getInstance(false) != 0)
         AirportDetails::getInstance(true)->refresh();

@@ -26,7 +26,7 @@
      <item>
       <widget class="QGroupBox" name="groupBox_4">
        <property name="title">
-        <string>Airport Information</string>
+        <string>Airport information</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -41,7 +41,10 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>Name:</string>
+           <string>name</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -62,7 +65,10 @@ Kranebitten</string>
         <item row="1" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
-           <string>Country:</string>
+           <string>country</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -82,7 +88,10 @@ Kranebitten</string>
         <item row="2" column="0">
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Location:</string>
+           <string>location</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -103,7 +112,10 @@ E009° 37.21'</string>
         <item row="3" column="0">
          <widget class="QLabel" name="label_6">
           <property name="text">
-           <string>Time (est.):</string>
+           <string>time (est.)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -197,7 +209,7 @@ E009° 37.21'</string>
           <item>
            <widget class="QCheckBox" name="cbAtis">
             <property name="text">
-             <string>Show
+             <string>show
 &amp;ATIS</string>
             </property>
             <property name="checked">
@@ -208,7 +220,7 @@ E009° 37.21'</string>
           <item>
            <widget class="QCheckBox" name="cbObservers">
             <property name="text">
-             <string>Show 
+             <string>show 
 &amp;OBS</string>
             </property>
            </widget>
@@ -314,7 +326,7 @@ E009° 37.21'</string>
         <string>Center Map and zoom in on this Airport</string>
        </property>
        <property name="text">
-        <string>Show on &amp;Map</string>
+        <string>show on &amp;map</string>
        </property>
        <property name="shortcut">
         <string>S</string>
@@ -330,7 +342,7 @@ E009° 37.21'</string>
         <string>Will be displayed in the Metar Decoder Widget</string>
        </property>
        <property name="text">
-        <string>Get M&amp;ETAR</string>
+        <string>get M&amp;ETAR</string>
        </property>
       </widget>
      </item>
@@ -340,7 +352,7 @@ E009° 37.21'</string>
         <string>Also accessible by right click on the airport label. (Uses Navigation Database if available)</string>
        </property>
        <property name="text">
-        <string>Plot &amp;Routes</string>
+        <string>plot &amp;routes</string>
        </property>
       </widget>
      </item>

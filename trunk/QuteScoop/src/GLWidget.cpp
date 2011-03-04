@@ -26,7 +26,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         controllerLabelZoomTreshold(2), fixZoomTreshold(0.05),
         plotFlightPlannedRoute(false),
         allSectorsDisplayed(false),
-        mapIsMoving(false), isRectangleSelecting(false),
+        mapIsMoving(false), mapIsZooming(false), mapIsRectangleSelecting(false),
         shutDownAnim_t(0)
 {
     setAutoFillBackground(false);
@@ -128,7 +128,7 @@ bool GLWidget::mouse2latlon(int x, int y, double &lat, double &lon) const {
 
     // 4) now to lat/lon
     lat = qAtan(-z0 / qSqrt(1 - (z0*z0))) * 180 / M_PI;
-    lon = qAtan(-x0 / y0) * 180 / Pi - 90;
+    lon = qAtan(-x0 / y0) * 180 / M_PI - 90;
 
     // 5) atan might have lost the sign
     if (xGl >= 0)
@@ -209,41 +209,34 @@ void GLWidget::createPilotsList() {
     glPointSize(Settings::pilotDotSize());
     glBegin(GL_POINTS);
     qglColor(Settings::pilotDotColor());
-    for (int i = 0; i < pilots.size(); i++) {
-        const Pilot *p = pilots[i];
-        if (p->lat != 0 && p->lon != 0)
+    foreach (Pilot *p, pilots)
+        if (!qFuzzyIsNull(p->lat) || !qFuzzyIsNull(p->lon))
             VERTEX(p->lat, p->lon);
-    }
     glEnd();
 
     // timelines
-    int seconds = Settings::timelineSeconds();
-    if(seconds > 0) {
+    if(Settings::timelineSeconds() > 0) {
         glLineWidth(Settings::timeLineStrength());
         glBegin(GL_LINES);
         qglColor(Settings::timeLineColor());
-        for (int i = 0; i < pilots.size(); i++) {
-            const Pilot *p = pilots[i];
-            if(p->groundspeed < 30)
-                continue;
-            VERTEX(p->lat, p->lon);
-            double lat, lon;
-            p->positionInFuture(&lat, &lon, seconds);
-            VERTEX(lat, lon);
+        foreach (Pilot *p, pilots) {
+            if (p->groundspeed > 30 && (!qFuzzyIsNull(p->lat) || !qFuzzyIsNull(p->lon))) {
+                VERTEX(p->lat, p->lon);
+                QPair<double, double> pos = p->positionInFuture(Settings::timelineSeconds());
+                VERTEX(pos.first, pos.second);
+            }
         }
         glEnd();
     }
 
     // flight paths, also for booked flights
     pilots = Whazzup::getInstance()->whazzupData().getAllPilots();
-    for (int i = 0; i < pilots.size(); i++) {
-        Pilot *p = pilots[i];
-        p->plotFlightPath();
-    }
+    foreach (Pilot *p, pilots)
+        p->plotDepDestLine();
 
     // planned route from Flightplan Dialog
     if(plotFlightPlannedRoute)
-        PlanFlightDialog::getInstance()->plotPlannedRoute();
+        PlanFlightDialog::getInstance(true)->plotPlannedRoute();
 
     glEndList();
     qDebug() << "GLWidget::createPilotsList() -- finished";
@@ -451,7 +444,8 @@ void GLWidget::createObjects(){
     gluQuadricNormals(earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     gluQuadricOrientation(earthQuad, GLU_OUTSIDE); // GLU_INSIDE
     if (Settings::glTextures()) {
-        QString earthTexFile = Settings::applicationDataDirectory(QString("textures/%1").arg(Settings::glTextureEarth()));
+        QString earthTexFile = Settings::applicationDataDirectory(
+                QString("textures/%1").arg(Settings::glTextureEarth()));
         QImage earthTexIm = QImage(earthTexFile);
         if (earthTexIm.isNull())
             qWarning() << "Unable to load texture file" << earthTexFile;
@@ -775,7 +769,7 @@ void GLWidget::paintGL() {
 
 	renderLabels();
 
-	if (isRectangleSelecting)
+	if (mapIsRectangleSelecting)
 		drawSelectionRectangle();
 
     //drawCoordinateAxii(); // use this to see where the axii are (x = red, y = green, z = blue)
@@ -795,33 +789,39 @@ void GLWidget::resizeGL(int width, int height) {
 // SLOTS: mouse, key... and general user-map interaction
 //
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    if(event->buttons().testFlag(Qt::RightButton) || event->buttons().testFlag(Qt::MiddleButton)) { // rotate
+    if(event->buttons().testFlag(Qt::RightButton)) { // rotate
         mapIsMoving = true;
         handleRotation(event);
+    } else if (event->buttons().testFlag(Qt::MiddleButton)) { // zoom
+        mapIsZooming = true;
+        zoomIn((event->x() - lastPos.x() - event->y() + lastPos.y()) / 100.);
+        lastPos = event->pos();
     } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
-        isRectangleSelecting = true;
+        mapIsRectangleSelecting = true;
         updateGL();
     }
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
     QToolTip::hideText();
-    if (mapIsMoving || isRectangleSelecting) {
+    if (mapIsMoving || mapIsZooming || mapIsRectangleSelecting) {
         mapIsMoving = false;
-        isRectangleSelecting = false;
+        mapIsZooming = false;
+        mapIsRectangleSelecting = false;
         updateGL();
     }
-    if (!isRectangleSelecting)
+    if (!mapIsRectangleSelecting)
         lastPos = mouseDownPos = event->pos();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     QToolTip::hideText();
     if (mapIsMoving) {
-        emit newPosition();
         mapIsMoving = false;
-    } else if (isRectangleSelecting) {
-        isRectangleSelecting = false;
+    } else if (mapIsZooming) {
+        mapIsZooming = false;
+    } else if (mapIsRectangleSelecting) {
+        mapIsRectangleSelecting = false;
         if (event->pos() != mouseDownPos) {
             double downLat, downLon;
             if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
@@ -888,7 +888,7 @@ void GLWidget::rightClick(const QPoint& pos) {
     if(countRelevant != 1) return; // ambiguous search result
     if(airport != 0) {
         emit hasGuiMessage(QString("Toggled routes for %1").arg(airport->label));
-        airport->setDisplayFlightLines(!airport->showFlightLines);
+        airport->showFlightLines = !airport->showFlightLines;
         createPilotsList();
         updateGL();
         return;
@@ -896,7 +896,7 @@ void GLWidget::rightClick(const QPoint& pos) {
     if(pilot != 0) {
         // display flight path for pilot
         emit hasGuiMessage(QString("Toggled route for %1").arg(pilot->label));
-        pilot->toggleDisplayPath();
+        pilot->showDepDestLine = !pilot->showDepDestLine;
         createPilotsList();
         updateGL();
         return;
@@ -947,7 +947,7 @@ bool GLWidget::event(QEvent *event) {
 }
 
 void GLWidget::zoomIn(double factor) {
-    zoom -= zoom * .2 * factor * Settings::zoomFactor();
+    zoom -= zoom * qMax(-.6, qMin(.6, .2 * factor * Settings::zoomFactor()));
     resetZoom();
     updateGL();
 }
@@ -1075,7 +1075,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
     double lat, lon; if(!mouse2latlon(x, y, lat, lon)) // returns false if not on globe
         return result;
 
-    double radiusDeg = Nm2Deg((radius == 0? 30. * zoom: radius));
+    double radiusDeg = Nm2Deg((qFuzzyIsNull(radius)? 30. * zoom: radius));
     radiusDeg *= radiusDeg;
 
     foreach (Airport* a, NavData::getInstance()->airports().values()) {
@@ -1126,20 +1126,20 @@ void GLWidget::drawSelectionRectangle() {
 	if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
 		double currLat, currLon;
 		if (mouse2latlon(current.x(), current.y(), currLat, currLon)) {
+			QList<QPair<double, double> > points;
+			points.append(NavData::greatCirclePoints(downLat, downLon, currLat, downLon));
+			points.append(NavData::greatCirclePoints(currLat, downLon, currLat, currLon));
+			points.append(NavData::greatCirclePoints(currLat, currLon, downLat, currLon));
+			points.append(NavData::greatCirclePoints(downLat, currLon, downLat, downLon));
 			glColor4f(0., 1., 1., .5);
 			glBegin(GL_POLYGON);
-			NavData::plotPath(downLat, downLon, currLat, downLon);
-			NavData::plotPath(currLat, downLon, currLat, currLon);
-			NavData::plotPath(currLat, currLon, downLat, currLon);
-			NavData::plotPath(downLat, currLon, downLat, downLon);
+			Tessellator().tessellate(points);
 			glEnd();
 			glLineWidth(2.);
 			glColor4f(0., 1., 1., 1.);
 			glBegin(GL_LINE_LOOP);
-			NavData::plotPath(downLat, downLon, currLat, downLon);
-			NavData::plotPath(currLat, downLon, currLat, currLon);
-			NavData::plotPath(currLat, currLon, downLat, currLon);
-			NavData::plotPath(downLat, currLon, downLat, downLon);
+			foreach (DoublePair p, points)
+				VERTEX(p.first, p.second);
 			glEnd();
 		}
 	}

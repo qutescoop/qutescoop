@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>814</width>
-    <height>787</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -318,6 +318,12 @@ Whazzups (replay)</string>
        <iconset resource="Resources.qrc">
         <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
       </property>
+      <property name="autoRepeat">
+       <bool>true</bool>
+      </property>
+      <property name="autoRepeatDelay">
+       <number>100</number>
+      </property>
       <property name="popupMode">
        <enum>QToolButton::InstantPopup</enum>
       </property>
@@ -356,6 +362,12 @@ Whazzups (replay)</string>
        <iconset resource="Resources.qrc">
         <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
       </property>
+      <property name="autoRepeat">
+       <bool>true</bool>
+      </property>
+      <property name="autoRepeatDelay">
+       <number>100</number>
+      </property>
       <property name="popupMode">
        <enum>QToolButton::InstantPopup</enum>
       </property>
@@ -368,7 +380,7 @@ Whazzups (replay)</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>814</width>
+     <width>800</width>
      <height>25</height>
     </rect>
    </property>
@@ -662,6 +674,9 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
@@ -749,7 +764,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/refresh16.png</normaloff>:/icons/images/refresh16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Refresh Network Status</string>
+    <string>&amp;Refresh network status</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -790,7 +805,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/search16.png</normaloff>:/icons/images/search16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Search Dock...</string>
+    <string>&amp;Search dock...</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
@@ -808,7 +823,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/fullscreen16.png</normaloff>:/icons/images/fullscreen16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Toggle Fullscreen</string>
+    <string>&amp;Toggle fullscreen</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F11</string>
@@ -826,7 +841,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Metar Dock...</string>
+    <string>&amp;Metar dock...</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -838,7 +853,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
    </property>
    <property name="text">
-    <string>Zoom &amp;In</string>
+    <string>Zoom &amp;in</string>
    </property>
    <property name="shortcut">
     <string>Ctrl++</string>
@@ -850,7 +865,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
    </property>
    <property name="text">
-    <string>Zoom &amp;Out</string>
+    <string>Zoom &amp;out</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+-</string>
@@ -858,7 +873,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberPosition">
    <property name="text">
-    <string>Default Map Position</string>
+    <string>Default map position</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+1</string>
@@ -866,7 +881,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionHideAllWindows">
    <property name="text">
-    <string>Hide all &amp;Windows</string>
+    <string>Hide all &amp;windows</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
@@ -878,7 +893,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/friends16.png</normaloff>:/icons/images/friends16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Friends Dock...</string>
+    <string>&amp;Friends dock...</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -893,7 +908,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/sector16.png</normaloff>:/icons/images/sector16.png</iconset>
    </property>
    <property name="text">
-    <string>Display &amp;all Sectors</string>
+    <string>Display &amp;all sectors</string>
    </property>
   </action>
   <action name="actionPlanFlight">
@@ -929,7 +944,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/inactiveAirports16.png</normaloff>:/icons/images/inactiveAirports16.png</iconset>
    </property>
    <property name="text">
-    <string>Show I&amp;nactive Airports</string>
+    <string>Display &amp;inactive airports</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F6</string>
@@ -947,7 +962,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/timewarp16.png</normaloff>:/icons/images/timewarp16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Time Warp</string>
+    <string>&amp;Time warp</string>
    </property>
    <property name="shortcut">
     <string>F8</string>
@@ -955,7 +970,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition">
    <property name="text">
-    <string>Default Map Position</string>
+    <string>Default map position</string>
    </property>
    <property name="shortcut">
     <string>Alt+1</string>
@@ -963,7 +978,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberMapPosition2">
    <property name="text">
-    <string>Map Position 2</string>
+    <string>Map position 2</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+2</string>
@@ -971,7 +986,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition2">
    <property name="text">
-    <string>Map Position 2</string>
+    <string>Map position 2</string>
    </property>
    <property name="shortcut">
     <string>Alt+2</string>
@@ -979,7 +994,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberMapPosition3">
    <property name="text">
-    <string>Map Position 3</string>
+    <string>Map position 3</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+3</string>
@@ -987,7 +1002,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition3">
    <property name="text">
-    <string>Map Position 3</string>
+    <string>Map position 3</string>
    </property>
    <property name="shortcut">
     <string>Alt+3</string>
@@ -995,7 +1010,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberMapPosition4">
    <property name="text">
-    <string>Map Position 4</string>
+    <string>Map position 4</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+4</string>
@@ -1003,7 +1018,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition4">
    <property name="text">
-    <string>Map Position 4</string>
+    <string>Map position 4</string>
    </property>
    <property name="shortcut">
     <string>Alt+4</string>
@@ -1011,7 +1026,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberMapPosition5">
    <property name="text">
-    <string>Map Position 5</string>
+    <string>Map position 5</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+5</string>
@@ -1019,7 +1034,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberMapPosition6">
    <property name="text">
-    <string>Map Position 6</string>
+    <string>Map position 6</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+6</string>
@@ -1027,7 +1042,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRememberMapPosition7">
    <property name="text">
-    <string>Map Position 7</string>
+    <string>Map position 7</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+7</string>
@@ -1051,7 +1066,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition5">
    <property name="text">
-    <string>Map Position 5</string>
+    <string>Map position 5</string>
    </property>
    <property name="shortcut">
     <string>Alt+5</string>
@@ -1059,7 +1074,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition6">
    <property name="text">
-    <string>Map Position 6</string>
+    <string>Map position 6</string>
    </property>
    <property name="shortcut">
     <string>Alt+6</string>
@@ -1067,7 +1082,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionRecallMapPosition7">
    <property name="text">
-    <string>Map Position 7</string>
+    <string>Map position 7</string>
    </property>
    <property name="shortcut">
     <string>Alt+7</string>
@@ -1123,7 +1138,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionListClients">
    <property name="text">
-    <string>&amp;Clients and Servers...</string>
+    <string>&amp;Clients and servers...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F5</string>
@@ -1135,7 +1150,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/log16.png</normaloff>:/icons/images/log16.png</iconset>
    </property>
    <property name="text">
-    <string>Show Debug &amp;Log...</string>
+    <string>Debug &amp;log...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F1</string>
@@ -1150,7 +1165,10 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/routes16.png</normaloff>:/icons/images/routes16.png</iconset>
    </property>
    <property name="text">
-    <string>Show all &amp;Routes</string>
+    <string>Display all &amp;routes</string>
+   </property>
+   <property name="toolTip">
+    <string>Dep/Dest lines. Settings in Preferences.</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -1162,7 +1180,7 @@ p, li { white-space: pre-wrap; }
      <normaloff>:/icons/images/viewmag16.png</normaloff>:/icons/images/viewmag16.png</iconset>
    </property>
    <property name="text">
-    <string>Reset &amp;Zoom</string>
+    <string>Reset &amp;zoom</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+0</string>

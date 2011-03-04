@@ -46,23 +46,22 @@ void ControllerDetails::refresh(Controller *newController) {
     setWindowTitle(controller->toolTip());
 
     // Controller Information
-    QString controllerInfo = QString("<strong>ATC: %1</strong><br>").arg(controller->displayName(true));
+    QString controllerInfo = QString("<strong>%1</strong><br>").arg(controller->displayName(true));
 
     QString details = controller->detailInformation();
     if(!details.isEmpty()) controllerInfo += details + "<br>";
 
-    controllerInfo += QString("On %3 for %4")
+    controllerInfo += QString("on %3 for %4")
                       .arg(controller->server)
                       .arg(controller->onlineTime());
-    QString software = controller->clientInformation();
-    if(!software.isEmpty()) controllerInfo += ", " + software;
+    if(!controller->clientInformation().isEmpty()) controllerInfo += ", " + controller->clientInformation();
     lblControllerInfo->setText(controllerInfo);
 
     QString stationInfo = controller->facilityString();
     if(!controller->isObserver() && !controller->frequency.length() == 0)
         stationInfo += QString(" on frequency %1<br>Voice: %2")
         .arg(controller->frequency)
-        .arg(controller->voiceServer);
+        .arg(controller->voiceChannel);
     lblStationInformatoin->setText(stationInfo);
 
     QString atis = controller->atisMessage;
@@ -73,9 +72,9 @@ void ControllerDetails::refresh(Controller *newController) {
     lblAtis->setText(atis);
 
     if(controller->isFriend())
-        buttonAddFriend->setText("Remove Friend");
+        buttonAddFriend->setText("remove &friend");
     else
-        buttonAddFriend->setText("Add Friend");
+        buttonAddFriend->setText("add &friend");
 
     btnJoinChannel->setVisible(Settings::voiceType() != Settings::NONE);
     btnJoinChannel->setEnabled(!controller->voiceLink().isEmpty());
@@ -84,7 +83,7 @@ void ControllerDetails::refresh(Controller *newController) {
     buttonAddFriend->setDisabled(controller->userId.isEmpty());
 
     // check if we know position
-    buttonShowOnMap->setDisabled(controller->lat == 0 && controller->lon == 0);
+    buttonShowOnMap->setDisabled(qFuzzyIsNull(controller->lat) && qFuzzyIsNull(controller->lon));
 }
 
 void ControllerDetails::on_buttonAddFriend_clicked() {
@@ -97,7 +96,7 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
     if(Settings::voiceType() == Settings::NONE) return;
 
     if(Settings::voiceUser().isEmpty()) {
-        QMessageBox::information(this, tr("Voice Settings"),
+        QMessageBox::information(this, tr("Voice settings"),
                 "You have to enter your network user ID and password in the preferences before you can join a TeamSpeak channel.");
         return;
     }

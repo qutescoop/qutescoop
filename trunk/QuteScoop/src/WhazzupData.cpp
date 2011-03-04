@@ -292,20 +292,19 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
 
         // position
         double fraction = (double) startTime.secsTo(predictTime) / startTime.secsTo(endTime);
-        double lat, lon;
-        NavData::greatCirclePlotTo(startLat, startLon, endLat, endLon, fraction, &lat, &lon);
+        QPair<double, double> pos = NavData::greatCircleFraction(startLat, startLon, endLat, endLon, fraction);
 
         double dist = NavData::distance(startLat, startLon, endLat, endLon);
         double enrouteHrs = ((double) startTime.secsTo(endTime)) / 3600.0;
-        if (enrouteHrs == 0) enrouteHrs = 0.1;
+        if (qFuzzyIsNull(enrouteHrs)) enrouteHrs = 0.1;
         double groundspeed = dist / enrouteHrs;
-        double trueHeading = NavData::courseTo(lat, lon, endLat, endLon);
+        double trueHeading = NavData::courseTo(pos.first, pos.second, endLat, endLon);
 
         // create Pilot instance and assign values
         Pilot* np = new Pilot(*p[i]);
         np->whazzupTime = QDateTime(predictTime);
-        np->lat = lat;
-        np->lon = lon;
+        np->lat = pos.first;
+        np->lon = pos.second;
         np->altitude = altitude;
         np->trueHeading = trueHeading;
         np->groundspeed = (int) groundspeed;
@@ -386,9 +385,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
             Pilot *p = new Pilot(*data.pilots[callsigns[i]]);
             pilots[callsigns[i]] = p;
         } else { // existing pilots: data saved in the object needs to be transferred
-            data.pilots[callsigns[i]]->displayLineFromDep = pilots[callsigns[i]]->displayLineFromDep;
-            data.pilots[callsigns[i]]->displayLineToDest  = pilots[callsigns[i]]->displayLineToDest;
-            data.pilots[callsigns[i]]->oldPositions       = pilots[callsigns[i]]->oldPositions;
+            data.pilots[callsigns[i]]->showDepDestLine              = pilots[callsigns[i]]->showDepDestLine;
             data.pilots[callsigns[i]]->routeWaypointsCache          = pilots[callsigns[i]]->routeWaypointsCache;
             data.pilots[callsigns[i]]->routeWaypointsPlanDepCache   = pilots[callsigns[i]]->routeWaypointsPlanDepCache;
             data.pilots[callsigns[i]]->routeWaypointsPlanDestCache  = pilots[callsigns[i]]->routeWaypointsPlanDestCache;
@@ -397,8 +394,6 @@ void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
             if ((pilots[callsigns[i]]->lat != 0 || pilots[callsigns[i]]->lon != 0) &&
                 (pilots[callsigns[i]]->lat != data.pilots[callsigns[i]]->lat ||
                  pilots[callsigns[i]]->lon != data.pilots[callsigns[i]]->lon))
-            data.pilots[callsigns[i]]->oldPositions.append(
-                    QPair<double, double> (pilots[callsigns[i]]->lat, pilots[callsigns[i]]->lon));
             *pilots[callsigns[i]] = *data.pilots[callsigns[i]];
         }
     }

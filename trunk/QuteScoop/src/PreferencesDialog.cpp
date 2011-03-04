@@ -32,7 +32,12 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
 //    setWindowFlags(Qt::Tool);
 
     cbNetwork->addItems(QStringList() << "IVAO" << "VATSIM" << "User Defined Network");
-    cbDashedFrontAfter->addItems(QStringList() << "in front" << "behind");
+    cbScreenshotMethod->addItems(QStringList() <<
+                                 "screengrab (only works if window is on top) [default]" <<
+                                 "OpenGL off-screen render (resource-intensive)" <<
+                                 "OpenGL framebuffer (fast but depending on hardware)");
+    foreach(QByteArray fmt, QImageReader::supportedImageFormats())
+        cbScreenshotFormat->addItem(fmt);
     loadSettings();
 }
 
@@ -48,7 +53,11 @@ void PreferencesDialog::loadSettings() {
     editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
     lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
     cbSaveWhazzupData->setChecked(Settings::saveWhazzupData());
+
+    // screenshots
     cbShootScreenshots->setChecked(Settings::shootScreenshots());
+    cbScreenshotMethod->setCurrentIndex(Settings::screenshotMethod());
+    cbScreenshotFormat->setCurrentIndex(cbScreenshotFormat->findText(Settings::screenshotFormat()));
 
     gbDownloadBookings->setChecked(Settings::downloadBookings()); // must be after cbNetwork
     editBookingsLocation->setText(Settings::bookingsLocation());
@@ -79,14 +88,10 @@ void PreferencesDialog::loadSettings() {
     cbReadSupFile->setChecked(Settings::useSupFile());
     spinBoxTimeline->setValue(Settings::timelineSeconds());
 
-    // Show routes
-    cbDashedFrontAfter->setCurrentIndex(0);
-    if(!Settings::dashedTrackInFront())
-        cbDashedFrontAfter->setCurrentIndex(1);
-
     // OpenGL
     glTextures->setChecked(Settings::glTextures());
 
+    // textures
     QDir texDir = QDir(Settings::applicationDataDirectory("textures/"));
     QStringList nameFilters;
     foreach(QByteArray fmt, QImageReader::supportedImageFormats())
@@ -95,9 +100,8 @@ void PreferencesDialog::loadSettings() {
     qDebug() << "Supported texture formats:"
             << QImageReader::supportedImageFormats() << ". See"
             << Settings::applicationDataDirectory("textures/+notes.txt") << "for more information.";
-    const QString tex = Settings::glTextureEarth(); // cache cause adding to the list will trigger writing
     glTextureEarth->addItems(texDir.entryList());
-    glTextureEarth->setCurrentIndex(glTextureEarth->findText(tex));
+    glTextureEarth->setCurrentIndex(glTextureEarth->findText(Settings::glTextureEarth()));
 
     glStippleLines->setChecked(Settings::glStippleLines());
     cbBlend->setChecked(Settings::glBlending);
@@ -237,18 +241,17 @@ void PreferencesDialog::loadSettings() {
     pbTimeLineColor->setPalette(QPalette(color));
     sbTimeLineStrength->setValue(Settings::timeLineStrength());
 
-    color = Settings::trackLineColor();
-    pbTrackLineColor->setText(color.name());
-    pbTrackLineColor->setPalette(QPalette(color));
-    sbTrackLineStrength->setValue(Settings::trackLineStrength());
+    color = Settings::depLineColor();
+    pbDepLineColor->setText(color.name());
+    pbDepLineColor->setPalette(QPalette(color));
+    sbDepLineStrength->setValue(Settings::depLineStrength());
+    cbDepLineDashed->setChecked(Settings::depLineDashed());
 
-    color = Settings::planLineColor();
-    pbPlanLineColor->setText(color.name());
-    pbPlanLineColor->setPalette(QPalette(color));
-    sbPlanLineStrength->setValue(Settings::planLineStrength());
-
-    cbTrackFront->setChecked(Settings::trackFront());
-    cbTrackAfter->setChecked(Settings::trackAfter());
+    color = Settings::destLineColor();
+    pbDestLineColor->setText(color.name());
+    pbDestLineColor->setPalette(QPalette(color));
+    sbDestLineStrength->setValue(Settings::destLineStrength());
+    cbDestLineDashed->setChecked(Settings::destLineDashed());
 
     // voice
     editVoiceCallsign->setText(Settings::voiceCallsign());
@@ -328,7 +331,6 @@ void PreferencesDialog::on_cbReadSupFile_stateChanged(int state) {
 }
 
 void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
-    // event is triggered when combobox is being created, so ignore it until we're ready
     if(!settingsLoaded)
         return;
 
@@ -351,10 +353,6 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 
     editUserDefinedLocation->setEnabled(index == 2);
     lbluserDefinedLocation->setEnabled(index == 2);
-}
-
-void PreferencesDialog::on_cbDashedFrontAfter_currentIndexChanged(int index) {
-    Settings::setDashedTrackInFront(index == 0);
 }
 
 void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
@@ -684,30 +682,39 @@ void PreferencesDialog::on_sbTimeLineStrength_valueChanged(double value) {
     Settings::setTimeLineStrength(value);
 }
 
-void PreferencesDialog::on_pbTrackLineColor_clicked() {
-    QColor color = QColorDialog::getColor(Settings::trackLineColor(), this, "Select color", QColorDialog::ShowAlphaChannel);
+void PreferencesDialog::on_pbDepLineColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::depLineColor(), this, "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
-        pbTrackLineColor->setText(color.name());
-        pbTrackLineColor->setPalette(QPalette(color));
-        Settings::setTrackLineColor(color);
+        pbDepLineColor->setText(color.name());
+        pbDepLineColor->setPalette(QPalette(color));
+        Settings::setDepLineColor(color);
     }
 }
 
-void PreferencesDialog::on_sbTrackLineStrength_valueChanged(double value) {
-    Settings::setTrackLineStrength(value);
+void PreferencesDialog::on_sbDepLineStrength_valueChanged(double value) {
+    Settings::setDepLineStrength(value);
 }
 
-void PreferencesDialog::on_pbPlanLineColor_clicked() {
-    QColor color = QColorDialog::getColor(Settings::planLineColor(), this, "Select color", QColorDialog::ShowAlphaChannel);
+void PreferencesDialog::on_pbDestLineColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::destLineColor(), this, "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
-        pbPlanLineColor->setText(color.name());
-        pbPlanLineColor->setPalette(QPalette(color));
-        Settings::setPlanLineColor(color);
+        pbDestLineColor->setText(color.name());
+        pbDestLineColor->setPalette(QPalette(color));
+        Settings::setDestLineColor(color);
     }
 }
 
-void PreferencesDialog::on_sbPlanLineStrength_valueChanged(double value) {
-    Settings::setPlanLineStrength(value);
+void PreferencesDialog::on_sbDestLineStrength_valueChanged(double value) {
+    Settings::setDestLineStrength(value);
+}
+
+void PreferencesDialog::on_cbDepLineDashed_toggled(bool checked)
+{
+    Settings::setDepLineDashed(checked);
+}
+void PreferencesDialog::on_cbDestLineDashed_toggled(bool checked)
+{
+    Settings::setDestLineDashed(checked);
 }
 
 void PreferencesDialog::on_buttonResetPilot_clicked() {
@@ -862,18 +869,6 @@ void PreferencesDialog::on_gbDownloadBookings_toggled(bool checked)
 {
     Settings::setDownloadBookings(checked);
     qobject_cast<Window *>(this->parent())->setEnableBookedAtc(checked);
-}
-
-void PreferencesDialog::on_cbTrackFront_toggled(bool checked)
-{
-    Settings::setTrackFront(checked);
-    if(!checked && !cbTrackAfter->isChecked()) cbTrackAfter->setChecked(true);
-}
-
-void PreferencesDialog::on_cbTrackAfter_toggled(bool checked)
-{
-    Settings::setTrackAfter(checked);
-    if(!checked && !cbTrackFront->isChecked()) cbTrackFront->setChecked(true);
 }
 
 
@@ -1060,7 +1055,6 @@ void PreferencesDialog::on_applyPilots_clicked()
 
 void PreferencesDialog::on_glStippleLines_toggled(bool checked) {
     Settings::setGlStippleLines(checked);
-    cbDashedFrontAfter->setEnabled(checked);
 }
 
 void PreferencesDialog::on_glTextures_toggled(bool checked) {
@@ -1068,5 +1062,16 @@ void PreferencesDialog::on_glTextures_toggled(bool checked) {
 }
 
 void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
-    Settings::setGlTextureEarth(tex);
+    if(settingsLoaded)
+        Settings::setGlTextureEarth(tex);
+}
+
+void PreferencesDialog::on_cbScreenshotMethod_currentIndexChanged(int index) {
+    if(settingsLoaded)
+        Settings::setScreenshotMethod(index);
+}
+
+void PreferencesDialog::on_cbScreenshotFormat_currentIndexChanged(QString value) {
+    if(settingsLoaded)
+        Settings::setScreenshotFormat(value);
 }

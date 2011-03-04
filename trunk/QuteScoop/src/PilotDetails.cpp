@@ -51,13 +51,13 @@ void PilotDetails::refresh(Pilot *newPilot) {
     setWindowTitle(pilot->toolTip());
 
     // Pilot Information
-    lblPilotInfo->setText(QString("<strong>PILOT: %1</strong>%2")
+    lblPilotInfo->setText(QString("<strong>%1</strong>%2")
                         .arg(pilot->displayName(true))
                         .arg(pilot->detailInformation().isEmpty() ? "" : ", " + pilot->detailInformation()));
     if (pilot->server.isEmpty()) {
-        lblConnected->setText(QString("<i>Not connected</i>"));
+        lblConnected->setText(QString("<i>not connected</i>"));
     } else {
-        lblConnected->setText(QString("On %1 for %2%3")
+        lblConnected->setText(QString("on %1 for %2%3")
                      .arg(pilot->server)
                      .arg(pilot->onlineTime())
                      .arg(pilot->clientInformation().isEmpty()? "": ", "+ pilot->clientInformation()));
@@ -71,13 +71,13 @@ void PilotDetails::refresh(Pilot *newPilot) {
     lblGroundspeed->setText(QString("%1 kts").arg(pilot->groundspeed));
 
     // flight status
-    groupStatus->setTitle(QString("Flight Status: %1").arg(pilot->flightStatusShortString()));
+    groupStatus->setTitle(QString("Status: %1").arg(pilot->flightStatusShortString()));
     lblFlightStatus->setText(pilot->flightStatusString());
 
     // flight plan
     groupFp->setVisible(!pilot->planFlighttype.isEmpty()); // hide for Bush pilots
 
-    groupFp->setTitle(QString("Flight Plan (%1)")
+    groupFp->setTitle(QString("Flightplan (%1)")
                       .arg(pilot->planFlighttypeString()));
 
     QString depStr = pilot->planDep;
@@ -113,20 +113,17 @@ void PilotDetails::refresh(Pilot *newPilot) {
     // check if we know userId
     buttonAddFriend->setDisabled(pilot->userId.isEmpty());
     if(pilot->isFriend())
-        buttonAddFriend->setText("Remove Friend");
+        buttonAddFriend->setText("remove &friend");
     else
-        buttonAddFriend->setText("Add Friend");
+        buttonAddFriend->setText("add &friend");
 
     // check if we know position
-    buttonShowOnMap->setDisabled(pilot->lon == 0.0 && pilot->lat == 0.0);
+    buttonShowOnMap->setDisabled(qFuzzyIsNull(pilot->lon) && qFuzzyIsNull(pilot->lat));
 
-    cbPlotRoute->setChecked(pilot->displayLineToDest);
+    cbPlotRoute->setChecked(pilot->showDepDestLine);
 
-    // adjust window, little tweaking //fixme, does not work perfectly but only on second refresh()
-    //setUpdatesEnabled(false);
     adjustSize();
     //updateGeometry();
-    //setUpdatesEnabled(true);
 }
 
 void PilotDetails::on_buttonDest_clicked() {
@@ -137,8 +134,7 @@ void PilotDetails::on_buttonDest_clicked() {
     }
 }
 
-void PilotDetails::on_buttonAlt_clicked()
-{
+void PilotDetails::on_buttonAlt_clicked() {
     Airport *airport = pilot->altAirport();
     if(airport != 0) {
         airport->showDetailsDialog();
@@ -159,10 +155,12 @@ void PilotDetails::on_buttonAddFriend_clicked() {
     refresh();
 }
 
-void PilotDetails::on_cbPlotRoute_toggled(bool checked)
-{
-    if (pilot->displayLineToDest != checked) {
-        pilot->toggleDisplayPath();
-        qobject_cast<Window *>(this->parent())->updateGLPilots();
+void PilotDetails::on_cbPlotRoute_toggled(bool checked) {
+    if (pilot->showDepDestLine != checked) {
+        pilot->showDepDestLine = checked;
+        if (Window::getInstance(false) != 0) {
+            Window::getInstance(true)->glWidget->createPilotsList();
+            Window::getInstance(true)->glWidget->updateGL();
+        }
     }
 }

@@ -30,20 +30,19 @@ public:
 public slots:
     void updateMetarDecoder(const QString& airport, const QString& decodedText);
     void refreshFriends();
-    void updateGLPilots();
 
     // the message system
     void showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType = GuiMessage::Temporary, QString id = QString(), int progress = 0, int total = 0);
 
 private slots:
-    void on_tbZoomIn_customContextMenuRequested(QPoint pos);
-    void on_actionZoomReset_triggered();
     void on_actionShowRoutes_triggered(bool checked);
     void on_actionDebugLog_triggered();
 
+    void on_actionZoomReset_triggered();
     void on_tbZoomOut_clicked();
     void on_tbZoomIn_clicked();
     void on_tbZoomOut_customContextMenuRequested(QPoint pos);
+    void on_tbZoomIn_customContextMenuRequested(QPoint pos);
 
     void on_actionMoveDown_triggered();
     void on_actionMoveUp_triggered();

@@ -20,7 +20,6 @@ public:
 
     Pilot(const QStringList& stringList, const WhazzupData* whazzup);
 
-    void plotPath(double lat1, double lon1, double lat2, double lon2);
     virtual QString rank() const;
 
     void showDetailsDialog();
@@ -82,23 +81,16 @@ public:
 
     int defuckPlanAlt(QString alt) const; // returns an altitude from various flightplan strings
 
-    void positionInFuture(double *lat, double *lon, int seconds) const;
+    QPair<double, double> positionInFuture(int seconds) const;
 
-    void toggleDisplayPath();
-    void plotFlightPath();
-
-    bool displayLineFromDep, displayLineToDest;
-
-    QList<QPair<double, double> > oldPositions;
+    void plotDepDestLine();
+    bool showDepDestLine;
 
     QList<Waypoint*> routeWaypoints();
 
     QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
     QString routeWaypointsPlanDepCache, routeWaypointsPlanDestCache, routeWaypointsPlanRouteCache;
 private:
-    void plotPathToDest();
-    void plotPathFromDep();
-    void plotPlannedLine();
 };
 
 #endif /*PILOT_H_*/

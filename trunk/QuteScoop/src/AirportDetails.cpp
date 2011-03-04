@@ -7,6 +7,7 @@
 #include "helpers.h"
 #include "NavData.h"
 #include "Window.h"
+#include "Settings.h"
 
 // singleton instance
 AirportDetails *airportDetails = 0;
@@ -34,7 +35,7 @@ QString lat2str(double lat) {
     }
 
     int lat1 = (int)lat;
-    double lat2 = (lat - (int)lat) * 60.0;
+    double lat2 = (lat - (int)lat) * 60.;
     result += QString("%1 %2'")
     .arg(lat1, 2, 10, QChar('0'))
     .arg(lat2, 2, 'f', 3, QChar('0'));
@@ -51,7 +52,7 @@ QString lon2str(double lon) {
     }
 
     int lon1 = (int)lon;
-    double lon2 = (lon - (int)lon) * 60.0;
+    double lon2 = (lon - (int)lon) * 60.;
     result += QString("%1 %2'")
     .arg(lon1, 3, 10, QChar('0'))
     .arg(lon2, 2, 'f', 3, QChar('0'));
@@ -74,7 +75,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     atcSortModel->setDynamicSortFilter(true);
     atcSortModel->setSourceModel(&atcModel);
     treeAtc->setModel(atcSortModel);
-    treeAtc->sortByColumn(1, Qt::AscendingOrder);
+    treeAtc->sortByColumn(0, Qt::AscendingOrder);
     treeAtc->header()->setResizeMode(QHeaderView::Interactive);
 
     connect(treeAtc->header(), SIGNAL(sectionClicked(int)), treeAtc, SLOT(sortByColumn(int)));
@@ -115,7 +116,6 @@ void AirportDetails::refresh(Airport* newAirport) {
             treeArrivals->scrollTo(arrivalsSortModel->index(0, 0));
             treeDepartures->scrollTo(departuresSortModel->index(0, 0));
         }
-
         airport = newAirport;
     }
     if(airport == 0) return;
@@ -148,9 +148,13 @@ void AirportDetails::refresh(Airport* newAirport) {
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // set titles
-    groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals).arg(airport->getArrivals().size()));
-    groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures).arg(airport->getDepartures().size()));
-
+    if (Settings::filterTraffic()) {
+        groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals).arg(airport->getArrivals().size()));
+        groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures).arg(airport->getDepartures().size()));
+    } else {
+        groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->getArrivals().size()));
+        groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
+    }
 
     QList<Controller*> atcContent = airport->getAllControllers();
     atcContent += checkSectors();
@@ -202,26 +206,25 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
     departuresModel.modelSelected(departuresSortModel->mapToSource(index));
 }
 
-void AirportDetails::on_cbPlotRoutes_toggled(bool checked)
-{
+void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
     if(airport->showFlightLines != checked) {
-        airport->setDisplayFlightLines(checked);
-        qobject_cast<Window *>(this->parent())->updateGLPilots();
+        airport->showFlightLines = checked;
+        if (Window::getInstance(false) != 0) {
+            Window::getInstance(true)->glWidget->createPilotsList();
+            Window::getInstance(true)->glWidget->updateGL();;
+        }
     }
 }
 
-void AirportDetails::on_cbObservers_toggled(bool checked)
-{
+void AirportDetails::on_cbObservers_toggled(bool checked) {
     refresh();
 }
 
-void AirportDetails::on_cbAtis_toggled(bool checked)
-{
+void AirportDetails::on_cbAtis_toggled(bool checked) {
     refresh();
 }
 
-void AirportDetails::on_pbMetar_clicked()
-{
+void AirportDetails::on_pbMetar_clicked() {
     disconnect(metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
     QList<Airport*> airports;
     if (airport != 0) {
@@ -236,72 +239,56 @@ void AirportDetails::on_pbMetar_clicked()
     }
 }
 
-QList<Controller*> AirportDetails::checkSectors()
-{
+QList<Controller*> AirportDetails::checkSectors() {
     QList<Controller*> result;
     QList<Controller*> allSectors = Whazzup::getInstance()->whazzupData().activeSectors();
 
-    for(int i = 0; i < allSectors.size(); i++)
-    {
+    for(int i = 0; i < allSectors.size(); i++) {
         int crossings = 0;
         double x1, x2;
 
-        //To make to code more clear
         int size = allSectors[i]->sector->sector().size();
-
-        for ( int ii = 0; ii < size ; ii++ )
-        {
+        for ( int ii = 0; ii < size ; ii++ ) {
             /* This is done to ensure that we get the same result when
                the line goes from left to right and right to left */
             if ( allSectors[i]->sector->sector().value(ii).first <
-                 allSectors[i]->sector->sector().value((ii+1)%size).first)
-            {
-                    x1 = allSectors[i]->sector->sector().value(ii).first;
-                    x2 = allSectors[i]->sector->sector().value((ii+1)%size).first;
-            }
-            else
-            {
-                    x1 = allSectors[i]->sector->sector().value((ii+1)%size).first;
-                    x2 = allSectors[i]->sector->sector().value(ii).first;
+                 allSectors[i]->sector->sector().value((ii + 1) % size).first) {
+                x1 = allSectors[i]->sector->sector().value(ii).first;
+                x2 = allSectors[i]->sector->sector().value((ii + 1) % size).first;
+            } else {
+                x1 = allSectors[i]->sector->sector().value((ii + 1) % size).first;
+                x2 = allSectors[i]->sector->sector().value(ii).first;
             }
 
             /* First check if the ray is possible to cross the line */
             if ( airport->lat > x1 && airport->lat <= x2 && (
                     airport->lon < allSectors[i]->sector->sector().value(ii).second
-                    || airport->lon <= allSectors[i]->sector->sector().value((ii+1)%8).second))
-            {
-                    static const float eps = 0.000001;
+                    || airport->lon <= allSectors[i]->sector->sector().value((ii + 1) % 8).second)) {
+                static const float eps = 0.000001;
 
-                    /* Calculate the equation of the line */
-                    double dx = allSectors[i]->sector->sector().value((ii+1)%size).first
-                                - allSectors[i]->sector->sector().value(ii).first;
-                    double dy = allSectors[i]->sector->sector().value((ii+1)%size).second
-                                - allSectors[i]->sector->sector().value(ii).second;
-                    double k;
+                /* Calculate the equation of the line */
+                double dx = allSectors[i]->sector->sector().value((ii + 1) % size).first
+                            - allSectors[i]->sector->sector().value(ii).first;
+                double dy = allSectors[i]->sector->sector().value((ii + 1) % size).second
+                            - allSectors[i]->sector->sector().value(ii).second;
+                double k;
 
-                    if ( fabs(dx) < eps )
-                    {
-                            k = INFINITY;	// math.h
-                    }
-                    else
-                    {
-                            k = dy/dx;
-                    }
+                if ( fabs(dx) < eps )
+                    k = INFINITY;	// math.h
+                else
+                    k = dy/dx;
 
-                    double m = allSectors[i]->sector->sector().value(ii).second
-                               - k * allSectors[i]->sector->sector().value(ii).first;
+                double m = allSectors[i]->sector->sector().value(ii).second
+                           - k * allSectors[i]->sector->sector().value(ii).first;
 
-                    /* Find if the ray crosses the line */
-                    double y2 = k * airport->lat + m;
-                    if ( airport->lon <= y2 )
-                    {
-                            crossings++;
-                    }
-                }
-        }
-
-        if(crossings%2 == 1) result.append(allSectors.value(i));
+                /* Find if the ray crosses the line */
+                double y2 = k * airport->lat + m;
+                if ( airport->lon <= y2 )
+                    crossings++;
+            }
+        }   
+        if(crossings % 2 == 1)
+            result.append(allSectors.value(i));
     }
-
     return result;
 }

@@ -21,15 +21,11 @@ public:
     Airport(const QStringList& list);
     ~Airport();
 
-    virtual QString toolTip() const;
     virtual void showDetailsDialog();
+
+    virtual QString toolTip() const;
     virtual QString mapLabel() const;
-
     virtual bool matches(const QRegExp& regex) const;
-
-    QString name;
-    QString city;
-    QString countryCode;
 
     void resetWhazzupStatus();
 
@@ -43,13 +39,11 @@ public:
     const QList<Pilot*>& getArrivals() const { return arrivals; }
     const QList<Pilot*>& getDepartures() const { return departures; }
 
-    int numFilteredArrivals;
-    int numFilteredDepartures;
-
     QList<Controller*> getAllControllers() const;
 
     void addArrival(Pilot* client);
     void addDeparture(Pilot* client);
+    int numFilteredArrivals, numFilteredDepartures;
 
     //void addCenter(Controller* client);
     void addApproach(Controller* client);
@@ -57,9 +51,9 @@ public:
     void addGround(Controller* client);
     void addDelivery(Controller* client);
 
-    void setDisplayFlightLines(bool show);
+    QString name, city, countryCode;
+
     bool showFlightLines;
-    void refreshAfterUpdate();
 
     const GLuint& getAppDisplayList();
     const GLuint& getAppBorderDisplayList();
@@ -72,19 +66,12 @@ public:
 private:
     bool active;
     //QList<Controller*> centers;
-    QList<Controller*> approaches;
-    QList<Controller*> towers;
-    QList<Controller*> grounds;
-    QList<Controller*> deliveries;
+    QList<Controller*> approaches, towers, grounds, deliveries;
 
-    QList<Pilot*> arrivals;
-    QList<Pilot*> departures;
+    QList<Pilot*> arrivals, departures;
 
-    GLuint appDisplayList;
-    GLuint appBorderDisplayList;
-    GLuint twrDisplayList;
-    GLuint gndDisplayList;
-    GLuint delDisplayList;
+    GLuint appDisplayList, appBorderDisplayList, twrDisplayList,
+        gndDisplayList, delDisplayList;
 };
 
 #endif /*AIRPORT_H_*/

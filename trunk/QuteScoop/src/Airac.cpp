@@ -9,12 +9,9 @@
 #include "NavData.h"
 
 Airac::Airac() {
-    // TODO Auto-generated constructor stub
-
 }
 
 Airac::~Airac() {
-    // TODO Auto-generated destructor stub
 }
 
 void Airac::load(const QString& directory) {
@@ -22,11 +19,9 @@ void Airac::load(const QString& directory) {
     readNavaids(directory);
     readAirways(directory);
 
-    QHash<QString, QList<Waypoint*> >::const_iterator iter = waypointMap.begin();
-    while(iter != waypointMap.end()) {
-        allWaypoints += iter.value();
-        ++iter;
-    }
+    allWaypoints.clear();
+    foreach(QList<Waypoint *> wpl, waypointMap.values())
+        allWaypoints.append(wpl);
 }
 
 void Airac::addFix(Waypoint* fix) {
@@ -208,7 +203,7 @@ Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
             continue;
         }
         double d = NavData::distance(lat, lon, wp->lat, wp->lon);
-        if(d == 0) {
+        if(qFuzzyIsNull(d)) {
             return list[i];
         }
         if(d < minDist) {
@@ -235,7 +230,7 @@ Waypoint* Airac::getNextWaypoint(QStringList& workingList, double lat, double lo
 }
 
 QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, double lon) const {
-    qDebug() << "Airac::resolveFlightPlan()" << plan;
+    //qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;
     if(plan.isEmpty()) return result;
 
@@ -289,7 +284,7 @@ QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, d
         if(i>0) debugStr += "-";
         debugStr += result[i]->label;
     }
-    qDebug() << "Airac::resolveFlightPlan() -- finished:" << debugStr;
+    //qDebug() << "Airac::resolveFlightPlan() -- finished:" << debugStr;
 
     return result;
 }

@@ -22,9 +22,6 @@ public:
     GLWidget(QGLFormat format, QWidget *parent = 0);
     ~GLWidget();
 
-//    QSize minimumSizeHint() const { return QSize(150, 200); }
-//    QSize sizeHint() const { return QSize(600, 700); }
-
     bool plotFlightPlannedRoute;
     QPair<double, double> currentPosition();
     ClientSelectionWidget *clientSelection;
@@ -100,7 +97,7 @@ private:
     QList<FontRectangle> fontRectangles, allFontRectangles;
 
     QPoint lastPos, mouseDownPos;
-    bool mapIsMoving, isRectangleSelecting;
+    bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting;
     double xRot, yRot, zRot, zoom, aspectRatio;
 
 	GLUquadricObj *earthQuad;
