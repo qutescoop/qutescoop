@@ -59,8 +59,23 @@
              <item row="0" column="1">
               <widget class="QComboBox" name="cbNetwork">
                <property name="currentIndex">
-                <number>-1</number>
+                <number>0</number>
                </property>
+               <item>
+                <property name="text">
+                 <string>IVAO</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>VATSIM</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>user defined network</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item row="0" column="2">
@@ -154,6 +169,9 @@ on program &amp;start</string>
                  <property name="text">
                   <string>save &amp;Whazzups to:</string>
                  </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
                 </widget>
                </item>
                <item row="0" column="1">
@@ -176,6 +194,9 @@ on program &amp;start</string>
                  </property>
                  <property name="text">
                   <string>save &amp;screenshots to:</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -211,6 +232,21 @@ on program &amp;start</string>
                  <property name="toolTip">
                   <string>Screenshots can be obtained by different methods. One or the other could make problems on your setup as grabbing an OpenGL-window can be complex. Try out which one works best for you.</string>
                  </property>
+                 <item>
+                  <property name="text">
+                   <string>screengrab (only works if window is on top) [default]</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>OpenGL off-screen render (resource-intensive)</string>
+                  </property>
+                 </item>
+                 <item>
+                  <property name="text">
+                   <string>OpenGL framebuffer (fast but depending on hardware)</string>
+                  </property>
+                 </item>
                 </widget>
                </item>
                <item>
@@ -1211,7 +1247,7 @@ The texture is affected by the colour chosen for the Globe.</string>
                <item row="1" column="4">
                 <widget class="QComboBox" name="glTextureEarth">
                  <property name="toolTip">
-                  <string>More information in textures/+notes.txt. Check View/Debug Log if you experience problems.</string>
+                  <string>GETS DYNAMICALLY OVERWRITTEN</string>
                  </property>
                 </widget>
                </item>
@@ -2785,7 +2821,7 @@ p, li { white-space: pre-wrap; }
             <item row="1" column="3">
              <widget class="QCheckBox" name="cbDepLineDashed">
               <property name="toolTip">
-               <string>Activate &quot;Dashed Lines&quot; in OPenGL settings for this to be enabled.</string>
+               <string>activate 'dashed lines' in OpenGL settings for this to be enabled.</string>
               </property>
               <property name="text">
                <string>dashed</string>
@@ -2795,7 +2831,7 @@ p, li { white-space: pre-wrap; }
             <item row="2" column="3">
              <widget class="QCheckBox" name="cbDestLineDashed">
               <property name="toolTip">
-               <string>Activate &quot;Dashed Lines&quot; in OPenGL settings for this to be enabled.</string>
+               <string>activate 'dashed lines' in OpenGL settings for this to be enabled.</string>
               </property>
               <property name="text">
                <string>dashed</string>

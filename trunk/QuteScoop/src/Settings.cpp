@@ -488,7 +488,7 @@ void Settings::setGlLights(int value) {
 }
 
 int Settings::glLightsSpread() {
-    return getSettings()->value("gl/lightsSpread", 25).toInt();
+    return getSettings()->value("gl/lightsSpread", 35).toInt();
 }
 void Settings::setGlLightsSpread(int value) {
     getSettings()->setValue("gl/lightsSpread", value);
@@ -508,7 +508,7 @@ void Settings::setGlTextureEarth(QString value) {
 }
 
 QColor Settings::sunLightColor() {
-    return getSettings()->value("gl/sunLightColor", QColor::fromRgb(255, 249, 201)).value<QColor>();
+    return getSettings()->value("gl/sunLightColor", QColor::fromRgb(255, 255, 255)).value<QColor>();
 }
 
 void Settings::setSunLightColor(const QColor& color) {
@@ -558,7 +558,7 @@ void Settings::setBackgroundColor(const QColor& color) {
 }
 
 QColor Settings::globeColor() {
-    return getSettings()->value("earthSpace/globeColor", QColor::fromRgb(130, 160, 190)).value<QColor>();
+    return getSettings()->value("earthSpace/globeColor", QColor::fromRgb(255, 255, 255)).value<QColor>();
 }
 
 void Settings::setGlobeColor(const QColor& color) {
@@ -582,7 +582,7 @@ void Settings::setGridLineStrength(double strength) {
 }
 
 QColor Settings::countryLineColor() {
-    return getSettings()->value("earthSpace/countryLineColor", QColor::fromRgb(170, 255, 127, 50)).value<QColor>();
+    return getSettings()->value("earthSpace/countryLineColor", QColor::fromRgb(102, 85, 67, 150)).value<QColor>();
 }
 
 void Settings::setCountryLineColor(const QColor& color) {
@@ -590,7 +590,7 @@ void Settings::setCountryLineColor(const QColor& color) {
 }
 
 double Settings::countryLineStrength() {
-    return getSettings()->value("earthSpace/countryLineStrength", 0.3).toDouble();
+    return getSettings()->value("earthSpace/countryLineStrength", 1.).toDouble();
 }
 
 void Settings::setCountryLineStrength(double strength) {
@@ -606,12 +606,14 @@ void Settings::setCoastLineColor(const QColor& color) {
 }
 
 double Settings::coastLineStrength() {
-    return getSettings()->value("earthSpace/coastLineStrength", 0.8).toDouble();
+    return getSettings()->value("earthSpace/coastLineStrength", 2.).toDouble();
 }
 
 void Settings::setCoastLineStrength(double strength) {
     getSettings()->setValue("earthSpace/coastLineStrength", strength);
 }
+
+// FIRs
 
 QColor Settings::firBorderLineColor() {
     return getSettings()->value("firDisplay/borderLineColor", QColor::fromRgbF(0.0, 0.0, 1.0)).value<QColor>();
