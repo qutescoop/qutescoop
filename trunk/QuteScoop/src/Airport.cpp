@@ -109,7 +109,7 @@ const GLuint& Airport::getAppDisplayList() {
 
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
-    glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
+    VERTEX(lat, lon);
     glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
     GLdouble circle_distort = cos(lat * Pi180);
     for(int i = 0; i <= 360; i += 10) {
@@ -145,7 +145,7 @@ const GLuint& Airport::getTwrDisplayList() {
 
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
-    glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
+    VERTEX(lat, lon);
     glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
     for(int i = 0; i < points.size(); i++) {
         VERTEX(points[i].first, points[i].second);
@@ -227,7 +227,7 @@ const GLuint& Airport::getDelDisplayList() {
 
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-    glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
+    VERTEX(lat, lon);
     for(int i = 0; i < points.size(); i++) {
         VERTEX(points[i].first, points[i].second);
     }
