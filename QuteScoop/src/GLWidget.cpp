@@ -1126,20 +1126,31 @@ void GLWidget::drawSelectionRectangle() {
 	if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
 		double currLat, currLon;
 		if (mouse2latlon(current.x(), current.y(), currLat, currLon)) {
+			// calculate a rectangle
+			double currLatDist = NavData::distance(currLat, downLon, currLat, currLon);
+			double downLatDist = NavData::distance(downLat, downLon, downLat, currLon);
+			double avgLonDist = (downLatDist + currLatDist) / 2.; // this needs to be the side length
+			DoublePair downLatCurrLon = NavData::greatCircleFraction(downLat, downLon,
+																	 downLat, currLon,
+																	 avgLonDist / downLatDist);
+			DoublePair currLatDownLon = NavData::greatCircleFraction(currLat, currLon,
+																	 currLat, downLon,
+																	 avgLonDist / currLatDist);
 			QList<QPair<double, double> > points;
-			points.append(NavData::greatCirclePoints(downLat, downLon, currLat, downLon));
-			points.append(NavData::greatCirclePoints(currLat, downLon, currLat, currLon));
-			points.append(NavData::greatCirclePoints(currLat, currLon, downLat, currLon));
-			points.append(NavData::greatCirclePoints(downLat, currLon, downLat, downLon));
+			points.append(DoublePair(downLat, downLon));
+			points.append(DoublePair(downLatCurrLon.first, downLatCurrLon.second));
+			points.append(DoublePair(currLat, currLon));
+			points.append(DoublePair(currLatDownLon.first, currLatDownLon.second));
+			points.append(DoublePair(downLat, downLon));
+
 			glColor4f(0., 1., 1., .5);
 			glBegin(GL_POLYGON);
-			Tessellator().tessellate(points);
+			NavData::plotPointsOnEarth(points);
 			glEnd();
 			glLineWidth(2.);
 			glColor4f(0., 1., 1., 1.);
 			glBegin(GL_LINE_LOOP);
-			foreach (DoublePair p, points)
-				VERTEX(p.first, p.second);
+			NavData::plotPointsOnEarth(points);
 			glEnd();
 		}
 	}
