@@ -772,6 +772,38 @@ void GLWidget::paintGL() {
 	if (mapIsRectangleSelecting)
 		drawSelectionRectangle();
 
+
+    /*
+    // some preparations to draw small textures on the globe (plane symbols, wind data...).
+    QPixmap planePm(":/icons/images/arrowup16.png");
+    GLuint planeTex = bindTexture(planePm, GL_TEXTURE_2D,
+                                  GL_RGBA, QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, planeTex);
+    glColor3f(1., 1., 1.);
+    for (double lat = -90.; lat <= 90.; lat += 45.) {
+        for (double lon = -180.; lon <= 180.; lon += 45.) {
+            glPushMatrix();
+            glTranslatef(SX(lat, lon), SY(lat, lon), SZ(lat, lon));
+            glRotatef(0, 1, 0, 0);
+            glRotatef(90, 0, 1, 0);
+            glRotatef(90, 0, 0, 1);
+
+            glBegin(GL_QUADS);
+            glTexCoord2i(0, 1);
+            glVertex2f(-.05,  .15);
+            glTexCoord2i(1, 1);
+            glVertex2f( .05,  .15);
+            glTexCoord2i(1, 0);
+            glVertex2f( .05, -.15);
+            glTexCoord2f(.4, 0);
+            glVertex2f(-.05, -.15);
+            glEnd();
+            glPopMatrix();
+        }
+    }
+    glDisable(GL_TEXTURE_2D);
+    */
     //drawCoordinateAxii(); // use this to see where the axii are (x = red, y = green, z = blue)
     glFlush(); // http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
 
@@ -827,7 +859,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
             if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
                 double currLat, currLon;
                 if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
-                    setMapPosition((downLat + currLat) / 2., (downLon + currLon) / 2.,
+                    DoublePair mid = NavData::greatCircleFraction(downLat, downLon, currLat, currLon, .5);
+                    setMapPosition(mid.first, mid.second,
                                    qMax(NavData::distance(downLat, downLon,
                                                           downLat, currLon),
                                         NavData::distance(downLat, downLon,

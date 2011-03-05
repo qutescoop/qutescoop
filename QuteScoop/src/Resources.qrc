@@ -24,6 +24,10 @@
         <file>images/search16.png</file>
         <file>images/inactiveAirports16.png</file>
         <file>images/sector16.png</file>
+        <file>images/info16.png</file>
+        <file>images/warn16.png</file>
+        <file>images/error16.png</file>
+        <file>images/fatal16.png</file>
     </qresource>
     <qresource prefix="/routeproviders">
         <file>images/vroute.png</file>
