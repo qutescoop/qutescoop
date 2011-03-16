@@ -799,8 +799,6 @@ void GLWidget::paintGL() {
     glCallList(gridlinesList);
     if(Settings::showAllWaypoints() && zoom < allWaypointsLabelZoomTreshold * .7)
         glCallList(allWaypointsList);
-    if(Settings::showAllWaypoints() && zoom < allWaypointsLabelZoomTreshold * .7)
-        glCallList(allWaypointsList);
     if(Settings::showUsedWaypoints() && zoom < usedWaypointsLabelZoomThreshold * .7)
         glCallList(usedWaypointsList);
 
