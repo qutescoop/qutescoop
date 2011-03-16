@@ -7,12 +7,6 @@
 #include "FileReader.h"
 #include "Settings.h"
 
-SectorReader::SectorReader() {
-}
-
-SectorReader::~SectorReader() {
-}
-
 void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
     sectors.clear();
     idIcaoMapping.clear();

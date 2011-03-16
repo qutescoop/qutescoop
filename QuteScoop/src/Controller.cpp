@@ -182,15 +182,15 @@ QString Controller::rank() const {
         switch(rating) {
         case 0: return QString();
         case 1: return QString("OBS");
-        case 2: return QString("S1");
-        case 3: return QString("S2");
-        case 4: return QString("S3");
-        case 5: return QString("C1");
-        case 6: return QString("C2");
-        case 7: return QString("C3");
-        case 8: return QString("I1");
-        case 9: return QString("I2");
-        case 10: return QString("I3");
+        case 2: return QString("AS1"); //ATC Applicant
+        case 3: return QString("AS2"); //ATC Trainee
+        case 4: return QString("AS3"); //Advanced ATC Trainee
+        case 5: return QString("ADC"); //Aerodrome Controller
+        case 6: return QString("APC"); //Approach Controller
+        case 7: return QString("ACC"); //Center Controller
+        case 8: return QString("SEC"); //Senior Controller (not available)
+        case 9: return QString("SAI"); //Senior ATC Instructor
+        case 10: return QString("CAI"); //Chief ATC Instructor
         default: return QString("unknown:%1").arg(rating);
         }
     }

@@ -8,7 +8,6 @@
 #include "Window.h"
 
 PreferencesDialog *preferencesDialogInstance = 0;
-
 PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance,
                                                   QWidget *parent) {
     if(preferencesDialogInstance == 0)
@@ -40,8 +39,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
 
 void PreferencesDialog::loadSettings() {
     settingsLoaded = false;
-    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
-
     QColor color;
 
     spinBoxDownloadInterval->setValue(Settings::downloadInterval());
@@ -83,7 +80,7 @@ void PreferencesDialog::loadSettings() {
     editNavdir->setEnabled(Settings::useNavdata());
     browseNavdirButton->setEnabled(Settings::useNavdata());
     cbUseNavDatabase->setChecked(Settings::useNavdata());
-    cbShowFixes->setChecked(Settings::showFixes());
+    cbShowFixes->setChecked(Settings::showAllWaypoints());
 
     // Display
     cbReadSupFile->setChecked(Settings::useSupFile());
@@ -107,22 +104,9 @@ void PreferencesDialog::loadSettings() {
                     "(View/Debug log shows them).\n"
                     "See +notes.txt in the texture directory for more information.").
             arg(Settings::applicationDataDirectory("textures")));
+    glTextureEarth->addItems(texDir.entryList()); // first without icons, use lazy-load
+    QTimer::singleShot(1000, this, SLOT(lazyloadTextureIcons()));
 
-    // icons: this might be time-consuming because all textures are loaded, but it is
-    // also very "Qute" ;)
-    // memory seems to be handled fine and released directly after painting. It
-    // expands to +40MB though while loading.
-    glTextureEarth->setIconSize(QSize(128, 64));
-    foreach(QString tex, texDir.entryList()) {
-        QPixmap *pm = new QPixmap(Settings::applicationDataDirectory(
-                QString("textures/%1").arg(tex)));
-        QIcon icon = QIcon( // smooth transform, we want it nice. Uses ~2x the CPU..
-                pm->scaled(128, 64, Qt::KeepAspectRatio, // ..cycles compared to..
-                           Qt::SmoothTransformation)); // ..Qt::FastTransformation
-        glTextureEarth->addItem(icon, tex);
-        delete pm;
-    }
-    // glTextureEarth->addItems(texDir.entryList()); // this is the solution without icons
     glTextureEarth->setCurrentIndex(glTextureEarth->findText(Settings::glTextureEarth()));
 
     glStippleLines->setChecked(Settings::glStippleLines());
@@ -276,6 +260,16 @@ void PreferencesDialog::loadSettings() {
     sbDestLineStrength->setValue(Settings::destLineStrength());
     cbDestLineDashed->setChecked(Settings::destLineDashed());
 
+    color = Settings::waypointsDotColor();
+    waypointsDotColor->setText(color.name());
+    waypointsDotColor->setPalette(QPalette(color));
+    waypointsDotSize->setValue(Settings::waypointsDotSize());
+
+    color = Settings::waypointsFontColor();
+    waypointsFontColor->setText(color.name());
+    waypointsFontColor->setPalette(QPalette(color));
+    waypointsFont->setFont(Settings::waypointsFont());
+
     // voice
     editVoiceCallsign->setText(Settings::voiceCallsign());
     editVoiceUser->setText(Settings::voiceUser());
@@ -296,7 +290,30 @@ void PreferencesDialog::loadSettings() {
 
     // FINISHED
     settingsLoaded = true;
-    qApp->restoreOverrideCursor();
+}
+
+// icons: this might be time-consuming because all textures are loaded, but it is
+// also very "Qute" ;)
+// memory seems to be handled fine and released directly after painting. It
+// expands to +40MB though while loading.
+void PreferencesDialog::lazyloadTextureIcons() {
+    for (int i=0; i < glTextureEarth->count(); i++) {
+        if (glTextureEarth->itemIcon(i).isNull()) {
+            qDebug() << "PreferencesDialog::lazyloadTextureIcons()" <<
+                    Settings::applicationDataDirectory(
+                            QString("textures/%1").arg(glTextureEarth->itemText(i)));
+            QPixmap *pm = new QPixmap(Settings::applicationDataDirectory(
+                    QString("textures/%1").arg(glTextureEarth->itemText(i))));
+            QIcon icon = QIcon( // smooth transform uses ~2x the CPU..
+                    pm->scaled(128, 64, Qt::KeepAspectRatio, // ..cycles compared to..
+                               //Qt::SmoothTransformation)); // fast transform
+                               Qt::FastTransformation));
+            glTextureEarth->setItemIcon(i, icon);
+            delete pm;
+            QTimer::singleShot(1000, this, SLOT(lazyloadTextureIcons()));
+            return;
+        }
+    }
 }
 
 // airport traffic settings
@@ -312,11 +329,9 @@ void PreferencesDialog::on_spFilterArriving_valueChanged(double value) {
     Settings::setFilterArriving(value);
 }
 
-void PreferencesDialog::on_sbCongestionMinimum_valueChanged(int value)
-{
+void PreferencesDialog::on_sbCongestionMinimum_valueChanged(int value) {
     Settings::setAirportCongestionMinimum(value);
 }
-//
 
 void PreferencesDialog::on_sbMaxTextLabels_valueChanged(int value) {
     Settings::setMaxLabels(value);
@@ -732,11 +747,9 @@ void PreferencesDialog::on_pbDepLineColor_clicked() {
         Settings::setDepLineColor(color);
     }
 }
-
 void PreferencesDialog::on_sbDepLineStrength_valueChanged(double value) {
     Settings::setDepLineStrength(value);
 }
-
 void PreferencesDialog::on_pbDestLineColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::destLineColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
@@ -746,11 +759,9 @@ void PreferencesDialog::on_pbDestLineColor_clicked() {
         Settings::setDestLineColor(color);
     }
 }
-
 void PreferencesDialog::on_sbDestLineStrength_valueChanged(double value) {
     Settings::setDestLineStrength(value);
 }
-
 void PreferencesDialog::on_cbDepLineDashed_toggled(bool checked)
 {
     Settings::setDepLineDashed(checked);
@@ -759,6 +770,37 @@ void PreferencesDialog::on_cbDestLineDashed_toggled(bool checked)
 {
     Settings::setDestLineDashed(checked);
 }
+
+void PreferencesDialog::on_waypointsDotSize_valueChanged(double value) {
+    Settings::setWaypointsDotSize(value);
+}
+void PreferencesDialog::on_waypointsDotColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::waypointsDotColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+    if(color.isValid()) {
+        waypointsDotColor->setText(color.name());
+        waypointsDotColor->setPalette(QPalette(color));
+        Settings::setWaypointsDotColor(color);
+    }
+}
+void PreferencesDialog::on_waypointsFontColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::waypointsFontColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+    if(color.isValid()) {
+        waypointsFontColor->setText(color.name());
+        waypointsFontColor->setPalette(QPalette(color));
+        Settings::setWaypointsFontColor(color);
+    }
+}
+void PreferencesDialog::on_waypointsFont_clicked() {
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, Settings::waypointsFont(), this);
+    if(ok) {
+        waypointsFont->setFont(font);
+        Settings::setWaypointsFont(font);
+    }
+}
+
 
 void PreferencesDialog::on_buttonResetPilot_clicked() {
     QSettings settings;
@@ -800,7 +842,7 @@ void PreferencesDialog::on_rbVRC_clicked(bool value) {
 
 void PreferencesDialog::on_cbShowFixes_toggled(bool checked)
 {
-    Settings::setShowFixes(checked);
+    Settings::setShowAllWaypoints(checked);
 }
 
 void PreferencesDialog::on_pbInactAirportFontColor_clicked()
@@ -1123,3 +1165,4 @@ void PreferencesDialog::on_cbScreenshotFormat_currentIndexChanged(QString value)
     if(settingsLoaded)
         Settings::setScreenshotFormat(value);
 }
+

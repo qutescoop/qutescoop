@@ -108,6 +108,7 @@ int main(int argc, char *argv[]) {
     splash->showMessage(splashMsg, Qt::AlignCenter, QColor(0, 24, 81));
     app.processEvents();
     NavData::getInstance();
+    Airac::getInstance();
 
     // create main window
     splashMsg.append("\nSetting up main window and OpenGL...");

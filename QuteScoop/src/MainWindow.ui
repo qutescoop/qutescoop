@@ -422,6 +422,7 @@ Whazzups (replay)</string>
     <addaction name="actionDisplayAllSectors"/>
     <addaction name="actionShowInactiveAirports"/>
     <addaction name="actionShowRoutes"/>
+    <addaction name="actionShowWaypoints"/>
    </widget>
    <widget class="QMenu" name="menuPlan">
     <property name="statusTip">
@@ -674,6 +675,8 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
@@ -1186,6 +1189,21 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+0</string>
    </property>
   </action>
+  <action name="actionShowWaypoints">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/arrowup16.png</normaloff>:/icons/images/arrowup16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Display route &amp;waypoints</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F6</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>searchEdit</tabstop>
@@ -1219,7 +1237,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>326</y>
+     <y>317</y>
     </hint>
    </hints>
   </connection>
@@ -1235,7 +1253,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>764</y>
+     <y>581</y>
     </hint>
    </hints>
   </connection>
@@ -1251,7 +1269,7 @@ p, li { white-space: pre-wrap; }
     </hint>
     <hint type="destinationlabel">
      <x>143</x>
-     <y>215</y>
+     <y>166</y>
     </hint>
    </hints>
   </connection>
@@ -1266,8 +1284,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>598</y>
+     <x>288</x>
+     <y>469</y>
     </hint>
    </hints>
   </connection>
@@ -1282,8 +1300,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>222</x>
-     <y>421</y>
+     <x>288</x>
+     <y>333</y>
     </hint>
    </hints>
   </connection>

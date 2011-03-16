@@ -23,6 +23,7 @@ public:
 		DME_NO_FREQ = 12,
 		DME = 13
 	};
+	virtual QString toolTip() const;
 
 private:
 	Type type;

@@ -10,8 +10,8 @@
 #include "helpers.h"
 
 Sector::Sector() {
-    polygon = 0;
-    borderline = 0;
+    _polygon = 0;
+    _borderline = 0;
 }
 
 bool Sector::isNull() const {
@@ -27,56 +27,58 @@ Sector::Sector(QStringList strings) {
     _lon = strings[4].toDouble();
     _id = strings[5];
 
-    polygon = 0;
-    borderline = 0;
-    if (_icao == "RU-NWC_FSS") qDebug() << "RU-NWC Controller:getCenter" << strings;
+    _polygon = 0;
+    _borderline = 0;
 }
 
 Sector::~Sector() {
-    if(polygon != 0) glDeleteLists(polygon, 1);
-    if(borderline != 0) glDeleteLists(borderline, 1);
+    if(_polygon != 0) glDeleteLists(_polygon, 1);
+    if(_borderline != 0) glDeleteLists(_borderline, 1);
+}
+
+const QPolygonF& Sector::sectorPolygon() const {
+    QPolygonF pol;
+    foreach (DoublePair p, _points)
+        pol.append(QPointF(p.first, p.second));
+    return pol;
 }
 
 void Sector::compileDisplayLists() {
     // filled polygon
-    polygon = glGenLists(1);
-    glNewList(polygon, GL_COMPILE);
+    _polygon = glGenLists(1);
+    glNewList(_polygon, GL_COMPILE);
     QColor color = Settings::firFillColor();
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     Tessellator().tessellate(_points);
     glEndList();
 
     // border line
-    borderline = glGenLists(1);
-    glNewList(borderline, GL_COMPILE);
+    _borderline = glGenLists(1);
+    glNewList(_borderline, GL_COMPILE);
     glLineWidth(Settings::firBorderLineStrength());
     glBegin(GL_LINE_STRIP);
     color = Settings::firBorderLineColor().rgba();
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-    for (int i = 0; i < _points.size(); i++) {
+    for (int i = 0; i < _points.size(); i++)
         VERTEXhigh(_points[i].first, _points[i].second);
-    }
     glEnd();
-
     glEndList();
 }
 
 GLuint Sector::getPolygon() {
-    if(polygon == 0)
+    if (_polygon == 0)
         compileDisplayLists();
-    return polygon;
+    return _polygon;
 }
 
 GLuint Sector::getBorderLine() {
-    if(borderline == 0)
+    if (_borderline == 0)
         compileDisplayLists();
-    return borderline;
+    return _borderline;
 }
 
-void Sector::setPointList(const QList<QPair<double, double> >& points)
-{
+void Sector::setPointList(const QList<QPair<double, double> >& points) {
     _points = points;
     if(_points.last() != _points.first())
         _points.append(_points.first());
-
 }

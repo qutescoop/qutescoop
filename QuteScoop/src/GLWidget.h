@@ -22,7 +22,6 @@ public:
     GLWidget(QGLFormat format, QWidget *parent = 0);
     ~GLWidget();
 
-    bool plotFlightPlannedRoute;
     QPair<double, double> currentPosition();
     ClientSelectionWidget *clientSelection;
 
@@ -68,7 +67,7 @@ protected:
     bool event(QEvent *event);
 
 private:
-    void createObjects();
+    void createStaticLists();
 
     void resetZoom();
     void handleRotation(QMouseEvent *event);
@@ -103,16 +102,16 @@ private:
 	GLUquadricObj *earthQuad;
 	GLuint earthTex;
 	GLuint earthList, coastlinesList, countriesList, gridlinesList;
-	GLuint pilotsList, airportsList, airportsInactiveList;
-	GLuint fixesList;
+	GLuint pilotsList, activeAirportsList, inactiveAirportsList;
+	GLuint allWaypointsList, usedWaypointsList, plannedRouteList;
 	GLuint sectorPolygonsList, sectorPolygonBorderLinesList, airportControllersList, appBorderLinesList,
 		congestionsList;
 	bool allSectorsDisplayed;
 
 	QList<Controller*> sectorsToDraw;
 
-    double pilotLabelZoomTreshold, airportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
-        inactiveAirportDotZoomTreshold, controllerLabelZoomTreshold, fixZoomTreshold;
+    double pilotLabelZoomTreshold, activeAirportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
+        controllerLabelZoomTreshold, allWaypointsLabelZoomTreshold, usedWaypointsLabelZoomThreshold;
 
     qint64 shutDownAnim_t;
 };

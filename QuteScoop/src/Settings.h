@@ -130,8 +130,8 @@ public:
     static bool useNavdata();
     static void setUseNavdata(bool value);
 
-    static bool showFixes();
-    static void setShowFixes(bool value);
+    static bool showAllWaypoints();
+    static void setShowAllWaypoints(bool value);
 
     static int metarDownloadInterval();
     static void setMetarDownloadInterval(int minutes);
@@ -288,6 +288,21 @@ public:
 
     static QColor timeLineColor();
     static void setTimeLineColor(const QColor& color);
+
+    static bool showUsedWaypoints();
+    static void setShowUsedWaypoints(bool value);
+
+    static QColor waypointsFontColor();
+    static void setWaypointsFontColor(const QColor& color);
+
+    static QColor waypointsDotColor();
+    static void setWaypointsDotColor(const QColor& color);
+
+    static double waypointsDotSize();
+    static void setWaypointsDotSize(double value);
+
+    static QFont waypointsFont();
+    static void setWaypointsFont(const QFont& font);
 
     static QColor depLineColor();
     static void setDepLineColor(const QColor& color);

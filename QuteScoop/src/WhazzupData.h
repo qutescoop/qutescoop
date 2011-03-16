@@ -31,9 +31,9 @@ public:
     void updateFrom(const WhazzupData& data);
 
     QList<Controller*> activeSectors() const;
-    QList<Pilot*> getPilots() const;
-    QList<Pilot*> getBookedPilots() const;
-    QList<Pilot*> getAllPilots() const;
+    QList<Pilot*> getPilots() const { return pilots.values(); }
+    QList<Pilot*> getBookedPilots() const { return bookedpilots.values(); }
+    QList<Pilot*> getAllPilots() const { return bookedpilots.values() + pilots.values(); }
     QList<Controller*> getControllers() const { return controllers.values(); }
     QList<BookedController*> getBookedControllers() const { return bookedcontrollers; }
 
@@ -67,17 +67,13 @@ private:
     void updateControllersFrom(const WhazzupData& data);
     void updateBookedControllersFrom(const WhazzupData& data);
 
-    QHash<QString, Pilot*> pilots;
-    QHash<QString, Pilot*> bookedpilots; // honestly, there could be same callsigns in the bookings, but it is easier like that (searching...)
+    QHash<QString, Pilot*> pilots, bookedpilots;
     QHash<QString, Controller*> controllers;
     QList<BookedController*> bookedcontrollers;
-    QList<QStringList> connectedServerList;
-    QList<QStringList> connectedVoiceServerList;
+    QList<QStringList> connectedServerList, connectedVoiceServerList;
     int whazzupVersion;
 
-    QDateTime whazzupTime, bookingsTime;
-    QDateTime predictionBasedOnTime;
-    QDateTime predictionBasedOnBookingsTime;
+    QDateTime whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
     WhazzupType dataType;
 };
 

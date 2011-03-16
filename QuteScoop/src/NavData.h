@@ -14,14 +14,15 @@
 class NavData
 {
 public:
-    static NavData* getInstance();
+    static NavData *getInstance(bool createIfNoInstance = true);
 
     const QHash<QString, Airport*>& airports() const { return airportHash; }
     const QMultiMap<int, Airport*>& activeAirports() const { return activeAirportsCongestionMap; }
     const QHash<QString, Sector*>& sectors() const { return sectorHash; }
     QList<Airport*> airportsAt(double lat, double lon, double maxDist);
 
-    const Airac& getAirac() const { return airac; }
+    static const QPair<double, double> *fromArinc(const QString &str);
+    static const QString toArinc(const short lat, const short lon);
 
     static double distance(double lat1, double lon1, double lat2, double lon2);
     static QPair<double, double> pointDistanceBearing(double lat, double lon, double dist, double heading);
@@ -39,7 +40,6 @@ public:
 private:
     NavData();
 
-    void loadDatabase(const QString& directory);
     void loadAirports(const QString& filename);
     void loadSectors();
     void loadCountryCodes(const QString& filename);
@@ -48,8 +48,6 @@ private:
     QMultiMap<int, Airport*> activeAirportsCongestionMap; // holds activeAirports sorted by congestion ascending
     QHash<QString, Sector*> sectorHash;
     QHash<QString, QString> countryCodes;
-
-    Airac airac;
 };
 
 #endif /*NAVDATA_H_*/

@@ -38,12 +38,11 @@ PilotDetails::PilotDetails(QWidget *parent):
 }
 
 void PilotDetails::refresh(Pilot *newPilot) {
-    if(newPilot != 0) {
+    if(newPilot != 0)
         pilot = newPilot;
-    } else {
+    else
         pilot = Whazzup::getInstance()->whazzupData().getPilot(callsign);
-    }
-    if(pilot == 0) {
+    if (pilot == 0) {
         hide();
         return;
     }
@@ -80,74 +79,60 @@ void PilotDetails::refresh(Pilot *newPilot) {
     groupFp->setTitle(QString("Flightplan (%1)")
                       .arg(pilot->planFlighttypeString()));
 
-    QString depStr = pilot->planDep;
-    Airport *airport = pilot->depAirport();
-    if(airport != 0) depStr = airport->toolTip();
-    //lblDep->setText(depStr);
-    buttonFrom->setText(depStr);
+    buttonFrom->setText(pilot->depAirport()  != 0? pilot->depAirport() ->toolTip(): pilot->planDep);
+    buttonDest->setText(pilot->destAirport() != 0? pilot->destAirport()->toolTip(): pilot->planDest);
+    buttonAlt-> setText(pilot->altAirport()  != 0? pilot->altAirport() ->toolTip(): pilot->planAltAirport);
 
     lblPlanEtd->setText(pilot->etd().toString("HHmm"));
-
-    QString destStr = pilot->planDest;
-    airport = pilot->destAirport();
-    if(airport != 0) destStr = airport->toolTip();
-    //lblDest->setText(destStr);
-    buttonDest->setText(destStr);
-
     lblPlanEta->setText(pilot->etaPlan().toString("HHmm"));
-
-    QString altStr = pilot->planAltAirport;
-    airport = pilot->altAirport();
-    if(airport != 0) altStr = airport->toolTip();
-    //lblAlt->setText(altStr);
-    buttonAlt->setText(altStr);
-
     lblFuel->setText(QTime(pilot->planHrsFuel, pilot->planMinFuel).toString("H:mm"));
     lblRoute->setText(pilot->planRoute);
     lblPlanTas->setText(QString("N%1").arg(pilot->planTasInt()));
     lblPlanFl->setText(QString("F%1").arg(pilot->defuckPlanAlt(pilot->planAlt)/100));
     lblPlanEte->setText(QString("%1").arg(QTime(pilot->planHrsEnroute, pilot->planMinEnroute).toString("H:mm")));
-
     lblRemarks->setText(pilot->planRemarks);
 
     // check if we know userId
     buttonAddFriend->setDisabled(pilot->userId.isEmpty());
-    if(pilot->isFriend())
-        buttonAddFriend->setText("remove &friend");
-    else
-        buttonAddFriend->setText("add &friend");
+    buttonAddFriend->setText(pilot->isFriend()? "remove &friend": "add &friend");
 
     // check if we know position
     buttonShowOnMap->setDisabled(qFuzzyIsNull(pilot->lon) && qFuzzyIsNull(pilot->lat));
 
-    cbPlotRoute->setChecked(pilot->showDepDestLine);
+    // plotted?
+    bool plottedAirports = false;
+    if (pilot->depAirport() != 0)
+        plottedAirports |= pilot->depAirport()->showFlightLines;
+    if (pilot->destAirport() != 0)
+        plottedAirports |= pilot->destAirport()->showFlightLines;
+
+    if (!plottedAirports && !pilot->showDepDestLine)
+        cbPlotRoute->setCheckState(Qt::Unchecked);
+    if (plottedAirports && !pilot->showDepDestLine)
+        cbPlotRoute->setCheckState(Qt::PartiallyChecked);
+    if (pilot->showDepDestLine)
+        cbPlotRoute->setCheckState(Qt::Checked);
+    if (pilot->showDepDestLine || plottedAirports)
+        lblPlotStatus->setText(QString("waypoints (calculated): %1").arg(pilot->routeWaypointsStr()));
+    lblPlotStatus->setVisible(pilot->showDepDestLine || plottedAirports);
 
     adjustSize();
     //updateGeometry();
 }
 
 void PilotDetails::on_buttonDest_clicked() {
-    Airport *airport = pilot->destAirport();
-    if(airport != 0) {
-        airport->showDetailsDialog();
-        close();
-    }
+    if(pilot->destAirport() != 0)
+        pilot->destAirport()->showDetailsDialog();
 }
 
 void PilotDetails::on_buttonAlt_clicked() {
-    Airport *airport = pilot->altAirport();
-    if(airport != 0) {
-        airport->showDetailsDialog();
-        close();
-    }
+    if(pilot->altAirport() != 0)
+        pilot->altAirport()->showDetailsDialog();
 }
 
 void PilotDetails::on_buttonFrom_clicked() {
-    Airport *airport = pilot->depAirport();
-    if(airport != 0) {
-        airport->showDetailsDialog();
-        close();
-    }
+    if(pilot->depAirport() != 0)
+        pilot->depAirport()->showDetailsDialog();
 }
 
 void PilotDetails::on_buttonAddFriend_clicked() {
@@ -155,12 +140,19 @@ void PilotDetails::on_buttonAddFriend_clicked() {
     refresh();
 }
 
-void PilotDetails::on_cbPlotRoute_toggled(bool checked) {
+void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
+    bool plottedAirports = false; // plotted?
+    if (pilot->depAirport() != 0)
+        plottedAirports |= pilot->depAirport()->showFlightLines;
+    if (pilot->destAirport() != 0)
+        plottedAirports |= pilot->destAirport()->showFlightLines;
+
     if (pilot->showDepDestLine != checked) {
         pilot->showDepDestLine = checked;
         if (Window::getInstance(false) != 0) {
             Window::getInstance(true)->glWidget->createPilotsList();
             Window::getInstance(true)->glWidget->updateGL();
         }
+        refresh();
     }
 }

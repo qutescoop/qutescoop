@@ -20,7 +20,7 @@ public:
     QString provider, dep, dest, route, minFl, maxFl, airacCycle, lastChange,
         comments, routeDistance, waypointsStr;
 
-    QList< Waypoint* > waypoints;
+    QList<Waypoint*> waypoints;
 
     void calculateWaypointsAndDistance();
 };

@@ -527,8 +527,13 @@ Check their webpage for member vACCs.</string>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
        <property name="text">
-        <string>plotted OK.</string>
+        <string>waypoints (calculated):...</string>
        </property>
        <property name="wordWrap">
         <bool>true</bool>

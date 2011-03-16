@@ -9,13 +9,19 @@
 #include "helpers.h"
 #include "Settings.h"
 
-NavData *instance = 0;
+NavData *navDataInstance = 0;
+NavData *NavData::getInstance(bool createIfNoInstance) {
+    if(navDataInstance == 0)
+        if (createIfNoInstance) {
+            navDataInstance = new NavData();
+        }
+    return navDataInstance;
+}
 
 NavData::NavData() {
     loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
-    loadDatabase(Settings::navdataDirectory());
 }
 
 void NavData::loadAirports(const QString& filename) {
@@ -48,12 +54,6 @@ void NavData::loadCountryCodes(const QString& filename) {
 
 void NavData::loadSectors() {
     SectorReader().loadSectors(sectorHash);
-}
-
-NavData* NavData::getInstance() {
-    if (instance == 0)
-        instance = new NavData();
-    return instance;
 }
 
 double NavData::distance(double lat1, double lon1, double lat2, double lon2) {
@@ -213,13 +213,6 @@ QPair<double, double> NavData::greatCircleFraction(double lat1, double lon1, dou
     return QPair<double, double>(rLat / Pi180, rLon / Pi180);
 }
 
-void NavData::loadDatabase(const QString& directory) {
-    if(directory.isEmpty())
-        return;
-    if(Settings::useNavdata())
-        airac.load(directory);
-}
-
 QList<QPair<double, double> > NavData::greatCirclePoints(double lat1, double lon1, double lat2, double lon2,
                                                          double pointEachNm) { // omits last point
     QList<QPair<double, double> > result;
@@ -237,10 +230,54 @@ void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) { /
 	if (points.size() > 1) {
 		DoublePair wpOld = points[0];
 		for (int i=1; i < points.size(); i++) {
-			foreach(DoublePair p, greatCirclePoints(wpOld.first, wpOld.second, points[i].first, points[i].second))
+			foreach(DoublePair p, greatCirclePoints(wpOld.first, wpOld.second,
+													points[i].first, points[i].second))
 				VERTEX(p.first, p.second);
 			wpOld = points[i];
 		}
 	}
 	VERTEX(points.last().first, points.last().second); // last points gets ommitted by greatCirclePoints by design
+}
+
+const QPair<double, double> *NavData::fromArinc(const QString &str) { // returning 0 on error
+	QRegExp arinc("(\\d{2})([NSEW]?)(\\d{2})([NSEW]?)"); // ARINC424 waypoints (strict)
+	if (arinc.exactMatch(str)) {
+		if (!arinc.capturedTexts()[2].isEmpty() ||
+			!arinc.capturedTexts()[4].isEmpty()) {
+			double wLat = arinc.capturedTexts()[1].toDouble();
+			double wLon = arinc.capturedTexts()[3].toDouble();
+			if (QRegExp("[SW]").exactMatch(arinc.capturedTexts()[2]) ||
+				QRegExp("[SW]").exactMatch(arinc.capturedTexts()[4]))
+				wLat = -wLat;
+			if (!arinc.capturedTexts()[2].isEmpty())
+				wLon = wLon + 100.;
+			if (QRegExp("[NW]").exactMatch(arinc.capturedTexts()[2]) ||
+				QRegExp("[NW]").exactMatch(arinc.capturedTexts()[4]))
+				wLon = -wLon;
+			return new QPair<double, double>(wLat, wLon);
+		}
+	}
+	return 0;
+}
+
+const QString NavData::toArinc(const short lat, const short lon) { // returning QString() on error
+	if (qAbs(lat) > 90 || qAbs(lon) > 180)
+		return QString();
+	QString q; // ARINC 424 quadrant
+	if (lat > 0) {
+		if (lon > 0)
+			q = "E";
+		else
+			q = "N";
+	} else {
+		if (lon > 0)
+			q = "S";
+		else
+			q = "W";
+	}
+	return QString("%1%2%3%4").
+			arg(qAbs(lat), 2, 10, QChar('0')).
+			arg(qAbs(lon) >= 100? q: "").
+			arg(qAbs(lon) >= 100? qAbs(lon) - 100: qAbs(lon), 2, 10, QChar('0')).
+			arg(qAbs(lon) >= 100? "": q);
 }

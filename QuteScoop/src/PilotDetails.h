@@ -20,7 +20,7 @@ public:
     virtual void refresh(Pilot *pilot = 0);
 
 private slots:
-    void on_cbPlotRoute_toggled(bool checked);
+    void on_cbPlotRoute_clicked(bool checked);
     void on_buttonAlt_clicked();
     void on_buttonDest_clicked();
     void on_buttonFrom_clicked();
