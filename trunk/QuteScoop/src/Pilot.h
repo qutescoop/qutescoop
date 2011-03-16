@@ -83,10 +83,13 @@ public:
 
     QPair<double, double> positionInFuture(int seconds) const;
 
-    void plotDepDestLine();
+    const int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
+    bool showDepLine(), showDestLine();
     bool showDepDestLine;
 
-    QList<Waypoint*> routeWaypoints();
+    QList<Waypoint*> &routeWaypoints();
+    QString routeWaypointsStr();
+    QList<Waypoint*> routeWaypointsWithDepDest();
 
     QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
     QString routeWaypointsPlanDepCache, routeWaypointsPlanDestCache, routeWaypointsPlanRouteCache;

@@ -32,3 +32,16 @@ NavAid::NavAid(const QStringList& stringList) {
 	}
 }
 
+QString NavAid::toolTip() const {
+	return Waypoint::toolTip() + QString(" - %6").
+			arg(type == NDB?
+				QString("%1kHz [NDB]").arg(frequency): (
+						type == VOR?
+						QString("%1MHz [VOR]").arg(frequency / 100., 0, 'f', 2): (
+								type == DME?
+								QString("%1MHz [DME]").arg(frequency / 100., 0, 'f', 2):
+								QString("%1").arg(frequency))
+						)
+				);
+
+}

@@ -7,6 +7,7 @@
 #include "helpers.h"
 #include "NavData.h"
 #include "Window.h"
+#include "PilotDetails.h"
 #include "Settings.h"
 
 // singleton instance
@@ -24,40 +25,6 @@ AirportDetails *AirportDetails::getInstance(bool createIfNoInstance, QWidget *pa
 void AirportDetails::destroyInstance() {
     delete airportDetails;
     airportDetails = 0;
-}
-
-// function only used here
-QString lat2str(double lat) {
-    QString result = "N";
-    if (lat < 0) {
-        result += "S";
-        lat *= -1;
-    }
-
-    int lat1 = (int)lat;
-    double lat2 = (lat - (int)lat) * 60.;
-    result += QString("%1 %2'")
-    .arg(lat1, 2, 10, QChar('0'))
-    .arg(lat2, 2, 'f', 3, QChar('0'));
-
-    return result;
-}
-
-// function only used here
-QString lon2str(double lon) {
-    QString result = "E";
-    if (lon < 0) {
-        lon *= -1;
-        result = "W";
-    }
-
-    int lon1 = (int)lon;
-    double lon2 = (lon - (int)lon) * 60.;
-    result += QString("%1 %2'")
-    .arg(lon1, 3, 10, QChar('0'))
-    .arg(lon2, 2, 'f', 3, QChar('0'));
-
-    return result;
 }
 
 AirportDetails::AirportDetails(QWidget *parent):
@@ -124,18 +91,21 @@ void AirportDetails::refresh(Airport* newAirport) {
     setWindowTitle(airport->toolTip());
 
     lblName->setText(QString("%1\n%2").arg(airport->city).arg(airport->name));
-
-    int utcDev = (int) (airport->lon/180*12 + 0.5); // lets estimate the deviation from UTC and round that
-    QString lt = Whazzup::getInstance()->whazzupData().timestamp().addSecs(utcDev*3600).time().toString("HH:mm");
     lblCountry->setText(QString("%1 (%2)")
                         .arg(airport->countryCode)
                         .arg(NavData::getInstance()->countryName(airport->countryCode)));
-    lblLocation->setText(QString("%1\n%2").arg(lat2str(airport->lat)).arg(lon2str(airport->lon)));
-    lblTime->setText(QString("local time %1, UTC %2%3")
+    lblLocation->setText(QString("%1%2 %3%4").
+                         arg(airport->lat > 0? "N": "S").
+                         arg(qAbs(airport->lat), 6, 'f', 3, '0').
+                         arg(airport->lon > 0? "E": "W").
+                         arg(qAbs(airport->lon), 7, 'f', 3, '0'));
+
+    int utcDev = (int) (airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
+    QString lt = Whazzup::getInstance()->whazzupData().timestamp().addSecs(utcDev * 3600).time().toString("HH:mm");
+    lblTime->setText(QString("%1 loc, UTC %2%3")
                         .arg(lt)
                         .arg(utcDev < 0 ? "": "+") // just a plus sign
                         .arg(utcDev));
-
 
     // arrivals
     arrivalsModel.setClients(airport->getArrivals());
@@ -213,6 +183,8 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
             Window::getInstance(true)->glWidget->createPilotsList();
             Window::getInstance(true)->glWidget->updateGL();;
         }
+        if (PilotDetails::getInstance(false) != 0)
+            PilotDetails::getInstance(true)->refresh();
     }
 }
 

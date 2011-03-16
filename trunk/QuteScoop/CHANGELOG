@@ -22,7 +22,7 @@ Iteration 4
 * fix the framerate
 * read firdisplay.sup
 * Download whazzup from IVAO + VATSIM
-* Download whazzup.txt from user-defined networks (requires a status.txt 
+* Download whazzup.txt from user-defined networks (requires a status.txt
   for now)
 
 Iteration 5
@@ -48,12 +48,12 @@ Iteration 8
 * Make all tables sortable by any column
 * User can click anywhere on a text label to display information
 * fix broken sectors (self-intersecting polygons, FIRs not being displayed)
-* Improve labelling performance (does no longer display overlapping text 
+* Improve labelling performance (does no longer display overlapping text
   labels)
 * Other stuff (that I was not supposed to do, but did anyways)
 
 Iteration 9
-* Display flight route (line from departure to aircraft to destination) 
+* Display flight route (line from departure to aircraft to destination)
   (right-click on any airport or aircraft to toggle flight paths)
 * Download and show METAR for airports
 * Display percentage of flight completed in pilot details window
@@ -71,14 +71,14 @@ Release Candidate 1
 * Friend List
 
 Release Candidate 5
-* Added "Join Channel" button in controller details (currently for IVAO, 
+* Added "Join Channel" button in controller details (currently for IVAO,
   should be simple to adapt for VATSIM)
 * Detail windows do not appear in the windows taskbar any more
 * Departure and destination show up in this order in pilot window
 
 Release 1.0.0
 * Made update check + version feedback optional in the preferences dialog
-* Minor fix in ATIS decoding (did not work with voice link when ATIS 
+* Minor fix in ATIS decoding (did not work with voice link when ATIS
   contained one line only)
 * FIR border line strength setting had no effect
 * VATSIM VVL support can not be added due to their restrictive licensing.
@@ -94,48 +94,48 @@ Version 1.0.2 alpha
 * Loading of navigation database in the XPlane 9 format. This is a free
   database that can be downloaded from http://data.x-plane.com
 * Plotting of flight route according to the filed flight plan
-* No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are 
+* No longer filters XXXX_TL_XXX stations. Only _T_, _T1_, _T2_, _T3_ are
   filtered.
 
 Version 1.0.3 alpha 8
 changed:
 * Markus' great code to identify ATC sectors above an airport!
 * Symbol for Delivery
-* Zoom accelerated if mouse wheel driver supports it, zoom factor 
+* Zoom accelerated if mouse wheel driver supports it, zoom factor
   configurable
 * Increased max. possible value for shown labels (in preferences)
 * Render dashed lines in front of/behind plane also in flightplan Plot mode
-* Replace Messageboxes by Statusbar-Messages to allow a less intrusive and 
+* Replace Messageboxes by Statusbar-Messages to allow a less intrusive and
   smoother user experience that does not need any interaction
 added:
 * Show network (and voice for VATSIM) servers and ping them
 * Respect the update interval that the Whazzup server transmits
 * Show ATC bookings in list (VATSIM only so far)
-* Do Time Warping: Jump to a date and time and see the expected ATC 
+* Do Time Warping: Jump to a date and time and see the expected ATC
   coverage AND traffic situation
-    * See prefiled flights in arrival and departure lists and in Time Warp 
+    * See prefiled flights in arrival and departure lists and in Time Warp
       on the map as faked real pilots
     * Allow "real time"-prediction
     * Add Controllers to prediction that have "ONLINE UNTIL 1234Z" et al in
       their Controller Info (ATIS)
-* List, search and filter all connected clients and show distance from 
+* List, search and filter all connected clients and show distance from
   present position: look for supervisors etc.
 * Remember / recall Multiple Map Positions
-* Save all downloaded data in "./downloaded" - to be used in replay mode 
+* Save all downloaded data in "./downloaded" - to be used in replay mode
   (not yet implemented)
-* Show OpenGL debug messages and be able to set OpenGL parameters through 
+* Show OpenGL debug messages and be able to set OpenGL parameters through
   own config file
 * Show inactive airports when zoomed in (switchable via Menu)
-* Filter airport traffic to only show traffic in the vicinity of airport 
+* Filter airport traffic to only show traffic in the vicinity of airport
   (configurable)
 * Show rings of airport congestion around airports (configurable)
 * Doubleclick to center map, right or left drag to pan
 * Key commands for pan and zoom
 * Remember and recall 7 Map Positions
-* Request routes from route providers. So far only vroute is integrated, 
-  but all major route databases have been asked (SimRoutes, asalink, 
+* Request routes from route providers. So far only vroute is integrated,
+  but all major route databases have been asked (SimRoutes, asalink,
   VATroute, IVAO-DB).
-    * Requested or manually enterred routes can be plotted onto the map 
+    * Requested or manually enterred routes can be plotted onto the map
       using the free XPlane-NavDatabase
 * Allow to disable the front/behind part of plotted routes
 * Show flight delay as difference from filed ETA to calculated ETA
@@ -150,28 +150,28 @@ fixed:
 * Allow to disable border lines by setting strength to 0px
 * Show map labels of busy airports in favor of less busier ones
 * Labels are less conservative in decluttering and use the screen better
-* Show _FSS stations (by faking the facilityType which is not reported 
+* Show _FSS stations (by faking the facilityType which is not reported
   correctly in WhazzUp data for VATSIM)
 * Preferences dialog fits on a 1280x800 screen
-* Put data location in the program path (./data), not /usr/share on Unix, 
+* Put data location in the program path (./data), not /usr/share on Unix,
   may be overridden through option general/dataDirectory as before
-* Set Zoom In/Out to CTRL+/- as F11 got obscured on Linux and was not 
+* Set Zoom In/Out to CTRL+/- as F11 got obscured on Linux and was not
   applicable on Mac as well
 
 
 Version 1.0.3 alpha 9:
 changed
-* bookings get not downloaded if they are not needed (code change, 
+* bookings get not downloaded if they are not needed (code change,
   hopefully works in the end...)
-* disabled View/Show All Routes, this often produced a program hang, and I 
+* disabled View/Show All Routes, this often produced a program hang, and I
   do not think it is important.
 * Make "save screenshots" selection persistent
-* re-organization of directory structure (remove ./gui and put files to 
+* re-organization of directory structure (remove ./gui and put files to
   ./src)
 
 added
 * map special approaches: EDBB -> EDDI, NY -> KLGA
-* import/export settings from/to a .ini file - allows transfer of settings 
+* import/export settings from/to a .ini file - allows transfer of settings
   between computers.
 
 
@@ -196,37 +196,37 @@ added:
 * a Debug Log browser internally in the program + Debug output to "log.txt"
 * allowing styleSheets - see under preferences ;)
 changed:
-* reenabled the "Show all Routes" option - it tends to run infinitely 
+* reenabled the "Show all Routes" option - it tends to run infinitely
   though..
 * use README in QuteScoop/About
 
 
 Version 1.0.3 beta 4:
 changed:
-* preventing unnecessary calls to Main Window instance (I feel that this 
+* preventing unnecessary calls to Main Window instance (I feel that this
   happened
   e.g. when opening BookedAtcDialog and caused major lags)
 * underlying data model for BookedAtcModel and ListClientsDialog is less
-  "automatic", thus preventing unnecessary filter operations. This results 
+  "automatic", thus preventing unnecessary filter operations. This results
   in a welcome speed-up in these "data-heavy" dialogs.
-* restructured datafile downloader: added more feedback on the progress and 
+* restructured datafile downloader: added more feedback on the progress and
   if an error occurs.
 * preparations to move to a new organisation of files which is necessary for
-  packaging QuteScoop for Mac and Linux (/data needs to go to 
+  packaging QuteScoop for Mac and Linux (/data needs to go to
   %ApplicationData%)
 added:
 * First steps of GUI message handler controlling StatusBar, ProgressBar and
   MessageBoxes (not finished yet) [GuiMessage.h]:
   Its intention is to find a solution to the problem of concurring user
-  messages, e.g. "There is a new Whazzup downloading, one notification of 
-  Bookings not available should be shown while one datafile from disk is 
-  not writable and if all that is over Whazzup status shall be displayed 
+  messages, e.g. "There is a new Whazzup downloading, one notification of
+  Bookings not available should be shown while one datafile from disk is
+  not writable and if all that is over Whazzup status shall be displayed
   again."... This is not yet finished!
 
 
 Version 1.0.3 beta 5:
 changed:
-* previous beta had some crashes now in the "data heavy" dialogs. Hopefully 
+* previous beta had some crashes now in the "data heavy" dialogs. Hopefully
   fixed now.
 * Combined date+time fields in main window (Warp mode) + Booked ATC.
 * Disabling warp via button works again.
@@ -234,8 +234,8 @@ changed:
 added:
 * LogBrowser also outputs readable version string.
 * First signs of icons within QuteScoop. We need more ;)
-* QuteScoop subdirectories can now be in %APPDATA% or besides the 
-  executable. The actual path gets determined on each program start. (See 
+* QuteScoop subdirectories can now be in %APPDATA% or besides the
+  executable. The actual path gets determined on each program start. (See
   Debug Log Browser).
 * installers are packaged with BitRock InstallBuilder Qt.
 
@@ -245,19 +245,19 @@ fixed:
 * crashs during route resolving ("Show all routes" etc.).
 changed:
 * caching results of route calculations for performance.
-* although I loved the GUI-responsiveness during long CPU-operations, I 
+* although I loved the GUI-responsiveness during long CPU-operations, I
   removed it because it tends to introduce instability.
 added:
-* data-directories will now be checked on program start. If anything is 
+* data-directories will now be checked on program start. If anything is
   wrong, QuteScoop can move files to the correct locations.
-* more information on the compiling and running environment in the debug 
+* more information on the compiling and running environment in the debug
   log browser.
 
 Version 2.0rc3:
 fixed:
 * crash after Metar download
 changed:
-* MAJOR improvements on update times. Brought one important function in 
+* MAJOR improvements on update times. Brought one important function in
   the Whazzup data updates down to ~10% of the CPU cycles needed before :)
 * small improvements of "List clients"
 added:
@@ -265,17 +265,17 @@ added:
 
 Version 2.0rc4:
 fixed:
-* inactive airport labels get shown again. (regression since the 
+* inactive airport labels get shown again. (regression since the
   faster update code from 2.0rc3)
 added:
-* EARTH HAS SUN day/night SHADOW. Configurable through "Preferences" with 
+* EARTH HAS SUN day/night SHADOW. Configurable through "Preferences" with
   various lighting options.
-* new OpenGL-options in preferences to adjust performance on low-end 
+* new OpenGL-options in preferences to adjust performance on low-end
   machines.
 * shutdown animation: fly away from spinning earth ;)
 changed:
 * standard values for most settings adapted. New standard color scheme.
-* increased visiblity distance for all objects. This might be configurable 
+* increased visiblity distance for all objects. This might be configurable
   through "Preferences" if you ask for it ;)
 
 Version 2.0rc6:
@@ -288,26 +288,26 @@ fixed:
 * online timespans corrected (UTC vs. local time bug) (regression).
 * consistent Time Warp en-/disabling via menu, button or F8 key.
 changed:
-* remove filtering of ATC stations with _T or _X in the middle (I don't 
+* remove filtering of ATC stations with _T or _X in the middle (I don't
   know it was added once...)
-* remove automatic selection of objects on mouseclick in congested areas 
+* remove automatic selection of objects on mouseclick in congested areas
   (removed progressbar from selection listbox)
 * texture selection in Preferences dialog. You can add new textures, see
   textures/+notes.txt
 * show name of sector in tooltip if we know it from firlist.dat.
 * show sector label at least if we do not have sector data (CTR, FSS).
 added:
-* selection rectangle allows zooming to a given area directly (left click 
+* selection rectangle allows zooming to a given area directly (left click
   and drag, right drag is panning as before).
-* right click on zoom icons, press CTRL+0 or right double click on the map 
+* right click on zoom icons, press CTRL+0 or right double click on the map
   to reset zoom.
-* direct access to Airport Details of departure/destination from Plan 
+* direct access to Airport Details of departure/destination from Plan
   Route Dialog.
-* you can enter your own routes in Plan Route Dialog to calculate distance 
+* you can enter your own routes in Plan Route Dialog to calculate distance
   and plot them.
-* show all sector labels on "View/Display all Sectors" (support for sector 
+* show all sector labels on "View/Display all Sectors" (support for sector
   file creators).
-* some more icons from the great Crystal Project iconset from Everaldo 
+* some more icons from the great Crystal Project iconset from Everaldo
   Coelho, released under LGPL.
 
 Version 2.0rc8:
@@ -329,11 +329,33 @@ added:
 
 Version 2.0rc9:
 fixed:
-* size of one texture
+* size of one texture.
 changed:
 * some default values to adapt better to lighting.
 added:
 * see icons of textures in Preferences dialog.
+
+Version 2.0rc10:
+fixed:
+* faster load times of preferences dialog through lazy-loading of iconized
+  textures (it is still prone to use large amounts of memory if you have
+  huge textures in the texture folder as they get scaled on-the-fly and thus
+  need to be completely loaded).
+changed:
+* updated IVAO-ratings.
+* ultimately appealing handling of plotted routes (transparently reflected in
+  airport and pilot dialogs).
+* changing functions for saving/restoring window statii and positions (problems
+  on Mac OS where reported - please try if this works).
+added:
+* support for ARINC424 geographic waypoints (3030N, 30N30 etc.) and some weird
+  other (incorrect) formats like 30N20W, 30/20, 3000N 02000W that are used by
+  unknowledgable ocean-crossers...
+* increased overall error tolerance in route resolvement.
+* show resolved route in Pilot details.
+* option to show route waypoints (for planned routes, too) on the map
+  (including frequencies of navaids).
+* all lines and dot can be disabled by setting their strength to 0.
 
 Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for

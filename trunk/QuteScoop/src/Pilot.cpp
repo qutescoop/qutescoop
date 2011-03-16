@@ -236,15 +236,15 @@ QString Pilot::planFlighttypeString() const {
 QString Pilot::rank() const {
     if(network == IVAO) {
         switch(rating) {
-        case 2: return "SFO"; break;
-        case 3: return "FFO"; break;
-        case 4: return "C"; break;
-        case 5: return "FC"; break;
-        case 6: return "SC"; break;
-        case 7: return "SFC"; break;
-        case 8: return "CC"; break;
-        case 9: return "CFC"; break;
-        case 10: return "CSC"; break;
+        case 2: return "FS1"; break; //Basic Flight Student
+        case 3: return "FS2"; break; //Flight Student
+        case 4: return "FS3"; break; //Advanced Flight Student
+        case 5: return "PP"; break; //Private Pilot
+        case 6: return "SPP"; break; //Senior Private Pilot
+        case 7: return "CP"; break; //Commercial Pilot
+        case 8: return "ATP"; break; //Airline Transport Pilot (currently not available)
+        case 9: return "SFI"; break; //Senior Flight Instructor
+        case 10: return "CFI"; break; //Chief Flight Instructor
         default: return QString("? (%1)").arg(rating); break;
         }
     }
@@ -399,10 +399,12 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
 }
 
 QStringList Pilot::waypoints() const {
-    QStringList result = planRoute.split(QRegExp("([\\s\\+\\-\\.\\,]|//)"), QString::SkipEmptyParts);
-    if(result.isEmpty())
-        result.append("");
-    return result;
+    return planRoute.toUpper().split(
+            QRegExp("[\\s\\-+.,/]|"
+                    "\\b(?:[MNAFSMK]\\d{3,4}){2,}\\b|"
+                    "\\b\\d{2}\\D?\\b|"
+                    "DCT"),
+            QString::SkipEmptyParts); // split and throw away DCT + /N450F230 etc.
 }
 
 QPair<double, double> Pilot::positionInFuture(int seconds) const {
@@ -410,99 +412,62 @@ QPair<double, double> Pilot::positionInFuture(int seconds) const {
     return NavData::pointDistanceBearing(lat, lon, dist, trueHeading);
 }
 
-void Pilot::plotDepDestLine() {
-    //if (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))
-    //    return; // some lines go to/come from N0/E0. This might be a prefiled flight or some other error.
-    QList<Waypoint*> waypoints = routeWaypoints();
-    if(depAirport() != 0)
-        waypoints.prepend(new Waypoint(depAirport()->label, depAirport()->lat, depAirport()->lon));
-    if(destAirport() != 0)
-        waypoints.append(new Waypoint(destAirport()->label, destAirport()->lat, destAirport()->lon));
-    if(waypoints.size() < 1) // either dep or dest should be known
-        return;
-
-    int nextPoint = qMin(1, waypoints.size()); // find the nextPoint on his route after the present plane position
-    // calculate first point behind plane
-    if(qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) {
-        nextPoint = 1; // prefiled flight or no known position
+const int Pilot::nextPointOnRoute(const QList<Waypoint *> &waypoints) const { // next point after present position
+    if((qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) || waypoints.isEmpty())
+        return 0; // prefiled flight or no known position
+    int nextPoint;
+    // find the point that is nearest to the plane
+    double minDist = NavData::distance(lat, lon, waypoints[0]->lat,
+                                       waypoints[0]->lon);
+    int minPoint = 0; // next to departure as default
+    for(int i = 1; i < waypoints.size(); i++) {
+        if(NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon) <
+           minDist) {
+            minDist = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
+            minPoint = i;
+        }
+    }
+    // with the nearest point, look which one is the next point ahead - saves from trouble with zig-zag routes
+    if(minPoint == 0) {
+        nextPoint = 1;
+    } else if(minPoint == waypoints.size() - 1) {
+        nextPoint = waypoints.size() - 1;
     } else {
-        // find the point that is nearest to the plane
-        double minDist = NavData::distance(lat, lon, waypoints[0]->lat, waypoints[0]->lon);
-        int minPoint = 0; // next to departure as default
-        for(int i = 1; i < waypoints.size(); i++) {
-            if(NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon) < minDist) {
-                minDist = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
-                minPoint = i;
-            }
-        }
-
-        // with the nearest point, look which one is the next point ahead - saves from trouble with zig-zag routes
-        if(minPoint == 0) {
-            nextPoint = 1;
-        } else if(minPoint == waypoints.size() - 1) {
-            nextPoint = waypoints.size() - 1;
-        } else {
-            nextPoint = minPoint + 1; // default
-            // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
-            int courseRoute, courseToPlane, courseDeviation;
-            for(int i = minPoint - 1; i <= minPoint; i++) {
-                courseRoute = (int) NavData::courseTo(waypoints[i]->lat, waypoints[i]->lon, waypoints[i + 1]->lat, waypoints[i + 1]->lon);
-                courseToPlane = (int) NavData::courseTo(waypoints[i]->lat, waypoints[i]->lon, lat, lon);
-                courseDeviation = (qAbs(courseRoute - courseToPlane)) % 360;
-                if (courseDeviation > 90) {
-                    nextPoint = i;
-                    break;
-                }
+        nextPoint = minPoint + 1; // default
+        // look for the first route segment where the planned course deviates > 90° from the bearing to the plane
+        int courseRoute, courseToPlane, courseDeviation;
+        for(int i = minPoint - 1; i <= minPoint; i++) {
+            courseRoute = (int) NavData::courseTo(waypoints[i]->lat, waypoints[i]->lon,
+                                                  waypoints[i + 1]->lat, waypoints[i + 1]->lon);
+            courseToPlane = (int) NavData::courseTo(waypoints[i]->lat, waypoints[i]->lon,
+                                                    lat, lon);
+            courseDeviation = (qAbs(courseRoute - courseToPlane)) % 360;
+            if (courseDeviation > 90) {
+                nextPoint = i;
+                break;
             }
         }
     }
-
-    QList<DoublePair> points; // these are the points that really get drawn
-    if (depAirport() != 0) { // Dep -> plane
-        if (Settings::depLineStrength() > 0. && (showDepDestLine || depAirport()->showFlightLines)) {
-            for (int i = 0; i < nextPoint; i++)
-                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
-        }
-    }
-
-    if (!qFuzzyIsNull(lat) && !qFuzzyIsNull(lon)) { // plane ok: draw to plane and reset list for DestLine
-        points.append(DoublePair(lat, lon));
-
-        if (Settings::depLineDashed())
-            glLineStipple(3, 0xAAAA);
-        QColor lineCol = Settings::depLineColor();
-        glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-        glLineWidth(Settings::depLineStrength());
-        glBegin(GL_LINE_STRIP);
-        NavData::plotPointsOnEarth(points);
-        glEnd();
-        if(Settings::depLineDashed())
-            glLineStipple(1, 0xFFFF);
-
-        points.clear();
-        points.append(DoublePair(lat, lon));
-    }
-
-    if (destAirport() != 0) { // plane -> Dest
-        if (Settings::destLineStrength() > 0. && (showDepDestLine || destAirport()->showFlightLines)) {
-            for (int i = nextPoint; i < waypoints.size(); i++)
-                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
-            if (Settings::destLineDashed())
-                glLineStipple(3, 0xAAAA);
-            QColor lineCol = Settings::destLineColor();
-            glColor4f(lineCol.redF(), lineCol.greenF(), lineCol.blueF(), lineCol.alphaF());
-            glLineWidth(Settings::destLineStrength());
-            glBegin(GL_LINE_STRIP);
-            NavData::plotPointsOnEarth(points);
-            glEnd();
-            if(Settings::destLineDashed())
-                glLineStipple(1, 0xFFFF);
-        }
-    }
+    return qMin(nextPoint, waypoints.size());
 }
 
+bool Pilot::showDepLine() {
+    if (depAirport() != 0)
+        return (Settings::depLineStrength() > 0. &&
+                (showDepDestLine || depAirport()->showFlightLines));
+    else
+        return (Settings::depLineStrength() > 0. && showDepDestLine);
+}
 
-QList<Waypoint*> Pilot::routeWaypoints() {
+bool Pilot::showDestLine() {
+    if (destAirport() != 0)
+        return (Settings::destLineStrength() > 0. &&
+                (showDepDestLine || destAirport()->showFlightLines));
+    else
+        return (Settings::destLineStrength() > 0. && showDepDestLine);
+}
+
+QList<Waypoint*> &Pilot::routeWaypoints() {
     //qDebug() << "Pilot::routeWaypoints()" << label;
     if ((planDep == routeWaypointsPlanDepCache) // we might have cached the route already
         && (planDest == routeWaypointsPlanDestCache)
@@ -510,17 +475,37 @@ QList<Waypoint*> Pilot::routeWaypoints() {
         return routeWaypointsCache; // no changes
     }
 
-    Airport *dep = depAirport();
     routeWaypointsPlanDepCache = planDep;
     routeWaypointsPlanDestCache = planDest;
     routeWaypointsPlanRouteCache = planRoute;
 
-    if (dep != 0) {
-        routeWaypointsCache = NavData::getInstance()->getAirac().resolveFlightplan(
-                waypoints(), dep->lat, dep->lon);
-    } else
+    if (depAirport() != 0)
+        routeWaypointsCache = Airac::getInstance()->resolveFlightplan(
+                waypoints(), depAirport()->lat, depAirport()->lon);
+    else if (!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon))
+        routeWaypointsCache = Airac::getInstance()->resolveFlightplan(
+                waypoints(), lat, lon);
+    else
         routeWaypointsCache = QList<Waypoint*>();
 
     //qDebug() << "Pilot::routeWaypoints() -- finished" << label;
     return routeWaypointsCache;
+}
+
+QString Pilot::routeWaypointsStr() {
+    QStringList ret;
+    foreach (Waypoint *w, routeWaypoints())
+        ret.append(w->label);
+    return ret.join(" ");
+}
+
+QList<Waypoint*> Pilot::routeWaypointsWithDepDest() {
+    QList<Waypoint*> waypoints = routeWaypoints();
+    if(depAirport() != 0)
+        waypoints.prepend(new Waypoint(depAirport()->label, depAirport()->lat,
+                                       depAirport()->lon));
+    if(destAirport() != 0)
+        waypoints.append(new Waypoint(destAirport()->label, destAirport()->lat,
+                                      destAirport()->lon));
+    return waypoints;
 }

@@ -11,18 +11,18 @@
 
 #include "PlanFlightRoutesModel.h"
 
-class PlanFlightDialog : public QDialog, private Ui::PlanFlightDialog {
+class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
     Q_OBJECT
 
 public:
     static PlanFlightDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void plotPlannedRoute() const;
+    Route* selectedRoute;
 
 signals:
     void fpDownloaded();
 
 private slots:
-    void on_edGenerated_textChanged(QString );
     void on_bDestDetails_clicked();
     void on_bDepDetails_clicked();
     void on_pbVatsimPrefile_clicked();
@@ -45,8 +45,6 @@ private:
     QHttp *vrouteDownloader, *vatrouteDownloader;
     QBuffer *vrouteBuffer, *vatrouteBuffer;
     QList<Route*> routes;
-
-    Route* selectedRoute;
 
     PlanFlightRoutesModel routesModel;
     QSortFilterProxyModel *routesSortModel;

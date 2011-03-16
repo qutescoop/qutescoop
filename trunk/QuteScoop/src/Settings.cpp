@@ -8,7 +8,6 @@
 #include "Window.h"
 
 QSettings *settings_instance = 0;
-
 QSettings* Settings::getSettings() {
     if(settings_instance == 0) {
         settings_instance = new QSettings();
@@ -60,7 +59,7 @@ QIODevice::OpenMode Settings::testDirectory(QString &dir) {
     // on Win7 64: \Users\<user>\AppData\local\QuteScoop\QuteScoop
 // 2) other location in 'dirs' has subdirs and is writeable
 // 3) any location has subdirs
-// 3a) if DataLocation is writeable: copy data there
+// 3a) if 'dirs.first()' is writeable: copy data there
 // 4) if all that fails: fall back to executable-directory
 void Settings::calculateApplicationDataDirectory() {
     QStringList dirs; // possible locations, 1st preferred
@@ -386,14 +385,6 @@ void Settings::applyProxySetting(QHttp *http) {
         http->setProxy(proxyServer(), proxyPort(), user, pass);
 }
 
-int Settings::timelineSeconds() {
-    return getSettings()->value("display/timelineSeconds", 120).toInt();
-}
-
-void Settings::setTimelineSeconds(int value) {
-    getSettings()->setValue("display/timelineSeconds", value);
-}
-
 QString Settings::navdataDirectory() {
     return getSettings()->value("database/path").toString();
 }
@@ -410,12 +401,11 @@ void Settings::setUseNavdata(bool value) {
     getSettings()->setValue("database/use", value);
 }
 
-bool Settings::showFixes() {
-    return getSettings()->value("database/showfixes", false).toBool();
+bool Settings::showAllWaypoints() {
+    return getSettings()->value("database/showAllWaypoints", false).toBool();
 }
-
-void Settings::setShowFixes(bool value) {
-    getSettings()->setValue("database/showfixes", value);
+void Settings::setShowAllWaypoints(bool value) {
+    getSettings()->setValue("database/showAllWaypoints", value);
 }
 
 int Settings::metarDownloadInterval() {
@@ -700,7 +690,6 @@ void Settings::setAirportFont(const QFont& font) {
 QColor Settings::inactiveAirportFontColor() {
     return getSettings()->value("airportDisplay/inactiveFontColor", QColor::fromRgbF(0.4, 0.4, 0.4, 1)).value<QColor>();
 }
-
 void Settings::setInactiveAirportFontColor(const QColor& color) {
     getSettings()->setValue("airportDisplay/inactiveFontColor", color);
 }
@@ -708,7 +697,6 @@ void Settings::setInactiveAirportFontColor(const QColor& color) {
 QColor Settings::inactiveAirportDotColor() {
     return getSettings()->value("airportDisplay/inactiveDotColor", QColor::fromRgbF(0.5, 0.5, 0.5, 1)).value<QColor>();
 }
-
 void Settings::setInactiveAirportDotColor(const QColor& color) {
     getSettings()->setValue("airportDisplay/inactiveDotColor", color);
 }
@@ -716,19 +704,17 @@ void Settings::setInactiveAirportDotColor(const QColor& color) {
 double Settings::inactiveAirportDotSize() {
     return getSettings()->value("airportDisplay/inactiveDotSizer", 2).toDouble();
 }
-
 void Settings::setInactiveAirportDotSize(double value) {
     getSettings()->setValue("airportDisplay/inactiveDotSizer", value);
 }
 
 QFont Settings::inactiveAirportFont() {
     QFont defaultResult;
-    defaultResult.setPixelSize(7);
+    defaultResult.setPixelSize(8);
     QFont result = getSettings()->value("airportDisplay/inactiveFont", defaultResult).value<QFont>();
     result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
     return result;
 }
-
 void Settings::setInactiveAirportFont(const QFont& font) {
     getSettings()->setValue("airportDisplay/inactiveFont", font);
 }
@@ -824,7 +810,7 @@ void Settings::setPilotFontColor(const QColor& color) {
 
 QFont Settings::pilotFont() {
     QFont defaultFont;
-    defaultFont.setPixelSize(8);
+    defaultFont.setPixelSize(9);
     return getSettings()->value("pilotDisplay/font", defaultFont).value<QFont>();
 }
 
@@ -848,24 +834,70 @@ void Settings::setPilotDotSize(double value) {
     getSettings()->setValue("pilotDisplay/dotSize", value);
 }
 
-QColor Settings::timeLineColor() {
-    return getSettings()->value("pilotDisplay/timeLineColor", QColor::fromRgb(143, 0, 71)).value<QColor>();
+int Settings::timelineSeconds() {
+    return getSettings()->value("pilotDisplay/timelineSeconds", 120).toInt();
+}
+void Settings::setTimelineSeconds(int value) {
+    getSettings()->setValue("pilotDisplay/timelineSeconds", value);
 }
 
+QColor Settings::timeLineColor() {
+    return getSettings()->value("pilotDisplay/timeLineColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
+}
 void Settings::setTimeLineColor(const QColor& color) {
     getSettings()->setValue("pilotDisplay/timeLineColor", color);
 }
 
 double Settings::timeLineStrength() {
-    return getSettings()->value("pilotDisplay/timeLineStrength", 1.0).toDouble();
+    return getSettings()->value("pilotDisplay/timeLineStrength", 1.).toDouble();
 }
 
 void Settings::setTimeLineStrength(double value) {
     getSettings()->setValue("pilotDisplay/timeLineStrength", value);
 }
 
+bool Settings::showUsedWaypoints() {
+    return getSettings()->value("display/showUsedWaypoints", false).toBool();
+}
+void Settings::setShowUsedWaypoints(bool value) {
+    getSettings()->setValue("display/showUsedWaypoints", value);
+}
+
+QColor Settings::waypointsFontColor() {
+    return getSettings()->value("pilotDisplay/waypointsFontColor", QColor::fromRgbF(.7, .7, .7, .7)).value<QColor>();
+}
+void Settings::setWaypointsFontColor(const QColor& color) {
+    getSettings()->setValue("pilotDisplay/waypointsFontColor", color);
+}
+
+QColor Settings::waypointsDotColor() {
+    return getSettings()->value("pilotDisplay/waypointsDotColor", QColor::fromRgbF(.8, .8, 0., .7)).value<QColor>();
+}
+void Settings::setWaypointsDotColor(const QColor& color) {
+    getSettings()->setValue("pilotDisplay/waypointsDotColor", color);
+}
+
+double Settings::waypointsDotSize() {
+    return getSettings()->value("pilotDisplay/waypointsDotSizer", 2.).toDouble();
+}
+void Settings::setWaypointsDotSize(double value) {
+    getSettings()->setValue("pilotDisplay/waypointsDotSizer", value);
+}
+
+QFont Settings::waypointsFont() {
+    QFont defaultResult;
+    defaultResult.setPixelSize(8);
+    QFont result = getSettings()->value("pilotDisplay/waypointsFont", defaultResult).value<QFont>();
+    result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
+    return result;
+}
+void Settings::setWaypointsFont(const QFont& font) {
+    getSettings()->setValue("pilotDisplay/waypointsFont", font);
+}
+
+
 QColor Settings::depLineColor() {
-    return getSettings()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127)).value<QColor>();
+    return getSettings()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 150)).value<QColor>();
 }
 
 void Settings::setDepLineColor(const QColor& color) {
@@ -873,7 +905,7 @@ void Settings::setDepLineColor(const QColor& color) {
 }
 
 QColor Settings::destLineColor() {
-    return getSettings()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0)).value<QColor>();
+    return getSettings()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0, 150)).value<QColor>();
 }
 
 void Settings::setDestLineColor(const QColor& color) {
@@ -897,7 +929,7 @@ bool Settings::destLineDashed() {
 }
 
 double Settings::depLineStrength() {
-    return getSettings()->value("pilotDisplay/depLineStrength", 1.).toDouble();
+    return getSettings()->value("pilotDisplay/depLineStrength", 1.5).toDouble();
 }
 
 void Settings::setDepLineStrength(double value) {
@@ -905,7 +937,7 @@ void Settings::setDepLineStrength(double value) {
 }
 
 double Settings::destLineStrength() {
-    return getSettings()->value("pilotDisplay/destLineStrength", 1.).toDouble();
+    return getSettings()->value("pilotDisplay/destLineStrength", 1.5).toDouble();
 }
 
 void Settings::setDestLineStrength(double value) {
@@ -1091,13 +1123,13 @@ void Settings::setZoomFactor(double value) {
     getSettings()->setValue("zoom/zoomFactor", value);
 }
 
-bool Settings::saveWhazzupData()
-{
+
+////////////////////////////////////////
+// uncategorized
+
+bool Settings::saveWhazzupData() {
     return getSettings()->value("general/saveWhazzupData", false).toBool();
 }
-
-void Settings::setSaveWhazzupData(bool value)
-{
+void Settings::setSaveWhazzupData(bool value) {
     getSettings()->setValue("general/saveWhazzupData" , value);
 }
-

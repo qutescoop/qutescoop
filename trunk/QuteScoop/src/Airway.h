@@ -35,8 +35,6 @@ public:
 	Waypoint* getClosestPointTo(double lat, double lon) const;
 
 	QList<Airway*> sort();
-	void dumpSegments() const;
-	void dumpWaypoints() const;
 
 private:
 	int getIndex(const QString& id) const;

@@ -514,25 +514,11 @@ QList<Controller*> WhazzupData::activeSectors() const {
     return result;
 }
 
-QList<Pilot*> WhazzupData::getPilots() const {
-    return pilots.values();
-}
-
-QList<Pilot*> WhazzupData::getBookedPilots() const {
-    return bookedpilots.values();
-}
-
-QList<Pilot*> WhazzupData::getAllPilots() const {
-    QList<Pilot*> ap = bookedpilots.values();
-    ap += pilots.values();
-    return ap;
-}
-
 void WhazzupData::accept(MapObjectVisitor* visitor) const {
-    for(int i = 0; i < controllers.size(); i++)
-        visitor->visit(controllers.values()[i]);
-    for(int i = 0; i < pilots.size(); i++)
-        visitor->visit(pilots.values()[i]);
-    for(int i = 0; i < bookedpilots.size(); i++)
-        visitor->visit(bookedpilots.values()[i]);
+    foreach (Controller *c, controllers)
+        visitor->visit(c);
+    foreach (Pilot *p, pilots)
+        visitor->visit(p);
+    foreach (Pilot *b, bookedpilots)
+        visitor->visit(b);
 }

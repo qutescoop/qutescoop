@@ -20,6 +20,7 @@ public:
 private slots:
     //
     void loadSettings();
+    void lazyloadTextureIcons();
     void on_cbResetConfiguration_stateChanged(int state);
 
     // import/export to .ini
@@ -81,7 +82,6 @@ private slots:
     void on_cbShowCongestion_clicked(bool checked);
 
     // display
-    void on_spinBoxTimeline_valueChanged(int value);
     void on_cbLineSmoothing_stateChanged(int state);
     void on_cbDotSmoothing_stateChanged(int state);
     void on_cbReadSupFile_stateChanged(int state);
@@ -134,10 +134,12 @@ private slots:
 
     // Aircraft
     void on_buttonResetPilot_clicked();
+    void on_applyPilots_clicked();
     void on_pbPilotFontColor_clicked();
     void on_pbPilotFont_clicked();
     void on_pbPilotDotColor_clicked();
     void on_sbPilotDotSize_valueChanged(double value);
+    void on_spinBoxTimeline_valueChanged(int value);
     void on_pbTimeLineColor_clicked();
     void on_sbTimeLineStrength_valueChanged(double value);
     void on_pbDepLineColor_clicked();
@@ -146,7 +148,10 @@ private slots:
     void on_sbDestLineStrength_valueChanged(double value);
     void on_cbDepLineDashed_toggled(bool checked);
     void on_cbDestLineDashed_toggled(bool checked);
-    void on_applyPilots_clicked();
+    void on_waypointsFont_clicked();
+    void on_waypointsFontColor_clicked();
+    void on_waypointsDotColor_clicked();
+    void on_waypointsDotSize_valueChanged(double );
 
     // voice
     void on_rbNone_clicked(bool value);

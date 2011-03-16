@@ -13,7 +13,6 @@
 #include "helpers.h"
 
 PlanFlightDialog *planFlightDialogInstance = 0;
-
 PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
     if(planFlightDialogInstance == 0)
         if (createIfNoInstance) {
@@ -26,8 +25,7 @@ PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance, QWidget
 PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     QDialog(parent),
     selectedRoute(0),
-    vrouteBuffer(0),
-    vatrouteBuffer(0)
+    vrouteBuffer(0), vatrouteBuffer(0)
 {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
@@ -63,13 +61,12 @@ void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected 
     lblVrouteStatus->setText(QString());
     lblVatrouteStatus->setText(QString());
 
+    edDep->setText(edDep->text().toUpper());
+    edDest->setText(edDest->text().toUpper());
+
     if (cbGenerated->isChecked()) requestGenerated();
     if (cbVroute->isChecked()) requestVroute();
     if (cbVatroute->isChecked()) requestVatroute();
-}
-
-void PlanFlightDialog::on_edGenerated_textChanged(QString str) {
-    edGenerated->setText(str.toUpper());
 }
 
 void PlanFlightDialog::requestGenerated() {
@@ -77,6 +74,7 @@ void PlanFlightDialog::requestGenerated() {
         lblGeneratedStatus->setText(QString("bad request"));
         return;
     }
+    edGenerated->setText(edGenerated->text().toUpper());
 
     Route *r = new Route();
     r->provider = QString("user");
@@ -284,12 +282,10 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
 
 void PlanFlightDialog::on_edDep_textChanged(QString str) {
     bDepDetails->setVisible(NavData::getInstance()->airports().contains(str));
-    edDep->setText(str.toUpper());
 }
 
 void PlanFlightDialog::on_edDest_textChanged(QString str) {
     bDestDetails->setVisible(NavData::getInstance()->airports().contains(str));
-    edDest->setText(str.toUpper());
 }
 
 void PlanFlightDialog::on_bDepDetails_clicked() {
@@ -309,31 +305,38 @@ void PlanFlightDialog::routeSelected(const QModelIndex& index) {
         selectedRoute = 0;
         return;
     }
-    selectedRoute = routes[routesSortModel->mapToSource(index).row()];
-    if(cbPlot->isChecked()) on_cbPlot_toggled(true);
+    if(selectedRoute != routes[routesSortModel->mapToSource(index).row()]) {
+        selectedRoute = routes[routesSortModel->mapToSource(index).row()];
+        if(cbPlot->isChecked()) on_cbPlot_toggled(true);
+    }
 }
 
 void PlanFlightDialog::plotPlannedRoute() const {
-    if(selectedRoute == 0) {
+    if(selectedRoute == 0 || !cbPlot->isChecked()) {
         lblPlotStatus->setText("no route to plot");
         return;
     }
     lblPlotStatus->setText(QString("waypoints (calculated): %1").arg(selectedRoute->waypointsStr));
     if(selectedRoute->waypoints.size() < 2)
         return;
-    glColor4f(1., 0., 0., 1.);
-    glLineWidth(3.);
-    glBegin(GL_LINE_STRIP);
     QList<DoublePair> points;
     foreach (Waypoint *wp, selectedRoute->waypoints)
         points.append(DoublePair(wp->lat, wp->lon));
+    glColor4f(0., 0., 1., 1.);
+    glLineWidth(3.);
+    glBegin(GL_LINE_STRIP);
     NavData::plotPointsOnEarth(points);
+    glEnd();
+    glPointSize(4.);
+    glColor4f(1., 0., 0., 1.);
+    glBegin(GL_POINTS);
+    foreach (DoublePair p, points)
+        VERTEX(p.first, p.second);
     glEnd();
 }
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
-    if (Window::getInstance(false)) {
-        Window::getInstance(true)->glWidget->plotFlightPlannedRoute = checked;
+    if (Window::getInstance(false) != 0) {
         Window::getInstance(true)->glWidget->createPilotsList();
         Window::getInstance(true)->glWidget->updateGL();
     }
@@ -342,9 +345,8 @@ void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
 }
 
 void PlanFlightDialog::on_pbCopyToClipboard_clicked() {
-    if(selectedRoute != 0) {
+    if(selectedRoute != 0)
         QApplication::clipboard()->setText(selectedRoute->route);
-    }
 }
 
 void PlanFlightDialog::on_pbVatsimPrefile_clicked() {

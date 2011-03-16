@@ -35,6 +35,7 @@ public slots:
     void showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType = GuiMessage::Temporary, QString id = QString(), int progress = 0, int total = 0);
 
 private slots:
+    void on_actionShowWaypoints_triggered(bool checked);
     void on_actionShowRoutes_triggered(bool checked);
     void on_actionDebugLog_triggered();
 

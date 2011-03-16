@@ -27,7 +27,7 @@ public:
 	bool isNull() const { return label.isNull(); }
 
 	virtual QString toolTip() const { return label; }
-	virtual void showDetailsDialog() = 0;
+	virtual void showDetailsDialog() {}
 
 	double lat, lon;
 	QString label;

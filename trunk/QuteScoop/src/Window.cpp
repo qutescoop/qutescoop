@@ -41,10 +41,10 @@ Window::Window(QWidget *parent) :
 
     setupUi(this);
     // restore saved states
-    restoreState(Settings::getSavedState());
-    restoreGeometry(Settings::getSavedGeometry());
-    //if(!Settings::getSavedSize().isNull()) resize(savedSize);
-    //if(!Settings::getSavedPos().isNull()) move(savedPos);
+    if (!Settings::getSavedSize().isNull())     resize(Settings::getSavedSize());
+    if (!Settings::getSavedPosition().isNull()) move(Settings::getSavedPosition());
+    if (!Settings::getSavedGeometry().isNull()) restoreGeometry(Settings::getSavedGeometry());
+    if (!Settings::getSavedState().isNull())    restoreState(Settings::getSavedState());
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
@@ -190,6 +190,7 @@ Window::Window(QWidget *parent) :
     lblWarpInfo->setFont(font); //make it a bit smaller than standard text
 
     setEnableBookedAtc(Settings::downloadBookings());
+    actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
     //LogBrowser
 #ifdef QT_NO_DEBUG_OUTPUT
@@ -457,9 +458,9 @@ void Window::performSearch() {
 
 void Window::closeEvent(QCloseEvent *event) {
     Settings::saveState(saveState()); //was: (VERSION_INT) but that should not harm
-    Settings::saveGeometry(saveGeometry()); // added this cause maximized wasn't saved
-    //Settings::saveSize(size());
-    //Settings::savePosition(pos());
+    Settings::saveGeometry(saveGeometry()); // added this 'cause maximized wasn't saved
+    Settings::saveSize(size()); // readded as Mac OS had problems with geometry only
+    Settings::savePosition(pos());
     on_actionHideAllWindows_triggered();
 
     glWidget->shutDownAnimation();
@@ -1070,16 +1071,13 @@ void Window::shootScreenshot() {
 
 void Window::on_actionShowRoutes_triggered(bool checked) {
     showGuiMessage("Toggled ALL routes");
-    foreach (Airport *a, NavData::getInstance()->airports().values()) {
+    foreach (Airport *a, NavData::getInstance()->airports().values())
         if(a != 0) // synonym to "toggle routes" on all airports
             a->showFlightLines = checked;
-    }
-    if (!checked) { // when disabled, this shall clear all routes
-        foreach (Pilot *p, Whazzup::getInstance()->whazzupData().getAllPilots()) {
+    if (!checked) // when disabled, this shall clear all routes
+        foreach (Pilot *p, Whazzup::getInstance()->whazzupData().getAllPilots())
             if(p != 0) // synonym to "toggle routes" on all airports
                 p->showDepDestLine = false;
-        }
-    }
 
     // adjust the "plot route" tick in dialogs
     if (AirportDetails::getInstance(false) != 0)
@@ -1093,4 +1091,10 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
     //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
 
     showGuiMessage("Toggled ALL routes", GuiMessage::Remove, "calcRoutes");
+}
+
+void Window::on_actionShowWaypoints_triggered(bool checked) {
+    Settings::setShowUsedWaypoints(checked);
+    glWidget->createPilotsList();
+    glWidget->updateGL();
 }

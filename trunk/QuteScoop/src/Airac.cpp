@@ -7,11 +7,19 @@
 #include "FileReader.h"
 #include "Waypoint.h"
 #include "NavData.h"
+#include "Settings.h"
 
-Airac::Airac() {
+Airac *airacInstance = 0;
+Airac *Airac::getInstance(bool createIfNoInstance) {
+    if(airacInstance == 0)
+        if (createIfNoInstance) {
+            airacInstance = new Airac();
+        }
+    return airacInstance;
 }
 
-Airac::~Airac() {
+Airac::Airac() {
+    load(Settings::navdataDirectory());
 }
 
 void Airac::load(const QString& directory) {
@@ -19,9 +27,13 @@ void Airac::load(const QString& directory) {
     readNavaids(directory);
     readAirways(directory);
 
-    allWaypoints.clear();
-    foreach(QList<Waypoint *> wpl, waypointMap.values())
-        allWaypoints.append(wpl);
+    mapObjects.clear();
+    foreach (QList<Waypoint*> wl, waypointMap.values())
+        foreach (Waypoint *w, wl)
+            mapObjects.append(w);
+    foreach (QList<NavAid*> nl, navaidMap.values())
+        foreach (NavAid *n, nl)
+            mapObjects.append(n);
 }
 
 void Airac::addFix(Waypoint* fix) {
@@ -76,15 +88,16 @@ void Airac::readAirways(const QString& directory) {
             continue;
 
         QStringList list = line.split(' ', QString::SkipEmptyParts);
-        if(list.size() < 10 || list.size() > 20) {
+        if(list.size() < 10 || list.size() > 20)
             continue;
-        }
 
         QString id = list[0];
         double lat = list[1].toDouble(&ok);
-        if(!ok) continue;
+        if(!ok)
+            continue;
         double lon = list[2].toDouble(&ok);
-        if(!ok) continue;
+        if(!ok)
+            continue;
 
         Waypoint *start = getWaypoint(id, lat, lon, 1);
         if(start == 0) {
@@ -94,9 +107,11 @@ void Airac::readAirways(const QString& directory) {
 
         id = list[3];
         lat = list[4].toDouble(&ok);
-        if(!ok) continue;
+        if(!ok)
+            continue;
         lon = list[5].toDouble(&ok);
-        if(!ok) continue;
+        if(!ok)
+            continue;
 
         Waypoint *end = getWaypoint(id, lat, lon, 1);
         if(end == 0) {
@@ -105,25 +120,27 @@ void Airac::readAirways(const QString& directory) {
         }
 
         Airway::Type type = (Airway::Type)list[6].toInt(&ok);
-        if(!ok) continue;
-
+        if(!ok)
+            continue;
         int base = list[7].toInt(&ok);
-        if(!ok) continue;
+        if(!ok)
+            continue;
         int top = list[8].toInt(&ok);
-        if(!ok) continue;
+        if(!ok)
+            continue;
 
         QStringList names;
         if(list.size() > 10) {
             //handle airways with spaces (!) in the name
             QString glue;
             for(int i = 9; i < list.size(); i++) {
-                if(i > 9) glue += " ";
+                if(i > 9)
+                    glue += " ";
                 glue += list[i];
             }
             names = glue.split('-', QString::SkipEmptyParts);
-        } else {
+        } else
             names = list[9].split('-', QString::SkipEmptyParts);
-        }
 
         for(int i = 0; i < names.size(); i++) {
             addAirwaySegment(start, end, type, base, top, names[i]);
@@ -147,65 +164,113 @@ Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double m
     Waypoint *result = 0;
     double minDist = 99999;
 
-    QList<NavAid*> navs = navaidMap[id];
-    for(int i = 0; i < navs.size() && minDist > 0; i++) {
-        double d = NavData::distance(lat, lon, navs[i]->lat, navs[i]->lon);
-        if(d > maxDist) {
-            continue;
+    foreach (NavAid *n, navaidMap[id]) {
+        double d = NavData::distance(lat, lon, n->lat, n->lon);
+        if ((d < minDist) && (d < maxDist)) {
+            result = n;
+            minDist = d;
         }
-        if(d <= minDist) {
-            result = navs[i];
+    }
+    foreach (Waypoint *w, waypointMap[id]) {
+        double d = NavData::distance(lat, lon, w->lat, w->lon);
+        if ((d < minDist) && (d < maxDist)) {
+            result = w;
+            minDist = d;
+        }
+    }
+    if (NavData::getInstance()->airports().contains(id)) { // trying aerodromes
+        double d = NavData::distance(lat, lon,
+                                     NavData::getInstance()->airports()[id]->lat,
+                                     NavData::getInstance()->airports()[id]->lon);
+        if ((d < minDist) && (d < maxDist)) {
+            result = new Waypoint(id, NavData::getInstance()->airports()[id]->lat,
+                                  NavData::getInstance()->airports()[id]->lon);
             minDist = d;
         }
     }
 
-    QList<Waypoint*> points = waypointMap[id];
-    for(int i = 0; i < points.size() && minDist > 0; i++) {
-        double d = NavData::distance(lat, lon, points[i]->lat, points[i]->lon);
-        if(d > maxDist) {
-            continue;
-        }
-        if(d <= minDist) {
-            result = points[i];
-            minDist = d;
+    if (result == 0) { // trying generic formats
+        QRegExp slash("([\\-]?\\d{2})/([\\-]?\\d{2,3})"); // some pilots
+                                                // ..like to use non-standard: -53/170
+        QRegExp wildGuess("([NS]?)(\\d{2})([NSEW])(\\d{2,3})([EW]?)"); // or even
+                                                                        // .. N53W170
+        QRegExp idiotFormat("(\\d{2,4})([NS])(\\d{2,5})([EW])"); // complete ignorants
+                                                             // ..write: 3000N 02000W
+        const QPair<double, double> *arincP = NavData::fromArinc(id);
+        if (arincP != 0) { // ARINC424
+            double d = NavData::distance(lat, lon, arincP->first, arincP->second);
+            if ((d < minDist) && (d < maxDist)) {
+                result = new Waypoint(id, arincP->first, arincP->second);
+                minDist = d;
+            }
+        } else if (slash.exactMatch(id)) { // slash-style: 35/30
+            double wLat = slash.capturedTexts()[1].toDouble();
+            double wLon = slash.capturedTexts()[2].toDouble();
+            double d = NavData::distance(lat, lon, wLat, wLon);
+            if ((d < minDist) && (d < maxDist)) {
+                result = new Waypoint(NavData::toArinc(wLat, wLon), wLat, wLon);
+                minDist = d;
+            }
+        } else if (wildGuess.exactMatch(id)) { // N53W170
+            double wLat = wildGuess.capturedTexts()[2].toDouble();
+            double wLon = wildGuess.capturedTexts()[4].toDouble();
+            if ((wildGuess.capturedTexts()[1] == "S") ||
+                (wildGuess.capturedTexts()[3] == "S"))
+                wLat = -wLat;
+            if ((wildGuess.capturedTexts()[3] == "W") ||
+                (wildGuess.capturedTexts()[5] == "W"))
+                wLon = -wLon;
+            double d = NavData::distance(lat, lon, wLat, wLon);
+            if ((d < minDist) && (d < maxDist)) {
+                result = new Waypoint(NavData::toArinc(wLat, wLon), wLat, wLon);
+                minDist = d;
+            }
+        } else if (idiotFormat.exactMatch(id)) { // 3000N 02000W (space removed by resolveFlightplan)
+            double wLat = idiotFormat.capturedTexts()[1].toDouble();
+            double wLon = idiotFormat.capturedTexts()[3].toDouble();
+            while (wLat > 90)
+                wLat /= 10.;
+            while (wLon > 180)
+                wLon /= 10.;
+            if (idiotFormat.capturedTexts()[2] == "S")
+                wLat = -wLat;
+            if (idiotFormat.capturedTexts()[4] == "W")
+                wLon = -wLon;
+            double d = NavData::distance(lat, lon, wLat, wLon);
+            if ((d < minDist) && (d < maxDist)) {
+                result = new Waypoint(NavData::toArinc(wLat, wLon), wLat, wLon);
+                minDist = d;
+            }
         }
     }
     return result;
 }
 
 Airway* Airac::getAirway(const QString& name, Airway::Type type, int base, int top) {
-    QList<Airway*> list = airwayMap[name];
-    for(int i = 0; i < list.size(); i++) {
-        if(list[i]->type == type) {
-            return list[i];
-        }
-    }
+    foreach (Airway *a, airwayMap[name])
+        if(a->type == type)
+            return a;
     Airway* awy = new Airway(name, type, base, top);
-    list.append(awy);
-    airwayMap[name] = list;
+    airwayMap[name].append(awy);
     return awy;
 }
 
 Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
     QList<Airway*> list = airwayMap[name];
-    if(list.isEmpty()) {
+    if(list.isEmpty())
         return 0;
-    }
-    if(list.size() == 1) {
+    if(list.size() == 1)
         return list[0];
-    }
 
     double minDist = 9999;
     Airway* result = 0;
     for(int i = 0; i < list.size(); i++) {
         Waypoint* wp = list[i]->getClosestPointTo(lat, lon);
-        if(wp == 0) {
+        if(wp == 0)
             continue;
-        }
         double d = NavData::distance(lat, lon, wp->lat, wp->lon);
-        if(qFuzzyIsNull(d)) {
+        if(qFuzzyIsNull(d))
             return list[i];
-        }
         if(d < minDist) {
             minDist = d;
             result = list[i];
@@ -214,77 +279,55 @@ Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
     return result;
 }
 
-void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name) {
-    Airway* awy = getAirway(name, type, base, top);
+void Airac::addAirwaySegment(Waypoint *from, Waypoint *to, Airway::Type type, int base, int top, const QString& name) {
+    Airway *awy = getAirway(name, type, base, top);
     awy->addSegment(from, to);
 }
 
-Waypoint* Airac::getNextWaypoint(QStringList& workingList, double lat, double lon) const {
-    Waypoint* result = 0;
-    while(!workingList.isEmpty() && result == 0) {
-        QString id = workingList.first();
-        workingList.removeFirst();
-        result = getWaypoint(id, lat, lon);
-    }
-    return result;
-}
-
-QList<Waypoint*> Airac::resolveFlightplan(const QStringList& plan, double lat, double lon) const {
+QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon) const {
     //qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;
     if(plan.isEmpty()) return result;
-
-    QStringList workingList = plan;
-
-    // find a starting point
-    Waypoint* currPoint = getNextWaypoint(workingList, lat, lon);
-    if(currPoint == 0) return result;
-
-    result.append(currPoint);
-    double myLat = currPoint->lat;
-    double myLon = currPoint->lon;
-    bool wantAirway = true;
-
-    while(!workingList.isEmpty()) {
-        QString id = workingList.first();
-        workingList.removeFirst();
-
+    Waypoint* currPoint;
+    bool wantAirway = false;
+    while (!plan.isEmpty()) {
+        QString id = plan.takeFirst();
         Airway *awy = 0;
-        if(wantAirway) awy = getAirway(id, lat, lon);
-        if(awy != 0 && !workingList.isEmpty()) {
+        if (wantAirway)
+            awy = getAirway(id, lat, lon);
+        if (awy != 0 && !plan.isEmpty()) {
             wantAirway = false;
             // have airway - next should be a waypoint
-            QString endId = workingList.first();
-            Waypoint* wp = getWaypoint(endId, myLat, myLon);
+            QString endId = plan.first();
+            Waypoint* wp = getWaypoint(endId, lat, lon);
             if(wp != 0) {
                 result += awy->expand(currPoint->label, wp->label);
                 currPoint = wp;
-                myLat = wp->lat;
-                myLon = wp->lon;
-                workingList.removeFirst();
+                lat = wp->lat;
+                lon = wp->lon;
+                plan.removeFirst();
                 wantAirway = true;
                 continue;
             }
-        } else if(awy == 0) {
-            wantAirway = false;
-            Waypoint* wp = getWaypoint(id, myLat, myLon);
+        } else if (awy == 0) {
+            if (!plan.isEmpty()) // joining with the next point for idiot style..
+                if (QRegExp("\\d{2,4}[NS]").exactMatch(id) && //.. 30(00)N (0)50(00)W
+                    QRegExp("(\\d{2,3}|\\d{5})[EW]").exactMatch(plan.first()))
+                                    // but preserving correct ARINC style (\\d{4}[EW])
+                    id += plan.takeFirst();
+            Waypoint* wp = getWaypoint(id, lat, lon);
             if(wp != 0) {
                 result.append(wp);
                 currPoint = wp;
-                myLat = wp->lat;
-                myLon = wp->lon;
-                wantAirway = true;
-                continue;
+                lat = wp->lat;
+                lon = wp->lon;
             }
+            wantAirway = (wp != 0);
         }
     }
-
-    QString debugStr;
-    for(int i = 0; i < result.size(); i++) {
-        if(i>0) debugStr += "-";
-        debugStr += result[i]->label;
-    }
-    //qDebug() << "Airac::resolveFlightPlan() -- finished:" << debugStr;
-
+//    QString debugStr;
+//    foreach (Waypoint *p, result)
+//        debugStr += p->label + " ";
+//    qDebug() << "Airac::resolveFlightPlan() -- finished:" << debugStr;
     return result;
 }

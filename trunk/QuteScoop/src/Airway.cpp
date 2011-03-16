@@ -26,39 +26,15 @@ Airway::~Airway() {
 	// destructor
 }
 
-#define DEBUG_AWY ""
-
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
-	if(name == DEBUG_AWY) {
-        //qDebug() << "seg+: " << from->label << to->label;
-	}
-
 	Segment newSegment(from, to);
-
 	// check if we already have this segment
 	for(int i = 0; i < segments.size(); i++) {
 		if(segments[i] == newSegment) {
 			return;
 		}
 	}
-
 	segments.append(newSegment);
-}
-
-void Airway::dumpWaypoints() const {
-	QString line;
-	for(int i = 0; i < waypoints.size(); i++) {
-		line += waypoints[i]->label + " - ";
-	}
-	qDebug() << line << "*";
-}
-
-void Airway::dumpSegments() const {
-	QString line;
-	for(int i = 0; i < segments.size(); i++) {
-		line += segments[i].from->label + "-" + segments[i].to->label + " ";
-	}
-	qDebug() << name << "segments:" << line << "*";
 }
 
 Airway* Airway::createFromSegments() {
@@ -113,57 +89,40 @@ Airway* Airway::createFromSegments() {
 
 QList<Airway*> Airway::sort() {
 	QList<Airway*> result;
-
-	if(segments.isEmpty()) {
+	if(segments.isEmpty())
 		return result;
-	}
-
-	if(name == DEBUG_AWY)
-		dumpSegments();
-
 	Airway *awy = 0;
 	do {
 		awy = createFromSegments();
-		if(awy != 0) {
+		if(awy != 0)
 			result.append(awy);
-			if(name == DEBUG_AWY)
-				awy->dumpWaypoints();
-		}
 	} while(awy != 0);
-
 	return result;
 }
 
 int Airway::getIndex(const QString& id) const {
-	for(int i = 0; i < waypoints.size(); i++) {
-		if(waypoints[i]->label == id) {
+	for(int i = 0; i < waypoints.size(); i++)
+		if(waypoints[i]->label == id)
 			return i;
-		}
-	}
 	return -1;
 }
 
 QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) const {
 	QList<Waypoint*> result;
-
 	int startIndex = getIndex(startId);
 	int endIndex = getIndex(endId);
 
-	if(startIndex < 0 || endIndex < 0) return result;
+	if(startIndex < 0 || endIndex < 0)
+		return result;
 
 	int direction = 1;
-	if(startIndex > endIndex) {
+	if(startIndex > endIndex)
 		direction = -1;
-	}
 
-	for(int i = startIndex; i != endIndex; i += direction) {
-		if(i != startIndex) {
-			// don't append first waypoint in list
+	for(int i = startIndex; i != endIndex; i += direction)
+		if(i != startIndex)  // don't append first waypoint in list
 			result.append(waypoints[i]);
-		}
-	}
 	result.append(waypoints[endIndex]);
-
 	return result;
 }
 

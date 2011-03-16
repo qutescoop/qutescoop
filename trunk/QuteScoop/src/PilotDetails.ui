@@ -465,50 +465,7 @@ p, li { white-space: pre-wrap; }
       </item>
       <item row="1" column="0">
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="0">
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
-           <widget class="QLabel" name="label_6">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="font">
-             <font>
-              <weight>75</weight>
-              <bold>true</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>route</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbPlotRoute">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="toolTip">
-             <string>Plot route on map (requires Navigation Database). Also accessible via right click on the airplane's label on the map. (Uses Navigation Database if available)</string>
-            </property>
-            <property name="text">
-             <string>&amp;plot
-route</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item row="0" column="2">
+        <item row="0" column="3">
          <widget class="QLabel" name="lblRoute">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -529,11 +486,11 @@ route</string>
            <bool>true</bool>
           </property>
           <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="2" column="0">
          <widget class="QLabel" name="label">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
@@ -552,7 +509,7 @@ route</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
+        <item row="2" column="3">
          <widget class="QLabel" name="lblRemarks">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -566,19 +523,72 @@ route</string>
           <property name="wordWrap">
            <bool>true</bool>
           </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+          </property>
          </widget>
         </item>
-        <item row="0" column="1">
+        <item row="0" column="1" rowspan="3">
          <widget class="Line" name="line">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="Line" name="line_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
+        <item row="1" column="3">
+         <widget class="QLabel" name="lblPlotStatus">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="text">
+           <string>waypoints (calculated): ...</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QCheckBox" name="cbPlotRoute">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="toolTip">
+           <string>Plot route on map (requires Navigation Database). Also accessible via right click on the airplane's label on the map. (Uses Navigation Database if available)</string>
+          </property>
+          <property name="text">
+           <string>&amp;plot
+route</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>route</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -639,8 +649,8 @@ route</string>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>94</x>
-     <y>602</y>
+     <x>84</x>
+     <y>623</y>
     </hint>
     <hint type="destinationlabel">
      <x>177</x>
@@ -655,8 +665,8 @@ route</string>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>331</x>
-     <y>583</y>
+     <x>453</x>
+     <y>624</y>
     </hint>
     <hint type="destinationlabel">
      <x>294</x>

@@ -8,9 +8,7 @@
 #include "Client.h"
 #include "WhazzupData.h"
 #include "ClientDetails.h"
-
-class WhazzupData;
-class Sector;
+#include "Sector.h";
 
 class Controller: public Client
 {

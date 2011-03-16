@@ -186,21 +186,23 @@ const GLuint& Airport::getGndDisplayList() {
         VERTEX(lat + s3, lon);
     glEnd();
 
-    color = Settings::gndBorderLineColor();
-    glBegin(GL_LINE_STRIP);
-        // draw the border for the star
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        glLineWidth(Settings::gndBorderLineStrength());
-        VERTEX(lat + s3, lon);
-        VERTEX(lat + s1, lon + 0.07);
-        VERTEX(lat,      lon + 0.25);
-        VERTEX(lat - s1, lon + 0.07);
-        VERTEX(lat - s3, lon);
-        VERTEX(lat - s1, lon - 0.07);
-        VERTEX(lat,      lon - 0.25);
-        VERTEX(lat + s1, lon - 0.07);
-        VERTEX(lat + s3, lon);
-    glEnd();
+    if (Settings::gndBorderLineStrength() > 0.) {
+        color = Settings::gndBorderLineColor();
+        glBegin(GL_LINE_STRIP);
+            // draw the border for the star
+            glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+            glLineWidth(Settings::gndBorderLineStrength());
+            VERTEX(lat + s3, lon);
+            VERTEX(lat + s1, lon + 0.07);
+            VERTEX(lat,      lon + 0.25);
+            VERTEX(lat - s1, lon + 0.07);
+            VERTEX(lat - s3, lon);
+            VERTEX(lat - s1, lon - 0.07);
+            VERTEX(lat,      lon - 0.25);
+            VERTEX(lat + s1, lon - 0.07);
+            VERTEX(lat + s3, lon);
+        glEnd();
+    }
     glEndList();
     return gndDisplayList;
 }

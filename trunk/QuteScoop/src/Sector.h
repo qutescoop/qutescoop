@@ -23,6 +23,7 @@ public:
 	const double& lat() const { return _lat; }
 	const double& lon() const { return _lon; }
 	const QList<QPair<double, double> > sector() const { return _points; }
+	const QPolygonF& sectorPolygon() const;
 
 	void setPointList(const QList<QPair<double, double> >& points);
 
@@ -34,7 +35,7 @@ private:
 	QList<QPair<double, double> > _points;
 	QString _icao, _name, _countryCode, _id;
 	double _lat, _lon;
-	GLuint polygon, borderline;
+	GLuint _polygon, _borderline;
 };
 
 #endif /*SECTOR_H_*/
