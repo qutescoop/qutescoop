@@ -52,7 +52,6 @@ Airport::~Airport() {
 void Airport::resetWhazzupStatus() {
     active = false;
     towers.clear();
-    //centers.clear();
     approaches.clear();
     grounds.clear();
     deliveries.clear();
@@ -63,17 +62,13 @@ void Airport::resetWhazzupStatus() {
 }
 
 void Airport::addArrival(Pilot* client) {
-    if(!arrivals.contains(client)) {
-        arrivals.append(client);
-        active = true;
-    }
+    arrivals.insert(client);
+    active = true;
 }
 
 void Airport::addDeparture(Pilot* client) {
-    if(!departures.contains(client)) {
-        departures.append(client);
-        active = true;
-    }
+    departures.insert(client);
+    active = true;
 }
 
 const GLuint& Airport::getAppBorderDisplayList() {
@@ -86,10 +81,10 @@ const GLuint& Airport::getAppBorderDisplayList() {
     glLineWidth(Settings::appBorderLineStrength());
     glBegin(GL_LINE_LOOP);
     glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
-    GLdouble circle_distort = cos(lat * Pi180);
+    GLdouble circle_distort = qCos(lat * Pi180);
     for(int i = 0; i <= 360; i += 10) {
-        double x = lat + Nm2Deg(40) * circle_distort * cos(i * Pi180);
-        double y = lon + Nm2Deg(40) * sin(i * Pi180);
+        double x = lat + Nm2Deg(40) * circle_distort * qCos(i * Pi180);
+        double y = lon + Nm2Deg(40) * qSin(i * Pi180);
         VERTEX(x, y);
     }
     glEnd();
@@ -111,10 +106,10 @@ const GLuint& Airport::getAppDisplayList() {
     glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
     VERTEX(lat, lon);
     glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
-    GLdouble circle_distort = cos(lat * Pi180);
+    GLdouble circle_distort = qCos(lat * Pi180);
     for(int i = 0; i <= 360; i += 10) {
-        double x = lat + Nm2Deg(40) * circle_distort * cos(i * Pi180);
-        double y = lon + Nm2Deg(40) * sin(i * Pi180);
+        double x = lat + Nm2Deg(40) * circle_distort * qCos(i * Pi180);
+        double y = lon + Nm2Deg(40) * qSin(i * Pi180);
         VERTEX(x, y);
     }
     glEnd();
@@ -134,12 +129,12 @@ const GLuint& Airport::getTwrDisplayList() {
     twrDisplayList = glGenLists(1);
     glNewList(twrDisplayList, GL_COMPILE);
 
-    GLdouble circle_distort = cos(lat * Pi180);
+    GLdouble circle_distort = qCos(lat * Pi180);
 
     QList<QPair<double, double> > points;
     for(int i = 0; i <= 360; i += 20) {
-        double x = lat + Nm2Deg(22) * circle_distort * cos(i * Pi180);
-        double y = lon + Nm2Deg(22) * sin(i * Pi180);
+        double x = lat + Nm2Deg(22) * circle_distort * qCos(i * Pi180);
+        double y = lon + Nm2Deg(22) * qSin(i * Pi180);
         points.append(QPair<double, double>(x, y));
     }
 
@@ -163,7 +158,7 @@ const GLuint& Airport::getGndDisplayList() {
     gndDisplayList = glGenLists(1);
     glNewList(gndDisplayList, GL_COMPILE);
 
-    GLdouble circle_distort = cos(lat * Pi180);
+    GLdouble circle_distort = qCos(lat * Pi180);
     GLdouble s1 = circle_distort * 0.07;
     GLdouble s3 = circle_distort * 0.25;
 
@@ -218,68 +213,51 @@ const GLuint& Airport::getDelDisplayList() {
     delDisplayList = glGenLists(1);
     glNewList(delDisplayList, GL_COMPILE);
 
-    GLdouble circle_distort = cos(lat * Pi180);
+    GLdouble circle_distort = qCos(lat * Pi180);
 
-    QList<QPair<double, double> > points;
+    QList<DoublePair> points;
     for(int i = 0; i <= 360; i += 20) {
-        double x = lat + Nm2Deg(8) * circle_distort * cos(i * Pi180);
-        double y = lon + Nm2Deg(8) * sin(i * Pi180);
-        points.append(QPair<double, double>(x, y));
+        double x = lat + Nm2Deg(8) * circle_distort * qCos(i * Pi180);
+        double y = lon + Nm2Deg(8) * qSin(i * Pi180);
+        points.append(DoublePair(x, y));
     }
 
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
     VERTEX(lat, lon);
-    for(int i = 0; i < points.size(); i++) {
-        VERTEX(points[i].first, points[i].second);
-    }
+    foreach(const DoublePair &p, points)
+        VERTEX(p.first, p.second);
     glEnd();
     // Border Line
     glLineWidth(Settings::gndBorderLineStrength());
     glBegin(GL_LINE_LOOP);
     glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
-    for (int i = 0; i < points.size(); i++) {
-        VERTEX(points[i].first, points[i].second);
-    }
+    foreach(const DoublePair &p, points)
+        VERTEX(p.first, p.second);
     glEnd();
     glEndList();
 
     return delDisplayList;
 }
 
-/*void Airport::addCenter(Controller* client) {
-    if(!centers.contains(client)) {
-        centers.append(client);
-        //active = true; // would make too much airports show as active on the map
-    }
-}*/
-
 void Airport::addApproach(Controller* client) {
-    if(!approaches.contains(client)) {
-        approaches.append(client);
-        active = true;
-    }
+    approaches.insert(client);
+    active = true;
 }
 
 void Airport::addTower(Controller* client) {
-    if(!towers.contains(client)) {
-        towers.append(client);
-        active = true;
-    }
+    towers.insert(client);
+    active = true;
 }
 
 void Airport::addGround(Controller* client) {
-    if(!grounds.contains(client)) {
-        grounds.append(client);
-        active = true;
-    }
+    grounds.insert(client);
+    active = true;
 }
 
 void Airport::addDelivery(Controller* client) {
-    if(!deliveries.contains(client)) {
-        deliveries.append(client);
-        active = true;
-    }
+    deliveries.insert(client);
+    active = true;
 }
 
 
@@ -292,9 +270,8 @@ void Airport::showDetailsDialog() {
     infoDialog->setFocus();
 }
 
-QList<Controller*> Airport::getAllControllers() const {
-    return QList<Controller*> () << approaches << towers << grounds << deliveries;
-    // << centers;
+QSet<Controller*> Airport::getAllControllers() const {
+    return approaches + towers + grounds + deliveries;
 }
 
 bool Airport::matches(const QRegExp& regex) const {
@@ -319,5 +296,5 @@ QString Airport::mapLabel() const {
 }
 
 QString Airport::toolTip() const {
-    return QString("%1 (%2, %3)").arg(label).arg(city).arg(countryCode);
+    return QString("%1 %2 (%3, %4)").arg(label).arg(name).arg(city).arg(countryCode);
 }

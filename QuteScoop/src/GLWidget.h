@@ -22,11 +22,11 @@ public:
     GLWidget(QGLFormat format, QWidget *parent = 0);
     ~GLWidget();
 
-    QPair<double, double> currentPosition();
+    QPair<double, double> currentPosition() const;
     ClientSelectionWidget *clientSelection;
 
 public slots:
-    void initializeGL();
+    virtual void initializeGL();
     void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
     // updating the statusbar as well - we do not want a full GL update here sometimes
     void setMapPosition(double lat, double lon, double newZoom, bool updateGL = true);
@@ -35,7 +35,7 @@ public slots:
     void zoomIn(double factor);
     void zoomTo(double zoom);
 
-    // Return a list of all clients at given lat/lon, within radius miles
+    // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
     QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
 
     void rememberPosition(int nr);
@@ -46,19 +46,17 @@ public slots:
 
     void createPilotsList();
     void createAirportsList();
-    void prepareDisplayLists();
+    void createControllersLists();
+    void createStaticLists();
 
-    void shutDownAnimation();
 
 signals:
     void mapClicked(int x, int y, QPoint absolutePos);
     void newPosition();
-    void hasGuiMessage(QString, GuiMessage::GuiMessageType = GuiMessage::Temporary,
-                       QString = QString(), int = 0, int = 0);
 
 protected:
-    void paintGL();
-    void resizeGL(int width, int height);
+    virtual void paintGL();
+    virtual void resizeGL(int width, int height);
     void mouseDoubleClickEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
@@ -67,7 +65,6 @@ protected:
     bool event(QEvent *event);
 
 private:
-    void createStaticLists();
 
     void resetZoom();
     void handleRotation(QMouseEvent *event);
@@ -75,25 +72,22 @@ private:
     bool mouse2latlon(int x, int y, double &lat, double &lon) const;
     bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
 
-    void drawSelectionRectangle();
-    void drawCoordinateAxii();
+    void drawSelectionRectangle() const;
+    void drawCoordinateAxii() const;
 
-    const QPair<double, double> sunZenith(const QDateTime &dt);
+    const QPair<double, double> sunZenith(const QDateTime &dt) const;
 
     void renderLabels();
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
     class FontRectangle {
     public:
-        FontRectangle(QRectF rectangle, MapObject *mapObject): _rect(rectangle), _object(mapObject) {}
-        const QRectF& rect() const { return _rect; }
-        MapObject* object() const { return _object; }
-    private:
-        QRectF _rect;
-        MapObject *_object;
+        FontRectangle(QRectF rectangle, MapObject *mapObject): rect(rectangle), object(mapObject) {}
+        QRectF rect;
+        MapObject *object;
     };
-    bool shouldDrawLabel(const FontRectangle& rect);
-    QList<FontRectangle> fontRectangles, allFontRectangles;
+    bool shouldDrawLabel(const FontRectangle *rect);
+    QSet<FontRectangle*> fontRectangles, allFontRectangles;
 
     QPoint lastPos, mouseDownPos;
     bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting;
@@ -108,12 +102,10 @@ private:
 		congestionsList;
 	bool allSectorsDisplayed;
 
-	QList<Controller*> sectorsToDraw;
+	QSet<Controller*> sectorsToDraw;
 
     double pilotLabelZoomTreshold, activeAirportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
         controllerLabelZoomTreshold, allWaypointsLabelZoomTreshold, usedWaypointsLabelZoomThreshold;
-
-    qint64 shutDownAnim_t;
 };
 
 #endif /*GLWIDGET_H_*/

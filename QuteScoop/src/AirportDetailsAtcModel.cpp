@@ -10,34 +10,24 @@ void AirportDetailsAtcModel::setClients(const QList<Controller*>& controllers) {
 }
 
 QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if (role != Qt::DisplayRole)
-        return QVariant();
-
-    if(orientation == Qt::Vertical)
-        return QVariant();
-
-    // orientation is Qt::Horizontal
-    switch(section) {
-    case 0: return QString("Callsign"); break;
-    case 1: return QString("Freq"); break;
-    case 2: return QString("Facility"); break;
-    case 3: return QString("Name"); break;
-    case 4: return QString("Rank"); break;
-    case 5: return QString("Online"); break;
-    case 6: return QString("Until"); break;
-    case 7: return QString("Server"); break;
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch(section) {
+        case 0: return QString("Callsign");
+        case 1: return QString("Freq");
+        case 2: return QString("Facility");
+        case 3: return QString("Name");
+        case 4: return QString("Rank");
+        case 5: return QString("Online");
+        case 6: return QString("Until");
+        case 7: return QString("Server");
+        }
     }
-
     return QVariant();
 }
 
 QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid())
+    if(!index.isValid() || index.row() >= controllers.size())
         return QVariant();
-
-    if(index.row() >= controllers.size())
-        return QVariant();
-
     Controller* c = controllers[index.row()];
 
     if(role == Qt::FontRole) {
@@ -63,6 +53,6 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
     return QVariant();
 }
 
-void AirportDetailsAtcModel::modelSelected(const QModelIndex& index) {
+void AirportDetailsAtcModel::modelSelected(const QModelIndex& index) const {
     controllers[index.row()]->showDetailsDialog();
 }

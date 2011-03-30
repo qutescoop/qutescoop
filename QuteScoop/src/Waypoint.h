@@ -13,12 +13,11 @@ class Waypoint: public MapObject
 public:
 	Waypoint() {}
 	Waypoint(const QStringList& stringList);
-	Waypoint(const QString& id, double lat, double lon);
+	Waypoint(const QString& id, const double lat, const double lon);
 
 	virtual QString mapLabel() const { return label; }
 	virtual QString toolTip() const;
-
-	virtual void showDetailsDialog() {};
+	virtual void showDetailsDialog() {} // not applicable
 };
 
 #endif /*WAYPOINT_H_*/

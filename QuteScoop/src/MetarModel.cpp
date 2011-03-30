@@ -117,11 +117,10 @@ void MetarModel::downloadMetarFor(Airport* airport) {
 
 void MetarModel::modelClicked(const QModelIndex& index) {
     Airport *a = metarList[index.row()];
-    if(a == 0) return;
-
-    if (Window::getInstance(false) != 0)
-        Window::getInstance(true)->updateMetarDecoder(a->label,
-            a->metar.encoded + "<hr>" + a->metar.decodedHtml());
+    if(a != 0)
+        if (Window::getInstance(false) != 0)
+            Window::getInstance(true)->updateMetarDecoder(a->label,
+                                                          a->metar.encoded + "<hr>" + a->metar.decodedHtml());
 }
 
 void MetarModel::abortAll() {

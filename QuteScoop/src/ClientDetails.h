@@ -8,23 +8,19 @@
 #include "_pch.h"
 
 #include "MapObject.h"
-
 class MapObject;
 
-class ClientDetails : public QDialog
-{
+class ClientDetails : public QDialog {
     Q_OBJECT
-
-public:
-    virtual void refresh() {}
 
 protected:
     ClientDetails(QWidget *parent);
+    virtual void refresh() {}
     void setMapObject(MapObject *object);
 
 protected slots:
-    void showOnMap();
-    void friendClicked();
+    void showOnMap() const;
+    void friendClicked() const;
 
 protected:
     double lat, lon;

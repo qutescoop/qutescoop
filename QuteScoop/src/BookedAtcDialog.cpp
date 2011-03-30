@@ -43,7 +43,7 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     treeBookedAtc->setModel(bookedAtcSortModel);
     connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
 
-    dateTimeFilter->setDateTime(QDateTime::currentDateTime().toUTC());
+    dateTimeFilter->setDateTime(QDateTime::currentDateTimeUtc());
     connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
     QFont font = lblStatusInfo->font();
@@ -58,28 +58,25 @@ void BookedAtcDialog::refresh() {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if(Settings::downloadBookings() &&
-       !Whazzup::getInstance()->realWhazzupData().bookingsTimestamp().isValid())
+       !Whazzup::getInstance()->realWhazzupData().bookingsTime.isValid())
         emit needBookings();
 
     const WhazzupData &data = Whazzup::getInstance()->realWhazzupData();
 
     qDebug() << "BookedAtcDialog/refresh(): setting clients";
-    bookedAtcModel->setClients(data.getBookedControllers());
+    bookedAtcModel->setClients(data.bookedControllers);
 
     QString msg = QString("Bookings %1 updated")
-                  .arg(data.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.bookingsTimestamp().time().toString("HHmm'z'"))
-                        : (data.bookingsTimestamp().isValid()
-                           ? data.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")
+                  .arg(data.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                        ? QString("today %1").arg(data.bookingsTime.time().toString("HHmm'z'"))
+                        : (data.bookingsTime.isValid()
+                           ? data.bookingsTime.toString("ddd MM/dd HHmm'z'")
                            : "never")
                         );
     lblStatusInfo->setText(msg);
-
-    qDebug() << "BookedAtcDialog/refresh() -- finished";
-
     editFilterTimer.start(5);
-
     qApp->restoreOverrideCursor();
+    qDebug() << "BookedAtcDialog/refresh() -- finished";
 }
 
 void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime)
@@ -187,5 +184,5 @@ void BookedAtcDialog::modelSelected(const QModelIndex& index) {
 void BookedAtcDialog::on_tbPredict_clicked()
 {
     close();
-    Whazzup::getInstance()->setPredictedTime(dateTimeFilter->dateTime());   
+    Whazzup::getInstance()->setPredictedTime(dateTimeFilter->dateTime());
 }

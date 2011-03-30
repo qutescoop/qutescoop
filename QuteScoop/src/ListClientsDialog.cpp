@@ -85,13 +85,13 @@ void ListClientsDialog::refresh() {
     // Clients
     QHash<QString, int> serversConnected;
     QList<Client*> clients;
-    foreach (Pilot *p, data.getPilots()) {
+    foreach(Pilot *p, data.pilots) {
         clients << dynamic_cast<Client*> (p);
         if (p != 0)
             serversConnected[p->server] = serversConnected.value(p->server, 0) + 1; // count clients
     }
     QHash<QString, int> voiceServerChannels;
-    foreach (Controller *c, data.getControllers()) {
+    foreach(Controller *c, data.controllers) {
         clients << dynamic_cast<Client*> (c);
         if (c != 0) {
             serversConnected[c->server] = serversConnected.value(c->server, 0) + 1; // count clients
@@ -104,21 +104,20 @@ void ListClientsDialog::refresh() {
 
     // Servers
     serversTable->clearContents();
-    QList<QStringList> servers = data.serverList();
-    serversTable->setRowCount(servers.size());
-    for (int row = 0; row < servers.size(); row++) {
+    serversTable->setRowCount(data.servers.size());
+    for (int row = 0; row < data.servers.size(); row++) {
         for (int col = 0; col < serversTable->columnCount(); col++) {
             switch(col) {
-                case 0: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][0]));
+                case 0: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][0]));
                     break; // ident
-                case 1: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][1]));
+                case 1: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][1]));
                     break; // hostname_or_IP
                 case 6: serversTable->setItem(row, col, new QTableWidgetItem(QString::number(
-                            serversConnected[servers[row][0]])));
+                            serversConnected[data.servers[row][0]])));
                     break; // connected
-                case 7: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][2]));
+                case 7: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][2]));
                     break; // location
-                case 8: serversTable->setItem(row, col, new QTableWidgetItem(servers[row][3]));
+                case 8: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][3]));
                     break; // name
                 default: serversTable->setItem(row, col, new QTableWidgetItem());
             }
@@ -136,24 +135,23 @@ void ListClientsDialog::refresh() {
 
     // VoiceServers
     voiceServersTable->clearContents();
-    QList<QStringList> voiceServers = data.voiceServerList();
-    voiceServersTable->setRowCount(voiceServers.size());
-    for (int row = 0; row < voiceServers.size(); row++) {
+    voiceServersTable->setRowCount(data.voiceServers.size());
+    for (int row = 0; row < data.voiceServers.size(); row++) {
         for (int col=0; col < voiceServersTable->columnCount(); col++) {
             switch(col) {
-                case 0: voiceServersTable->setItem(row, col, new QTableWidgetItem(voiceServers[row][0]));
+                case 0: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][0]));
                     break; // hostname_or_IP
                 case 5: voiceServersTable->setItem(row, col, new QTableWidgetItem(QString::number(
-                        voiceServerChannels[voiceServers[row][0].toLower()])));
+                        voiceServerChannels[data.voiceServers[row][0].toLower()])));
                     break; // channels
-                case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(voiceServers[row][1]));
+                case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][1]));
                     break; // location
-                case 7: voiceServersTable->setItem(row, col, new QTableWidgetItem(voiceServers[row][2]));
+                case 7: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][2]));
                     break; // name
                 default: voiceServersTable->setItem(row, col, new QTableWidgetItem());
             }
         }
-        voiceServerChannels.remove(voiceServers[row][0]); // we remove all we have displayed
+        voiceServerChannels.remove(data.voiceServers[row][0]); // we remove all we have displayed
         // styles
         QFont font; font.setBold(true);
         voiceServersTable->item(row, 4)->setData(Qt::FontRole, font);
@@ -163,7 +161,7 @@ void ListClientsDialog::refresh() {
         voiceServersTable->item(row, 4)->setTextAlignment(Qt::AlignCenter);
         voiceServersTable->item(row, 5)->setTextAlignment(Qt::AlignCenter);
     }
-    foreach (QString server, voiceServerChannels.keys()) { // remaining voice servers not included in Whazzup
+    foreach(const QString server, voiceServerChannels.keys()) { // remaining voice servers not included in Whazzup
         voiceServersTable->setRowCount(voiceServersTable->rowCount() + 1);
         int row = voiceServersTable->rowCount() - 1;
         voiceServersTable->setItem(row, 0, new QTableWidgetItem(server));
@@ -188,10 +186,10 @@ void ListClientsDialog::refresh() {
 
     // Status
     QString msg = QString("Whazzup %1 updated")
-                  .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
-                        : (data.timestamp().isValid()
-                           ? data.timestamp().toString("ddd yyyy/MM/dd HHmm'z'")
+                  .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                        ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
+                        : (data.whazzupTime.isValid()
+                           ? data.whazzupTime.toString("ddd yyyy/MM/dd HHmm'z'")
                            : "never")
                         );
     lblStatusInfo->setText(msg);
@@ -199,11 +197,11 @@ void ListClientsDialog::refresh() {
     // Set Item Titles
     toolBox->setItemText(0, QString("C&lients (%1)").arg(clients.size()));
 
-    toolBox->setItemText(1, QString("&Servers (%1)").arg(servers.size()));
-    toolBox->setItemEnabled(1, servers.size() > 0);
+    toolBox->setItemText(1, QString("&Servers (%1)").arg(data.servers.size()));
+    toolBox->setItemEnabled(1, data.servers.size() > 0);
 
-    toolBox->setItemText(2, QString("&Voice Servers (%1)").arg(voiceServers.size()));
-    toolBox->setItemEnabled(2, voiceServers.size() > 0);
+    toolBox->setItemText(2, QString("&Voice Servers (%1)").arg(data.voiceServers.size()));
+    toolBox->setItemEnabled(2, data.voiceServers.size() > 0);
 
     performSearch();
     qApp->restoreOverrideCursor();

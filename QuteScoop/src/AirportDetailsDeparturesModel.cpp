@@ -10,91 +10,78 @@ void AirportDetailsDeparturesModel::setClients(const QList<Pilot*>& pilots) {
 }
 
 QVariant AirportDetailsDeparturesModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if (role != Qt::DisplayRole)
-        return QVariant();
-
-    if(orientation == Qt::Vertical)
-        return QVariant();
-
-    // orientation is Qt::Horizontal
-    switch(section) {
-        case 0: return QString("Callsign"); break;
-        case 1: return QString("Type"); break;
-        case 2: return QString("Name"); break;
-        case 3: return QString("Outbound To"); break;
-        case 4: return QString("T"); break;
-        case 5: return QString("Via"); break;
-        case 6: return QString("Alt"); break;
-        case 7: return QString("GS"); break;
-        case 8: return QString("Dist"); break;
-        case 9: return QString("Delay"); break;
-        case 10: return QString("Status"); break;
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch(section) {
+        case 0: return QString("Callsign");
+        case 1: return QString("Type");
+        case 2: return QString("Name");
+        case 3: return QString("Outbound To");
+        case 4: return QString("T");
+        case 5: return QString("Via");
+        case 6: return QString("Alt");
+        case 7: return QString("GS");
+        case 8: return QString("Dist");
+        case 9: return QString("Delay");
+        case 10: return QString("Status");
+        }
     }
-
     return QVariant();
-}
-
-int AirportDetailsDeparturesModel::rowCount(const QModelIndex &parent) const {
-    return pilots.count();
 }
 
 int AirportDetailsDeparturesModel::columnCount(const QModelIndex &parent) const {
     return 11;
 }
 
-QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid())
-        return QVariant();
+int AirportDetailsDeparturesModel::rowCount(const QModelIndex &parent) const {
+    return pilots.count();
+}
 
-    if(index.row() >= pilots.size())
+QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role) const {
+    if(!index.isValid() || index.row() >= pilots.size())
         return QVariant();
 
     Pilot* p = pilots[index.row()];
 
     if(role == Qt::FontRole) {
         QFont result;
-        if (p->flightStatus() == Pilot::PREFILED) {
+        if (p->flightStatus() == Pilot::PREFILED)
             result.setItalic(true);
-            return result;
-        }
-        if (p->isFriend()) {
+        if (p->isFriend())
             result.setBold(true);
-            return result;
-        }
-        return QFont();
+        return result;
     } else if(role == Qt::DisplayRole) {
         switch(index.column()) {
-            case 0:
-                return p->label; break;
-            case 1:
-                return p->aircraftType(); break;
-            case 2:
-                return p->displayName(); break;
-            case 3:
-                if(p->destAirport() != 0) return p->destAirport()->toolTip(); break;
-            case 4:
-                return p->planFlighttype; break;
-            case 5:
-                return p->waypoints().first(); break;
-            case 6:
-                return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude)); break;
-            case 7:
-                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed)); break;
-            case 8:
-                if(p->flightStatus() == Pilot::PREFILED) return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
-                else return (p->distanceFromDeparture() < 3? 0: (int)p->distanceFromDeparture()); break;
-            case 9:
-                return p->delayStr();
-                break;
-            case 10:
-                return p->flightStatusShortString();
-                break;
+        case 0:
+            return p->label;
+        case 1:
+            return p->aircraftType();
+        case 2:
+            return p->displayName();
+        case 3:
+            return p->destAirport() != 0? p->destAirport()->toolTip(): QString();
+        case 4:
+            return p->planFlighttype;
+        case 5:
+            return p->waypoints().isEmpty()? QString(): p->waypoints().first();
+        case 6:
+            return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude));
+        case 7:
+            return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed));
+        case 8:
+            if(p->flightStatus() == Pilot::PREFILED)
+                return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
+            else
+                return (p->distanceFromDeparture() < 3? 0: (int)p->distanceFromDeparture());
+        case 9:
+            return p->delayStr();
+        case 10:
+            return p->flightStatusShortString();
         }
     }
 
     return QVariant();
 }
 
-void AirportDetailsDeparturesModel::modelSelected(const QModelIndex& index) {
+void AirportDetailsDeparturesModel::modelSelected(const QModelIndex& index) const {
     pilots[index.row()]->showDetailsDialog();
 }

@@ -12,17 +12,11 @@
 #include "GLWidget.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
-#include "GuiMessage.h"
-
-
 
 class Window : public QMainWindow, private Ui::MainWindow {
-
-Q_OBJECT
-
+    Q_OBJECT
 public:
     static Window* getInstance(bool createIfNoInstance = false);
-    //~Window();
     void setEnableBookedAtc(bool enable);
     void shootScreenshot();
     GLWidget *glWidget;
@@ -30,9 +24,6 @@ public:
 public slots:
     void updateMetarDecoder(const QString& airport, const QString& decodedText);
     void refreshFriends();
-
-    // the message system
-    void showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType = GuiMessage::Temporary, QString id = QString(), int progress = 0, int total = 0);
 
 private slots:
     void on_actionShowWaypoints_triggered(bool checked);
@@ -73,6 +64,7 @@ private slots:
     void on_tbDisablePredict_clicked();
     void on_tbRunPredict_toggled(bool checked);
     void on_cbUseDownloaded_toggled(bool checked);
+    void on_cbOnlyUseDownloaded_toggled(bool checked);
     void performWarp(bool forceUseDownloaded = false);
     void runPredict();
 
@@ -101,26 +93,17 @@ private slots:
     void friendClicked(const QModelIndex& index);
     void friendDoubleClicked(const QModelIndex& index);
 
-    void versionDownloaded(bool error);
+    //void versionDownloaded(bool error);
     void downloadWatchdogTriggered();
-
-    // datafiles update
-    void dataVersionsDownloaded(bool error);
-    void dataFilesRequestFinished(int id, bool error);
-    void dataFilesDownloaded(bool error);
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
 
 private:
-    void checkForUpdates();
-    void checkForDataUpdates();
-
-    void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
-
     // singleton
     Window(QWidget *parent = 0);
-    void createActions();
+    ~Window();
+    void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
 
     SearchResultModel searchResultModel, friendsModel;
     QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer;
@@ -128,19 +111,14 @@ private:
     QSortFilterProxyModel *metarSortModel, *friendsSortModel;
     MetarModel metarModel;
 
+    //void checkForUpdates();
     QHttp *versionChecker;
     QBuffer *versionBuffer;
-
-    QHttp *dataVersionsAndFilesDownloader;
-    QBuffer *dataVersionsBuffer;
-    QList<QFile*> dataFilesToDownload;
 
     QDateTime dateTimePredict_old;
 
     QLabel *lblStatus;
     QProgressBar *progressBar;
-
-    QMultiMap< QDateTime, GuiMessage > guiMessages;
 };
 
 #endif /*WINDOW_H_*/

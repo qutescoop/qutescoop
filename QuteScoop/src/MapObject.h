@@ -9,8 +9,6 @@
 
 #include "ClientDetails.h"
 
-class ClientDetails;
-
 class MapObject: public QObject
 {
 	Q_OBJECT
@@ -21,13 +19,13 @@ public:
 	MapObject& operator=(const MapObject& obj);
 	virtual ~MapObject();
 
-	virtual bool matches(const QRegExp& regex) const;
-	virtual QString mapLabel() const { return label; }
-
 	bool isNull() const { return label.isNull(); }
 
+	virtual bool matches(const QRegExp& regex) const { return label.contains(regex); }
+	virtual QString mapLabel() const { return label; }
 	virtual QString toolTip() const { return label; }
-	virtual void showDetailsDialog() {}
+
+	virtual void showDetailsDialog() = 0;
 
 	double lat, lon;
 	QString label;

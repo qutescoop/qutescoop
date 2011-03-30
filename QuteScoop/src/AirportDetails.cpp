@@ -45,8 +45,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     treeAtc->sortByColumn(0, Qt::AscendingOrder);
     treeAtc->header()->setResizeMode(QHeaderView::Interactive);
 
-    connect(treeAtc->header(), SIGNAL(sectionClicked(int)), treeAtc, SLOT(sortByColumn(int)));
-    connect(treeAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(atcSelected(const QModelIndex&)));
+    connect(treeAtc->header(), SIGNAL(sectionClicked(int)),
+            treeAtc, SLOT(sortByColumn(int)));
+    connect(treeAtc, SIGNAL(clicked(const QModelIndex&)),
+            this, SLOT(atcSelected(const QModelIndex&)));
 
     // arrivals
     arrivalsSortModel = new QSortFilterProxyModel;
@@ -56,8 +58,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     treeArrivals->sortByColumn(9, Qt::AscendingOrder);
     treeArrivals->header()->setResizeMode(QHeaderView::Interactive);
 
-    connect(treeArrivals->header(), SIGNAL(sectionClicked(int)), treeArrivals, SLOT(sortByColumn(int)));
-    connect(treeArrivals, SIGNAL(clicked(const QModelIndex&)), this, SLOT(arrivalSelected(const QModelIndex&)));
+    connect(treeArrivals->header(), SIGNAL(sectionClicked(int)),
+            treeArrivals, SLOT(sortByColumn(int)));
+    connect(treeArrivals, SIGNAL(clicked(const QModelIndex&)),
+            this, SLOT(arrivalSelected(const QModelIndex&)));
 
     // departures
     departuresSortModel = new QSortFilterProxyModel;
@@ -67,8 +71,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     treeDepartures->sortByColumn(8, Qt::AscendingOrder);
     treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
 
-    connect(treeDepartures->header(), SIGNAL(sectionClicked(int)), treeDepartures, SLOT(sortByColumn(int)));
-    connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)), this, SLOT(departureSelected(const QModelIndex&)));
+    connect(treeDepartures->header(), SIGNAL(sectionClicked(int)),
+            treeDepartures, SLOT(sortByColumn(int)));
+    connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)),
+            this, SLOT(departureSelected(const QModelIndex&)));
 
     metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
@@ -93,7 +99,7 @@ void AirportDetails::refresh(Airport* newAirport) {
     lblName->setText(QString("%1\n%2").arg(airport->city).arg(airport->name));
     lblCountry->setText(QString("%1 (%2)")
                         .arg(airport->countryCode)
-                        .arg(NavData::getInstance()->countryName(airport->countryCode)));
+                        .arg(NavData::getInstance()->countryCodes[airport->countryCode]));
     lblLocation->setText(QString("%1%2 %3%4").
                          arg(airport->lat > 0? "N": "S").
                          arg(qAbs(airport->lat), 6, 'f', 3, '0').
@@ -101,63 +107,60 @@ void AirportDetails::refresh(Airport* newAirport) {
                          arg(qAbs(airport->lon), 7, 'f', 3, '0'));
 
     int utcDev = (int) (airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
-    QString lt = Whazzup::getInstance()->whazzupData().timestamp().addSecs(utcDev * 3600).time().toString("HH:mm");
+    QString lt = Whazzup::getInstance()->whazzupData().whazzupTime.
+                 addSecs(utcDev * 3600).time().toString("HH:mm");
     lblTime->setText(QString("%1 loc, UTC %2%3")
                         .arg(lt)
                         .arg(utcDev < 0 ? "": "+") // just a plus sign
                         .arg(utcDev));
 
     // arrivals
-    arrivalsModel.setClients(airport->getArrivals());
+    arrivalsModel.setClients(airport->arrivals.toList());
     arrivalsSortModel->invalidate();
     treeArrivals->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // departures
-    departuresModel.setClients(airport->getDepartures());
+    departuresModel.setClients(airport->departures.toList());
     departuresSortModel->invalidate();
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // set titles
     if (Settings::filterTraffic()) {
-        groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").arg(airport->numFilteredArrivals).arg(airport->getArrivals().size()));
-        groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").arg(airport->numFilteredDepartures).arg(airport->getDepartures().size()));
+        groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").
+                                   arg(airport->numFilteredArrivals).arg(airport->arrivals.size()));
+        groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").
+                                     arg(airport->numFilteredDepartures).arg(airport->departures.size()));
     } else {
-        groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->getArrivals().size()));
-        groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->getDepartures().size()));
+        groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->arrivals.size()));
+        groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->departures.size()));
     }
 
-    QList<Controller*> atcContent = airport->getAllControllers();
-    atcContent += checkSectors();
+    QSet<Controller*> atcContent = airport->getAllControllers() + checkSectors();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
     // ATIS
     if(cbAtis->isChecked()) {
-        Controller* atis = Whazzup::getInstance()->whazzupData().getController(airport->label + "_ATIS");
+        Controller* atis = Whazzup::getInstance()->whazzupData().controllers[airport->label + "_ATIS"];
         if (atis != 0)
-            atcContent.append(atis);
+            atcContent.insert(atis);
     }
 
     // observers
     if(cbObservers->isChecked()) {
-        QList<Controller*> controllers = Whazzup::getInstance()->whazzupData().getControllers();
-        for(int i = 0; i < controllers.size(); i++) {
-            Controller* c = controllers[i];
-            if(c->isObserver()) {
-                double distance = NavData::distance(airport->lat, airport->lon, c->lat, c->lon);
-                if(c->visualRange > distance && distance < 20)
-                    atcContent.append(c);
-            }
+        foreach(Controller *c, Whazzup::getInstance()->whazzupData().controllers) {
+            if(c->isObserver())
+                if(NavData::distance(airport->lat, airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
+                    atcContent.insert(c);
         }
     }
     /*
     // booked ATC
     QList<BookedController*> bookedcontrollers = airport->getBookedControllers();
-    for (int i = 0; i < bookedcontrollers.size(); i++) {
+    for (int i = 0; i < bookedcontrollers.size(); i++)
         controllers.append(dynamic_cast <Controller*> (bookedcontrollers[i]));
-    }
     */
 
-    atcModel.setClients(atcContent);
+    atcModel.setClients(atcContent.values());
     atcSortModel->invalidate();
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
@@ -202,65 +205,60 @@ void AirportDetails::on_pbMetar_clicked() {
     if (airport != 0) {
         airports += airport;
         metarModel->setData(airports);
-        if(metarModel->rowCount() == 1) { // means that the METAR is readily downloaded
+        if(metarModel->rowCount() == 1) // means that the METAR is readily downloaded
             metarModel->modelClicked(metarModel->index(0));
-            //this->lower(); // does not what expected: lowers all of QuteScoop, not just this dialog
-        } else {
+        else
             connect(metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
-        }
     }
 }
 
-QList<Controller*> AirportDetails::checkSectors() {
-    QList<Controller*> result;
-    QList<Controller*> allSectors = Whazzup::getInstance()->whazzupData().activeSectors();
+QSet<Controller*> AirportDetails::checkSectors() const {
+    QSet<Controller*> result;
 
-    for(int i = 0; i < allSectors.size(); i++) {
+    foreach(Controller *c, Whazzup::getInstance()->whazzupData().activeSectors()) {
         int crossings = 0;
         double x1, x2;
 
-        int size = allSectors[i]->sector->sector().size();
-        for ( int ii = 0; ii < size ; ii++ ) {
+        int size = c->sector->points.size();
+        for(int ii = 0; ii < size ; ii++ ) {
             /* This is done to ensure that we get the same result when
                the line goes from left to right and right to left */
-            if ( allSectors[i]->sector->sector().value(ii).first <
-                 allSectors[i]->sector->sector().value((ii + 1) % size).first) {
-                x1 = allSectors[i]->sector->sector().value(ii).first;
-                x2 = allSectors[i]->sector->sector().value((ii + 1) % size).first;
+            if(c->sector->points.value(ii).first <
+                 c->sector->points.value((ii + 1) % size).first) {
+                x1 = c->sector->points.value(ii).first;
+                x2 = c->sector->points.value((ii + 1) % size).first;
             } else {
-                x1 = allSectors[i]->sector->sector().value((ii + 1) % size).first;
-                x2 = allSectors[i]->sector->sector().value(ii).first;
+                x1 = c->sector->points.value((ii + 1) % size).first;
+                x2 = c->sector->points.value(ii).first;
             }
 
             /* First check if the ray is possible to cross the line */
-            if ( airport->lat > x1 && airport->lat <= x2 && (
-                    airport->lon < allSectors[i]->sector->sector().value(ii).second
-                    || airport->lon <= allSectors[i]->sector->sector().value((ii + 1) % 8).second)) {
-                static const float eps = 0.000001;
-
+            if(airport->lat > x1 && airport->lat <= x2 && (
+                    airport->lon < c->sector->points.value(ii).second
+                    || airport->lon <= c->sector->points.value((ii + 1) % 8).second)) {
                 /* Calculate the equation of the line */
-                double dx = allSectors[i]->sector->sector().value((ii + 1) % size).first
-                            - allSectors[i]->sector->sector().value(ii).first;
-                double dy = allSectors[i]->sector->sector().value((ii + 1) % size).second
-                            - allSectors[i]->sector->sector().value(ii).second;
+                double dx = c->sector->points.value((ii + 1) % size).first
+                            - c->sector->points.value(ii).first;
+                double dy = c->sector->points.value((ii + 1) % size).second
+                            - c->sector->points.value(ii).second;
                 double k;
 
-                if ( fabs(dx) < eps )
+                if(qFuzzyIsNull(dx))
                     k = INFINITY;	// math.h
                 else
                     k = dy/dx;
 
-                double m = allSectors[i]->sector->sector().value(ii).second
-                           - k * allSectors[i]->sector->sector().value(ii).first;
+                double m = c->sector->points.value(ii).second
+                           - k * c->sector->points.value(ii).first;
 
                 /* Find if the ray crosses the line */
                 double y2 = k * airport->lat + m;
-                if ( airport->lon <= y2 )
+                if(airport->lon <= y2)
                     crossings++;
             }
-        }   
+        }
         if(crossings % 2 == 1)
-            result.append(allSectors.value(i));
+            result.insert(c);
     }
     return result;
 }

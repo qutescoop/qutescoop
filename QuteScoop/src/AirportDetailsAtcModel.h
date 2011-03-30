@@ -24,7 +24,7 @@ public:
 
 public slots:
     void setClients(const QList<Controller*>& controllers);
-    void modelSelected(const QModelIndex& index);
+    void modelSelected(const QModelIndex& index) const;
 
 private:
     QList<Controller*> controllers;

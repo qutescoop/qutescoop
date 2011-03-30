@@ -27,8 +27,8 @@ void SectorReader::loadSectorlist(QHash<QString, Sector*>& sectors) {
             delete sector;
             continue;
         }
-        sectors[sector->icao()] = sector;
-        idIcaoMapping.insert(sector->id(), sector->icao());
+        sectors[sector->icao] = sector;
+        idIcaoMapping.insert(sector->id, sector->icao);
         line = fileReader->nextLine();
     }
     delete fileReader;
@@ -51,7 +51,7 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
                 QList<QString> sectorIcaos = idIcaoMapping.values(workingSectorId);
                 for(int i = 0; i < sectorIcaos.size(); i++) {
                     if(sectors.value(sectorIcaos[i]) != 0) // be conservative as a segfault was reported on Mac OS
-                        sectors[sectorIcaos[i]]->setPointList(pointList);
+                        sectors[sectorIcaos[i]]->points = pointList;
                 }
             }
             workingSectorId = line.split('_').last();

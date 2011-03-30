@@ -160,7 +160,7 @@ on program &amp;start</string>
               </layout>
              </item>
              <item>
-              <layout class="QGridLayout" name="gridLayout">
+              <layout class="QGridLayout" name="gridLayoutSave">
                <item row="0" column="0">
                 <widget class="QCheckBox" name="cbSaveWhazzupData">
                  <property name="toolTip">
@@ -260,7 +260,11 @@ on program &amp;start</string>
                 </widget>
                </item>
                <item>
-                <widget class="QComboBox" name="cbScreenshotFormat"/>
+                <widget class="QComboBox" name="cbScreenshotFormat">
+                 <property name="toolTip">
+                  <string>supported image formats. Gain more with a full Qt installation (technically, by adding more imageformat plugins).</string>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -308,7 +312,7 @@ on program &amp;start</string>
                   <bool>false</bool>
                  </property>
                  <property name="toolTip">
-                  <string>Will be initially downloaded only when needed the first time.</string>
+                  <string>first time downloaded when needed the first time.</string>
                  </property>
                  <property name="text">
                   <string>download bookings every</string>
@@ -521,7 +525,8 @@ on program &amp;start</string>
              <bool>false</bool>
             </property>
             <property name="toolTip">
-             <string>Disabled due to server move</string>
+             <string>Disabled due to server move.
+Check our site fom time to time to stay up-to-date.</string>
             </property>
             <property name="text">
              <string>send version number, platform and preferred network to server</string>
@@ -806,7 +811,7 @@ p, li { white-space: pre-wrap; }
           <item row="0" column="1">
            <widget class="QDoubleSpinBox" name="sbZoomFactor">
             <property name="toolTip">
-             <string>All zooming gets accelerated by this value.</string>
+             <string>all zooming gets accelerated by this value.</string>
             </property>
             <property name="prefix">
              <string>× </string>
@@ -832,7 +837,17 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="0" column="2">
+          <item row="0" column="3">
+           <widget class="QPushButton" name="pbWheelCalibrate">
+            <property name="toolTip">
+             <string>The maximum value of your mouse wheel gets updated constantly as it differs from mouse driver to mouse driver. Reset if you feel your zomming is way too slow.</string>
+            </property>
+            <property name="text">
+             <string>recalibrate mouse wheel values</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="4">
            <spacer name="horizontalSpacer_14">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -844,16 +859,6 @@ p, li { white-space: pre-wrap; }
              </size>
             </property>
            </spacer>
-          </item>
-          <item row="0" column="3">
-           <widget class="QPushButton" name="pbWheelCalibrate">
-            <property name="toolTip">
-             <string>The maximum value of your mouse wheel gets updated constantly as it differs from mouse driver to mouse driver. Reset if you feel your zomming is way too slow.</string>
-            </property>
-            <property name="text">
-             <string>recalibrate mouse wheel values</string>
-            </property>
-           </widget>
           </item>
          </layout>
         </widget>
@@ -886,7 +891,7 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QPushButton" name="pbExportToFile">
               <property name="toolTip">
-               <string>Writes settings to .ini file.</string>
+               <string>writes settings to .ini file.</string>
               </property>
               <property name="text">
                <string>&amp;export all settings to file</string>
@@ -950,7 +955,8 @@ Please give us feedback if you encounter such situations - we are researching th
             <item row="0" column="1">
              <widget class="QCheckBox" name="cbLineSmoothing">
               <property name="toolTip">
-               <string>Depends completely on your graphics hardware plus device driver.</string>
+               <string>Smooth / rounded / anti-aliased lines. 
+Depends completely on your graphics hardware plus device driver.</string>
               </property>
               <property name="text">
                <string>smooth lines</string>
@@ -963,7 +969,8 @@ Please give us feedback if you encounter such situations - we are researching th
             <item row="0" column="2">
              <widget class="QCheckBox" name="cbDotSmoothing">
               <property name="toolTip">
-               <string>Depends completely on your graphics hardware plus device driver.</string>
+               <string>Smooth / round / anti-aliased dots. 
+Depends completely on your graphics hardware plus device driver.</string>
               </property>
               <property name="text">
                <string>smooth dots</string>
@@ -1142,8 +1149,11 @@ Please give us feedback if you encounter such situations - we are researching th
                </item>
                <item row="2" column="3">
                 <widget class="QDoubleSpinBox" name="sbGridLineStrength">
+                 <property name="toolTip">
+                  <string>set to 0 to deactivate.</string>
+                 </property>
                  <property name="specialValueText">
-                  <string>none</string>
+                  <string>off</string>
                  </property>
                  <property name="suffix">
                   <string> px</string>
@@ -1159,13 +1169,19 @@ Please give us feedback if you encounter such situations - we are researching th
                  </property>
                  <property name="singleStep">
                   <double>0.100000000000000</double>
+                 </property>
+                 <property name="value">
+                  <double>0.000000000000000</double>
                  </property>
                 </widget>
                </item>
                <item row="3" column="3">
                 <widget class="QDoubleSpinBox" name="sbCoastLineStrength">
+                 <property name="toolTip">
+                  <string>set to 0 to deactivate.</string>
+                 </property>
                  <property name="specialValueText">
-                  <string>none</string>
+                  <string>off</string>
                  </property>
                  <property name="suffix">
                   <string> px</string>
@@ -1183,14 +1199,17 @@ Please give us feedback if you encounter such situations - we are researching th
                   <double>0.100000000000000</double>
                  </property>
                  <property name="value">
-                  <double>2.000000000000000</double>
+                  <double>0.000000000000000</double>
                  </property>
                 </widget>
                </item>
                <item row="4" column="3">
                 <widget class="QDoubleSpinBox" name="sbCountryLineStrength">
+                 <property name="toolTip">
+                  <string>set to 0 to deactivate.</string>
+                 </property>
                  <property name="specialValueText">
-                  <string>none</string>
+                  <string>off</string>
                  </property>
                  <property name="suffix">
                   <string> px</string>
@@ -1208,7 +1227,7 @@ Please give us feedback if you encounter such situations - we are researching th
                   <double>0.100000000000000</double>
                  </property>
                  <property name="value">
-                  <double>2.000000000000000</double>
+                  <double>0.000000000000000</double>
                  </property>
                 </widget>
                </item>
@@ -1246,7 +1265,7 @@ Please give us feedback if you encounter such situations - we are researching th
                   </font>
                  </property>
                  <property name="toolTip">
-                  <string>Overlay a picture over the whole Earth. This is loaded from ./textures/earth.jpg - if you want to change it, pay attention to have width and height at a power of 2 (1024, 2048, 4096...).
+                  <string>Overlay a picture over the whole Earth.
 The texture is affected by the colour chosen for the Globe.</string>
                  </property>
                  <property name="text">
@@ -1476,7 +1495,7 @@ The texture is affected by the colour chosen for the Globe.</string>
             <item>
              <widget class="QPushButton" name="pbReinitOpenGl">
               <property name="toolTip">
-               <string>These settings are enabled by re-initializing the OpenGL engine.</string>
+               <string>re-initialize OpenGL engine to reflect the settings</string>
               </property>
               <property name="text">
                <string>apply</string>
@@ -1624,6 +1643,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="0" column="1">
                  <widget class="QPushButton" name="pbInactAirportFontColor">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to hide all labels of this type.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1686,6 +1708,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="0" column="6">
                  <widget class="QDoubleSpinBox" name="sbInactAirportDotSize">
+                  <property name="toolTip">
+                   <string>set to 0 to deactivate.</string>
+                  </property>
                   <property name="specialValueText">
                    <string>off</string>
                   </property>
@@ -1730,6 +1755,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="0" column="1">
                  <widget class="QPushButton" name="pbAirportFontColor">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to hide all labels of this type.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1766,6 +1794,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="2" column="1">
                  <widget class="QPushButton" name="pbAppBorderLineColor">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to hide all labels of this type.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1779,6 +1810,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="2" column="2">
                  <widget class="QDoubleSpinBox" name="sbAppBorderLineStrength">
+                  <property name="toolTip">
+                   <string>set to 0 to deactivate.</string>
+                  </property>
                   <property name="specialValueText">
                    <string>off</string>
                   </property>
@@ -1815,6 +1849,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="4" column="1">
                  <widget class="QPushButton" name="pbGndBorderLineColor">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to hide all labels of this type.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1828,6 +1865,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="4" column="2">
                  <widget class="QDoubleSpinBox" name="sbGndBorderLineStrength">
+                  <property name="toolTip">
+                   <string>set to 0 to deactivate.</string>
+                  </property>
                   <property name="specialValueText">
                    <string>off</string>
                   </property>
@@ -1873,6 +1913,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item row="0" column="6">
                  <widget class="QDoubleSpinBox" name="sbAirportDotSize">
+                  <property name="toolTip">
+                   <string>set to 0 to deactivate.</string>
+                  </property>
                   <property name="specialValueText">
                    <string>off</string>
                   </property>
@@ -1916,6 +1959,9 @@ margin</string>
                 </item>
                 <item row="4" column="5">
                  <widget class="QPushButton" name="pbGndFillColor">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to deactivate.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1950,6 +1996,9 @@ margin</string>
                 </item>
                 <item row="2" column="5">
                  <widget class="QPushButton" name="pbAppColorCenter">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to deactivate.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1963,6 +2012,9 @@ margin</string>
                 </item>
                 <item row="2" column="6">
                  <widget class="QPushButton" name="pbAppColorMargin">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to deactivate.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1976,6 +2028,9 @@ margin</string>
                 </item>
                 <item row="3" column="6">
                  <widget class="QPushButton" name="pbTwrColorMargin">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to deactivate.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -1989,6 +2044,9 @@ margin</string>
                 </item>
                 <item row="3" column="5">
                  <widget class="QPushButton" name="pbTwrColorCenter">
+                  <property name="toolTip">
+                   <string>set color-alpha to 0 to deactivate.</string>
+                  </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
@@ -2321,7 +2379,7 @@ airports with at least</string>
             <item row="1" column="2">
              <widget class="QDoubleSpinBox" name="sbFirBorderLineStrength">
               <property name="toolTip">
-               <string>Set to 0 to deactivate</string>
+               <string>set to 0 to deactivate.</string>
               </property>
               <property name="specialValueText">
                <string>off</string>
@@ -2342,7 +2400,7 @@ airports with at least</string>
                <double>0.100000000000000</double>
               </property>
               <property name="value">
-               <double>1.000000000000000</double>
+               <double>0.000000000000000</double>
               </property>
              </widget>
             </item>
@@ -2371,6 +2429,9 @@ airports with at least</string>
             </item>
             <item row="1" column="5">
              <widget class="QPushButton" name="pbFirFillColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to deactivate.</string>
+              </property>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
@@ -2407,6 +2468,9 @@ airports with at least</string>
             </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="pbFirFontColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to hide all labels of this type.</string>
+              </property>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
@@ -2479,6 +2543,9 @@ airports with at least</string>
             </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="pbPilotFontColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to hide all labels of this type.</string>
+              </property>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
@@ -2541,6 +2608,9 @@ airports with at least</string>
             </item>
             <item row="0" column="6">
              <widget class="QDoubleSpinBox" name="sbPilotDotSize">
+              <property name="toolTip">
+               <string>set to 0 to deactivate.</string>
+              </property>
               <property name="specialValueText">
                <string>off</string>
               </property>
@@ -2617,7 +2687,7 @@ airports with at least</string>
             <item row="0" column="2">
              <widget class="QDoubleSpinBox" name="sbTimeLineStrength">
               <property name="toolTip">
-               <string>Set to 0 to deactivate</string>
+               <string>set to 0 to deactivate.</string>
               </property>
               <property name="specialValueText">
                <string>off</string>
@@ -2792,7 +2862,7 @@ airports with at least</string>
             <item row="1" column="2">
              <widget class="QDoubleSpinBox" name="sbDepLineStrength">
               <property name="toolTip">
-               <string>Set to 0 to deactivate</string>
+               <string>set to 0 to deactivate.</string>
               </property>
               <property name="specialValueText">
                <string>off</string>
@@ -2814,7 +2884,7 @@ airports with at least</string>
             <item row="2" column="2">
              <widget class="QDoubleSpinBox" name="sbDestLineStrength">
               <property name="toolTip">
-               <string>Set to 0 to deactivate</string>
+               <string>set to 0 to deactivate.</string>
               </property>
               <property name="specialValueText">
                <string>off</string>
@@ -2882,6 +2952,9 @@ airports with at least</string>
             </item>
             <item row="0" column="2">
              <widget class="QPushButton" name="waypointsFontColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to hide all labels of this type.</string>
+              </property>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
@@ -2944,6 +3017,9 @@ airports with at least</string>
             </item>
             <item row="0" column="7">
              <widget class="QDoubleSpinBox" name="waypointsDotSize">
+              <property name="toolTip">
+               <string>set to 0 to deactivate.</string>
+              </property>
               <property name="specialValueText">
                <string>off</string>
               </property>

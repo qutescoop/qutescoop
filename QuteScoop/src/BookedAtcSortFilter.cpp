@@ -23,9 +23,8 @@ bool BookedAtcSortFilter::filterAcceptsRow(int source_row, const QModelIndex& so
                     (QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent));
             return (false);
         }
-    } else {
+    } else
         return(QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent));
-    }
     return (false);
 }
 

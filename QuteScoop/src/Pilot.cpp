@@ -14,7 +14,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     onGround(false),
     showDepDestLine(false)
 {
-    whazzupTime = QDateTime(whazzup->timestamp()); // need some local reference to that
+    whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
     altitude = getField(stringList, 7).toInt(); // we could do some barometric calculations here (only for VATSIM needed)
     groundspeed = getField(stringList, 8).toInt();
@@ -65,14 +65,13 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
 
     // anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
-    if(planRoute.count("/") > 4)
-        planRoute.replace(QRegExp("[/]"), " ");
-
-    if(planRoute.isEmpty())
-        planRoute = "";
+    // let's keep him... waypoints() takes care of it in places where we need it.
+    //if(planRoute.count("/") > 4)
+    //    planRoute.replace(QRegExp("[/]"), " ");
 }
 
 void Pilot::showDetailsDialog() {
+    qDebug() << "Pilot::showDetailsDialog()";
     PilotDetails *infoDialog = PilotDetails::getInstance(true);
     infoDialog->refresh(this);
     infoDialog->show();
@@ -142,39 +141,27 @@ QString Pilot::flightStatusString() const {
     QString result;
     switch(flightStatus()) {
         case BOARDING:
-            result = QString();
-            result += "TTG " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HHmm") + "z";
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
-            return result;
+            return "TTG " + eet().toString("H:mm") + " hrs"
+                    + ", ETA " + eta().toString("HHmm") + "z"
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
         case GROUND_DEP:
-            result = QString();
-            result += "TTG " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HHmm") + "z";
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
-            return result;
+            return "TTG " + eet().toString("H:mm") + " hrs"
+                    + ", ETA " + eta().toString("HHmm") + "z"
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
         case DEPARTING:
-            result = QString();
-            result += "TTG " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HHmm") + "z";
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
-            return result;
+            return "TTG " + eet().toString("H:mm") + " hrs"
+                    + ", ETA " + eta().toString("HHmm") + "z"
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
         case ARRIVING:
-            result = QString();
-            result += "TTG " + eet().toString("H:mm") + " hrs";
-            result += ", ETA " + eta().toString("HHmm") + "z";
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
-            return result;
+            return "TTG " + eet().toString("H:mm") + " hrs"
+                    + ", ETA " + eta().toString("HHmm") + "z"
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
         case GROUND_ARR:
-            result = QString();
-            result += "ATA " + eta().toString("HHmm") + "z"; // Actual Time of Arrival :)
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
-            return result;
+            return "ATA " + eta().toString("HHmm") + "z" // Actual Time of Arrival :)
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
         case BLOCKED:
-            result = QString();
-            result += "ATA " + eta().toString("HHmm") + "z"; // Actual Time of Arrival :)
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
-            return result;
+            return "ATA " + eta().toString("HHmm") + "z" // Actual Time of Arrival :)
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
         case CRASHED: return QString();
         case BUSH: return QString();
         case EN_ROUTE: {
@@ -182,7 +169,7 @@ QString Pilot::flightStatusString() const {
                 Airport *dep = depAirport();
                 Airport *dst = destAirport();
                 if(dst == 0)
-                    return QString();
+                    return result;
                 if(dep != 0) {
                     // calculate %done
                     int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
@@ -233,6 +220,10 @@ QString Pilot::planFlighttypeString() const {
         return QString(planFlighttype);
 }
 
+QString Pilot::toolTip() const {
+    return Client::toolTip() + " " + planDep + "-" + planDest;
+}
+
 QString Pilot::rank() const {
     if(network == IVAO) {
         switch(rating) {
@@ -271,20 +262,20 @@ QString Pilot::aircraftType() const {
 }
 
 Airport* Pilot::depAirport() const {
-    if(NavData::getInstance()->airports().contains(planDep))
-        return NavData::getInstance()->airports()[planDep];
+    if(NavData::getInstance()->airports.contains(planDep))
+        return NavData::getInstance()->airports[planDep];
     else return 0;
 }
 
 Airport* Pilot::destAirport() const {
-    if(NavData::getInstance()->airports().contains(planDest))
-        return NavData::getInstance()->airports()[planDest];
+    if(NavData::getInstance()->airports.contains(planDest))
+        return NavData::getInstance()->airports[planDest];
     else return 0;
 }
 
 Airport* Pilot::altAirport() const {
-    if(NavData::getInstance()->airports().contains(planAltAirport))
-        return NavData::getInstance()->airports()[planAltAirport];
+    if(NavData::getInstance()->airports.contains(planAltAirport))
+        return NavData::getInstance()->airports[planAltAirport];
     else return 0;
 }
 
@@ -315,30 +306,28 @@ int Pilot::planTasInt() const { // defuck flightplanned TAS
 }
 
 QDateTime Pilot::etd() const { // Estimated Time of Departure
-    if(planDeptime.length() < 3)
-        return QDateTime();
     QString planDeptimeFixed = planDeptime;
 
     if(planDeptime.length() == 3)
         planDeptimeFixed.prepend("0"); // fromString("Hmm") does not handle "145" correctly -> "14:05"
 
     QTime time = QTime::fromString(planDeptimeFixed, "HHmm");
+
     return QDateTime(dayOfFlight, time, Qt::UTC);
 }
 
 QDateTime Pilot::eta() const { // Estimated Time of Arrival
     FlightStatus status = flightStatus();
-    if(status == PREFILED || status == BOARDING) {
+    if(status == PREFILED || status == BOARDING)
         return etaPlan();
-    } else if(status == DEPARTING || status == GROUND_DEP) { // try to calculate with flightplanned speed
+    else if(status == DEPARTING || status == GROUND_DEP) { // try to calculate with flightplanned speed
         int enrouteSecs;
         if(planTasInt() == 0) {
             if(groundspeed == 0)
                 return QDateTime(); // abort
             enrouteSecs = (int) (distanceToDestination() * 3600) / groundspeed;
-        } else {
+        } else
             enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
-        }
         if(status == GROUND_DEP) enrouteSecs += 240; // taxi time outbound
         return whazzupTime.addSecs(enrouteSecs);
     } else if(status == EN_ROUTE || status == ARRIVING) { // try groundspeed
@@ -347,14 +336,12 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
             if(planTasInt() == 0)
                 return QDateTime(); // abort
             enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
-        } else {
+        } else
             enrouteSecs = (int) (distanceToDestination() * 3600) / groundspeed;
-        }
         QDateTime ret = whazzupTime.addSecs(enrouteSecs);
         return ret;
-    } else if(status == GROUND_ARR || status == BLOCKED) {
+    } else if(status == GROUND_ARR || status == BLOCKED)
         return whazzupTime;
-    }
     return QDateTime();
 }
 
@@ -393,7 +380,7 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
         return altStr.mid(1).toInt() * 100;
     if(altStr.left(1) == "A" && altStr.length() <= 4) // A45
         return altStr.mid(1).toInt() * 100;
-    if(altStr.left(1) == "A" && altStr.length() > 4) // A4500
+    if(altStr.left(1) == "A" && altStr.length() > 4) // A4500: idiot mode...
         return altStr.mid(1).toInt();
     return altStr.toInt();
 }
@@ -451,7 +438,7 @@ const int Pilot::nextPointOnRoute(const QList<Waypoint *> &waypoints) const { //
     return qMin(nextPoint, waypoints.size());
 }
 
-bool Pilot::showDepLine() {
+bool Pilot::showDepLine() const {
     if (depAirport() != 0)
         return (Settings::depLineStrength() > 0. &&
                 (showDepDestLine || depAirport()->showFlightLines));
@@ -459,7 +446,7 @@ bool Pilot::showDepLine() {
         return (Settings::depLineStrength() > 0. && showDepDestLine);
 }
 
-bool Pilot::showDestLine() {
+bool Pilot::showDestLine() const {
     if (destAirport() != 0)
         return (Settings::destLineStrength() > 0. &&
                 (showDepDestLine || destAirport()->showFlightLines));
@@ -467,7 +454,7 @@ bool Pilot::showDestLine() {
         return (Settings::destLineStrength() > 0. && showDepDestLine);
 }
 
-QList<Waypoint*> &Pilot::routeWaypoints() {
+QList<Waypoint*> Pilot::routeWaypoints() {
     //qDebug() << "Pilot::routeWaypoints()" << label;
     if ((planDep == routeWaypointsPlanDepCache) // we might have cached the route already
         && (planDest == routeWaypointsPlanDestCache)
@@ -494,7 +481,7 @@ QList<Waypoint*> &Pilot::routeWaypoints() {
 
 QString Pilot::routeWaypointsStr() {
     QStringList ret;
-    foreach (Waypoint *w, routeWaypoints())
+    foreach(const Waypoint *w, routeWaypoints())
         ret.append(w->label);
     return ret.join(" ");
 }

@@ -13,13 +13,20 @@ const QList<QPair<double, double> >& LineReader::readLine() {
 			break;
 
 		QStringList list = line.split(':');
-		if(list.size() != 2) continue;
+		if(list.size() != 2)
+			continue;
 
 		bool ok = true;
 		double lat = list[0].toDouble(&ok);
-		if(!ok) continue;
+		if(!ok) {
+			qWarning() << "LineReader::readLine() unable to read lat (double):" << list;
+			continue;
+		}
 		double lon = list[1].toDouble(&ok);
-		if(!ok) continue;
+		if(!ok) {
+			qWarning() << "LineReader::readLine() unable to read lon (double):" << list;
+			continue;
+		}
 
 		currentLine.append(QPair<double, double>(lat, lon));
 	}

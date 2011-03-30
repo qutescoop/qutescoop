@@ -40,7 +40,7 @@ void ControllerDetails::refresh(Controller *newController) {
     if(newController != 0)
         controller = newController;
     else
-        controller = Whazzup::getInstance()->whazzupData().getController(callsign);
+        controller = Whazzup::getInstance()->whazzupData().controllers[callsign];
     if(controller == 0) return;
     setMapObject(controller);
     setWindowTitle(controller->toolTip());
@@ -68,7 +68,6 @@ void ControllerDetails::refresh(Controller *newController) {
     if (controller->assumeOnlineUntil.isValid())
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(controller->assumeOnlineUntil.toString("HHmm"));
-
     lblAtis->setText(atis);
 
     if(controller->isFriend())

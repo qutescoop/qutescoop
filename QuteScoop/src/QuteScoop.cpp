@@ -55,8 +55,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 /* main */
 int main(int argc, char *argv[]) {
-    QT_REQUIRE_VERSION(argc, argv, "4.7.0")
-    QApplication app(argc, argv);
+    QApplication app(argc, argv); // before QT_REQUIRE_VERSION to prevent creating duplicate
+    QT_REQUIRE_VERSION(argc, argv, "4.7.0") // application objects
     // catch all messages
     qRegisterMetaType<QtMsgType>("QtMsgType");
     qInstallMsgHandler(myMessageOutput);
@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     logFile->write(cacheLogByteArray); // debug messages ended up there until now
     logFile->flush();
 
-    qDebug() << "Expecting application data directory at" 
+    qDebug() << "Expecting application data directory at"
              << Settings::applicationDataDirectory() << "(gets calculated on each start)";
 
     // splash screen

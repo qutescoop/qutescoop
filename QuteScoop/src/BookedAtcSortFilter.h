@@ -12,14 +12,12 @@ class BookedAtcSortFilter : public QSortFilterProxyModel {
 public:
     BookedAtcSortFilter(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
     void setDateTimeRange(QDateTime& dtfrom, QDateTime& dtto);
-    //Q_PROPERTY(QDateTime range READ range WRITE setRange);
 
 protected:
-    virtual bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
-    
+    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+
 private:
-    QDateTime from;
-    QDateTime to;
+    QDateTime from, to;
 };
 
 #endif // BOOKEDATCSORTFILTER_H

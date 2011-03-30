@@ -19,10 +19,8 @@
 #include "AirportDetailsArrivalsModel.h"
 #include "AirportDetailsDeparturesModel.h"
 
-class AirportDetails : public ClientDetails, private Ui::AirportDetails
-{
+class AirportDetails : public ClientDetails, private Ui::AirportDetails {
     Q_OBJECT
-
 public:
     static AirportDetails *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
@@ -33,9 +31,9 @@ private slots:
     void on_cbAtis_toggled(bool checked);
     void on_cbObservers_toggled(bool checked);
     void on_cbPlotRoutes_toggled(bool checked);
-    void atcSelected(const QModelIndex& index);
-    void arrivalSelected(const QModelIndex& index);
-    void departureSelected(const QModelIndex& index);
+    void atcSelected(const QModelIndex &index);
+    void arrivalSelected(const QModelIndex &index);
+    void departureSelected(const QModelIndex &index);
 
 private:
     AirportDetails(QWidget *parent);
@@ -44,12 +42,9 @@ private:
     AirportDetailsArrivalsModel arrivalsModel;
     AirportDetailsDeparturesModel departuresModel;
     Airport* airport;
-    QSortFilterProxyModel *atcSortModel;
-    QSortFilterProxyModel *arrivalsSortModel;
-    QSortFilterProxyModel *departuresSortModel;
+    QSortFilterProxyModel *atcSortModel, *arrivalsSortModel, *departuresSortModel;
 
-    //test for sectorcheck
-    QList<Controller*> checkSectors();
+    QSet<Controller*> checkSectors() const;
 
     MetarModel* metarModel;
 };

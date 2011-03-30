@@ -23,13 +23,12 @@ public:
 		DME_NO_FREQ = 12,
 		DME = 13
 	};
+	static QString typeStr(Type type);
 	virtual QString toolTip() const;
 
 private:
 	Type type;
-	int altitude;
-	int frequency;
-	int range;
+	int altitude, frequency, range;
 	float heading;
 	QString name;
 };

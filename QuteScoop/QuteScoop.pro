@@ -217,7 +217,8 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsDialogModel.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
-    src/LogBrowserDialog.cpp
+    src/LogBrowserDialog.cpp \
+    src/GuiMessage.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \

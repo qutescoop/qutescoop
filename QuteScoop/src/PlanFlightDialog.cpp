@@ -281,21 +281,21 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
 }
 
 void PlanFlightDialog::on_edDep_textChanged(QString str) {
-    bDepDetails->setVisible(NavData::getInstance()->airports().contains(str));
+    bDepDetails->setVisible(NavData::getInstance()->airports.contains(str));
 }
 
 void PlanFlightDialog::on_edDest_textChanged(QString str) {
-    bDestDetails->setVisible(NavData::getInstance()->airports().contains(str));
+    bDestDetails->setVisible(NavData::getInstance()->airports.contains(str));
 }
 
 void PlanFlightDialog::on_bDepDetails_clicked() {
-    Airport *airport = NavData::getInstance()->airports().value(edDep->text());
+    Airport *airport = NavData::getInstance()->airports.value(edDep->text());
     if (airport != 0)
         airport->showDetailsDialog();
 }
 
 void PlanFlightDialog::on_bDestDetails_clicked() {
-    Airport *airport = NavData::getInstance()->airports().value(edDest->text());
+    Airport *airport = NavData::getInstance()->airports.value(edDest->text());
     if (airport != 0)
         airport->showDetailsDialog();
 }
@@ -320,7 +320,7 @@ void PlanFlightDialog::plotPlannedRoute() const {
     if(selectedRoute->waypoints.size() < 2)
         return;
     QList<DoublePair> points;
-    foreach (Waypoint *wp, selectedRoute->waypoints)
+    foreach(const Waypoint *wp, selectedRoute->waypoints)
         points.append(DoublePair(wp->lat, wp->lon));
     glColor4f(0., 0., 1., 1.);
     glLineWidth(3.);
@@ -330,7 +330,7 @@ void PlanFlightDialog::plotPlannedRoute() const {
     glPointSize(4.);
     glColor4f(1., 0., 0., 1.);
     glBegin(GL_POINTS);
-    foreach (DoublePair p, points)
+    foreach(const DoublePair p, points)
         VERTEX(p.first, p.second);
     glEnd();
 }

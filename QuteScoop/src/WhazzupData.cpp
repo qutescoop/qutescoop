@@ -13,23 +13,15 @@
 #include "helpers.h"
 
 WhazzupData::WhazzupData():
-    connectedServerList(QList<QStringList>()),
-    connectedVoiceServerList(QList<QStringList>()),
-    whazzupVersion(0),
-    whazzupTime(QDateTime()),
-    bookingsTime(QDateTime()),
-    updateEarliest(QDateTime()),
-    dataType(UNIFIED)
+    servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
+    whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime()),
+    dataType(UNIFIED), whazzupVersion(0)
 {
 }
 
 WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
-    connectedServerList(QList<QStringList>()),
-    connectedVoiceServerList(QList<QStringList>()),
-    whazzupVersion(0),
-    whazzupTime(QDateTime()),
-    bookingsTime(QDateTime()),
-    updateEarliest(QDateTime())
+    servers(QList<QStringList>()), voiceServers(QList<QStringList>()), whazzupVersion(0),
+    whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime())
 {
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -71,7 +63,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 QStringList list = line.split(':');
                 if(list.size() < 5)
                     continue;
-                connectedServerList += list;
+                servers += list;
                 //; !SERVERS section -         ident:hostname_or_IP:location:name:clients_connection_allowed:
                 //EUROPE-C2:88.198.19.202:Europe:Center Europe Server Two:1:
             }
@@ -80,7 +72,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 QStringList list = line.split(':');
                 if(list.size() < 5)
                     continue;
-                connectedVoiceServerList += list;
+                voiceServers += list;
                 //; !VOICE SERVERS section -   hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
                 //voice2.vacc-sag.org:Nurnberg:Europe-CW:1:R:
             }
@@ -131,7 +123,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                         controllers[c->label] = c;
                     } else if (type == ATCBOOKINGS) {
                         BookedController *bc = new BookedController(list, this);
-                        bookedcontrollers.append(bc);
+                        bookedControllers.append(bc);
                     }
                 }
             }
@@ -140,7 +132,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                 if (type == WHAZZUP) {
                     QStringList list = line.split(':');
                     Pilot *p = new Pilot(list, this);
-                    bookedpilots[p->label] = p;
+                    bookedPilots[p->label] = p;
                 }
             }
             break;
@@ -148,22 +140,16 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     }
 
     // set the earliest time the server will have new data
-    if (whazzupTime.isValid() && reloadInMin > 0) {
+    if (whazzupTime.isValid() && reloadInMin > 0)
         updateEarliest = whazzupTime.addSecs(reloadInMin * 60).toUTC();
-        //qDebug() << "next update in" << reloadInMin << "min from" << whazzupTime << ":" << updateEarliest << QDateTime::currentDateTimeUtc().secsTo(updateEarliest);
-    }
     qApp->restoreOverrideCursor();
 }
 
-WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
-    connectedServerList(QList<QStringList>()),
-    connectedVoiceServerList(QList<QStringList>()),
-    whazzupVersion(0),
-    whazzupTime(QDateTime()),
-    bookingsTime(QDateTime()),
-    predictionBasedOnTime(QDateTime()),
-    predictionBasedOnBookingsTime(QDateTime()),
-    updateEarliest(QDateTime())
+//faking WhazzupData based on valid data and a predictTime
+WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
+    servers(QList<QStringList>()), voiceServers(QList<QStringList>()), whazzupVersion(0),
+    whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime()),
+    predictionBasedOnTime(QDateTime()), predictionBasedOnBookingsTime(QDateTime())
 {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
@@ -175,40 +161,37 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
 
     dataType = data.dataType;
     // so now lets fake some controllers
-    QList<BookedController*> bc = data.getBookedControllers();
-    for (int i = 0; i < bc.size(); i++) {
-        // keep GUI responsive - leads to hangups?
-        qApp->processEvents();
-
-        if (bc[i] == 0) continue;
-        if (bc[i]->starts() <= predictTime && bc[i]->ends() >= predictTime) { // only ones booked for the selected time
+    foreach(const BookedController* bc, data.bookedControllers) {
+        //if (bc == 0) continue;
+        if (bc->starts() <= predictTime && bc->ends() >= predictTime) { // only ones booked for the selected time
             QStringList sl;
-            for (int h=0; h<50; h++) sl.append(QString()); // build a QStringList with enough items
+            for(int h=0; h < 40; h++)
+                sl.append(QString()); // build a QStringList with enough items
 
             //userId = getField(stringList, 1);
-            sl[0]= bc[i]->label;
-            sl[2] = bc[i]->realName;
-            sl[18] = QString("%1").arg(bc[i]->facilityType);
+            sl[0]= bc->label;
+            sl[2] = bc->realName;
+            sl[18] = QString("%1").arg(bc->facilityType);
 
             //lat = getField(stringList, 5).toDouble();
             //lon = getField(stringList, 6).toDouble();
-            sl[5] = QString("%1").arg(bc[i]->lat);
-            sl[6] = QString("%1").arg(bc[i]->lon);
+            sl[5] = QString("%1").arg(bc->lat);
+            sl[6] = QString("%1").arg(bc->lon);
 
             //atisMessage = getField(stringList, 35);
             sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
-                     .arg(bc[i]->starts().toString("HHmm'z'"))
-                     .arg(bc[i]->ends().toString("HHmm'z'"))
-                     .arg(bc[i]->bookingInfoStr);
+                     .arg(bc->starts().toString("HHmm'z'"))
+                     .arg(bc->ends().toString("HHmm'z'"))
+                     .arg(bc->bookingInfoStr);
 
             //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddHHmmss");
-            sl[37] = bc[i]->timeConnected.toString("yyyyMMddHHmmss");
+            sl[37] = bc->timeConnected.toString("yyyyMMddHHmmss");
 
             //server = getField(stringList, 14);
             sl[14] = "BOOKED SESSION";
 
             //visualRange = getField(stringList, 19).toInt();
-            sl[19] = QString("%1").arg(bc[i]->visualRange);
+            sl[19] = QString("%1").arg(bc->visualRange);
 
             // not applicable:
             //frequency = getField(stringList, 4);
@@ -217,78 +200,66 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
             //protrevision = getField(stringList, 15).toInt();
             //rating = getField(stringList, 16).toInt();
 
-            controllers[bc[i]->label] = new Controller(sl, this);
+            controllers[bc->label] = new Controller(sl, this);
         }
     }
 
-    // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked (to allow for smoother realtime simulation).
-    QList<Controller*> c = data.getControllers();
-    for (int i = 0; i < c.size(); i++) {
-        // keep GUI responsive - leads to hangups?
-        //qApp->processEvents();
+    // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked
+    foreach(const Controller *c, data.controllers) {
+        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers: 10 min
+        if(c->assumeOnlineUntil.isValid())
+            if(predictionBasedOnTime.secsTo(c->assumeOnlineUntil) >= 0) // use only if we catched him before his stated leave-time.
+                showUntil = c->assumeOnlineUntil;
 
-        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers
-        if(c[i]->assumeOnlineUntil.isValid()) {
-            if(predictionBasedOnTime.secsTo(c[i]->assumeOnlineUntil) > 0) // use only if we catched him before his stated leave-time.
-                showUntil = c[i]->assumeOnlineUntil;
-        }
-
-        if (predictTime < showUntil && predictTime > predictionBasedOnTime) {
-            controllers[c[i]->label] = new Controller(*c[i]);
-        }
+        if (predictTime <= showUntil && predictTime >= predictionBasedOnTime)
+            controllers[c->label] = new Controller(*c);
     }
-
-    QList<Pilot*> p = data.getAllPilots();
 
     QDateTime startTime, endTime = QDateTime();
-    double startLat, startLon, endLat, endLon = 0.0;
+    double startLat, startLon, endLat, endLon = 0.;
     int altitude = 0;
 
-    for (int i=0; i < p.size(); i++) {
-        // keep GUI responsive - leads to hangups?
-        //qApp->processEvents();
-
-        if (p[i] == 0)
-            continue;
-        if (!p[i]->eta().isValid())
+    foreach(const Pilot *p, data.allPilots()) {
+        //if (p == 0) continue;
+        if (!p->eta().isValid())
             continue; // no ETA, no prediction...
-        if (!p[i]->etd().isValid() && predictTime < predictionBasedOnTime)
-            continue; // no ETD, difficult prediction. Before the WhazzupTime, no prediction...
-        if(p[i]->destAirport() == 0)
+        if (!p->etd().isValid() && predictTime < predictionBasedOnTime)
+            continue; // no ETD, difficult prediction. Before the whazzupTime, no prediction...
+        if(p->destAirport() == 0)
             continue; // sorry, no magic available yet. Just let him fly the last heading until etaPlan()? Does not make sense
-        if(p[i]->etd() > predictTime || p[i]->eta() < predictTime) {
-            if (p[i]->flightStatus() == Pilot::PREFILED && p[i]->etd() > predictTime) { // we want prefiled before their
+        if(p->etd() > predictTime || p->eta() < predictTime) {
+            if (p->flightStatus() == Pilot::PREFILED && p->etd() > predictTime) { // we want prefiled before their
                                                                                         //departure as in non-Warped view
-                Pilot* np = new Pilot(*p[i]);
+                Pilot* np = new Pilot(*p);
                 np->whazzupTime = QDateTime(predictTime);
-                bookedpilots[np->label] = np; // just copy him over
+                bookedPilots[np->label] = np; // just copy him over
                 continue;
             }
             continue; // not on the map on the selected time
         }
-        if (p[i]->flightStatus() == Pilot::PREFILED) {
-            if(p[i]->depAirport() == 0 || p[i]->destAirport() == 0) {// if we dont know where a prefiled comes from, no magic available
+        if (p->flightStatus() == Pilot::PREFILED) {
+            if(p->depAirport() == 0 || p->destAirport() == 0) {// if we dont know where a prefiled comes from, no magic available
                 continue;
             }
-            startTime = p[i]->etd();
-            startLat = p[i]->depAirport()->lat;
-            startLon = p[i]->depAirport()->lon;
+            startTime = p->etd();
+            startLat = p->depAirport()->lat;
+            startLon = p->depAirport()->lon;
 
-            endTime = p[i]->eta();
-            endLat = p[i]->destAirport()->lat;
-            endLon = p[i]->destAirport()->lon;
+            endTime = p->eta();
+            endLat = p->destAirport()->lat;
+            endLon = p->destAirport()->lon;
         } else {
-            startTime = data.timestamp();
-            startLat = p[i]->lat;
-            startLon = p[i]->lon;
+            startTime = data.whazzupTime;
+            startLat = p->lat;
+            startLon = p->lon;
 
-            endTime = p[i]->eta();
-            endLat = p[i]->destAirport()->lat;
-            endLon = p[i]->destAirport()->lon;
+            endTime = p->eta();
+            endLat = p->destAirport()->lat;
+            endLon = p->destAirport()->lon;
         }
         // altitude
-        if(p[i]->planAlt.toInt() != 0)
-            altitude = p[i]->defuckPlanAlt(p[i]->planAlt);
+        if(p->planAlt.toInt() != 0)
+            altitude = p->defuckPlanAlt(p->planAlt);
 
         // position
         double fraction = (double) startTime.secsTo(predictTime) / startTime.secsTo(endTime);
@@ -301,7 +272,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
         double trueHeading = NavData::courseTo(pos.first, pos.second, endLat, endLon);
 
         // create Pilot instance and assign values
-        Pilot* np = new Pilot(*p[i]);
+        Pilot* np = new Pilot(*p);
         np->whazzupTime = QDateTime(predictTime);
         np->lat = pos.first;
         np->lon = pos.second;
@@ -315,52 +286,64 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData& data):
     qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";
 }
 
-WhazzupData::WhazzupData(const WhazzupData& data) {
+WhazzupData::WhazzupData(const WhazzupData &data) {
     assignFrom(data);
 }
 
-WhazzupData& WhazzupData::operator=(const WhazzupData& data) {
+WhazzupData::~WhazzupData() {
+    foreach(const QString s, pilots.keys())
+        delete pilots[s];
+    pilots.clear();
+
+    foreach(const QString s, bookedPilots.keys())
+        delete bookedPilots[s];
+    bookedPilots.clear();
+
+    foreach(const QString s, controllers.keys())
+        delete controllers[s];
+    controllers.clear();
+
+    foreach(const BookedController *bc, bookedControllers)
+        delete bc;
+    bookedControllers.clear();
+}
+
+WhazzupData &WhazzupData::operator=(const WhazzupData &data) {
     assignFrom(data);
     return *this;
 }
 
-void WhazzupData::assignFrom(const WhazzupData& data) {
+void WhazzupData::assignFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::assignFrom()";
     if(this == &data)
         return;
 
     if (data.dataType == WHAZZUP || data.dataType == UNIFIED) {
         if(dataType == ATCBOOKINGS) dataType = UNIFIED;
-        connectedServerList = data.connectedServerList;
-        connectedVoiceServerList = data.connectedVoiceServerList;
+        servers = data.servers;
+        voiceServers = data.voiceServers;
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
         updateEarliest = data.updateEarliest;
 
         pilots.clear();
-        QList<QString> callsigns = data.pilots.keys();
-        for(int i = 0; i < callsigns.size(); i++) {
-            pilots[callsigns[i]] = new Pilot(*data.pilots[callsigns[i]]);
-        }
+        foreach(const QString s, data.pilots.keys())
+            pilots[s] = new Pilot(*data.pilots[s]);
 
-        bookedpilots.clear();
-        callsigns = data.bookedpilots.keys();
-        for(int i = 0; i < callsigns.size(); i++) {
-            bookedpilots[callsigns[i]] = new Pilot(*data.bookedpilots[callsigns[i]]);
-        }
+        bookedPilots.clear();
+        foreach(const QString s, data.bookedPilots.keys())
+            bookedPilots[s] = new Pilot(*data.bookedPilots[s]);
 
         controllers.clear();
-        callsigns = data.controllers.keys();
-        for(int i = 0; i < callsigns.size(); i++)
-            controllers[callsigns[i]] = new Controller(*data.controllers[callsigns[i]]);
+        foreach(const QString s, data.controllers.keys())
+            controllers[s] = new Controller(*data.controllers[s]);
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
         if(dataType == WHAZZUP) dataType = UNIFIED;
 
-        bookedcontrollers.clear();
-        for (int i = 0; i < data.bookedcontrollers.size(); i++) {
-            bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
-        }
+        bookedControllers.clear();
+        foreach(const BookedController *bc, data.bookedControllers)
+            bookedControllers.append(new BookedController(*bc));
 
         bookingsTime = QDateTime(data.bookingsTime);
         predictionBasedOnBookingsTime = QDateTime(data.predictionBasedOnBookingsTime);
@@ -368,90 +351,80 @@ void WhazzupData::assignFrom(const WhazzupData& data) {
     qDebug() << "WhazzupData::assignFrom() -- finished";
 }
 
-void WhazzupData::updatePilotsFrom(const WhazzupData& data) {
+void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updatePilotsFrom()";
-    QList<QString> callsigns = pilots.keys();
-    for(int i = 0; i < callsigns.size(); i++) { // remove pilots that are no longer there
-        if(!data.pilots.contains(callsigns[i])) {
-            foreach (Pilot *p, pilots.values(callsigns[i])) // there might be several...
+    foreach(const QString s, pilots.keys()) { // remove pilots that are no longer there
+        if(!data.pilots.contains(s)) {
+            foreach(const Pilot *p, pilots.values(s)) // there might be several...
                 delete p;
-            pilots.remove(callsigns[i]);
+            pilots.remove(s);
         }
     }
-    callsigns = data.pilots.keys();
-    for(int i = 0; i < callsigns.size(); i++) {
-        if(!pilots.contains(callsigns[i])) { // new pilots
+    foreach(const QString s, data.pilots.keys()) {
+        if(!pilots.contains(s)) { // new pilots
             // create a new copy of new pilot
-            Pilot *p = new Pilot(*data.pilots[callsigns[i]]);
-            pilots[callsigns[i]] = p;
+            Pilot *p = new Pilot(*data.pilots[s]);
+            pilots[s] = p;
         } else { // existing pilots: data saved in the object needs to be transferred
-            data.pilots[callsigns[i]]->showDepDestLine              = pilots[callsigns[i]]->showDepDestLine;
-            data.pilots[callsigns[i]]->routeWaypointsCache          = pilots[callsigns[i]]->routeWaypointsCache;
-            data.pilots[callsigns[i]]->routeWaypointsPlanDepCache   = pilots[callsigns[i]]->routeWaypointsPlanDepCache;
-            data.pilots[callsigns[i]]->routeWaypointsPlanDestCache  = pilots[callsigns[i]]->routeWaypointsPlanDestCache;
-            data.pilots[callsigns[i]]->routeWaypointsPlanRouteCache = pilots[callsigns[i]]->routeWaypointsPlanRouteCache;
+            data.pilots[s]->showDepDestLine              = pilots[s]->showDepDestLine;
+            data.pilots[s]->routeWaypointsCache          = pilots[s]->routeWaypointsCache;
+            data.pilots[s]->routeWaypointsPlanDepCache   = pilots[s]->routeWaypointsPlanDepCache;
+            data.pilots[s]->routeWaypointsPlanDestCache  = pilots[s]->routeWaypointsPlanDestCache;
+            data.pilots[s]->routeWaypointsPlanRouteCache = pilots[s]->routeWaypointsPlanRouteCache;
 
-            if ((pilots[callsigns[i]]->lat != 0 || pilots[callsigns[i]]->lon != 0) &&
-                (pilots[callsigns[i]]->lat != data.pilots[callsigns[i]]->lat ||
-                 pilots[callsigns[i]]->lon != data.pilots[callsigns[i]]->lon))
-            *pilots[callsigns[i]] = *data.pilots[callsigns[i]];
+            if ((pilots[s]->lat != 0 || pilots[s]->lon != 0) &&
+                (pilots[s]->lat != data.pilots[s]->lat ||
+                 pilots[s]->lon != data.pilots[s]->lon))
+            *pilots[s] = *data.pilots[s];
         }
     }
 
-    callsigns = bookedpilots.keys();
-    for(int i = 0; i < callsigns.size(); i++) { // remove pilots that are no longer there
-        if(!data.bookedpilots.contains(callsigns[i])) {
-            foreach (Pilot *p, bookedpilots.values(callsigns[i])) // there might be several...
+    foreach(const QString s, bookedPilots.keys()) { // remove pilots that are no longer there
+        if(!data.bookedPilots.contains(s)) {
+            foreach(const Pilot *p, bookedPilots.values(s)) // there might be several...
                 delete p;
-            bookedpilots.remove(callsigns[i]);
+            bookedPilots.remove(s);
         }
     }
-    callsigns = data.bookedpilots.keys();
-    for(int i = 0; i < callsigns.size(); i++) {
-        if(!bookedpilots.contains(callsigns[i])) { // new pilots
-            Pilot *p = new Pilot(*data.bookedpilots[callsigns[i]]);
-            bookedpilots[callsigns[i]] = p;
-        } else { // existing pilots
-            *bookedpilots[callsigns[i]] = *data.bookedpilots[callsigns[i]];
-        }
+    foreach(const QString s, data.bookedPilots.keys()) {
+        if(!bookedPilots.contains(s)) { // new pilots
+            Pilot *p = new Pilot(*data.bookedPilots[s]);
+            bookedPilots[s] = p;
+        } else // existing pilots
+            *bookedPilots[s] = *data.bookedPilots[s];
     }
     qDebug() << "WhazzupData::updatePilotsFrom() -- finished";
 }
 
-void WhazzupData::updateControllersFrom(const WhazzupData& data) {
+void WhazzupData::updateControllersFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updateControllersFrom()";
-    QList<QString> callsigns = controllers.keys();
-    for(int i = 0; i < callsigns.size(); i++) {
-        if(!data.controllers.contains(callsigns[i])) {
+    foreach(const QString s, controllers.keys()) {
+        if(!data.controllers.contains(s)) {
             // remove controllers that are no longer there
-            delete controllers[callsigns[i]];
-            controllers.remove(callsigns[i]);
+            delete controllers[s];
+            controllers.remove(s);
         }
     }
-    callsigns = data.controllers.keys();
-    for(int i = 0; i < callsigns.size(); i++) {
-        if(!controllers.contains(callsigns[i])) {
+    foreach(const QString s, data.controllers.keys()) {
+        if(!controllers.contains(s)) {
             // create a new copy of new controllers
-            Controller *c = new Controller(*data.controllers[callsigns[i]]);
+            Controller *c = new Controller(*data.controllers[s]);
             controllers[c->label] = c;
-        } else {
-            // controller already exists, assign values from data
-            *controllers[callsigns[i]] = *data.controllers[callsigns[i]];
-        }
+        } else // controller already exists, assign values from data
+            *controllers[s] = *data.controllers[s];
     }
     qDebug() << "WhazzupData::updateControllersFrom() -- finished";
 }
 
-void WhazzupData::updateBookedControllersFrom(const WhazzupData& data) {
+void WhazzupData::updateBookedControllersFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updateBookedControllersFrom()";
-    bookedcontrollers.clear();
-    for (int i = 0; i < data.bookedcontrollers.size(); i++) {
-        bookedcontrollers.append(new BookedController(*data.bookedcontrollers[i]));
-    }
+    bookedControllers.clear();
+    foreach(const BookedController *bc, data.bookedControllers)
+        bookedControllers.append(new BookedController(*bc));
     qDebug() << "WhazzupData::updateBookedControllersFrom() -- finished";
 }
 
-void WhazzupData::updateFrom(const WhazzupData& data) {
+void WhazzupData::updateFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updateFrom()";
     if(this == &data)
         return;
@@ -464,8 +437,8 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
         updatePilotsFrom(data);
         updateControllersFrom(data);
 
-        connectedServerList = data.connectedServerList;
-        connectedVoiceServerList = data.connectedVoiceServerList;
+        servers = data.servers;
+        voiceServers = data.voiceServers;
         whazzupVersion = data.whazzupVersion;
         whazzupTime = data.whazzupTime;
         updateEarliest = data.updateEarliest;
@@ -480,45 +453,23 @@ void WhazzupData::updateFrom(const WhazzupData& data) {
     qDebug() << "WhazzupData::updateFrom() -- finished";
 }
 
-WhazzupData::~WhazzupData() {
-    QList<QString> callsigns = pilots.keys();
-    for(int i = 0; i < callsigns.size(); i++)
-        delete pilots[callsigns[i]];
-    pilots.clear();
-
-    callsigns = bookedpilots.keys();
-    for(int i = 0; i < callsigns.size(); i++)
-        delete bookedpilots[callsigns[i]];
-    bookedpilots.clear();
-
-    callsigns = controllers.keys();
-    for(int i = 0; i < callsigns.size(); i++)
-        delete controllers[callsigns[i]];
-    controllers.clear();
-
-    for(int i = 0; i < bookedcontrollers.size(); i++)
-        delete bookedcontrollers[i];
-    bookedcontrollers.clear();
-}
-
-QList<Controller*> WhazzupData::activeSectors() const {
+QSet<Controller*> WhazzupData::activeSectors() const {
     qDebug() << "WhazzupData::activeSectors()";
-    QList<Controller*> result;
+    QSet<Controller*> result;
     QList<Controller*> controllerList = controllers.values();
-    for(int i = 0; i < controllerList.size(); i++) {
-        if (controllerList[i]->sector != 0)
-            result.append(controllerList[i]);
-    }
+    foreach(Controller *c, controllerList)
+        if (c->sector != 0)
+            result.insert(c);
 
     qDebug() << "WhazzupData::activeSectors() -- finished";
     return result;
 }
 
 void WhazzupData::accept(MapObjectVisitor* visitor) const {
-    foreach (Controller *c, controllers)
+    foreach(Controller *c, controllers)
         visitor->visit(c);
-    foreach (Pilot *p, pilots)
+    foreach(Pilot *p, pilots)
         visitor->visit(p);
-    foreach (Pilot *b, bookedpilots)
+    foreach(Pilot *b, bookedPilots)
         visitor->visit(b);
 }

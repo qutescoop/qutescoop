@@ -18,7 +18,7 @@ public:
     static Airac *getInstance(bool createIfNoInstance = true);
 
     void load(const QString& directory);
-    bool isEmpty() const { return waypointMap.isEmpty(); }
+    bool isEmpty() const { return waypoints.isEmpty(); }
 
     /**
      * Returns the waypoint with the given id closest to the given lat/lon.
@@ -40,21 +40,20 @@ public:
     QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon) const;
 
     Airway* getAirway(const QString& name, double lat, double lon) const;
-    QList<MapObject*> mapObjects;
+    QSet<MapObject*> mapObjects;
 
-    QHash<QString, QList<Waypoint*> > waypointMap;
-    QHash<QString, QList<NavAid*> > navaidMap;
-    QHash<QString, QList<Airway*> > airwayMap;
+    QHash<QString, QSet<Waypoint*> > waypoints;
+    QHash<QString, QSet<NavAid*> > navaids;
+    QHash<QString, QList<Airway*> > airways;
 
 private:
     Airac();
 
-    void readFixes(const QString& directory);
-    void addFix(Waypoint* fix);
+    void readFixes(const QString &directory);
+    void readNavaids(const QString &directory);
+    void readAirways(const QString &directory);
 
-    void readNavaids(const QString& directory);
-    void readAirways(const QString& directory);
-    void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString& name);
+    void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString &name);
 
     Airway* getAirway(const QString& name, Airway::Type type, int base, int top);
 };

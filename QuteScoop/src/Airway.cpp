@@ -12,7 +12,8 @@ Airway::Segment::Segment(Waypoint* from, Waypoint* to) {
 }
 
 bool Airway::Segment::operator==(const Airway::Segment& other) const {
-	return (from == other.from || from == other.to) && (to == other.from || to == other.to);
+	return (from == other.from || from == other.to) &&
+			(to == other.from || to == other.to);
 }
 
 Airway::Airway(const QString& name, Type type, int base, int top) {
@@ -20,10 +21,6 @@ Airway::Airway(const QString& name, Type type, int base, int top) {
 	this->type = type;
 	this->base = base;
 	this->top = top;
-}
-
-Airway::~Airway() {
-	// destructor
 }
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {

@@ -69,9 +69,6 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
     copyButton->setText("Copy to clipboard");
     buttonLayout->addWidget(copyButton);
     connect(copyButton, SIGNAL(clicked()), this, SLOT(slotCopy()));
-
-    connect(this, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
-            qobject_cast<Window *>(this->parent()), SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
 }
 
 
@@ -109,6 +106,6 @@ void LogBrowserDialog::slotSave() {
         stream << browser->toPlainText();
         file.close();
     } else
-        emit hasGuiMessage(QString("File '%1' cannot be written. The log could not be saved!")
-                           .arg(saveFileName), GuiMessage::CriticalUserInteraction);
+        GuiMessages::criticalUserInteraction(QString("File '%1' cannot be written. The log could not be saved!")
+                                            .arg(saveFileName), "Debug Log");
 }
