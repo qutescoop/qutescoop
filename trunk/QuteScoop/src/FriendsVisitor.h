@@ -16,7 +16,7 @@ class FriendsVisitor : public MapObjectVisitor
 public:
 	FriendsVisitor();
 	virtual void visit(MapObject *object);
-	virtual QList<MapObject*> result() { return friends; }
+	virtual QList<MapObject*> result() const { return friends; }
 
 private:
 	QStringList friendList;

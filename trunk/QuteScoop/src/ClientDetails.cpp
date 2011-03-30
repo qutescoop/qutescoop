@@ -27,12 +27,12 @@ void ClientDetails::setMapObject(MapObject *object) {
     }
 }
 
-void ClientDetails::showOnMap() {
-    if ((lat != 0 || lon != 0) && Window::getInstance(false) != 0)
+void ClientDetails::showOnMap() const {
+    if ((!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon)) && Window::getInstance(false) != 0)
         Window::getInstance(true)->glWidget->setMapPosition(lat, lon, 0.1);
 }
 
-void ClientDetails::friendClicked() {
+void ClientDetails::friendClicked() const {
     if(!userId.isEmpty()) {
         if(Settings::friends().contains(userId)) // was friend, remove
             Settings::removeFriend(userId);

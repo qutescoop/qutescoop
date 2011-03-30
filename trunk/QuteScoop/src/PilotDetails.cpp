@@ -41,7 +41,7 @@ void PilotDetails::refresh(Pilot *newPilot) {
     if(newPilot != 0)
         pilot = newPilot;
     else
-        pilot = Whazzup::getInstance()->whazzupData().getPilot(callsign);
+        pilot = Whazzup::getInstance()->whazzupData().findPilot(callsign);
     if (pilot == 0) {
         hide();
         return;
@@ -53,14 +53,13 @@ void PilotDetails::refresh(Pilot *newPilot) {
     lblPilotInfo->setText(QString("<strong>%1</strong>%2")
                         .arg(pilot->displayName(true))
                         .arg(pilot->detailInformation().isEmpty() ? "" : ", " + pilot->detailInformation()));
-    if (pilot->server.isEmpty()) {
+    if (pilot->server.isEmpty())
         lblConnected->setText(QString("<i>not connected</i>"));
-    } else {
+    else
         lblConnected->setText(QString("on %1 for %2%3")
                      .arg(pilot->server)
                      .arg(pilot->onlineTime())
                      .arg(pilot->clientInformation().isEmpty()? "": ", "+ pilot->clientInformation()));
-    }
     buttonShowOnMap->setEnabled(pilot->lat != 0 || pilot->lon != 0);
 
 
@@ -79,9 +78,12 @@ void PilotDetails::refresh(Pilot *newPilot) {
     groupFp->setTitle(QString("Flightplan (%1)")
                       .arg(pilot->planFlighttypeString()));
 
-    buttonFrom->setText(pilot->depAirport()  != 0? pilot->depAirport() ->toolTip(): pilot->planDep);
-    buttonDest->setText(pilot->destAirport() != 0? pilot->destAirport()->toolTip(): pilot->planDest);
-    buttonAlt-> setText(pilot->altAirport()  != 0? pilot->altAirport() ->toolTip(): pilot->planAltAirport);
+    buttonFrom->setEnabled(pilot->depAirport()   != 0);
+    buttonFrom->setText(   pilot->depAirport()   != 0? pilot->depAirport() ->toolTip(): pilot->planDep);
+    buttonDest->setEnabled(pilot->destAirport()  != 0);
+    buttonDest->setText(   pilot->destAirport()  != 0? pilot->destAirport()->toolTip(): pilot->planDest);
+    buttonAlt->setEnabled( pilot->altAirport()   != 0);
+    buttonAlt-> setText(   pilot->altAirport()   != 0? pilot->altAirport() ->toolTip(): pilot->planAltAirport);
 
     lblPlanEtd->setText(pilot->etd().toString("HHmm"));
     lblPlanEta->setText(pilot->etaPlan().toString("HHmm"));
@@ -117,7 +119,6 @@ void PilotDetails::refresh(Pilot *newPilot) {
     lblPlotStatus->setVisible(pilot->showDepDestLine || plottedAirports);
 
     adjustSize();
-    //updateGeometry();
 }
 
 void PilotDetails::on_buttonDest_clicked() {

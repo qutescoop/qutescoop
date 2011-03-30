@@ -10,11 +10,12 @@
 #include "ControllerDetails.h"
 #include "NavData.h"
 #include "Settings.h"
+#include "helpers.h"
 
 
 Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
-    Client(stringList, whazzup),
-    sector(0)
+        Client(stringList, whazzup),
+        sector(0)
 {
     frequency = getField(stringList, 4);
     facilityType = getField(stringList, 18).toInt();
@@ -42,30 +43,39 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
         //fixme
         QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
         if(found.isValid()) {
-            if (qAbs(found.secsTo(whazzup->timestamp().time())) > 60*60 * 12) // e.g. now its 2200z, and he says
+            if (qAbs(found.secsTo(whazzup->whazzupTime.time())) > 60*60 * 12) // e.g. now its 2200z, and he says
                                                                 //"online until 0030z", allow for up to 12 hours
-                assumeOnlineUntil = QDateTime(whazzup->timestamp().date().addDays(1), found, Qt::UTC);
+                assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date().addDays(1), found, Qt::UTC);
             else
-                assumeOnlineUntil = QDateTime(whazzup->timestamp().date(), found, Qt::UTC);
+                assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date(), found, Qt::UTC);
         }
         //qDebug() << "Found" << label << "to be online until" << assumeOnlineUntil << "(Controller Info)";
     }
 
-    QHash<QString, Sector*> sectors = NavData::getInstance()->sectors();
     QString icao = this->getCenter();
     if (!icao.isEmpty()) {
-        while(!sectors.contains(icao) && !icao.isEmpty()) {
+        while(!NavData::getInstance()->sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
             if(p == -1) {
                 qDebug() << "Unknown sector/FIR\t" << icao << "\tPlease provide sector information if you can";
-                icao = "";
-                continue;
+                if (visualRange == 0 || (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
+                    icao = "";
+                    continue;
+                }
+                Sector *s = new Sector(); // creating a round sector with 0.5 * visualRange radius
+                s->lat = lat; s->lon = lon; s->icao = icao;
+                s->name = "no sector data available!";
+                for(float u = 0.; u < 2 * M_PI; u += M_PI / 24.) { // 48 segments
+                    s->points.append(QPair<double, double>(lat + qCos(u) * visualRange / 2. / 60.,
+                                                           lon + qSin(u) * visualRange / 2. / 60. /
+                                                                qCos(qAbs(lat) * Pi180)));
+                }
+                NavData::getInstance()->sectors.insert(icao, s); // adding to the pool
             } else
                 icao = icao.left(p);
         }
-        if(sectors.contains(icao) && !icao.isEmpty()) {
-            this->sector = sectors[icao];
-        }
+        if(NavData::getInstance()->sectors.contains(icao) && !icao.isEmpty())
+            this->sector = NavData::getInstance()->sectors[icao];
     }
 }
 
@@ -83,7 +93,7 @@ QString Controller::facilityString() const {
     return QString();
 }
 
-QString Controller::getCenter() {
+QString Controller::getCenter() const{
     if(!isATC())
         return QString();
     QStringList list = label.split('_');
@@ -152,7 +162,6 @@ QString Controller::getDelivery() const {
 
 void Controller::showDetailsDialog() {
     ControllerDetails *infoDialog = ControllerDetails::getInstance(true);
-
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -199,7 +208,7 @@ QString Controller::rank() const {
 QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Name, C1)
     QString result = label;
     if (sector != 0)
-        result += " [" + sector->name() + "]";
+        result += " [" + sector->name + "]";
     result += " (";
     if(!isObserver() && !frequency.isEmpty())
         result += frequency + ", ";
@@ -220,7 +229,7 @@ bool Controller::matches(const QRegExp& regex) const {
     if (frequency.contains(regex)) return true;
     if (atisMessage.contains(regex)) return true;
     if (sector != 0)
-        if (sector->name().contains(regex)) return true;
+        if (sector->name.contains(regex)) return true;
     return MapObject::matches(regex);
 }
 

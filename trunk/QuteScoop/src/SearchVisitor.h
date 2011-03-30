@@ -17,14 +17,13 @@ class SearchVisitor : public MapObjectVisitor
 public:
 	SearchVisitor(const QString& search);
 	virtual void visit(MapObject *object);
-	virtual QList<MapObject*> result();
+	virtual QList<MapObject*> result() const;
 		
 protected:
 	QRegExp regex;
 	
 	QHash<QString, Pilot*> pilots;
-	QHash<QString, Controller*> controllers;
-	QHash<QString, Controller*> observers;
+	QHash<QString, Controller*> controllers, observers;
 	QHash<QString, MapObject*> others;
 };
 

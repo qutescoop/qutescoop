@@ -1,7 +1,7 @@
 <project>
     <shortName>qutescoop</shortName>
     <fullName>QuteScoop</fullName>
-    <version>2.0rc9</version>
+    <version>2.0rc10</version>
     <installerFilename>${platform_name}-${product_shortname}-${product_version}-installer.${platform_exec_suffix}</installerFilename>
     <licenseFile>COPYING</licenseFile>
     <logoImage>src/qutescoop.png</logoImage>
@@ -277,15 +277,15 @@
             <width>800</width>
         </showText>
         <launchBrowser>
-            <explanation>View the QuteScoop Wiki</explanation>
-            <url>http://sourceforge.net/apps/mediawiki/qutescoop/</url>
+            <explanation>Download the free X-Plane navdatabase (unzip somewhere, enter the path in Preferences...)</explanation>
+            <url>http://data.x-plane.com/get_data.html</url>
         </launchBrowser>
         <launchBrowser>
             <explanation>View the QuteScoop project page</explanation>
             <url>http://qutescoop.sourceforge.net</url>
         </launchBrowser>
         <launchBrowser>
-            <explanation>Visit the most active QuteScoop-users forum</explanation>
+            <explanation>Visit the most active QuteScoop-users forum [german, but use any language you like]</explanation>
             <url>http://board.vacc-sag.org/49/28031/newpost.php</url>
         </launchBrowser>
     </finalPageActionList>

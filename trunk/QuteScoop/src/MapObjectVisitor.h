@@ -14,7 +14,7 @@ public:
 	virtual ~MapObjectVisitor() {}
 
 	virtual void visit(MapObject* object) = 0;
-	virtual QList<MapObject*> result() = 0;
+	virtual QList<MapObject*> result() const = 0;
 };
 
 #endif /*MAPOBJECTVISITOR_H_*/

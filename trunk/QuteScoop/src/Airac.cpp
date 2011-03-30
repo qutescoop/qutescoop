@@ -12,9 +12,8 @@
 Airac *airacInstance = 0;
 Airac *Airac::getInstance(bool createIfNoInstance) {
     if(airacInstance == 0)
-        if (createIfNoInstance) {
+        if (createIfNoInstance)
             airacInstance = new Airac();
-        }
     return airacInstance;
 }
 
@@ -28,21 +27,17 @@ void Airac::load(const QString& directory) {
     readAirways(directory);
 
     mapObjects.clear();
-    foreach (QList<Waypoint*> wl, waypointMap.values())
+    mapObjects.reserve(waypoints.size() + navaids.size());
+    foreach (const QSet<Waypoint*> &wl, waypoints.values())
         foreach (Waypoint *w, wl)
-            mapObjects.append(w);
-    foreach (QList<NavAid*> nl, navaidMap.values())
+            mapObjects.insert(w);
+    foreach (const QSet<NavAid*> &nl, navaids.values())
         foreach (NavAid *n, nl)
-            mapObjects.append(n);
-}
-
-void Airac::addFix(Waypoint* fix) {
-    QList<Waypoint*>& list = waypointMap[fix->label];
-    list.append(fix);
+            mapObjects.insert(n);
 }
 
 void Airac::readFixes(const QString& directory) {
-    waypointMap.clear();
+    waypoints.clear();
     FileReader fr(directory + "/default data/earth_fix.dat");
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
@@ -53,13 +48,14 @@ void Airac::readFixes(const QString& directory) {
         if (wp == 0 || wp->isNull())
             continue;
 
-        addFix(wp);
+        waypoints[wp->label].insert(wp);
     }
-    qDebug() << "Read fixes from\t" << (directory + "/default data/earth_fix.dat") << "-" << waypointMap.size() << "imported";
+    qDebug() << "Read fixes from\t" << (directory + "/default data/earth_fix.dat")
+             << "-" << waypoints.size() << "imported";
 }
 
 void Airac::readNavaids(const QString& directory) {
-    navaidMap.clear();
+    navaids.clear();
     FileReader fr(directory + "/default data/earth_nav.dat");
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
@@ -70,11 +66,10 @@ void Airac::readNavaids(const QString& directory) {
         if (nav == 0 || nav->isNull())
             continue;
 
-        QList<NavAid*> list = navaidMap[nav->label];
-        list.append(nav);
-        navaidMap[nav->label] = list;
+        navaids[nav->label].insert(nav);
     }
-    qDebug() << "Read navaids from\t" << (directory + "/default data/earth_nav.dat") << "-" << navaidMap.size() << "imported";
+    qDebug() << "Read navaids from\t" << (directory + "/default data/earth_nav.dat")
+            << "-" << navaids.size() << "imported";
 }
 
 void Airac::readAirways(const QString& directory) {
@@ -93,41 +88,55 @@ void Airac::readAirways(const QString& directory) {
 
         QString id = list[0];
         double lat = list[1].toDouble(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse lat (double):" << list;
             continue;
+        }
         double lon = list[2].toDouble(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse lon (double):" << list;
             continue;
+        }
 
         Waypoint *start = getWaypoint(id, lat, lon, 1);
         if(start == 0) {
             start = new Waypoint(id, lat, lon);
-            addFix(start);
+            waypoints[start->label].insert(start);
         }
 
         id = list[3];
         lat = list[4].toDouble(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse lat (double):" << list;
             continue;
+        }
         lon = list[5].toDouble(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse lon (double):" << list;
             continue;
+        }
 
         Waypoint *end = getWaypoint(id, lat, lon, 1);
         if(end == 0) {
             end = new Waypoint(id, lat, lon);
-            addFix(end);
+            waypoints[end->label].insert(end);
         }
 
         Airway::Type type = (Airway::Type)list[6].toInt(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse airwaytype (int):" << list;
             continue;
+        }
         int base = list[7].toInt(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse base (int):" << list;
             continue;
+        }
         int top = list[8].toInt(&ok);
-        if(!ok)
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse top (int):" << list;
             continue;
+        }
 
         QStringList names;
         if(list.size() > 10) {
@@ -149,42 +158,42 @@ void Airac::readAirways(const QString& directory) {
     }
 
     QHash<QString, QList<Airway*> >::iterator iter;
-    for(iter = airwayMap.begin(); iter != airwayMap.end(); ++iter) {
+    for(iter = airways.begin(); iter != airways.end(); ++iter) {
         QList<Airway*>& list = iter.value();
-        QList<Airway*> sorted = list[0]->sort();
-
+        const QList<Airway*> sorted = list[0]->sort();
         delete list[0];
-        list.clear();
-        list += sorted;
+        list = sorted;
     }
-    qDebug() << "Read airways from\t" << (directory + "/default data/earth_awy.dat") << "-" << airwayMap.size() << "airways," << segments << "segments imported and sorted";
+
+    qDebug() << "Read airways from\t" << (directory + "/default data/earth_awy.dat")
+            << "-" << airways.size() << "airways," << segments << "segments imported and sorted";
 }
 
 Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double maxDist) const {
     Waypoint *result = 0;
     double minDist = 99999;
 
-    foreach (NavAid *n, navaidMap[id]) {
+    foreach (NavAid *n, navaids[id]) {
         double d = NavData::distance(lat, lon, n->lat, n->lon);
         if ((d < minDist) && (d < maxDist)) {
             result = n;
             minDist = d;
         }
     }
-    foreach (Waypoint *w, waypointMap[id]) {
+    foreach (Waypoint *w, waypoints[id]) {
         double d = NavData::distance(lat, lon, w->lat, w->lon);
         if ((d < minDist) && (d < maxDist)) {
             result = w;
             minDist = d;
         }
     }
-    if (NavData::getInstance()->airports().contains(id)) { // trying aerodromes
+    if (NavData::getInstance()->airports.contains(id)) { // trying aerodromes
         double d = NavData::distance(lat, lon,
-                                     NavData::getInstance()->airports()[id]->lat,
-                                     NavData::getInstance()->airports()[id]->lon);
+                                     NavData::getInstance()->airports[id]->lat,
+                                     NavData::getInstance()->airports[id]->lon);
         if ((d < minDist) && (d < maxDist)) {
-            result = new Waypoint(id, NavData::getInstance()->airports()[id]->lat,
-                                  NavData::getInstance()->airports()[id]->lon);
+            result = new Waypoint(id, NavData::getInstance()->airports[id]->lat,
+                                  NavData::getInstance()->airports[id]->lon);
             minDist = d;
         }
     }
@@ -247,16 +256,16 @@ Waypoint* Airac::getWaypoint(const QString& id, double lat, double lon, double m
 }
 
 Airway* Airac::getAirway(const QString& name, Airway::Type type, int base, int top) {
-    foreach (Airway *a, airwayMap[name])
+    foreach(Airway *a, airways[name])
         if(a->type == type)
             return a;
     Airway* awy = new Airway(name, type, base, top);
-    airwayMap[name].append(awy);
+    airways[name].append(awy);
     return awy;
 }
 
 Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
-    QList<Airway*> list = airwayMap[name];
+    const QList<Airway*> list = airways[name];
     if(list.isEmpty())
         return 0;
     if(list.size() == 1)
@@ -264,16 +273,16 @@ Airway* Airac::getAirway(const QString& name, double lat, double lon) const {
 
     double minDist = 9999;
     Airway* result = 0;
-    for(int i = 0; i < list.size(); i++) {
-        Waypoint* wp = list[i]->getClosestPointTo(lat, lon);
+    foreach(Airway *aw, list) {
+        Waypoint* wp = aw->getClosestPointTo(lat, lon);
         if(wp == 0)
             continue;
         double d = NavData::distance(lat, lon, wp->lat, wp->lon);
         if(qFuzzyIsNull(d))
-            return list[i];
+            return aw;
         if(d < minDist) {
             minDist = d;
-            result = list[i];
+            result = aw;
         }
     }
     return result;

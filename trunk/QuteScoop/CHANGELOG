@@ -333,7 +333,7 @@ fixed:
 changed:
 * some default values to adapt better to lighting.
 added:
-* see icons of textures in Preferences dialog.
+* icons of textures in Preferences dialog ;)
 
 Version 2.0rc10:
 fixed:
@@ -345,7 +345,7 @@ changed:
 * updated IVAO-ratings.
 * ultimately appealing handling of plotted routes (transparently reflected in
   airport and pilot dialogs).
-* changing functions for saving/restoring window statii and positions (problems
+* functions for saving/restoring window statii and positions (problems
   on Mac OS where reported - please try if this works).
 added:
 * support for ARINC424 geographic waypoints (3030N, 30N30 etc.) and some weird
@@ -355,7 +355,31 @@ added:
 * show resolved route in Pilot details.
 * option to show route waypoints (for planned routes, too) on the map
   (including frequencies of navaids).
-* all lines and dot can be disabled by setting their strength to 0.
+* all lines and dots can be disabled by setting their strength to 0.
+
+Version 2.0rc11:
+fixed:
+* internal code refactoring: Fixed memory holes and removed (hopefully)
+  unnecessary checks. If you experience stability problems, please report.
+changed:
+* removed the exit animation as it proved to be disturbing ;)
+added:
+* if no sector data of a CTR/FSS-controller is available, a simple circle
+  around his main visibility center with half his reported visibility range is
+  drawn (looks ugly, so if you see such thing, please help to provide sector
+  data).
+* pilot tooltips include DEP-DEST.
+* fade Earth to space (using OpenGL fog function).
+* allow to disable texts by setting their color-alpha to 0 in the Preferences
+  dialog.
+* option to use ONLY downloaded Whazzups when in Warp-mode (no prediction at
+  all, useful for replaying and seeing only what really happened)
+* (internal) GUI message (statusbar text and progressbar) system changed from
+  the ground up to have a unified way for all classes to throw messages of
+  different types onto the user. As a user, you may notify that temporary
+  messages show and disappear after some seconds now. This was done with
+  extendability in mind. (not yet ready and far from perfect)
+
 
 Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for

@@ -28,7 +28,6 @@ private slots:
 
 private:
     PilotDetails(QWidget *parent);
-
     Pilot *pilot;
 };
 

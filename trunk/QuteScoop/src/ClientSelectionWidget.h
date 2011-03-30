@@ -14,18 +14,18 @@
 class ClientSelectionWidget : public QDialog, private Ui::ClientSelectionDialog
 {
 	Q_OBJECT
-	
+
 public:
 	ClientSelectionWidget(QWidget *parent = 0);
-	
+
 	void setObjects(QList<MapObject*> objects);
 	void clearClients();
 
 public slots:
-	void dialogForItem(QListWidgetItem * item);
+	void dialogForItem(QListWidgetItem *item);
 
 protected:
-	virtual void focusOutEvent(QFocusEvent *event);
+	void focusOutEvent(QFocusEvent *event);
 
 private:
 	QList<MapObject*> displayClients;

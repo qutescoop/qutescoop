@@ -12,16 +12,17 @@ ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):
     setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
     setFocusPolicy(Qt::StrongFocus);
-    connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
+    connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)),   this, SLOT(dialogForItem(QListWidgetItem*)));
     connect(listWidget, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
+    resize(500, 500);
 }
 
 void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {
     clearClients();
     displayClients = objects;
     for(int i = 0; i < objects.size(); i++) {
-        if(i == 0) {
-            QListWidgetItem* lwi = new QListWidgetItem(objects[i]->toolTip(), listWidget);
+        if(i == 0) { // first item bold
+            QListWidgetItem *lwi = new QListWidgetItem(objects[i]->toolTip(), listWidget);
             QFont font = QFont();
             font.setBold(true);
             lwi->setFont(font);
@@ -40,9 +41,9 @@ void ClientSelectionWidget::clearClients() {
 }
 
 void ClientSelectionWidget::dialogForItem(QListWidgetItem *item) {
-    for(int i = 0; i < displayClients.size(); i++) {
-        if(item->text() == displayClients[i]->toolTip()) {
-            displayClients[i]->showDetailsDialog();
+    foreach(MapObject *m, displayClients) {
+        if(item->text() == m->toolTip()) {
+            m->showDetailsDialog();
             //listWidget->releaseKeyboard();
             close();
             return;

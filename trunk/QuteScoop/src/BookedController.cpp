@@ -37,59 +37,59 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
     if (label.right(5) == "_ATIS") facilityType = 2; // dont know who wants to book it, but well...
 
     else if (label.right(4) == "_DEL") {
-        if (NavData::getInstance()->airports().contains(this->getDelivery())) {
-            countryCode = NavData::getInstance()->airports()[this->getDelivery()]->countryCode;
-            lat = NavData::getInstance()->airports()[this->getDelivery()]->lat;
-            lon = NavData::getInstance()->airports()[this->getDelivery()]->lon;
+        if (NavData::getInstance()->airports.contains(this->getDelivery())) {
+            countryCode = NavData::getInstance()->airports[this->getDelivery()]->countryCode;
+            lat = NavData::getInstance()->airports[this->getDelivery()]->lat;
+            lon = NavData::getInstance()->airports[this->getDelivery()]->lon;
             visualRange = 2;
         }
         facilityType = 3;
     }
     else if (label.right(4) == "_GND") {
-        if (NavData::getInstance()->airports().contains(this->getGround())) {
-            countryCode = NavData::getInstance()->airports()[this->getGround()]->countryCode;
-            lat = NavData::getInstance()->airports()[this->getGround()]->lat;
-            lon = NavData::getInstance()->airports()[this->getGround()]->lon;
+        if (NavData::getInstance()->airports.contains(this->getGround())) {
+            countryCode = NavData::getInstance()->airports[this->getGround()]->countryCode;
+            lat = NavData::getInstance()->airports[this->getGround()]->lat;
+            lon = NavData::getInstance()->airports[this->getGround()]->lon;
             visualRange = 5;
         }
         facilityType = 3;
     }
     else if (label.right(4) == "_TWR") {
         facilityType = 4;
-        if (NavData::getInstance()->airports().contains(this->getTower())) {
-            countryCode = NavData::getInstance()->airports()[this->getTower()]->countryCode;
-            lat = NavData::getInstance()->airports()[this->getTower()]->lat;
-            lon = NavData::getInstance()->airports()[this->getTower()]->lon;
+        if (NavData::getInstance()->airports.contains(this->getTower())) {
+            countryCode = NavData::getInstance()->airports[this->getTower()]->countryCode;
+            lat = NavData::getInstance()->airports[this->getTower()]->lat;
+            lon = NavData::getInstance()->airports[this->getTower()]->lon;
             visualRange = 15;
         }
     }
     else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
         facilityType = 5;
-        if (NavData::getInstance()->airports().contains(this->getApproach())) {
-            countryCode = NavData::getInstance()->airports()[this->getApproach()]->countryCode;
-            lat = NavData::getInstance()->airports()[this->getApproach()]->lat;
-            lon = NavData::getInstance()->airports()[this->getApproach()]->lon;
+        if (NavData::getInstance()->airports.contains(this->getApproach())) {
+            countryCode = NavData::getInstance()->airports[this->getApproach()]->countryCode;
+            lat = NavData::getInstance()->airports[this->getApproach()]->lat;
+            lon = NavData::getInstance()->airports[this->getApproach()]->lon;
             visualRange = 35;
         }
     }
     else if (label.right(4) == "_CTR") {
         facilityType = 6;
         QString ctr = this->getCenter();
-        if (NavData::getInstance()->sectors().contains(ctr)) {
-            countryCode = NavData::getInstance()->sectors()[ctr]->countryCode();
-            lat = NavData::getInstance()->sectors()[ctr]->lat();
-            lon = NavData::getInstance()->sectors()[ctr]->lon();
-            //visualRange = NavData::getInstance()->sectors()[ctr]->maxDistanceFromCenter();
+        if (NavData::getInstance()->sectors.contains(ctr)) {
+            countryCode = NavData::getInstance()->sectors[ctr]->countryCode;
+            lat = NavData::getInstance()->sectors[ctr]->lat;
+            lon = NavData::getInstance()->sectors[ctr]->lon;
+            visualRange = 150; // NavData::getInstance()->sectors[ctr]->maxDistanceFromCenter();
         }
     }
     else if (label.right(4) == "_FSS") {
         facilityType = 7;
         QString ctr = this->getCenter();
-        if (NavData::getInstance()->sectors().contains(ctr)) {
-            countryCode = NavData::getInstance()->sectors()[ctr]->countryCode();
-            lat = NavData::getInstance()->sectors()[ctr]->lat();
-            lon = NavData::getInstance()->sectors()[ctr]->lon();
-            //visualRange = NavData::getInstance()->sectors()[ctr]->maxDistanceFromCenter();
+        if (NavData::getInstance()->sectors.contains(ctr)) {
+            countryCode = NavData::getInstance()->sectors[ctr]->countryCode;
+            lat = NavData::getInstance()->sectors[ctr]->lat;
+            lon = NavData::getInstance()->sectors[ctr]->lon;
+            visualRange = 500; // NavData::getInstance()->sectors[ctr]->maxDistanceFromCenter();
         }
     }
 
@@ -126,9 +126,9 @@ QString BookedController::getCenter() {
     if(list.last().startsWith("CTR") || list.last().startsWith("FSS")) {
         list.removeLast();
         QString result = list.join("_");
-        if(NavData::getInstance()->sectors().contains(result)) {
-            lat = NavData::getInstance()->sectors()[result]->lat(); // fix my coordinates so that user can find me on the map
-            lon = NavData::getInstance()->sectors()[result]->lon();
+        if(NavData::getInstance()->sectors.contains(result)) {
+            lat = NavData::getInstance()->sectors[result]->lat; // fix my coordinates
+            lon = NavData::getInstance()->sectors[result]->lon;
         }
         return result;
     }
@@ -190,10 +190,6 @@ QString BookedController::getDelivery() const {
     return QString();
 }
 
-void BookedController::showDetailsDialog() {
-    //not applicable
-}
-
 QString BookedController::rank() const {
     if(network == VATSIM) {
         switch(rating) {
@@ -233,7 +229,7 @@ QString BookedController::rank() const {
 QString BookedController::toolTip() const {
     QString result = label;
     if (sector != 0)
-        result += " [" + sector->name() + "]";
+        result += " [" + sector->name + "]";
     result += " (";
     if(!isObserver() && !frequency.isEmpty())
         result += frequency + ", ";

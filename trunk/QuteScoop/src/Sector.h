@@ -10,31 +10,23 @@
 
 class Sector {
 public:
-    Sector();
+    Sector() :
+            icao(), name(), countryCode(), lat(0.), lon(0.), id(), _polygon(0), _borderline(0)
+    {}
     Sector(QStringList strings);
     ~Sector();
 
-    bool isNull() const;
+    bool isNull() const { return icao.isNull(); }
 
-	const QString& icao() const { return _icao; }
-	const QString& name() const { return _name; }
-	const QString& countryCode() const { return _countryCode; }
-	const QString& id() const { return _id; }
-	const double& lat() const { return _lat; }
-	const double& lon() const { return _lon; }
-	const QList<QPair<double, double> > sector() const { return _points; }
-	const QPolygonF& sectorPolygon() const;
+    const QPolygonF& sectorPolygon() const;
 
-	void setPointList(const QList<QPair<double, double> >& points);
+	QList<QPair<double, double> > points;
+	QString icao, name, countryCode, id;
+	double lat, lon;
 
-	GLuint getPolygon();
-	GLuint getBorderLine();
+	GLuint getGlPolygon();
+	GLuint getGlBorderLine();
 private:
-	void compileDisplayLists();
-
-	QList<QPair<double, double> > _points;
-	QString _icao, _name, _countryCode, _id;
-	double _lat, _lon;
 	GLuint _polygon, _borderline;
 };
 

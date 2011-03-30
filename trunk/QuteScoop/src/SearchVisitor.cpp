@@ -18,8 +18,7 @@ SearchVisitor::SearchVisitor(const QString& searchStr) {
 	regex = QRegExp(regExpStr, Qt::CaseInsensitive);
 }
 
-void SearchVisitor::visit(MapObject* object)
-{
+void SearchVisitor::visit(MapObject* object) {
 	if(!object->matches(regex))
 		return;
 
@@ -31,18 +30,17 @@ void SearchVisitor::visit(MapObject* object)
 
 	Controller *c = dynamic_cast<Controller*>(object);
 	if(c != 0) {
-		if(c->isObserver()) {
+		if(c->isObserver())
 			observers[c->label] = c;
-		} else {
+		else
 			controllers[c->label] = c;
-		}
 		return;
 	}
 	
 	others[object->label] = object;
 }
 
-QList<MapObject*> SearchVisitor::result() {
+QList<MapObject*> SearchVisitor::result() const {
 	QList<MapObject*> result;
 
 	// airports

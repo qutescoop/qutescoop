@@ -7,51 +7,101 @@
 
 #include "_pch.h"
 
-//#include "Window.h"
+/* The GUI message system.
+  Background idea is to provide a simple API to any class that wants to show
+  messages, statii and progresses to the user.
+*/
 
-class GuiMessage : QObject {
+class GuiMessages : public QObject {
     Q_OBJECT
 public:
-    enum GuiMessageType {
-        Remove,         // remove all messages/progressbar with 'id'
-        Splash,         // show message as splash screen
-        ProgressBar,    // call once with at least 'msg', 'id', 'progress' and 'total',
-                        // subsequently 'id' and progress is fine
-        Temporary,      // remains visible some seconds
-        InformationUserAttention, // important user information not related to errors / 'id' may be used as MessageBox->title
-        Persistent,     // shown until "Remove" with same id is called
-        Warning,        // something is not going smooth, shown longer than Temporary / 'id' may be used as MessageBox->title
-        ErrorUserAttention, // some error, user attention required / 'id' may be used as MessageBox->title
-        CriticalUserInteraction, // error that could potentially lead to instability / 'id' may be used as MessageBox->title
-        FatalUserInteraction, // program needs to close / 'id' may be used as MessageBox->title
-        _Update         // internally called to update
-    };
+    static GuiMessages *getInstance(bool createIfNoInstance = true);
 
-    GuiMessage(QObject *parent, QString msg, GuiMessageType msgType, QString id, int progress, int total, int showMs):
-            QObject(parent),
-            _msg(msg),
-            _id(id),
-            _msgType(msgType),
-            _progress(progress),
-            _total(total),
-            _showMs(showMs)
-    {
-        if (msgType == Temporary or msgType == Warning) {
-            QTimer::singleShot(showMs, this, SLOT(remove()));
+    ///////////////////////////////////////////////////////////////////////////
+    // STATIC METHODS TO SEND MESSAGES
+    // temporary message:
+    static void message(const QString &msg, const QString &id = "");
+    // also temporary, but with higher priority
+    static void warning(const QString &msg, const QString &id = "");
+    // shown if no other messages available
+    static void status (const QString &msg, const QString &id = "");
+    // just draw attention, no disturbance of the program flow
+    static void informationUserAttention(const QString &msg, const QString &id = "");
+    // just draw attention, no disturbance of the program flow
+    static void errorUserAttention      (const QString &msg, const QString &id = "");
+    // user-confirmation required
+    static void criticalUserInteraction (const QString &msg, const QString &titleAndId);
+    // QuteScoop needs to close
+    static void fatalUserInteraction    (const QString &msg, const QString &titleAndId);
+    // set progress message (highly recommended, shown in the label)
+    static void progress(const QString &id, const QString &msg);
+    // update progress value
+    static void progress(const QString &id, int value, int maximum = -1);
+    // remove message
+    static void remove(const QString &id);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // METHODS TO SET ACTIVE OUTPUT WIDGETS
+    void addStatusLabel(QLabel *label, bool hideIfNothingToDisplay = true);
+    void removeStatusLabel(QLabel *label);
+    void addProgressBar(QProgressBar *progressBar, bool hideIfNothingToDisplay = true);
+    void removeProgressBar(QProgressBar *progressBar);
+
+    ///////////////////////////////////////////////////////////////////////////
+    // INTERNALLY USED CLASS AND METHODS (called by static methods)
+    class GuiMessage {
+    public:
+        enum Type { // type corresponding to priority
+            All = 101, Uninitialized = 100, Persistent = 10, Temporary = 9, ProgressBar = 7, InformationUserAttention = 5,
+            Warning = 4, ErrorUserAttention = 3, CriticalUserInteraction = 1, FatalUserInteraction = 0
+        };
+        GuiMessage(): // needed for _METATYPE
+            id(""), msg(""), type(Uninitialized), progressValue(-1),
+            progressMaximum(-1), showMs(-1), shownSince(QDateTime())
+        {}
+        GuiMessage(const QString &id, const Type &type, const QString &msg,
+                   int progressValue = -1, int progressMaximum = -1):
+            id(id), msg(msg), type(type), progressValue(progressValue),
+            progressMaximum(progressMaximum), showMs(-1), shownSince(QDateTime())
+        {}
+
+        bool operator==(const GuiMessage *gm) const {
+            return id == gm->id && msg == gm->msg && type == gm->type &&
+                    progressValue == gm->progressValue && progressMaximum == gm->progressMaximum &&
+                    showMs == gm->showMs && shownSince == gm->shownSince;
         }
-    }
+        ~GuiMessage() {} // needed for _METATYPE
 
+        QString msg, id;
+        Type type;
+        int progressValue, progressMaximum, showMs;
+        QDateTime shownSince;
+    };
+    void updateMessage(GuiMessage *guiMessage, bool callUpdate = true);
+    void removeMessage(const QString &id, bool callUpdate = true);
 public slots:
-    void remove() {
- //       dynamic_cast<Window::Window*> (this->parent())->showGuiMessage(_msg, GuiMessage::Remove, _id);
-    }
-
+    void labelDestroyed(QObject *obj);
+    void progressBarDestroyed(QObject *obj);
+private slots:
+    void update();
 private:
-    QString _msg, _id;
-    GuiMessageType _msgType;
-    int _progress, _total;
-    //QDateTime _showUntil;
-    int _showMs;
+    GuiMessages();
+    ~GuiMessages() { delete _currentStatusMessage, _currentProgressMessage; }
+
+    void setStatusMessage(GuiMessage *gm, bool bold = false, bool italic = false,
+                          bool instantRepaint = true);
+    void setProgress(GuiMessage *gm, bool instantRepaint = false);
+
+    GuiMessage *messageById(const QString &id, const GuiMessage::Type &type = GuiMessage::All);
+
+    QHash<QLabel*, bool> _labels; // bool indicating hideIfNothingToDisplay
+    QHash<QProgressBar*, bool> _bars; // bool indicating hideIfNothingToDisplay
+    GuiMessage *_currentStatusMessage, *_currentProgressMessage;
+    QMultiMap<int, GuiMessage*> _messages; // messages sorted by priority (= int of enum GuiMessage::Type)
+    QTimer _timer;
 };
+
+Q_DECLARE_METATYPE(GuiMessages::GuiMessage) // needed for QVariant and QDebug compatilbility
+QDebug operator<<(QDebug dbg, const GuiMessages::GuiMessage *gm);
 
 #endif // GUIMESSAGE_H

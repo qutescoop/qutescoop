@@ -19,17 +19,15 @@ QSettings* Settings::getSettings() {
 // .ini File Functions
 void Settings::exportToFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
-    for (int i = 0; i < getSettings()->allKeys().length(); i++) {
+    for (int i = 0; i < getSettings()->allKeys().length(); i++)
         settings_file->setValue(getSettings()->allKeys()[i], getSettings()->value(getSettings()->allKeys()[i]));
-    }
     delete settings_file;
 }
 
 void Settings::importFromFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
-    for (int i = 0; i < settings_file->allKeys().length(); i++) {
+    for (int i = 0; i < settings_file->allKeys().length(); i++)
         getSettings()->setValue(settings_file->allKeys()[i], settings_file->value(settings_file->allKeys()[i]));
-    }
     delete settings_file;
 }
 
@@ -43,9 +41,8 @@ QIODevice::OpenMode Settings::testDirectory(QString &dir) {
             capabilities |= QIODevice::ReadWrite;
             testFile.close();
             testFile.remove();
-        } else {
+        } else
             capabilities |= QIODevice::ReadOnly;
-        }
     }
     //qDebug() << "Settings::testDirectory()" << dir << capabilities;
     return capabilities;
@@ -134,9 +131,9 @@ void Settings::calculateApplicationDataDirectory() {
                                         QMessageBox::critical(0, "Error", QString(
                                                 "Error removing existing file '%1'. Please consider removing it by hand.")
                                                               .arg(destFilePath));
-                                if (QFile::copy(sourceFilePath, destFilePath)) {
+                                if (QFile::copy(sourceFilePath, destFilePath))
                                     qDebug() << "copied" << sourceFilePath << "to" << destFilePath;
-                                } else {
+                                else {
                                     copyErrors.append(QString("Error copying file '%1' to '%2'\n").arg(sourceFilePath, destFilePath));
                                     qDebug() << "Error copying file" << sourceFilePath << "to" << destFilePath;
                                 }
@@ -622,7 +619,7 @@ void Settings::setFirBorderLineStrength(double strength) {
 }
 
 QColor Settings::firFontColor() {
-    return getSettings()->value("firDisplay/fontColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
+    return getSettings()->value("firDisplay/fontColor", QColor::fromRgb(170, 255, 255)).value<QColor>();
 }
 
 void Settings::setFirFontColor(const QColor& color) {

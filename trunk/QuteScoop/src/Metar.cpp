@@ -130,7 +130,10 @@ QString Metar::decodeVisibility(QStringList& tokens) const {
 
     bool ok;
     int i = vis.toInt(&ok);
-    if(!ok) return QString();
+    if(!ok) {
+        qWarning() << "Metar::decodeVisibility() unable to parse vis (int):" << vis;
+        return QString();
+    }
 
     tokens.removeFirst();
 
@@ -304,7 +307,7 @@ QString Metar::decodedHtml() const {
     QStringList tokens = encoded.split(" ", QString::SkipEmptyParts);
 
     // LOWW 012020Z 35006KT 320V040 9999 -RA FEW060 SCT070 BKN080 08/05 Q1014 NOSIG
-    Airport *a = NavData::getInstance()->airports()[tokens.first()];
+    Airport *a = NavData::getInstance()->airports[tokens.first()];
     if(a == 0) result = tokens.first();
     else result = a->city;
     result += " Weather Information, Recorded ";

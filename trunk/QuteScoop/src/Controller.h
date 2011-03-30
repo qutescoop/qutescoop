@@ -15,29 +15,26 @@ class Controller: public Client
 public:
     Controller(const QStringList& stringList, const WhazzupData* whazzup);
 
-    void showDetailsDialog();
+    virtual void showDetailsDialog();
 
     QString facilityString() const;
     QString toolTip() const;
-    virtual QString mapLabel() const;
+    QString mapLabel() const;
     bool matches(const QRegExp& regex) const;
 
     bool isObserver() const { return facilityType == 0; }
     bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations (at least from VATSIM)
-    virtual QString rank() const;
+    QString rank() const;
 
-    QString getCenter();
+    QString getCenter() const;
     QString getApproach() const;
     QString getTower() const;
     QString getGround() const;
     QString getDelivery() const;
 
-    QString frequency;
-    int facilityType;
-    int visualRange;
-    QString atisMessage;
-    QDateTime timeLastAtisReceived;
-    QDateTime assumeOnlineUntil;
+    QString frequency, atisMessage;
+    int facilityType, visualRange;
+    QDateTime timeLastAtisReceived, assumeOnlineUntil;
 
     QString voiceChannel;
     QString voiceLink() const;

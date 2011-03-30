@@ -28,13 +28,12 @@ Client::Client(const QStringList& stringList, const WhazzupData* whazzup)
         rating = getField(stringList, 41).toInt(); // IVAO only
     }
 
-    if(whazzup->isVatsim()) {
+    if(whazzup->isVatsim())
         network = VATSIM;
-    } else if(whazzup->isIvao()){
+    else if(whazzup->isIvao())
         network = IVAO;
-    } else {
+    else
         network = OTHER;
-    }
 
     // un-fuck user names. people enter all kind of stuff here
     realName.remove(QRegExp("[_\\-\\d\\.\\,\\;\\:\\#\\+\\(\\)]"));
@@ -46,7 +45,7 @@ Client::Client(const QStringList& stringList, const WhazzupData* whazzup)
     }
 }
 
-QString Client::getField(const QStringList& list, int index) {
+QString Client::getField(const QStringList& list, int index) const {
     if(index < 0 || index >= list.size())
         return QString();
 
@@ -57,7 +56,7 @@ QString Client::onlineTime() const {
     if (!timeConnected.isValid())
         return QString("not connected");
     return QDateTime::fromTime_t(               // this will get wrapped by 24h but that should not be a problem...
-            Whazzup::getInstance()->whazzupData().timestamp().toTime_t()
+            Whazzup::getInstance()->whazzupData().whazzupTime.toTime_t()
             - timeConnected.toTime_t()
             ).toUTC().toString("HH:mm");
 }

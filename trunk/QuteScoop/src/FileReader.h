@@ -13,7 +13,7 @@ public:
 	virtual ~FileReader();
 	
 	bool atEnd() const;
-	QString nextLine();
+	QString nextLine() const;
 	
 private:
 	QFile *file;

@@ -76,6 +76,6 @@ void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double
     }
 }
 
-void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the Details, as is the case on the map
+void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the detailsDialog
     content[index.row()]->showDetailsDialog();
 }

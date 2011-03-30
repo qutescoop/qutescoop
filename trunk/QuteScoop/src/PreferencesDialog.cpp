@@ -31,8 +31,8 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
-    foreach(QByteArray fmt, QImageWriter::supportedImageFormats())
-        if (cbScreenshotFormat->findText(fmt.toLower()) == -1)
+    foreach(const QByteArray &fmt, QImageWriter::supportedImageFormats())
+        if(cbScreenshotFormat->findText(fmt.toLower()) == -1)
             cbScreenshotFormat->addItem(fmt.toLower());
     loadSettings();
 }
@@ -92,7 +92,7 @@ void PreferencesDialog::loadSettings() {
     // textures
     QDir texDir = QDir(Settings::applicationDataDirectory("textures/"));
     QStringList nameFilters;
-    foreach(QByteArray fmt, QImageReader::supportedImageFormats())
+    foreach(const QByteArray fmt, QImageReader::supportedImageFormats())
         nameFilters.append("*." + fmt);
     texDir.setNameFilters(nameFilters);
     qDebug() << "Supported texture formats:"
@@ -1128,7 +1128,7 @@ void PreferencesDialog::on_applyAirports_clicked()
 {
     if (Window::getInstance(false) != 0) {
         Window::getInstance(true)->glWidget->createAirportsList();
-        Window::getInstance(true)->glWidget->prepareDisplayLists();
+        Window::getInstance(true)->glWidget->createControllersLists();
         Window::getInstance(true)->glWidget->updateGL();
     }
 
@@ -1138,7 +1138,7 @@ void PreferencesDialog::on_applyPilots_clicked()
 {
     if (Window::getInstance(false) != 0) {
         Window::getInstance(true)->glWidget->createPilotsList();
-        Window::getInstance(true)->glWidget->prepareDisplayLists();
+        Window::getInstance(true)->glWidget->createControllersLists();
         Window::getInstance(true)->glWidget->updateGL();
     }
 }

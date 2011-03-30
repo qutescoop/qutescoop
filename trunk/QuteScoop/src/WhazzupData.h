@@ -21,59 +21,42 @@ public:
 
     WhazzupData();
     WhazzupData(QBuffer* buffer, WhazzupType type);
-    WhazzupData(const QDateTime predictTime, const WhazzupData& data); // predict whazzup data
+    WhazzupData(const QDateTime predictTime, const WhazzupData &data); // predict whazzup data
     ~WhazzupData();
-
     // copy constructor and assignment operator
-    WhazzupData(const WhazzupData& data);
-    WhazzupData& operator=(const WhazzupData& data);
+    WhazzupData(const WhazzupData &data);
+    WhazzupData &operator=(const WhazzupData &data);
 
-    void updateFrom(const WhazzupData& data);
+    bool isNull() const { return (whazzupTime.isNull() && bookingsTime.isNull()); }
+    void updateFrom(const WhazzupData &data);
 
-    QList<Controller*> activeSectors() const;
-    QList<Pilot*> getPilots() const { return pilots.values(); }
-    QList<Pilot*> getBookedPilots() const { return bookedpilots.values(); }
-    QList<Pilot*> getAllPilots() const { return bookedpilots.values() + pilots.values(); }
-    QList<Controller*> getControllers() const { return controllers.values(); }
-    QList<BookedController*> getBookedControllers() const { return bookedcontrollers; }
+    QSet<Controller*> activeSectors() const;
+    QHash<QString, Pilot*> pilots, bookedPilots;
+    QHash<QString, Controller*> controllers;
+    QList<Pilot*> allPilots() const { return bookedPilots.values() + pilots.values(); }
+    QList<BookedController*> bookedControllers;
 
-    Pilot* getPilot(const QString& callsign) const { if(pilots[callsign] != 0) return pilots[callsign]; else return bookedpilots[callsign]; }
-    Controller* getController(const QString& callsign) const { return controllers[callsign]; }
+    Pilot* findPilot(const QString& callsign) const { if(pilots[callsign] != 0) return pilots[callsign];
+        else return bookedPilots[callsign]; }
 
-    int clients() const { return controllers.size() + pilots.size(); }
-    QList<QStringList> serverList() const { return connectedServerList; }
-    QList<QStringList> voiceServerList() const { return connectedVoiceServerList; }
-    int version() const { return whazzupVersion; }
+    QList<QStringList> servers, voiceServers;
 
-    QDateTime updateEarliest;
-    //const QDateTime& updateEarliest() const { return updateEarliest; }
-    const QDateTime& timestamp() const { return whazzupTime; }
-    const QDateTime& bookingsTimestamp() const { return bookingsTime; }
-    const QDateTime& predictionBasedOnTimestamp() const { return predictionBasedOnTime; }
-    const QDateTime& predictionBasedOnBookingsTimestamp() const { return predictionBasedOnBookingsTime; }
+    QDateTime updateEarliest, whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
 
     bool isIvao() const { return whazzupVersion == 4; }
     bool isVatsim() const { return whazzupVersion == 8; }
-    int network() const { switch(whazzupVersion) { case 4: return 0; case 8: return 1; default: return 2;} }
+    int network() const { switch(whazzupVersion) { case 4: return 0; case 8: return 1; default: return 2; } }
 
     void accept(MapObjectVisitor *visitor) const;
 
-    bool isNull() const { return (whazzupTime.isNull() && bookingsTime.isNull()); }
-
 private:
-    void assignFrom(const WhazzupData& data);
+    void assignFrom(const WhazzupData &data);
+    void updatePilotsFrom(const WhazzupData &data);
+    void updateControllersFrom(const WhazzupData &data);
+    void updateBookedControllersFrom(const WhazzupData &data);
 
-    void updatePilotsFrom(const WhazzupData& data);
-    void updateControllersFrom(const WhazzupData& data);
-    void updateBookedControllersFrom(const WhazzupData& data);
-
-    QHash<QString, Pilot*> pilots, bookedpilots;
-    QHash<QString, Controller*> controllers;
-    QList<BookedController*> bookedcontrollers;
-    QList<QStringList> connectedServerList, connectedVoiceServerList;
     int whazzupVersion;
 
-    QDateTime whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
     WhazzupType dataType;
 };
 

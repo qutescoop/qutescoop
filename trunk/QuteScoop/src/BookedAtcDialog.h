@@ -37,7 +37,6 @@ private:
     BookedAtcSortFilter *bookedAtcSortModel;
 
     QDateTime dateTimeFilter_old;
-
     QTimer editFilterTimer;
 };
 

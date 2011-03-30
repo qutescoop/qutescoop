@@ -14,14 +14,14 @@ Route::~Route()
 
 void Route::calculateWaypointsAndDistance() {
     Airport* depAirport;
-    if(NavData::getInstance()->airports().contains(dep))
-        depAirport = NavData::getInstance()->airports()[dep];
+    if(NavData::getInstance()->airports.contains(dep))
+        depAirport = NavData::getInstance()->airports[dep];
     else
         return;
 
     Airport* destAirport;
-    if(NavData::getInstance()->airports().contains(dest))
-        destAirport = NavData::getInstance()->airports()[dest];
+    if(NavData::getInstance()->airports.contains(dest))
+        destAirport = NavData::getInstance()->airports[dest];
     else
         return;
 

@@ -13,33 +13,26 @@ FileReader::FileReader(const QString& filename)
 		file = 0;
 		return;
 	}
-	
 	stream = new QTextStream(file);
 }
 
 FileReader::~FileReader()
 {
-	if(file != 0) {
+	if(file != 0)
 		delete file;
-	}
-	if(stream != 0) {
+	if(stream != 0)
 		delete stream;
-	}
 }
 
-QString FileReader::nextLine() {
-	if(stream == 0)
+QString FileReader::nextLine() const {
+	if(stream == 0 || stream->atEnd())
 		return QString();
-	
-	if(stream->atEnd())
-		return QString();
-
 	return stream->readLine();
 }
 
 bool FileReader::atEnd() const {
 	if(stream == 0)
 		return true;
-	
+
 	return stream->atEnd();
 }

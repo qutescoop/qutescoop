@@ -4,8 +4,7 @@
 
 #include "MapObject.h"
 
-MapObject::MapObject()
-{
+MapObject::MapObject() {
 }
 
 MapObject::~MapObject() {
@@ -30,8 +29,4 @@ MapObject& MapObject::operator=(const MapObject& obj) {
 	lon = obj.lon;
 	label = obj.label;
 	return *this;
-}
-
-bool MapObject::matches(const QRegExp& regex) const {
-	return label.contains(regex);
 }

@@ -4,8 +4,6 @@
 
 #include "Window.h"
 
-#include "_pch.h"
-
 #include "GLWidget.h"
 #include "ClientDetails.h"
 #include "PilotDetails.h"
@@ -23,6 +21,7 @@
 #include "NavData.h"
 #include "FriendsVisitor.h"
 #include "helpers.h"
+#include "GuiMessage.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -52,8 +51,10 @@ Window::Window(QWidget *parent) :
     QSettings* settings = new QSettings();
 
     // apply styleSheet
-    qDebug() << "applying styleSheet:" << Settings::stylesheet();
-    setStyleSheet(Settings::stylesheet());
+    if (!Settings::stylesheet().isEmpty()) {
+        qDebug() << "Window::Window() applying styleSheet:" << Settings::stylesheet();
+        setStyleSheet(Settings::stylesheet());
+    }
 
     QGLFormat fmt;
     fmt.setDirectRendering(settings->value("gl/directrendering", fmt.defaultFormat().directRendering()).toBool());
@@ -74,10 +75,11 @@ Window::Window(QWidget *parent) :
     if (fmt.defaultFormat().accumBufferSize() > 0)
         fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
     fmt.setRgba(true);
+
+    qDebug() << "Window::Window() creating GLWidget";
     glWidget = new GLWidget(fmt);
+    qDebug() << "Window::Window() creating GLWidget --finished";
     centralwidget->layout()->addWidget(glWidget);
-    connect (glWidget, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
-             this, SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
 
     // Status- & ProgressBar
     progressBar = new QProgressBar(statusbar);
@@ -97,9 +99,9 @@ Window::Window(QWidget *parent) :
     connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
     connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
 
+    qDebug() << "Window::Window() creating Whazzup";
     Whazzup *whazzup = Whazzup::getInstance();
-    connect(whazzup, SIGNAL(hasGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)),
-            this, SLOT(showGuiMessage(QString,GuiMessage::GuiMessageType,QString,int,int)));
+    qDebug() << "Window::Window() creating Whazzup --finished";
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
@@ -107,10 +109,10 @@ Window::Window(QWidget *parent) :
     connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
-    if(Settings::downloadOnStartup()) {
+    if(Settings::downloadOnStartup())
         // download whazzup as soon as whazzup status download is complete
         connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
-    }
+
     // Always download status
     whazzup->setStatusLocation(Settings::statusLocation());
 
@@ -172,10 +174,8 @@ Window::Window(QWidget *parent) :
 
     versionChecker = 0;
     versionBuffer = 0;
-    if(Settings::checkForUpdates()){
-        checkForUpdates();
-        checkForDataUpdates();
-    }
+    //if(Settings::checkForUpdates()) // disabled
+    //    checkForUpdates();
 
     // Forecast / Predict settings
     framePredict->hide();
@@ -189,13 +189,30 @@ Window::Window(QWidget *parent) :
     font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
     lblWarpInfo->setFont(font); //make it a bit smaller than standard text
 
+    font = cbUseDownloaded->font();
+    font.setPointSize(cbUseDownloaded->fontInfo().pointSize() - 1);
+    cbUseDownloaded->setFont(font); //make it a bit smaller than standard text
+
+    font = cbOnlyUseDownloaded->font();
+    font.setPointSize(cbOnlyUseDownloaded->fontInfo().pointSize() - 1);
+    cbOnlyUseDownloaded->setFont(font); //make it a bit smaller than standard text
+
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
     //LogBrowser
 #ifdef QT_NO_DEBUG_OUTPUT
     menuView->removeAction(actionDebugLog);
+    qDebug() << "Window::Window() Debug Log Browser deactivated due to QT_NO_DEBUG_OUTPUT";
 #endif
+
+    qDebug() << "Window::Window() connecting me as GuiMessages listener";
+    GuiMessages::getInstance()->addProgressBar(progressBar, true);
+    GuiMessages::getInstance()->addStatusLabel(lblStatus, false);
+    qDebug() << "Window::Window() --finished";
+}
+
+Window::~Window() {
 }
 
 void Window::toggleFullscreen() {
@@ -214,80 +231,6 @@ void Window::about() {
     QMessageBox::about(this, tr("About QuteScoop"), readmeFile.readAll());
 }
 
-void Window::showGuiMessage(QString msg, GuiMessage::GuiMessageType msgType, QString id, int progress, int total) {
-    switch (msgType) {
-    case GuiMessage::Splash:
-        qDebug() << "guiMessage[Splash]" << id << msg;
-        QMessageBox::information(this, id, msg);
-        break;
-    case GuiMessage::ProgressBar:
-        //qDebug() << "guiMessage[ProgressBar]" << id << msg << progress << total;
-        if (!msg.isEmpty()) lblStatus->setText(msg);
-        progressBar->setWhatsThis(id);
-        progressBar->show();
-        progressBar->setMaximum(total);
-        progressBar->setValue(progress);
-        break;
-    case GuiMessage::Temporary:
-        qDebug() << "guiMessage[Temporary]" << id << msg;
-        lblStatus->setText(msg);
-        new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
-        break;
-    case GuiMessage::InformationUserAttention:
-        qDebug() << "guiMessage[Temporary]" << id << msg;
-        lblStatus->setText(msg);
-        new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
-        break;
-    case GuiMessage::Persistent:
-        qDebug() << "guiMessage[Persistent]" << id << msg;
-        lblStatus->setWhatsThis(msg);
-        lblStatus->setText(msg);
-        break;
-    case GuiMessage::Warning:
-        lblStatus->setText(msg);
-        new GuiMessage(this, msg, msgType, id, 0, 0, 8000);
-        qWarning() << "guiMessage[Warning]" << id << msg;
-        break;
-    case GuiMessage::ErrorUserAttention:
-        qDebug() << "guiMessage[Temporary]" << id << msg;
-        lblStatus->setText(msg);
-        new GuiMessage(this, msg, msgType, id, 0, 0, 3000);
-        break;
-    case GuiMessage::CriticalUserInteraction:
-        qCritical() << "guiMessage[Critical]" << id << msg;
-        QMessageBox::critical(this, id, msg);
-        break;
-    case GuiMessage::FatalUserInteraction:
-        qFatal("guiMessage[Fatal]" + id.toAscii() + " " + msg.toAscii());
-        QMessageBox::critical(this, id, msg);
-        break;
-    case GuiMessage::Remove:
-        qDebug() << "guiMessage[Remove]" << id;
-        // remove Persistent
-        if (msg == lblStatus->whatsThis()) {
-            lblStatus->setText(QString());
-            lblStatus->setWhatsThis(QString());
-        }
-        // remove Temporary: restore Presistent
-        if (msg == lblStatus->text()) lblStatus->setText(lblStatus->whatsThis());
-        // remove ProgressBar
-        if (id == progressBar->whatsThis()) {
-            progressBar->hide();
-            lblStatus->setText(lblStatus->whatsThis());
-        }
-        break;
-    case GuiMessage::_Update: // worker function
-        qDebug() << "guiMessage[Update]";
-        /*QMapIterator<QDateTime, GuiMessage> i(guiMessages);
-        while (i.hasNext()) {
-            i.next();
-            GuiMessage gM = i.value();
-            qDebug() << i.key() << gM.msg;
-        }*/
-    }
-    lblStatus->repaint();
-}
-
 void Window::whazzupDownloaded(bool isNew) {
     qDebug() << "Window::whazzupDownloaded() isNew =" << isNew;
     const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
@@ -299,23 +242,23 @@ void Window::whazzupDownloaded(bool isNew) {
                        ? " - <b>W A R P E D</b>  to"
                        : ""
                        )
-                  .arg(data.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(data.timestamp().time().toString("HHmm'z'"))
-                        : data.timestamp().toString("ddd MM/dd HHmm'z'"))
-                  .arg(data.clients());
-    showGuiMessage(msg, GuiMessage::Persistent, "status");
+                  .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                        ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
+                        : data.whazzupTime.toString("ddd MM/dd HHmm'z'"))
+                  .arg(data.pilots.size() + data.controllers.size());
+    GuiMessages::status(msg, "status");
 
     msg = QString("Whazzup %1, bookings %2 updated")
-                  .arg(realdata.timestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(realdata.timestamp().time().toString("HHmm'z'"))
-                        : (realdata.timestamp().isValid()
-                           ? realdata.timestamp().toString("ddd MM/dd HHmm'z'")
+                  .arg(realdata.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                        ? QString("today %1").arg(realdata.whazzupTime.time().toString("HHmm'z'"))
+                        : (realdata.whazzupTime.isValid()
+                           ? realdata.whazzupTime.toString("ddd MM/dd HHmm'z'")
                            : "never")
                         )
-                  .arg(realdata.bookingsTimestamp().date() == QDateTime::currentDateTime().toUTC().date() // is today?
-                        ? QString("today %1").arg(realdata.bookingsTimestamp().time().toString("HHmm'z'"))
-                        : (realdata.bookingsTimestamp().isValid()
-                           ? realdata.bookingsTimestamp().toString("ddd MM/dd HHmm'z'")
+                  .arg(realdata.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                        ? QString("today %1").arg(realdata.bookingsTime.time().toString("HHmm'z'"))
+                        : (realdata.bookingsTime.isValid()
+                           ? realdata.bookingsTime.toString("ddd MM/dd HHmm'z'")
                            : "never")
                         );
     lblWarpInfo->setText(msg);
@@ -325,10 +268,9 @@ void Window::whazzupDownloaded(bool isNew) {
         dateTimePredict->setDateTime(Whazzup::getInstance()->getPredictedTime());
         if(isNew) {
             // recalculate prediction on new data arrived
-            if(data.predictionBasedOnTimestamp() != realdata.timestamp()
-                || data.predictionBasedOnBookingsTimestamp() != realdata.bookingsTimestamp()) {
+            if(data.predictionBasedOnTime != realdata.whazzupTime
+                || data.predictionBasedOnBookingsTime != realdata.bookingsTime)
                 Whazzup::getInstance()->setPredictedTime(dateTimePredict->dateTime());
-            }
         }
     }
 
@@ -364,7 +306,7 @@ void Window::whazzupDownloaded(bool isNew) {
                 ListClientsDialog::getInstance(true)->destroyInstance();
         }
 
-        if(realdata.bookingsTimestamp().isValid()) {
+        if(realdata.bookingsTime.isValid()) {
             if (BookedAtcDialog::getInstance(false) != 0) {
                 if (BookedAtcDialog::getInstance(true)->isVisible())
                     BookedAtcDialog::getInstance(true)->refresh();
@@ -462,9 +404,7 @@ void Window::closeEvent(QCloseEvent *event) {
     Settings::saveSize(size()); // readded as Mac OS had problems with geometry only
     Settings::savePosition(pos());
     on_actionHideAllWindows_triggered();
-
-    glWidget->shutDownAnimation();
-    event->ignore();
+    event->accept();
 }
 
 void Window::on_actionHideAllWindows_triggered() {
@@ -553,275 +493,108 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
         // set horizontal title bar
         dock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
         break;
-
     case Qt::TopDockWidgetArea:
     case Qt::BottomDockWidgetArea:
         // set vertical title bar
         dock->setFeatures(searchDock->features() | QDockWidget::DockWidgetVerticalTitleBar);
         break;
-    default:
-        break;
     }
 }
 
-void Window::checkForUpdates() {
-    /* DISABLED
-    versionChecker = new QHttp(this);
-    connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
+//void Window::checkForUpdates() {
+//    versionChecker = new QHttp(this);
+//    connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
 
-    QString downloadUrl = "http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/version.txt";
+//    QString downloadUrl = "http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/version.txt";
 
-    if(Settings::sendVersionInformation()) {
-        // append platform, version and preferred network information to the download link
-        QString urlArgs = QString("?%1&%2&").arg(VERSION_NUMBER).arg(Settings::downloadNetwork());
-        #ifdef Q_WS_WIN
-            urlArgs += "w";
-        #endif
-        #ifdef Q_WS_MAC
-            urlArgs += "m";
-        #endif
-        #ifdef Q_WS_X11
-            urlArgs += "l";
-        #endif
-        downloadUrl += urlArgs;
-    }
+//    if(Settings::sendVersionInformation()) {
+//        // append platform, version and preferred network information to the download link
+//        QString urlArgs = QString("?%1&%2&").arg(VERSION_NUMBER).arg(Settings::downloadNetwork());
+//        #ifdef Q_WS_WIN
+//            urlArgs += "w";
+//        #endif
+//        #ifdef Q_WS_MAC
+//            urlArgs += "m";
+//        #endif
+//        #ifdef Q_WS_X11
+//            urlArgs += "l";
+//        #endif
+//        downloadUrl += urlArgs;
+//    }
 
-    qDebug() << "Checking for new version on" << downloadUrl;
-    QUrl url(downloadUrl);
-    versionChecker->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-    Settings::applyProxySetting(versionChecker);
+//    qDebug() << "Checking for new version on" << downloadUrl;
+//    QUrl url(downloadUrl);
+//    versionChecker->setHost(url.host(), url.port() != -1 ? url.port() : 80);
+//    Settings::applyProxySetting(versionChecker);
 
-    if (!url.userName().isEmpty())
-        versionChecker->setUser(url.userName(), url.password());
+//    if (!url.userName().isEmpty())
+//        versionChecker->setUser(url.userName(), url.password());
 
-    QString querystr = url.path() + "?" + url.encodedQuery();
-    versionBuffer = new QBuffer;
-    versionBuffer->open(QBuffer::ReadWrite);
-    versionChecker->get(querystr, versionBuffer);
-    */
-}
+//    QString querystr = url.path() + "?" + url.encodedQuery();
+//    versionBuffer = new QBuffer;
+//    versionBuffer->open(QBuffer::ReadWrite);
+//    versionChecker->get(querystr, versionBuffer);
+//}
 
-void Window::versionDownloaded(bool error) {
-    /* DISABLED
-    if(!error) {
-        // compare downloaded version with my own
-        versionBuffer->seek(0);
-        if(versionBuffer->canReadLine()) {
-            QString newVersion = QString(versionBuffer->readLine()).trimmed();
-            QString myVersion = VERSION_NUMBER;
+//void Window::versionDownloaded(bool error) {
+//    if(!error) {
+//        // compare downloaded version with my own
+//        versionBuffer->seek(0);
+//        if(versionBuffer->canReadLine()) {
+//            QString newVersion = QString(versionBuffer->readLine()).trimmed();
+//            QString myVersion = VERSION_NUMBER;
 
-            // if downloaded is greater, see if we told about new version
-            if(myVersion < newVersion) {
-                if(newVersion != Settings::updateVersionNumber()) {
-                    // tell user that there is a newer version
-                    QMessageBox::information(this, tr("New Version Available"),
-                            QString("A new version of QuteScoop is available! Visit the ")
-                            + "<a href='http://sourceforge.net/projects/qutescoop'>sourceforge.net/projects/qutescoop</a> for more information.<br><br>"
-                            + "You are using: " + VERSION_NUMBER + "<br>"
-                            + "New version is: " + newVersion);
+//            // if downloaded is greater, see if we told about new version
+//            if(myVersion < newVersion) {
+//                if(newVersion != Settings::updateVersionNumber()) {
+//                    // tell user that there is a newer version
+//                    QMessageBox::information(this, tr("New Version Available"),
+//                            QString("A new version of QuteScoop is available! Visit the ")
+//                            + "<a href='http://sourceforge.net/projects/qutescoop'>sourceforge.net/projects/qutescoop</a> for more information.<br><br>"
+//                            + "You are using: " + VERSION_NUMBER + "<br>"
+//                            + "New version is: " + newVersion);
 
-                    // remember that we told about new version
-                    Settings::setUpdateVersionNumber(newVersion);
-                }
-            }
-        }
-    }
-    */
-}
-
-void Window::checkForDataUpdates() {
-    if(dataVersionsAndFilesDownloader != 0) {
-        dataVersionsAndFilesDownloader = 0;
-    }
-    dataVersionsAndFilesDownloader = new QHttp(this);
-    QUrl url("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
-    dataVersionsAndFilesDownloader->setHost(url.host());
-    Settings::applyProxySetting(dataVersionsAndFilesDownloader);
-
-    connect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
-
-    dataVersionsBuffer = new QBuffer;
-    dataVersionsBuffer->open(QBuffer::ReadWrite);
-
-    dataVersionsAndFilesDownloader->get(url.path(), dataVersionsBuffer);
-    qDebug() << "Checking for datafile versions:" << url.toString();
-}
-
-void Window::dataVersionsDownloaded(bool error) {
-    disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
-    if(dataVersionsBuffer == 0)
-        return;
-
-    if(error) {
-        showGuiMessage(dataVersionsAndFilesDownloader->errorString(), GuiMessage::Warning, "Datafile download");
-        return;
-    }
-    QList< QPair< QString, int> > serverDataVersionsList, localDataVersionsList;
-
-    dataVersionsBuffer->seek(0);
-    while(dataVersionsBuffer->canReadLine()) {
-        QStringList splitLine = QString(dataVersionsBuffer->readLine()).split("%%");
-        QPair< QString, int> rawPair;
-        rawPair.first = splitLine.first();
-        rawPair.second = splitLine.last().toInt();
-        if (splitLine.size() == 2) // only xx%%xx accepted
-            serverDataVersionsList.append(rawPair);
-        //qDebug() << "Server versions are " << rawPair.first << " : " << rawPair.second;
-    }
-
-    QFile localVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
-    if (!localVersionsFile.open(QIODevice::ReadOnly | QIODevice::Text))  {
-        showGuiMessage(QString("Could not read %1.\nThus we are updating all datafiles.")
-                       .arg(localVersionsFile.fileName()),
-                       GuiMessage::InformationUserAttention, "Complete datafiles update necessary");
-    }
-    while(!localVersionsFile.atEnd()) {
-        QStringList splitLine = QString(localVersionsFile.readLine()).split("%%");
-        QPair< QString, int> rawPair;
-        rawPair.first = splitLine.first();
-        rawPair.second = splitLine.last().toInt();
-        if (splitLine.size() == 2) // only xx%%xx accepted
-            localDataVersionsList.append(rawPair);
-        //qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
-    }
-    localVersionsFile.close();
-
-    //collecting files to update
-    connect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
-            this, SLOT(dataFilesRequestFinished(int,bool)));
-    connect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
-            this, SLOT(dataFilesDownloaded(bool)));
-    for(int i = 0; i < serverDataVersionsList.size(); i++) {
-        // download also files that are locally not available
-        if(serverDataVersionsList[i].second >
-           localDataVersionsList.value(i, QPair< QString, int>(QString(), 0)).second){
-            dataFilesToDownload.append(new QFile(Settings::applicationDataDirectory("data/%1.newFromServer")
-                                                 .arg(serverDataVersionsList[i].first)));
-            QUrl url(QString("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
-                 .arg(serverDataVersionsList[i].first));
-            dataVersionsAndFilesDownloader->get(url.path(), dataFilesToDownload.last());
-            //qDebug() << "Downloading datafile" << url.toString();
-        }
-    }
-    if (!dataFilesToDownload.isEmpty())
-        showGuiMessage(QString("New sector-/ airport- or geography-files are available. They will be downloaded now."),
-                       GuiMessage::InformationUserAttention, "New datafiles");
-    else {
-        disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
-                this, SLOT(dataFilesRequestFinished(int,bool)));
-        disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
-                this, SLOT(dataFilesDownloaded(bool)));
-        dataVersionsAndFilesDownloader->abort();
-        delete dataVersionsAndFilesDownloader;
-        delete dataVersionsBuffer;
-    }
-}
-
-void Window::dataFilesRequestFinished(int id, bool error) {
-    if (error) {
-        showGuiMessage(QString("Error downloading %1:\n%2")
-                       .arg(dataVersionsAndFilesDownloader->currentRequest().path())
-                       .arg(dataVersionsAndFilesDownloader->errorString()),
-                       GuiMessage::CriticalUserInteraction, "New datafiles");
-        return;
-    }
-    showGuiMessage(QString("Downloaded %1")
-                   .arg(dataVersionsAndFilesDownloader->currentRequest().path()),
-                   GuiMessage::InformationUserAttention, "New datafiles");
-}
-
-void Window::dataFilesDownloaded(bool error) {
-    disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
-            this, SLOT(dataFilesRequestFinished(int,bool)));
-    disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
-            this, SLOT(dataFilesDownloaded(bool)));
-    if(dataVersionsBuffer == 0)
-        return;
-
-    if(error) {
-        showGuiMessage(QString("New sector- / airport- / geography-files could not be downloaded.\n%1")
-                       .arg(dataVersionsAndFilesDownloader->errorString()),
-                       GuiMessage::CriticalUserInteraction, "New datafiles");
-        return;
-    }
-
-    showGuiMessage("All scheduled files have been downloaded.\nThese changes will take effect on the next start of QuteScoop.",
-                   GuiMessage::InformationUserAttention, "New datafiles");
-
-    int errors = 0;
-    for(int i = 0; i < dataFilesToDownload.size(); i++) {
-        dataFilesToDownload[i]->flush();
-        dataFilesToDownload[i]->close();
-
-        if(dataFilesToDownload[i]->exists()) {
-            QString datafileFilePath = dataFilesToDownload[i]->fileName().remove(".newFromServer");
-            if (QFile::exists(datafileFilePath) && !QFile::remove(datafileFilePath)) {
-                showGuiMessage(QString("Unable to delete\n%1")
-                               .arg(datafileFilePath), GuiMessage::CriticalUserInteraction, "New datafiles");
-                errors++;
-            }
-            if (!dataFilesToDownload[i]->rename(datafileFilePath)) {
-                showGuiMessage(QString("Unable to move downloaded file to\n%1")
-                               .arg(datafileFilePath), GuiMessage::CriticalUserInteraction, "New datafiles");
-                errors++;
-            }
-        }
-
-        delete dataFilesToDownload[i];
-    }
-
-    if (errors == 0) {
-        QFile localDataVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
-        if (localDataVersionsFile.open(QIODevice::WriteOnly))
-            localDataVersionsFile.write(dataVersionsBuffer->data());
-        else
-            showGuiMessage(QString("Error writing %1").arg(localDataVersionsFile.fileName()),
-                           GuiMessage::CriticalUserInteraction, "New datafiles");
-    } else
-        showGuiMessage(QString("Errors occured. All datafiles will be redownloaded on next launch of QuteScoop."),
-                       GuiMessage::CriticalUserInteraction, "New datafiles");
-
-    dataVersionsBuffer->close();
-    delete dataVersionsBuffer;
-    dataVersionsAndFilesDownloader->abort();
-    delete dataVersionsAndFilesDownloader;
-    dataFilesToDownload.clear();
-}
+//                    // remember that we told about new version
+//                    Settings::setUpdateVersionNumber(newVersion);
+//                }
+//            }
+//        }
+//    }
+//}
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
-    qDebug() << "updateMetarDecoder()";
+    qDebug() << "Window::updateMetarDecoder()";
     metarDecoderDock->setWindowTitle("METAR for " + airport);
     metarText->setText(decodedText);
     metarDecoderDock->show();
     metarDecoderDock->raise();
     metarDecoderDock->activateWindow(); // ?? it gets on top only after the second click from AirportDialog...
     metarDecoderDock->setFocus(); // Don't understand how I can bring this nasty on top of all other. A simple click on the titlebar and it is done.
-    qDebug() << "updateMetarDecoder() -- finished";
+    qDebug() << "Window::updateMetarDecoder() -- finished";
 }
 
 void Window::downloadWatchdogTriggered() {
     downloadWatchdog.stop();
-    showGuiMessage("Failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.",
-                   GuiMessage::ErrorUserAttention, "Whazzup-download failed.");
     Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
+    GuiMessages::errorUserAttention("Failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.",
+                                   "Whazzup-download failed.");
 }
 
 void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
 }
 
-void Window::performWarp(bool forceUseDownloaded)
-{
+void Window::performWarp(bool forceUseDownloaded) {
     editPredictTimer.stop();
 
     QDateTime warpToTime = dateTimePredict->dateTime();
     if(cbUseDownloaded->isChecked() || forceUseDownloaded) { // use downloaded Whazzups for (past) replay
         qDebug() << "Window::performWarp() Looking for downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
-        for (int i = downloaded.size()-1; i > -1; i--) {
+        for (int i = downloaded.size() - 1; i > -1; i--) {
             if((downloaded[i].first <= warpToTime) || (i == 0)) {
                 // only if different
-                if (downloaded[i].first != Whazzup::getInstance()->realWhazzupData().timestamp()) {
+                if (downloaded[i].first != Whazzup::getInstance()->realWhazzupData().whazzupTime) {
                     // disconnect to inhibit update because will be updated later
                     disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
                     disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
@@ -838,45 +611,42 @@ void Window::performWarp(bool forceUseDownloaded)
     Whazzup::getInstance()->setPredictedTime(warpToTime);
 }
 
-void Window::on_cbUseDownloaded_toggled(bool checked)
-{
+void Window::on_cbUseDownloaded_toggled(bool checked) {
     qDebug() << "Window::cbUseDownloaded_toggled()" << checked;
-    if (!checked) {
+    if(!checked) {
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
-        if (!downloaded.isEmpty())
+        if(!downloaded.isEmpty())
             Whazzup::getInstance()->fromFile(downloaded.last().second);
+        cbOnlyUseDownloaded->setChecked(false); // uncheck when not using downloaded at all
     }
-    qApp->processEvents();
     performWarp(true);
 }
+void Window::on_cbOnlyUseDownloaded_toggled(bool checked) {
+    if(checked) // if newly selected, set dateTime to valid Whazzup
+        on_dateTimePredict_dateTimeChanged(dateTimePredict->dateTime());
+}
 
-void Window::on_tbDisablePredict_clicked()
-{
+void Window::on_tbDisablePredict_clicked() {
     qDebug() << "Window::tbDisablePredict_clicked()";
     actionPredict->setChecked(false);
 }
 
-void Window::on_actionPredict_toggled(bool enabled)
-{
-    qDebug() << "Window::actionPredict_toggled()" << enabled;
+void Window::on_actionPredict_toggled(bool enabled) {
     if(enabled) {
-        dateTimePredict->setDateTime(
-                QDateTime::currentDateTime().toUTC()
-                .addSecs(- QDateTime::currentDateTime().toUTC().time().second())); // remove seconds
+        dateTimePredict_old = QDateTime::currentDateTimeUtc()
+                .addSecs(- QDateTime::currentDateTimeUtc().time().second()); // remove seconds
+        dateTimePredict->setDateTime(dateTimePredict_old);
         framePredict->show();
     } else {
         tbRunPredict->setChecked(false);
-        runPredictTimer.stop();
-
-        Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
         cbUseDownloaded->setChecked(false);
+        Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
         framePredict->hide();
         widgetRunPredict->hide();
     }
 }
 
-void Window::on_tbRunPredict_toggled(bool checked)
-{
+void Window::on_tbRunPredict_toggled(bool checked) {
     if(checked) {
         dateTimePredict->setEnabled(false);
         widgetRunPredict->show();
@@ -893,11 +663,23 @@ void Window::on_tbRunPredict_toggled(bool checked)
 void Window::runPredict() {
     runPredictTimer.stop();
     QDateTime to;
-    if (dsRunPredictStep->value() == 0) { // real time selected
-        to = QDateTime::currentDateTime().toUTC();
-    } else {
+
+    if (dsRunPredictStep->value() == 0) // real time selected
+        to = QDateTime::currentDateTimeUtc();
+    else
         to = Whazzup::getInstance()->getPredictedTime().addSecs(
                 static_cast<int>(dsRunPredictStep->value()*60));
+
+    // when only using downloaded Whazzups, select the next available
+    if(cbOnlyUseDownloaded->isChecked()) {
+        qDebug() << "Window::runPredict() restricting Warp target to downloaded Whazzups";
+        QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        for (int i = 0; i < downloaded.size(); i++) {
+            if((downloaded[i].first >= to) || (i == downloaded.size() - 1)) {
+                to = downloaded[i].first;
+                break;
+            }
+        }
     }
 
     // setting dateTimePredict without "niceify"
@@ -909,9 +691,9 @@ void Window::runPredict() {
     runPredictTimer.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
 }
 
-void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime)
-{
+void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
+    // + only allow selecting downloaded Whazzups if respective option is selected
     disconnect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
     editPredictTimer.stop();
 
@@ -952,12 +734,33 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime)
         && (dateTime.time().minute() == 59))
         dateTime = dateTime.addSecs(-60 * 60);
 
+    // when only using downloaded Whazzups, select the next available
+    if(cbOnlyUseDownloaded->isChecked()) {
+        qDebug() << "Window::on_dateTimePredict_dateTimeChanged()"
+                 << "restricting Warp target to downloaded Whazzups";
+        QList<QPair<QDateTime, QString> > downloaded =
+                Whazzup::getInstance()->getDownloadedWhazzups();
+        if (dateTime > dateTimePredict_old) { // selecting a later date
+            for (int i = 0; i < downloaded.size(); i++) {
+                if((downloaded[i].first >= dateTime) || (i == downloaded.size() - 1)) {
+                    dateTime = downloaded[i].first;
+                    break;
+                }
+            }
+        } else { // selecting an earlier date
+            for (int i = downloaded.size() - 1; i > -1; i--) {
+                if((downloaded[i].first <= dateTime) || (i == 0)) {
+                    dateTime = downloaded[i].first;
+                    break;
+                }
+            }
+        }
+    }
+
     dateTimePredict_old = dateTime;
 
-    if(dateTime.isValid()
-        && (dateTime != dateTimePredict->dateTime())) {
+    if(dateTime.isValid() && (dateTime != dateTimePredict->dateTime()))
         dateTimePredict->setDateTime(dateTime);
-    }
 
     connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
     editPredictTimer.start(1000);
@@ -1055,7 +858,7 @@ void Window::shootScreenshot() {
     QString filename = Settings::applicationDataDirectory(
             QString("screenshots/%1_%2")
             .arg(Settings::downloadNetwork())
-            .arg(Whazzup::getInstance()->whazzupData().timestamp().toString("yyyyMMdd-HHmmss")));
+            .arg(Whazzup::getInstance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
 
     if (Settings::screenshotMethod() == 0)
         QPixmap::grabWindow(glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
@@ -1066,18 +869,16 @@ void Window::shootScreenshot() {
     else if (Settings::screenshotMethod() == 2)
         glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                              Settings::screenshotFormat().toAscii());
-    qDebug() << "shot screenie" << QString("%1.png").arg(filename); //fixme
+    qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
 
 void Window::on_actionShowRoutes_triggered(bool checked) {
-    showGuiMessage("Toggled ALL routes");
-    foreach (Airport *a, NavData::getInstance()->airports().values())
-        if(a != 0) // synonym to "toggle routes" on all airports
-            a->showFlightLines = checked;
+    GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
+    foreach(Airport *a, NavData::getInstance()->airports.values()) // synonym to "toggle routes" on all airports
+        a->showFlightLines = checked;
     if (!checked) // when disabled, this shall clear all routes
-        foreach (Pilot *p, Whazzup::getInstance()->whazzupData().getAllPilots())
-            if(p != 0) // synonym to "toggle routes" on all airports
-                p->showDepDestLine = false;
+        foreach (Pilot *p, Whazzup::getInstance()->whazzupData().allPilots())
+            p->showDepDestLine = false;
 
     // adjust the "plot route" tick in dialogs
     if (AirportDetails::getInstance(false) != 0)
@@ -1089,8 +890,6 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
     glWidget->createPilotsList();
     glWidget->updateGL();
     //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
-
-    showGuiMessage("Toggled ALL routes", GuiMessage::Remove, "calcRoutes");
 }
 
 void Window::on_actionShowWaypoints_triggered(bool checked) {

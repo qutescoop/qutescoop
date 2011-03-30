@@ -20,10 +20,6 @@ public:
     static LogBrowserDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     ~LogBrowserDialog();
 
-signals:
-    void hasGuiMessage(QString, GuiMessage::GuiMessageType = GuiMessage::Temporary,
-                       QString = QString(), int = 0, int = 0);
-
 public slots:
     void outputMessage(const QString &msg);
 

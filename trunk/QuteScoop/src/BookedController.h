@@ -17,43 +17,31 @@ class BookedController: public Client
 public:
 	BookedController(const QStringList& stringList, const WhazzupData* whazzup);
 
-	void showDetailsDialog();
 	bool isObserver() const { return facilityType == 0; }
 	bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations and staff (at least from VATSIM)
 
-	QString toolTip() const;
+	virtual QString toolTip() const;
+	virtual QString mapLabel() const;
+	virtual QString rank() const;
+	virtual void showDetailsDialog() {} // not applicable
 
 	QString facilityString() const;
-
-	virtual QString mapLabel() const;
-
-	virtual QString rank() const;
-
-	QString getCenter();
+	QString getCenter(); // not const as we assign lat, lon
 	QString getApproach() const;
 	QString getTower() const;
 	QString getGround() const;
 	QString getDelivery() const;
 
-	QString frequency;
-	int facilityType;
-	int visualRange;
-	QString atisMessage;
+	QString frequency, atisMessage;
+	int facilityType, visualRange;
 	QDateTime timeLastAtisReceived;
 
 	QString voiceServer;
 	QString voiceLink() const { return QString(); }
 
     // Booking values
-    QString countryCode;
-    QString link;
+    QString countryCode, link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
     int bookingType;
-    QString bookingInfoStr;
-
-    QString timeFrom;
-    QString timeTo;
-    QString date;
-    QString eventLink;
 
     QDateTime starts() const;
     QDateTime ends() const;

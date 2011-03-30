@@ -11,19 +11,14 @@
 #include "Window.h"
 #include "GuiMessage.h"
 
-class WhazzupData;
-
-class Whazzup: public QObject
-{
+class Whazzup: public QObject {
     Q_OBJECT
 
 public:
     static Whazzup* getInstance();
 
-    /**
-     * Set the download location for whazzup status file
-     */
-    const WhazzupData& whazzupData() { return (predictedTime.isValid()? predictedData: data); } // we fake it when predicting a certain time
+    const WhazzupData& whazzupData() { return (predictedTime.isValid()?
+                                                   predictedData: data); } // we fake it when predicting a certain time
     const WhazzupData& realWhazzupData() { return data; } // this is always the really downloaded thing
 
     void setPredictedTime(QDateTime predictedTime);
@@ -32,12 +27,10 @@ public:
     QString getUserLink(const QString& id) const;
     QString getAtisLink(const QString& id) const;
 
-    QList <QPair <QDateTime, QString> > getDownloadedWhazzups();
+    QList <QPair <QDateTime, QString> > getDownloadedWhazzups() const;
 
 signals:
     void newData(bool isNew);
-    void hasGuiMessage(QString, GuiMessage::GuiMessageType = GuiMessage::Temporary,
-                       QString = QString(), int = 0, int = 0);
     void statusDownloaded();
     void needBookings();
 
@@ -58,28 +51,15 @@ private:
     Whazzup();
     virtual ~Whazzup();
 
-    WhazzupData data;
-    WhazzupData predictedData;
+    WhazzupData data, predictedData;
 
     QDateTime predictedTime;
 
-    QHttp *statusDownloader;
-    QBuffer *statusBuffer;
+    QHttp *statusDownloader, *whazzupDownloader, *bookingsDownloader;
+    QBuffer *statusBuffer, *whazzupBuffer, *bookingsBuffer;
 
-    QHttp *whazzupDownloader;
-    QBuffer *whazzupBuffer;
-
-    QHttp *bookingsDownloader;
-    QBuffer *bookingsBuffer;
-
-    QStringList urls;
-    QStringList gzurls;
-    QString metarUrl;
-    QString tafUrl;
-    QString shorttafUrl;
-    QString userLink;
-    QString atisLink;
-    QString message;
+    QStringList urls, gzurls;
+    QString metarUrl, tafUrl, shorttafUrl, userLink, atisLink, message;
 
     QTime lastDownloadTime;
 

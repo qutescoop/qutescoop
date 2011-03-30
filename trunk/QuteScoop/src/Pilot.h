@@ -20,45 +20,29 @@ public:
 
     Pilot(const QStringList& stringList, const WhazzupData* whazzup);
 
+    virtual QString toolTip() const;
     virtual QString rank() const;
+    virtual void showDetailsDialog();
 
-    void showDetailsDialog();
     FlightStatus flightStatus() const;
     QString flightStatusString() const;
     QString flightStatusShortString() const;
     QString planFlighttypeString() const;
 
-    int altitude;
-    int groundspeed;
-    QString planAircraft;
-    QString planTAS;
-    QString planDep;
-    QString planAlt;
-    QString planDest;
-    QString transponder;
-    QString planRevision;
-    QString planFlighttype;
-    QString planDeptime;
+    QString planAircraft, planTAS, planDep, planAlt, planDest, planAltAirport, planRevision, planFlighttype, planDeptime;
+    QString transponder, planRemarks, planRoute;
     QDate dayOfFlight;
 
     QString planActtime;
-    int planHrsEnroute;
-    int planMinEnroute;
-    int planHrsFuel;
-    int planMinFuel;
-    QString planAltAirport;
-    QString planRemarks;
-    QString planRoute;
+    int altitude, groundspeed, planHrsEnroute, planMinEnroute, planHrsFuel, planMinFuel;
 
-    QString planAltAirport2; // IVAO only
-    QString planTypeOfFlight; // IVAO only
+    QString planAltAirport2, planTypeOfFlight; // IVAO only
     int pob; // IVAO only
 
     double trueHeading;
     bool onGround; // IVAO only
 
-    QString qnhInHg; // VATSIM only
-    QString qnhMb; // VATSIM only
+    QString qnhInHg, qnhMb; // VATSIM only
 
     QString aircraftType() const;
     Airport* depAirport() const;
@@ -78,16 +62,16 @@ public:
     QDateTime whazzupTime; // need some local reference to that
 
     int planTasInt() const; // defuck TAS for Mach numbers
-
     int defuckPlanAlt(QString alt) const; // returns an altitude from various flightplan strings
 
     QPair<double, double> positionInFuture(int seconds) const;
 
     const int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
-    bool showDepLine(), showDestLine();
+    bool showDepLine() const;
+    bool showDestLine() const;
     bool showDepDestLine;
 
-    QList<Waypoint*> &routeWaypoints();
+    QList<Waypoint*> routeWaypoints();
     QString routeWaypointsStr();
     QList<Waypoint*> routeWaypointsWithDepDest();
 

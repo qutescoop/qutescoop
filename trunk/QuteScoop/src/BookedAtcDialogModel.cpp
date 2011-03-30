@@ -16,52 +16,44 @@ void BookedAtcDialogModel::setClients(const QList<BookedController*> &controller
 }
 
 QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if (role != Qt::DisplayRole)
-        return QVariant();
-
-    if(orientation == Qt::Vertical)
-        return QVariant();
-
-    // orientation is Qt::Horizontal
-    switch(section) {
-        case 0: return QString("Callsign"); break;
-        case 1: return QString("Facility"); break;
-        case 2: return QString("Country"); break;
-        case 3: return QString("Name"); break;
-        case 4: return QString("Date"); break;
-        case 5: return QString("From"); break;
-        case 6: return QString("Until"); break;
-        case 7: return QString("Info"); break;
-        case 8: return QString("Link"); break;
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch(section) {
+            case 0: return QString("Callsign");
+            case 1: return QString("Facility");
+            case 2: return QString("Country");
+            case 3: return QString("Name");
+            case 4: return QString("Date");
+            case 5: return QString("From");
+            case 6: return QString("Until");
+            case 7: return QString("Info");
+            case 8: return QString("Link");
+        }
     }
-
     return QVariant();
 }
 
+int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
+    return 9;
+}
+
 QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
-    // keep GUI responsive
-    //qApp->processEvents();
-
-    if(!index.isValid())
-        return QVariant();
-
-    if((index.row() > rowCount(index)) || (index.column() > columnCount(index)))
+    if(!index.isValid() || (index.row() >= rowCount(index)))
         return QVariant();
 
     if(role == Qt::DisplayRole) {
         BookedController* c = controllers[index.row()];
         switch(index.column()) {
-            case 0: return c->label; break;
-            case 1: return c->facilityString(); break;
-            case 2: return c->countryCode; break;
-            case 3: return c->realName; break;
-            case 4: return c->starts().toString("MM/dd (ddd)"); break;
-            case 5: return c->starts().time().toString("HHmm'z'"); break;
-            case 6: return c->ends().time().toString("HHmm'z'"); break;
-            case 7: return c->bookingInfoStr; break;
-            case 8: return c->link; break;
+            case 0: return c->label;
+            case 1: return c->facilityString();
+            case 2: return c->countryCode;
+            case 3: return c->realName;
+            case 4: return c->starts().toString("MM/dd (ddd)");
+            case 5: return c->starts().time().toString("HHmm'z'");
+            case 6: return c->ends().time().toString("HHmm'z'");
+            case 7: return c->bookingInfoStr;
+            case 8: return c->link;
         }
-    } else if(role == Qt::EditRole) {
+    } else if(role == Qt::EditRole) { // we are faking "EditRole" to access raw data
         BookedController* c = controllers[index.row()];
         switch(index.column()) {
             case 5: return c->starts(); break;
@@ -78,11 +70,7 @@ int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const {
     return controllers.count();
 }
 
-int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
-    return 9;
-}
-
-void BookedAtcDialogModel::modelSelected(const QModelIndex& index) {
+void BookedAtcDialogModel::modelSelected(const QModelIndex& index) const {
     if(controllers[index.row()] != 0) {
         if(!controllers[index.row()]->link.isEmpty()) {
             QUrl url = QUrl(controllers[index.row()]->link, QUrl::TolerantMode);
