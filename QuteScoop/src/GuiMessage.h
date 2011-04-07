@@ -48,7 +48,7 @@ public:
     void removeProgressBar(QProgressBar *progressBar);
 
     ///////////////////////////////////////////////////////////////////////////
-    // INTERNALLY USED CLASS AND METHODS (called by static methods)
+    // INTERNALLY USED CLASS
     class GuiMessage {
     public:
         enum Type { // type corresponding to priority
@@ -77,8 +77,10 @@ public:
         int progressValue, progressMaximum, showMs;
         QDateTime shownSince;
     };
+    ///////////////////////////////////////////////////////////////////////////
+    // INTERNALLY USED METHODS (public to be callable out of static methods)
     void updateMessage(GuiMessage *guiMessage, bool callUpdate = true);
-    void removeMessage(const QString &id, bool callUpdate = true);
+    void removeMessageById(const QString &id, bool callUpdate = true);
 public slots:
     void labelDestroyed(QObject *obj);
     void progressBarDestroyed(QObject *obj);

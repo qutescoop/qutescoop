@@ -25,6 +25,7 @@ GuiMessages::GuiMessages() :
 
 ///////////////////////////////////////////////////////////////////////////
 // STATIC METHODS TO SEND MESSAGES
+// text:
 void GuiMessages::message(const QString &msg, const QString &id) {
     GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::Temporary, msg));
 }
@@ -34,7 +35,6 @@ void GuiMessages::warning(const QString &msg, const QString &id) {
 void GuiMessages::status (const QString &msg, const QString &id) {
     GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::Persistent, msg));
 }
-
 void GuiMessages::informationUserAttention(const QString &msg, const QString &id) {
     GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::InformationUserAttention, msg));
 }
@@ -47,7 +47,7 @@ void GuiMessages::criticalUserInteraction (const QString &msg, const QString &ti
 void GuiMessages::fatalUserInteraction    (const QString &msg, const QString &titleAndId) {
     GuiMessages::getInstance()->updateMessage(new GuiMessage(titleAndId, GuiMessage::FatalUserInteraction, msg));
 }
-
+// progress (including text):
 void GuiMessages::progress(const QString &id, int value, int maximum) {
     GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::ProgressBar, "", value, maximum));
 }
@@ -56,7 +56,8 @@ void GuiMessages::progress(const QString &id, const QString &msg) {
 }
 
 void GuiMessages::remove(const QString &id) {
-    GuiMessages::getInstance()->removeMessage(id);
+    if (!id.isEmpty())
+        GuiMessages::getInstance()->removeMessageById(id);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -119,7 +120,7 @@ void GuiMessages::updateMessage(GuiMessage *guiMessage, bool callUpdate) {
     if (callUpdate)
         update();
 }
-void GuiMessages::removeMessage(const QString &id, bool callUpdate) {
+void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
     qDebug() << "GuiMessages::removeMessage() id=" << id;
     foreach(int key, _messages.keys())
         foreach(GuiMessage *gm, _messages.values(key))
@@ -145,7 +146,10 @@ void GuiMessages::setStatusMessage(GuiMessage *gm, bool bold, bool italic, bool 
         if (instantRepaint)
             l->repaint();
     }
-    _currentStatusMessage = gm;
+    if (gm->msg.isEmpty())
+        _currentStatusMessage = 0;
+    else
+        _currentStatusMessage = gm;
     if (!gm->shownSince.isValid())
         gm->shownSince = QDateTime::currentDateTimeUtc();
 }
@@ -179,54 +183,43 @@ void GuiMessages::update() {
                     QMessageBox::critical(qApp->desktop(), gm->id, gm->msg);
                     qFatal(gm->id.toAscii() + " " + gm->msg.toAscii());
                     _messages.remove(key, gm);
-                    break;
+                    return;
                 case GuiMessage::CriticalUserInteraction:
                     QMessageBox::critical(qApp->desktop(), gm->id, gm->msg);
                     qCritical(gm->id.toAscii() + " " + gm->msg.toAscii());
                     _messages.remove(key, gm);
-                    break;
+                    return;
                 case GuiMessage::ErrorUserAttention:
-                    if (!_timer.isActive()) {
-                        gm->showMs = 5000;
-                        setStatusMessage(gm, true);
-                        _timer.start(gm->showMs);
-                    }
-                    break;
+                    gm->showMs = 5000;
+                    setStatusMessage(gm, true);
+                    _timer.start(gm->showMs);
+                    return;
                 case GuiMessage::Warning:
-                    if (!_timer.isActive()) {
-                        gm->showMs = 3000;
-                        setStatusMessage(gm, false, true);
-                        _timer.start(gm->showMs);
-                    }
-                    break;
+                    gm->showMs = 3000;
+                    setStatusMessage(gm, false, true);
+                    _timer.start(gm->showMs);
+                    return;
                 case GuiMessage::InformationUserAttention:
-                    if (!_timer.isActive()) {
-                        gm->showMs = 3000;
-                        setStatusMessage(gm, true);
-                        _timer.start(gm->showMs);
-                    }
-                    break;
+                    gm->showMs = 3000;
+                    setStatusMessage(gm, true);
+                    _timer.start(gm->showMs);
+                    return;
                 case GuiMessage::ProgressBar:
-                    if (!_timer.isActive()) {
-                        if (!gm->msg.isEmpty())
-                            setStatusMessage(gm);
-                    }
+                    gm->showMs = 10000; // timeout value
+                    setStatusMessage(gm);
+                    _timer.start(gm->showMs);
                     if (gm->progressValue != -1)
                         setProgress(gm);
-                    break;
+                    break; // looking further for messages
                 case GuiMessage::Temporary:
-                    if (!_timer.isActive()) {
-                        gm->showMs = 3000;
-                        setStatusMessage(gm);
-                        _timer.start(gm->showMs);
-                    }
-                    break;
+                    gm->showMs = 3000;
+                    setStatusMessage(gm);
+                    _timer.start(gm->showMs);
+                    return;
                 case GuiMessage::Persistent:
-                    if (!_timer.isActive()) {
-                        setStatusMessage(gm);
-                        setProgress(new GuiMessage());
-                    }
-                    break;
+                    setStatusMessage(gm);
+                    setProgress(new GuiMessage());
+                    return;
                 }
             }
         }

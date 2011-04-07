@@ -1120,6 +1120,13 @@ void Settings::setZoomFactor(double value) {
     getSettings()->setValue("zoom/zoomFactor", value);
 }
 
+bool Settings::useSelectionRectangle() {
+    return getSettings()->value("zoom/selectionRectangle", true).toBool();
+}
+void Settings::setUseSelctionRectangle(bool value) {
+    getSettings()->setValue("zoom/selectionRectangle", value);
+}
+
 
 ////////////////////////////////////////
 // uncategorized

@@ -221,7 +221,8 @@ QString Pilot::planFlighttypeString() const {
 }
 
 QString Pilot::toolTip() const {
-    return Client::toolTip() + " " + planDep + "-" + planDest;
+    return Client::toolTip() +
+            (!planDep.isEmpty() || !planDest.isEmpty()? " " + planDep + "-" + planDest: "");
 }
 
 QString Pilot::rank() const {
@@ -236,6 +237,16 @@ QString Pilot::rank() const {
         case 8: return "ATP"; break; //Airline Transport Pilot (currently not available)
         case 9: return "SFI"; break; //Senior Flight Instructor
         case 10: return "CFI"; break; //Chief Flight Instructor
+        default: return QString("? (%1)").arg(rating); break;
+        }
+    } else if(network == VATSIM) {
+        switch(rating) { // experimental, I do not know which ratings really get reported yet
+        case 1: return "P0"; break; // Unrated Pilot
+        case 2: return "P1"; break; // Pilot
+        case 3: return "P2"; break; // VFR Pilot
+        case 4: return "P3"; break; // IFR Pilot
+        case 5: return "P4"; break; // Command Pilot
+        case 6: return "P5"; break; // Master Pilot
         default: return QString("? (%1)").arg(rating); break;
         }
     }
@@ -261,19 +272,19 @@ QString Pilot::aircraftType() const {
     return planAircraft;
 }
 
-Airport* Pilot::depAirport() const {
+Airport *Pilot::depAirport() const {
     if(NavData::getInstance()->airports.contains(planDep))
         return NavData::getInstance()->airports[planDep];
     else return 0;
 }
 
-Airport* Pilot::destAirport() const {
+Airport *Pilot::destAirport() const {
     if(NavData::getInstance()->airports.contains(planDest))
         return NavData::getInstance()->airports[planDest];
     else return 0;
 }
 
-Airport* Pilot::altAirport() const {
+Airport *Pilot::altAirport() const {
     if(NavData::getInstance()->airports.contains(planAltAirport))
         return NavData::getInstance()->airports[planAltAirport];
     else return 0;

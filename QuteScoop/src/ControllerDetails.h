@@ -25,6 +25,8 @@ private slots:
     void on_buttonAddFriend_clicked();
     void on_btnJoinChannel_clicked();
 
+    void on_pbAirportDetails_clicked();
+
 private:
     ControllerDetails(QWidget *parent);
     Controller* controller;

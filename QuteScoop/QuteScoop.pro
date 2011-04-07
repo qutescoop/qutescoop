@@ -111,7 +111,6 @@ unix {
 # Input
 FORMS = src/MainWindow.ui \
     src/PilotDetails.ui \
-    src/ClientSelectionDialog.ui \
     src/ControllerDetails.ui \
     src/AirportDetails.ui \
     src/PreferencesDialog.ui \

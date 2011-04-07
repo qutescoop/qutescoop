@@ -2,41 +2,35 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "Client.h"
-
 #include "ClientSelectionWidget.h"
 
 ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):
-    QDialog(parent)
+    QListWidget(parent)
 {
-    setupUi(this);
     setWindowFlags(Qt::FramelessWindowHint);
     setFocusPolicy(Qt::StrongFocus);
-    connect(listWidget, SIGNAL(itemClicked(QListWidgetItem*)),   this, SLOT(dialogForItem(QListWidgetItem*)));
-    connect(listWidget, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
-    resize(500, 500);
+    setFrameStyle(QFrame::NoFrame);
+    //setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),   this, SLOT(dialogForItem(QListWidgetItem*)));
+    connect(this, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
 }
 
 void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {
     clearClients();
     displayClients = objects;
-    for(int i = 0; i < objects.size(); i++) {
-        if(i == 0) { // first item bold
-            QListWidgetItem *lwi = new QListWidgetItem(objects[i]->toolTip(), listWidget);
-            QFont font = QFont();
-            font.setBold(true);
-            lwi->setFont(font);
-            listWidget->addItem(lwi);
-        } else
-            listWidget->addItem(objects[i]->toolTip());
-    }
-    listWidget->setCurrentRow(0);
-    listWidget->setFocus();
-    //listWidget->grabKeyboard(); // gives GTK+ errors in Gnome
+    for(int i = 0; i < objects.size(); i++)
+        addItem(objects[i]->toolTip());
+    setCurrentRow(0);
+    show();
+    resize(sizeHint());
+    raise();
+    setFocus();
 }
 
 void ClientSelectionWidget::clearClients() {
-    listWidget->clear();
+    clear();
     displayClients.clear();
 }
 
@@ -44,7 +38,6 @@ void ClientSelectionWidget::dialogForItem(QListWidgetItem *item) {
     foreach(MapObject *m, displayClients) {
         if(item->text() == m->toolTip()) {
             m->showDetailsDialog();
-            //listWidget->releaseKeyboard();
             close();
             return;
         }
@@ -52,8 +45,10 @@ void ClientSelectionWidget::dialogForItem(QListWidgetItem *item) {
 }
 
 void ClientSelectionWidget::focusOutEvent(QFocusEvent *event) {
-    if(event->reason() != Qt::MouseFocusReason) {
-        //listWidget->releaseKeyboard();
+    if(event->reason() != Qt::MouseFocusReason)
         close();
-    }
+}
+
+QSize ClientSelectionWidget::sizeHint() const {
+    return contentsSize();
 }

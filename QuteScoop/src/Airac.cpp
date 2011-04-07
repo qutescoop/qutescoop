@@ -22,9 +22,11 @@ Airac::Airac() {
 }
 
 void Airac::load(const QString& directory) {
-    readFixes(directory);
-    readNavaids(directory);
-    readAirways(directory);
+    if (Settings::useNavdata()) {
+        readFixes(directory);
+        readNavaids(directory);
+        readAirways(directory);
+    }
 
     mapObjects.clear();
     mapObjects.reserve(waypoints.size() + navaids.size());

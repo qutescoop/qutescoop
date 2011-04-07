@@ -63,9 +63,8 @@ QString Client::onlineTime() const {
 
 QString Client::displayName(bool withLink) const {
     QString result = realName;
-    QString clientRank = rank();
-    if(!clientRank.isEmpty())
-        result += " (" + clientRank + ")";
+    if(!rank().isEmpty())
+        result += " (" + rank() + ")";
 
     if(withLink && !userId.isEmpty()) {
         QString link = Whazzup::getInstance()->getUserLink(userId);
