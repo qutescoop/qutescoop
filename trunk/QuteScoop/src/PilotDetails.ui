@@ -70,13 +70,16 @@
         <item>
          <widget class="QLabel" name="label_10">
           <property name="toolTip">
-           <string>aircraft type</string>
+           <string>ICAO aircraft type (link to ICAO type designators)</string>
           </property>
           <property name="text">
-           <string>type</string>
+           <string>&lt;a href=&quot;http://www.icao.int/anb/ais/8643/index.cfm&quot;&gt;type&lt;/a&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -87,6 +90,9 @@
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>ICAO aircraft type</string>
           </property>
           <property name="text">
            <string>A319</string>
@@ -114,6 +120,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>current altitude</string>
+          </property>
           <property name="text">
            <string>28000 ft</string>
           </property>
@@ -122,7 +131,7 @@
         <item>
          <widget class="QLabel" name="label_13">
           <property name="toolTip">
-           <string>current groundspeed</string>
+           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
           </property>
           <property name="text">
            <string>GS</string>
@@ -139,6 +148,9 @@
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
           </property>
           <property name="text">
            <string>419 kts</string>
@@ -159,7 +171,9 @@
       <item>
        <widget class="QLabel" name="lblFlightStatus">
         <property name="toolTip">
-         <string>EET: Estimated remaining Enroute Time, ETA: Estimated Time of Arrival (constantly updated), delay: According to planned ETA</string>
+         <string>TTG: estimated remaining enroute time (&lt;b&gt;t&lt;/b&gt;ime-&lt;b&gt;t&lt;/b&gt;o-&lt;b&gt;g&lt;/b&gt;o)
+ETA: calculated &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival
+delay: difference between planned and calculated ETA</string>
         </property>
         <property name="text">
          <string>35%, EET 0:33 hrs, ETA 1120z, Delay -0:05 hrs</string>
@@ -189,7 +203,7 @@
            </font>
           </property>
           <property name="toolTip">
-           <string>departure aerodrome / Estimated Time of Departure</string>
+           <string>departure aerodrome / &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;d&lt;/b&gt;eparture</string>
           </property>
           <property name="text">
            <string>dep/ETD</string>
@@ -208,7 +222,7 @@
            </font>
           </property>
           <property name="toolTip">
-           <string>destination aerodrome / Estimated Time of Arrival (flightplan)</string>
+           <string>destination aerodrome / &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival (flightplan)</string>
           </property>
           <property name="text">
            <string>dest/ETA</string>
@@ -227,7 +241,7 @@
            </font>
           </property>
           <property name="toolTip">
-           <string>ETA</string>
+           <string>ETA: &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival</string>
           </property>
           <property name="text">
            <string>1125</string>
@@ -252,7 +266,7 @@
            </font>
           </property>
           <property name="toolTip">
-           <string>ETD</string>
+           <string>ETD: &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;d&lt;/b&gt;eparture</string>
           </property>
           <property name="text">
            <string>1035</string>
@@ -310,7 +324,7 @@
            </font>
           </property>
           <property name="toolTip">
-           <string>filed true airspeed / cruise level / Estimated Time Enroute</string>
+           <string>filed &lt;b&gt;t&lt;/b&gt;rue &lt;b&gt;a&lt;/b&gt;ir&lt;b&gt;s&lt;/b&gt;peed / cruise level / &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;e&lt;/b&gt;nroute</string>
           </property>
           <property name="text">
            <string>TAS/FL/ETE</string>
@@ -324,6 +338,9 @@
             <weight>75</weight>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>ETE: &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;e&lt;/b&gt;nroute</string>
           </property>
           <property name="text">
            <string>0:50</string>
@@ -348,6 +365,9 @@
               <weight>75</weight>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>open destination aerodrome details dialog</string>
             </property>
             <property name="text">
              <string>LOWI (Innsbruck, AT)</string>
@@ -374,6 +394,9 @@
               <weight>75</weight>
               <bold>true</bold>
              </font>
+            </property>
+            <property name="toolTip">
+             <string>open departure aerodrome details dialog</string>
             </property>
             <property name="text">
              <string>LOWW (Vienna, AT)</string>
@@ -449,6 +472,9 @@
               <verstretch>0</verstretch>
              </sizepolicy>
             </property>
+            <property name="toolTip">
+             <string>open alternate aerodrome details dialog</string>
+            </property>
             <property name="text">
              <string>LOWS (Salzburg, AT)</string>
             </property>
@@ -473,6 +499,9 @@
           </property>
           <property name="mouseTracking">
            <bool>true</bool>
+          </property>
+          <property name="toolTip">
+           <string>filed route</string>
           </property>
           <property name="text">
            <string>KAPPI UW705 BEROK UW653 TULSI</string>
@@ -536,6 +565,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>filed route</string>
+          </property>
           <property name="text">
            <string>route</string>
           </property>
@@ -586,6 +618,9 @@ route</string>
     <layout class="QHBoxLayout" name="verticalBottom">
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
+       <property name="toolTip">
+        <string>move to and and zoom in on this plane</string>
+       </property>
        <property name="text">
         <string>show on &amp;map</string>
        </property>

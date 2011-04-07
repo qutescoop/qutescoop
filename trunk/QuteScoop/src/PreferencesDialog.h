@@ -169,6 +169,8 @@ private slots:
     void on_pbWheelCalibrate_clicked();
     void on_sbZoomFactor_valueChanged(double );
 
+    void on_useSelectionRectangle_toggled(bool checked);
+
 private:
     PreferencesDialog(QWidget *parent);
 

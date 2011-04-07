@@ -55,6 +55,8 @@ GLWidget::~GLWidget() {
         deleteTexture(earthTex);
         //glDeleteTextures(1, &earthTex); // handled Qt'ish by deleteTexture
     gluDeleteQuadric(earthQuad);
+
+    delete clientSelection;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -862,7 +864,8 @@ void GLWidget::resizeGL(int width, int height) {
 // SLOTS: mouse, key... and general user-map interaction
 //
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-    if(event->buttons().testFlag(Qt::RightButton)) { // rotate
+    if(event->buttons().testFlag(Qt::RightButton) || // check before left button if useSelectionRectangle=off
+            (!Settings::useSelectionRectangle() && event->buttons().testFlag(Qt::LeftButton))) { // rotate
         mapIsMoving = true;
         handleRotation(event);
     } else if (event->buttons().testFlag(Qt::MiddleButton)) { // zoom
@@ -921,11 +924,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
         } else if (objects.size() == 1)
             objects[0]->showDetailsDialog();
         else {
-            clientSelection->setObjects(objects);
             clientSelection->move(event->globalPos());
-            clientSelection->show();
-            clientSelection->raise();
-            clientSelection->setFocus();
+            clientSelection->setObjects(objects);
         }
     } else if (mouseDownPos == event->pos() && event->button() == Qt::RightButton)
         rightClick(event->pos());
@@ -1136,7 +1136,6 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 
     QFontMetricsF fontMetrics(font, this);
     foreach(MapObject *o, objects) {
-        //if(o == 0) continue;
         int x, y; if(pointIsVisible(o->lat, o->lon, &x, &y)) {
             QString text = o->mapLabel();
             QRectF rect = fontMetrics.boundingRect(text);
@@ -1144,26 +1143,43 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
             int drawY = y - rect.height() - 5; // some px above dot
             rect.moveTo(drawX, drawY);
 
-            FontRectangle *fontRect = new FontRectangle(rect, o);
-            allFontRectangles.insert(fontRect);
-            if(shouldDrawLabel(fontRect)) {
-                qglColor(color);
-                renderText(drawX, (drawY + rect.height()), text, font);
-                fontRectangles.insert(fontRect);
+            QList<QRectF> rects; // possible positions, with preferred ones first
+            rects << rect;
+            rects << rect.translated(0,  rect.height() / 1.5);
+            rects << rect.translated(0, -rect.height() / 1.5);
+            rects << rect.translated( rect.width() / 1.5, 0);
+            rects << rect.translated(-rect.width() / 1.5, 0);
+            rects << rect.translated( rect.width() / 1.5,  rect.height() / 1.5 + 5);
+            rects << rect.translated( rect.width() / 1.5, -rect.height() / 1.5);
+            rects << rect.translated(-rect.width() / 1.5,  rect.height() / 1.5 + 5);
+            rects << rect.translated(-rect.width() / 1.5, -rect.height() / 1.5);
+
+            FontRectangle *drawnFontRect = 0;
+            foreach(const QRectF &r, rects) {
+                if(shouldDrawLabel(r)) {
+                    drawnFontRect = new FontRectangle(r, o);
+                    qglColor(color);
+                    renderText(r.left(), (r.top() + r.height()), text, font);
+                    fontRectangles.insert(drawnFontRect);
+                    allFontRectangles.insert(drawnFontRect);
+                    break;
+                }
             }
+            if (drawnFontRect == 0) // default position if it was not drawn
+                allFontRectangles.insert(new FontRectangle(rect, o));
         }
     }
 }
 
-bool GLWidget::shouldDrawLabel(const FontRectangle *rect) {
+bool GLWidget::shouldDrawLabel(const QRectF &rect) {
     if (fontRectangles.size() >= Settings::maxLabels())
         return false;
     foreach(const FontRectangle *fr, fontRectangles) {
         QRectF checkRect = fr->rect;
-        checkRect.setWidth(checkRect.width()   / 1.7); // make them smaller to allow a tiny bit of intersect
-        checkRect.setHeight(checkRect.height() / 1.7);
+        checkRect.setWidth(checkRect.width()   / 1.6); // make them smaller to allow a tiny bit of intersect
+        checkRect.setHeight(checkRect.height() / 1.6);
         checkRect.moveCenter(fr->rect.center());
-        if(rect->rect.intersects(checkRect))
+        if(rect.intersects(checkRect))
             return false;
     }
     return true;

@@ -5,21 +5,20 @@
 #ifndef CLIENTSELECTIONWIDGET_H_
 #define CLIENTSELECTIONWIDGET_H_
 
-#include "ui_ClientSelectionDialog.h"
-
 #include "_pch.h"
 
 #include "MapObject.h"
 
-class ClientSelectionWidget : public QDialog, private Ui::ClientSelectionDialog
-{
+class ClientSelectionWidget : public QListWidget {
 	Q_OBJECT
-
 public:
-	ClientSelectionWidget(QWidget *parent = 0);
+	explicit ClientSelectionWidget(QWidget *parent = 0);
+	~ClientSelectionWidget() {}
 
 	void setObjects(QList<MapObject*> objects);
 	void clearClients();
+
+	virtual QSize sizeHint () const;
 
 public slots:
 	void dialogForItem(QListWidgetItem *item);

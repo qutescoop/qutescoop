@@ -287,6 +287,7 @@ void PreferencesDialog::loadSettings() {
 
     // zooming
     sbZoomFactor->setValue(Settings::zoomFactor());
+    useSelectionRectangle->setChecked(Settings::useSelectionRectangle());
 
     // FINISHED
     settingsLoaded = true;
@@ -1166,3 +1167,9 @@ void PreferencesDialog::on_cbScreenshotFormat_currentIndexChanged(QString value)
         Settings::setScreenshotFormat(value);
 }
 
+
+void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked)
+{
+    if(settingsLoaded)
+        Settings::setUseSelctionRectangle(checked);
+}

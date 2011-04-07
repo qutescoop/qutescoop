@@ -104,13 +104,15 @@ Kranebitten</string>
            </font>
           </property>
           <property name="text">
-           <string>N47° 15.44' 
-E009° 37.21'</string>
+           <string>N47.154' E009.372</string>
           </property>
          </widget>
         </item>
         <item row="3" column="0">
          <widget class="QLabel" name="label_6">
+          <property name="toolTip">
+           <string>local time simply estimated by longitude</string>
+          </property>
           <property name="text">
            <string>time (est.)</string>
           </property>
@@ -127,8 +129,11 @@ E009° 37.21'</string>
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>local time simply estimated by longitude</string>
+          </property>
           <property name="text">
-           <string>09:13, UTC +2</string>
+           <string>09:13 loc, UTC +2</string>
           </property>
          </widget>
         </item>
@@ -208,6 +213,9 @@ E009° 37.21'</string>
           </item>
           <item>
            <widget class="QCheckBox" name="cbAtis">
+            <property name="toolTip">
+             <string>show ATISes in ATC list</string>
+            </property>
             <property name="text">
              <string>show
 &amp;ATIS</string>
@@ -219,6 +227,9 @@ E009° 37.21'</string>
           </item>
           <item>
            <widget class="QCheckBox" name="cbObservers">
+            <property name="toolTip">
+             <string>show observers in ATC list</string>
+            </property>
             <property name="text">
              <string>show 
 &amp;OBS</string>
@@ -234,8 +245,11 @@ E009° 37.21'</string>
    </item>
    <item>
     <widget class="QGroupBox" name="groupBoxArrivals">
+     <property name="toolTip">
+      <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
+     </property>
      <property name="title">
-      <string>Arrivals</string>
+      <string>Arrivals (10 filtered, 12 total)</string>
      </property>
      <layout class="QVBoxLayout">
       <property name="margin">
@@ -277,8 +291,11 @@ E009° 37.21'</string>
    </item>
    <item>
     <widget class="QGroupBox" name="groupBoxDepartures">
+     <property name="toolTip">
+      <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
+     </property>
      <property name="title">
-      <string>Departures</string>
+      <string>Departures (2 filtered, 8 total)</string>
      </property>
      <layout class="QVBoxLayout">
       <property name="margin">
@@ -323,7 +340,7 @@ E009° 37.21'</string>
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
        <property name="toolTip">
-        <string>Center Map and zoom in on this Airport</string>
+        <string>move to and zoom in on this airport</string>
        </property>
        <property name="text">
         <string>show on &amp;map</string>
@@ -339,7 +356,7 @@ E009° 37.21'</string>
      <item>
       <widget class="QPushButton" name="pbMetar">
        <property name="toolTip">
-        <string>Will be displayed in the Metar Decoder Widget</string>
+        <string>will be displayed in METAR decoder dock</string>
        </property>
        <property name="text">
         <string>get M&amp;ETAR</string>
@@ -349,7 +366,7 @@ E009° 37.21'</string>
      <item>
       <widget class="QCheckBox" name="cbPlotRoutes">
        <property name="toolTip">
-        <string>Also accessible by right click on the airport label. (Uses Navigation Database if available)</string>
+        <string>Also accessible by right click on the airport label. Uses navigation database if available.</string>
        </property>
        <property name="text">
         <string>plot &amp;routes</string>

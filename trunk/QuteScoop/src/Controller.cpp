@@ -63,9 +63,10 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
                     continue;
                 }
                 Sector *s = new Sector(); // creating a round sector with 0.5 * visualRange radius
-                s->lat = lat; s->lon = lon; s->icao = icao;
-                s->name = "no sector data available!";
-                for(float u = 0.; u < 2 * M_PI; u += M_PI / 24.) { // 48 segments
+                //s->lat = lat; s->lon = lon; // position label on primary visibility center
+                s->icao = icao;
+                s->name = "no sector data";
+                for(float u = 0.; u < 2. * M_PI; u += M_PI / 24.) { // 48 segments
                     s->points.append(QPair<double, double>(lat + qCos(u) * visualRange / 2. / 60.,
                                                            lon + qSin(u) * visualRange / 2. / 60. /
                                                                 qCos(qAbs(lat) * Pi180)));
@@ -158,6 +159,17 @@ QString Controller::getDelivery() const {
         return list.first();
     }
     return QString();
+}
+
+Airport *Controller::airport() const {
+    QString tryAirport;
+    if (!label.split("_").isEmpty())
+        tryAirport = label.split("_").first();
+    if (tryAirport.size() == 3)
+        tryAirport = "K" + tryAirport;
+    if(NavData::getInstance()->airports.contains(tryAirport))
+        return NavData::getInstance()->airports[tryAirport];
+    else return 0;
 }
 
 void Controller::showDetailsDialog() {

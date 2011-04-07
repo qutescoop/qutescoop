@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>442</width>
-    <height>294</height>
+    <width>327</width>
+    <height>238</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,14 +17,14 @@
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
-  <layout class="QVBoxLayout">
+  <layout class="QVBoxLayout" stretch="0,1,0">
    <property name="margin">
     <number>6</number>
    </property>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
-      <string>Controller information</string>
+      <string>Controller</string>
      </property>
      <layout class="QVBoxLayout">
       <property name="margin">
@@ -33,10 +33,8 @@
       <item>
        <widget class="QLabel" name="lblControllerInfo">
         <property name="text">
-         <string>&lt;strong&gt;ATC: C3 Donald Fauntleroy Duck&lt;/strong&gt;&lt;br&gt;On IVANIT for 01:23, IvAc 1.2.3</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+         <string>Donald Fauntleroy Duck (C3)
+On IVANIT for 01:23, IvAc 1.2.3</string>
         </property>
         <property name="openExternalLinks">
          <bool>true</bool>
@@ -44,21 +42,12 @@
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout">
+       <layout class="QHBoxLayout" name="detailsLayout">
         <item>
          <widget class="QLabel" name="lblStationInformatoin">
           <property name="text">
-           <string>Approach on frequency &lt;strong&gt;123.45&lt;/strong&gt;&lt;br&gt;Voice: de.ts.ivao.aero/LOVV_CTR</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnJoinChannel">
-          <property name="text">
-           <string>join channel</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
+           <string>APP on frequency 123.45
+Voice: de.ts.ivao.aero/LOVV_CTR</string>
           </property>
          </widget>
         </item>
@@ -75,66 +64,73 @@
           </property>
          </spacer>
         </item>
+        <item>
+         <widget class="QPushButton" name="btnJoinChannel">
+          <property name="text">
+           <string>join channel</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="title">
-      <string>ATIS</string>
-     </property>
-     <layout class="QVBoxLayout">
-      <property name="margin">
-       <number>6</number>
-      </property>
       <item>
-       <widget class="QScrollArea" name="scrollArea">
-        <property name="frameShape">
-         <enum>QFrame::NoFrame</enum>
+       <widget class="QPushButton" name="pbAirportDetails">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
         </property>
-        <property name="widgetResizable">
-         <bool>true</bool>
+        <property name="text">
+         <string>LOWW (Vienna, AT)</string>
         </property>
-        <widget class="QWidget" name="scrollAreaWidgetContents">
-         <property name="geometry">
-          <rect>
-           <x>0</x>
-           <y>0</y>
-           <width>410</width>
-           <height>105</height>
-          </rect>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <property name="margin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QLabel" name="lblAtis">
-            <property name="text">
-             <string>TextLabel</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
        </widget>
       </item>
      </layout>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout">
+    <widget class="QGroupBox" name="gbAtis">
+     <property name="title">
+      <string>ATIS</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="margin">
+       <number>6</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="lblAtis">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>TextLabel</string>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="openExternalLinks">
+         <bool>true</bool>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="bottomLayout">
      <item>
       <widget class="QPushButton" name="buttonShowOnMap">
        <property name="text">

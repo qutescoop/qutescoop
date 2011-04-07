@@ -86,7 +86,7 @@ private:
         QRectF rect;
         MapObject *object;
     };
-    bool shouldDrawLabel(const FontRectangle *rect);
+    bool shouldDrawLabel(const QRectF &rect);
     QSet<FontRectangle*> fontRectangles, allFontRectangles;
 
     QPoint lastPos, mouseDownPos;

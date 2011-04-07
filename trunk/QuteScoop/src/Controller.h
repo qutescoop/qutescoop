@@ -9,6 +9,9 @@
 #include "WhazzupData.h"
 #include "ClientDetails.h"
 #include "Sector.h";
+#include "Airport.h";
+
+class Airport;
 
 class Controller: public Client
 {
@@ -31,6 +34,8 @@ public:
     QString getTower() const;
     QString getGround() const;
     QString getDelivery() const;
+
+    Airport *airport() const;
 
     QString frequency, atisMessage;
     int facilityType, visualRange;

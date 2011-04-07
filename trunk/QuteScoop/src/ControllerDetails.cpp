@@ -41,7 +41,8 @@ void ControllerDetails::refresh(Controller *newController) {
         controller = newController;
     else
         controller = Whazzup::getInstance()->whazzupData().controllers[callsign];
-    if(controller == 0) return;
+    if(controller == 0)
+        return;
     setMapObject(controller);
     setWindowTitle(controller->toolTip());
 
@@ -49,26 +50,34 @@ void ControllerDetails::refresh(Controller *newController) {
     QString controllerInfo = QString("<strong>%1</strong><br>").arg(controller->displayName(true));
 
     QString details = controller->detailInformation();
-    if(!details.isEmpty()) controllerInfo += details + "<br>";
+    if(!details.isEmpty())
+        controllerInfo += details + "<br>";
 
     controllerInfo += QString("on %3 for %4")
                       .arg(controller->server)
                       .arg(controller->onlineTime());
-    if(!controller->clientInformation().isEmpty()) controllerInfo += ", " + controller->clientInformation();
+    if(!controller->clientInformation().isEmpty())
+        controllerInfo += ", " + controller->clientInformation();
     lblControllerInfo->setText(controllerInfo);
 
     QString stationInfo = controller->facilityString();
     if(!controller->isObserver() && !controller->frequency.length() == 0)
         stationInfo += QString(" on frequency %1<br>Voice: %2")
-        .arg(controller->frequency)
-        .arg(controller->voiceChannel);
+                .arg(controller->frequency)
+                .arg(controller->voiceChannel);
     lblStationInformatoin->setText(stationInfo);
+
+    pbAirportDetails->setVisible(controller->airport() != 0);
+    pbAirportDetails->setText(   controller->airport() != 0? controller->airport()->toolTip(): "");
 
     QString atis = controller->atisMessage;
     if (controller->assumeOnlineUntil.isValid())
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(controller->assumeOnlineUntil.toString("HHmm"));
     lblAtis->setText(atis);
+    lblAtis->adjustSize(); // ensure auto-resize
+
+    gbAtis->setTitle(controller->label.endsWith("_ATIS")? "ATIS" : "Controller info");
 
     if(controller->isFriend())
         buttonAddFriend->setText("remove &friend");
@@ -83,6 +92,8 @@ void ControllerDetails::refresh(Controller *newController) {
 
     // check if we know position
     buttonShowOnMap->setDisabled(qFuzzyIsNull(controller->lat) && qFuzzyIsNull(controller->lon));
+
+    adjustSize();
 }
 
 void ControllerDetails::on_buttonAddFriend_clicked() {
@@ -91,8 +102,10 @@ void ControllerDetails::on_buttonAddFriend_clicked() {
 }
 
 void ControllerDetails::on_btnJoinChannel_clicked() {
-    if(controller == 0) return;
-    if(Settings::voiceType() == Settings::NONE) return;
+    if(controller == 0)
+        return;
+    if(Settings::voiceType() == Settings::NONE)
+        return;
 
     if(Settings::voiceUser().isEmpty()) {
         QMessageBox::information(this, tr("Voice settings"),
@@ -112,5 +125,11 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
 
     QString command = program + " " + controller->voiceLink();
     int ret = system(command.toAscii());
-    qDebug() << program << "returned" << ret;
+    qDebug() << "ControllerDetails::on_btnJoinChannel_clicked(): " << program << "returned" << ret;
+}
+
+void ControllerDetails::on_pbAirportDetails_clicked()
+{
+    if (controller->airport() != 0)
+        controller->airport()->showDetailsDialog();
 }

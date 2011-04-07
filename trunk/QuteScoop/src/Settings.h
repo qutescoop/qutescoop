@@ -364,13 +364,15 @@ public:
     static bool saveWhazzupData();
     static void setSaveWhazzupData(const bool value);
 
-    //zooming
+    // zooming
     static int wheelMax();
     static void setWheelMax(const int value);
 
     static double zoomFactor();
     static void setZoomFactor(const double value);
 
+    static bool useSelectionRectangle();
+    static void setUseSelctionRectangle(const bool value);
 private:
     static QSettings *getSettings();
 };

@@ -45,9 +45,9 @@ public:
     QString qnhInHg, qnhMb; // VATSIM only
 
     QString aircraftType() const;
-    Airport* depAirport() const;
-    Airport* destAirport() const;
-    Airport* altAirport() const;
+    Airport *depAirport() const;
+    Airport *destAirport() const;
+    Airport *altAirport() const;
     QStringList waypoints() const;
     double distanceToDestination() const;
     double distanceFromDeparture() const;

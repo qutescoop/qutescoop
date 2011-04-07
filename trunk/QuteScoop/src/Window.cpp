@@ -275,8 +275,8 @@ void Window::whazzupDownloaded(bool isNew) {
     }
 
     if(isNew) {
-        glWidget->clientSelection->clearClients();
         glWidget->clientSelection->close();
+        glWidget->clientSelection->clearClients();
 
         performSearch();
 
