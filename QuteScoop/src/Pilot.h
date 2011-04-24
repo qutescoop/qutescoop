@@ -35,6 +35,7 @@ public:
 
     QString planActtime;
     int altitude, groundspeed, planHrsEnroute, planMinEnroute, planHrsFuel, planMinFuel;
+    QString airline;
 
     QString planAltAirport2, planTypeOfFlight; // IVAO only
     int pob; // IVAO only

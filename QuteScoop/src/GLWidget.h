@@ -53,6 +53,7 @@ public slots:
 signals:
     void mapClicked(int x, int y, QPoint absolutePos);
     void newPosition();
+    void mouseMoved(QMouseEvent *);
 
 protected:
     virtual void paintGL();
@@ -80,6 +81,9 @@ private:
     void renderLabels();
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
+
+
+
     class FontRectangle {
     public:
         FontRectangle(QRectF rectangle, MapObject *mapObject): rect(rectangle), object(mapObject) {}
@@ -93,16 +97,16 @@ private:
     bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting;
     double xRot, yRot, zRot, zoom, aspectRatio;
 
-	GLUquadricObj *earthQuad;
-	GLuint earthTex;
-	GLuint earthList, coastlinesList, countriesList, gridlinesList;
-	GLuint pilotsList, activeAirportsList, inactiveAirportsList;
-	GLuint allWaypointsList, usedWaypointsList, plannedRouteList;
-	GLuint sectorPolygonsList, sectorPolygonBorderLinesList, airportControllersList, appBorderLinesList,
-		congestionsList;
-	bool allSectorsDisplayed;
+        GLUquadricObj *earthQuad;
+        GLuint earthTex;
+        GLuint earthList, coastlinesList, countriesList, gridlinesList;
+        GLuint pilotsList, activeAirportsList, inactiveAirportsList;
+        GLuint allWaypointsList, usedWaypointsList, plannedRouteList;
+        GLuint sectorPolygonsList, sectorPolygonBorderLinesList, appBorderLinesList, congestionsList;
+        //GLuint airportControllersList,
+        bool allSectorsDisplayed;
 
-	QSet<Controller*> sectorsToDraw;
+        QSet<Controller*> sectorsToDraw;
 
     double pilotLabelZoomTreshold, activeAirportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
         controllerLabelZoomTreshold, allWaypointsLabelZoomTreshold, usedWaypointsLabelZoomThreshold;

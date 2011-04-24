@@ -9,7 +9,8 @@
 
 #include "_pch.h"
 
-#include "GLWidget.h"
+//#include "GLWidget.h" //For ne on screen settings
+#include "mapscreen.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
 
@@ -19,15 +20,16 @@ public:
     static Window* getInstance(bool createIfNoInstance = false);
     void setEnableBookedAtc(bool enable);
     void shootScreenshot();
-    GLWidget *glWidget;
+    MapScreen *mapScreen;
+    //GLWidget *glWidget;
 
 public slots:
     void updateMetarDecoder(const QString& airport, const QString& decodedText);
     void refreshFriends();
+    void on_actionShowRoutes_triggered(bool checked);
 
 private slots:
     void on_actionShowWaypoints_triggered(bool checked);
-    void on_actionShowRoutes_triggered(bool checked);
     void on_actionDebugLog_triggered();
 
     void on_actionZoomReset_triggered();

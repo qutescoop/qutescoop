@@ -48,7 +48,7 @@ Window::Window(QWidget *parent) :
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
 
-    QSettings* settings = new QSettings();
+    //QSettings* settings = new QSettings();
 
     // apply styleSheet
     if (!Settings::stylesheet().isEmpty()) {
@@ -56,30 +56,16 @@ Window::Window(QWidget *parent) :
         setStyleSheet(Settings::stylesheet());
     }
 
-    QGLFormat fmt;
-    fmt.setDirectRendering(settings->value("gl/directrendering", fmt.defaultFormat().directRendering()).toBool());
-    fmt.setDoubleBuffer(settings->value("gl/doublebuffer", fmt.defaultFormat().doubleBuffer()).toBool());
-    fmt.setStencil(settings->value("gl/stencilbuffer", fmt.defaultFormat().stencil()).toBool());
-    if (fmt.defaultFormat().stencilBufferSize() > 0)
-        fmt.setStencilBufferSize(settings->value("gl/stencilsize", fmt.defaultFormat().stencilBufferSize()).toInt());
-    fmt.setDepth(settings->value("gl/depthbuffer", fmt.defaultFormat().depth()).toBool());
-    if (fmt.defaultFormat().depthBufferSize() > 0)
-        fmt.setDepthBufferSize(settings->value("gl/depthsize", fmt.defaultFormat().depthBufferSize()).toInt());
-    fmt.setAlpha(settings->value("gl/alphabuffer", fmt.defaultFormat().alpha()).toBool());
-    if (fmt.defaultFormat().alphaBufferSize() > 0)
-        fmt.setAlphaBufferSize(settings->value("gl/alphasize", fmt.defaultFormat().alphaBufferSize()).toInt());
-    fmt.setSampleBuffers(settings->value("gl/samplebuffers", fmt.defaultFormat().sampleBuffers()).toBool());
-    if (fmt.defaultFormat().samples() > 0)
-        fmt.setSamples(settings->value("gl/samples", fmt.defaultFormat().samples()).toInt());
-    fmt.setAccum(settings->value("gl/accumbuffer", fmt.defaultFormat().accum()).toBool());
-    if (fmt.defaultFormat().accumBufferSize() > 0)
-        fmt.setAccumBufferSize(settings->value("gl/accumsize", fmt.defaultFormat().accumBufferSize()).toInt());
-    fmt.setRgba(true);
 
-    qDebug() << "Window::Window() creating GLWidget";
-    glWidget = new GLWidget(fmt);
-    qDebug() << "Window::Window() creating GLWidget --finished";
-    centralwidget->layout()->addWidget(glWidget);
+
+    //The map
+    mapScreen = new MapScreen(this);
+    centralwidget->layout()->addWidget(mapScreen);
+
+    connect(mapScreen, SIGNAL(toggleRoutes()), actionShowRoutes, SLOT(trigger()));
+    connect(mapScreen, SIGNAL(toggleSectors()), actionDisplayAllSectors, SLOT(trigger()));
+    connect(mapScreen, SIGNAL(toggleRouteWaypoints()), actionShowWaypoints, SLOT(trigger()));
+    connect(mapScreen, SIGNAL(toggleInactiveAirports()), actionShowInactiveAirports,SLOT(trigger()));
 
     // Status- & ProgressBar
     progressBar = new QProgressBar(statusbar);
@@ -106,7 +92,7 @@ Window::Window(QWidget *parent) :
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
-    connect(whazzup, SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+    connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
     if(Settings::downloadOnStartup())
@@ -155,11 +141,11 @@ Window::Window(QWidget *parent) :
             this, SLOT(downloadWatchdogTriggered()));
 
     connect(actionDisplayAllSectors, SIGNAL(toggled(bool)),
-            glWidget, SLOT(displayAllSectors(bool)));
+            mapScreen->glWidget, SLOT(displayAllSectors(bool)));
 
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
     connect(actionShowInactiveAirports, SIGNAL(toggled(bool)),
-            glWidget, SLOT(showInactiveAirports(bool)));
+            mapScreen->glWidget, SLOT(showInactiveAirports(bool)));
 
     connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
@@ -275,8 +261,8 @@ void Window::whazzupDownloaded(bool isNew) {
     }
 
     if(isNew) {
-        glWidget->clientSelection->close();
-        glWidget->clientSelection->clearClients();
+        mapScreen->glWidget->clientSelection->close();
+        mapScreen->glWidget->clientSelection->clearClients();
 
         performSearch();
 
@@ -426,7 +412,7 @@ void Window::on_actionHideAllWindows_triggered() {
     if(friendsDock->isFloating())
         friendsDock->hide();
 
-    glWidget->clientSelection->close();
+    mapScreen->glWidget->clientSelection->close();
 }
 
 void Window::on_metarEdit_textChanged(const QString& text) {
@@ -596,12 +582,12 @@ void Window::performWarp(bool forceUseDownloaded) {
                 // only if different
                 if (downloaded[i].first != Whazzup::getInstance()->realWhazzupData().whazzupTime) {
                     // disconnect to inhibit update because will be updated later
-                    disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+                    disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
                     disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
                     Whazzup::getInstance()->fromFile(downloaded[i].second);
 
-                    connect(Whazzup::getInstance(), SIGNAL(newData(bool)), glWidget, SLOT(newWhazzupData(bool)));
+                    connect(Whazzup::getInstance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
                     connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
                 }
                 break;
@@ -628,7 +614,7 @@ void Window::on_cbOnlyUseDownloaded_toggled(bool checked) {
 
 void Window::on_tbDisablePredict_clicked() {
     qDebug() << "Window::tbDisablePredict_clicked()";
-    actionPredict->setChecked(false);
+    this->on_actionPredict_toggled(false);
 }
 
 void Window::on_actionPredict_toggled(bool enabled) {
@@ -767,91 +753,91 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
 }
 
 void Window::on_actionRecallMapPosition_triggered(){
-    glWidget->restorePosition(1);
+    mapScreen->glWidget->restorePosition(1);
 }
 
 void Window::on_actionRecallMapPosition7_triggered(){
-    glWidget->restorePosition(7);
+    mapScreen->glWidget->restorePosition(7);
 }
 
 void Window::on_actionRecallMapPosition6_triggered(){
-    glWidget->restorePosition(6);
+    mapScreen->glWidget->restorePosition(6);
 }
 
 void Window::on_actionRecallMapPosition5_triggered(){
-    glWidget->restorePosition(5);
+    mapScreen->glWidget->restorePosition(5);
 }
 
 void Window::on_actionRecallMapPosition4_triggered(){
-    glWidget->restorePosition(4);
+    mapScreen->glWidget->restorePosition(4);
 }
 
 void Window::on_actionRecallMapPosition3_triggered(){
-    glWidget->restorePosition(3);
+    mapScreen->glWidget->restorePosition(3);
 }
 
 void Window::on_actionRecallMapPosition2_triggered(){
-    glWidget->restorePosition(2);
+    mapScreen->glWidget->restorePosition(2);
 }
 
 void Window::on_actionRememberPosition_triggered() {
-    glWidget->rememberPosition(1);
+    mapScreen->glWidget->rememberPosition(1);
 }
 
 void Window::on_actionRememberMapPosition7_triggered(){
-    glWidget->rememberPosition(7);
+    mapScreen->glWidget->rememberPosition(7);
 }
 
 void Window::on_actionRememberMapPosition6_triggered(){
-    glWidget->rememberPosition(6);
+    mapScreen->glWidget->rememberPosition(6);
 }
 
 void Window::on_actionRememberMapPosition5_triggered(){
-    glWidget->rememberPosition(5);
+    mapScreen->glWidget->rememberPosition(5);
 }
 
 void Window::on_actionRememberMapPosition4_triggered(){
-    glWidget->rememberPosition(4);
+    mapScreen->glWidget->rememberPosition(4);
 }
 
 void Window::on_actionRememberMapPosition3_triggered(){
-    glWidget->rememberPosition(3);
+    mapScreen->glWidget->rememberPosition(3);
 }
 
 void Window::on_actionRememberMapPosition2_triggered(){
-    glWidget->rememberPosition(2);
+    mapScreen->glWidget->rememberPosition(2);
 }
 
 void Window::on_actionMoveLeft_triggered(){
-    glWidget->scrollBy(-1, 0);
+    mapScreen->glWidget->scrollBy(-1, 0);
 }
 
 void Window::on_actionMoveRight_triggered(){
-    glWidget->scrollBy(1, 0);
+    mapScreen->glWidget->scrollBy(1, 0);
 }
 
 void Window::on_actionMoveUp_triggered(){
-    glWidget->scrollBy(0, -1);
+    mapScreen->glWidget->scrollBy(0, -1);
 }
 
 void Window::on_actionMoveDown_triggered(){
-    glWidget->scrollBy(0, 1);
+    mapScreen->glWidget->scrollBy(0, 1);
 }
 void Window::on_tbZoomIn_clicked(){
-    glWidget->zoomIn(.6);
+    mapScreen->glWidget->zoomIn(.6);
 }
 void Window::on_tbZoomOut_clicked(){
-    glWidget->zoomIn(-.6);
+    mapScreen->glWidget->zoomIn(-.6);
 }
 // we use this to catch right-clicks on the buttons
 void Window::on_tbZoomOut_customContextMenuRequested(QPoint pos){
-    glWidget->zoomTo(2.);
+    mapScreen->glWidget->zoomTo(2.);
 }
 void Window::on_tbZoomIn_customContextMenuRequested(QPoint pos){
-    glWidget->zoomTo(2.);
+    mapScreen->glWidget->zoomTo(2.);
 }
 void Window::on_actionZoomReset_triggered(){
-    glWidget->zoomTo(2.);
+    mapScreen->glWidget->zoomTo(2.);
 }
 
 void Window::shootScreenshot() {
@@ -861,13 +847,13 @@ void Window::shootScreenshot() {
             .arg(Whazzup::getInstance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
 
     if (Settings::screenshotMethod() == 0)
-        QPixmap::grabWindow(glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+        QPixmap::grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                                     Settings::screenshotFormat().toAscii());
     else if (Settings::screenshotMethod() == 1)
-        glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+        mapScreen->glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                       Settings::screenshotFormat().toAscii(), true);
     else if (Settings::screenshotMethod() == 2)
-        glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+        mapScreen->glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                              Settings::screenshotFormat().toAscii());
     qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
@@ -887,13 +873,13 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
         PilotDetails::getInstance(true)->refresh();
 
     // map update
-    glWidget->createPilotsList();
-    glWidget->updateGL();
+    mapScreen->glWidget->createPilotsList();
+    mapScreen->glWidget->updateGL();
     //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
 }
 
 void Window::on_actionShowWaypoints_triggered(bool checked) {
     Settings::setShowUsedWaypoints(checked);
-    glWidget->createPilotsList();
-    glWidget->updateGL();
+    mapScreen->glWidget->createPilotsList();
+    mapScreen->glWidget->updateGL();
 }

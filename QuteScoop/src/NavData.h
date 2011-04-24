@@ -11,6 +11,7 @@
 #include "Sector.h"
 #include "Airac.h"
 #include "GuiMessage.h"
+#include "SearchVisitor.h"
 
 class NavData: public QObject {
     Q_OBJECT
@@ -22,6 +23,7 @@ public:
     QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
     QHash<QString, Sector*> sectors;
     QHash<QString, QString> countryCodes;
+    QHash<QString, QString> airlineCodes;
 
     Airport* airportAt(double lat, double lon, double maxDist) const;
 
@@ -41,7 +43,7 @@ public:
     void checkForDataUpdates();
 
     void updateData(const WhazzupData& whazzupData);
-    void accept(MapObjectVisitor* visitor);
+    void accept(SearchVisitor* visitor);
 
 private slots:
     // datafiles update
@@ -55,6 +57,7 @@ private:
     void loadAirports(const QString& filename);
     void loadSectors();
     void loadCountryCodes(const QString& filename);
+    void loadAirlineCodes(const QString& filename);
 
     QHttp *dataVersionsAndFilesDownloader;
     QBuffer *dataVersionsBuffer;

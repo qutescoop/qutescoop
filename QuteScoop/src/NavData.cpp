@@ -4,6 +4,8 @@
 
 #include "NavData.h"
 
+#include <QRegExp>
+
 #include "FileReader.h"
 #include "SectorReader.h"
 #include "helpers.h"
@@ -21,6 +23,7 @@ NavData::NavData() {
     loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
+    loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));
     if(Settings::checkForUpdates())
         checkForDataUpdates();
 }
@@ -61,6 +64,18 @@ void NavData::loadCountryCodes(const QString& filename) {
 
 void NavData::loadSectors() {
     SectorReader().loadSectors(sectors);
+}
+
+void NavData::loadAirlineCodes(const QString &filename)
+{
+    airlineCodes.clear();
+    FileReader fileReader(filename);
+
+    while(!fileReader.atEnd()){
+
+        QStringList line = fileReader.nextLine().split(0x09);
+        airlineCodes[line.value(0)] = line.value(1);
+    }
 }
 
 double NavData::distance(double lat1, double lon1, double lat2, double lon2) {
@@ -167,9 +182,12 @@ void NavData::updateData(const WhazzupData& whazzupData) {
     qApp->restoreOverrideCursor();
 }
 
-void NavData::accept(MapObjectVisitor* visitor) {
-    foreach(Airport *a, airports)
+void NavData::accept(SearchVisitor* visitor) {
+    foreach(Airport *a, airports){
         visitor->visit(a);
+    }
+    visitor->AirlineCodes = airlineCodes;
+    visitor->checkAirlines();
 }
 
 double NavData::courseTo(double lat1, double lon1, double lat2, double lon2) {
@@ -344,7 +362,8 @@ void NavData::dataVersionsDownloaded(bool error) {
     for(int i = 0; i < serverDataVersionsList.size(); i++) {
         // download also files that are locally not available
         if(serverDataVersionsList[i].second >
-           localDataVersionsList.value(i, QPair< QString, int>(QString(), 0)).second){
+           localDataVersionsList.value(i, QPair< QString, int>(QString(), 0)).second)
+        {
             dataFilesToDownload.append(new QFile(Settings::applicationDataDirectory("data/%1.newFromServer")
                                                  .arg(serverDataVersionsList[i].first)));
             QUrl url(QString("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")

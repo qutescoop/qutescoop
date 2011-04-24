@@ -1114,8 +1114,8 @@ void PreferencesDialog::on_glLightsSpread_valueChanged(int value)
 void PreferencesDialog::on_pbReinitOpenGl_clicked()
 {
     if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->glWidget->initializeGL();
-        Window::getInstance(true)->glWidget->updateGL();
+        Window::getInstance(true)->mapScreen->glWidget->initializeGL();
+        Window::getInstance(true)->mapScreen->glWidget->updateGL();
     }
 }
 
@@ -1128,9 +1128,9 @@ void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value)
 void PreferencesDialog::on_applyAirports_clicked()
 {
     if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->glWidget->createAirportsList();
-        Window::getInstance(true)->glWidget->createControllersLists();
-        Window::getInstance(true)->glWidget->updateGL();
+        Window::getInstance(true)->mapScreen->glWidget->createAirportsList();
+        Window::getInstance(true)->mapScreen->glWidget->createControllersLists();
+        Window::getInstance(true)->mapScreen->glWidget->updateGL();
     }
 
 }
@@ -1138,9 +1138,9 @@ void PreferencesDialog::on_applyAirports_clicked()
 void PreferencesDialog::on_applyPilots_clicked()
 {
     if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->glWidget->createPilotsList();
-        Window::getInstance(true)->glWidget->createControllersLists();
-        Window::getInstance(true)->glWidget->updateGL();
+        Window::getInstance(true)->mapScreen->glWidget->createPilotsList();
+        Window::getInstance(true)->mapScreen->glWidget->createControllersLists();
+        Window::getInstance(true)->mapScreen->glWidget->updateGL();
     }
 }
 
