@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -40,6 +40,9 @@
         </property>
         <item row="0" column="0">
          <widget class="QLabel" name="label_4">
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>name</string>
           </property>
@@ -388,9 +391,7 @@ Kranebitten</string>
   <tabstop>treeArrivals</tabstop>
   <tabstop>buttonShowOnMap</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonShowOnMap</sender>

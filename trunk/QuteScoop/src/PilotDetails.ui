@@ -14,7 +14,7 @@
    <string>AUA325</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -96,6 +96,29 @@
           </property>
           <property name="text">
            <string>A319</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_12">
+          <property name="text">
+           <string>airline</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblAirline">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Austrian</string>
           </property>
          </widget>
         </item>
@@ -536,27 +559,6 @@ delay: difference between planned and calculated ETA</string>
           </property>
          </widget>
         </item>
-        <item row="1" column="2">
-         <widget class="QLabel" name="lblPlotStatus">
-          <property name="font">
-           <font>
-            <italic>true</italic>
-           </font>
-          </property>
-          <property name="toolTip">
-           <string>waypoints as extracted from the route with help of navigation database.</string>
-          </property>
-          <property name="text">
-           <string>waypoints (calculated): ...</string>
-          </property>
-          <property name="wordWrap">
-           <bool>true</bool>
-          </property>
-          <property name="textInteractionFlags">
-           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="label_6">
           <property name="font">
@@ -609,6 +611,27 @@ route</string>
           </property>
          </widget>
         </item>
+        <item row="1" column="2">
+         <widget class="QLabel" name="lblPlotStatus">
+          <property name="font">
+           <font>
+            <italic>true</italic>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>waypoints as extracted from the route with help of navigation database.</string>
+          </property>
+          <property name="text">
+           <string>waypoints (calculated): ...</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
      </layout>
@@ -658,9 +681,7 @@ route</string>
   <tabstop>buttonAddFriend</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonShowOnMap</sender>

@@ -413,6 +413,59 @@ void Settings::setMetarDownloadInterval(int minutes) {
     getSettings()->setValue("download/metarInterval", minutes);
 }
 
+//Display
+bool Settings::showCTR(){
+    return getSettings()->value("display/showCTR", true).toBool();
+}
+void Settings::setShowCTR(bool value){
+    getSettings()->setValue("display/showCTR", value);
+}
+
+bool Settings::showAPP(){
+    return getSettings()->value("display/showAPP", true).toBool();
+}
+void Settings::setShowAPP(bool value){
+    return getSettings()->setValue("display/showAPP", value);
+}
+
+bool Settings::showTWR(){
+    return getSettings()->value("display/showTWR", true).toBool();
+}
+void Settings::setShowTWR(bool value){
+    getSettings()->setValue("display/showTWR", value);
+}
+
+bool Settings::showGND(){
+    return getSettings()->value("display/showGND", true).toBool();
+}
+void Settings::setShowGND(bool value){
+    getSettings()->setValue("display/showGND", value);
+}
+
+bool Settings::showAllSectors(){
+    return getSettings()->value("display/showALLSectors", false).toBool();
+}
+void Settings::setShowAllSectors(bool value){
+    getSettings()->setValue("display/showALLSectors", value);
+}
+
+bool Settings::showRouteFix(){
+    return getSettings()->value("display/showRouteFix", false).toBool();
+}
+void Settings::setShowRouteFix(bool value){
+    getSettings()->setValue("display/showRouteFix", value);
+}
+
+bool Settings::showInactiveAirports() {
+    return getSettings()->value("display/showInactive", false).toBool(); // time-intensive function
+}
+
+void Settings::setShowInactiveAirports(const bool& value) {
+    getSettings()->setValue("display/showInactive", value);
+}
+
+
+
 // OpenGL
 bool Settings::displaySmoothLines() {
     return getSettings()->value("gl/smoothLines", true).toBool();
@@ -716,13 +769,7 @@ void Settings::setInactiveAirportFont(const QFont& font) {
     getSettings()->setValue("airportDisplay/inactiveFont", font);
 }
 
-bool Settings::showInactiveAirports() {
-    return getSettings()->value("airportDisplay/showInactive", false).toBool(); // time-intensive function
-}
 
-void Settings::setShowInactiveAirports(const bool& value) {
-    getSettings()->setValue("airportDisplay/showInactive", value);
-}
 
 QColor Settings::appBorderLineColor() {
     return getSettings()->value("airportDisplay/appBorderLineColor", QColor::fromRgb(255, 255, 127)).value<QColor>();

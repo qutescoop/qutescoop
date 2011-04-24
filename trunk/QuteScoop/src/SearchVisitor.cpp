@@ -5,6 +5,7 @@
 #include "SearchVisitor.h"
 
 SearchVisitor::SearchVisitor(const QString& searchStr) {
+        searchString = searchStr;
 	QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
 	if(tokens.size() == 1) {
 		regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
@@ -40,11 +41,31 @@ void SearchVisitor::visit(MapObject* object) {
 	others[object->label] = object;
 }
 
+void SearchVisitor::checkAirlines()
+{
+    if(!AirlineCodes.contains(searchString)){
+        return;
+    }
+
+    otherStrings[searchString] = AirlineCodes.value(searchString);
+}
+
 QList<MapObject*> SearchVisitor::result() const {
 	QList<MapObject*> result;
 
+        //airlines
+        QList<QString> labels = otherStrings.keys();
+        qSort(labels);
+        for(int i = 0; i < labels.size(); i++){
+            MapObject *object = new MapObject();
+            object->label = labels[i];
+            object->label.append("  ");
+            object->label.append(otherStrings[labels[i]]);
+            result.append(object);
+        }
+
 	// airports
-	QList<QString> labels = others.keys();
+        labels = others.keys();
 	qSort(labels);
 	for(int i = 0; i < labels.size(); i++)
 		result.append(others[labels[i]]);

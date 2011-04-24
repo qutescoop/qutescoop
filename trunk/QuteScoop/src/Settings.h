@@ -136,6 +136,26 @@ public:
     static int metarDownloadInterval();
     static void setMetarDownloadInterval(int minutes);
 
+    //Display settings
+    static bool showCTR();
+    static void setShowCTR(bool value);
+
+    static bool showAPP();
+    static void setShowAPP(bool value);
+
+    static bool showTWR();
+    static void setShowTWR(bool value);
+
+    static bool showGND();
+    static void setShowGND(bool value);
+
+    static bool showAllSectors();
+    static void setShowAllSectors(bool value);
+
+    static bool showRouteFix();
+    static void setShowRouteFix(bool value);
+
+
     // OpenGL settings
     static bool glStippleLines();
     static void setGlStippleLines(bool value);

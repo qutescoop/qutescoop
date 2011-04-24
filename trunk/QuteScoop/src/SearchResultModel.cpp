@@ -71,7 +71,7 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center
     if (content[index.row()]->lat != 0 || content[index.row()]->lon != 0) {
         if (Window::getInstance(false) != 0)
-            Window::getInstance(true)->glWidget->setMapPosition(content[index.row()]->lat,
+            Window::getInstance(true)->mapScreen->glWidget->setMapPosition(content[index.row()]->lat,
                                                                 content[index.row()]->lon, 0.1);
     }
 }

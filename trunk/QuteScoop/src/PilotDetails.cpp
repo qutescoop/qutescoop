@@ -65,6 +65,7 @@ void PilotDetails::refresh(Pilot *newPilot) {
 
     // Aircraft Information
     lblAircraft->setText(QString("%1").arg(pilot->planAircraft));
+    lblAirline->setText(pilot->airline);
     lblAltitude->setText(QString("%1 ft").arg(pilot->altitude));
     lblGroundspeed->setText(QString("%1 kts").arg(pilot->groundspeed));
 
@@ -151,8 +152,8 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
     if (pilot->showDepDestLine != checked) {
         pilot->showDepDestLine = checked;
         if (Window::getInstance(false) != 0) {
-            Window::getInstance(true)->glWidget->createPilotsList();
-            Window::getInstance(true)->glWidget->updateGL();
+            Window::getInstance(true)->mapScreen->glWidget->createPilotsList();
+            Window::getInstance(true)->mapScreen->glWidget->updateGL();
         }
         refresh();
     }

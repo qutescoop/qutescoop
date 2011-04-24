@@ -2,6 +2,17 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.0rc13
+ fixed:
+* closing TimeWrap Widget bug
+ changed:
+* qoted out the Pilot ratings (not supported yet by servers)
+ added:
+* Airlinedatabase (airline.dat) Source:http://en.wikipedia.org/wiki/Airline_codes-All
+  Airlines can be searched in the SearchDialog and displayed in the Pilots Dialog
+* On Screen Settings Added
+  Quick access for the displaysettings(toggle Routes, Sectors, ...)
+
 Version 2.0rc12:
  changed:
 * resize logic of pilots and controller details.

@@ -25,7 +25,7 @@ public:
 	virtual QString mapLabel() const { return label; }
 	virtual QString toolTip() const { return label; }
 
-	virtual void showDetailsDialog() = 0;
+        virtual void showDetailsDialog() {return;}
 
 	double lat, lon;
 	QString label;

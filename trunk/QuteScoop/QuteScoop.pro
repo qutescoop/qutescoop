@@ -3,35 +3,37 @@
 # #####################################################################
 TEMPLATE = app
 CONFIG *= qt
-#CONFIG = debug
-#CONFIG += release
+
+# CONFIG = debug
+# CONFIG += release
 CONFIG *= warn_off
 TARGET = QuteScoop
 win32:PLATFORM = "win32"
 macx:PLATFORM = "macx"
 unix:PLATFORM = "unix"
-
-QT *= core gui network opengl xml
-
-CONFIG(debug,release|debug) {
+QT *= core \
+    gui \
+    network \
+    opengl \
+    xml
+CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
     DESTDIR = ./
-
+    
     # If precompiled headers are not possible, qmake should deactivate it.
     # If compiling/linking problems arise, this should be deactivated.
     CONFIG += precompile_header
     PRECOMPILED_HEADER = src/_pch.h
-    precompile_header:!isEmpty(PRECOMPILED_HEADER) {
-        !build_pass:message("Using precompiled headers.")
-    }
+    precompile_header:!isEmpty(PRECOMPILED_HEADER):!build_pass:message("Using precompiled headers.")
 }
 
 # Included for release/dist
-CONFIG(release,release|debug) {
+CONFIG(release,release|debug) { 
     !build_pass:message("RELEASE")
     DEBUGRELEASE = "release"
     DESTDIR = ./DIST-$${PLATFORM}
+    
     # Add a "make install" target for deploying Qt/compiler/QuteScoop files.
     # Qt library files
     myQtLib.path = $$DESTDIR
@@ -41,21 +43,23 @@ CONFIG(release,release|debug) {
     myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtXml4.*
     myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtOpenGL4.*
     !build_pass:message("Library files added to 'install': $${myQtLib.files}")
-
+    
     # Compiler libraries
     myCompilerLib.path = $$DESTDIR
     win32-g++ { # For MingW
         myCompilerLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}mingwm10.dll
         myCompilerLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}libgcc_s_dw2-1.dll
         !build_pass:message("MingW compiler libraries added to 'install': $${myCompilerLib.files}")
-    } else {
-        !build_pass:message("No compiler libraries added to 'install'")
     }
-
+    else:!build_pass:message("No compiler libraries added to 'install'")
+    
     # QuteScoop additional files
     rootFiles.path = $$DESTDIR
-    rootFiles.files += ./README.html ./COPYING ./CHANGELOG
-    unix: rootFiles.files += ./QuteScoop.sh ./src/qutescoop.png
+    rootFiles.files += ./README.html \
+        ./COPYING \
+        ./CHANGELOG
+    unix:rootFiles.files += ./QuteScoop.sh \
+        ./src/qutescoop.png
     dataFiles.path = $$DESTDIR/data
     dataFiles.files += ./data/+notes.txt
     dataFiles.files += ./data/airports.dat
@@ -82,14 +86,18 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/2048px-toposhaded.png
     texturesFiles.files += ./textures/4096px.png
     texturesFiles.files += ./textures/4096px-color.png
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} \
-        $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
-
+    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
+    
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
-    INSTALLS *= rootFiles dataFiles downloadedFiles screenshotsFiles texturesFiles myQtLib myCompilerLib
+    INSTALLS *= rootFiles \
+        dataFiles \
+        downloadedFiles \
+        screenshotsFiles \
+        texturesFiles \
+        myQtLib \
+        myCompilerLib
 }
-
 macx { # could be "mac" also, I am not sure
     CONFIG += app_bundle
     ICON = src/Dolomynum.icns
@@ -102,11 +110,8 @@ mac { # could be "macx" also, I am not sure
     CONFIG *= x86
     CONFIG *= ppc
 }
-win32 {
-    RC_FILE = src/windowsicon.rc
-}
-unix {
-}
+win32:RC_FILE = src/windowsicon.rc
+unix:
 
 # Input
 FORMS = src/MainWindow.ui \
@@ -117,7 +122,6 @@ FORMS = src/MainWindow.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui
-
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \
@@ -129,6 +133,7 @@ HEADERS += src/_pch.h \
     src/NavAid.h \
     src/Metar.h \
     src/MapObject.h \
+    src/mapscreen.h\
     src/LineReader.h \
     src/helpers.h \
     src/SectorReader.h \
@@ -169,7 +174,6 @@ HEADERS += src/_pch.h \
     src/Ping.h \
     src/LogBrowserDialog.h \
     src/GuiMessage.h
-
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -181,6 +185,7 @@ SOURCES += src/WhazzupData.cpp \
     src/NavAid.cpp \
     src/Metar.cpp \
     src/MapObject.cpp \
+    src/mapscreen.cpp\
     src/LineReader.cpp \
     src/SectorReader.cpp \
     src/Sector.cpp \
@@ -228,7 +233,7 @@ OTHER_FILES += CHANGELOG \
     textures/+notes.txt
 
 # temp files
-MOC_DIR =       ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-UI_DIR =        ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-OBJECTS_DIR =   ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-RCC_DIR =       ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}

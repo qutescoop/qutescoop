@@ -14,7 +14,7 @@
    <string>QuteScoop</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -139,7 +139,7 @@ Whazzups (replay)</string>
             <string>run</string>
            </property>
            <property name="icon">
-            <iconset resource="Resources.qrc">
+            <iconset>
              <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
            </property>
            <property name="iconSize">
@@ -169,7 +169,7 @@ Whazzups (replay)</string>
             <string>Unwarp</string>
            </property>
            <property name="icon">
-            <iconset resource="Resources.qrc">
+            <iconset>
              <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
            </property>
            <property name="toolButtonStyle">
@@ -323,7 +323,7 @@ Whazzups (replay)</string>
        <string>-</string>
       </property>
       <property name="icon">
-       <iconset resource="Resources.qrc">
+       <iconset>
         <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
       </property>
       <property name="autoRepeat">
@@ -367,7 +367,7 @@ Whazzups (replay)</string>
        <string>+</string>
       </property>
       <property name="icon">
-       <iconset resource="Resources.qrc">
+       <iconset>
         <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
       </property>
       <property name="autoRepeat">
@@ -389,7 +389,7 @@ Whazzups (replay)</string>
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -502,7 +502,7 @@ Whazzups (replay)</string>
     </size>
    </property>
    <property name="windowIcon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/search16.png</normaloff>:/icons/images/search16.png</iconset>
    </property>
    <property name="allowedAreas">
@@ -572,6 +572,9 @@ Whazzups (replay)</string>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -579,7 +582,7 @@ Whazzups (replay)</string>
   </widget>
   <widget class="QDockWidget" name="metarDock">
    <property name="windowIcon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
    </property>
    <property name="windowTitle">
@@ -622,6 +625,12 @@ Whazzups (replay)</string>
          <property name="text">
           <string>Refresh</string>
          </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -649,6 +658,9 @@ Whazzups (replay)</string>
        <attribute name="headerShowSortIndicator" stdset="0">
         <bool>true</bool>
        </attribute>
+       <attribute name="headerShowSortIndicator" stdset="0">
+        <bool>true</bool>
+       </attribute>
       </widget>
      </item>
     </layout>
@@ -656,7 +668,7 @@ Whazzups (replay)</string>
   </widget>
   <widget class="QDockWidget" name="metarDecoderDock">
    <property name="windowIcon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
    </property>
    <property name="windowTitle">
@@ -683,6 +695,8 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'Ubuntu'; font-size:10pt;&quot;&gt;&lt;/p&gt;
@@ -721,7 +735,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <widget class="QDockWidget" name="friendsDock">
    <property name="windowIcon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/friends16.png</normaloff>:/icons/images/friends16.png</iconset>
    </property>
    <property name="windowTitle">
@@ -759,7 +773,7 @@ p, li { white-space: pre-wrap; }
   </widget>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
    </property>
    <property name="text">
@@ -774,7 +788,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionDownload">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/refresh16.png</normaloff>:/icons/images/refresh16.png</iconset>
    </property>
    <property name="text">
@@ -797,7 +811,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionPreferences">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/preferences16.png</normaloff>:/icons/images/preferences16.png</iconset>
    </property>
    <property name="text">
@@ -815,7 +829,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/search16.png</normaloff>:/icons/images/search16.png</iconset>
    </property>
    <property name="text">
@@ -833,7 +847,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/fullscreen16.png</normaloff>:/icons/images/fullscreen16.png</iconset>
    </property>
    <property name="text">
@@ -851,7 +865,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/metar16.png</normaloff>:/icons/images/metar16.png</iconset>
    </property>
    <property name="text">
@@ -863,7 +877,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionZoomIn">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/viewmag+16.png</normaloff>:/icons/images/viewmag+16.png</iconset>
    </property>
    <property name="text">
@@ -875,7 +889,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionZoomOut">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/viewmag-16.png</normaloff>:/icons/images/viewmag-16.png</iconset>
    </property>
    <property name="text">
@@ -903,7 +917,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionShowFriendsDock">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/friends16.png</normaloff>:/icons/images/friends16.png</iconset>
    </property>
    <property name="text">
@@ -918,7 +932,7 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/sector16.png</normaloff>:/icons/images/sector16.png</iconset>
    </property>
    <property name="text">
@@ -927,7 +941,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionPlanFlight">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/flyer16.png</normaloff>:/icons/images/flyer16.png</iconset>
    </property>
    <property name="text">
@@ -939,7 +953,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionBookedAtc">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/bookedAtc16.png</normaloff>:/icons/images/bookedAtc16.png</iconset>
    </property>
    <property name="text">
@@ -954,7 +968,7 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/inactiveAirports16.png</normaloff>:/icons/images/inactiveAirports16.png</iconset>
    </property>
    <property name="text">
@@ -972,7 +986,7 @@ p, li { white-space: pre-wrap; }
     <bool>false</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/timewarp16.png</normaloff>:/icons/images/timewarp16.png</iconset>
    </property>
    <property name="text">
@@ -1104,7 +1118,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionMoveLeft">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/arrowleft16.png</normaloff>:/icons/images/arrowleft16.png</iconset>
    </property>
    <property name="text">
@@ -1116,7 +1130,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionMoveRight">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/arrowright16.png</normaloff>:/icons/images/arrowright16.png</iconset>
    </property>
    <property name="text">
@@ -1128,7 +1142,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionMoveUp">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/arrowup16.png</normaloff>:/icons/images/arrowup16.png</iconset>
    </property>
    <property name="text">
@@ -1140,7 +1154,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionMoveDown">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/arrowdown16.png</normaloff>:/icons/images/arrowdown16.png</iconset>
    </property>
    <property name="text">
@@ -1160,7 +1174,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionDebugLog">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/log16.png</normaloff>:/icons/images/log16.png</iconset>
    </property>
    <property name="text">
@@ -1175,7 +1189,7 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/routes16.png</normaloff>:/icons/images/routes16.png</iconset>
    </property>
    <property name="text">
@@ -1190,7 +1204,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionZoomReset">
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/viewmag16.png</normaloff>:/icons/images/viewmag16.png</iconset>
    </property>
    <property name="text">
@@ -1205,7 +1219,7 @@ p, li { white-space: pre-wrap; }
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="Resources.qrc">
+    <iconset>
      <normaloff>:/icons/images/arrowup16.png</normaloff>:/icons/images/arrowup16.png</iconset>
    </property>
    <property name="text">
@@ -1232,9 +1246,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>tbZoomIn</tabstop>
   <tabstop>tbZoomOut</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>actionShowMetars</sender>

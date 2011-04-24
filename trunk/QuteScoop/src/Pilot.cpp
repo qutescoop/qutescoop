@@ -24,6 +24,10 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     planAlt = getField(stringList, 12);
     planDest = getField(stringList, 13);
 
+    QString airlineCode = getField(stringList,0);
+    airlineCode.resize(3);
+    airline = NavData::getInstance()->airlineCodes[airlineCode];
+
     transponder = getField(stringList, 17);
     planRevision = getField(stringList, 20);
     planFlighttype = getField(stringList, 21);
@@ -239,7 +243,7 @@ QString Pilot::rank() const {
         case 10: return "CFI"; break; //Chief Flight Instructor
         default: return QString("? (%1)").arg(rating); break;
         }
-    } else if(network == VATSIM) {
+    } /*else if(network == VATSIM) {
         switch(rating) { // experimental, I do not know which ratings really get reported yet
         case 1: return "P0"; break; // Unrated Pilot
         case 2: return "P1"; break; // Pilot
@@ -248,8 +252,8 @@ QString Pilot::rank() const {
         case 5: return "P4"; break; // Command Pilot
         case 6: return "P5"; break; // Master Pilot
         default: return QString("? (%1)").arg(rating); break;
-        }
-    }
+        }*/
+
     return QString();
 }
 

@@ -337,8 +337,8 @@ void PlanFlightDialog::plotPlannedRoute() const {
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
     if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->glWidget->createPilotsList();
-        Window::getInstance(true)->glWidget->updateGL();
+        Window::getInstance(true)->mapScreen->glWidget->createPilotsList();
+        Window::getInstance(true)->mapScreen->glWidget->updateGL();
     }
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);
