@@ -70,6 +70,7 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/firdisplay.dat
     dataFiles.files += ./data/firdisplay.sup
     dataFiles.files += ./data/firlist.dat
+    dataFiles.files += ./data/airlines.dat
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/+notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots

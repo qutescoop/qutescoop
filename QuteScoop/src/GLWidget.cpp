@@ -21,7 +21,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
         xRot(0), yRot(0), zRot(0), zoom(2), aspectRatio(1), earthTex(0),
         earthList(0), coastlinesList(0), countriesList(0), gridlinesList(0),
-        pilotsList(0), activeAirportsList(0), inactiveAirportsList(0), congestionsList(0), allWaypointsList(0),
+        pilotsList(0), activeAirportsList(0), inactiveAirportsList(0), congestionsList(0), FixesList(0),
         usedWaypointsList(0), sectorPolygonsList(0), sectorPolygonBorderLinesList(0),
         appBorderLinesList(0),
         pilotLabelZoomTreshold(.9), activeAirportLabelZoomTreshold(1.2), inactiveAirportLabelZoomTreshold(.15),
@@ -45,7 +45,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 GLWidget::~GLWidget() {
     makeCurrent();
     glDeleteLists(earthList, 1); glDeleteLists(gridlinesList, 1);
-    glDeleteLists(coastlinesList, 1); glDeleteLists(countriesList, 1); glDeleteLists(allWaypointsList, 1);
+    glDeleteLists(coastlinesList, 1); glDeleteLists(countriesList, 1); glDeleteLists(FixesList, 1);
     glDeleteLists(usedWaypointsList, 1); glDeleteLists(pilotsList, 1);
     glDeleteLists(activeAirportsList, 1); glDeleteLists(inactiveAirportsList, 1); glDeleteLists(congestionsList, 1);
     glDeleteLists(appBorderLinesList, 1);
@@ -564,21 +564,23 @@ void GLWidget::createStaticLists(){
     glEndList();
 
     // all waypoints (fixes + navaids)
-    allWaypointsList = glGenLists(1);
+    FixesList = glGenLists(1);
     if(Settings::showAllWaypoints()) {
         qDebug() << "GLWidget::createStaticLists() allWaypoints";
-        glNewList(allWaypointsList, GL_COMPILE);
+        glNewList(FixesList, GL_COMPILE);
         qglColor(Settings::waypointsDotColor());
         glLineWidth(Settings::countryLineStrength());
         double sin30 = .5; double cos30 = .8660254037;
         double tri_c = .01; double tri_a = tri_c * cos30; double tri_b = tri_c * sin30;
         glBegin(GL_TRIANGLES);
-        foreach(const MapObject *m, Airac::getInstance()->mapObjects) {
-            double circle_distort = qCos(m->lat * Pi180);
-            double tri_b_c = tri_b * circle_distort;
-            VERTEX(m->lat - tri_b_c, m->lon - tri_a);
-            VERTEX(m->lat - tri_b_c, m->lon + tri_a);
-            VERTEX(m->lat + tri_c * circle_distort, m->lon);
+        foreach( Waypoint *w, Airac::getInstance()->allPoints) {
+            if(w->getTyp() == 1){
+                double circle_distort = qCos(w->lat * Pi180);
+                double tri_b_c = tri_b * circle_distort;
+                VERTEX(w->lat - tri_b_c, w->lon - tri_a);
+                VERTEX(w->lat - tri_b_c, w->lon + tri_a);
+                VERTEX(w->lat + tri_c * circle_distort, w->lon);
+            }
         }
         glEnd();
         glEndList();
@@ -766,7 +768,7 @@ void GLWidget::paintGL() {
     glCallList(countriesList);
     glCallList(gridlinesList);
     if(Settings::showAllWaypoints() && zoom < allWaypointsLabelZoomTreshold * .7)
-        glCallList(allWaypointsList);
+        glCallList(FixesList);
     if(Settings::showUsedWaypoints() && zoom < usedWaypointsLabelZoomThreshold * .7)
         glCallList(usedWaypointsList);
 
@@ -885,7 +887,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         mapIsRectangleSelecting = true;
         updateGL();
     }
-    emit mouseMoved(event);
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
@@ -1050,7 +1051,7 @@ void GLWidget::zoomTo(double zoom) {
 
 /////////////////////////////
 // rendering text
-//
+/////////////////////////////
 
 void GLWidget::renderLabels() {
     fontRectangles.clear();
@@ -1101,8 +1102,45 @@ void GLWidget::renderLabels() {
     QList<Pilot*> pilots = Whazzup::getInstance()->whazzupData().pilots.values();
     for(int i = 0; i < pilots.size(); i++)
         objects.append(pilots[i]);
-    renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold,
+    if(Settings::showPilotsLabels()){
+        renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold,
                  Settings::pilotFontColor());
+    }
+    if(!Settings::showPilotsLabels()){
+        QFontMetricsF fontMetrics(Settings::airportFont(), this);
+        foreach(MapObject *o, objects){
+            int x, y; if(pointIsVisible(o->lat, o->lon, &x, &y)) {
+                QRectF rect = fontMetrics.boundingRect(o->label);
+                int drawX = x - rect.width() / 2; // center horizontally
+                int drawY = y - rect.height() - 5; // some px above dot
+                rect.moveTo(drawX, drawY);
+
+                QList<QRectF> rects; // possible positions, with preferred ones first
+                rects << rect;
+                rects << rect.translated(0,  rect.height() / 1.5);
+                rects << rect.translated(0, -rect.height() / 1.5);
+                rects << rect.translated( rect.width() / 1.5, 0);
+                rects << rect.translated(-rect.width() / 1.5, 0);
+                rects << rect.translated( rect.width() / 1.5,  rect.height() / 1.5 + 5);
+                rects << rect.translated( rect.width() / 1.5, -rect.height() / 1.5);
+                rects << rect.translated(-rect.width() / 1.5,  rect.height() / 1.5 + 5);
+                rects << rect.translated(-rect.width() / 1.5, -rect.height() / 1.5);
+
+                FontRectangle *drawnFontRect = 0;
+                foreach(const QRectF &r, rects) {
+                    if(shouldDrawLabel(r)) {
+                        drawnFontRect = new FontRectangle(r, o);
+                        fontRectangles.insert(drawnFontRect);
+                        allFontRectangles.insert(drawnFontRect);
+                        break;
+                    }
+                }
+                if (drawnFontRect == 0) // default position if it was not drawn
+                    allFontRectangles.insert(new FontRectangle(rect, o));
+            }
+
+        }
+    }
 
     // waypoints used in shown routes
     QSet<MapObject*> waypointObjects; // using a QSet 'cause it takes care of unique values
@@ -1133,10 +1171,15 @@ void GLWidget::renderLabels() {
                      Settings::inactiveAirportFontColor());
     }
 
-    // all waypoints (fixes + navaids)
+    /*// all waypoints (fixes + navaids)
+    QSet<MapObject*> tmp_points;
+    foreach(Waypoint* wp, Airac::getInstance()->allPoints)
+        tmp_points.insert(wp);
+
+    /*Airac::getInstance()->allPoints.subtract(waypointObjects).toList()
     if(Settings::showAllWaypoints())
-        renderLabels(Airac::getInstance()->mapObjects.subtract(waypointObjects).toList(), Settings::waypointsFont(),
-                     allWaypointsLabelZoomTreshold, Settings::waypointsFontColor());
+        renderLabels(tmp_points.subtract(waypointObjects).toList(), Settings::waypointsFont(),
+                     allWaypointsLabelZoomTreshold, Settings::waypointsFontColor());*/
 }
 
 void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,

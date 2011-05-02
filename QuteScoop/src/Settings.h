@@ -155,6 +155,9 @@ public:
     static bool showRouteFix();
     static void setShowRouteFix(bool value);
 
+    static bool showPilotsLabels();
+    static void setShowPilotsLabels(bool value);
+
 
     // OpenGL settings
     static bool glStippleLines();

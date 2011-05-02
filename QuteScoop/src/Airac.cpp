@@ -28,6 +28,15 @@ void Airac::load(const QString& directory) {
         readAirways(directory);
     }
 
+    allPoints.clear();
+    allPoints.reserve(waypoints.size() +navaids.size());
+    foreach( const QSet<Waypoint*> &wl, waypoints.values())
+        foreach(Waypoint *w, wl)
+            allPoints.insert(w);
+    foreach( const QSet<NavAid*> &nl, navaids.values())
+        foreach(NavAid *n , nl)
+            allPoints.insert(n);
+    /*
     mapObjects.clear();
     mapObjects.reserve(waypoints.size() + navaids.size());
     foreach (const QSet<Waypoint*> &wl, waypoints.values())
@@ -36,6 +45,7 @@ void Airac::load(const QString& directory) {
     foreach (const QSet<NavAid*> &nl, navaids.values())
         foreach (NavAid *n, nl)
             mapObjects.insert(n);
+    */
 }
 
 void Airac::readFixes(const QString& directory) {

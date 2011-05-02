@@ -1919,7 +1919,6 @@ GBA	Gulf Air Bahrain	GULF BAHRAIN	Bahrain
 GBB	Global Aviation Operations	GLOBE	South Africa
 GBE	Gabon Express	GABEX	Gabon
 GBJ	Aero Business Charter	GLOBAL JET	Germany
-
 GBL	GB Airways	GEEBEE AIRWAYS	United Kingdom
 GBN	Atlantic Airlines	ATLANTIC GABON	Gabon
 GBO	Ogooue Air Cargo		Gabon
@@ -2107,8 +2106,7 @@ GVN	Gavina	GAVINA	Spain
 GWA	Great Western Air	G-W AIR	United States
 GWI	Germanwings	GERMAN WINGS	Germany
 GWL	Great Wall Airlines	GREAT WALL	China
-GWN	Gwyn Aviation	GWYN	United Kingdom
-			
+GWN	Gwyn Aviation	GWYN	United Kingdom			
 GWS	General Airways	GENAIR	South Africa
 GWY	USA3000 Airlines	GETAWAY	United States
 GXA	Grixona	GRIXONA	Moldova
@@ -2196,8 +2194,7 @@ HJE	Servicios Ejecutivos Gosa	GOSA	Mexico
 HJL	Hamlin Jet	BIZJET	United Kingdom
 HJT	Al Rais Cargo	AL-RAIS CARGO	United Arab Emirates
 HKA	Superior Aviation	SPEND AIR	United States
-HKB	Hawker Beechcraft	CLASSIC	United States
-			
+HKB	Hawker Beechcraft	CLASSIC	United States			
 HKE	Hong Kong Express Airways	HONGKONG SHUTTLE	Hong Kong SAR of China
 HKG	Government Flying Service	HONGKONG GOVERNMENT	Hong Kong SAR of China
 HKH	Air-Invest	HAWKHUNGARY	Hungary
@@ -2394,8 +2391,7 @@ ILS	Servicios Aéreos Ilsa	SERVICIOS ILSA	Mexico
 ILV	Il-Avia	ILAVIA	Russia
 IMA	Inter-Mountain Airways	INTER-MOUNTAIN	United States
 IME	Airtime Charters	AIRTIME	United Kingdom
-IMG	Imperial Cargo Airlines	IMPERIAL AIRLINES	Ghana
-			
+IMG	Imperial Cargo Airlines	IMPERIAL AIRLINES	Ghana			
 IMN	Aerotaxis Cimarron	TAXI CIMARRON	Mexico
 IMR	Imaer	IMAER	Portugal
 IMT	Imtrec Aviation	IMTREC	Cambodia
@@ -2772,8 +2768,7 @@ KYB	Skybridge Airops	SKY AIROPS	Italy
 KYC	Av Atlantic	DOLPHIN	United States
 KYM	Krym	CRIMEA AIR	Ukraine
 KYR	Sky Aeronautical Services	SKY AERONAUTICAL	Mexico
-KYV	Kibris Türk Hava	AIRKIBRIS	Turkey
-			
+KYV	Kibris Türk Hava	AIRKIBRIS	Turkey			
 KZA	Kurzemes Avio		Russia
 KZE	Euro-Asia Air International	KAZEUR	Kazakhstan
 KZH	Zhez Air		Kazakhstan
@@ -2798,8 +2793,7 @@ LAP	TAM Mercosur	PARAGUAYA	Paraguay
 LAQ	Lebanese Air Transport	LAT	Lebanon
 LAR	Lawrence Aviation	LAWRENCE	United States
 LAT	Lebanese Air Transport (charter)	LEBANESE AIR	Lebanon
-LAU	Líneas Aéreas Suramericanas	SURAMERICANO	Colombia
-			
+LAU	Líneas Aéreas Suramericanas	SURAMERICANO	Colombia			
 LAW	Link Airways of Australia		Australia
 LAY	Layang-Layang Aerospace	LAYANG	Malaysia
 LBC	Albanian Airlines	ALBANIAN	Albania
@@ -2851,8 +2845,7 @@ LFE	Luxflight Executive	LUX EXPRESS	Luxembourg
 LFI	National Airways Corporation	AEROMED	South Africa
 LFL	Executive Air	LIFE FLIGHT	Zimbabwe
 LFO	Deutsches Zentrum fur Luft-und Raumfahrt EV	LUFO	Germany
-LFO	DLR	LUFO	Germany
-			
+LFO	DLR	LUFO	Germany			
 LFP	Alfa Aerospace	ALFA-SPACE	Australia
 LFR	Atlantic Airfreight Aviation	LANFREIGHT	São Tomé and Príncipe
 LFT	Aerolift Company	LIFTCO	Sierra Leone
@@ -2862,6 +2855,7 @@ LGN	Aerolaguna	AEROLAGUNA	Mexico
 LGT	Longtail Aviation	LONGTAIL	Bermuda
 LGU	Servicios Aéreos Ejecutivos De La Laguna	LAGUNA	Mexico
 LGW	Luftfahrtgesellschaft Walter	WALTER	Germany
+LHA	Leipzig Air	LEIPZIG AIR	Germany
 LHC	London Helicopter Centres	MUSTANG	United Kingdom
 LHN	Express One International	LONGHORN	United States
 LHR	Al Ahram Aviation	AL AHRAM	Egypt
@@ -3424,7 +3418,6 @@ NOH	No. 32 (The Royal) Squadron RAF	NORTHOLT	United Kingdom
 NOK	Nok Air	NOK AIR	Thailand
 NOL	National Overseas Airlines Company	NAT AIRLINE	Egypt
 NON	Servicios Aéreos Latinoamericanos	SERVICIOS LATINO	Mexico
-
 NOR	Norsk Helikopter	NORSKE	Norway
 NOS	Neos	MOONFLOWER	Italy
 NOT	Línea Aérea Costa Norte	COSTA NORTE	Chile
@@ -3497,8 +3490,7 @@ NVM	Naviera Mexicana	NAVIERA	Mexico
 NVP	Navegacao Aérea De Portugal		Portugal
 NVR	Novair	NAVIGATOR	Sweden
 NVY	Royal Navy	NAVY	United Kingdom
-NWA	Northwest Airlines	NORTHWEST	United States
-			
+NWA	Northwest Airlines	NORTHWEST	United States		
 NWD	New World Jet Corporation	NEW WORLD	United States
 NWE	Northwest Aero Associates		United States
 NWG	Airwing	NORWING	Norway
@@ -3517,8 +3509,7 @@ NYA	Nanyah Aviation	NANYAH	Israel
 NYB	Belgian Navy	BELGIAN NAVY	Belgium
 NYH	New York Helicopter	NEW YORK	United States
 NYL	Mid Airlines	NILE	Sudan
-NYS	Nyasa Express	NYASA	Malawi
-			
+NYS	Nyasa Express	NYASA	Malawi			
 NZA	Nayzak Air Transport		Libya
 NZM	Mount Cook Airlines	MOUNTCOOK	New Zealand
 OAA	Oxley Aviation		Australia
@@ -3768,8 +3759,7 @@ PLB	Polynesian Blue	POLYBLUE	New Zealand
 PLC	Police Aviation Services	SPECIAL	United Kingdom
 PLF	Polish Air Force	POLISH AIRFORCE	Poland
 PLI	Aeroperú	Aeroperu	Peru
-PLK	Pulkovo Aviation Enterprise	PULKOVO	Russia
-			
+PLK	Pulkovo Aviation Enterprise	PULKOVO	Russia			
 PLL	Air Pal	AIRPAL	Spain
 PLM	Air Pullmantur	PULLMANTUR	Spain
 PLN	Planar[disambiguation needed]	PLANAR	Angola
@@ -3929,8 +3919,7 @@ QCL	Air Class Líneas Aéreas	ACLA	Uruguay
 QEA	Aviation Consultancy Office		Australia
 QFA	Qantas	QANTAS	Australia
 QGA	Windrose Air	QUADRIGA	Germany
-QID	USAF 100th Air Refueling Wing	QUID	United States
-			
+QID	USAF 100th Air Refueling Wing	QUID	United States			
 QKC	Aero Taxi Aviation	QUAKER CITY	United States
 QLA	Aviation Quebec Labrador	QUEBEC LABRADOR	Canada
 QNA	Queen Air	QUEEN AIR	Dominican Republic
@@ -3945,14 +3934,12 @@ QUE	Quebec Government Air Service	QUEBEC	Canada
 QUI	Aero Quimmco	QUIMMCO	Mexico
 QVR	Kvadro Aero	PEGASO	Kyrgyzstan
 QWA	Qwestair		Australia
-QWL	Qwila Air	Q-CHARTER	South Africa
-			
+QWL	Qwila Air	Q-CHARTER	South Africa			
 QXE	Horizon Air	HORIZON AIR	United States
 RAA	Rynes Aviation	RYNES AVIATION	United States
 RAC	Icar Air	TUZLA AIR	Bosnia and Herzegovina
 RAD	Alada	AIR ALADA	Angola
-RAE	Régional Compagnie Aérienne Européenne	REGIONAL EUROPE	France
-			
+RAE	Régional Compagnie Aérienne Européenne	REGIONAL EUROPE	France			
 RAF	Farnas Aviation Services	FARNAS	Sudan
 RAG	Regio Air	GERMAN LINK	Germany
 RAH	Regent Air	REGENT	Canada
@@ -4848,7 +4835,6 @@ THY	Turkish Airlines	TURKISH	Turkey
 THZ	Trans Helicoptere Service	LYON HELIJET	France
 TIA	Trans International Airlines	TRANS INTERNATIONAL	United States
 TIB	TRIP Linhas Aéreas	TRIP	Brazil
-
 TIC	Travel International Air Charters	TRAVEL INTERNATIONAL	Zambia
 TID	Air Tindi		Canada
 TIE	Time Air	TIME AIR	Czech Republic
@@ -4933,7 +4919,6 @@ TOL	Tol-Air Services	TOL AIR	United States
 TOM	Thomson Airways	TOMSON	United Kingdom
 TON	Aero Tonala	AEROTONALA	Mexico
 TOP	Top Air	AIR TOP	Indonesia
-
 TOR	Toronto Airways	TORONTAIR	Canada
 TOS	Tropic Air	TROPISER	Belize
 TOT	Totavia		Canada
@@ -5190,7 +5175,7 @@ UYC	Cameroon Airlines	CAM-AIR	Cameroon
 UZA	Constanta Airline	CONSTANTA	Ukraine
 UZB	Uzbekistan Airways	UZBEK	Uzbekistan
 UZS	Samarkand Airways	SOGDIANA	Uzbekistan
-VAA	Van Air Europe	EUROVAN	Czech Republic
+VAA	Virtuel Air Alsace	AIR ALSACE	France
 VAB	Airtrans Ltd		Russia
 VAC	Vacationair	VACATIONAIR	Canada
 VAD	Aero Taxi Los Valles	VALLES	Spain
@@ -5291,7 +5276,6 @@ VNE	Empresa Venezolana	VENEZOLANA	Venezuela
 VNG	Aero Servicios Vanguardia	VANGUARDIA	Mexico
 VNK	Vipport Joint Stock Company		Russia
 VNR	Avantair	AVANTAIR	United States
-
 VNR	Wanair	WANAIR	French Polynesia
 VNT	Avient Air Zambia	AVIENT	Zambia
 VNZ	Tbilaviamsheni	TBILAVIA	Georgia

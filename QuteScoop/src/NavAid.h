@@ -25,6 +25,7 @@ public:
 	};
 	static QString typeStr(Type type);
 	virtual QString toolTip() const;
+        int getTyp();
 
 private:
 	Type type;

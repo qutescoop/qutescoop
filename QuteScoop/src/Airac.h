@@ -40,7 +40,8 @@ public:
     QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon) const;
 
     Airway* getAirway(const QString& name, double lat, double lon) const;
-    QSet<MapObject*> mapObjects;
+    QSet<Waypoint*> allPoints;
+    //QSet<MapObject*> mapObjects;
 
     QHash<QString, QSet<Waypoint*> > waypoints;
     QHash<QString, QSet<NavAid*> > navaids;

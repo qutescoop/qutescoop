@@ -2,16 +2,24 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.0rc14
+ changed:
+* airlinesearch optimized
+* OnScreenttings optimized
+added:
+* toggle pilot labels
+* Tooltip for airlinefield(PilotsDeatailDialog): ICAO airline(Source: data/airline.dat)
+
 Version 2.0rc13
  fixed:
 * closing TimeWrap Widget bug
  changed:
-* qoted out the Pilot ratings (not supported yet by servers)
+* qoted out the pilot ratings (not supported yet by servers)
  added:
-* Airlinedatabase (airline.dat) Source:http://en.wikipedia.org/wiki/Airline_codes-All
-  Airlines can be searched in the SearchDialog and displayed in the Pilots Dialog
+* airlinedatabase (airline.dat) Source:http://en.wikipedia.org/wiki/Airline_codes-All
+  airlines can be searched in the SearchDialog and displayed in the Pilots Dialog
 * On Screen Settings Added
-  Quick access for the displaysettings(toggle Routes, Sectors, ...)
+  quick access for the displaysettings(toggle Routes, Sectors, ...)
 
 Version 2.0rc12:
  changed:
