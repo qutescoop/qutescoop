@@ -101,6 +101,9 @@
         </item>
         <item>
          <widget class="QLabel" name="label_12">
+          <property name="toolTip">
+           <string>ICAO airline (source: data/airlines.dat)</string>
+          </property>
           <property name="text">
            <string>airline</string>
           </property>

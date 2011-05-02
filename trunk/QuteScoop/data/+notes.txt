@@ -122,8 +122,25 @@ airspaces (e.g. VATSIM-IVAO differences).
 
 ------
 
+AIRLINES.DAT
+
+This contains the airlinedata for the searchfield and the pilots dialog
+Format is as follwoed:
+
+ICAO Code 	Airline Name	Callsing	Country
+
+Example:
+AAA	Ansett Australia	ANSETT	Australia
+
+ICAO Code:		AAA
+Airlnie Name:	Ansett Australia
+Calsing:		ANSETT
+Country:		Australia
+
+------
+
 
 Have fun! :)
 
 Gergely Kosa
-editted by Jonas Eberle to adapt to current QuteScoop circumstances.
+editted by Jonas Eberle and Markus Swarowsky to adapt to current QuteScoop circumstances.

@@ -18,6 +18,7 @@ public:
 	virtual QString mapLabel() const { return label; }
 	virtual QString toolTip() const;
 	virtual void showDetailsDialog() {} // not applicable
+        virtual int getTyp() { return 0;}
 };
 
 #endif /*WAYPOINT_H_*/

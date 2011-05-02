@@ -456,6 +456,13 @@ void Settings::setShowRouteFix(bool value){
     getSettings()->setValue("display/showRouteFix", value);
 }
 
+bool Settings::showPilotsLabels(){
+    return getSettings()->value("display/showPilotsLabels", true).toBool();
+}
+void Settings::setShowPilotsLabels(bool value){
+    getSettings()->setValue("display/showPilotsLabels", value);
+}
+
 bool Settings::showInactiveAirports() {
     return getSettings()->value("display/showInactive", false).toBool(); // time-intensive function
 }

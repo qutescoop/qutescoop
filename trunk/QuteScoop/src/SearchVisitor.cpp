@@ -42,12 +42,19 @@ void SearchVisitor::visit(MapObject* object) {
 }
 
 void SearchVisitor::checkAirlines()
-{
-    if(!AirlineCodes.contains(searchString)){
-        return;
-    }
+{ 
+    QHashIterator<QString, QString> i(AirlineCodes);
+     while (i.hasNext()) {
+         i.next();
+         if (i.key().contains(regex)){
+             otherStrings[i.key()] = i.value();
+         }
 
-    otherStrings[searchString] = AirlineCodes.value(searchString);
+         if(i.value().contains(regex)){
+             otherStrings[i.key()] = i.value();
+         }
+
+     }
 }
 
 QList<MapObject*> SearchVisitor::result() const {

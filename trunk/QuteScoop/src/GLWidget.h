@@ -13,6 +13,7 @@
 #include "WhazzupData.h"
 #include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
+#include "Airac.h"
 
 class GLWidget : public QGLWidget
 {
@@ -53,7 +54,6 @@ public slots:
 signals:
     void mapClicked(int x, int y, QPoint absolutePos);
     void newPosition();
-    void mouseMoved(QMouseEvent *);
 
 protected:
     virtual void paintGL();
@@ -101,7 +101,7 @@ private:
         GLuint earthTex;
         GLuint earthList, coastlinesList, countriesList, gridlinesList;
         GLuint pilotsList, activeAirportsList, inactiveAirportsList;
-        GLuint allWaypointsList, usedWaypointsList, plannedRouteList;
+        GLuint FixesList, usedWaypointsList, plannedRouteList;
         GLuint sectorPolygonsList, sectorPolygonBorderLinesList, appBorderLinesList, congestionsList;
         //GLuint airportControllersList,
         bool allSectorsDisplayed;

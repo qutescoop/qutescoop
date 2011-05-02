@@ -103,3 +103,8 @@ QString NavAid::toolTip() const {
 		ret.append(QString(" [%1]").arg(NavAid::typeStr(type)));
 	return ret;
 }
+
+int NavAid::getTyp()
+{
+    return Type(type);
+}

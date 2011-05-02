@@ -7,6 +7,7 @@
 
 #include <QHash>
 
+
 #include "MapObjectVisitor.h"
 #include "MapObject.h"
 #include "Controller.h"
