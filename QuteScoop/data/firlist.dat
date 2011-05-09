@@ -43,7 +43,6 @@ EDYY_HN:Maastricht:EU:52.11:8.83:803
 EDYY_BRU:Maastricht:EU:50.6:4.7:801
 EDYY_DCO:Maastricht:EU:53.55:5.75:802
 EDYY_HNN:Maastricht:EU:52.11:8.83:803
-EETT:Tallinn:EE:58.7:24.4:118
 EFES:Tampere:FI:61.8:25.3:119
 EFPS:Rovaniemi:FI:66.9:25.5:120
 EGGX:Shanwick Oceanic:GB:53:-19:121
@@ -82,8 +81,6 @@ EPWW:Warsaw:PL:52.4:20.7:146
 ESOS:Sweden:SE:62.1:16.7:147
 ESUN:Sweden:SE:65.1:16.4:148
 ESMM:Sweden:SE:57.4:15:149
-EVRR:Riga:LV:57:23.3:150
-EYVL:Vilnius:LT:55.1:22.4:151
 LATI:Tirana:AL:41.1:20.1:152
 LAAA:Tirana:AL:41.1:20.1:152
 LBSR:Sofia:BG:42.8:26.4:6750
@@ -584,3 +581,7 @@ YBAS:Alice Springs:AU:-25.7:135.8:5903
 YPAD:Adelaide:AU:-34.5:135.5:5904
 AFRC:Central Africa Control:CD:-02.7:24.1:612
 GULF:Gulf Control::26:58:
+EETT:Tallinn:EE:58.7:24.4:118
+EVRR:Riga:LV:57:23.3:150
+EYVL:Vilnius:LT:55.1:22.4:151
+BALT:Baltic Control::57.5:23.3:613
