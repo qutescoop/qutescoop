@@ -48,7 +48,7 @@ MapScreen::MapScreen(QWidget *parent) :
     L_Pilots->setAutoFillBackground(true);
     L_Pilots->setMouseTracking(true);
     L_Pilots->raise();
-    xDistance += 60;
+    xDistance += 59;
 
     L_Controller = new OnScreenLabel(this);
     L_Controller->typ = 2;
@@ -87,8 +87,11 @@ MapScreen::MapScreen(QWidget *parent) :
     connect(W_NavData, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
     createPilotWidget();
+    W_Pilots->move(0,L_Pilots->height()-5);
     createControllerWidget();
+    W_Controller->move(0,L_Pilots->height()-5);
     createNavDataWidget();
+    W_NavData->move(0,L_Pilots->height()-5);
 
     qDebug() << "MapScreen::MapScreen() created";
 
@@ -103,7 +106,7 @@ void MapScreen::createPilotWidget()
 
     W_Pilots->setMouseTracking(true);
     W_Pilots->setAutoFillBackground(true);
-    W_Pilots->setContentsMargins(3, L_Pilots->height(), 3, 3);
+    //W_Pilots->setContentsMargins(3, L_Pilots->height(), 3, 3);
     W_Pilots->setMinimumWidth(xDistance+L_NavData->width());
 
     //Show all routes button
@@ -131,7 +134,7 @@ void MapScreen::createControllerWidget()
 
     W_Controller->setMouseTracking(true);
     W_Controller->setAutoFillBackground(true);
-    W_Controller->setContentsMargins(3, L_Pilots->height(), 3, 3);
+    //W_Controller->setContentsMargins(3, L_Pilots->height(), 3, 3);
     W_Controller->setMinimumWidth(xDistance+L_NavData->width());
 
 
@@ -174,7 +177,7 @@ void MapScreen::createNavDataWidget()
     W_NavData->setMouseTracking(true);
     W_NavData->setAutoFillBackground(true);
     W_NavData->setMinimumWidth(xDistance+L_NavData->width());
-    W_NavData->setContentsMargins(3, L_Pilots->height(), 3, 3);
+    //W_NavData->setContentsMargins(3, L_Pilots->height(), 3, 3);
 
     N_sectorsAll = new QPushButton();
     N_sectorsAll->setText(tr("all sectors"));
