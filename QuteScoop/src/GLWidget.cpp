@@ -910,16 +910,20 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     else if (mapIsRectangleSelecting) {
         mapIsRectangleSelecting = false;
         if (event->pos() != mouseDownPos) {
-            double downLat, downLon;
-            if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
-                double currLat, currLon;
-                if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
-                    DoublePair mid = NavData::greatCircleFraction(downLat, downLon, currLat, currLon, .5);
-                    setMapPosition(mid.first, mid.second,
-                                   qMax(NavData::distance(downLat, downLon,
-                                                          downLat, currLon),
-                                        NavData::distance(downLat, downLon,
-                                                          currLat, downLon)) / 4000.);
+            //Checking if courser moved more than 10pix in x and y direction
+            if(((event->x()- mouseDownPos.x())*(event->x()- mouseDownPos.x())) > 4000 && ((event->y() - mouseDownPos.y())*(event->y()-mouseDownPos.y())) >4000 )
+            {
+                double downLat, downLon;
+                if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
+                    double currLat, currLon;
+                    if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
+                        DoublePair mid = NavData::greatCircleFraction(downLat, downLon, currLat, currLon, .5);
+                        setMapPosition(mid.first, mid.second,
+                                       qMax(NavData::distance(downLat, downLon,
+                                                              downLat, currLon),
+                                            NavData::distance(downLat, downLon,
+                                                              currLat, downLon)) / 4000.);
+                    }
                 }
             }
         } else
@@ -940,6 +944,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
         }
     } else if (mouseDownPos == event->pos() && event->button() == Qt::RightButton)
         rightClick(event->pos());
+    updateGL();
 }
 
 void GLWidget::rightClick(const QPoint& pos) {
