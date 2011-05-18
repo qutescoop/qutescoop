@@ -6,6 +6,7 @@
 #define GLWIDGET_H_
 
 #include "_pch.h"
+#include <QPoint>
 
 #include "MapObject.h"
 #include "Sector.h"

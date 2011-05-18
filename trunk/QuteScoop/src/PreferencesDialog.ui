@@ -24,7 +24,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="downloadTab">
       <attribute name="title">
@@ -866,7 +866,7 @@ p, li { white-space: pre-wrap; }
              <string>Use left mouse button to drag a selection rectangle. When off, left mouse drag is globe panning (same as right drag)</string>
             </property>
             <property name="text">
-             <string>use &amp;selection rectangle</string>
+             <string>use &amp;selection rectangle (then navigate via the left mouse button)</string>
             </property>
             <property name="checked">
              <bool>true</bool>
