@@ -152,6 +152,12 @@ public:
     static bool showAllSectors();
     static void setShowAllSectors(bool value);
 
+    static bool showUpperWind();
+    static void setShowUpperWind(bool value);
+
+    static int upperWindAlt();
+    static void setUpperWindAlt(int value);
+
     static bool showRouteFix();
     static void setShowRouteFix(bool value);
 
@@ -396,6 +402,9 @@ public:
 
     static bool useSelectionRectangle();
     static void setUseSelctionRectangle(const bool value);
+
+public slots:
+
 private:
     static QSettings *getSettings();
 };

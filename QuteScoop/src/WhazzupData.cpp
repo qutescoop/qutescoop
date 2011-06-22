@@ -143,6 +143,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
     if (whazzupTime.isValid() && reloadInMin > 0)
         updateEarliest = whazzupTime.addSecs(reloadInMin * 60).toUTC();
     qApp->restoreOverrideCursor();
+    qDebug() << "WhazzupData::WhazzupData(buffer) -- finished";
 }
 
 //faking WhazzupData based on valid data and a predictTime

@@ -26,7 +26,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 
     QString airlineCode = getField(stringList,0);
     airlineCode.resize(3);
-    airline = NavData::getInstance()->airlineCodes[airlineCode];
+    airline = NavData::getInstance()->getAirline(airlineCode);
 
     transponder = getField(stringList, 17);
     planRevision = getField(stringList, 20);
@@ -45,6 +45,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     planAltAirport = getField(stringList, 28);
     planRemarks = getField(stringList, 29);
     planRoute = getField(stringList, 30);
+
 
     if(whazzup->isIvao()) {
         planAltAirport2 = getField(stringList, 42); // IVAO only

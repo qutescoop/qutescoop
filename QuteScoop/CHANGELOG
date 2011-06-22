@@ -3,6 +3,13 @@ See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
 
+Version 2.0rc17
+fixed:
+ *IVAO Whazzupversion (now 5)
+ *toggle all sectors 
+added:
+ *uppperwind visualisation
+
 Version 2.0rc16
  changed:
  *zooming via rectagle selcting only by selcting more than 60pix
@@ -11,12 +18,6 @@ Version 2.0rc15
  fixed:
 *OnScreenSetting now working with linux
 
-=======
-Version 2.0rc15
- fixed:
-*OnScreenSetting now working with linux
-
->>>>>>> .r242
 Version 2.0rc14
  changed:
 * airlinesearch optimized

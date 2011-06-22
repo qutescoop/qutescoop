@@ -15,6 +15,7 @@
 #include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
 #include "Airac.h"
+#include "winddata.h"
 
 class GLWidget : public QGLWidget
 {
@@ -82,6 +83,10 @@ private:
     void renderLabels();
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
+    //experimantal
+    void createWindList();
+    void renderWindStation(double lat, double lon ,double knots  ,double deg);
+
 
 
 
@@ -104,6 +109,7 @@ private:
         GLuint pilotsList, activeAirportsList, inactiveAirportsList;
         GLuint FixesList, usedWaypointsList, plannedRouteList;
         GLuint sectorPolygonsList, sectorPolygonBorderLinesList, appBorderLinesList, congestionsList;
+        GLuint windList;
         //GLuint airportControllersList,
         bool allSectorsDisplayed;
 

@@ -23,7 +23,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         earthList(0), coastlinesList(0), countriesList(0), gridlinesList(0),
         pilotsList(0), activeAirportsList(0), inactiveAirportsList(0), congestionsList(0), FixesList(0),
         usedWaypointsList(0), sectorPolygonsList(0), sectorPolygonBorderLinesList(0),
-        appBorderLinesList(0),
+        appBorderLinesList(0), windList(0),
         pilotLabelZoomTreshold(.9), activeAirportLabelZoomTreshold(1.2), inactiveAirportLabelZoomTreshold(.15),
         controllerLabelZoomTreshold(2.), allWaypointsLabelZoomTreshold(.1), usedWaypointsLabelZoomThreshold(1.2),
         allSectorsDisplayed(false),
@@ -40,6 +40,8 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     emit newPosition();
 
     clientSelection = new ClientSelectionWidget();
+
+
 }
 
 GLWidget::~GLWidget() {
@@ -48,7 +50,7 @@ GLWidget::~GLWidget() {
     glDeleteLists(coastlinesList, 1); glDeleteLists(countriesList, 1); glDeleteLists(FixesList, 1);
     glDeleteLists(usedWaypointsList, 1); glDeleteLists(pilotsList, 1);
     glDeleteLists(activeAirportsList, 1); glDeleteLists(inactiveAirportsList, 1); glDeleteLists(congestionsList, 1);
-    glDeleteLists(appBorderLinesList, 1);
+    glDeleteLists(appBorderLinesList, 1); glDeleteLists(windList, 1);
     glDeleteLists(sectorPolygonsList, 1); glDeleteLists(sectorPolygonBorderLinesList, 1);
 
     if (earthTex != 0)
@@ -223,6 +225,7 @@ void GLWidget::createPilotsList() {
         }
         glEnd();
     }
+
 
     // flight paths, also for booked flights
     foreach(Pilot *p, Whazzup::getInstance()->whazzupData().allPilots()) {
@@ -820,10 +823,19 @@ void GLWidget::paintGL() {
 
     glCallList(pilotsList);
 
+    //render Wind
+    if(Settings::showUpperWind()){
+        //Display al +/- 1000ft
+        glCallList(WindData::getInstance()->getWindArrows((Settings::upperWindAlt()-1)));
+        glCallList(WindData::getInstance()->getWindArrows(Settings::upperWindAlt()));
+        glCallList(WindData::getInstance()->getWindArrows((Settings::upperWindAlt()+1)));
+    }
+
     renderLabels();
 
     if (mapIsRectangleSelecting)
             drawSelectionRectangle();
+
 
 
 
@@ -1384,5 +1396,26 @@ void GLWidget::showInactiveAirports(bool value) {
     Settings::setShowInactiveAirports(value);
     newWhazzupData(true);
 }
+
+
+//experimantal
+/*
+void GLWidget::createWindList()
+{
+
+    if(windList == 0)
+        windList = glGenLists(1);
+
+    windList = glGenLists(1);
+
+    glNewList(windList, GL_COMPILE);
+
+    renderWindStation(49.7, 7.33, 15, 275);
+
+    glEndList();
+
+}
+*/
+
 
 

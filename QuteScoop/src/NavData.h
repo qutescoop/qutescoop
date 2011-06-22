@@ -23,7 +23,7 @@ public:
     QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
     QHash<QString, Sector*> sectors;
     QHash<QString, QString> countryCodes;
-    QHash<QString, QString> airlineCodes;
+    QString getAirline(QString airlineCode);
 
     Airport* airportAt(double lat, double lon, double maxDist) const;
 
@@ -59,6 +59,7 @@ private:
     void loadCountryCodes(const QString& filename);
     void loadAirlineCodes(const QString& filename);
 
+    QHash<QString, QString> airlineCodes;
     QHttp *dataVersionsAndFilesDownloader;
     QBuffer *dataVersionsBuffer;
     QList<QFile*> dataFilesToDownload;

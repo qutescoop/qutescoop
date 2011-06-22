@@ -449,6 +449,22 @@ void Settings::setShowAllSectors(bool value){
     getSettings()->setValue("display/showALLSectors", value);
 }
 
+bool Settings::showUpperWind(){
+    return getSettings()->value("display/showUpperWind", false).toBool();
+}
+
+void Settings::setShowUpperWind(bool value){
+    getSettings()->setValue("display/showUpperWind", value);
+}
+
+int Settings::upperWindAlt(){
+    return getSettings()->value("display/upperWindAlt", 10000).toInt();
+}
+
+void Settings::setUpperWindAlt(int value){
+    getSettings()->setValue("display/upperWindAlt", value);
+}
+
 bool Settings::showRouteFix(){
     return getSettings()->value("display/showRouteFix", false).toBool();
 }

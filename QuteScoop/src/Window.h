@@ -98,6 +98,10 @@ private slots:
     //void versionDownloaded(bool error);
     void downloadWatchdogTriggered();
 
+    void startWindDecoding(bool);
+
+    void allSectorsChanged(bool);
+
 protected:
     virtual void closeEvent(QCloseEvent *event);
 
@@ -107,6 +111,7 @@ private:
     ~Window();
     void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
 
+
     SearchResultModel searchResultModel, friendsModel;
     QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer;
     QTimer downloadWatchdog;
@@ -114,8 +119,8 @@ private:
     MetarModel metarModel;
 
     //void checkForUpdates();
-    QHttp *versionChecker;
-    QBuffer *versionBuffer;
+    QHttp *versionChecker, *windDataDownloader;
+    QBuffer *versionBuffer, *windDataBuffer;
 
     QDateTime dateTimePredict_old;
 

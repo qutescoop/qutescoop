@@ -11,6 +11,7 @@
 #include "helpers.h"
 #include "Settings.h"
 
+
 NavData *navDataInstance = 0;
 NavData *NavData::getInstance(bool createIfNoInstance) {
     if(navDataInstance == 0)
@@ -73,7 +74,7 @@ void NavData::loadAirlineCodes(const QString &filename)
 
     while(!fileReader.atEnd()){
 
-        QStringList line = fileReader.nextLine().split(0x09);
+        QStringList line = fileReader.nextLine().split(0x09);  // 0x09 code for Tabulator
         airlineCodes[line.value(0)] = line.value(1);
     }
 }
@@ -455,4 +456,12 @@ void NavData::dataFilesDownloaded(bool error) {
     dataVersionsAndFilesDownloader->abort();
     delete dataVersionsAndFilesDownloader;
     dataFilesToDownload.clear();
+}
+
+QString NavData::getAirline(QString airlineCode)
+{
+    QString result;
+    result = airlineCodes[airlineCode];
+    if(result.isEmpty()) result = tr("general aviation");
+    return result;
 }
