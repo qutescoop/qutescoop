@@ -70,6 +70,17 @@ MapScreen::MapScreen(QWidget *parent) :
     L_NavData->setMouseTracking(true);
     L_NavData->move(xDistance,0);
     L_NavData->raise();
+    xDistance += 87;
+
+    L_Wind = new OnScreenLabel(this);
+    L_Wind->typ = 4;
+    connect(L_Wind, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    L_Wind->setText(tr("Upperwind"));
+    L_Wind->setFont(QFont("Arial", 16, QFont::Bold));
+    L_Wind->setAutoFillBackground(true);
+    L_Wind->setMouseTracking(true);
+    L_Wind->move(xDistance,0);
+    L_Wind->raise();
 
     W_Pilots = new OnScreenWidget(this);
     W_Pilots->typ = 1;
@@ -86,12 +97,21 @@ MapScreen::MapScreen(QWidget *parent) :
     connect(W_NavData, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
     connect(W_NavData, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
+    W_Wind = new OnScreenWidget(this);
+    W_Wind->typ = 4;
+    connect(W_Wind, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
+    connect(W_Wind, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+
     createPilotWidget();
     W_Pilots->move(0,L_Pilots->height()-5);
     createControllerWidget();
     W_Controller->move(0,L_Pilots->height()-5);
     createNavDataWidget();
     W_NavData->move(0,L_Pilots->height()-5);
+    createWindWidget();
+    W_Wind->move(0, L_Pilots->height()-5);
+
+
 
     qDebug() << "MapScreen::MapScreen() created";
 
@@ -107,7 +127,7 @@ void MapScreen::createPilotWidget()
     W_Pilots->setMouseTracking(true);
     W_Pilots->setAutoFillBackground(true);
     //W_Pilots->setContentsMargins(3, L_Pilots->height(), 3, 3);
-    W_Pilots->setMinimumWidth(xDistance+L_NavData->width());
+    W_Pilots->setMinimumWidth(xDistance+L_Wind->width());
 
     //Show all routes button
     P_toggleRoutes = new QPushButton();
@@ -135,7 +155,7 @@ void MapScreen::createControllerWidget()
     W_Controller->setMouseTracking(true);
     W_Controller->setAutoFillBackground(true);
     //W_Controller->setContentsMargins(3, L_Pilots->height(), 3, 3);
-    W_Controller->setMinimumWidth(xDistance+L_NavData->width());
+    W_Controller->setMinimumWidth(xDistance+L_Wind->width());
 
 
     C_toggleCTR = new QPushButton();
@@ -176,7 +196,7 @@ void MapScreen::createNavDataWidget()
 
     W_NavData->setMouseTracking(true);
     W_NavData->setAutoFillBackground(true);
-    W_NavData->setMinimumWidth(xDistance+L_NavData->width());
+    W_NavData->setMinimumWidth(xDistance+L_Wind->width());
     //W_NavData->setContentsMargins(3, L_Pilots->height(), 3, 3);
 
     N_sectorsAll = new QPushButton();
@@ -207,6 +227,44 @@ void MapScreen::createNavDataWidget()
     W_NavData->lower();
 }
 
+void MapScreen::createWindWidget()
+{
+    W_Wind->setMouseTracking(true);
+    W_Wind->setAutoFillBackground(true);
+    W_Wind->setMinimumWidth(xDistance+L_Wind->width());
+
+    W_toggleWind = new QPushButton();
+    W_toggleWind->setText(tr("upperwind"));
+    W_toggleWind->setCheckable(true);
+    W_toggleWind->setChecked(Settings::showUpperWind());
+    connect(W_toggleWind, SIGNAL(clicked()), this, SLOT(W_toggleWindClicked()));
+    W_layout.addWidget(W_toggleWind);
+
+    W_minus = new QPushButton();
+    W_minus->setText(tr("-"));
+    connect(W_minus, SIGNAL(clicked()), this, SLOT(W_minusClicked()));
+    W_layout.addWidget(W_minus);
+
+    W_slider = new QSlider();
+    W_slider->setRange(0, 40);
+    W_slider->setOrientation(Qt::Horizontal);
+    W_slider->setValue(Settings::upperWindAlt());
+    connect(W_slider, SIGNAL(valueChanged(int)), this, SLOT(W_sliderChanged()));
+    W_layout.addWidget(W_slider);
+
+    W_plus = new QPushButton();
+    W_plus->setText(tr("+"));
+    connect(W_plus, SIGNAL(clicked()), this, SLOT(W_plusClicked()));
+    W_layout.addWidget(W_plus);
+
+    W_windAlt = new QLabel();
+    W_windAlt->setText(QString("%1").arg((Settings::upperWindAlt()*1000)));
+    W_layout.addWidget(W_windAlt);
+
+    W_Wind->setLayout(&W_layout);
+    W_Wind->lower();
+}
+
 void MapScreen::resizeEvent(QResizeEvent *event)
 {
     glWidget->resize(this->width(),this->height());
@@ -230,40 +288,67 @@ void MapScreen::LabelEntered(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
+        L_Wind->raise();
         W_Controller->lower();
         W_NavData->lower();
+        W_Wind->lower();
 
         L_Pilots->setFont(f);
         f.setUnderline(false);
         L_Controller->setFont(f);
         L_NavData->setFont(f);
+        L_Wind->setFont(f);
         break;
     case 2:
         W_Controller->raise();
         L_Controller->raise();
         L_Pilots->raise();
         L_NavData->raise();
+        L_Wind->raise();
         W_Pilots->lower();
         W_NavData->lower();
+        W_Wind->lower();
 
         L_Controller->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_NavData->setFont(f);
+        L_Wind->setFont(f);
         break;
     case 3:
         W_NavData->raise();
         L_NavData->raise();
+        L_Wind->raise();
         L_Controller->raise();
         L_Pilots->raise();
         W_Pilots->lower();
         W_Controller->lower();
+        W_Wind->lower();
 
         L_NavData->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_Controller->setFont(f);
+        L_Wind->setFont(f);
         break;
+
+    case 4:
+        W_Wind->raise();
+        L_Wind->raise();
+        L_Pilots->raise();
+        L_Controller->raise();
+        L_NavData->raise();
+        W_Pilots->lower();
+        W_Controller->lower();
+        W_NavData->lower();
+
+        L_Wind->setFont(f);
+        f.setUnderline(false);
+        L_Pilots->setFont(f);
+        L_Controller->setFont(f);
+        L_NavData->setFont(f);
+        break;
+
     default:
         return;
         break;
@@ -287,6 +372,11 @@ void MapScreen::LabelLeft(int typ)
     case 3:
         L_NavData->setFont(f);
         break;
+
+    case 4:
+        L_Wind->setFont(f);
+        break;
+
     default:
         return;
         break;
@@ -306,39 +396,65 @@ void MapScreen::WidgetEntered(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
+        L_Wind->raise();
         W_Controller->lower();
         W_NavData->lower();
+        W_Wind->lower();
 
         L_Pilots->setFont(f);
         f.setUnderline(false);
         L_Controller->setFont(f);
         L_NavData->setFont(f);
+        L_Wind->setFont(f);
         break;
     case 2:
         W_Controller->raise();
         L_Controller->raise();
         L_Pilots->raise();
         L_NavData->raise();
+        L_Wind->raise();
         W_Pilots->lower();
         W_NavData->lower();
+        W_Wind->lower();
 
         L_Controller->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_NavData->setFont(f);
+        L_Wind->setFont(f);
         break;
     case 3:
         W_NavData->raise();
         L_NavData->raise();
         L_Pilots->raise();
         L_Controller->raise();
+        L_Wind->raise();
         W_Pilots->lower();
         W_Controller->lower();
+        W_Wind->lower();
 
         L_NavData->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_Controller->setFont(f);
+        L_Wind->setFont(f);
+        break;
+
+    case 4:
+        W_Wind->raise();
+        L_Wind->raise();
+        L_Pilots->raise();
+        L_Controller->raise();
+        L_NavData->raise();
+        W_Pilots->lower();
+        W_Controller->lower();
+        W_NavData->lower();
+
+        L_Wind->setFont(f);
+        f.setUnderline(false);
+        L_Pilots->setFont(f);
+        L_Controller->setFont(f);
+        L_NavData->setFont(f);
         break;
     default:
         return;
@@ -359,6 +475,7 @@ void MapScreen::WidgetLeft(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
+        L_Wind->raise();
 
         L_Pilots->setFont(f);
         break;
@@ -367,6 +484,7 @@ void MapScreen::WidgetLeft(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
+        L_Wind->raise();
 
         L_Controller->setFont(f);
         break;
@@ -375,8 +493,19 @@ void MapScreen::WidgetLeft(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
+        L_Wind->raise();
 
         L_NavData->setFont(f);
+        break;
+    case 4:
+        W_Wind->lower();
+        L_Pilots->raise();
+        L_Controller->raise();
+        L_NavData->raise();
+        L_Wind->raise();
+
+        L_Wind->setFont(f);
+        break;
     default:
         return;
         break;
@@ -435,8 +564,16 @@ void MapScreen::C_toggleGNDClicked()
 
 void MapScreen::N_toggleSectorClicked()
 {
-    Settings::setShowAllSectors(N_sectorsAll->isChecked());
-    emit toggleSectors();
+    //Settings::setShowAllSectors(N_sectorsAll->isChecked());
+    emit toggleSectors(N_sectorsAll->isChecked());
+}
+
+void MapScreen::toggleSectorChanged(bool state)
+{
+    if(N_sectorsAll->isChecked() != state)
+    {
+        N_sectorsAll->setChecked(state);
+    }
 }
 
 void MapScreen::N_toggleRouteFixClicked()
@@ -449,6 +586,48 @@ void MapScreen::N_toggleInactiveClicked()
 {
     Settings::setShowInactiveAirports(N_InactiveAirports->isChecked());
     emit toggleInactiveAirports();
+}
+
+////////////////////////////
+// Wind funktions
+////////////////////////////
+
+void MapScreen::W_toggleWindClicked()
+{
+    if(Settings::showUpperWind() == false){
+        Settings::setShowUpperWind(true);
+        glWidget->update();
+        return;
+    }
+
+    Settings::setShowUpperWind(false);
+    glWidget->update();
+    return;
+}
+
+void MapScreen::W_minusClicked()
+{
+    int value = W_slider->value();
+    if(value == 0) return;
+
+    value -= 1;
+    W_slider->setValue(value);
+}
+
+void MapScreen::W_plusClicked()
+{
+    int value = W_slider->value();
+    if(value == 40) return;
+
+    value += 1;
+    W_slider->setValue(value);
+}
+
+void MapScreen::W_sliderChanged()
+{
+    Settings::setUpperWindAlt(W_slider->value());
+    W_windAlt->setText(QString("%1").arg((W_slider->value()*1000)));
+    glWidget->update();
 }
 
 ///////////////////////////

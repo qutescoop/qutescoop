@@ -63,7 +63,7 @@ Window::Window(QWidget *parent) :
     centralwidget->layout()->addWidget(mapScreen);
 
     connect(mapScreen, SIGNAL(toggleRoutes()), actionShowRoutes, SLOT(trigger()));
-    connect(mapScreen, SIGNAL(toggleSectors()), actionDisplayAllSectors, SLOT(trigger()));
+    connect(mapScreen, SIGNAL(toggleSectors(bool)), this, SLOT(allSectorsChanged(bool)));
     connect(mapScreen, SIGNAL(toggleRouteWaypoints()), actionShowWaypoints, SLOT(trigger()));
     connect(mapScreen, SIGNAL(toggleInactiveAirports()), actionShowInactiveAirports,SLOT(trigger()));
 
@@ -140,8 +140,10 @@ Window::Window(QWidget *parent) :
     connect(&downloadWatchdog, SIGNAL(timeout()),
             this, SLOT(downloadWatchdogTriggered()));
 
-    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)),
-            mapScreen->glWidget, SLOT(displayAllSectors(bool)));
+    actionDisplayAllSectors->setChecked(Settings::showAllSectors());
+    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), this, SLOT(allSectorsChanged(bool)));
+            //mapScreen->glWidget, SLOT(displayAllSectors(bool)));
+
 
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
     connect(actionShowInactiveAirports, SIGNAL(toggled(bool)),
@@ -185,6 +187,20 @@ Window::Window(QWidget *parent) :
 
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
+
+    if(windDataDownloader != 0) windDataDownloader = 0;
+
+    windDataDownloader= new QHttp(this);
+    QUrl url("http://fsrealwx.rs-transline.de/upperair.txt");
+    connect(windDataDownloader, SIGNAL(done(bool)) , this , SLOT(startWindDecoding(bool)));
+
+    windDataBuffer = new QBuffer;
+    windDataBuffer->open(QBuffer::ReadWrite);
+
+    windDataDownloader->setHost(url.host());
+    windDataDownloader->get(url.path(), windDataBuffer);
+    qDebug() << "Window::Window -- WindData download started";
+
 
     //LogBrowser
 #ifdef QT_NO_DEBUG_OUTPUT
@@ -883,3 +899,44 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
     mapScreen->glWidget->createPilotsList();
     mapScreen->glWidget->updateGL();
 }
+
+void Window::startWindDecoding(bool error)
+{
+    qDebug() << "Window::startWindDecoding -- WindData downloaded";
+    //if(WindData::getInstance()->isRunning()) return;
+    if(windDataBuffer == 0) return;
+
+    if(error)
+    {
+        GuiMessages::criticalUserInteraction(windDataDownloader->errorString() , "WindData download");
+        return;
+    }
+
+    windDataBuffer->seek(0);
+
+    QString data = QString(windDataBuffer->readAll());
+    WindData::getInstance()->setRawData(data);
+
+    WindData::getInstance()->decodeData();
+}
+
+void Window::allSectorsChanged(bool state)
+{
+    if(actionDisplayAllSectors->isChecked() !=  state)
+    {
+        actionDisplayAllSectors->setChecked( state);
+    }
+
+    mapScreen->toggleSectorChanged(state);
+
+    Settings::setShowAllSectors(state);
+    mapScreen->glWidget->displayAllSectors(state);
+
+}
+
+
+
+
+
+
+

@@ -71,6 +71,7 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/firdisplay.sup
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
+    dataFiles.files += ./data/station.dat
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/+notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
@@ -174,7 +175,9 @@ HEADERS += src/_pch.h \
     src/ListClientsDialog.h \
     src/Ping.h \
     src/LogBrowserDialog.h \
-    src/GuiMessage.h
+    src/GuiMessage.h \
+    src/winddata.h \
+    src/station.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -223,7 +226,9 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
     src/LogBrowserDialog.cpp \
-    src/GuiMessage.cpp
+    src/GuiMessage.cpp \
+    src/winddata.cpp \
+    src/station.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
