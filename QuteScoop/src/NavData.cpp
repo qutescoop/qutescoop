@@ -325,10 +325,11 @@ void NavData::dataVersionsDownloaded(bool error) {
         GuiMessages::criticalUserInteraction(dataVersionsAndFilesDownloader->errorString(), "Datafile download");
         return;
     }
+    qDebug() << "NavData::dataVersionsDownloaded";
     QList< QPair< QString, int> > serverDataVersionsList, localDataVersionsList;
 
     dataVersionsBuffer->seek(0);
-    while(dataVersionsBuffer->canReadLine()) {
+    while(!dataVersionsBuffer->atEnd()) {
         QStringList splitLine = QString(dataVersionsBuffer->readLine()).split("%%");
         QPair< QString, int> rawPair;
         rawPair.first = splitLine.first();

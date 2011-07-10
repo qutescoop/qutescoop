@@ -29,6 +29,7 @@ public:
 
 	double lat, lon;
 	QString label;
+        bool drawLabel;
 };
 
 #endif /*MAPOBJECT_H_*/

@@ -5,6 +5,7 @@
 #include "MapObject.h"
 
 MapObject::MapObject() {
+    drawLabel = true;
 }
 
 MapObject::~MapObject() {
@@ -19,6 +20,7 @@ MapObject::MapObject(const MapObject& obj):
 	lat = obj.lat;
 	lon = obj.lon;
 	label = obj.label;
+        drawLabel = obj.drawLabel;
 }
 
 MapObject& MapObject::operator=(const MapObject& obj) {
@@ -28,5 +30,6 @@ MapObject& MapObject::operator=(const MapObject& obj) {
 	lat = obj.lat;
 	lon = obj.lon;
 	label = obj.label;
+        drawLabel = obj.drawLabel;
 	return *this;
 }

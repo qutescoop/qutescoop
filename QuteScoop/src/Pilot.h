@@ -78,6 +78,8 @@ public:
 
     QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
     QString routeWaypointsPlanDepCache, routeWaypointsPlanDestCache, routeWaypointsPlanRouteCache;
+
+    void checkStatus();
 private:
 };
 

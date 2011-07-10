@@ -49,32 +49,106 @@ void Station::getWindArrow(int alt) // alt in ft
 void Station::renderWindStation(double deg, double knots)
 {
 
-    //qDebug() << "renderWind ID: " << number << " deg:" << deg << " dir:" << knots;
-    if(knots <= 0) return;
+    int n_Five = knots/5;
+    if(static_cast<int>(knots)%5 != 0){
+        float rest = static_cast<int>(knots)%5;
+        rest = rest*2;
+        rest = rest/10;
+        int roundRest = qRound(rest);
+        if(roundRest == 1) n_Five++ ;
+    }
+
+    int speed = n_Five*5;
+    n_Five = 0;
+
+    if(speed == 0) return;
+
+
+    int n_Fifty = qFloor(speed / 50.);
+    int n_Ten = qFloor((speed - n_Fifty*50) / 10.);
+    n_Five = qFloor((speed - n_Fifty*50 - n_Ten*10) / 5.);
+
+
     glLineWidth( 2);
     glBegin(GL_LINES);
-    double dist = knots*2;
-    double adist = qSqrt(2*(qPow(knots *0.7,2)));
-    double ideg = deg+180; //inverste direction
+
+    //main line
+    double dist = 30;
+    double ideg = deg+180; //invers direction
     if(ideg >= 360) ideg -= 360;
-    double ardeg = ideg-45;
-    if(ardeg < 0) ardeg += 360;
-    double aldeg = ideg+45;
-    if(aldeg >= 360) aldeg -= 360;
+    int ortoDeg = ideg+90; // 90° to invers direction
+    if(ortoDeg >= 360) ortoDeg -= 360;
 
     QPair<double, double> begin = NavData::pointDistanceBearing(lat, lon, dist, ideg);
     QPair<double, double> end = NavData::pointDistanceBearing(lat, lon, dist, deg);
-    QPair<double, double> arrowRight = NavData::pointDistanceBearing(end.first, end.second, adist, ardeg);
-    QPair<double, double> arrowLeft = NavData::pointDistanceBearing(end.first, end.second, adist , aldeg);
-
-
-    //glLineWidth( 2);
-    //glBegin(GL_LINES);  //main line
 
     QColor color(QColor::fromRgb(136, 255, 134));
     glColor3f(color.redF(), color.greenF(), color.blueF());
     VERTEX(begin.first, begin.second);
     VERTEX(end.first, end.second);
+    glEnd();
+
+
+    int pos = 0;
+    for(int drawFifty = n_Fifty; drawFifty > 0; drawFifty--)
+    {                                                                                           //            B
+        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, ideg);       // C ->  ____/_| <- A
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -8 -pos, ideg);
+        QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, ortoDeg);
+
+        glBegin(GL_TRIANGLES);
+        VERTEX(a.first, a.second);
+        VERTEX(b.first, b.second);
+        VERTEX(c.first, c.second);
+        glEnd();
+
+        pos += 18;
+    }
+
+    glLineWidth( 1);
+
+    for(int drawTen = n_Ten; drawTen > 0; drawTen--)
+    {
+        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist -pos + 6, ideg);    //             B
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -pos, ideg);        //   C-> _____/.  <- A(only needed to calculate B)
+        QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, ortoDeg);
+
+        glBegin(GL_LINES);
+        VERTEX(c.first, c.second);
+        VERTEX(b.first, b.second);
+        glEnd();
+
+        pos += 8;
+
+    }
+
+    for(int drawFive = n_Five; drawFive > 0; drawFive--)
+    {
+        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist -pos + 3, ideg);    //             B
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -pos, ideg);        //   C-> _____/.  <- A(only needed to calculate B)
+        QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 13, ortoDeg);
+
+        glBegin(GL_LINES);
+        VERTEX(c.first, c.second);
+        VERTEX(b.first, b.second);
+        glEnd();
+
+        pos += 8;
+    }
+
+    /*
+    double adist = qSqrt(2*(qPow(knots *0.7,2)));
+
+    double ardeg = ideg-45;
+    if(ardeg < 0) ardeg += 360;
+    double aldeg = ideg+45;
+    if(aldeg >= 360) aldeg -= 360;
+
+
+
+
+    QPair<double, double> arrowRight = NavData::pointDistanceBearing(end.first, end.second, adist, ardeg);
+    QPair<double, double> arrowLeft = NavData::pointDistanceBearing(end.first, end.second, adist , aldeg);
 
 
     //right arrow line
@@ -87,6 +161,6 @@ void Station::renderWindStation(double deg, double knots)
     //qglColor(QColor::fromRgb(136, 255, 134));
     VERTEX(end.first, end.second);
     VERTEX(arrowLeft.first, arrowLeft.second);
-    glEnd();
+    glEnd();*/
 
 }

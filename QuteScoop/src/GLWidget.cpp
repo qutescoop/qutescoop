@@ -831,6 +831,7 @@ void GLWidget::paintGL() {
         glCallList(WindData::getInstance()->getWindArrows((Settings::upperWindAlt()+1)));
     }
 
+    //render labels
     renderLabels();
 
     if (mapIsRectangleSelecting)
@@ -1126,6 +1127,8 @@ void GLWidget::renderLabels() {
     if(!Settings::showPilotsLabels()){
         QFontMetricsF fontMetrics(Settings::airportFont(), this);
         foreach(MapObject *o, objects){
+            //Check if Pilot is flying
+            if(o->drawLabel == false ) continue;
             int x, y; if(pointIsVisible(o->lat, o->lon, &x, &y)) {
                 QRectF rect = fontMetrics.boundingRect(o->label);
                 int drawX = x - rect.width() / 2; // center horizontally
@@ -1207,6 +1210,7 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
 
     QFontMetricsF fontMetrics(font, this);
     foreach(MapObject *o, objects) {
+        if(o->drawLabel == false ) continue;
         int x, y; if(pointIsVisible(o->lat, o->lon, &x, &y)) {
             QString text = o->mapLabel();
             QRectF rect = fontMetrics.boundingRect(text);
@@ -1398,24 +1402,6 @@ void GLWidget::showInactiveAirports(bool value) {
 }
 
 
-//experimantal
-/*
-void GLWidget::createWindList()
-{
-
-    if(windList == 0)
-        windList = glGenLists(1);
-
-    windList = glGenLists(1);
-
-    glNewList(windList, GL_COMPILE);
-
-    renderWindStation(49.7, 7.33, 15, 275);
-
-    glEndList();
-
-}
-*/
 
 
 
