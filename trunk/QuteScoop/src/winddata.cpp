@@ -83,8 +83,6 @@ void WindData::decodeData()
     if(rawData.isEmpty()) return;
     stationRawData = rawData.split(QRegExp("=\\s+"));
 
-
-
     //infos about decoding radiosonde code see here: http://apollo.lsc.vsc.edu/classes/met1211L/raob.html#ident
 
     QStringList stationRawList;
@@ -96,18 +94,17 @@ void WindData::decodeData()
         if(stationRawList[0] == "TTAA") mode = 0; // Temp + Wind
         if(stationRawList[0] == "TTBB") mode = 1; // temp only
         if(stationRawList[0] == "PPBB") mode = 2; // Wind
+        stationRawList.removeFirst(); //remove mode
 
         if( mode == 0 )
         {
-
-            int stationID = stationRawList[2].toInt();
-
-            stationRawList.removeFirst();           //remove the station identification
-            stationRawList.removeFirst();
-            stationRawList.removeFirst();
+            int stationID = stationRawList[1].toInt();
 
 
-
+            if(!stationRawList.isEmpty()) stationRawList.removeFirst();
+            if(!stationRawList.isEmpty()) stationRawList.removeFirst();
+            if(stationRawList.isEmpty() || stationRawList.size() < 3){
+                continue;}
 
 
             bool isLevel = false;
@@ -220,7 +217,6 @@ void WindData::decodeData()
 
                     }
 
-
                     if(stationRawList[1].left(3).toInt()%2 == 0)
                     {
                         temp = static_cast<int>(stationRawList[1].left(3).toInt()/10.f);
@@ -240,6 +236,8 @@ void WindData::decodeData()
 
                     dir += stationRawList[2].left(3).toInt();
 
+
+
                     stationList[stationID].addWind(alt, dir, speed);
                     stationList[stationID].addTemp(alt, temp);
                     //qDebug() << "WindData::decode() -- ID:" << stationID << " alt:" << alt << " dir:" << dir << " speed:" << speed << " temp:" << temp;
@@ -250,8 +248,6 @@ void WindData::decodeData()
                 if(!stationRawList.isEmpty()) stationRawList.removeFirst();
 
                 if(stationRawList.isEmpty() || stationRawList.size() < 3) break;
-
-
             }
         }
     }

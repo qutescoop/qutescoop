@@ -2,6 +2,13 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.0rc18
+fixed:
+ *NavData update
+ *Wind decoding
+changed:
+ *Wind visualisation (flags instead of arrows)
+ *Pilotlabels at airports aren't displayed
 
 Version 2.0rc17
 fixed:

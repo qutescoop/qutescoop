@@ -69,6 +69,8 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     else
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
 
+    checkStatus();
+
     // anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
     // let's keep him... waypoints() takes care of it in places where we need it.
     //if(planRoute.count("/") > 4)
@@ -95,10 +97,10 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     if(onGround) flying = false;
 
     if ( dep == NULL || dst == NULL ) {
-        if(flying)
-            return EN_ROUTE;
-        else
-            return BUSH;
+        if(flying){
+            return EN_ROUTE;}
+        else{
+            return BUSH;}
     }
 
     double totalDist = NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
@@ -123,22 +125,22 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     // BLOCKED: !flying, speed = 0, arriving
     // PREFILED: !flying, lat=0, lon=0
 
-    if(!flying && groundspeed == 0 && departing)
-        return BOARDING;
-    if(!flying && groundspeed > 0 && departing)
-        return GROUND_DEP;
-    if(flying && arriving)
-        return ARRIVING; // put before departing; on small hops tend to show "arriving", not departing
-    if(flying && departing)
-        return DEPARTING;
-    if(flying && !departing && !arriving)
-        return EN_ROUTE;
-    if(!flying && groundspeed > 0 && arriving)
-        return GROUND_ARR;
-    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) // must be before BLOCKED
-        return PREFILED;
-    if(!flying && groundspeed == 0 && arriving)
-        return BLOCKED;
+    if(!flying && groundspeed == 0 && departing){
+        return BOARDING;}
+    if(!flying && groundspeed > 0 && departing){
+        return GROUND_DEP;}
+    if(flying && arriving){
+        return ARRIVING;} // put before departing; on small hops tend to show "arriving", not departing
+    if(flying && departing){
+        return DEPARTING;}
+    if(flying && !departing && !arriving){
+        return EN_ROUTE;}
+    if(!flying && groundspeed > 0 && arriving){
+        return GROUND_ARR;}
+    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)){ // must be before BLOCKED
+        return PREFILED;}
+    if(!flying && groundspeed == 0 && arriving){
+        return BLOCKED;}
     return CRASHED;
 }
 
@@ -511,4 +513,42 @@ QList<Waypoint*> Pilot::routeWaypointsWithDepDest() {
         waypoints.append(new Waypoint(destAirport()->label, destAirport()->lat,
                                       destAirport()->lon));
     return waypoints;
+}
+
+void Pilot::checkStatus()
+{
+    switch(flightStatus()){
+    case Pilot::BOARDING:
+        this->drawLabel = false;
+        break;
+    case Pilot::GROUND_DEP:
+        this->drawLabel = false;
+        break;
+    case Pilot::DEPARTING:
+        this->drawLabel = true;
+        break;
+    case Pilot::EN_ROUTE:
+        this->drawLabel = true;
+        break;
+    case Pilot::ARRIVING:
+        this->drawLabel = true;
+        break;
+    case Pilot::GROUND_ARR:
+        this->drawLabel = false;
+        break;
+    case Pilot::BLOCKED:
+        this->drawLabel = false;
+        break;
+    case Pilot::CRASHED:
+        this->drawLabel = true;
+        break;
+    case Pilot::BUSH:
+        this->drawLabel = true;
+        break;
+    case Pilot::PREFILED:
+        this->drawLabel = true;
+        break;
+    default:
+        this->drawLabel = true;
+    }
 }
