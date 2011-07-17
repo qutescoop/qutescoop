@@ -158,6 +158,9 @@ public:
     static int upperWindAlt();
     static void setUpperWindAlt(int value);
 
+    static QColor upperWindColor();
+    static void setUpperWindColor(const QColor& value);
+
     static bool showRouteFix();
     static void setShowRouteFix(bool value);
 
@@ -402,6 +405,76 @@ public:
 
     static bool useSelectionRectangle();
     static void setUseSelctionRectangle(const bool value);
+
+    // -- windowmanagment
+    static QSize preferencesDialogSize();
+    static void setPreferencesDialogSize(const QSize& value);
+
+    static QPoint preferencesDialogPos();
+    static void setPreferencesDialogPos(const QPoint& value);
+
+    static QByteArray preferencesDialogGeometry();
+    static void setPreferencesDialogGeometry(const QByteArray& value);
+
+
+    static QSize airportDetailsSize();
+    static void setAirportDetailsSize(const QSize& value);
+
+    static QPoint airportDetailsPos();
+    static void setAirportDetailsPos(const QPoint& value);
+
+    static QByteArray airportDetailsGeometry();
+    static void setAirportDetailsGeometry(const QByteArray& value);
+
+
+    static QSize bookAtcDialogSize();
+    static void setBookAtcDialogSize(const QSize& value);
+
+    static QPoint bookAtcDialogPos();
+    static void setBookAtcDialogPos(const QPoint& value);
+
+    static QByteArray bookAtcDialogGeometry();
+    static void setBookAtcDialogGeometry(const QByteArray& value);
+
+
+    static QSize controllerDetailsSize();
+    static void setControllerDetailsSize(const QSize& value);
+
+    static QPoint controllerDetailsPos();
+    static void setControllerDetailsPos(const QPoint& value);
+
+    static QByteArray controllerDetailsGeometry();
+    static void setControllerDetailsGeometry(const QByteArray& value);
+
+
+    static QSize listClientsDialogSize();
+    static void setListClientsDialogSize(const QSize& value);
+
+    static QPoint listClientsDialogPos();
+    static void setListClientsDialogPos(const QPoint& value);
+
+    static QByteArray listClientsDialogGeometry();
+    static void setListClientsDialogGeometry(const QByteArray& value);
+
+
+    static QSize pilotDetailsSize();
+    static void setPilotDetailsSize(const QSize& value);
+
+    static QPoint pilotDetailsPos();
+    static void setPilotDetailsPos(const QPoint& value);
+
+    static QByteArray pilotDetailsGeometry();
+    static void setPilotDetailsGeometry(const QByteArray& value);
+
+
+    static QSize planFlightDialogSize();
+    static void setPlanFlightDialogSize(const QSize& value);
+
+    static QPoint planFlightDialogPos();
+    static void setPlanFlightDialogPos(const QPoint& value);
+
+    static QByteArray planFlightDialogGeometry();
+    static void setPlanFlightDialogGeometry(const QByteArray& value);
 
 public slots:
 

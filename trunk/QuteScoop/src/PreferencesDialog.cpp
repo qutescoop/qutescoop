@@ -169,6 +169,10 @@ void PreferencesDialog::loadSettings() {
     pbFirFontColor->setPalette(QPalette(color));
     pbFirFont->setFont(Settings::firFont());
 
+    color = Settings::upperWindColor();
+    pbUpperWindColor->setText(color.name());
+    pbUpperWindColor->setPalette(QPalette(color));
+
     // airport traffic settings
     cbFilterTraffic->setChecked(Settings::filterTraffic());
     spFilterDistance->setValue(Settings::filterDistance());
@@ -767,6 +771,7 @@ void PreferencesDialog::on_cbDepLineDashed_toggled(bool checked)
 {
     Settings::setDepLineDashed(checked);
 }
+
 void PreferencesDialog::on_cbDestLineDashed_toggled(bool checked)
 {
     Settings::setDestLineDashed(checked);
@@ -801,7 +806,6 @@ void PreferencesDialog::on_waypointsFont_clicked() {
         Settings::setWaypointsFont(font);
     }
 }
-
 
 void PreferencesDialog::on_buttonResetPilot_clicked() {
     QSettings settings;
@@ -1064,8 +1068,6 @@ QLabel {\n\
     }
 }
 
-
-
 void PreferencesDialog::on_cbLighting_toggled(bool checked)
 {
     Settings::setEnableLighting(checked);
@@ -1167,9 +1169,26 @@ void PreferencesDialog::on_cbScreenshotFormat_currentIndexChanged(QString value)
         Settings::setScreenshotFormat(value);
 }
 
-
 void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked)
 {
     if(settingsLoaded)
         Settings::setUseSelctionRectangle(checked);
+}
+
+void PreferencesDialog::on_pbUpperWindColor_clicked(){
+    QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+    if(color.isValid()) {
+        pbUpperWindColor->setText(color.name());
+        pbUpperWindColor->setPalette(QPalette(color));
+        Settings::setUpperWindColor(color);
+    }
+    WindData::getInstance()->refreshLists();
+}
+
+void PreferencesDialog::closeEvent(QCloseEvent *event){
+    Settings::setPreferencesDialogSize(size());
+    Settings::setPreferencesDialogPos(pos());
+    Settings::setPreferencesDialogGeometry(saveGeometry());
+    event->accept();
 }

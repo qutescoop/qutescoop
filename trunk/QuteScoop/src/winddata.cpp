@@ -309,6 +309,15 @@ GLuint WindData::getWindArrows(int alt) // alt in 1000 ft
 
 }
 
+void WindData::refreshLists(){
+    WindList.clear();
+
+    for(int i = 1; i <= 40 ; i++)
+    {
+        WindList.append( createWindArrowList(i*1000));
+    }
+    qDebug() << "WindData::refreshLists -- done";
+}
 
 
 

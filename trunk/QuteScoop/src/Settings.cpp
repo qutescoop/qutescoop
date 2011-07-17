@@ -465,6 +465,14 @@ void Settings::setUpperWindAlt(int value){
     getSettings()->setValue("display/upperWindAlt", value);
 }
 
+QColor Settings::upperWindColor(){
+    return getSettings()->value("display/upperWindColor", QColor::fromRgb(136, 255, 134)).value<QColor>();
+}
+
+void Settings::setUpperWindColor(const QColor &value){
+    getSettings()->setValue("display/upperWindColor", value);
+}
+
 bool Settings::showRouteFix(){
     return getSettings()->value("display/showRouteFix", false).toBool();
 }
@@ -1206,4 +1214,183 @@ bool Settings::saveWhazzupData() {
 }
 void Settings::setSaveWhazzupData(bool value) {
     getSettings()->setValue("general/saveWhazzupData" , value);
+}
+
+
+//////////////////////////////////////
+// windowmanagment
+/////////////////////////////////////
+
+QSize Settings::preferencesDialogSize(){
+    return getSettings()->value("windowmanagment/preferncesSize", QSize()).toSize();
+}
+
+void Settings::setPreferencesDialogSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/preferncesSize", value);
+}
+
+QPoint Settings::preferencesDialogPos(){
+    return getSettings()->value("windowmanagment/preferncesPos", QPoint()).toPoint();
+}
+
+void Settings::setPreferencesDialogPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/preferncesPos", value);
+}
+
+QByteArray Settings::preferencesDialogGeometry(){
+    return getSettings()->value("windowmanagment/preferncesGeo", QByteArray()).toByteArray();
+}
+
+void Settings::setPreferencesDialogGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/preferncesGeo", value);
+}
+
+
+QSize Settings::airportDetailsSize(){
+    return getSettings()->value("windowmanagment/airportDetailsSize", QSize()).toSize();
+}
+
+void Settings::setAirportDetailsSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/airportDetailsSize", value);
+}
+
+QPoint Settings::airportDetailsPos(){
+    return getSettings()->value("windowmanagment/airportDetailsPos", QPoint()).toPoint();
+}
+
+void Settings::setAirportDetailsPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/airportDetailsPos", value);
+}
+
+QByteArray Settings::airportDetailsGeometry(){
+    return getSettings()->value("windowmanagment/airportDetailsGeo", QByteArray()).toByteArray();
+}
+
+void Settings::setAirportDetailsGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/airportDetailsGeo", value);
+}
+
+
+QSize Settings::bookAtcDialogSize(){
+    return getSettings()->value("windowmanagment/bookAtcDialogSize", QSize()).toSize();
+}
+
+void Settings::setBookAtcDialogSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/bookAtcDialogSize", value);
+}
+
+QPoint Settings::bookAtcDialogPos(){
+    return getSettings()->value("windowmanagment/bookAtcDialogPos", QPoint()).toPoint();
+}
+
+void Settings::setBookAtcDialogPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/bookAtcDialogPos", value);
+}
+
+QByteArray Settings::bookAtcDialogGeometry(){
+    return getSettings()->value("windowmanagment/bookAtcDialogGeo", QByteArray()).toByteArray();
+}
+
+void Settings::setBookAtcDialogGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/bookAtcDialogGeo", value);
+}
+
+
+QSize Settings::controllerDetailsSize(){
+    return getSettings()->value("windowmanagment/controllerDetailsSize", QSize()).toSize();
+}
+
+void Settings::setControllerDetailsSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/controllerDetailsSize", value);
+}
+
+QPoint Settings::controllerDetailsPos(){
+    return getSettings()->value("windowmanagment/controllerDetailsPos", QPoint()).toPoint();
+}
+
+void Settings::setControllerDetailsPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/controllerDetailsPos", value);
+}
+
+QByteArray Settings::controllerDetailsGeometry(){
+    return getSettings()->value("windowmanagment/controllerDetailsGeo", QByteArray()).toByteArray();
+}
+
+void Settings::setControllerDetailsGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/controllerDetailsGeo", value);
+}
+
+
+QSize Settings::listClientsDialogSize(){
+    return getSettings()->value("windowmanagment/listClientsDialogSize", QSize()).toSize();
+}
+
+void Settings::setListClientsDialogSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/listClientsDialogSize", value);
+}
+
+QPoint Settings::listClientsDialogPos(){
+    return getSettings()->value("windowmanagment/listClientsDialogPos", QPoint()).toPoint();
+}
+
+void Settings::setListClientsDialogPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/listClientsDialogPos", value);
+}
+
+QByteArray Settings::listClientsDialogGeometry(){
+    return getSettings()->value("windowmanagment/listClientsDialogGeo", QByteArray()).toByteArray();
+}
+
+void Settings::setListClientsDialogGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/listClientsDialogGeo", value);
+}
+
+
+QSize Settings::pilotDetailsSize(){
+    return getSettings()->value("windowmanagment/pilotDetailsSize", QSize()).toSize();
+}
+
+void Settings::setPilotDetailsSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/pilotDetailsSize", value);
+}
+
+QPoint Settings::pilotDetailsPos(){
+    return getSettings()->value("windowmanagment/pilotDetailsPos", QPoint()).toPoint();
+}
+
+void Settings::setPilotDetailsPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/pilotDetailsPos", value);
+}
+
+QByteArray Settings::pilotDetailsGeometry(){
+    return getSettings()->value("windowmanagment/pilotDetailsGeo", QByteArray()).toByteArray();
+}
+
+void Settings::setPilotDetailsGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/pilotDetailsGeo", value);
+}
+
+
+QSize Settings::planFlightDialogSize(){
+    return getSettings()->value("windowmanagment/planFlightDialogSize").toSize();
+}
+
+void Settings::setPlanFlightDialogSize(const QSize &value){
+    getSettings()->setValue("windowmanagment/planFlightDialogSize", value);
+}
+
+QPoint Settings::planFlightDialogPos(){
+    return getSettings()->value("windowmanagment/planFlightDialogPos").toPoint();
+}
+
+void Settings::setPlanFlightDialogPos(const QPoint &value){
+    getSettings()->setValue("windowmanagment/planFlightDialogPos", value);
+}
+
+QByteArray Settings::planFlightDialogGeometry(){
+    return getSettings()->value("windowmanagment/planFlightDialogGeo").toByteArray();
+}
+
+void Settings::setPlanFlightDialogGeometry(const QByteArray &value){
+    getSettings()->setValue("windowmanagment/planFlightDialogGeo", value);
 }

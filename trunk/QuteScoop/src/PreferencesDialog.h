@@ -8,6 +8,7 @@
 #include "_pch.h"
 
 #include "ui_PreferencesDialog.h"
+#include "winddata.h"
 
 class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
 {
@@ -16,6 +17,9 @@ class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
 public:
     static PreferencesDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     //
@@ -86,6 +90,7 @@ private slots:
     void on_cbDotSmoothing_stateChanged(int state);
     void on_cbReadSupFile_stateChanged(int state);
     void on_sbMaxTextLabels_valueChanged(int value);
+    void on_pbUpperWindColor_clicked();
 
     // navdata
     void on_editNavdir_editingFinished();

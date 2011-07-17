@@ -22,6 +22,9 @@ public slots:
     void performSearch();
     void pingReceived(QString, int);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void on_pbPingVoiceServers_clicked();
     void on_pbPingServers_clicked();

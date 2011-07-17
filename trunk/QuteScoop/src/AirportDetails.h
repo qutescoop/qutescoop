@@ -13,7 +13,7 @@
 #include "Airport.h"
 #include "MetarModel.h"
 #include "Whazzup.h"
-
+#include "Settings.h"
 
 #include "AirportDetailsAtcModel.h"
 #include "AirportDetailsArrivalsModel.h"
@@ -25,6 +25,9 @@ public:
     static AirportDetails *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     void refresh(Airport* airport = 0);
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void on_pbMetar_clicked();

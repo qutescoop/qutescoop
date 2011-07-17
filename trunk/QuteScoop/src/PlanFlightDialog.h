@@ -22,6 +22,9 @@ public:
 signals:
     void fpDownloaded();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void on_bDestDetails_clicked();
     void on_bDepDetails_clicked();

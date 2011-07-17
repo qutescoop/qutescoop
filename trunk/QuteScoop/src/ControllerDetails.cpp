@@ -37,6 +37,10 @@ ControllerDetails::ControllerDetails(QWidget *parent):
 }
 
 void ControllerDetails::refresh(Controller *newController) {
+    if (!Settings::controllerDetailsSize().isNull()) resize(Settings::controllerDetailsSize());
+    if (!Settings::controllerDetailsPos().isNull()) move(Settings::controllerDetailsPos());
+    if (!Settings::controllerDetailsGeometry().isNull()) restoreGeometry(Settings::controllerDetailsGeometry());
+
     if(newController != 0)
         controller = newController;
     else
@@ -132,4 +136,11 @@ void ControllerDetails::on_pbAirportDetails_clicked()
 {
     if (controller->airport() != 0)
         controller->airport()->showDetailsDialog();
+}
+
+void ControllerDetails::closeEvent(QCloseEvent *event){
+    Settings::setControllerDetailsPos(pos());
+    Settings::setControllerDetailsSize(size());
+    Settings::setControllerDetailsGeometry(saveGeometry());
+    event->accept();
 }

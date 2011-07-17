@@ -19,6 +19,9 @@ public:
     void destroyInstance();
     virtual void refresh(Pilot *pilot = 0);
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private slots:
     void on_cbPlotRoute_clicked(bool checked);
     void on_buttonAlt_clicked();

@@ -19,8 +19,12 @@ public:
     void destroyInstance();
     void refresh();
 
+
 signals:
     void needBookings();
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void on_dateTimeFilter_dateTimeChanged(QDateTime date);

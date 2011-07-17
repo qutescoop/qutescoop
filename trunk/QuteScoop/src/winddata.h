@@ -22,6 +22,8 @@ public:
     void setRawData(QString);
     void decodeData();
 
+    void refreshLists();
+
 
 signals:
 
