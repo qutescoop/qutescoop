@@ -339,7 +339,7 @@ void Window::refreshFriends() {
 }
 
 void Window::openPreferences() {
-    if (!Settings::preferencesDialogSize().isNull())     {PreferencesDialog::getInstance(true, this)->resize(Settings::preferencesDialogSize());}
+    //if (!Settings::preferencesDialogSize().isNull())     {PreferencesDialog::getInstance(true, this)->resize(Settings::preferencesDialogSize());}
     if (!Settings::preferencesDialogPos().isNull()) PreferencesDialog::getInstance(true)->move(Settings::preferencesDialogPos());
     if (!Settings::preferencesDialogGeometry().isNull()) PreferencesDialog::getInstance(true)->restoreGeometry(Settings::preferencesDialogGeometry());
 

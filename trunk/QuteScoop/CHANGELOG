@@ -2,6 +2,11 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.0rc19
+added:
+ *function to chose custom color for the wind flags
+ *save position, state and geometry from all dialogs and windows
+ 
 Version 2.0rc18
 fixed:
  *NavData update
