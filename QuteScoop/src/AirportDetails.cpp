@@ -82,6 +82,10 @@ AirportDetails::AirportDetails(QWidget *parent):
 }
 
 void AirportDetails::refresh(Airport* newAirport) {
+    if (!Settings::airportDetailsSize().isNull()) resize(Settings::airportDetailsSize());
+    if (!Settings::airportDetailsPos().isNull()) move(Settings::airportDetailsPos());
+    if (!Settings::airportDetailsGeometry().isNull()) restoreGeometry(Settings::airportDetailsGeometry());
+
     if(newAirport != 0) {
         if(newAirport != airport) {
             // scroll Boxes to top on new Data
@@ -261,4 +265,11 @@ QSet<Controller*> AirportDetails::checkSectors() const {
             result.insert(c);
     }
     return result;
+}
+
+void AirportDetails::closeEvent(QCloseEvent *event){
+   Settings::setAirportDetailsPos(pos());
+   Settings::setAirportDetailsSize(size());
+   Settings::setAirportDetailsGeometry(saveGeometry());
+   event->accept();
 }

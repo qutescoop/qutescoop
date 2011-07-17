@@ -38,6 +38,10 @@ PilotDetails::PilotDetails(QWidget *parent):
 }
 
 void PilotDetails::refresh(Pilot *newPilot) {
+    if (!Settings::pilotDetailsSize().isNull()) resize(Settings::pilotDetailsSize());
+    if (!Settings::pilotDetailsPos().isNull()) move(Settings::pilotDetailsPos());
+    if (!Settings::pilotDetailsGeometry().isNull()) restoreGeometry(Settings::pilotDetailsGeometry());
+
     if(newPilot != 0)
         pilot = newPilot;
     else
@@ -157,4 +161,11 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
         }
         refresh();
     }
+}
+
+void PilotDetails::closeEvent(QCloseEvent *event){
+    Settings::setPilotDetailsPos(pos());
+    Settings::setPilotDetailsSize(size());
+    Settings::setPilotDetailsGeometry(saveGeometry());
+    event->accept();
 }

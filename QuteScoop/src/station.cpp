@@ -82,7 +82,7 @@ void Station::renderWindStation(double deg, double knots)
     QPair<double, double> begin = NavData::pointDistanceBearing(lat, lon, dist, ideg);
     QPair<double, double> end = NavData::pointDistanceBearing(lat, lon, dist, deg);
 
-    QColor color(QColor::fromRgb(136, 255, 134));
+    QColor color(Settings::upperWindColor());
     glColor3f(color.redF(), color.greenF(), color.blueF());
     VERTEX(begin.first, begin.second);
     VERTEX(end.first, end.second);
@@ -135,32 +135,4 @@ void Station::renderWindStation(double deg, double knots)
 
         pos += 8;
     }
-
-    /*
-    double adist = qSqrt(2*(qPow(knots *0.7,2)));
-
-    double ardeg = ideg-45;
-    if(ardeg < 0) ardeg += 360;
-    double aldeg = ideg+45;
-    if(aldeg >= 360) aldeg -= 360;
-
-
-
-
-    QPair<double, double> arrowRight = NavData::pointDistanceBearing(end.first, end.second, adist, ardeg);
-    QPair<double, double> arrowLeft = NavData::pointDistanceBearing(end.first, end.second, adist , aldeg);
-
-
-    //right arrow line
-    //qglColor(QColor::fromRgb(136, 255, 134));
-    VERTEX(end.first, end.second);
-    VERTEX(arrowRight.first, arrowRight.second);
-
-
-    //left arrow line
-    //qglColor(QColor::fromRgb(136, 255, 134));
-    VERTEX(end.first, end.second);
-    VERTEX(arrowLeft.first, arrowLeft.second);
-    glEnd();*/
-
 }

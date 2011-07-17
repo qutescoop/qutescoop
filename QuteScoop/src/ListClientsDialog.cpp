@@ -79,6 +79,10 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
 }
 
 void ListClientsDialog::refresh() {
+    if (!Settings::listClientsDialogSize().isNull()) resize(Settings::listClientsDialogSize());
+    if (!Settings::listClientsDialogPos().isNull()) move(Settings::listClientsDialogPos());
+    if (!Settings::listClientsDialogGeometry().isNull()) restoreGeometry(Settings::listClientsDialogGeometry());
+
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     const WhazzupData &data = Whazzup::getInstance()->whazzupData();
 
@@ -366,4 +370,11 @@ void ListClientsDialog::voiceServerClicked(int row, int col) {
         } else
             QMessageBox::critical(this, tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
     }
+}
+
+void ListClientsDialog::closeEvent(QCloseEvent *event){
+    Settings::setListClientsDialogPos(pos());
+    Settings::setListClientsDialogSize(size());
+    Settings::setListClientsDialogGeometry(saveGeometry());
+    event->accept();
 }

@@ -6,6 +6,7 @@
 
 #include "NavData.h"
 #include "helpers.h"
+#include "Settings.h"
 
 class Station
 {

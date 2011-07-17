@@ -363,3 +363,10 @@ void PlanFlightDialog::on_pbVatsimPrefile_clicked() {
             QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
     }
 }
+
+void PlanFlightDialog::closeEvent(QCloseEvent *event){
+    Settings::setPlanFlightDialogPos(pos());
+    Settings::setPlanFlightDialogSize(size());
+    Settings::setPlanFlightDialogGeometry(saveGeometry());
+    event->accept();
+}

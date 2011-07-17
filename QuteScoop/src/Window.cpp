@@ -339,6 +339,10 @@ void Window::refreshFriends() {
 }
 
 void Window::openPreferences() {
+    if (!Settings::preferencesDialogSize().isNull())     {PreferencesDialog::getInstance(true, this)->resize(Settings::preferencesDialogSize());}
+    if (!Settings::preferencesDialogPos().isNull()) PreferencesDialog::getInstance(true)->move(Settings::preferencesDialogPos());
+    if (!Settings::preferencesDialogGeometry().isNull()) PreferencesDialog::getInstance(true)->restoreGeometry(Settings::preferencesDialogGeometry());
+
     PreferencesDialog::getInstance(true, this)->show();
     PreferencesDialog::getInstance(true)->raise();
     PreferencesDialog::getInstance(true)->activateWindow();
@@ -350,6 +354,11 @@ void Window::openPlanFlight() {
     PlanFlightDialog::getInstance(true)->raise();
     PlanFlightDialog::getInstance(true)->activateWindow();
     PlanFlightDialog::getInstance(true)->setFocus();
+
+    //if (Settings::planFlightDialogSize().isNull() == false) {PlanFlightDialog::getInstance(true)->resize(Settings::planFlightDialogSize());}
+    if (Settings::planFlightDialogPos().isNull() == false)  {PlanFlightDialog::getInstance(true)->move(Settings::planFlightDialogPos());}
+    if (Settings::planFlightDialogGeometry().isNull() == false)    {PlanFlightDialog::getInstance(true)->restoreGeometry(Settings::planFlightDialogGeometry());}
+
 }
 
 void Window::openBookedAtc() {
@@ -366,6 +375,7 @@ void Window::openListClients()
     ListClientsDialog::getInstance(true)->activateWindow();
     ListClientsDialog::getInstance(true)->setFocus();
 }
+
 void Window::on_actionDebugLog_triggered()
 {
     LogBrowserDialog::getInstance(true, this)->show();

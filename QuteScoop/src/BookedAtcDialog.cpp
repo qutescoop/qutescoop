@@ -55,6 +55,10 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
 }
 
 void BookedAtcDialog::refresh() {
+    if (!Settings::bookAtcDialogSize().isNull()) resize(Settings::bookAtcDialogSize());
+    if (!Settings::bookAtcDialogPos().isNull()) move(Settings::bookAtcDialogPos());
+    if (!Settings::bookAtcDialogGeometry().isNull()) restoreGeometry(Settings::bookAtcDialogGeometry());
+
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if(Settings::downloadBookings() &&
@@ -185,4 +189,11 @@ void BookedAtcDialog::on_tbPredict_clicked()
 {
     close();
     Whazzup::getInstance()->setPredictedTime(dateTimeFilter->dateTime());
+}
+
+void BookedAtcDialog::closeEvent(QCloseEvent *event){
+    Settings::setBookAtcDialogPos(pos());
+    Settings::setBookAtcDialogSize(size());
+    Settings::setBookAtcDialogGeometry(saveGeometry());
+    event->accept();
 }

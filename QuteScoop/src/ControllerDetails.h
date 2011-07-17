@@ -11,6 +11,7 @@
 
 #include "ClientDetails.h"
 #include "Controller.h"
+#include "Settings.h"
 
 class ControllerDetails: public ClientDetails, private Ui::ControllerDetails
 {
@@ -20,6 +21,9 @@ public:
     static ControllerDetails* getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
     void destroyInstance();
     void refresh(Controller* controller = 0);
+
+protected:
+    void closeEvent(QCloseEvent *event);
 
 private slots:
     void on_buttonAddFriend_clicked();
