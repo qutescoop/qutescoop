@@ -2,6 +2,12 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.0rc20
+fixed:
+ *direct focus on filterfield in the ListClientDialog
+ *upperwind direction
+ *join Teamspeakchannel for IVAO(Whazzup was changed)
+
 Version 2.0rc19
 added:
  *function to chose custom color for the wind flags

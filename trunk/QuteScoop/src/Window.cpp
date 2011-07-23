@@ -373,7 +373,7 @@ void Window::openListClients()
     ListClientsDialog::getInstance(true, this)->show();
     ListClientsDialog::getInstance(true)->raise();
     ListClientsDialog::getInstance(true)->activateWindow();
-    ListClientsDialog::getInstance(true)->setFocus();
+    //ListClientsDialog::getInstance(true)->setFocus();
 }
 
 void Window::on_actionDebugLog_triggered()

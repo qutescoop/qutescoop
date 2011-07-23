@@ -76,8 +76,8 @@ void Station::renderWindStation(double deg, double knots)
     double dist = 30;
     double ideg = deg+180; //invers direction
     if(ideg >= 360) ideg -= 360;
-    int ortoDeg = ideg+90; // 90° to invers direction
-    if(ortoDeg >= 360) ortoDeg -= 360;
+    int ortoDeg = ideg-90; // 90° to invers direction
+    if(ortoDeg < 0) ortoDeg += 360;
 
     QPair<double, double> begin = NavData::pointDistanceBearing(lat, lon, dist, ideg);
     QPair<double, double> end = NavData::pointDistanceBearing(lat, lon, dist, deg);
@@ -92,8 +92,8 @@ void Station::renderWindStation(double deg, double knots)
     int pos = 0;
     for(int drawFifty = n_Fifty; drawFifty > 0; drawFifty--)
     {                                                                                           //            B
-        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, ideg);       // C ->  ____/_| <- A
-        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -8 -pos, ideg);
+        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, deg);       // C ->  ____/_| <- A
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -8 -pos, deg);
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, ortoDeg);
 
         glBegin(GL_TRIANGLES);
@@ -109,8 +109,8 @@ void Station::renderWindStation(double deg, double knots)
 
     for(int drawTen = n_Ten; drawTen > 0; drawTen--)
     {
-        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist -pos + 6, ideg);    //             B
-        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -pos, ideg);        //   C-> _____/.  <- A(only needed to calculate B)
+        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist -pos + 6, deg);    //             B
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -pos, deg);        //   C-> _____/.  <- A(only needed to calculate B)
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, ortoDeg);
 
         glBegin(GL_LINES);
@@ -124,8 +124,8 @@ void Station::renderWindStation(double deg, double knots)
 
     for(int drawFive = n_Five; drawFive > 0; drawFive--)
     {
-        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist -pos + 3, ideg);    //             B
-        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -pos, ideg);        //   C-> _____/.  <- A(only needed to calculate B)
+        QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist -pos + 3, deg);    //             B
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist -pos, deg);        //   C-> _____/.  <- A(only needed to calculate B)
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 13, ortoDeg);
 
         glBegin(GL_LINES);

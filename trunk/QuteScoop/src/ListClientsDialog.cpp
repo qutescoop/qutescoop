@@ -378,3 +378,8 @@ void ListClientsDialog::closeEvent(QCloseEvent *event){
     Settings::setListClientsDialogGeometry(saveGeometry());
     event->accept();
 }
+
+void ListClientsDialog::showEvent(QShowEvent *event){
+    editFilter->setFocus();
+    event->accept();
+}
