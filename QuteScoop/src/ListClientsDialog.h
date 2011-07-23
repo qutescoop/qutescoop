@@ -24,6 +24,7 @@ public slots:
 
 protected:
     void closeEvent(QCloseEvent *event);
+    void showEvent(QShowEvent *event);
 
 private slots:
     void on_pbPingVoiceServers_clicked();

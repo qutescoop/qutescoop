@@ -26,7 +26,14 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
     timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddHHmmss");
 
     QStringList atisLines = atisMessage.split(QString::fromUtf8("^§")); // needed due to source encoded in UTF8 -
-                                                                            // found after some headache...
+                                                                        // found after some headache...
+
+    if(network== Client::IVAO){
+        voiceChannel = atisLines.first();
+        atisLines.removeFirst();
+    }
+
+
     atisMessage = "";
     while (!atisLines.isEmpty()) {
         QString line = atisLines.takeFirst();
