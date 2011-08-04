@@ -5,5 +5,5 @@ countrycodes.dat%%118
 firdisplay.dat%%242
 firdisplay.sup%%118
 firlist.dat%%241
-airlines.dat%%239
+airlines.dat%%250
 station.dat%%245
