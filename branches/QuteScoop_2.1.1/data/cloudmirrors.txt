@@ -1,0 +1,15 @@
+[2048px]
+http://xplanet-sydney.inside.net/clouds_2048.jpg 
+http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg
+http://home.megapass.co.kr/~holywatr/cloud_data/clouds_2048.jpg
+http://www.wizabit.eclipse.co.uk/xplanet/files/mirror/clouds_2048.jpg 
+ftp://ftp.iastate.edu/pub/xplanet/clouds_2048.jpg
+http://xplanet.explore-the-world.net/clouds_2048.jpg
+http://xplanet-lasvegas.inside.net/clouds_2048.jpg 
+[4096px]
+http://xplanet-sydney.inside.net/clouds_4096.jpg
+http://home.megapass.co.kr/~gitto88/cloud_data/clouds_4096.jpg
+http://home.megapass.co.kr/~holywatr/cloud_data/clouds_4096.jpg
+ftp://ftp.iastate.edu/pub/xplanet/clouds_4096.jpg
+http://xplanet.explore-the-world.net/clouds_4096.jpg
+http://xplanet-lasvegas.inside.net/clouds_4096.jpg
