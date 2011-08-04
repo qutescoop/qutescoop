@@ -84,8 +84,10 @@ private:
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
     //experimantal
-    void createWindList();
-    void renderWindStation(double lat, double lon ,double knots  ,double deg);
+    //void createWindList();
+    //void renderWindStation(double lat, double lon ,double knots  ,double deg);
+
+    void parseEarthClouds(void);
 
 
 
@@ -103,8 +105,10 @@ private:
     bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting;
     double xRot, yRot, zRot, zoom, aspectRatio;
 
+    QImage completedEarthTexIm;
+
         GLUquadricObj *earthQuad;
-        GLuint earthTex;
+        GLuint earthTex, cloudTex;
         GLuint earthList, coastlinesList, countriesList, gridlinesList;
         GLuint pilotsList, activeAirportsList, inactiveAirportsList;
         GLuint FixesList, usedWaypointsList, plannedRouteList;

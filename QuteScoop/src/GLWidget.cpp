@@ -16,6 +16,7 @@
 #include "PlanFlightDialog.h"
 #include "AirportDetails.h"
 #include "PilotDetails.h"
+//#include <GL/glext.h>   Multitexturing
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
@@ -447,15 +448,18 @@ void GLWidget::createStaticLists(){
     gluQuadricDrawStyle(earthQuad, GLU_FILL); // FILL, LINE, SILHOUETTE or POINT
     gluQuadricNormals(earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     gluQuadricOrientation(earthQuad, GLU_OUTSIDE); // GLU_INSIDE
-    if (Settings::glTextures()) {
-        QString earthTexFile = Settings::applicationDataDirectory(
+
+    parseEarthClouds();
+    //if (Settings::glTextures()) {
+        /*QString earthTexFile = Settings::applicationDataDirectory(
                     QString("textures/%1").arg(Settings::glTextureEarth()));
 //                    QString("textures/overlays/gfs.png"));
-//                    QString("textures/overlays/clouds_2048.jpg"));
+//                    QString("textures/clouds_4096.jpg"));
         QImage earthTexIm = QImage(earthTexFile);
-        //QImage earthTexIm2 = QImage(earthTexFile2).copy(59, 142, 1220 - 59, 854 - 177);
-        if (earthTexIm.isNull())
-            qWarning() << "Unable to load texture file" << earthTexFile;
+        //QImage earthTexIm2 = QImage(earthTexFile2).copy(59, 142, 1220 - 59, 854 - 177);*/
+        if (completedEarthTexIm.isNull())
+            qWarning() << "Unable to load texture file: " << Settings::applicationDataDirectory(
+                              QString("textures/%1").arg(Settings::glTextureEarth()));
         else {
             GLint max_texture_size;  glGetIntegerv(GL_MAX_TEXTURE_SIZE,  &max_texture_size);
             qDebug() << "OpenGL reported MAX_TEXTURE_SIZE as" << max_texture_size;
@@ -463,19 +467,42 @@ void GLWidget::createStaticLists(){
             // multitexturing units, if we need it once (headers in GL/glext.h, on Windows not available ?!)
             //GLint max_texture_units; glGetIntegerv(GL_MAX_TEXTURE_UNITS, &max_texture_units);
             //qDebug() << "OpenGL reported MAX_TEXTURE_UNITS as" << max_texture_units;
-            qDebug() << "Binding" << earthTexFile << "as" << earthTexIm.width()
-                     << "x" << earthTexIm.height() << "px texture";
+            qDebug() << "Binding parsed texture as" << completedEarthTexIm.width()
+                     << "x" << completedEarthTexIm.height() << "px texture";
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
             glGetError(); // empty the error buffer
-            earthTex = bindTexture(earthTexIm, GL_TEXTURE_2D,
+            earthTex = bindTexture(completedEarthTexIm, GL_TEXTURE_2D,
                                    GL_RGBA, QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
             if (GLenum glError = glGetError())
                 qCritical() << QString("OpenGL returned an error (0x%1)").arg((int) glError, 4, 16, QChar('0'));
             gluQuadricTexture(earthQuad, GL_TRUE); // prepare texture coordinates
         }
-    }
+    //}
+
+    /*QString cloudsTexFile = Settings::applicationDataDirectory(QString("textures/clouds/clouds_4096.jpg"));
+    QImage cloudTexIm;
+    cloudTexIm.load(cloudsTexFile);
+    cloudTexIm.convertToFormat(QImage::Format_ARGB32_Premultiplied, Qt::DiffuseAlphaDither);
+    cloudTexIm.createAlphaMask();
+    //QImage cloudTexIm = cloudTexIm_no_alpha.createMaskFromColor( qRgb(0,0,0) , Qt::MaskInColor);
+
+    qDebug() << "Test alpha channel" << cloudTexIm.hasAlphaChannel();
+    if(cloudTexIm.isNull())
+        qDebug() << "No clouds";
+    else{
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glGetError();
+        cloudTex = bindTexture(cloudTexIm, GL_TEXTURE_2D,
+                               GL_RGBA, QGLContext::PremultipliedAlphaBindOption);
+        if (GLenum glError = glGetError())
+            qCritical() << QString("OpenGL returned an error (0x%1)").arg((int) glError, 4, 16, QChar('0'));
+        gluQuadricTexture(earthQuad, GL_TRUE); // prepare texture coordinates
+
+    }*/
+
     earthList = glGenLists(1);
     glNewList(earthList, GL_COMPILE);
     qglColor(Settings::globeColor());
@@ -757,16 +784,25 @@ void GLWidget::paintGL() {
             }
         }
     }
-    if (Settings::glTextures() && earthTex != 0) {
+    if (Settings::glTextures() && earthTex != 0 && Settings::glLighting() == true) {
+            glEnable(GL_TEXTURE_2D);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
+            glBindTexture(GL_TEXTURE_2D, earthTex);
+        }
+    if (Settings::glTextures() && earthTex != 0 && Settings::glLighting() == false){
         glEnable(GL_TEXTURE_2D);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
         glBindTexture(GL_TEXTURE_2D, earthTex);
     }
+
+
     glCallList(earthList);
-    if (Settings::glTextures() && earthTex != 0) // disable textures after drawing earth...
-        glDisable(GL_TEXTURE_2D);
     if (Settings::glLighting())
         glDisable(GL_LIGHTING); // disable lighting after drawing earth...
+
+    if (Settings::glTextures() && earthTex != 0) // disable textures after drawing earth...
+        glDisable(GL_TEXTURE_2D);
+
     glCallList(coastlinesList);
     glCallList(countriesList);
     glCallList(gridlinesList);
@@ -810,9 +846,6 @@ void GLWidget::paintGL() {
                 glCallList(a->getDelDisplayList());
         }
     }
-
-
-
 
 
     if(Settings::showAirportCongestion())
@@ -860,7 +893,7 @@ void GLWidget::paintGL() {
             glTexCoord2i(0, 1);
             glVertex2f(-.05,  .15);
             glTexCoord2i(1, 1);
-            glVertex2f( .05,  .15);
+cloudsIm.width()            glVertex2f( .05,  .15);
             glTexCoord2i(1, 0);
             glVertex2f( .05, -.15);
             glTexCoord2f(.4, 0);
@@ -872,6 +905,8 @@ void GLWidget::paintGL() {
     glDisable(GL_TEXTURE_2D);
     */
     //drawCoordinateAxii(); // use this to see where the axii are (x = red, y = green, z = blue)
+
+
     glFlush(); // http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
 
     // just for performance measurement:
@@ -1370,7 +1405,6 @@ void GLWidget::drawCoordinateAxii() const { // just for debugging. Visualization
 }
 
 
-
 /////////////////////////
 // uncategorized
 /////////////////////////
@@ -1401,7 +1435,99 @@ void GLWidget::showInactiveAirports(bool value) {
     newWhazzupData(true);
 }
 
+void GLWidget::parseEarthClouds()
+{
+    qDebug() << "GLWidget::parseEarthClouds -- start parsing";
 
+    QImage earthTexIm;
+    QString cloudsTexFile = Settings::applicationDataDirectory(QString("textures/clouds/clouds_4096.jpg"));
+    QImage cloudsIm = QImage(cloudsTexFile);
+
+    if(Settings::glTextures())
+    {
+        QString earthTexFile = Settings::applicationDataDirectory(
+                    QString("textures/%1").arg(Settings::glTextureEarth()));
+        earthTexIm.load(earthTexFile);
+    }
+
+    if(Settings::glTextures() == false)
+    {
+        completedEarthTexIm = cloudsIm;
+        qDebug() << "GLWidget::parseEarthClouds -- finished using clouds";
+        return;
+    }
+
+    if(cloudsIm.isNull() && Settings::glTextures())
+    {
+        completedEarthTexIm = earthTexIm;
+        qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex";
+        return;
+    }
+
+    if(!cloudsIm.isNull() &&! earthTexIm.isNull())
+    {
+        //transform so same size, take the bigger image
+        int width = cloudsIm.width();
+        int height = cloudsIm.height();
+
+        if(earthTexIm.width() > width){
+            cloudsIm = cloudsIm.scaledToWidth(earthTexIm.width(), Qt::SmoothTransformation);
+            width = earthTexIm.width();
+        }
+        else{
+            earthTexIm = earthTexIm.scaledToWidth(width, Qt::SmoothTransformation);
+
+        }
+
+        if(earthTexIm.height() > height){
+            cloudsIm = cloudsIm.scaledToHeight(earthTexIm.height(), Qt::SmoothTransformation);
+            height = earthTexIm.height();
+        }
+        else {
+            earthTexIm = earthTexIm.scaledToHeight(height, Qt::SmoothTransformation);
+        }
+
+        completedEarthTexIm = earthTexIm;
+        completedEarthTexIm = completedEarthTexIm.convertToFormat(QImage::Format_ARGB32);
+
+
+
+        //read every pixel and add clouds to earth
+        for( int line = 0; line < completedEarthTexIm.height(); line++)
+        {
+            QRgb* cloudPixel = reinterpret_cast<QRgb*>(
+                        cloudsIm.scanLine(line));
+            QRgb* pixel = reinterpret_cast<QRgb*>(
+                        completedEarthTexIm.scanLine(line));
+
+            for(int pos = 0; pos < completedEarthTexIm.width() ; pos++)
+            {
+                int cRed = qRed(cloudPixel[pos]);
+                int cGreen = qGreen(cloudPixel[pos]);
+                int cBlue =  qBlue(cloudPixel[pos]);
+
+                int red = qRed(pixel[pos]);
+                int green = qGreen(pixel[pos]);
+                int blue = qBlue(pixel[pos]);
+                int alpha = qAlpha(pixel[pos]);
+
+                red += cRed;
+                green += cGreen;
+                blue += cBlue;
+
+                if(red > 255) red = 255;
+                if(green > 255) green = 255;
+                if(blue > 255) blue = 255;
+
+                pixel[pos] = qRgba( red, green, blue, alpha);
+            }
+        }
+    }
+
+    qDebug() << "GLWidget::parseEarthClouds -- finished parsing";
+
+
+}
 
 
 
