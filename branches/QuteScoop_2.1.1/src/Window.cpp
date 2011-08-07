@@ -956,7 +956,7 @@ void Window::startCloudDownload()
     cloudTimer.stop();
 
     if(!Settings::downloadClouds()){
-        mapScreen->glWidget->useClouds(false);
+        mapScreen->glWidget->cloudsAvaliable = false;
         return;
     }
 
@@ -1028,7 +1028,8 @@ void Window::cloudDownloadFinished(bool error)
     qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:" << Settings::applicationDataDirectory("textures/clouds/");
 
     cloudTimer.start(12600000); //start download in 3,5 h again
-    mapScreen->glWidget->useClouds(true);
+    mapScreen->glWidget->cloudsAvaliable = true;
+    mapScreen->glWidget->useClouds();
 }
 
 

@@ -1428,8 +1428,7 @@ void GLWidget::showInactiveAirports(bool value) {
 // Clouds, Lightning and Earth Textures
 //////////////////////////////////
 
-void GLWidget::useClouds(bool use){
-    cloudsAvaliable = use;
+void GLWidget::useClouds(){
     parseEarthClouds();
 }
 
@@ -1439,9 +1438,10 @@ void GLWidget::parseEarthClouds()
 
     QImage earthTexIm;
     QImage cloudsIm;
+    //completedEarthTexIm
 
     //Check if clouds available
-    if(cloudsAvaliable && Settings::downloadClouds()){
+    if(cloudsAvaliable && Settings::showClouds()){
     QString cloudsTexFile = Settings::applicationDataDirectory(QString("textures/clouds/clouds.jpg"));
     cloudsIm = QImage(cloudsTexFile);
     }
@@ -1465,7 +1465,12 @@ void GLWidget::parseEarthClouds()
         qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex";
     }
 
-    if(!cloudsIm.isNull() &&! earthTexIm.isNull())
+    if(!Settings::showClouds() && Settings::glTextures()){
+        completedEarthTexIm = earthTexIm;
+        qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex";
+    }
+
+    if(!cloudsIm.isNull() && !earthTexIm.isNull() && Settings::showClouds())
     {
         //transform so same size, take the bigger image
         int width = cloudsIm.width();
@@ -1549,7 +1554,7 @@ void GLWidget::parseEarthClouds()
             qCritical() << QString("OpenGL returned an error (0x%1)").arg((int) glError, 4, 16, QChar('0'));
         gluQuadricTexture(earthQuad, GL_TRUE); // prepare texture coordinates
     }
-    //updateGL();
+    update();
 }
 
 

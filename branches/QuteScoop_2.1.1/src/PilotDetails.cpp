@@ -72,6 +72,7 @@ void PilotDetails::refresh(Pilot *newPilot) {
     lblAirline->setText(pilot->airline);
     lblAltitude->setText(QString("%1 ft").arg(pilot->altitude));
     lblGroundspeed->setText(QString("%1 kts").arg(pilot->groundspeed));
+    lblSquwak->setText(QString("%1").arg(pilot->transponder));
 
     // flight status
     groupStatus->setTitle(QString("Status: %1").arg(pilot->flightStatusShortString()));

@@ -72,15 +72,15 @@ MapScreen::MapScreen(QWidget *parent) :
     L_NavData->raise();
     xDistance += 87;
 
-    L_Wind = new OnScreenLabel(this);
-    L_Wind->typ = 4;
-    connect(L_Wind, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
-    L_Wind->setText(tr("Upperwind"));
-    L_Wind->setFont(QFont("Arial", 16, QFont::Bold));
-    L_Wind->setAutoFillBackground(true);
-    L_Wind->setMouseTracking(true);
-    L_Wind->move(xDistance,0);
-    L_Wind->raise();
+    L_Weather = new OnScreenLabel(this);
+    L_Weather->typ = 4;
+    connect(L_Weather, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    L_Weather->setText(tr("Weather"));
+    L_Weather->setFont(QFont("Arial", 16, QFont::Bold));
+    L_Weather->setAutoFillBackground(true);
+    L_Weather->setMouseTracking(true);
+    L_Weather->move(xDistance,0);
+    L_Weather->raise();
 
     W_Pilots = new OnScreenWidget(this);
     W_Pilots->typ = 1;
@@ -97,10 +97,10 @@ MapScreen::MapScreen(QWidget *parent) :
     connect(W_NavData, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
     connect(W_NavData, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
-    W_Wind = new OnScreenWidget(this);
-    W_Wind->typ = 4;
-    connect(W_Wind, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(W_Wind, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    W_Weather = new OnScreenWidget(this);
+    W_Weather->typ = 4;
+    connect(W_Weather, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
+    connect(W_Weather, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
     createPilotWidget();
     W_Pilots->move(0,L_Pilots->height()-5);
@@ -109,7 +109,7 @@ MapScreen::MapScreen(QWidget *parent) :
     createNavDataWidget();
     W_NavData->move(0,L_Pilots->height()-5);
     createWindWidget();
-    W_Wind->move(0, L_Pilots->height()-5);
+    W_Weather->move(0, L_Pilots->height()-5);
 
 
 
@@ -127,7 +127,7 @@ void MapScreen::createPilotWidget()
     W_Pilots->setMouseTracking(true);
     W_Pilots->setAutoFillBackground(true);
     //W_Pilots->setContentsMargins(3, L_Pilots->height(), 3, 3);
-    W_Pilots->setMinimumWidth(xDistance+L_Wind->width());
+    W_Pilots->setMinimumWidth(xDistance+L_Weather->width());
 
     //Show all routes button
     P_toggleRoutes = new QPushButton();
@@ -155,7 +155,7 @@ void MapScreen::createControllerWidget()
     W_Controller->setMouseTracking(true);
     W_Controller->setAutoFillBackground(true);
     //W_Controller->setContentsMargins(3, L_Pilots->height(), 3, 3);
-    W_Controller->setMinimumWidth(xDistance+L_Wind->width());
+    W_Controller->setMinimumWidth(xDistance+L_Weather->width());
 
 
     C_toggleCTR = new QPushButton();
@@ -196,7 +196,7 @@ void MapScreen::createNavDataWidget()
 
     W_NavData->setMouseTracking(true);
     W_NavData->setAutoFillBackground(true);
-    W_NavData->setMinimumWidth(xDistance+L_Wind->width());
+    W_NavData->setMinimumWidth(xDistance+L_Weather->width());
     //W_NavData->setContentsMargins(3, L_Pilots->height(), 3, 3);
 
     N_sectorsAll = new QPushButton();
@@ -229,10 +229,11 @@ void MapScreen::createNavDataWidget()
 
 void MapScreen::createWindWidget()
 {
-    W_Wind->setMouseTracking(true);
-    W_Wind->setAutoFillBackground(true);
-    W_Wind->setMinimumWidth(xDistance+L_Wind->width());
+    W_Weather->setMouseTracking(true);
+    W_Weather->setAutoFillBackground(true);
+    W_Weather->setMinimumWidth(xDistance+L_Weather->width());
 
+    // On/Off buttons for wind and clouds
     W_toggleWind = new QPushButton();
     W_toggleWind->setText(tr("upperwind"));
     W_toggleWind->setCheckable(true);
@@ -240,29 +241,41 @@ void MapScreen::createWindWidget()
     connect(W_toggleWind, SIGNAL(clicked()), this, SLOT(W_toggleWindClicked()));
     W_layout.addWidget(W_toggleWind);
 
+    W_toggleClouds = new QPushButton;
+    W_toggleClouds->setText(tr("clouds"));
+    W_toggleClouds->setCheckable(true);
+    W_toggleClouds->setChecked(Settings::showClouds());
+    connect(W_toggleClouds, SIGNAL(clicked()), this, SLOT(W_toggleCloudsClicked()));
+    W_layout.addWidget(W_toggleClouds);
+
+
+    //upperwind settings
     W_minus = new QPushButton();
     W_minus->setText(tr("-"));
     connect(W_minus, SIGNAL(clicked()), this, SLOT(W_minusClicked()));
-    W_layout.addWidget(W_minus);
+    W_layout1.addWidget(W_minus);
 
     W_slider = new QSlider();
     W_slider->setRange(0, 40);
     W_slider->setOrientation(Qt::Horizontal);
     W_slider->setValue(Settings::upperWindAlt());
     connect(W_slider, SIGNAL(valueChanged(int)), this, SLOT(W_sliderChanged()));
-    W_layout.addWidget(W_slider);
+    W_layout1.addWidget(W_slider);
 
     W_plus = new QPushButton();
     W_plus->setText(tr("+"));
     connect(W_plus, SIGNAL(clicked()), this, SLOT(W_plusClicked()));
-    W_layout.addWidget(W_plus);
+    W_layout1.addWidget(W_plus);
 
     W_windAlt = new QLabel();
     W_windAlt->setText(QString("%1").arg((Settings::upperWindAlt()*1000)));
-    W_layout.addWidget(W_windAlt);
+    W_layout1.addWidget(W_windAlt);
 
-    W_Wind->setLayout(&W_layout);
-    W_Wind->lower();
+    W_Vlayout.addLayout(&W_layout);
+    W_Vlayout.addLayout(&W_layout1);
+
+    W_Weather->setLayout(&W_Vlayout);
+    W_Weather->lower();
 }
 
 void MapScreen::resizeEvent(QResizeEvent *event)
@@ -288,53 +301,53 @@ void MapScreen::LabelEntered(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
         W_Controller->lower();
         W_NavData->lower();
-        W_Wind->lower();
+        W_Weather->lower();
 
         L_Pilots->setFont(f);
         f.setUnderline(false);
         L_Controller->setFont(f);
         L_NavData->setFont(f);
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
     case 2:
         W_Controller->raise();
         L_Controller->raise();
         L_Pilots->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
         W_Pilots->lower();
         W_NavData->lower();
-        W_Wind->lower();
+        W_Weather->lower();
 
         L_Controller->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_NavData->setFont(f);
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
     case 3:
         W_NavData->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
         L_Controller->raise();
         L_Pilots->raise();
         W_Pilots->lower();
         W_Controller->lower();
-        W_Wind->lower();
+        W_Weather->lower();
 
         L_NavData->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_Controller->setFont(f);
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
 
     case 4:
-        W_Wind->raise();
-        L_Wind->raise();
+        W_Weather->raise();
+        L_Weather->raise();
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
@@ -342,7 +355,7 @@ void MapScreen::LabelEntered(int typ)
         W_Controller->lower();
         W_NavData->lower();
 
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_Controller->setFont(f);
@@ -374,7 +387,7 @@ void MapScreen::LabelLeft(int typ)
         break;
 
     case 4:
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
 
     default:
@@ -396,53 +409,53 @@ void MapScreen::WidgetEntered(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
         W_Controller->lower();
         W_NavData->lower();
-        W_Wind->lower();
+        W_Weather->lower();
 
         L_Pilots->setFont(f);
         f.setUnderline(false);
         L_Controller->setFont(f);
         L_NavData->setFont(f);
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
     case 2:
         W_Controller->raise();
         L_Controller->raise();
         L_Pilots->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
         W_Pilots->lower();
         W_NavData->lower();
-        W_Wind->lower();
+        W_Weather->lower();
 
         L_Controller->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_NavData->setFont(f);
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
     case 3:
         W_NavData->raise();
         L_NavData->raise();
         L_Pilots->raise();
         L_Controller->raise();
-        L_Wind->raise();
+        L_Weather->raise();
         W_Pilots->lower();
         W_Controller->lower();
-        W_Wind->lower();
+        W_Weather->lower();
 
         L_NavData->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_Controller->setFont(f);
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
 
     case 4:
-        W_Wind->raise();
-        L_Wind->raise();
+        W_Weather->raise();
+        L_Weather->raise();
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
@@ -450,7 +463,7 @@ void MapScreen::WidgetEntered(int typ)
         W_Controller->lower();
         W_NavData->lower();
 
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         f.setUnderline(false);
         L_Pilots->setFont(f);
         L_Controller->setFont(f);
@@ -475,7 +488,7 @@ void MapScreen::WidgetLeft(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
 
         L_Pilots->setFont(f);
         break;
@@ -484,7 +497,7 @@ void MapScreen::WidgetLeft(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
 
         L_Controller->setFont(f);
         break;
@@ -493,18 +506,18 @@ void MapScreen::WidgetLeft(int typ)
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
 
         L_NavData->setFont(f);
         break;
     case 4:
-        W_Wind->lower();
+        W_Weather->lower();
         L_Pilots->raise();
         L_Controller->raise();
         L_NavData->raise();
-        L_Wind->raise();
+        L_Weather->raise();
 
-        L_Wind->setFont(f);
+        L_Weather->setFont(f);
         break;
     default:
         return;
@@ -589,7 +602,7 @@ void MapScreen::N_toggleInactiveClicked()
 }
 
 ////////////////////////////
-// Wind funktions
+// Weather funktions
 ////////////////////////////
 
 void MapScreen::W_toggleWindClicked()
@@ -628,6 +641,21 @@ void MapScreen::W_sliderChanged()
     Settings::setUpperWindAlt(W_slider->value());
     W_windAlt->setText(QString("%1").arg((W_slider->value()*1000)));
     glWidget->update();
+}
+
+void MapScreen::W_toggleCloudsClicked()
+{
+    if(Settings::showClouds() == false){
+        Settings::setShowClouds(true);
+        glWidget->useClouds();
+        //glWidget->update();
+        return;
+    }
+
+    Settings::setShowClouds(false);
+    glWidget->useClouds();
+    //glWidget->update();
+    return;
 }
 
 ///////////////////////////

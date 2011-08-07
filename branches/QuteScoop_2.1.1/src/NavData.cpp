@@ -24,7 +24,8 @@ NavData::NavData() {
     loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
-    loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));
+    if(Settings::useESAirlines()){loadAirlineCodes(Settings::ESAirlinesDirectory());}
+    else{ loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));}
     if(Settings::checkForUpdates())
         checkForDataUpdates();
 }
@@ -70,12 +71,20 @@ void NavData::loadSectors() {
 void NavData::loadAirlineCodes(const QString &filename)
 {
     airlineCodes.clear();
+    if(filename.isEmpty()){
+        qDebug() << "NavData::loadAirlineCodes -- no airline data loaded";
+        return;
+    }
     FileReader fileReader(filename);
 
     while(!fileReader.atEnd()){
 
-        QStringList line = fileReader.nextLine().split(0x09);  // 0x09 code for Tabulator
-        airlineCodes[line.value(0)] = line.value(1);
+        QStringList line = fileReader.nextLine().split(0x09);   // 0x09 code for Tabulator
+        if(line.size()< 3){         // if prefent crashing when loading a wrong format
+            GuiMessages::warning(QString(tr("%1 has not the correct format to load the airlines!")).arg(filename));
+            return;
+        }
+        airlineCodes[line.value(0)] = line.value(2);
     }
 }
 

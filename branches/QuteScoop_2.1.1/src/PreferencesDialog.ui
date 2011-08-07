@@ -24,7 +24,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="downloadTab">
       <attribute name="title">
@@ -817,6 +817,53 @@ p, li { white-space: pre-wrap; }
             </item>
             <item>
              <spacer name="horizontalSpacer_17">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_13">
+            <property name="topMargin">
+             <number>10</number>
+            </property>
+            <property name="bottomMargin">
+             <number>10</number>
+            </property>
+            <item>
+             <widget class="QCheckBox" name="cbUseESAirlines">
+              <property name="text">
+               <string>use Euroscop airline data (ponit to ICAO_airlines.txt)</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="editESAirlines">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="bt_browseESAirlines">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>browse...</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_22">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -3232,7 +3279,6 @@ airports with at least</string>
   </layout>
  </widget>
  <tabstops>
-  <tabstop>tabWidget</tabstop>
   <tabstop>cbNetwork</tabstop>
   <tabstop>editUserDefinedLocation</tabstop>
   <tabstop>cbDownloadPeriodically</tabstop>
@@ -3240,6 +3286,8 @@ airports with at least</string>
   <tabstop>cbDownloadOnStartup</tabstop>
   <tabstop>cbSaveWhazzupData</tabstop>
   <tabstop>cbShootScreenshots</tabstop>
+  <tabstop>cbScreenshotMethod</tabstop>
+  <tabstop>cbScreenshotFormat</tabstop>
   <tabstop>gbDownloadBookings</tabstop>
   <tabstop>editBookingsLocation</tabstop>
   <tabstop>cbBookingsPeriodically</tabstop>
@@ -3249,30 +3297,29 @@ airports with at least</string>
   <tabstop>editProxyPort</tabstop>
   <tabstop>editProxyUser</tabstop>
   <tabstop>editProxyPassword</tabstop>
+  <tabstop>cbCheckForUpdates</tabstop>
+  <tabstop>cbDownloadClouds</tabstop>
+  <tabstop>cbUseHighResClouds</tabstop>
+  <tabstop>buttonBox</tabstop>
   <tabstop>rbNone</tabstop>
   <tabstop>rbTeamSpeak</tabstop>
   <tabstop>rbVRC</tabstop>
   <tabstop>editVoiceCallsign</tabstop>
   <tabstop>editVoiceUser</tabstop>
   <tabstop>editVoicePassword</tabstop>
-  <tabstop>cbShowFixes</tabstop>
-  <tabstop>editNavdir</tabstop>
+  <tabstop>cbUseNavDatabase</tabstop>
   <tabstop>browseNavdirButton</tabstop>
+  <tabstop>editNavdir</tabstop>
+  <tabstop>cbUseESAirlines</tabstop>
+  <tabstop>bt_browseESAirlines</tabstop>
+  <tabstop>editESAirlines</tabstop>
+  <tabstop>cbShowFixes</tabstop>
+  <tabstop>useSelectionRectangle</tabstop>
   <tabstop>sbZoomFactor</tabstop>
   <tabstop>pbWheelCalibrate</tabstop>
-  <tabstop>cbBlend</tabstop>
-  <tabstop>cbLineSmoothing</tabstop>
-  <tabstop>cbLighting</tabstop>
-  <tabstop>pbSunLightColor</tabstop>
-  <tabstop>buttonResetEarthSpace</tabstop>
-  <tabstop>pbReinitOpenGl</tabstop>
-  <tabstop>tedStylesheet</tabstop>
-  <tabstop>pbStylesheetExample1</tabstop>
-  <tabstop>pbStylesheetExample2</tabstop>
-  <tabstop>pbInactAirportFontColor</tabstop>
-  <tabstop>pbInactAirportFont</tabstop>
-  <tabstop>pbInactAirportDotColor</tabstop>
-  <tabstop>sbInactAirportDotSize</tabstop>
+  <tabstop>pbImportFromFile</tabstop>
+  <tabstop>pbExportToFile</tabstop>
+  <tabstop>cbResetConfiguration</tabstop>
   <tabstop>pbAirportFontColor</tabstop>
   <tabstop>pbAirportFont</tabstop>
   <tabstop>pbAirportDotColor</tabstop>
@@ -3313,7 +3360,49 @@ airports with at least</string>
   <tabstop>pbDestLineColor</tabstop>
   <tabstop>sbDestLineStrength</tabstop>
   <tabstop>buttonResetPilot</tabstop>
-  <tabstop>buttonBox</tabstop>
+  <tabstop>pbStylesheetExample2</tabstop>
+  <tabstop>cbLineSmoothing</tabstop>
+  <tabstop>cbLighting</tabstop>
+  <tabstop>pbInactAirportFontColor</tabstop>
+  <tabstop>cbSendVersionInfo</tabstop>
+  <tabstop>pbSunLightColor</tabstop>
+  <tabstop>pbStylesheetExample1</tabstop>
+  <tabstop>cbBlend</tabstop>
+  <tabstop>pbInactAirportDotColor</tabstop>
+  <tabstop>pbInactAirportFont</tabstop>
+  <tabstop>sbInactAirportDotSize</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>cbDotSmoothing</tabstop>
+  <tabstop>sbMaxTextLabels</tabstop>
+  <tabstop>glStippleLines</tabstop>
+  <tabstop>pbGlobeColor</tabstop>
+  <tabstop>pbGridLineColor</tabstop>
+  <tabstop>pbCoastLineColor</tabstop>
+  <tabstop>pbCountryLineColor</tabstop>
+  <tabstop>sbGridLineStrength</tabstop>
+  <tabstop>sbCoastLineStrength</tabstop>
+  <tabstop>sbCountryLineStrength</tabstop>
+  <tabstop>sbEarthGridEach</tabstop>
+  <tabstop>glTextures</tabstop>
+  <tabstop>glTextureEarth</tabstop>
+  <tabstop>pbBackgroundColor</tabstop>
+  <tabstop>glLights</tabstop>
+  <tabstop>glLightsSpread</tabstop>
+  <tabstop>pbSpecularLightColor</tabstop>
+  <tabstop>glEarthShininess</tabstop>
+  <tabstop>pbUpperWindColor</tabstop>
+  <tabstop>pbStylesheetUpdate</tabstop>
+  <tabstop>applyAirports</tabstop>
+  <tabstop>cbDepLineDashed</tabstop>
+  <tabstop>cbDestLineDashed</tabstop>
+  <tabstop>waypointsFontColor</tabstop>
+  <tabstop>waypointsFont</tabstop>
+  <tabstop>waypointsDotColor</tabstop>
+  <tabstop>waypointsDotSize</tabstop>
+  <tabstop>applyPilots</tabstop>
+  <tabstop>buttonResetEarthSpace</tabstop>
+  <tabstop>pbReinitOpenGl</tabstop>
+  <tabstop>tedStylesheet</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>
@@ -3426,8 +3515,8 @@ airports with at least</string>
      <y>285</y>
     </hint>
     <hint type="destinationlabel">
-     <x>158</x>
-     <y>313</y>
+     <x>186</x>
+     <y>371</y>
     </hint>
    </hints>
   </connection>
@@ -3438,12 +3527,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>441</y>
+     <x>64</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
-     <x>393</x>
-     <y>435</y>
+     <x>68</x>
+     <y>91</y>
     </hint>
    </hints>
   </connection>
@@ -3454,12 +3543,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>213</x>
-     <y>388</y>
+     <x>64</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel">
-     <x>305</x>
-     <y>390</y>
+     <x>68</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -3470,12 +3559,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>213</x>
-     <y>388</y>
+     <x>64</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel">
-     <x>534</x>
-     <y>390</y>
+     <x>74</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -3486,12 +3575,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>441</y>
+     <x>64</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
-     <x>873</x>
-     <y>476</y>
+     <x>72</x>
+     <y>85</y>
     </hint>
    </hints>
   </connection>
@@ -3502,12 +3591,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>441</y>
+     <x>64</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
-     <x>957</x>
-     <y>476</y>
+     <x>76</x>
+     <y>85</y>
     </hint>
    </hints>
   </connection>
@@ -3518,12 +3607,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>213</x>
-     <y>388</y>
+     <x>64</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel">
-     <x>410</x>
-     <y>394</y>
+     <x>71</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -3534,12 +3623,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>441</y>
+     <x>64</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
-     <x>563</x>
-     <y>441</y>
+     <x>72</x>
+     <y>91</y>
     </hint>
    </hints>
   </connection>
@@ -3550,12 +3639,12 @@ airports with at least</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>212</x>
-     <y>441</y>
+     <x>64</x>
+     <y>91</y>
     </hint>
     <hint type="destinationlabel">
-     <x>782</x>
-     <y>476</y>
+     <x>68</x>
+     <y>85</y>
     </hint>
    </hints>
   </connection>
@@ -4034,8 +4123,8 @@ airports with at least</string>
      <y>85</y>
     </hint>
     <hint type="destinationlabel">
-     <x>434</x>
-     <y>397</y>
+     <x>85</x>
+     <y>64</y>
     </hint>
    </hints>
   </connection>
@@ -4050,8 +4139,8 @@ airports with at least</string>
      <y>87</y>
     </hint>
     <hint type="destinationlabel">
-     <x>434</x>
-     <y>430</y>
+     <x>85</x>
+     <y>68</y>
     </hint>
    </hints>
   </connection>
@@ -4100,6 +4189,38 @@ airports with at least</string>
     <hint type="destinationlabel">
      <x>665</x>
      <y>625</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbUseESAirlines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>editESAirlines</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>291</x>
+     <y>322</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>429</x>
+     <y>319</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbUseESAirlines</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>bt_browseESAirlines</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>323</x>
+     <y>324</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>688</x>
+     <y>325</y>
     </hint>
    </hints>
   </connection>

@@ -83,11 +83,12 @@ public slots:
     void N_toggleRouteFixClicked();
     void N_toggleInactiveClicked();
 
-    //Wind
+    //Weather
     void W_toggleWindClicked();
     void W_minusClicked();
     void W_plusClicked();
     void W_sliderChanged();
+    void W_toggleCloudsClicked();
 
 
 private:
@@ -96,12 +97,12 @@ private:
     void createNavDataWidget();
     void createWindWidget();
 
-    OnScreenLabel *L_Controller, *L_Pilots, *L_NavData, *L_Wind;
-    OnScreenWidget *W_Controller, *W_Pilots, *W_NavData, *W_Wind;
+    OnScreenLabel *L_Controller, *L_Pilots, *L_NavData, *L_Weather;
+    OnScreenWidget *W_Controller, *W_Pilots, *W_NavData, *W_Weather;
 
 
-    QHBoxLayout C_layout, P_layout, N_layout, N_layout1, W_layout;
-    QVBoxLayout N_Vlayout;
+    QHBoxLayout C_layout, P_layout, N_layout, N_layout1, W_layout, W_layout1;
+    QVBoxLayout N_Vlayout, W_Vlayout;
 
     //for PilotTab
     QPushButton *P_toggleRoutes, *P_togglePilotLabels;
@@ -114,8 +115,8 @@ private:
     QPushButton  *N_sectorsAll, *N_InactiveAirports, *N_RouteWaypoints;
     QPushButton  *N_FIX, *N_VOR, *N_NDB;
 
-    //for windtab
-    QPushButton *W_toggleWind, *W_plus, *W_minus;
+    //for WeatherTab
+    QPushButton *W_toggleWind, *W_plus, *W_minus, *W_toggleClouds;
     QSlider *W_slider;
     QLabel *W_windAlt;
 

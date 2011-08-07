@@ -10,6 +10,7 @@
 #include "ui_PreferencesDialog.h"
 #include "winddata.h"
 
+
 class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
 {
     Q_OBJECT
@@ -96,6 +97,9 @@ private slots:
     void on_editNavdir_editingFinished();
     void on_browseNavdirButton_clicked();
     void on_cbUseNavDatabase_stateChanged(int state);
+    void on_cbUseESAirlines_stateChanged(int state);
+    void on_bt_browseESAirlines_clicked();
+    void on_editESAirlines_editingFinished();
 
     // earth and space
     void on_buttonResetEarthSpace_clicked();

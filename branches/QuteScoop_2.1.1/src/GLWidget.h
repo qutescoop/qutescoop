@@ -27,6 +27,7 @@ public:
 
     QPair<double, double> currentPosition() const;
     ClientSelectionWidget *clientSelection;
+    bool cloudsAvaliable;
 
 public slots:
     virtual void initializeGL();
@@ -52,7 +53,7 @@ public slots:
     void createControllersLists();
     void createStaticLists();
 
-    void useClouds(bool use);
+    void useClouds();
 
 
 signals:
@@ -110,7 +111,6 @@ private:
 
     QImage completedEarthTexIm;
     bool lightsGenerated;
-    bool cloudsAvaliable;
 
         GLUquadricObj *earthQuad;
         GLuint earthTex, cloudTex;

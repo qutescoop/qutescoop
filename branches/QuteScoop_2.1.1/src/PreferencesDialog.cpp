@@ -81,6 +81,10 @@ void PreferencesDialog::loadSettings() {
     browseNavdirButton->setEnabled(Settings::useNavdata());
     cbUseNavDatabase->setChecked(Settings::useNavdata());
     cbShowFixes->setChecked(Settings::showAllWaypoints());
+    cbUseESAirlines->setChecked(Settings::useESAirlines());
+    editESAirlines->setText(Settings::ESAirlinesDirectory());
+    editESAirlines->setEnabled(Settings::useESAirlines());
+
 
     // Display
     cbReadSupFile->setChecked(Settings::useSupFile());
@@ -1162,7 +1166,7 @@ void PreferencesDialog::on_glTextures_toggled(bool checked) {
 void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
     if(settingsLoaded){
         Settings::setGlTextureEarth(tex);
-        Window::getInstance()->mapScreen->glWidget->useClouds(Settings::downloadClouds());
+        Window::getInstance()->mapScreen->glWidget->useClouds();
     }
 }
 
@@ -1210,3 +1214,37 @@ void PreferencesDialog::closeEvent(QCloseEvent *event){
     Settings::setPreferencesDialogGeometry(saveGeometry());
     event->accept();
 }
+
+void PreferencesDialog::on_cbUseESAirlines_stateChanged(int state){
+    if(state == Qt::Checked) Settings::setUseESAirlnies(true);
+    if(state == Qt::Unchecked) Settings::setUseESAirlnies(false);
+}
+
+void PreferencesDialog::on_bt_browseESAirlines_clicked(){
+    QString path = QFileDialog::getOpenFileName(this, tr("Open ICAO_Airlines.txt"), QDir::homePath(),"Textfile (*.txt)");
+    Settings::setESAirlinesDirectory(path);
+    editESAirlines->setText(Settings::ESAirlinesDirectory());
+    qDebug() << "directory for alternativ airline data set: " << Settings::ESAirlinesDirectory();
+}
+
+void PreferencesDialog::on_editESAirlines_editingFinished(){
+    Settings::setESAirlinesDirectory(editESAirlines->text());
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

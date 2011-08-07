@@ -14,7 +14,7 @@
    <string>AUA325</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
@@ -102,7 +102,8 @@
         <item>
          <widget class="QLabel" name="label_12">
           <property name="toolTip">
-           <string>ICAO airline (source: data/airlines.dat)</string>
+           <string>airline callsing
+source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
           </property>
           <property name="text">
            <string>airline</string>
@@ -122,6 +123,58 @@
           </property>
           <property name="text">
            <string>Austrian</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,0,0,0,0,0">
+        <property name="spacing">
+         <number>10</number>
+        </property>
+        <property name="margin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_13">
+          <property name="toolTip">
+           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
+          </property>
+          <property name="text">
+           <string>GS</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblGroundspeed">
+          <property name="font">
+           <font>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
+          </property>
+          <property name="text">
+           <string>419 kts</string>
           </property>
          </widget>
         </item>
@@ -155,12 +208,9 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label_13">
-          <property name="toolTip">
-           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
-          </property>
+         <widget class="QLabel" name="label_14">
           <property name="text">
-           <string>GS</string>
+           <string>squwak:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -168,20 +218,30 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lblGroundspeed">
+         <widget class="QLabel" name="lblSquwak">
           <property name="font">
            <font>
             <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
-          <property name="toolTip">
-           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
-          </property>
           <property name="text">
-           <string>419 kts</string>
+           <string>2200</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </item>
@@ -684,7 +744,9 @@ route</string>
   <tabstop>buttonAddFriend</tabstop>
   <tabstop>buttonBox</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonShowOnMap</sender>

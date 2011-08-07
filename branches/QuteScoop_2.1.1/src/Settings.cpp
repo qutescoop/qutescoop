@@ -368,7 +368,6 @@ void Settings::setProxyPassword(QString password) {
     getSettings()->setValue("proxy/password", password);
 }
 
-
 void Settings::applyProxySetting(QHttp *http) {
     if(!useProxy() || http == 0)
         return;
@@ -398,9 +397,24 @@ void Settings::setUseNavdata(bool value) {
     getSettings()->setValue("database/use", value);
 }
 
+bool Settings::useESAirlines(){
+    return getSettings()->value("database/useESAirlines", false).toBool();
+}
+void Settings::setUseESAirlnies(bool value){
+    getSettings()->setValue("database/useESAirlines", value);
+}
+
+QString Settings::ESAirlinesDirectory(){
+    return getSettings()->value("database/ESAirlinesDirectory").toString();
+}
+void Settings::setESAirlinesDirectory(QString directory){
+    getSettings()->setValue("database/ESAirlinesDirectory", directory);
+}
+
 bool Settings::showAllWaypoints() {
     return getSettings()->value("database/showAllWaypoints", false).toBool();
 }
+
 void Settings::setShowAllWaypoints(bool value) {
     getSettings()->setValue("database/showAllWaypoints", value);
 }
@@ -452,7 +466,6 @@ void Settings::setShowAllSectors(bool value){
 bool Settings::showUpperWind(){
     return getSettings()->value("display/showUpperWind", false).toBool();
 }
-
 void Settings::setShowUpperWind(bool value){
     getSettings()->setValue("display/showUpperWind", value);
 }
@@ -460,7 +473,6 @@ void Settings::setShowUpperWind(bool value){
 int Settings::upperWindAlt(){
     return getSettings()->value("display/upperWindAlt", 10000).toInt();
 }
-
 void Settings::setUpperWindAlt(int value){
     getSettings()->setValue("display/upperWindAlt", value);
 }
@@ -468,7 +480,6 @@ void Settings::setUpperWindAlt(int value){
 QColor Settings::upperWindColor(){
     return getSettings()->value("display/upperWindColor", QColor::fromRgb(136, 255, 134)).value<QColor>();
 }
-
 void Settings::setUpperWindColor(const QColor &value){
     getSettings()->setValue("display/upperWindColor", value);
 }
@@ -490,11 +501,16 @@ void Settings::setShowPilotsLabels(bool value){
 bool Settings::showInactiveAirports() {
     return getSettings()->value("display/showInactive", false).toBool(); // time-intensive function
 }
-
 void Settings::setShowInactiveAirports(const bool& value) {
     getSettings()->setValue("display/showInactive", value);
 }
 
+bool Settings::showClouds(){
+    return getSettings()->value("display/showClouds", false).toBool();
+}
+void Settings::setShowClouds(const bool value){
+    getSettings()->setValue("display/showClouds", value);
+}
 
 
 // OpenGL
