@@ -72,6 +72,7 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat
+    dataFiles.files += ./data/cloudmirrors.dat
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/+notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots

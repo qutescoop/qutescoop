@@ -201,6 +201,12 @@ Window::Window(QWidget *parent) :
     windDataDownloader->get(url.path(), windDataBuffer);
     qDebug() << "Window::Window -- WindData download started";
 
+    connect(&cloudTimer, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
+
+    if(Settings::downloadClouds()){
+        startCloudDownload();
+    }
+
 
     //LogBrowser
 #ifdef QT_NO_DEBUG_OUTPUT
@@ -942,6 +948,87 @@ void Window::allSectorsChanged(bool state)
     Settings::setShowAllSectors(state);
     mapScreen->glWidget->displayAllSectors(state);
 
+}
+
+void Window::startCloudDownload()
+{
+    qDebug() << "Window::startCloudDownload -- prepare Download";
+    cloudTimer.stop();
+
+    if(!Settings::downloadClouds()){
+        mapScreen->glWidget->useClouds(false);
+        return;
+    }
+
+    FileReader file(Settings::applicationDataDirectory("data/cloudmirrors.dat"));
+
+    bool hiResMode = false;
+    QList<QString> loResMirrors;
+    QList<QString> hiResMirrors;
+
+    while(!file.atEnd())
+    {
+        QString line = file.nextLine();
+        if(line.startsWith(";")) continue;
+        if(line.startsWith("[2048px]")) {
+            hiResMode = false;
+            continue;
+        }
+        if(line.startsWith("[4096px]")){
+            hiResMode = true;
+            continue;
+        }
+
+        if(!hiResMode) loResMirrors.append(line);
+        if(hiResMode) hiResMirrors.append(line);
+    }
+
+    QUrl url;
+
+    if(Settings::useHightResClouds()){
+        url.setUrl(hiResMirrors[qrand()%hiResMirrors.size()]);
+    }
+    else {
+        url.setUrl(loResMirrors[qrand()%loResMirrors.size()]);
+    }
+
+    if(cloudDownloader != 0) cloudDownloader = 0;
+    cloudDownloader = new QHttp(this);
+
+    cloudDownloader->setHost(url.host());
+    Settings::applyProxySetting(cloudDownloader);
+
+    connect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
+
+    cloudBuffer = new QBuffer;
+    cloudBuffer->open(QBuffer::ReadWrite);
+
+    //cloudDownloader->abort();
+    cloudDownloader->get(url.path(), cloudBuffer);
+
+    qDebug() << "Window::startCloudDownload -- Download started";
+}
+
+void Window::cloudDownloadFinished(bool error)
+{
+    qDebug() << "Window::cloudDownloadFinished -- donload finished";
+    disconnect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
+    if(cloudBuffer == 0)
+        return;
+
+    if(error) {
+        GuiMessages::criticalUserInteraction(cloudDownloader->errorString(), "cloudlayer download");
+        return;
+    }
+
+    cloudBuffer->seek(0);
+    QImage cloudlayer;
+    cloudlayer.load(cloudBuffer, "JPG");
+    cloudlayer.save(Settings::applicationDataDirectory("textures/clouds/clouds.jpg"), "JPG");
+    qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:" << Settings::applicationDataDirectory("textures/clouds/");
+
+    cloudTimer.start(12600000); //start download in 3,5 h again
+    mapScreen->glWidget->useClouds(true);
 }
 
 
