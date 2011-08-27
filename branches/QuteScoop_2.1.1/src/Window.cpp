@@ -984,20 +984,18 @@ void Window::startCloudDownload()
     }
 
     QUrl url;
-
     if(Settings::useHightResClouds()){
-        url.setUrl(hiResMirrors[qrand()%hiResMirrors.size()]);
+        if (!hiResMirrors.isEmpty())
+            url.setUrl(hiResMirrors[qrand() % hiResMirrors.size()]);
     }
     else {
-        url.setUrl(loResMirrors[qrand()%loResMirrors.size()]);
+        if (!loResMirrors.isEmpty())
+            url.setUrl(loResMirrors[qrand() % loResMirrors.size()]);
     }
-
     if(cloudDownloader != 0) cloudDownloader = 0;
     cloudDownloader = new QHttp(this);
 
     cloudDownloader->setHost(url.host());
-    Settings::applyProxySetting(cloudDownloader);
-
     connect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
 
     cloudBuffer = new QBuffer;
@@ -1011,13 +1009,13 @@ void Window::startCloudDownload()
 
 void Window::cloudDownloadFinished(bool error)
 {
-    qDebug() << "Window::cloudDownloadFinished -- donload finished";
+    qDebug() << "Window::cloudDownloadFinished -- download finished";
     disconnect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
     if(cloudBuffer == 0)
         return;
 
     if(error) {
-        GuiMessages::criticalUserInteraction(cloudDownloader->errorString(), "cloudlayer download");
+        GuiMessages::criticalUserInteraction(cloudDownloader->errorString(), "cloudlayer download error:");
         return;
     }
 

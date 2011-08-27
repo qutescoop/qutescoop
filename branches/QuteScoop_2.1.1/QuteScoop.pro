@@ -89,6 +89,8 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/2048px-toposhaded.png
     texturesFiles.files += ./textures/4096px.png
     texturesFiles.files += ./textures/4096px-color.png
+    cloudsFiles.path = $$DESTDIR/textures/clouds
+    cloudsFiles.files += ./textures/clouds/+notes.txt
     !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
     
     # Adds an "install" target for make, executed by "make install"
@@ -98,6 +100,7 @@ CONFIG(release,release|debug) {
         downloadedFiles \
         screenshotsFiles \
         texturesFiles \
+        cloudsFiles \
         myQtLib \
         myCompilerLib
 }
@@ -237,7 +240,8 @@ OTHER_FILES += CHANGELOG \
     data/+notes.txt \
     data/dataversions.txt \
     screenshots/+notes.txt \
-    textures/+notes.txt
+    textures/+notes.txt \
+    textures/clouds/+notes.txt
 
 # temp files
 MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
