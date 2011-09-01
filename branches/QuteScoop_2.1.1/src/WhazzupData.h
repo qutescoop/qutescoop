@@ -36,6 +36,8 @@ public:
     QList<Pilot*> allPilots() const { return bookedPilots.values() + pilots.values(); }
     QList<BookedController*> bookedControllers;
 
+    QList< QPair< double, double> > friendsLatLon;
+
     Pilot* findPilot(const QString& callsign) const { if(pilots[callsign] != 0) return pilots[callsign];
         else return bookedPilots[callsign]; }
 

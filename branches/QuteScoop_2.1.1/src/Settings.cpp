@@ -512,8 +512,15 @@ void Settings::setShowClouds(const bool value){
     getSettings()->setValue("display/showClouds", value);
 }
 
+bool Settings::highlightFriends(){
+    return getSettings()->value("display/highlightFriends", false).toBool();
+}
+void Settings::setHighlightFriends(bool value){
+    getSettings()->setValue("display/highlightFriends", value);
+}
 
 // OpenGL
+
 bool Settings::displaySmoothLines() {
     return getSettings()->value("gl/smoothLines", true).toBool();
 }
@@ -1066,6 +1073,13 @@ QByteArray Settings::getSavedGeometry() {
     return getSettings()->value("mainWindowState/geometry", QByteArray()).toByteArray();
 }
 
+QColor Settings::highlightColor(){
+    return getSettings()->value("pilotDisplay/highlightColor", QColor::fromRgb(255, 0 , 0, 255)).value<QColor>();
+}
+void Settings::setHighlightColor(QColor &color){
+    getSettings()->setValue("pilotDisplay/highlightColor", color);
+}
+
 void Settings::saveSize(const QSize& size) {
     getSettings()->setValue("mainWindowState/size", size);
 }
@@ -1401,7 +1415,6 @@ QByteArray Settings::pilotDetailsGeometry(){
 void Settings::setPilotDetailsGeometry(const QByteArray &value){
     getSettings()->setValue("windowmanagment/pilotDetailsGeo", value);
 }
-
 
 QSize Settings::planFlightDialogSize(){
     return getSettings()->value("windowmanagment/planFlightDialogSize").toSize();

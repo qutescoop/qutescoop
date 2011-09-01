@@ -160,6 +160,9 @@ Window::Window(QWidget *parent) :
     connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
 
+    pb_highlightFriends->setChecked(Settings::highlightFriends());
+    actionHighlight_Friends->setChecked(Settings::highlightFriends());
+
     versionChecker = 0;
     versionBuffer = 0;
     //if(Settings::checkForUpdates()) // disabled
@@ -422,6 +425,7 @@ void Window::closeEvent(QCloseEvent *event) {
     Settings::saveSize(size()); // readded as Mac OS had problems with geometry only
     Settings::savePosition(pos());
     on_actionHideAllWindows_triggered();
+    mapScreen->glWidget->savePosition();
     event->accept();
 }
 
@@ -1030,7 +1034,19 @@ void Window::cloudDownloadFinished(bool error)
     mapScreen->glWidget->useClouds();
 }
 
+void Window::on_actionHighlight_Friends_tiggered(bool checked){
+    Settings::setHighlightFriends(checked);
+    pb_highlightFriends->setChecked(checked);
+    if(checked == false) mapScreen->glWidget->destroyFriendHightlighter();
+    mapScreen->glWidget->updateGL();
+}
 
+void Window::on_pb_highlightFriends_toggled(bool checked){
+    Settings::setHighlightFriends(checked);
+    actionHighlight_Friends->setChecked(checked);
+    if(checked == false) mapScreen->glWidget->destroyFriendHightlighter();
+    mapScreen->glWidget->updateGL();
+}
 
 
 

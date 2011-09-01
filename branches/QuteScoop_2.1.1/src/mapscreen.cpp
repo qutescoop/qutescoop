@@ -43,6 +43,7 @@ MapScreen::MapScreen(QWidget *parent) :
     L_Pilots = new OnScreenLabel(this);
     L_Pilots->typ = 1;
     connect(L_Pilots, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    connect(L_Pilots, SIGNAL(left(int)), this,  SLOT(LabelLeft(int)));        // causes strange flickering on linux
     L_Pilots->setText(tr("Pilots"));
     L_Pilots->setFont(QFont("Arial", 16, QFont::Bold));
     L_Pilots->setAutoFillBackground(true);
@@ -53,6 +54,7 @@ MapScreen::MapScreen(QWidget *parent) :
     L_Controller = new OnScreenLabel(this);
     L_Controller->typ = 2;
     connect(L_Controller, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    //connect(L_Controller, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));     // see L_Pilots
     L_Controller->setText(tr("Controller"));
     L_Controller->setFont(QFont("Arial", 16, QFont::Bold));
     L_Controller->setAutoFillBackground(true);
@@ -64,6 +66,7 @@ MapScreen::MapScreen(QWidget *parent) :
     L_NavData = new OnScreenLabel(this);
     L_NavData->typ = 3;
     connect(L_NavData, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    //connect(L_NavData, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));        // see L_Pilots
     L_NavData->setText(tr("NavData"));
     L_NavData->setFont(QFont("Arial", 16, QFont::Bold));
     L_NavData->setAutoFillBackground(true);
@@ -75,6 +78,7 @@ MapScreen::MapScreen(QWidget *parent) :
     L_Weather = new OnScreenLabel(this);
     L_Weather->typ = 4;
     connect(L_Weather, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    //connect(L_Weather, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));       // see L_Pilots
     L_Weather->setText(tr("Weather"));
     L_Weather->setFont(QFont("Arial", 16, QFont::Bold));
     L_Weather->setAutoFillBackground(true);
@@ -158,6 +162,7 @@ void MapScreen::createControllerWidget()
     W_Controller->setMinimumWidth(xDistance+L_Weather->width());
 
 
+
     C_toggleCTR = new QPushButton();
     C_toggleCTR->setText(tr("CTR/FSS"));
     C_toggleCTR->setCheckable(true);
@@ -233,6 +238,7 @@ void MapScreen::createWindWidget()
     W_Weather->setAutoFillBackground(true);
     W_Weather->setMinimumWidth(xDistance+L_Weather->width());
 
+
     // On/Off buttons for wind and clouds
     W_toggleWind = new QPushButton();
     W_toggleWind->setText(tr("upperwind"));
@@ -245,6 +251,7 @@ void MapScreen::createWindWidget()
     W_toggleClouds->setText(tr("clouds"));
     W_toggleClouds->setCheckable(true);
     W_toggleClouds->setChecked(Settings::showClouds());
+    //if(!Settings::downloadClouds()) W_toggleClouds->setEnabled(false);
     connect(W_toggleClouds, SIGNAL(clicked()), this, SLOT(W_toggleCloudsClicked()));
     W_layout.addWidget(W_toggleClouds);
 
@@ -378,16 +385,20 @@ void MapScreen::LabelLeft(int typ)
         break;
     case 1:
         L_Pilots->setFont(f);
+        //W_Pilots->lower();
         break;
     case 2:
         L_Controller->setFont(f);
+        //W_Controller->lower();
         break;
     case 3:
         L_NavData->setFont(f);
+        //W_NavData->lower();
         break;
 
     case 4:
         L_Weather->setFont(f);
+        //W_Weather->lower();
         break;
 
     default:

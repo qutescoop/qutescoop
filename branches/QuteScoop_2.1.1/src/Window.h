@@ -33,6 +33,8 @@ public slots:
 private slots:
     void on_actionShowWaypoints_triggered(bool checked);
     void on_actionDebugLog_triggered();
+    void on_actionHighlight_Friends_tiggered(bool checked);
+    void on_pb_highlightFriends_toggled(bool checked);
 
     void on_actionZoomReset_triggered();
     void on_tbZoomOut_clicked();

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>920</width>
+    <width>926</width>
     <height>626</height>
    </rect>
   </property>
@@ -388,8 +388,8 @@ Whazzups (replay)</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>920</width>
-     <height>27</height>
+     <width>926</width>
+     <height>25</height>
     </rect>
    </property>
    <property name="statusTip">
@@ -426,6 +426,8 @@ Whazzups (replay)</string>
     <addaction name="actionDebugLog"/>
     <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
+    <addaction name="separator"/>
+    <addaction name="actionHighlight_Friends"/>
     <addaction name="separator"/>
     <addaction name="actionDisplayAllSectors"/>
     <addaction name="actionShowInactiveAirports"/>
@@ -691,6 +693,7 @@ p, li { white-space: pre-wrap; }
 &lt;td style=&quot;border: none;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;/p&gt;
@@ -747,6 +750,19 @@ p, li { white-space: pre-wrap; }
      <property name="margin">
       <number>4</number>
      </property>
+     <item>
+      <widget class="QPushButton" name="pb_highlightFriends">
+       <property name="text">
+        <string>Highlight</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
      <item>
       <widget class="QTreeView" name="friendsList">
        <property name="toolTip">
@@ -842,7 +858,7 @@ p, li { white-space: pre-wrap; }
   </action>
   <action name="actionToggleFullscreen">
    <property name="checkable">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon">
     <iconset resource="Resources.qrc">
@@ -1227,6 +1243,14 @@ p, li { white-space: pre-wrap; }
     <string>Shift+F6</string>
    </property>
   </action>
+  <action name="actionHighlight_Friends">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hightlight Friends</string>
+   </property>
+  </action>
  </widget>
  <tabstops>
   <tabstop>searchEdit</tabstop>
@@ -1259,8 +1283,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>143</x>
-     <y>317</y>
+     <x>135</x>
+     <y>327</y>
     </hint>
    </hints>
   </connection>
@@ -1275,8 +1299,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>143</x>
-     <y>581</y>
+     <x>135</x>
+     <y>603</y>
     </hint>
    </hints>
   </connection>
@@ -1291,8 +1315,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>143</x>
-     <y>166</y>
+     <x>135</x>
+     <y>175</y>
     </hint>
    </hints>
   </connection>
@@ -1307,8 +1331,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>216</x>
-     <y>469</y>
+     <x>160</x>
+     <y>490</y>
     </hint>
    </hints>
   </connection>
@@ -1323,8 +1347,8 @@ p, li { white-space: pre-wrap; }
      <y>-1</y>
     </hint>
     <hint type="destinationlabel">
-     <x>216</x>
-     <y>333</y>
+     <x>160</x>
+     <y>353</y>
     </hint>
    </hints>
   </connection>

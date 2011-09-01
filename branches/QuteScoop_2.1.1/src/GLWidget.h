@@ -29,6 +29,8 @@ public:
     ClientSelectionWidget *clientSelection;
     bool cloudsAvaliable;
 
+    void savePosition();
+
 public slots:
     virtual void initializeGL();
     void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
@@ -54,6 +56,8 @@ public slots:
     void createStaticLists();
 
     void useClouds();
+
+    void destroyFriendHightlighter();
 
 
 signals:
@@ -93,6 +97,8 @@ private:
     void parseEarthClouds(void);
     void createLights();
 
+    void createFriendHighlighter();
+
 
 
 
@@ -126,6 +132,9 @@ private:
 
     double pilotLabelZoomTreshold, activeAirportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
         controllerLabelZoomTreshold, allWaypointsLabelZoomTreshold, usedWaypointsLabelZoomThreshold;
+
+    QTimer *highlighter;
+    QList< QPair<double , double> > friends;
 };
 
 #endif /*GLWIDGET_H_*/

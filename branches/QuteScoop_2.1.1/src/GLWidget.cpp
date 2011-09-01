@@ -34,6 +34,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     setMouseTracking(true);
     lightsGenerated = false;
     cloudsAvaliable = false;
+    highlighter = 0;
     // call default (=1) map position
     Settings::getRememberedMapPosition(&xRot, &yRot, &zRot, &zoom, 1);
     xRot = modPositive(xRot, 360.);
@@ -742,6 +743,7 @@ void GLWidget::paintGL() {
     //qDebug() << "GLWidget::paintGL()";
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         glLoadIdentity();
         glTranslatef(0, 0, -10);
         glRotated(xRot, 1, 0, 0);
@@ -844,6 +846,34 @@ void GLWidget::paintGL() {
             glCallList(inactiveAirportsList);
 
     glCallList(pilotsList);
+
+
+    //Highlight friends
+    if(Settings::highlightFriends()){
+        if(highlighter == 0) createFriendHighlighter();
+        QTime time = QTime::currentTime();
+        double range = (time.second()%5);
+        range += (time.msec()%500)/1000;
+;
+        GLfloat red = Settings::highlightColor().redF();
+        GLfloat green = Settings::highlightColor().greenF();
+        GLfloat blue = Settings::highlightColor().blueF();
+        GLfloat alpha = Settings::highlightColor().alphaF();
+
+        for(int ii = 0; ii < friends.size(); ii++)
+        {
+            glBegin(GL_LINE_LOOP);
+            glLineWidth(10);
+            glColor4f(red, green, blue, alpha);
+            GLdouble circle_distort = qCos(friends.value(ii).first * Pi180);
+            for(int i = 0; i <= 360; i += 20){
+                double x = friends.value(ii).first  + Nm2Deg((100-(range*20))) * circle_distort * qCos(i * Pi180);
+                double y = friends.value(ii).second + Nm2Deg((100-(range*20))) * qSin(i * Pi180);
+                VERTEX(x, y);
+            }
+            glEnd();
+        }
+    }
 
     //render Wind
     if(Settings::showUpperWind()){
@@ -1408,6 +1438,7 @@ void GLWidget::newWhazzupData(bool isNew) {
         createPilotsList();
         createAirportsList();
         createControllersLists();
+        friends = Whazzup::getInstance()->whazzupData().friendsLatLon;
 
         updateGL();
     }
@@ -1423,6 +1454,26 @@ void GLWidget::showInactiveAirports(bool value) {
     Settings::setShowInactiveAirports(value);
     newWhazzupData(true);
 }
+
+void GLWidget::savePosition()
+{
+    Settings::setRememberedMapPosition(xRot, yRot, zRot, zoom, 1);
+}
+
+void GLWidget::createFriendHighlighter(){
+    highlighter = new QTimer(this);
+    highlighter->setInterval(100);
+    connect(highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
+    highlighter->start();
+}
+
+void GLWidget::destroyFriendHightlighter(){
+    highlighter->stop();
+    disconnect(highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
+    delete highlighter;
+    highlighter = 0;
+}
+
 
 //////////////////////////////////
 // Clouds, Lightning and Earth Textures
@@ -1556,7 +1607,6 @@ void GLWidget::parseEarthClouds()
     }
     update();
 }
-
 
 void GLWidget::createLights()
 {

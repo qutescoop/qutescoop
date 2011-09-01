@@ -391,7 +391,7 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
         gbDownloadBookings->setChecked(false);
         break;
     case 1: // VATSIM
-        Settings::setStatusLocation("http://www.vatsim.net/data/status.txt");
+        Settings::setStatusLocation("http://status.vatsim.net/");
         gbDownloadBookings->setChecked(true);
         break;
     case 2: // user defined

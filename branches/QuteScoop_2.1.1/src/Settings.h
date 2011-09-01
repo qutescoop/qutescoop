@@ -176,6 +176,9 @@ public:
     static bool showClouds();
     static void setShowClouds(bool value);
 
+    static bool highlightFriends();
+    static void setHighlightFriends(bool value);
+
 
     // OpenGL settings
     static bool glStippleLines();
@@ -365,6 +368,9 @@ public:
 
     static bool destLineDashed();
     static void setDestLineDashed(bool value);
+
+    static QColor highlightColor();
+    static void setHighlightColor(QColor& color);
 
     // -- General
     static bool checkForUpdates();
