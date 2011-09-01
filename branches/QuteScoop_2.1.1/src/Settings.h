@@ -372,6 +372,12 @@ public:
     static QColor highlightColor();
     static void setHighlightColor(QColor& color);
 
+    static double highlightLineWidth();
+    static void setHighlightLineWidth(double value);
+
+    static bool useHighlightAnimation();
+    static void setUseHighlightAnimation(bool value);
+
     // -- General
     static bool checkForUpdates();
     static void setCheckForUpdates(bool value);

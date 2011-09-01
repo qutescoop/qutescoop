@@ -859,11 +859,16 @@ void GLWidget::paintGL() {
         GLfloat green = Settings::highlightColor().greenF();
         GLfloat blue = Settings::highlightColor().blueF();
         GLfloat alpha = Settings::highlightColor().alphaF();
+        double lineWidth = Settings::highlightLineWidth();
+        if(Settings::useHighlightAnimation() == false) {
+            range = 0;
+            destroyFriendHightlighter();
+        }
 
         for(int ii = 0; ii < friends.size(); ii++)
         {
             glBegin(GL_LINE_LOOP);
-            glLineWidth(10);
+            glLineWidth(lineWidth);
             glColor4f(red, green, blue, alpha);
             GLdouble circle_distort = qCos(friends.value(ii).first * Pi180);
             for(int i = 0; i <= 360; i += 20){
@@ -1468,7 +1473,8 @@ void GLWidget::createFriendHighlighter(){
 }
 
 void GLWidget::destroyFriendHightlighter(){
-    highlighter->stop();
+    if(highlighter == 0) return;
+    if(highlighter->isActive()) highlighter->stop();
     disconnect(highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
     delete highlighter;
     highlighter = 0;

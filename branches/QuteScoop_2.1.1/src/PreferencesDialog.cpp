@@ -301,6 +301,12 @@ void PreferencesDialog::loadSettings() {
     sbZoomFactor->setValue(Settings::zoomFactor());
     useSelectionRectangle->setChecked(Settings::useSelectionRectangle());
 
+    //highlight Friends
+    sb_highlightFriendsLineWidth->setValue(Settings::highlightLineWidth());
+    pb_highlightFriendsColor->setPalette(QPalette(Settings::highlightColor()));
+    pb_highlightFriendsColor->setText(Settings::highlightColor().name());
+    cb_Animation->setChecked(Settings::useHighlightAnimation());
+
     // FINISHED
     settingsLoaded = true;
 }
@@ -1231,7 +1237,30 @@ void PreferencesDialog::on_editESAirlines_editingFinished(){
     Settings::setESAirlinesDirectory(editESAirlines->text());
 }
 
+void PreferencesDialog::on_sb_highlightFriendsLineWidth_valueChanged(double value){
+    Settings::setHighlightLineWidth(value);
+}
 
+void PreferencesDialog::on_cb_Animation_stateChanged(int state){
+    if(state == Qt::Checked){
+        Settings::setUseHighlightAnimation(true);
+        return;
+    }
+    if(state == Qt::Unchecked){
+        Settings::setUseHighlightAnimation(false);
+    }
+}
+
+void PreferencesDialog::on_pb_highlightFriendsColor_clicked(){
+    QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+
+    if(color.isValid()){
+        pb_highlightFriendsColor->setText(color.name());
+        pb_highlightFriendsColor->setPalette(QPalette(color));
+        Settings::setHighlightColor(color);
+    }
+}
 
 
 

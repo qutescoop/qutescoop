@@ -1080,6 +1080,20 @@ void Settings::setHighlightColor(QColor &color){
     getSettings()->setValue("pilotDisplay/highlightColor", color);
 }
 
+double Settings::highlightLineWidth(){
+    return getSettings()->value("pilotDisplay/highlightLineWidth" , 1.5).toDouble();
+}
+void Settings::setHighlightLineWidth(double value){
+    getSettings()->setValue("pilotDisplay/highlightLineWidth", value);
+}
+
+bool Settings::useHighlightAnimation(){
+    return getSettings()->value("pilotDisplay/useHighlightAnimation", false).toBool();
+}
+void Settings::setUseHighlightAnimation(bool value){
+    getSettings()->setValue("pilotDisplay/useHighlightAnimation", value);
+}
+
 void Settings::saveSize(const QSize& size) {
     getSettings()->setValue("mainWindowState/size", size);
 }

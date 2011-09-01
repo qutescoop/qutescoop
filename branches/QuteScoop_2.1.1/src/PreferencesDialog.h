@@ -181,6 +181,11 @@ private slots:
     void on_pbWheelCalibrate_clicked();
     void on_sbZoomFactor_valueChanged(double );
 
+    //highlight friends
+    void on_cb_Animation_stateChanged(int state);
+    void on_sb_highlightFriendsLineWidth_valueChanged(double value);
+    void on_pb_highlightFriendsColor_clicked();
+
     void on_useSelectionRectangle_toggled(bool checked);
 
 private:
