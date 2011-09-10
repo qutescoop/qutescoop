@@ -320,7 +320,7 @@ void Settings::setUpdateVersionNumber(const QString& version) {
 }
 
 QString Settings::statusLocation() {
-    return getSettings()->value("download/statusLocation", "http://status.vatsim.net/").toString();
+    return getSettings()->value("download/statusLocation", "http://status.vatsim.net/status.txt").toString();
 }
 
 void Settings::setStatusLocation(const QString& location) {
