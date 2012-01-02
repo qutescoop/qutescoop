@@ -923,7 +923,6 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
 void Window::startWindDecoding(bool error)
 {
     qDebug() << "Window::startWindDecoding -- WindData downloaded";
-    //if(WindData::getInstance()->isRunning()) return;
     if(windDataBuffer == 0) return;
 
     if(error)

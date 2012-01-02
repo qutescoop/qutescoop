@@ -1519,7 +1519,7 @@ void GLWidget::parseEarthClouds()
     if(cloudsIm.isNull() && Settings::glTextures())
     {
         completedEarthTexIm = earthTexIm;
-        qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex";
+        qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex (no cloud tex found)";
     }
 
     if(!Settings::showClouds() && Settings::glTextures()){
@@ -1585,7 +1585,7 @@ void GLWidget::parseEarthClouds()
                 pixel[pos] = qRgba( red, green, blue, alpha);
             }
         }
-        qDebug() << "GLWidget::parseEarthClouds -- finished parsing";
+        qDebug() << "GLWidget::parseEarthClouds -- finished parsing using clouds and earthTex";
     }
 
 
