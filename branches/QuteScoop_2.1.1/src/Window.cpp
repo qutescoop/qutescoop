@@ -22,6 +22,7 @@
 #include "FriendsVisitor.h"
 #include "helpers.h"
 #include "GuiMessage.h"
+#include "sectorview.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -84,6 +85,7 @@ Window::Window(QWidget *parent) :
     connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
     connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
     connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
+    connect(actionSectorview, SIGNAL(triggered()), this, SLOT(openSectorView()));
 
     qDebug() << "Window::Window() creating Whazzup";
     Whazzup *whazzup = Whazzup::getInstance();
@@ -206,7 +208,7 @@ Window::Window(QWidget *parent) :
 
     connect(&cloudTimer, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
 
-    if(Settings::downloadClouds()){
+    if(Settings::showClouds()){
         startCloudDownload();
     }
 
@@ -958,10 +960,10 @@ void Window::startCloudDownload()
     qDebug() << "Window::startCloudDownload -- prepare Download";
     cloudTimer.stop();
 
-    if(!Settings::downloadClouds()){
+    /*if(!Settings::downloadClouds()){
         mapScreen->glWidget->cloudsAvaliable = false;
         return;
-    }
+    }*/
 
     FileReader file(Settings::applicationDataDirectory("data/cloudmirrors.dat"));
 
@@ -1007,7 +1009,7 @@ void Window::startCloudDownload()
     //cloudDownloader->abort();
     cloudDownloader->get(url.path(), cloudBuffer);
 
-    qDebug() << "Window::startCloudDownload -- Download started";
+    qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
 }
 
 void Window::cloudDownloadFinished(bool error)
@@ -1045,6 +1047,13 @@ void Window::on_pb_highlightFriends_toggled(bool checked){
     actionHighlight_Friends->setChecked(checked);
     if(checked == false) mapScreen->glWidget->destroyFriendHightlighter();
     mapScreen->glWidget->updateGL();
+}
+
+void Window::openSectorView(){
+    Sectorview::getInstance(true, this)->show();
+    Sectorview::getInstance(true)->raise();
+    Sectorview::getInstance(true)->activateWindow();
+    Sectorview::getInstance(true)->setFocus();
 }
 
 

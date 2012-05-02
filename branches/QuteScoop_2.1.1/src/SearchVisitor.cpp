@@ -26,7 +26,7 @@ void SearchVisitor::visit(MapObject* object) {
 	Pilot *p = dynamic_cast<Pilot*>(object);
 	if(p != 0) {
 		pilots[p->label] = p;
-		return;
+                return;
 	}
 
 	Controller *c = dynamic_cast<Controller*>(object);
@@ -75,7 +75,7 @@ QList<MapObject*> SearchVisitor::result() const {
         labels = others.keys();
 	qSort(labels);
 	for(int i = 0; i < labels.size(); i++)
-		result.append(others[labels[i]]);
+                result.append(others[labels[i]]);
 	
 	// controllers
 	labels = controllers.keys();

@@ -82,6 +82,7 @@ private slots:
     void openPlanFlight();
     void openBookedAtc();
     void openListClients();
+    void openSectorView();
 
     void on_searchEdit_textChanged(const QString& text);
 

@@ -600,9 +600,54 @@ void GLWidget::createStaticLists(){
     }
 }
 
+void GLWidget::createSaticSectorLists(QList<Sector*> sectors){
+
+    //Polygon
+    if(staticSectorPolygonsList == 0){
+        staticSectorPolygonsList = glGenLists(1);
+    }
+
+    // make sure all the lists are there to avoid nested glNewList calls
+    foreach(Sector *sector, sectors) {
+        if(sector != 0){
+            sector->getGlPolygon();}
+    }
+
+    // create a list of lists
+    glNewList(staticSectorPolygonsList, GL_COMPILE);
+    foreach(Sector *sector, sectors) {
+        if(sector != 0){
+            glCallList(sector->getGlPolygon());}
+    }
+    glEndList();
+
+
+    // FIR borders
+    if(staticSectorPolygonBorderLinesList == 0){
+        staticSectorPolygonBorderLinesList = glGenLists(1);
+    }
+
+
+    if(!allSectorsDisplayed && Settings::firBorderLineStrength() > 0.) {
+        // first, make sure all lists are there
+        foreach(Sector *sector, sectors) {
+            if(sector != 0){
+                sector->getGlBorderLine();}
+        }
+        glNewList(staticSectorPolygonBorderLinesList, GL_COMPILE);
+        foreach(Sector *sector, sectors) {
+            if(sector != 0){
+                glCallList(sector->getGlBorderLine());}
+        }
+        glEndList();
+    }
+
+
+}
+
 //////////////////////////////////////////
 // initializeGL(), paintGL() & resizeGL()
-//
+//////////////////////////////////////////
 
 void GLWidget::initializeGL(){
     qDebug() << "GLWidget::initializeGL()";
@@ -806,6 +851,12 @@ void GLWidget::paintGL() {
     if(Settings::showCTR()){
         glCallList(sectorPolygonsList);
         glCallList(sectorPolygonBorderLinesList);
+    }
+
+    //Static Sectors (for editing Sectordata)
+    if(renderstaticSectors){
+        glCallList(staticSectorPolygonsList);
+        glCallList(staticSectorPolygonBorderLinesList);
     }
 
     QList<Airport*> airportList = NavData::getInstance()->airports.values();

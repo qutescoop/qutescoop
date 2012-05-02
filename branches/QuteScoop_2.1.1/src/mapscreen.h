@@ -12,7 +12,7 @@ class OnScreenLabel : public QLabel
 Q_OBJECT
 public:
     OnScreenLabel(QWidget *parent = 0);
-    int typ;                            //Typ   0:Default   1:Pilot  2:Controller 3:NavData 4:Wind
+    int typ;                            //Typ   0:Default   1:Pilot  2:Controller 3:NavData 4:Weather
 
 signals:
     void entered(int t);
@@ -28,7 +28,7 @@ class OnScreenWidget : public QWidget
 Q_OBJECT
 public:
     OnScreenWidget(QWidget *parent = 0);
-    int typ;                            //Typ   0:Default   1:Pilot  2:Controller 3:NavData 4:Wind
+    int typ;                            //Typ   0:Default   1:Pilot  2:Controller 3:NavData 4:Weather
 
 signals:
     void entered(int t);
@@ -46,6 +46,7 @@ Q_OBJECT
 public:
     MapScreen(QWidget *parent = 0);
     GLWidget *glWidget;
+    static MapScreen* getInstance(bool);
 
 
 protected:

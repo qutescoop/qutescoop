@@ -127,7 +127,8 @@ FORMS = src/MainWindow.ui \
     src/PreferencesDialog.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
-    src/ListClientsDialog.ui
+    src/ListClientsDialog.ui \
+    src/sectorview.ui
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \
@@ -181,7 +182,9 @@ HEADERS += src/_pch.h \
     src/LogBrowserDialog.h \
     src/GuiMessage.h \
     src/winddata.h \
-    src/station.h
+    src/station.h \
+    src/launcher.h \
+    src/sectorview.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -232,7 +235,9 @@ SOURCES += src/WhazzupData.cpp \
     src/LogBrowserDialog.cpp \
     src/GuiMessage.cpp \
     src/winddata.cpp \
-    src/station.cpp
+    src/station.cpp \
+    src/launcher.cpp \
+    src/sectorview.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
@@ -248,3 +253,6 @@ MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+
+
+

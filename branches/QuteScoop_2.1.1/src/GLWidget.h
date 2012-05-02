@@ -54,10 +54,12 @@ public slots:
     void createAirportsList();
     void createControllersLists();
     void createStaticLists();
+    void createSaticSectorLists(QList<Sector*> sectors);
 
     void useClouds();
 
     void destroyFriendHightlighter();
+    void renderStaticSectors(bool value) {renderstaticSectors = value;}
 
 
 signals:
@@ -112,7 +114,7 @@ private:
     QSet<FontRectangle*> fontRectangles, allFontRectangles;
 
     QPoint lastPos, mouseDownPos;
-    bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting;
+    bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting, renderstaticSectors;
     double xRot, yRot, zRot, zoom, aspectRatio;
 
     QImage completedEarthTexIm;
@@ -124,7 +126,7 @@ private:
         GLuint pilotsList, activeAirportsList, inactiveAirportsList;
         GLuint FixesList, usedWaypointsList, plannedRouteList;
         GLuint sectorPolygonsList, sectorPolygonBorderLinesList, appBorderLinesList, congestionsList;
-        GLuint windList;
+        GLuint windList, staticSectorPolygonsList, staticSectorPolygonBorderLinesList;
         //GLuint airportControllersList,
         bool allSectorsDisplayed;
 

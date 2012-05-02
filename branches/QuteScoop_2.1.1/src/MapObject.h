@@ -21,7 +21,7 @@ public:
 
 	bool isNull() const { return label.isNull(); }
 
-	virtual bool matches(const QRegExp& regex) const { return label.contains(regex); }
+        virtual bool matches(const QRegExp& regex) const { return label.contains(regex); }
 	virtual QString mapLabel() const { return label; }
 	virtual QString toolTip() const { return label; }
 

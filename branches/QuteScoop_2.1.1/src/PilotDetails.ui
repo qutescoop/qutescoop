@@ -210,7 +210,7 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
         <item>
          <widget class="QLabel" name="label_14">
           <property name="text">
-           <string>squwak:</string>
+           <string>squawk:</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>

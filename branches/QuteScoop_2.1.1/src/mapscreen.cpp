@@ -1,6 +1,8 @@
 #include "mapscreen.h"
 #include <QHBoxLayout>
 
+static MapScreen *instance = 0;
+
 MapScreen::MapScreen(QWidget *parent) :
     QWidget(parent)
 {
@@ -120,6 +122,14 @@ MapScreen::MapScreen(QWidget *parent) :
     qDebug() << "MapScreen::MapScreen() created";
 
 }
+
+MapScreen* MapScreen::getInstance(bool create = true){
+    if(instance == 0)
+        if (create)
+            instance = new MapScreen;
+    return instance;
+}
+
 
 ////////////////////////////
 // Creating the widgets
@@ -659,13 +669,11 @@ void MapScreen::W_toggleCloudsClicked()
     if(Settings::showClouds() == false){
         Settings::setShowClouds(true);
         glWidget->useClouds();
-        //glWidget->update();
         return;
     }
 
     Settings::setShowClouds(false);
     glWidget->useClouds();
-    //glWidget->update();
     return;
 }
 
