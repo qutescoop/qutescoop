@@ -165,9 +165,9 @@ CZQX_OC:Gander Oceanic:CA:54.7:-47.7:205
 CZQX:Gander:CA:51.3:-55.5:206
 CZQM:Moncton:CA:45.1:-62.4:207
 DAAA:Algiers:DZ:28.1:2.8:208
-DGAC:Accra:GH:0.7:1.6:209
+DGAC:Accra:GH:5.0:0:209
 DIII:Abidjan:CI:-2:-5:210
-DNKK:Kano:NG:8.4:8.6:211
+DNKK:Kano:NG:10.5:8.2:211
 DRRR:Niamey:NE:17:2.9:212
 DTTC:Tunis:TN:34.6:9.5:213
 FBGR:Gaborone:BW:-22.2:24.6:226
@@ -200,7 +200,7 @@ HKNA:Nairobi:KE:-0.4:38.9:251
 HLLL:Tripoli:LY:26.9:17.2:252
 HRYR:Kigali:RW:-2:29.8:253
 HSSS:Khartoum:SD:13:30.1:254
-HTDC:Dar es-Salaam:TZ:-6.4:36.4:255
+HTDC:Dar Es Salaam:TZ:-6.8:36.5:255
 HUEC:Entebbe:UG:1.2:32.3:256
 KZAB:Albuquerque:US:33.2:-107:257
 ABQ:Albuquerque:US:33.2:-107:257
@@ -587,3 +587,12 @@ EYVL:Vilnius:LT:55.1:22.4:151
 DGAC_O:Accra:GH:0:0:214
 BALT:Baltic Control::57.5:23.3:613
 ASEA:South East Asia Control::10.5:106.00:4435
+AFRN:North Africa Control::5.65:24.76:4500
+FZZA_K:Kinshasa:CD:2.01:26.33:4501
+FZZA_L:Kinshasa:CD:-6.38:25.23:4502
+DGAC_N:Accra:GH:9.30:0:4503
+DGAC_O:Accra:GH:-2:0:4504
+DNLL:Lagos:NG:6.7:5.2:4505
+FCCC_L:Brazzaville:CG:0.7:7.6:4506
+FCCC_D:Brazzaville:CG:4.3:9.7:4507
+HTDC_W:Dar Es Salaam:TZ:4.35:30.5:4508
