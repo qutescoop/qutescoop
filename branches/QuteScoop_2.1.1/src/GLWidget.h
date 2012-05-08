@@ -7,6 +7,7 @@
 
 #include "_pch.h"
 #include <QPoint>
+#include <GL/glu.h>
 
 #include "MapObject.h"
 #include "Sector.h"

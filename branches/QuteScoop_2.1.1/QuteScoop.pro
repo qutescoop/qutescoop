@@ -109,15 +109,21 @@ macx { # could be "mac" also, I am not sure
     ICON = src/Dolomynum.icns
     CONFIG *= x86
     CONFIG *= ppc
+    LIBS += -lGLU
 }
 mac { # could be "macx" also, I am not sure
     CONFIG += app_bundle
     ICON = src/Dolomynum.icns
     CONFIG *= x86
     CONFIG *= ppc
+    LIBS += -lGLU
 }
-win32:RC_FILE = src/windowsicon.rc
-unix:
+win32 { RC_FILE = src/windowsicon.rc
+    LIBS += -lglu32
+}
+unix {
+    LIBS += -lGLU
+}
 
 # Input
 FORMS = src/MainWindow.ui \
@@ -127,8 +133,7 @@ FORMS = src/MainWindow.ui \
     src/PreferencesDialog.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
-    src/ListClientsDialog.ui \
-    src/sectorview.ui
+    src/ListClientsDialog.ui
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \
@@ -183,8 +188,7 @@ HEADERS += src/_pch.h \
     src/GuiMessage.h \
     src/winddata.h \
     src/station.h \
-    src/launcher.h \
-    src/sectorview.h
+    src/launcher.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -236,8 +240,7 @@ SOURCES += src/WhazzupData.cpp \
     src/GuiMessage.cpp \
     src/winddata.cpp \
     src/station.cpp \
-    src/launcher.cpp \
-    src/sectorview.cpp
+    src/launcher.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
@@ -253,6 +256,3 @@ MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-
-
-

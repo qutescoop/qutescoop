@@ -22,7 +22,6 @@
 #include "FriendsVisitor.h"
 #include "helpers.h"
 #include "GuiMessage.h"
-#include "sectorview.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -1050,10 +1049,11 @@ void Window::on_pb_highlightFriends_toggled(bool checked){
 }
 
 void Window::openSectorView(){
-    Sectorview::getInstance(true, this)->show();
-    Sectorview::getInstance(true)->raise();
-    Sectorview::getInstance(true)->activateWindow();
-    Sectorview::getInstance(true)->setFocus();
+    // SectorView not committed yet?
+//    Sectorview::getInstance(true, this)->show();
+//    Sectorview::getInstance(true)->raise();
+//    Sectorview::getInstance(true)->activateWindow();
+//    Sectorview::getInstance(true)->setFocus();
 }
 
 
