@@ -11,6 +11,7 @@
 #include "Settings.h"
 
 
+
 /* logging */
 QFile *logFile = new QFile();
 QByteArray cacheLogByteArray;

@@ -16,6 +16,7 @@ QT *= core \
     network \
     opengl \
     xml
+
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
