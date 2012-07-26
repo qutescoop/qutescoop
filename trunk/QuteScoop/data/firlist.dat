@@ -168,6 +168,7 @@ DAAA:Algiers:DZ:28.1:2.8:208
 DGAC:Accra:GH:5.0:0:209
 DIII:Abidjan:CI:-2:-5:210
 DNKK:Kano:NG:10.5:8.2:211
+DNKK_W:Kano:NG:11.6:4.56:5100
 DRRR:Niamey:NE:17:2.9:212
 DTTC:Tunis:TN:34.6:9.5:213
 FBGR:Gaborone:BW:-22.2:24.6:226
@@ -580,6 +581,9 @@ YWTN:Winton:AU:-22.2:142.2:5902
 YBAS:Alice Springs:AU:-25.7:135.8:5903
 YPAD:Adelaide:AU:-34.5:135.5:5904
 AFRC:Central Africa Control:CD:-02.7:24.1:612
+AFRC_W:Central Africa West Control::2.37:-2.19:5102
+AFRC_C:Central Africa Central Control::-9.44:7.80:5103
+AFRC_E:Central Africa East Control::-2.10:43.66:5104
 GULF:Gulf Control::26:58:
 EETT:Tallinn:EE:58.7:24.4:118
 EVRR:Riga:LV:57:23.3:150
@@ -593,6 +597,7 @@ FZZA_L:Kinshasa:CD:-6.38:25.23:4502
 DGAC_N:Accra:GH:9.30:0:4503
 DGAC_O:Accra:GH:-2:0:4504
 DNLL:Lagos:NG:6.7:5.2:4505
+DNLL_E:Lagos:NG:6.85:7.08:5101
 FCCC_L:Brazzaville:CG:0.7:7.6:4506
 FCCC_D:Brazzaville:CG:4.3:9.7:4507
 HTDC_W:Dar Es Salaam:TZ:4.35:30.5:4508
