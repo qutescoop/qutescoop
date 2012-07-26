@@ -5,10 +5,10 @@
 #include "_pch.h"
 
 #include "Window.h"
-#include "NavData.h"
 #include "LogBrowserDialog.h"
 #include "helpers.h"
 #include "Settings.h"
+#include "launcher.h"
 
 
 /* logging */
@@ -97,33 +97,17 @@ int main(int argc, char *argv[]) {
     qDebug() << "Expecting application data directory at"
              << Settings::applicationDataDirectory() << "(gets calculated on each start)";
 
-    // splash screen
-    QPixmap pixmap(":/splash/splash");
-    QSplashScreen *splash = new QSplashScreen(pixmap);
-    splash->show();
-    QString splashMsg;
 
-    // Loading Navdata
-    splashMsg.append("Loading navdata...");
-    splash->showMessage(splashMsg, Qt::AlignCenter, QColor(0, 24, 81));
-    app.processEvents();
-    NavData::getInstance();
-    Airac::getInstance();
+    //Startin Launcher
+    Launcher launch;
+    launch.fireUp();
 
-    // create main window
-    splashMsg.append("\nSetting up main window and OpenGL...");
-    splash->showMessage(splashMsg, Qt::AlignCenter, QColor(0, 24, 81));
-    app.processEvents();
-    Window *window = Window::getInstance(true);
 
-    // ready
-    splashMsg.append("\nStartup completed");
-    splash->showMessage(splashMsg, Qt::AlignCenter, QColor(0, 24, 81));
-    splash->finish(window);
-    window->show();
-    delete splash;
 
     // starting event loop
+    launch.close();
+    Window::getInstance()->show();
+    app.processEvents();
     return app.exec();
 
     // closing log

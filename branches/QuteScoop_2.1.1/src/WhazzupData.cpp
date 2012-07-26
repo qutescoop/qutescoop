@@ -19,7 +19,7 @@ WhazzupData::WhazzupData():
 {
 }
 
-WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
+WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
     servers(QList<QStringList>()), voiceServers(QList<QStringList>()), whazzupVersion(0),
     whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime())
 {

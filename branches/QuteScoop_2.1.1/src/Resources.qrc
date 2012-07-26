@@ -28,13 +28,13 @@
         <file>images/warn16.png</file>
         <file>images/error16.png</file>
         <file>images/fatal16.png</file>
-        <file>images/qs-logo.png</file>
     </qresource>
     <qresource prefix="/routeproviders">
         <file>images/vroute.png</file>
         <file>images/vatroute.png</file>
     </qresource>
-    <qresource prefix="/splash">
+    <qresource prefix="/startup">
         <file alias="splash">images/splash.png</file>
+        <file alias="logo">images/qs-logo.png</file>
     </qresource>
 </RCC>

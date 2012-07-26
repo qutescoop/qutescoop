@@ -20,7 +20,7 @@ public:
     enum WhazzupType { NONE, WHAZZUP, ATCBOOKINGS, UNIFIED };
 
     WhazzupData();
-    WhazzupData(QBuffer* buffer, WhazzupType type);
+    WhazzupData(QNetworkReply* buffer, WhazzupType type);
     WhazzupData(const QDateTime predictTime, const WhazzupData &data); // predict whazzup data
     ~WhazzupData();
     // copy constructor and assignment operator

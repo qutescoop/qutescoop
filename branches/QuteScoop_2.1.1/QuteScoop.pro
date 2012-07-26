@@ -15,7 +15,8 @@ QT *= core \
     gui \
     network \
     opengl \
-    xml
+    xml \
+    testlib
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
@@ -73,6 +74,7 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat
     dataFiles.files += ./data/cloudmirrors.dat
+    dataFiles.files += ./data/clouds/+notes.txt
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/+notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
@@ -188,7 +190,9 @@ HEADERS += src/_pch.h \
     src/GuiMessage.h \
     src/winddata.h \
     src/station.h \
-    src/launcher.h
+    src/launcher.h \
+    src/sectorview.h \
+    src/networkmanager.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -240,7 +244,9 @@ SOURCES += src/WhazzupData.cpp \
     src/GuiMessage.cpp \
     src/winddata.cpp \
     src/station.cpp \
-    src/launcher.cpp
+    src/launcher.cpp \
+    src/sectorview.cpp \
+    src/networkmanager.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \

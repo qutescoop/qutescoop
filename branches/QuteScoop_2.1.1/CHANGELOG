@@ -2,6 +2,19 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.1.1
+fixed:
+*VATSIM status file redirects
+changed:
+*airlinedatabase now in ES format
+added:
+*show clouds
+*highlight friends
+*show transponder code
+*save map position
+*launcher
+
+
 Version 2.0rc20
 fixed:
  *direct focus on filterfield in the ListClientDialog

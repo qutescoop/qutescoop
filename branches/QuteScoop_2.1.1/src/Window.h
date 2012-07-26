@@ -29,6 +29,7 @@ public slots:
     void refreshFriends();
     void on_actionShowRoutes_triggered(bool checked);
     void startCloudDownload();
+    void whazzupDownloaded(bool isNew = true);
 
 private slots:
     void on_actionShowWaypoints_triggered(bool checked);
@@ -77,7 +78,6 @@ private slots:
     void about();
 
     void toggleFullscreen();
-    void whazzupDownloaded(bool isNew = true);
     void openPreferences();
     void openPlanFlight();
     void openBookedAtc();
@@ -103,14 +103,13 @@ private slots:
     //void versionDownloaded(bool error);
     void downloadWatchdogTriggered();
 
-    void startWindDecoding(bool);
-
     void allSectorsChanged(bool);
 
     void cloudDownloadFinished(bool error);
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
+
 
 private:
     // singleton
@@ -126,8 +125,8 @@ private:
     MetarModel metarModel;
 
     //void checkForUpdates();
-    QHttp *versionChecker, *windDataDownloader, *cloudDownloader;
-    QBuffer *versionBuffer, *windDataBuffer, *cloudBuffer;
+    QHttp *versionChecker, *cloudDownloader;
+    QBuffer *versionBuffer, *cloudBuffer;
 
     QDateTime dateTimePredict_old;
 

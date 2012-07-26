@@ -86,22 +86,13 @@ Window::Window(QWidget *parent) :
     connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
     connect(actionSectorview, SIGNAL(triggered()), this, SLOT(openSectorView()));
 
-    qDebug() << "Window::Window() creating Whazzup";
     Whazzup *whazzup = Whazzup::getInstance();
-    qDebug() << "Window::Window() creating Whazzup --finished";
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
     //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
     connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
-
-    if(Settings::downloadOnStartup())
-        // download whazzup as soon as whazzup status download is complete
-        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
-
-    // Always download status
-    whazzup->setStatusLocation(Settings::statusLocation());
 
     searchResult->setModel(&searchResultModel);
     connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)),
@@ -192,18 +183,6 @@ Window::Window(QWidget *parent) :
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
-    if(windDataDownloader != 0) windDataDownloader = 0;
-
-    windDataDownloader= new QHttp(this);
-    QUrl url("http://fsrealwx.rs-transline.de/upperair.txt");
-    connect(windDataDownloader, SIGNAL(done(bool)) , this , SLOT(startWindDecoding(bool)));
-
-    windDataBuffer = new QBuffer;
-    windDataBuffer->open(QBuffer::ReadWrite);
-
-    windDataDownloader->setHost(url.host());
-    windDataDownloader->get(url.path(), windDataBuffer);
-    qDebug() << "Window::Window -- WindData download started";
 
     connect(&cloudTimer, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
 
@@ -919,25 +898,6 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
     Settings::setShowUsedWaypoints(checked);
     mapScreen->glWidget->createPilotsList();
     mapScreen->glWidget->updateGL();
-}
-
-void Window::startWindDecoding(bool error)
-{
-    qDebug() << "Window::startWindDecoding -- WindData downloaded";
-    if(windDataBuffer == 0) return;
-
-    if(error)
-    {
-        GuiMessages::criticalUserInteraction(windDataDownloader->errorString() , "WindData download");
-        return;
-    }
-
-    windDataBuffer->seek(0);
-
-    QString data = QString(windDataBuffer->readAll());
-    WindData::getInstance()->setRawData(data);
-
-    WindData::getInstance()->decodeData();
 }
 
 void Window::allSectorsChanged(bool state)

@@ -40,16 +40,16 @@ public:
                                                            double lon2, double pointEachNm = 30.);
     static void plotPointsOnEarth(const QList<QPair<double, double> > &points);
 
-    void checkForDataUpdates();
+    //void checkForDataUpdates();
 
     void updateData(const WhazzupData& whazzupData);
     void accept(SearchVisitor* visitor);
 
 private slots:
     // datafiles update
-    void dataVersionsDownloaded(bool error);
-    void dataFilesRequestFinished(int id, bool error);
-    void dataFilesDownloaded(bool error);
+    //void dataVersionsDownloaded(bool error);
+    //void dataFilesRequestFinished(int id, bool error);
+    //void dataFilesDownloaded(bool error);
 
 private:
     NavData();

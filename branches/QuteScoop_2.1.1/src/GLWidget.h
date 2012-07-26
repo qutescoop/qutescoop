@@ -18,6 +18,7 @@
 #include "Airac.h"
 #include "winddata.h"
 
+
 class GLWidget : public QGLWidget
 {
     Q_OBJECT
@@ -120,6 +121,7 @@ private:
 
     QImage completedEarthTexIm;
     bool lightsGenerated;
+
 
         GLUquadricObj *earthQuad;
         GLuint earthTex, cloudTex;
