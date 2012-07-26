@@ -35,6 +35,12 @@ Launcher::Launcher(QWidget *parent)
     windowReady = false;
     navReady = false;
     windReady = false;
+
+    finalTimer.setInterval(250);
+    finalTimer.setSingleShot(false);
+    windowTimer.setInterval(250);
+    windowTimer.setSingleShot(false);
+
     this->show();
 
 
@@ -112,11 +118,15 @@ void Launcher::fireUp()
 
 
 
-    while(windowReady != true || windReady != true)
+    finalTimer.start();
+    while(finalTimer.isActive())
     {
-        QTest::qWait(250);
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
+        if(windowReady == true && windReady == true){
+        finalTimer.stop();}
     }
-    qDebug() << "window:" << windowReady << " :   wind:" << windReady;
+
+
     qDebug() << "Launcher::fireUp -- finished";
 }
 
@@ -315,9 +325,10 @@ void Launcher::loadNavdata()
 
 void Launcher::loadWindow()
 {
-    while(navReady != true){
-        QTest::qWait(250);
-        qDebug() << "Launcher::loadWindow -- waiting for Navdata";
+    windowTimer.start();
+    while(windowTimer.isActive()){
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
+        if(navReady == true) windowTimer.stop();
     }
     qDebug() << "Launcher::loadWindow -- starting loading";
 

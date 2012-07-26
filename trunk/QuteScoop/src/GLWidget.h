@@ -16,6 +16,7 @@
 #include "ClientSelectionWidget.h"
 #include "Airac.h"
 #include "winddata.h"
+#include "GL/glu.h"
 
 class GLWidget : public QGLWidget
 {

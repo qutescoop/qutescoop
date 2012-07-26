@@ -8,7 +8,6 @@
 #include "FileReader.h"
 #include "Whazzup.h"
 #include "Settings.h"
-#include <QtTest>
 #include "GuiMessage.h"
 
 class Launcher : public QWidget
@@ -43,7 +42,7 @@ private slots:
 
 private:
 
-
+    //Startupimage
     QPixmap map;
     QLabel *image;
     QLabel *text;
@@ -63,6 +62,7 @@ private:
 
 
     bool navReady, windowReady, windReady;
+    QTimer finalTimer,windowTimer;
 
 };
 

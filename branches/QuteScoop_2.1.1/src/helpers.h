@@ -18,7 +18,7 @@ static double inline modPositive(double x, double y) {
 }
 
 /* version information */
-#define CVS_REVISION "$Revision: 256 $" // Gets set automatically on commit of THIS file.
+#define CVS_REVISION "$Revision: 270 $" // Gets set automatically on commit of THIS file.
                                         // This is just the revision of THIS file, not the whole working copy.
                                         // Well, better than nothing. No working copy revision information is available cross-platform :(
 

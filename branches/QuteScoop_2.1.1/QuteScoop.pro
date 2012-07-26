@@ -15,8 +15,7 @@ QT *= core \
     gui \
     network \
     opengl \
-    xml \
-    testlib
+    xml
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
@@ -135,7 +134,8 @@ FORMS = src/MainWindow.ui \
     src/PreferencesDialog.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
-    src/ListClientsDialog.ui
+    src/ListClientsDialog.ui\
+    src/sectorview.ui
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \

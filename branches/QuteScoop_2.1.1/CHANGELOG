@@ -8,12 +8,11 @@ fixed:
 changed:
 *airlinedatabase now in ES format
 added:
-*show clouds
+*show clouds[experimental]
 *highlight friends
 *show transponder code
 *save map position
 *launcher
-
 
 Version 2.0rc20
 fixed:
