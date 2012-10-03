@@ -190,7 +190,7 @@ void Whazzup::download() {
     NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
     connect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this, SLOT(whazzupDownloaded(QNetworkReply*)));
 
-    /*if(whazzupDownloader != 0) {
+    if(whazzupDownloader != 0) {
         whazzupDownloader->abort();
         delete whazzupDownloader;
     }
@@ -210,7 +210,7 @@ void Whazzup::download() {
         delete whazzupBuffer;
     whazzupBuffer = new QBuffer;
     whazzupBuffer->open(QBuffer::ReadWrite);
-    whazzupDownloader->get(querystr, whazzupBuffer);*/
+    whazzupDownloader->get(querystr, whazzupBuffer);
 }
 
 void Whazzup::whazzupDownloading(int prog, int tot) {
