@@ -1,7 +1,7 @@
 <project>
     <shortName>qutescoop</shortName>
     <fullName>QuteScoop</fullName>
-    <version>2.1.1(beta)</version>
+    <version>2.1.1a(beta)</version>
     <installerFilename>${platform_name}-${product_shortname}-${product_version}-installer.${platform_exec_suffix}</installerFilename>
     <licenseFile>COPYING</licenseFile>
     <logoImage>src/qutescoop.png</logoImage>

@@ -32,6 +32,7 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
 //    setWindowFlags(Qt::Tool);
 
     bDepDetails->hide(); bDestDetails->hide();
+    edCycle->setText(QDate::currentDate().toString("yyMM"));
 
     routesSortModel = new QSortFilterProxyModel;
     routesSortModel->setDynamicSortFilter(true);
@@ -134,7 +135,7 @@ void PlanFlightDialog::vrouteDownloaded(bool error) {
 
     if(error) {
         lblVrouteStatus->setText(QString("error: %1")
-                              .arg(QString(vrouteDownloader->errorString())));
+                              .arg(vrouteDownloader->errorString()));
         return;
     }
 
@@ -213,7 +214,11 @@ void PlanFlightDialog::vrouteDownloaded(bool error) {
 }
 
 void PlanFlightDialog::requestVatroute() {
-    QUrl url("http://www.michael-nagler.de/getvatroute.php"); // kindly providing an interface with parsed results
+//    QUrl url("http://www.michael-nagler.de/getvatroute.php"); // kindly providing an interface with parsed results
+//    url.addQueryItem(QString("dep"), edDep->text().trimmed());
+//    url.addQueryItem(QString("dest"), edDest->text().trimmed());
+
+    QUrl url("http://www.vatroute.net/web_showfp.php");
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("dest"), edDest->text().trimmed());
 
@@ -237,30 +242,35 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
 
     if(error) {
         lblVatrouteStatus->setText(QString("error: %1")
-                              .arg(QString(vatrouteDownloader->errorString())));
+                              .arg(vatrouteDownloader->errorString()));
         return;
     }
 
     QList<Route*> newRoutes;
 
-    vatrouteBuffer->seek(0);
-    while (vatrouteBuffer->canReadLine()) {
-        QString line = vatrouteBuffer->readLine();
+    QRegExp rxRoutes("(?:<tr[^>]*>.*){23}.*(<tr.*>.*<\\/tr>.*)<\\/table>");
+    rxRoutes.setMinimal(true);
 
-        QRegExp regEx = QRegExp("FL(\\d*)-FL(\\d*): (\\w{4})-(.*)-(\\w{4}) \\[(.*)\\]");
-        regEx.indexIn(line);
+    if (rxRoutes.indexIn(vatrouteBuffer->data()) != -1) {
+        QRegExp rx("\\s*<tr[^<]*<td[^<]*(?:<.><\\/.>)?FL(\\d{3})-FL(\\d{3})(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<\\/tr>");
+        QString rStr = rxRoutes.cap(1);
 
-        Route *r = new Route();
-        r->provider = QString("VATroute");
-        r->dep = edDep->text();
-        r->dest = edDest->text();
-        r->minFl = regEx.cap(1);
-        r->maxFl = regEx.cap(2);
-        r->route = regEx.cap(4).split("-").join(" ");;
-        r->comments = regEx.cap(6);
+        int pos = 0;
+        while ((pos = rx.indexIn(rStr, pos)) != -1) {
+            Route *r = new Route();
+            r->provider = QString("VATroute");
+            r->dep = edDep->text();
+            r->dest = edDest->text();
+            r->minFl = rx.cap(1);
+            r->maxFl = rx.cap(2);
+            r->route = rx.cap(3).toUpper();
+            r->comments = rx.cap(4);
 
-        r->calculateWaypointsAndDistance();
-        newRoutes.append(r);
+            r->calculateWaypointsAndDistance();
+            newRoutes.append(r);
+
+            pos += rx.matchedLength();
+        }
     }
 
     lblVatrouteStatus->setText(QString("%1 route%2").arg(newRoutes.size()).
