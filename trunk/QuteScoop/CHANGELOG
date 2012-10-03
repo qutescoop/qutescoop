@@ -2,6 +2,14 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
+Version 2.0rc22
+added:
+ * linker includes libGLU on UNIX. Should make compiling out of the
+   box possible again (Tested on Ubuntu 12.04 64bit with libgl1-mesa-dev).
+fixed:
+ * VATRoute route provider: Our dear friend lost his domain michael-nagler.de
+   where the parsing webservice was hosted. Put the parsing in QuteScoop.
+
 Version 2.0rc21
 fixed:
  *changed all VATSIM status urls to: http://status.vatsim.net/status.txt
