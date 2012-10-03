@@ -4,8 +4,8 @@
 TEMPLATE = app
 CONFIG *= qt
 
-# CONFIG = debug
-# CONFIG += release
+# CONFIG *= debug
+# CONFIG *= release
 CONFIG *= warn_off
 TARGET = QuteScoop
 win32:PLATFORM = "win32"
@@ -15,7 +15,8 @@ QT *= core \
     gui \
     network \
     opengl \
-    xml
+    xml \
+    xmlpatterns
 
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
@@ -89,7 +90,7 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/2048px-toposhaded.png
     texturesFiles.files += ./textures/4096px.png
     texturesFiles.files += ./textures/4096px-color.png
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
+    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}. Run 'make install' to copy these.")
     
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
