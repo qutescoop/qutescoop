@@ -252,14 +252,11 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
     rxRoutes.setMinimal(true);
 
     if (rxRoutes.indexIn(vatrouteBuffer->data()) != -1) {
-        qDebug() << rxRoutes.capturedTexts().mid(1);
         QRegExp rx("\\s*<tr[^<]*<td[^<]*(?:<.><\\/.>)?FL(\\d{3})-FL(\\d{3})(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<\\/tr>");
         QString rStr = rxRoutes.cap(1);
 
         int pos = 0;
         while ((pos = rx.indexIn(rStr, pos)) != -1) {
-            qDebug() << pos;
-            qDebug() << rx.capturedTexts().mid(1);
             Route *r = new Route();
             r->provider = QString("VATroute");
             r->dep = edDep->text();
@@ -273,7 +270,6 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
             newRoutes.append(r);
 
             pos += rx.matchedLength();
-            qDebug() << pos;
         }
     }
 
