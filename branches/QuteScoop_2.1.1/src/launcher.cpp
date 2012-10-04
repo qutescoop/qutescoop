@@ -122,7 +122,7 @@ void Launcher::fireUp()
     while(finalTimer.isActive())
     {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
-        if(windowReady == true && windReady == true){
+        if(windowReady && windReady){
         finalTimer.stop();}
     }
 
@@ -328,7 +328,7 @@ void Launcher::loadWindow()
     windowTimer.start();
     while(windowTimer.isActive()){
         QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
-        if(navReady == true) windowTimer.stop();
+        if(navReady) windowTimer.stop();
     }
     qDebug() << "Launcher::loadWindow -- starting loading";
 

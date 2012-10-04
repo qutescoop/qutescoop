@@ -93,6 +93,8 @@ private:
 
     void renderLabels();
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
+    void renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
+    void renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
     //experimantal
     //void createWindList();

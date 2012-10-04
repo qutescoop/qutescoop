@@ -188,7 +188,9 @@ private slots:
 
     void on_useSelectionRectangle_toggled(bool checked);
 
-private:
+    void on_cbSimpleLabels_toggled(bool checked);
+
+    private:
     PreferencesDialog(QWidget *parent);
 
     bool settingsLoaded;

@@ -56,7 +56,6 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
             else
                 assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date(), found, Qt::UTC);
         }
-        //qDebug() << "Found" << label << "to be online until" << assumeOnlineUntil << "(Controller Info)";
     }
 
     QString icao = this->getCenter();

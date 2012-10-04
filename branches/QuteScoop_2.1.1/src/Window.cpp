@@ -344,9 +344,9 @@ void Window::openPlanFlight() {
     PlanFlightDialog::getInstance(true)->activateWindow();
     PlanFlightDialog::getInstance(true)->setFocus();
 
-    //if (Settings::planFlightDialogSize().isNull() == false) {PlanFlightDialog::getInstance(true)->resize(Settings::planFlightDialogSize());}
-    if (Settings::planFlightDialogPos().isNull() == false)  {PlanFlightDialog::getInstance(true)->move(Settings::planFlightDialogPos());}
-    if (Settings::planFlightDialogGeometry().isNull() == false)    {PlanFlightDialog::getInstance(true)->restoreGeometry(Settings::planFlightDialogGeometry());}
+    //if (!Settings::planFlightDialogSize().isNull()) {PlanFlightDialog::getInstance(true)->resize(Settings::planFlightDialogSize());}
+    if (!Settings::planFlightDialogPos().isNull())  {PlanFlightDialog::getInstance(true)->move(Settings::planFlightDialogPos());}
+    if (!Settings::planFlightDialogGeometry().isNull())    {PlanFlightDialog::getInstance(true)->restoreGeometry(Settings::planFlightDialogGeometry());}
 
 }
 
@@ -997,14 +997,14 @@ void Window::cloudDownloadFinished(bool error)
 void Window::on_actionHighlight_Friends_tiggered(bool checked){
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
-    if(checked == false) mapScreen->glWidget->destroyFriendHightlighter();
+    if(!checked) mapScreen->glWidget->destroyFriendHightlighter();
     mapScreen->glWidget->updateGL();
 }
 
 void Window::on_pb_highlightFriends_toggled(bool checked){
     Settings::setHighlightFriends(checked);
     actionHighlight_Friends->setChecked(checked);
-    if(checked == false) mapScreen->glWidget->destroyFriendHightlighter();
+    if(!checked) mapScreen->glWidget->destroyFriendHightlighter();
     mapScreen->glWidget->updateGL();
 }
 

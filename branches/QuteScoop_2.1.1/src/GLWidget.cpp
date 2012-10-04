@@ -70,7 +70,7 @@ GLWidget::~GLWidget() {
 //
 // scene -> unrotated world (looking onto N0/E0):
 //      (1,0,0)->(0,90), (0,1,0)->(0,180), (0,0,1)->(-90,0) [Southpole].
-// The scene is then rotated by xRot/yRot/zRot. When looking onto N0/E0, -90�/0�/0�
+// The scene is then rotated by xRot/yRot/zRot. When looking onto N0/E0, -90째/0째/0째
 // This looks a bit anarchic, but it fits the automatically created texture coordinates.
 // call drawCoordinateAxii() inside paintGL() to se where the axii are.
 void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updateGL) {
@@ -117,7 +117,7 @@ bool GLWidget::mouse2latlon(int x, int y, double &lat, double &lon) const {
     if(qIsNaN(yGl))
         return false; // mouse is not on globe
 
-    // 2) skew (rotation around the x-axis, where 0� means looking onto the equator)
+    // 2) skew (rotation around the x-axis, where 0째 means looking onto the equator)
     double theta = (xRot + 90.) * Pi180;
 
     // 3) new cartesian coordinates, taking skew into account
@@ -139,7 +139,7 @@ bool GLWidget::mouse2latlon(int x, int y, double &lat, double &lon) const {
 
 void GLWidget::scrollBy(int moveByX, int moveByY) {
     QPair<double, double> cur = currentPosition();
-    setMapPosition(cur.first  - (double) moveByY * zoom * 6., // 6� on zoom=1
+    setMapPosition(cur.first  - (double) moveByY * zoom * 6., // 6째 on zoom=1
                    cur.second + (double) moveByX * zoom * 6., zoom);
     updateGL();
 }
@@ -677,21 +677,21 @@ void GLWidget::initializeGL(){
                 glDisable(GL_LINE_STIPPLE);
         if(Settings::displaySmoothDots()) {
                 glEnable(GL_POINT_SMOOTH);
-                glHint(GL_POINT_SMOOTH_HINT, GL_NICEST); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
+                glHint(GL_POINT_SMOOTH_HINT, GL_DONT_CARE); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
         } else {
                 glDisable(GL_POINT_SMOOTH);
-                glHint(GL_POINT_SMOOTH_HINT, GL_FASTEST); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
+                glHint(GL_POINT_SMOOTH_HINT, GL_DONT_CARE); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
         }
         if(Settings::displaySmoothLines()) {
                 glEnable(GL_LINE_SMOOTH);
                 glEnable(GL_POLYGON_SMOOTH);
-                glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
-                glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+                glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
+                glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
         } else {
                 glDisable(GL_LINE_SMOOTH);
                 glDisable(GL_POLYGON_SMOOTH);
-                glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
-                glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
+                glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
+                glHint(GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
         }
         if(Settings::glBlending()) {
                 glEnable(GL_BLEND);
@@ -703,11 +703,15 @@ void GLWidget::initializeGL(){
 
                 glEnable(GL_FOG); // fog - fading Earth's borders
                 glFogi(GL_FOG_MODE, GL_LINEAR); // GL_EXP2, GL_EXP, GL_LINEAR
-                GLfloat fogColor[] = {Settings::backgroundColor().redF(), Settings::backgroundColor().greenF(),
-                                                           Settings::backgroundColor().blueF(), Settings::backgroundColor().alphaF()};;
+                GLfloat fogColor[] = {
+                    Settings::backgroundColor().redF(),
+                    Settings::backgroundColor().greenF(),
+                    Settings::backgroundColor().blueF(),
+                    Settings::backgroundColor().alphaF()
+                };
                 glFogfv(GL_FOG_COLOR, fogColor);
                 glFogf(GL_FOG_DENSITY, 1.);
-                glHint(GL_FOG_HINT, GL_NICEST);
+                glHint(GL_FOG_HINT, GL_DONT_CARE);
                 glFogf(GL_FOG_START, 9.8);
                 glFogf(GL_FOG_END, 10.);
         } else {
@@ -716,8 +720,9 @@ void GLWidget::initializeGL(){
                 glDisable(GL_FOG);
         }
 
-        glDisable(GL_DEPTH_TEST); // this helps against sectors and coastlines that are "farer" away than the earth superficie
-                                                        // - also we do not need that. We just draw from far to near...
+        glDisable(GL_DEPTH_TEST); // this helps against sectors and coastlines that..
+                                    //are "farer" away than the earth superficie
+                                    // - also we do not need that. We just draw from far to near...
         //glDepthFunc(GL_LEQUAL); // when using DEPTH_TEST
         //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST); // 1st: GL_FOG_HINT, GL_GENERATE_MIPMAP_HINT,
         // ...GL_LINE_SMOOTH_HINT, GL_PERSPECTIVE_CORRECTION_HINT, GL_POINT_SMOOTH_HINT,
@@ -741,8 +746,12 @@ void GLWidget::initializeGL(){
         if (Settings::glLighting()) {
                 //const GLfloat earthAmbient[]  = {0, 0, 0, 1};
                 const GLfloat earthDiffuse[]  = {1, 1, 1, 1};
-                const GLfloat earthSpecular[] = {Settings::specularColor().redF(), Settings::specularColor().greenF(),
-                                                                                 Settings::specularColor().blueF(), Settings::specularColor().alphaF()};
+                const GLfloat earthSpecular[] = {
+                    Settings::specularColor().redF(),
+                    Settings::specularColor().greenF(),
+                    Settings::specularColor().blueF(),
+                    Settings::specularColor().alphaF()
+                };
                 const GLfloat earthEmission[] = {0, 0, 0, 1};
                 const GLfloat earthShininess[] = {Settings::earthShininess()};
                 //glMaterialfv(GL_FRONT, GL_AMBIENT, earthAmbient); // GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR,
@@ -798,7 +807,7 @@ void GLWidget::paintGL() {
     if (Settings::glLighting()) {
 
         //check if lights generated
-        if(lightsGenerated == false){
+        if(!lightsGenerated){
             createLights();
         }
 
@@ -820,12 +829,12 @@ void GLWidget::paintGL() {
             }
         }
     }
-    if (Settings::glTextures() && earthTex != 0 && Settings::glLighting() == true) {
+    if (Settings::glTextures() && earthTex != 0 && Settings::glLighting()) {
             glEnable(GL_TEXTURE_2D);
             glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
             glBindTexture(GL_TEXTURE_2D, earthTex);
         }
-    if (Settings::glTextures() && earthTex != 0 && Settings::glLighting() == false){
+    if (Settings::glTextures() && earthTex != 0 && !Settings::glLighting()){
         glEnable(GL_TEXTURE_2D);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
         glBindTexture(GL_TEXTURE_2D, earthTex);
@@ -911,7 +920,7 @@ void GLWidget::paintGL() {
         GLfloat blue = Settings::highlightColor().blueF();
         GLfloat alpha = Settings::highlightColor().alphaF();
         double lineWidth = Settings::highlightLineWidth();
-        if(Settings::useHighlightAnimation() == false) {
+        if(!Settings::useHighlightAnimation()) {
             range = 0;
             destroyFriendHightlighter();
         }
@@ -944,9 +953,6 @@ void GLWidget::paintGL() {
 
     if (mapIsRectangleSelecting)
             drawSelectionRectangle();
-
-
-
 
     /*
     // some preparations to draw small textures on the globe (plane symbols, wind data...).
@@ -1234,43 +1240,6 @@ void GLWidget::renderLabels() {
         renderLabels(objects, Settings::pilotFont(), pilotLabelZoomTreshold,
                  Settings::pilotFontColor());
     }
-    if(!Settings::showPilotsLabels()){
-        QFontMetricsF fontMetrics(Settings::airportFont(), this);
-        foreach(MapObject *o, objects){
-            //Check if Pilot is flying
-            if(o->drawLabel == false ) continue;
-            int x, y; if(pointIsVisible(o->lat, o->lon, &x, &y)) {
-                QRectF rect = fontMetrics.boundingRect(o->label);
-                int drawX = x - rect.width() / 2; // center horizontally
-                int drawY = y - rect.height() - 5; // some px above dot
-                rect.moveTo(drawX, drawY);
-
-                QList<QRectF> rects; // possible positions, with preferred ones first
-                rects << rect;
-                rects << rect.translated(0,  rect.height() / 1.5);
-                rects << rect.translated(0, -rect.height() / 1.5);
-                rects << rect.translated( rect.width() / 1.5, 0);
-                rects << rect.translated(-rect.width() / 1.5, 0);
-                rects << rect.translated( rect.width() / 1.5,  rect.height() / 1.5 + 5);
-                rects << rect.translated( rect.width() / 1.5, -rect.height() / 1.5);
-                rects << rect.translated(-rect.width() / 1.5,  rect.height() / 1.5 + 5);
-                rects << rect.translated(-rect.width() / 1.5, -rect.height() / 1.5);
-
-                FontRectangle *drawnFontRect = 0;
-                foreach(const QRectF &r, rects) {
-                    if(shouldDrawLabel(r)) {
-                        drawnFontRect = new FontRectangle(r, o);
-                        fontRectangles.insert(drawnFontRect);
-                        allFontRectangles.insert(drawnFontRect);
-                        break;
-                    }
-                }
-                if (drawnFontRect == 0) // default position if it was not drawn
-                    allFontRectangles.insert(new FontRectangle(rect, o));
-            }
-
-        }
-    }
 
     // waypoints used in shown routes
     QSet<MapObject*> waypointObjects; // using a QSet 'cause it takes care of unique values
@@ -1314,15 +1283,27 @@ void GLWidget::renderLabels() {
 
 void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
                             double zoomTreshold, QColor color) {
+    if (Settings::simpleLabels()) // cheap function
+        renderLabelsSimple(objects, font, zoomTreshold, color);
+    else // expensive function
+        renderLabelsComplex(objects, font, zoomTreshold, color);
+}
+
+// this one checks if labels overlap etc. the transformation lat/lon -> x,y is very expensive
+void GLWidget::renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font,
+                            double zoomTreshold, QColor color) {
     if(zoom > zoomTreshold || color.alpha() == 0)
         return; // don't draw if too far away or color-alpha == 0
     color.setAlphaF(qMax(0., qMin(1., (zoomTreshold - zoom) / zoomTreshold * 1.5))); // fade out
 
     QFontMetricsF fontMetrics(font, this);
     foreach(MapObject *o, objects) {
-        if(o->drawLabel == false ) continue;
-        int x, y; if(pointIsVisible(o->lat, o->lon, &x, &y)) {
-            QString text = o->mapLabel();
+        if (fontRectangles.size() >= Settings::maxLabels())
+            break;
+        if (!o->drawLabel)
+            continue;
+        int x, y; if (pointIsVisible(o->lat, o->lon, &x, &y)) {
+            const QString &text = o->mapLabel();
             QRectF rect = fontMetrics.boundingRect(text);
             int drawX = x - rect.width() / 2; // center horizontally
             int drawY = y - rect.height() - 5; // some px above dot
@@ -1344,6 +1325,9 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
                 if(shouldDrawLabel(r)) {
                     drawnFontRect = new FontRectangle(r, o);
                     qglColor(color);
+
+                    // yes, this is slow and it is known: ..
+                    // https://bugreports.qt-project.org/browse/QTBUG-844
                     renderText(r.left(), (r.top() + r.height()), text, font);
                     fontRectangles.insert(drawnFontRect);
                     allFontRectangles.insert(drawnFontRect);
@@ -1356,9 +1340,29 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
     }
 }
 
+// this one uses 3D-coordinates to paint and does not check overlap
+// which results in tremendously improved framerates
+void GLWidget::renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font,
+                            double zoomTreshold, QColor color) {
+    if (zoom > zoomTreshold || color.alpha() == 0)
+        return; // don't draw if too far away or color-alpha == 0
+    color.setAlphaF(qMax(0., qMin(1., (zoomTreshold - zoom) / zoomTreshold * 1.5))); // fade out
+
+    foreach(MapObject *o, objects) {
+        if (fontRectangles.size() >= Settings::maxLabels())
+            break;
+        fontRectangles.insert(new FontRectangle(QRectF(), 0)); // we use..
+                        // this bogus value to stay compatible..
+                        // with maxLabels-checking
+        if (!o->drawLabel)
+            continue;
+        qglColor(color);
+        renderText(SXhigh(o->lat, o->lon), SYhigh(o->lat, o->lon), SZhigh(o->lat, o->lon),
+                   o->mapLabel(), font);
+    }
+}
+
 bool GLWidget::shouldDrawLabel(const QRectF &rect) {
-    if (fontRectangles.size() >= Settings::maxLabels())
-        return false;
     foreach(const FontRectangle *fr, fontRectangles) {
         QRectF checkRect = fr->rect;
         checkRect.setWidth(checkRect.width()   / 1.6); // make them smaller to allow a tiny bit of intersect
@@ -1422,39 +1426,39 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
 /////////////////////////
 
 void GLWidget::drawSelectionRectangle() const {
-        QPoint current = mapFromGlobal(QCursor::pos());
-        double downLat, downLon;
-        if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
-                double currLat, currLon;
-                if (mouse2latlon(current.x(), current.y(), currLat, currLon)) {
-                        // calculate a rectangle: approximating what the viewport will look after zoom (far from perfect)
-                        double currLonDist = NavData::distance(currLat, downLon, currLat, currLon);
-                        double downLonDist = NavData::distance(downLat, downLon, downLat, currLon);
-                        double avgLonDist = (downLonDist + currLonDist) / 2.; // this needs to be the side length
-                        DoublePair downLatCurrLon = NavData::greatCircleFraction(downLat, downLon,
-                                                                                 downLat, currLon,
-                                                                                 avgLonDist / downLonDist);
-                        DoublePair currLatDownLon = NavData::greatCircleFraction(currLat, currLon,
-                                                                                 currLat, downLon,
-                                                                                 avgLonDist / currLonDist);
-                        QList<QPair<double, double> > points;
-                        points.append(DoublePair(downLat, downLon));
-                        points.append(DoublePair(downLatCurrLon.first, downLatCurrLon.second));
-                        points.append(DoublePair(currLat, currLon));
-                        points.append(DoublePair(currLatDownLon.first, currLatDownLon.second));
-                        points.append(DoublePair(downLat, downLon));
+    QPoint current = mapFromGlobal(QCursor::pos());
+    double downLat, downLon;
+    if (mouse2latlon(mouseDownPos.x(), mouseDownPos.y(), downLat, downLon)) {
+        double currLat, currLon;
+        if (mouse2latlon(current.x(), current.y(), currLat, currLon)) {
+            // calculate a rectangle: approximating what the viewport will look after zoom (far from perfect)
+            double currLonDist = NavData::distance(currLat, downLon, currLat, currLon);
+            double downLonDist = NavData::distance(downLat, downLon, downLat, currLon);
+            double avgLonDist = (downLonDist + currLonDist) / 2.; // this needs to be the side length
+            DoublePair downLatCurrLon = NavData::greatCircleFraction(downLat, downLon,
+                                                                     downLat, currLon,
+                                                                     avgLonDist / downLonDist);
+            DoublePair currLatDownLon = NavData::greatCircleFraction(currLat, currLon,
+                                                                     currLat, downLon,
+                                                                     avgLonDist / currLonDist);
+            QList<QPair<double, double> > points;
+            points.append(DoublePair(downLat, downLon));
+            points.append(DoublePair(downLatCurrLon.first, downLatCurrLon.second));
+            points.append(DoublePair(currLat, currLon));
+            points.append(DoublePair(currLatDownLon.first, currLatDownLon.second));
+            points.append(DoublePair(downLat, downLon));
 
-                        glColor4f(0., 1., 1., .5);
-                        glBegin(GL_POLYGON);
-                        NavData::plotPointsOnEarth(points);
-                        glEnd();
-                        glLineWidth(2.);
-                        glColor4f(0., 1., 1., 1.);
-                        glBegin(GL_LINE_LOOP);
-                        NavData::plotPointsOnEarth(points);
-                        glEnd();
-                }
+            glColor4f(0., 1., 1., .5);
+            glBegin(GL_POLYGON);
+            NavData::plotPointsOnEarth(points);
+            glEnd();
+            glLineWidth(2.);
+            glColor4f(0., 1., 1., 1.);
+            glBegin(GL_LINE_LOOP);
+            NavData::plotPointsOnEarth(points);
+            glEnd();
         }
+    }
 }
 
 void GLWidget::drawCoordinateAxii() const { // just for debugging. Visualization of the axii. red=x/green=y/blue=z
@@ -1554,15 +1558,11 @@ void GLWidget::parseEarthClouds()
     cloudsIm = QImage(cloudsTexFile);
     }
 
-    if(Settings::glTextures())
-    {
+    if(Settings::glTextures()) {
         QString earthTexFile = Settings::applicationDataDirectory(
                     QString("textures/%1").arg(Settings::glTextureEarth()));
         earthTexIm.load(earthTexFile);
-    }
-
-    if(Settings::glTextures() == false)
-    {
+    } else {
         completedEarthTexIm = cloudsIm;
         qDebug() << "GLWidget::parseEarthClouds -- finished using clouds";
     }

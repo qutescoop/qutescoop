@@ -24,7 +24,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="downloadTab">
       <attribute name="title">
@@ -118,9 +118,6 @@ location</string>
                  <property name="text">
                   <string>download Whazzup every</string>
                  </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
                 </widget>
                </item>
                <item>
@@ -138,9 +135,6 @@ location</string>
                  <property name="text">
                   <string>download Whazzup 
 on program &amp;start</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -169,9 +163,6 @@ on program &amp;start</string>
                  <property name="text">
                   <string>save &amp;Whazzups to:</string>
                  </property>
-                 <property name="checked">
-                  <bool>true</bool>
-                 </property>
                 </widget>
                </item>
                <item row="0" column="1">
@@ -194,9 +185,6 @@ on program &amp;start</string>
                  </property>
                  <property name="text">
                   <string>save &amp;screenshots to:</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -521,9 +509,6 @@ on program &amp;start</string>
                 <property name="text">
                  <string>check for datafile updates</string>
                 </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
                </widget>
               </item>
               <item>
@@ -794,9 +779,6 @@ p, li { white-space: pre-wrap; }
               <property name="text">
                <string>use navigation database from (point to /Resources):</string>
               </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
              </widget>
             </item>
             <item>
@@ -882,9 +864,6 @@ p, li { white-space: pre-wrap; }
             <property name="text">
              <string>show fixes when zoomed in</string>
             </property>
-            <property name="checked">
-             <bool>true</bool>
-            </property>
            </widget>
           </item>
          </layout>
@@ -912,9 +891,6 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="singleStep">
              <double>0.100000000000000</double>
-            </property>
-            <property name="value">
-             <double>1.000000000000000</double>
             </property>
            </widget>
           </item>
@@ -948,16 +924,13 @@ p, li { white-space: pre-wrap; }
             </property>
            </spacer>
           </item>
-          <item row="1" column="0">
+          <item row="1" column="0" colspan="5">
            <widget class="QCheckBox" name="useSelectionRectangle">
             <property name="toolTip">
              <string>Use left mouse button to drag a selection rectangle. When off, left mouse drag is globe panning (same as right drag)</string>
             </property>
             <property name="text">
              <string>use &amp;selection rectangle (then navigate via the left mouse button)</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -1048,9 +1021,6 @@ Please give us feedback if you encounter such situations - we are researching th
               <property name="text">
                <string>enable blend</string>
               </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
              </widget>
             </item>
             <item row="0" column="1">
@@ -1062,9 +1032,6 @@ Depends completely on your graphics hardware plus device driver.</string>
               <property name="text">
                <string>smooth lines</string>
               </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
              </widget>
             </item>
             <item row="0" column="2">
@@ -1075,9 +1042,6 @@ Depends completely on your graphics hardware plus device driver.</string>
               </property>
               <property name="text">
                <string>smooth dots</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -1094,17 +1058,20 @@ Depends completely on your graphics hardware plus device driver.</string>
               </property>
              </spacer>
             </item>
-            <item row="0" column="5">
+            <item row="0" column="6">
              <widget class="QLabel" name="label_29">
               <property name="text">
                <string>show</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="6">
+            <item row="0" column="7">
              <widget class="QSpinBox" name="sbMaxTextLabels">
               <property name="toolTip">
                <string>Labels seem to have the biggest impact on Rendering performance.</string>
+              </property>
+              <property name="specialValueText">
+               <string>no</string>
               </property>
               <property name="accelerated">
                <bool>true</bool>
@@ -1118,12 +1085,9 @@ Depends completely on your graphics hardware plus device driver.</string>
               <property name="singleStep">
                <number>10</number>
               </property>
-              <property name="value">
-               <number>50</number>
-              </property>
              </widget>
             </item>
-            <item row="0" column="7">
+            <item row="0" column="8">
              <widget class="QLabel" name="label_32">
               <property name="text">
                <string>text labels</string>
@@ -1138,8 +1102,15 @@ Depends completely on your graphics hardware plus device driver.</string>
               <property name="text">
                <string>dashed lines</string>
               </property>
-              <property name="checked">
-               <bool>true</bool>
+             </widget>
+            </item>
+            <item row="0" column="9">
+             <widget class="QCheckBox" name="cbSimpleLabels">
+              <property name="toolTip">
+               <string>Labels are not checked if they overlap with others. Can greatly improve performance.</string>
+              </property>
+              <property name="text">
+               <string>simple labels</string>
               </property>
              </widget>
             </item>
@@ -1181,9 +1152,6 @@ Depends completely on your graphics hardware plus device driver.</string>
                  <property name="autoFillBackground">
                   <bool>true</bool>
                  </property>
-                 <property name="text">
-                  <string>#c142ff</string>
-                 </property>
                  <property name="flat">
                   <bool>true</bool>
                  </property>
@@ -1193,9 +1161,6 @@ Depends completely on your graphics hardware plus device driver.</string>
                 <widget class="QPushButton" name="pbGridLineColor">
                  <property name="autoFillBackground">
                   <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>#c142ff</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -1217,9 +1182,6 @@ Depends completely on your graphics hardware plus device driver.</string>
                  <property name="autoFillBackground">
                   <bool>true</bool>
                  </property>
-                 <property name="text">
-                  <string>#c142ff</string>
-                 </property>
                  <property name="flat">
                   <bool>true</bool>
                  </property>
@@ -1239,9 +1201,6 @@ Depends completely on your graphics hardware plus device driver.</string>
                 <widget class="QPushButton" name="pbCountryLineColor">
                  <property name="autoFillBackground">
                   <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>#c142ff</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -1352,9 +1311,6 @@ Depends completely on your graphics hardware plus device driver.</string>
                  <property name="maximum">
                   <number>360</number>
                  </property>
-                 <property name="value">
-                  <number>20</number>
-                 </property>
                 </widget>
                </item>
                <item row="1" column="3">
@@ -1371,9 +1327,6 @@ The texture is affected by the colour chosen for the Globe.</string>
                  </property>
                  <property name="text">
                   <string>textured</string>
-                 </property>
-                 <property name="checked">
-                  <bool>true</bool>
                  </property>
                 </widget>
                </item>
@@ -1413,9 +1366,6 @@ The texture is affected by the colour chosen for the Globe.</string>
                  </property>
                  <property name="autoFillBackground">
                   <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>#c142ff</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -1460,9 +1410,6 @@ The texture is affected by the colour chosen for the Globe.</string>
                  </property>
                  <property name="autoFillBackground">
                   <bool>true</bool>
-                 </property>
-                 <property name="text">
-                  <string>#c142ff</string>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -1548,9 +1495,6 @@ The texture is affected by the colour chosen for the Globe.</string>
                  <property name="autoFillBackground">
                   <bool>true</bool>
                  </property>
-                 <property name="text">
-                  <string>#c142ff</string>
-                 </property>
                  <property name="flat">
                   <bool>true</bool>
                  </property>
@@ -1603,9 +1547,6 @@ The texture is affected by the colour chosen for the Globe.</string>
               </property>
               <property name="autoFillBackground">
                <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>#c142ff</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -1796,9 +1737,6 @@ p, li { white-space: pre-wrap; }
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
-                  <property name="text">
-                   <string>#c142ff</string>
-                  </property>
                   <property name="flat">
                    <bool>true</bool>
                   </property>
@@ -1810,7 +1748,7 @@ p, li { white-space: pre-wrap; }
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>LOWG</string>
+                   <string>EDTF</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -1844,9 +1782,6 @@ p, li { white-space: pre-wrap; }
                  <widget class="QPushButton" name="pbInactAirportDotColor">
                   <property name="autoFillBackground">
                    <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>#c142ff</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -1908,9 +1843,6 @@ p, li { white-space: pre-wrap; }
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
-                  <property name="text">
-                   <string>#c142ff</string>
-                  </property>
                   <property name="flat">
                    <bool>true</bool>
                   </property>
@@ -1922,7 +1854,7 @@ p, li { white-space: pre-wrap; }
                    <bool>true</bool>
                   </property>
                   <property name="text">
-                   <string>LOWI 8/9</string>
+                   <string>LFSB</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -1946,9 +1878,6 @@ p, li { white-space: pre-wrap; }
                   </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>#c142ff</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -2002,9 +1931,6 @@ p, li { white-space: pre-wrap; }
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
-                  <property name="text">
-                   <string>#c142ff</string>
-                  </property>
                   <property name="flat">
                    <bool>true</bool>
                   </property>
@@ -2049,9 +1975,6 @@ p, li { white-space: pre-wrap; }
                  <widget class="QPushButton" name="pbAirportDotColor">
                   <property name="autoFillBackground">
                    <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>#c142ff</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -2112,9 +2035,6 @@ margin</string>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
-                  <property name="text">
-                   <string>#c142ff</string>
-                  </property>
                   <property name="flat">
                    <bool>true</bool>
                   </property>
@@ -2149,9 +2069,6 @@ margin</string>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
-                  <property name="text">
-                   <string>#c142ff</string>
-                  </property>
                   <property name="flat">
                    <bool>true</bool>
                   </property>
@@ -2164,9 +2081,6 @@ margin</string>
                   </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>#c142ff</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -2181,9 +2095,6 @@ margin</string>
                   <property name="autoFillBackground">
                    <bool>true</bool>
                   </property>
-                  <property name="text">
-                   <string>#c142ff</string>
-                  </property>
                   <property name="flat">
                    <bool>true</bool>
                   </property>
@@ -2196,9 +2107,6 @@ margin</string>
                   </property>
                   <property name="autoFillBackground">
                    <bool>true</bool>
-                  </property>
-                  <property name="text">
-                   <string>#c142ff</string>
                   </property>
                   <property name="flat">
                    <bool>true</bool>
@@ -2515,9 +2423,6 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -2582,9 +2487,6 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -2621,9 +2523,6 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -2635,7 +2534,7 @@ airports with at least</string>
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>LOVV_CTR</string>
+               <string>EURM</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -2651,9 +2550,6 @@ airports with at least</string>
             </property>
             <property name="text">
              <string>display FIR boundaries for VATSIM (use firdisplay.sup)</string>
-            </property>
-            <property name="checked">
-             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -2688,22 +2584,6 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="1">
-             <widget class="QPushButton" name="pbPilotFontColor">
-              <property name="toolTip">
-               <string>set color-alpha to 0 to hide all labels of this type.</string>
-              </property>
-              <property name="autoFillBackground">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
             <item row="0" column="3">
              <spacer name="horizontalSpacer_10">
               <property name="orientation">
@@ -2717,13 +2597,26 @@ airports with at least</string>
               </property>
              </spacer>
             </item>
+            <item row="0" column="1">
+             <widget class="QPushButton" name="pbPilotFontColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to hide all labels of this type.</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="2">
              <widget class="QPushButton" name="pbPilotFont">
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>DGF042</string>
+               <string>UPS5GH</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -2745,13 +2638,23 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
              </widget>
+            </item>
+            <item row="0" column="7">
+             <spacer name="horizontalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item row="0" column="6">
              <widget class="QDoubleSpinBox" name="sbPilotDotSize">
@@ -2774,19 +2677,6 @@ airports with at least</string>
                <double>0.100000000000000</double>
               </property>
              </widget>
-            </item>
-            <item row="0" column="7">
-             <spacer name="horizontalSpacer_9">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
             </item>
            </layout>
           </item>
@@ -2823,9 +2713,6 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -2859,7 +2746,7 @@ airports with at least</string>
                <string>Length of Leader Line ahead of the airplane (in seconds corresponding to the speed of the aircraft)</string>
               </property>
               <property name="specialValueText">
-               <string>no</string>
+               <string>none</string>
               </property>
               <property name="accelerated">
                <bool>true</bool>
@@ -2872,9 +2759,6 @@ airports with at least</string>
               </property>
               <property name="singleStep">
                <number>10</number>
-              </property>
-              <property name="value">
-               <number>120</number>
               </property>
              </widget>
             </item>
@@ -2972,9 +2856,6 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -2997,9 +2878,6 @@ airports with at least</string>
              <widget class="QPushButton" name="pbDestLineColor">
               <property name="autoFillBackground">
                <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>#4444ff</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -3105,9 +2983,6 @@ airports with at least</string>
               <property name="autoFillBackground">
                <bool>true</bool>
               </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
               <property name="flat">
                <bool>true</bool>
               </property>
@@ -3132,7 +3007,7 @@ airports with at least</string>
                <bool>true</bool>
               </property>
               <property name="text">
-               <string>DGF042</string>
+               <string>ALLOK</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -3153,9 +3028,6 @@ airports with at least</string>
              <widget class="QPushButton" name="waypointsDotColor">
               <property name="autoFillBackground">
                <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>#c142ff</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -3252,9 +3124,6 @@ airports with at least</string>
              <widget class="QPushButton" name="pb_highlightFriendsColor">
               <property name="autoFillBackground">
                <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>#c142ff</string>
               </property>
               <property name="flat">
                <bool>true</bool>

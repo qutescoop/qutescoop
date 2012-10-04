@@ -1453,3 +1453,11 @@ QByteArray Settings::planFlightDialogGeometry(){
 void Settings::setPlanFlightDialogGeometry(const QByteArray &value){
     getSettings()->setValue("windowmanagment/planFlightDialogGeo", value);
 }
+
+void Settings::setSimpleLabels(bool value) {
+    getSettings()->setValue("gl/simpleLabels", value);
+}
+
+bool Settings::simpleLabels() {
+    return getSettings()->value("gl/simpleLabels", true).toBool();
+}

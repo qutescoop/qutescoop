@@ -628,15 +628,8 @@ void MapScreen::N_toggleInactiveClicked()
 
 void MapScreen::W_toggleWindClicked()
 {
-    if(Settings::showUpperWind() == false){
-        Settings::setShowUpperWind(true);
-        glWidget->update();
-        return;
-    }
-
-    Settings::setShowUpperWind(false);
+    Settings::setShowUpperWind(!Settings::showUpperWind());
     glWidget->update();
-    return;
 }
 
 void MapScreen::W_minusClicked()
@@ -666,7 +659,7 @@ void MapScreen::W_sliderChanged()
 
 void MapScreen::W_toggleCloudsClicked()
 {
-    if(Settings::showClouds() == false){
+    if(!Settings::showClouds()){
         Settings::setShowClouds(true);
         glWidget->useClouds();
         return;

@@ -394,6 +394,9 @@ public:
     static int maxLabels();
     static void setMaxLabels(int maxLabels);
 
+    static bool simpleLabels();
+    static void setSimpleLabels(bool value);
+
     static QStringList friends();
     static void addFriend(const QString& friendId);
     static void removeFriend(const QString& friendId);

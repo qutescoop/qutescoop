@@ -63,6 +63,7 @@ void PreferencesDialog::loadSettings() {
     sbBookingsInterval->setValue(Settings::bookingsInterval());
 
     sbMaxTextLabels->setValue(Settings::maxLabels());
+    cbSimpleLabels->setChecked(Settings::simpleLabels());
 
     groupBoxProxy->setChecked(Settings::useProxy());
     editProxyServer->setText(Settings::proxyServer());
@@ -1262,18 +1263,7 @@ void PreferencesDialog::on_pb_highlightFriendsColor_clicked(){
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void PreferencesDialog::on_cbSimpleLabels_toggled(bool checked)
+{
+    Settings::setSimpleLabels(checked);
+}
