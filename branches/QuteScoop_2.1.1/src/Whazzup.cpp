@@ -18,15 +18,6 @@ Whazzup* Whazzup::getInstance() {
 }
 
 Whazzup::Whazzup() {
-    statusDownloader = new QHttp;
-    whazzupDownloader = new QHttp;
-    bookingsDownloader = new QHttp;
-
-    statusBuffer = 0;
-    whazzupBuffer = 0;
-    bookingsBuffer = 0;
-    //connect(statusDownloader, SIGNAL(done(bool)), this, SLOT(statusDownloaded(bool)));
-
     srand(QDateTime::currentDateTime().toTime_t()); // init random seed to switch between URLs
 
     downloadTimer = new QTimer(this);
@@ -38,8 +29,6 @@ Whazzup::Whazzup() {
 }
 
 Whazzup::~Whazzup() {
-    if(statusDownloader != 0) delete statusDownloader;
-    if(statusBuffer != 0) delete statusBuffer;
     if(downloadTimer != 0) delete downloadTimer;
     if(bookingsTimer != 0) delete bookingsTimer;
 }
@@ -49,28 +38,17 @@ void Whazzup::setStatusLocation(const QString& statusLocation) {
 
     QUrl url(statusLocation);
 
+    connect(NetworkManager::getInstance(),
+            SIGNAL(requestFinished(QNetworkReply*)),
+            this, SLOT(statusDownloaded(QNetworkReply*)));
     NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
-    connect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this, SLOT(statusDownloaded(QNetworkReply*)));
-
-    /*
-    statusDownloader->abort();
-    statusDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-    Settings::applyProxySetting(statusDownloader);
-
-    if (!url.userName().isEmpty())
-        statusDownloader->setUser(url.userName(), url.password());
-
-    QString querystr = url.path() + "?" + url.encodedQuery();
-
-    if(statusBuffer != 0) delete statusBuffer;
-    statusBuffer = new QBuffer;
-    statusBuffer->open(QBuffer::ReadWrite);
-    statusDownloader->get(querystr, statusBuffer);*/
 }
 
 void Whazzup::statusDownloaded(QNetworkReply* reply) {
-    //qDebug() << "Status received";
-    disconnect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this, SLOT(statusDownloaded(QNetworkReply*)));
+    disconnect(NetworkManager::getInstance(),
+               SIGNAL(requestFinished(QNetworkReply*)),
+               this, SLOT(statusDownloaded(QNetworkReply*)));
+
     if(reply == 0)
         return;
 
@@ -130,8 +108,6 @@ void Whazzup::statusDownloaded(QNetworkReply* reply) {
     if(!message.isEmpty())
         GuiMessages::warning(message);
 
-    delete statusBuffer;
-    statusBuffer = 0;
     lastDownloadTime = QTime();
 
     qDebug() << "Whazzup::statusDownloaded() Got" << urls.size() << "Whazzup URLs";
@@ -145,22 +121,14 @@ void Whazzup::statusDownloaded(QNetworkReply* reply) {
 
 void Whazzup::fromFile(QString filename) {
     qDebug() << "Whazzup::fromFile()" << filename;
-    QFile *file = new QFile(filename);
-    if (!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-        GuiMessages::errorUserAttention(QString("Error opening %1").arg(filename));
-        return;
-    }
+    QUrl url = QUrl::fromLocalFile(filename);
+
     GuiMessages::progress("whazzupDownload", "Loading Whazzup from file...");
 
-    if(whazzupBuffer != 0) {
-        whazzupBuffer->close();
-        delete whazzupBuffer;
-    }
-    whazzupBuffer = new QBuffer;
-    whazzupBuffer->open(QBuffer::WriteOnly);
-    whazzupBuffer->write(file->readAll());
-    whazzupBuffer->close();
-    whazzupDownloaded(false);
+    connect(NetworkManager::getInstance(),
+            SIGNAL(requestFinished(QNetworkReply*)),
+            this, SLOT(whazzupDownloaded(QNetworkReply*)));
+    NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
 }
 
 void Whazzup::download() {
@@ -187,39 +155,17 @@ void Whazzup::download() {
                          arg(url.toString(QUrl::RemoveUserInfo)));
 
 
+    connect(NetworkManager::getInstance(),
+            SIGNAL(requestFinished(QNetworkReply*)),
+            this, SLOT(whazzupDownloaded(QNetworkReply*)));
     NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
-    connect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this, SLOT(whazzupDownloaded(QNetworkReply*)));
-
-    if(whazzupDownloader != 0) {
-        whazzupDownloader->abort();
-        delete whazzupDownloader;
-    }
-    whazzupDownloader = new QHttp(this);
-    connect(whazzupDownloader, SIGNAL(done(bool)), this, SLOT(whazzupDownloaded(bool)));
-    connect(whazzupDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(whazzupDownloading(int,int)));
-    Settings::applyProxySetting(whazzupDownloader);
-
-    whazzupDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-    if (!url.userName().isEmpty())
-        whazzupDownloader->setUser(url.userName(), url.password());
-
-    QString querystr = url.path() + "?" + url.encodedQuery();
-
-    if(whazzupBuffer != 0)
-        whazzupBuffer->close();
-        delete whazzupBuffer;
-    whazzupBuffer = new QBuffer;
-    whazzupBuffer->open(QBuffer::ReadWrite);
-    whazzupDownloader->get(querystr, whazzupBuffer);
-}
-
-void Whazzup::whazzupDownloading(int prog, int tot) {
-    GuiMessages::progress("whazzupDownload", prog, tot);
 }
 
 void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
     GuiMessages::remove("whazzupDownload");
-    disconnect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this, SLOT(whazzupDownloaded(QNetworkReply*)));
+    disconnect(NetworkManager::getInstance(),
+               SIGNAL(requestFinished(QNetworkReply*)),
+               this, SLOT(whazzupDownloaded(QNetworkReply*)));
 
 
     if(reply == 0) {
@@ -228,8 +174,7 @@ void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
         return;
     }
 
-    if(reply->bytesAvailable() == 0){
-    //if(whazzupBuffer->data().isEmpty()) {
+    if(reply->bytesAvailable() == 0) {
         GuiMessages::warning("No data in Whazzup.");
         downloadTimer->start(30 * 1000); // try again in 30s
         return;
@@ -242,19 +187,11 @@ void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
     }
     GuiMessages::status("Processing Whazzup", "whazzupProcess");
 
-    //reply->open(QBuffer::ReadOnly);
     reply->seek(0);
     WhazzupData newWhazzupData(reply, WhazzupData::WHAZZUP);
 
     reply->close();
-    /*
-    whazzupBuffer->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
-    whazzupBuffer->seek(0);
-    WhazzupData newWhazzupData(whazzupBuffer, WhazzupData::WHAZZUP);
-
-    whazzupBuffer->close();*/
     if(!newWhazzupData.isNull()) {
-
         if(!predictedTime.isValid() &&
                 newWhazzupData.whazzupTime.secsTo(QDateTime::currentDateTimeUtc()) > 60 * 30)
             GuiMessages::warning("Whazzup data more than 30 minutes old.");
@@ -272,7 +209,7 @@ void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
                         .arg(data.whazzupTime.toString("yyyyMMdd-HHmmss")));
                 QFile out(filename);
                 if (out.open(QIODevice::WriteOnly | QIODevice::Text))
-                    out.write(whazzupBuffer->data());
+                    out.write(reply->readAll());
                 else
                     qWarning() << "Info: Could not write Whazzup to disk" << out.fileName();
             }
@@ -303,62 +240,38 @@ void Whazzup::downloadBookings() {
     bookingsTimer->stop();
 
     GuiMessages::progress("bookingsDownload",
-                              QString("Updating ATC Bookings from %1").arg(url.toString(QUrl::RemoveUserInfo)));
+                              QString("Updating ATC Bookings from %1")
+                          .arg(url.toString(QUrl::RemoveUserInfo)));
 
+    connect(NetworkManager::getInstance(),
+            SIGNAL(requestFinished(QNetworkReply*)),
+            this, SLOT(bookingsDownloaded(QNetworkReply*)));
     NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
-    connect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this , SLOT(bookingsDownloaded(QNetworkReply*)));
-
-    /*
-    if(bookingsDownloader != 0) {
-        bookingsDownloader->abort();
-        delete bookingsDownloader;
-    }
-    bookingsDownloader = new QHttp(this);
-    connect(bookingsDownloader, SIGNAL(done(bool)), this, SLOT(bookingsDownloaded(bool)));
-    connect(bookingsDownloader, SIGNAL(dataReadProgress(int,int)), this, SLOT(bookingsDownloading(int,int)));
-    Settings::applyProxySetting(bookingsDownloader);
-
-    bookingsDownloader->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-    if (!url.userName().isEmpty())
-        bookingsDownloader->setUser(url.userName(), url.password());
-
-    QString querystr = url.path() + "?" + url.encodedQuery();
-
-    if(bookingsBuffer != 0)
-        delete bookingsBuffer;
-    bookingsBuffer = new QBuffer;
-    bookingsBuffer->open(QBuffer::ReadWrite);
-    bookingsDownloader->get(querystr, bookingsBuffer);*/
 }
 
-void Whazzup::bookingsDownloading(int prog, int tot) {
-    GuiMessages::progress("bookingsDownload", prog, tot);
-}
-
-void Whazzup::bookingsDownloaded(QNetworkReply* reply ) {
+void Whazzup::bookingsDownloaded(QNetworkReply* reply) {
     GuiMessages::remove("bookingsDownload");
-    disconnect(NetworkManager::getInstance(), SIGNAL(requestFinished(QNetworkReply*)), this, SLOT(whazzupDownloaded(QNetworkReply*)));
+    disconnect(NetworkManager::getInstance(),
+               SIGNAL(requestFinished(QNetworkReply*)),
+               this, SLOT(whazzupDownloaded(QNetworkReply*)));
     if(reply == 0) {
         GuiMessages::errorUserAttention("Download Error. Buffer unavailable.");
+        return;
+    }
+    if(reply->bytesAvailable() == 0) {
+        GuiMessages::warning("No data in Bookings.");
+        return;
+    }
+    if(reply->error() != QNetworkReply::NoError) {
+        GuiMessages::warning(reply->errorString());
         return;
     }
 
     if(Settings::downloadBookings() && Settings::bookingsPeriodically())
         bookingsTimer->start(Settings::bookingsInterval() * 60 * 1000);
 
-    if(reply->readBufferSize() == 0) {
-        GuiMessages::warning("No data in Bookings.");
-        return;
-    }
-
     reply->open(QBuffer::ReadOnly); // maybe fixes some issues we encounter very rarely
-
-    if(reply->error() != QNetworkReply::NoError) {
-        GuiMessages::warning(reply->errorString());
-        return;
-    }
     GuiMessages::status("Processing Bookings", "bookingsProcess");
-
     WhazzupData newBookingsData(reply, WhazzupData::ATCBOOKINGS);
     reply->close();
     if(!newBookingsData.isNull()) {

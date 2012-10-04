@@ -17,7 +17,6 @@ public slots:
 signals:
     void requestFinished(QNetworkReply* reply );
 
-
 private slots:
     void redirectCheck (QNetworkReply* reply);
 

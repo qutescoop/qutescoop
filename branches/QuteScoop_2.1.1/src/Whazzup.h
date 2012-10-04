@@ -43,11 +43,7 @@ public slots:
 
 private slots:
     void statusDownloaded(QNetworkReply* reply);
-    void whazzupDownloading(int prog, int tot);
-    void bookingsDownloading(int prog, int tot);
-    //void whazzupDownloaded(bool error);
     void whazzupDownloaded(QNetworkReply* reply);
-    //void bookingsDownloaded(bool error);
     void bookingsDownloaded(QNetworkReply* reply);
 
 private:
@@ -57,9 +53,6 @@ private:
     WhazzupData data, predictedData;
 
     QDateTime predictedTime;
-
-    QHttp *statusDownloader, *whazzupDownloader, *bookingsDownloader;
-    QBuffer *statusBuffer, *whazzupBuffer, *bookingsBuffer;
 
     QStringList urls, gzurls;
     QString metarUrl, tafUrl, shorttafUrl, userLink, atisLink, message;

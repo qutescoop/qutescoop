@@ -14,17 +14,18 @@ NetworkManager* NetworkManager::getInstance(bool createIfNoInstance) {
 NetworkManager::NetworkManager()
 {
     connect(this, SIGNAL(finished(QNetworkReply*)), this, SLOT(redirectCheck(QNetworkReply*)));
-    //setProxy(QNetworkProxy(QNetworkProxy::DefaultProxy, Settings::proxyServer(), Settings::proxyPort(), Settings::proxyUser(), Settings::proxyPassword()));
+    if (Settings::useProxy())
+        setProxy(QNetworkProxy(QNetworkProxy::DefaultProxy, Settings::proxyServer(), Settings::proxyPort(), Settings::proxyUser(), Settings::proxyPassword()));
 }
 
 void NetworkManager::httpRequest(QNetworkRequest request){
     this->get(request);
-    qDebug() << "NetworkManager::httpRequest -- request to: " << request.url().toString() << " started";
+    qDebug() << "NetworkManager::httpRequest " << request.url().toString();
 }
 
 void NetworkManager::redirectCheck(QNetworkReply *reply){
 
-    qDebug() << "Networkmanager::redirectCheck -- request finshed";
+    qDebug() << "Networkmanager::redirectCheck";
     //Get redirect headers
     QVariant possibleRedirectUrl =
             reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
@@ -40,7 +41,7 @@ void NetworkManager::redirectCheck(QNetworkReply *reply){
     }
     //no redirect
     else {
-        emit requestFinished( reply);
+        emit requestFinished(reply);
         _urlRedirectedTo.clear();
         return;
     }

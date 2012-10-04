@@ -154,7 +154,10 @@ on program &amp;start</string>
               </layout>
              </item>
              <item>
-              <layout class="QGridLayout" name="gridLayoutSave">
+              <layout class="QFormLayout" name="formLayout">
+               <property name="labelAlignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
                <item row="0" column="0">
                 <widget class="QCheckBox" name="cbSaveWhazzupData">
                  <property name="toolTip">
