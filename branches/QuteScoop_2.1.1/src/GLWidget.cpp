@@ -830,10 +830,10 @@ void GLWidget::paintGL() {
         }
     }
     if (Settings::glTextures() && earthTex != 0 && Settings::glLighting()) {
-            glEnable(GL_TEXTURE_2D);
-            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
-            glBindTexture(GL_TEXTURE_2D, earthTex);
-        }
+        glEnable(GL_TEXTURE_2D);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
+        glBindTexture(GL_TEXTURE_2D, earthTex);
+    }
     if (Settings::glTextures() && earthTex != 0 && !Settings::glLighting()){
         glEnable(GL_TEXTURE_2D);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // GL_MODULATE, GL_DECAL, GL_BLEND, GL_REPLACE
@@ -873,7 +873,6 @@ void GLWidget::paintGL() {
     if(Settings::showAPP()){
         glCallList(appBorderLinesList);
         foreach(Airport *a, airportList) {
-
             if(!a->approaches.isEmpty())
                 glCallList(a->getAppDisplayList());
         }
@@ -882,7 +881,6 @@ void GLWidget::paintGL() {
     //render Tower
     if(Settings::showTWR()){
         foreach(Airport *a, airportList) {
-            //if(a == 0) continue;
             if(!a->towers.isEmpty())
                 glCallList(a->getTwrDisplayList());
         }
@@ -909,12 +907,12 @@ void GLWidget::paintGL() {
 
 
     //Highlight friends
-    if(Settings::highlightFriends()){
+    if(Settings::highlightFriends()) {
         if(highlighter == 0) createFriendHighlighter();
         QTime time = QTime::currentTime();
         double range = (time.second()%5);
         range += (time.msec()%500)/1000;
-;
+
         GLfloat red = Settings::highlightColor().redF();
         GLfloat green = Settings::highlightColor().greenF();
         GLfloat blue = Settings::highlightColor().blueF();
@@ -1208,7 +1206,7 @@ void GLWidget::renderLabels() {
     // planned route waypoint labels from Flightplan Dialog
     if(PlanFlightDialog::getInstance(false) != 0) {
         if(PlanFlightDialog::getInstance(true)->cbPlot->isChecked() &&
-           PlanFlightDialog::getInstance(true)->selectedRoute != 0) {
+                PlanFlightDialog::getInstance(true)->selectedRoute != 0) {
             objects.clear();
             for (int i=1; i < PlanFlightDialog::getInstance(true)->
                        selectedRoute->waypoints.size() - 1; i++)
@@ -1256,7 +1254,8 @@ void GLWidget::renderLabels() {
                         waypointObjects.insert(waypoints[i]);
             }
         }
-        renderLabels(waypointObjects.toList(), Settings::waypointsFont(), usedWaypointsLabelZoomThreshold,
+        renderLabels(waypointObjects.toList(),
+                     Settings::waypointsFont(), usedWaypointsLabelZoomThreshold,
                      Settings::waypointsFontColor());
     }
 
@@ -1289,7 +1288,7 @@ void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
         renderLabelsComplex(objects, font, zoomTreshold, color);
 }
 
-// this one checks if labels overlap etc. the transformation lat/lon -> x,y is very expensive
+// this one checks if labels overlap etc. - the transformation lat/lon -> x,y is very expensive
 void GLWidget::renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font,
                             double zoomTreshold, QColor color) {
     if(zoom > zoomTreshold || color.alpha() == 0)
@@ -1351,11 +1350,11 @@ void GLWidget::renderLabelsSimple(const QList<MapObject*>& objects, const QFont&
     foreach(MapObject *o, objects) {
         if (fontRectangles.size() >= Settings::maxLabels())
             break;
+        if (!o->drawLabel)
+            continue;
         fontRectangles.insert(new FontRectangle(QRectF(), 0)); // we use..
                         // this bogus value to stay compatible..
                         // with maxLabels-checking
-        if (!o->drawLabel)
-            continue;
         qglColor(color);
         renderText(SXhigh(o->lat, o->lon), SYhigh(o->lat, o->lon), SZhigh(o->lat, o->lon),
                    o->mapLabel(), font);

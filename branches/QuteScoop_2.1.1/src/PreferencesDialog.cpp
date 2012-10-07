@@ -1193,7 +1193,7 @@ void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked)
 }
 
 void PreferencesDialog::on_pbUpperWindColor_clicked(){
-    QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
+    QColor color = QColorDialog::getColor(Settings::upperWindColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
         pbUpperWindColor->setText(color.name());

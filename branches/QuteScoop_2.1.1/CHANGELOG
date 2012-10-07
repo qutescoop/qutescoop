@@ -2,9 +2,14 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
 general project status and planned features.
 
-Version 2.1.4
+Version 2.1.5
  fixed:
   * 3D quality settings re-enabled (went lost in 2.1.2)
+ changed:
+  * reordered preferences
+  * clarified tooltip for the new 'simple labels' setting
+ added:
+  * 2 new big (25 MB each) earth textures
 
 Version 2.1.3
  fixed:

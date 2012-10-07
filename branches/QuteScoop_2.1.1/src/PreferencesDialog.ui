@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1007</width>
-    <height>732</height>
+    <height>687</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -826,7 +826,7 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QCheckBox" name="cbUseESAirlines">
               <property name="text">
-               <string>use Euroscop airline data (ponit to ICAO_airlines.txt)</string>
+               <string>use Euroscope airline data (point to ICAO_airlines.txt)</string>
               </property>
              </widget>
             </item>
@@ -1110,7 +1110,7 @@ Depends completely on your graphics hardware plus device driver.</string>
             <item row="0" column="9">
              <widget class="QCheckBox" name="cbSimpleLabels">
               <property name="toolTip">
-               <string>Labels are not checked if they overlap with others. Can greatly improve performance.</string>
+               <string>Labels are not checked if they overlap with others. Can greatly improve performance but 'clickspots' will be only the lower lefts of the texts and texts might be badly aligned with objects. You will need to increase the number on the left because we won't be able to check if a label is on-screen, so we just count every single label painted. (Renders directly in the 3D-space rather than on the 2D-screen)</string>
               </property>
               <property name="text">
                <string>simple labels</string>
@@ -1375,6 +1375,26 @@ The texture is affected by the colour chosen for the Globe.</string>
                  </property>
                 </widget>
                </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_40">
+                 <property name="text">
+                  <string>upper wind color</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QPushButton" name="pbUpperWindColor">
+                 <property name="toolTip">
+                  <string>default color of the windflags</string>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>true</bool>
+                 </property>
+                 <property name="flat">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </item>
@@ -1529,49 +1549,6 @@ The texture is affected by the colour chosen for the Globe.</string>
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="upperWind_layout" stretch="1,0,5">
-            <property name="spacing">
-             <number>1</number>
-            </property>
-            <property name="margin">
-             <number>1</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="label_40">
-              <property name="text">
-               <string>Upper wind color:</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pbUpperWindColor">
-              <property name="toolTip">
-               <string>default color of the windflags</string>
-              </property>
-              <property name="autoFillBackground">
-               <bool>true</bool>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_21">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QPushButton" name="buttonResetEarthSpace">
@@ -1590,83 +1567,6 @@ The texture is affected by the colour chosen for the Globe.</string>
               </property>
               <property name="text">
                <string>apply</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
-        <widget class="QGroupBox" name="gbStylesheet">
-         <property name="title">
-          <string>Stylesheet</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_11">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
-            <item>
-             <widget class="QLabel" name="label_18">
-              <property name="text">
-               <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;More &lt;/span&gt;&lt;a href=&quot;http://doc.qt.nokia.com/latest/stylesheet.html&quot;&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline; color:#0000ff;&quot;&gt;information on Qt stylesheets&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;. Let us know if you have a cool one for QuteScoop ;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="wordWrap">
-               <bool>true</bool>
-              </property>
-              <property name="openExternalLinks">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <widget class="QPlainTextEdit" name="tedStylesheet"/>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_7">
-            <property name="sizeConstraint">
-             <enum>QLayout::SetMaximumSize</enum>
-            </property>
-            <item>
-             <widget class="QPushButton" name="pbStylesheetExample1">
-              <property name="styleSheet">
-               <string notr="true"/>
-              </property>
-              <property name="text">
-               <string>load example 1</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pbStylesheetExample2">
-              <property name="text">
-               <string>load example 2</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_16">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pbStylesheetUpdate">
-              <property name="text">
-               <string>apply &amp;stylesheet</string>
               </property>
              </widget>
             </item>
@@ -3178,7 +3078,7 @@ airports with at least</string>
             <item>
              <widget class="QCheckBox" name="cb_Animation">
               <property name="text">
-               <string>with animation (need more cpu power)</string>
+               <string>with animation (needs more cpu power)</string>
               </property>
              </widget>
             </item>
@@ -3212,6 +3112,81 @@ airports with at least</string>
           </size>
          </property>
         </spacer>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab">
+      <attribute name="title">
+       <string>Stylesheet</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_11">
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <item>
+          <widget class="QLabel" name="label_18">
+           <property name="text">
+            <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;More &lt;/span&gt;&lt;a href=&quot;http://doc.qt.nokia.com/latest/stylesheet.html&quot;&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline; color:#0000ff;&quot;&gt;information on Qt stylesheets&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;. Let us know if you have a cool one for QuteScoop ;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           </property>
+           <property name="wordWrap">
+            <bool>true</bool>
+           </property>
+           <property name="openExternalLinks">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QPlainTextEdit" name="tedStylesheet"/>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetMaximumSize</enum>
+         </property>
+         <item>
+          <widget class="QPushButton" name="pbStylesheetExample1">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="text">
+            <string>load example 1</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbStylesheetExample2">
+           <property name="text">
+            <string>load example 2</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_16">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbStylesheetUpdate">
+           <property name="text">
+            <string>apply &amp;stylesheet</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
@@ -3327,13 +3302,11 @@ airports with at least</string>
   <tabstop>pbDestLineColor</tabstop>
   <tabstop>sbDestLineStrength</tabstop>
   <tabstop>buttonResetPilot</tabstop>
-  <tabstop>pbStylesheetExample2</tabstop>
   <tabstop>cbLineSmoothing</tabstop>
   <tabstop>cbLighting</tabstop>
   <tabstop>pbInactAirportFontColor</tabstop>
   <tabstop>cbSendVersionInfo</tabstop>
   <tabstop>pbSunLightColor</tabstop>
-  <tabstop>pbStylesheetExample1</tabstop>
   <tabstop>cbBlend</tabstop>
   <tabstop>pbInactAirportDotColor</tabstop>
   <tabstop>pbInactAirportFont</tabstop>
@@ -3357,8 +3330,6 @@ airports with at least</string>
   <tabstop>glLightsSpread</tabstop>
   <tabstop>pbSpecularLightColor</tabstop>
   <tabstop>glEarthShininess</tabstop>
-  <tabstop>pbUpperWindColor</tabstop>
-  <tabstop>pbStylesheetUpdate</tabstop>
   <tabstop>applyAirports</tabstop>
   <tabstop>cbDepLineDashed</tabstop>
   <tabstop>cbDestLineDashed</tabstop>
@@ -3369,7 +3340,6 @@ airports with at least</string>
   <tabstop>applyPilots</tabstop>
   <tabstop>buttonResetEarthSpace</tabstop>
   <tabstop>pbReinitOpenGl</tabstop>
-  <tabstop>tedStylesheet</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>
