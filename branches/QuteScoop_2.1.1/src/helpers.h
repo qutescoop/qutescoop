@@ -22,11 +22,11 @@ static double inline modPositive(double x, double y) {
                                         // This is just the revision of THIS file, not the whole working copy.
                                         // Well, better than nothing. No working copy revision information is available cross-platform :(
 
-#define VERSION_NUMBER "2.1.5"
+#define VERSION_NUMBER "2.1.6"
 #define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
 
 /* mathematical constants */
-const double Pi180 = M_PI/180.;
+const double Pi180 = M_PI / 180.;
 
 /* 3D-calculations */
 #define SX(lat, lon)  qCos((lat) * Pi180) * qSin((lon) * Pi180)
