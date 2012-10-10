@@ -7,7 +7,7 @@
 #define SECTORVIEW_H
 
 #include "_pch.h"
-#include "ui_sectorview.h"
+#include "ui_SectorView.h"
 #include "NavData.h"
 #include "Sector.h"
 #include "MapScreen.h"

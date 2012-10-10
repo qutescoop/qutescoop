@@ -4,7 +4,6 @@
 
 
 #include "SectorView.h"
-#include "ui_sectorview.h"
 
 
 Sectorview* instance = 0;
