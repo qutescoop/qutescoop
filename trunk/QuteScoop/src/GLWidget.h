@@ -7,6 +7,7 @@
 
 #include "_pch.h"
 #include <QPoint>
+#include <GL/glu.h>
 
 #include "MapObject.h"
 #include "Sector.h"
@@ -15,8 +16,8 @@
 #include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
 #include "Airac.h"
-#include "winddata.h"
-#include "GL/glu.h"
+#include "WindData.h"
+
 
 class GLWidget : public QGLWidget
 {
@@ -28,6 +29,9 @@ public:
 
     QPair<double, double> currentPosition() const;
     ClientSelectionWidget *clientSelection;
+    bool cloudsAvaliable;
+
+    void savePosition();
 
 public slots:
     virtual void initializeGL();
@@ -52,6 +56,12 @@ public slots:
     void createAirportsList();
     void createControllersLists();
     void createStaticLists();
+    void createSaticSectorLists(QList<Sector*> sectors);
+
+    void useClouds();
+
+    void destroyFriendHightlighter();
+    void renderStaticSectors(bool value) {renderstaticSectors = value;}
 
 
 signals:
@@ -83,12 +93,17 @@ private:
 
     void renderLabels();
     void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
+    void renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
+    void renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
 
     //experimantal
     //void createWindList();
     //void renderWindStation(double lat, double lon ,double knots  ,double deg);
 
     void parseEarthClouds(void);
+    void createLights();
+
+    void createFriendHighlighter();
 
 
 
@@ -103,10 +118,12 @@ private:
     QSet<FontRectangle*> fontRectangles, allFontRectangles;
 
     QPoint lastPos, mouseDownPos;
-    bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting;
+    bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting, renderstaticSectors;
     double xRot, yRot, zRot, zoom, aspectRatio;
 
     QImage completedEarthTexIm;
+    bool lightsGenerated;
+
 
         GLUquadricObj *earthQuad;
         GLuint earthTex, cloudTex;
@@ -114,7 +131,7 @@ private:
         GLuint pilotsList, activeAirportsList, inactiveAirportsList;
         GLuint FixesList, usedWaypointsList, plannedRouteList;
         GLuint sectorPolygonsList, sectorPolygonBorderLinesList, appBorderLinesList, congestionsList;
-        GLuint windList;
+        GLuint windList, staticSectorPolygonsList, staticSectorPolygonBorderLinesList;
         //GLuint airportControllersList,
         bool allSectorsDisplayed;
 
@@ -122,6 +139,9 @@ private:
 
     double pilotLabelZoomTreshold, activeAirportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
         controllerLabelZoomTreshold, allWaypointsLabelZoomTreshold, usedWaypointsLabelZoomThreshold;
+
+    QTimer *highlighter;
+    QList< QPair<double , double> > friends;
 };
 
 #endif /*GLWIDGET_H_*/

@@ -63,6 +63,7 @@ void PreferencesDialog::loadSettings() {
     sbBookingsInterval->setValue(Settings::bookingsInterval());
 
     sbMaxTextLabels->setValue(Settings::maxLabels());
+    cbSimpleLabels->setChecked(Settings::simpleLabels());
 
     groupBoxProxy->setChecked(Settings::useProxy());
     editProxyServer->setText(Settings::proxyServer());
@@ -81,6 +82,10 @@ void PreferencesDialog::loadSettings() {
     browseNavdirButton->setEnabled(Settings::useNavdata());
     cbUseNavDatabase->setChecked(Settings::useNavdata());
     cbShowFixes->setChecked(Settings::showAllWaypoints());
+    cbUseESAirlines->setChecked(Settings::useESAirlines());
+    editESAirlines->setText(Settings::ESAirlinesDirectory());
+    editESAirlines->setEnabled(Settings::useESAirlines());
+
 
     // Display
     cbReadSupFile->setChecked(Settings::useSupFile());
@@ -289,9 +294,19 @@ void PreferencesDialog::loadSettings() {
     cbCheckForUpdates->setChecked(Settings::checkForUpdates());
     cbSendVersionInfo->setChecked(Settings::sendVersionInformation());
 
+    cbDownloadClouds->setChecked(Settings::downloadClouds());
+    if(Settings::downloadClouds())cbUseHighResClouds->setEnabled(true);
+    cbUseHighResClouds->setChecked(Settings::useHightResClouds());
+
     // zooming
     sbZoomFactor->setValue(Settings::zoomFactor());
     useSelectionRectangle->setChecked(Settings::useSelectionRectangle());
+
+    //highlight Friends
+    sb_highlightFriendsLineWidth->setValue(Settings::highlightLineWidth());
+    pb_highlightFriendsColor->setPalette(QPalette(Settings::highlightColor()));
+    pb_highlightFriendsColor->setText(Settings::highlightColor().name());
+    cb_Animation->setChecked(Settings::useHighlightAnimation());
 
     // FINISHED
     settingsLoaded = true;
@@ -383,7 +398,7 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
         gbDownloadBookings->setChecked(false);
         break;
     case 1: // VATSIM
-        Settings::setStatusLocation("http://status.vatsim.net/status.txt");
+        Settings::setStatusLocation("http://status.vatsim.net/");
         gbDownloadBookings->setChecked(true);
         break;
     case 2: // user defined
@@ -1104,10 +1119,12 @@ void PreferencesDialog::on_glLights_valueChanged(int value)
     else
         glLightsSpread->setEnabled(true);
 }
+
 void PreferencesDialog::on_glEarthShininess_valueChanged(int value)
 {
     Settings::setEarthShininess(value);
 }
+
 void PreferencesDialog::on_glLightsSpread_valueChanged(int value)
 {
     Settings::setGlLightsSpread(value);
@@ -1125,7 +1142,6 @@ void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value)
 {
     Settings::setEarthGridEach(value);
 }
-
 
 void PreferencesDialog::on_applyAirports_clicked()
 {
@@ -1146,7 +1162,6 @@ void PreferencesDialog::on_applyPilots_clicked()
     }
 }
 
-
 void PreferencesDialog::on_glStippleLines_toggled(bool checked) {
     Settings::setGlStippleLines(checked);
 }
@@ -1156,8 +1171,10 @@ void PreferencesDialog::on_glTextures_toggled(bool checked) {
 }
 
 void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
-    if(settingsLoaded)
+    if(settingsLoaded){
         Settings::setGlTextureEarth(tex);
+        Window::getInstance()->mapScreen->glWidget->useClouds();
+    }
 }
 
 void PreferencesDialog::on_cbScreenshotMethod_currentIndexChanged(int index) {
@@ -1176,7 +1193,7 @@ void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked)
 }
 
 void PreferencesDialog::on_pbUpperWindColor_clicked(){
-    QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
+    QColor color = QColorDialog::getColor(Settings::upperWindColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
         pbUpperWindColor->setText(color.name());
@@ -1186,9 +1203,67 @@ void PreferencesDialog::on_pbUpperWindColor_clicked(){
     WindData::getInstance()->refreshLists();
 }
 
+void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state){
+    if(state == Qt::Checked) Settings::setDownloadClouds(true);
+    if(state == Qt::Unchecked) Settings::setDownloadClouds(false);
+    Window::getInstance()->startCloudDownload();
+}
+
+void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state){
+    if(state == Qt::Checked) Settings::setUseHightResClouds(true);
+    if(state == Qt::Unchecked) Settings::setUseHightResClouds(false);
+    Window::getInstance()->startCloudDownload();
+}
+
 void PreferencesDialog::closeEvent(QCloseEvent *event){
     Settings::setPreferencesDialogSize(size());
     Settings::setPreferencesDialogPos(pos());
     Settings::setPreferencesDialogGeometry(saveGeometry());
     event->accept();
+}
+
+void PreferencesDialog::on_cbUseESAirlines_stateChanged(int state){
+    if(state == Qt::Checked) Settings::setUseESAirlnies(true);
+    if(state == Qt::Unchecked) Settings::setUseESAirlnies(false);
+}
+
+void PreferencesDialog::on_bt_browseESAirlines_clicked(){
+    QString path = QFileDialog::getOpenFileName(this, tr("Open ICAO_Airlines.txt"), QDir::homePath(),"Textfile (*.txt)");
+    Settings::setESAirlinesDirectory(path);
+    editESAirlines->setText(Settings::ESAirlinesDirectory());
+    qDebug() << "directory for alternativ airline data set: " << Settings::ESAirlinesDirectory();
+}
+
+void PreferencesDialog::on_editESAirlines_editingFinished(){
+    Settings::setESAirlinesDirectory(editESAirlines->text());
+}
+
+void PreferencesDialog::on_sb_highlightFriendsLineWidth_valueChanged(double value){
+    Settings::setHighlightLineWidth(value);
+}
+
+void PreferencesDialog::on_cb_Animation_stateChanged(int state){
+    if(state == Qt::Checked){
+        Settings::setUseHighlightAnimation(true);
+        return;
+    }
+    if(state == Qt::Unchecked){
+        Settings::setUseHighlightAnimation(false);
+    }
+}
+
+void PreferencesDialog::on_pb_highlightFriendsColor_clicked(){
+    QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+
+    if(color.isValid()){
+        pb_highlightFriendsColor->setText(color.name());
+        pb_highlightFriendsColor->setPalette(QPalette(color));
+        Settings::setHighlightColor(color);
+    }
+}
+
+void PreferencesDialog::on_cbSimpleLabels_toggled(bool checked)
+{
+    Settings::setSimpleLabels(checked);
 }

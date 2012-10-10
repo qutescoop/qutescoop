@@ -10,6 +10,7 @@
 #include "WhazzupData.h"
 #include "Window.h"
 #include "GuiMessage.h"
+#include "NetworkManager.h"
 
 class Whazzup: public QObject {
     Q_OBJECT
@@ -41,11 +42,11 @@ public slots:
     void downloadBookings();
 
 private slots:
-    void statusDownloaded(bool error);
-    void whazzupDownloading(int prog, int tot);
-    void bookingsDownloading(int prog, int tot);
-    void whazzupDownloaded(bool error);
-    void bookingsDownloaded(bool error);
+    void statusDownloaded(QNetworkReply* reply);
+    void whazzupProgress(qint64 prog,qint64 tot);
+    void whazzupDownloaded(QNetworkReply* reply);
+    void bookingsProgress(qint64 prog,qint64 tot);
+    void bookingsDownloaded(QNetworkReply* reply);
 
 private:
     Whazzup();
@@ -54,9 +55,6 @@ private:
     WhazzupData data, predictedData;
 
     QDateTime predictedTime;
-
-    QHttp *statusDownloader, *whazzupDownloader, *bookingsDownloader;
-    QBuffer *statusBuffer, *whazzupBuffer, *bookingsBuffer;
 
     QStringList urls, gzurls;
     QString metarUrl, tafUrl, shorttafUrl, userLink, atisLink, message;

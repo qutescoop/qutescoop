@@ -33,7 +33,8 @@
         <file>images/vroute.png</file>
         <file>images/vatroute.png</file>
     </qresource>
-    <qresource prefix="/splash">
+    <qresource prefix="/startup">
         <file alias="splash">images/splash.png</file>
+        <file alias="logo">images/qs-logo.png</file>
     </qresource>
 </RCC>

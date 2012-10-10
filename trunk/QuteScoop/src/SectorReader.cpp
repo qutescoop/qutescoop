@@ -12,6 +12,7 @@ void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
     idIcaoMapping.clear();
 
     loadSectorlist(sectors);
+
     loadSectordisplay(sectors, Settings::applicationDataDirectory("data/firdisplay.dat"));
     if(Settings::useSupFile())
         loadSectordisplay(sectors, Settings::applicationDataDirectory("data/firdisplay.sup"));
@@ -58,6 +59,7 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
             pointList.clear();
         } else if(!workingSectorId.isEmpty() && !line.isEmpty()) {
             QStringList points = line.split(':');
+            if(points.size() < 2) continue;
             double lat = points[0].toDouble();
             double lon = points[1].toDouble();
             if(lat != 0. || lon != 0.)

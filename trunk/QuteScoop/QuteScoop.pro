@@ -4,8 +4,8 @@
 TEMPLATE = app
 CONFIG *= qt
 
-# CONFIG *= debug
-# CONFIG *= release
+# CONFIG = debug
+# CONFIG += release
 CONFIG *= warn_off
 TARGET = QuteScoop
 win32:PLATFORM = "win32"
@@ -15,9 +15,7 @@ QT *= core \
     gui \
     network \
     opengl \
-    xml \
-    xmlpatterns
-
+    xml
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
@@ -74,6 +72,8 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat
+    dataFiles.files += ./data/cloudmirrors.dat
+    dataFiles.files += ./data/clouds/+notes.txt
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/+notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
@@ -90,7 +90,11 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/2048px-toposhaded.png
     texturesFiles.files += ./textures/4096px.png
     texturesFiles.files += ./textures/4096px-color.png
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}. Run 'make install' to copy these.")
+    texturesFiles.files += ./textures/8192px-arctic-toposhaded.png
+    texturesFiles.files += ./textures/8192px-topo.png
+    cloudsFiles.path = $$DESTDIR/textures/clouds
+    cloudsFiles.files += ./textures/clouds/+notes.txt
+    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
     
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
@@ -99,6 +103,7 @@ CONFIG(release,release|debug) {
         downloadedFiles \
         screenshotsFiles \
         texturesFiles \
+        cloudsFiles \
         myQtLib \
         myCompilerLib
 }
@@ -107,15 +112,21 @@ macx { # could be "mac" also, I am not sure
     ICON = src/Dolomynum.icns
     CONFIG *= x86
     CONFIG *= ppc
+    LIBS += -lGLU
 }
 mac { # could be "macx" also, I am not sure
     CONFIG += app_bundle
     ICON = src/Dolomynum.icns
     CONFIG *= x86
     CONFIG *= ppc
+    LIBS += -lGLU
 }
-win32:RC_FILE = src/windowsicon.rc
-unix:
+win32 { RC_FILE = src/windowsicon.rc
+    LIBS += -lglu32
+}
+unix {
+    LIBS += -lGLU
+}
 
 # Input
 FORMS = src/MainWindow.ui \
@@ -125,7 +136,8 @@ FORMS = src/MainWindow.ui \
     src/PreferencesDialog.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
-    src/ListClientsDialog.ui
+    src/ListClientsDialog.ui\
+    src/SectorView.ui
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \
@@ -137,7 +149,7 @@ HEADERS += src/_pch.h \
     src/NavAid.h \
     src/Metar.h \
     src/MapObject.h \
-    src/mapscreen.h\
+    src/MapScreen.h\
     src/LineReader.h \
     src/helpers.h \
     src/SectorReader.h \
@@ -178,8 +190,11 @@ HEADERS += src/_pch.h \
     src/Ping.h \
     src/LogBrowserDialog.h \
     src/GuiMessage.h \
-    src/winddata.h \
-    src/station.h
+    src/WindData.h \
+    src/Station.h \
+    src/Launcher.h \
+    src/SectorView.h \
+    src/NetworkManager.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -191,7 +206,7 @@ SOURCES += src/WhazzupData.cpp \
     src/NavAid.cpp \
     src/Metar.cpp \
     src/MapObject.cpp \
-    src/mapscreen.cpp\
+    src/MapScreen.cpp\
     src/LineReader.cpp \
     src/SectorReader.cpp \
     src/Sector.cpp \
@@ -229,8 +244,11 @@ SOURCES += src/WhazzupData.cpp \
     src/Ping.cpp \
     src/LogBrowserDialog.cpp \
     src/GuiMessage.cpp \
-    src/winddata.cpp \
-    src/station.cpp
+    src/WindData.cpp \
+    src/Station.cpp \
+    src/Launcher.cpp \
+    src/SectorView.cpp \
+    src/NetworkManager.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
@@ -238,7 +256,8 @@ OTHER_FILES += CHANGELOG \
     data/+notes.txt \
     data/dataversions.txt \
     screenshots/+notes.txt \
-    textures/+notes.txt
+    textures/+notes.txt \
+    textures/clouds/+notes.txt
 
 # temp files
 MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}

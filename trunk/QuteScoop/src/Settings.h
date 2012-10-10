@@ -130,6 +130,12 @@ public:
     static bool useNavdata();
     static void setUseNavdata(bool value);
 
+    static bool useESAirlines();
+    static void setUseESAirlnies(bool value);
+
+    static QString ESAirlinesDirectory();
+    static void setESAirlinesDirectory(QString directory);
+
     static bool showAllWaypoints();
     static void setShowAllWaypoints(bool value);
 
@@ -166,6 +172,12 @@ public:
 
     static bool showPilotsLabels();
     static void setShowPilotsLabels(bool value);
+
+    static bool showClouds();
+    static void setShowClouds(bool value);
+
+    static bool highlightFriends();
+    static void setHighlightFriends(bool value);
 
 
     // OpenGL settings
@@ -357,6 +369,15 @@ public:
     static bool destLineDashed();
     static void setDestLineDashed(bool value);
 
+    static QColor highlightColor();
+    static void setHighlightColor(QColor& color);
+
+    static double highlightLineWidth();
+    static void setHighlightLineWidth(double value);
+
+    static bool useHighlightAnimation();
+    static void setUseHighlightAnimation(bool value);
+
     // -- General
     static bool checkForUpdates();
     static void setCheckForUpdates(bool value);
@@ -372,6 +393,9 @@ public:
 
     static int maxLabels();
     static void setMaxLabels(int maxLabels);
+
+    static bool simpleLabels();
+    static void setSimpleLabels(bool value);
 
     static QStringList friends();
     static void addFriend(const QString& friendId);
@@ -395,6 +419,12 @@ public:
 
     static bool saveWhazzupData();
     static void setSaveWhazzupData(const bool value);
+
+    static bool downloadClouds();
+    static void setDownloadClouds(const bool value);
+
+    static bool useHightResClouds();
+    static void setUseHightResClouds(const bool value);
 
     // zooming
     static int wheelMax();
@@ -476,6 +506,8 @@ public:
     static QByteArray planFlightDialogGeometry();
     static void setPlanFlightDialogGeometry(const QByteArray& value);
 
+    static bool getMaximized();
+    static void saveMaximized(const bool val);
 public slots:
 
 private:

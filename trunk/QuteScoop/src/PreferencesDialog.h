@@ -8,7 +8,8 @@
 #include "_pch.h"
 
 #include "ui_PreferencesDialog.h"
-#include "winddata.h"
+#include "WindData.h"
+
 
 class PreferencesDialog: public QDialog, private Ui::PreferencesDialog
 {
@@ -96,6 +97,9 @@ private slots:
     void on_editNavdir_editingFinished();
     void on_browseNavdirButton_clicked();
     void on_cbUseNavDatabase_stateChanged(int state);
+    void on_cbUseESAirlines_stateChanged(int state);
+    void on_bt_browseESAirlines_clicked();
+    void on_editESAirlines_editingFinished();
 
     // earth and space
     void on_buttonResetEarthSpace_clicked();
@@ -170,13 +174,23 @@ private slots:
     void on_cbCheckForUpdates_stateChanged(int state);
     void on_cbSendVersionInfo_stateChanged(int state);
 
+    void on_cbDownloadClouds_stateChanged(int state);
+    void on_cbUseHighResClouds_stateChanged(int state);
+
     //zooming
     void on_pbWheelCalibrate_clicked();
     void on_sbZoomFactor_valueChanged(double );
 
+    //highlight friends
+    void on_cb_Animation_stateChanged(int state);
+    void on_sb_highlightFriendsLineWidth_valueChanged(double value);
+    void on_pb_highlightFriendsColor_clicked();
+
     void on_useSelectionRectangle_toggled(bool checked);
 
-private:
+    void on_cbSimpleLabels_toggled(bool checked);
+
+    private:
     PreferencesDialog(QWidget *parent);
 
     bool settingsLoaded;

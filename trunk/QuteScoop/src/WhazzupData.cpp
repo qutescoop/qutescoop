@@ -19,13 +19,14 @@ WhazzupData::WhazzupData():
 {
 }
 
-WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
+WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
     servers(QList<QStringList>()), voiceServers(QList<QStringList>()), whazzupVersion(0),
     whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime())
 {
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     dataType = type;
+    QStringList friends = Settings::friends();
     int reloadInMin;
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
     ParserState state = STATE_NONE;
@@ -111,6 +112,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                     if (type == WHAZZUP) {
                         Pilot *p = new Pilot(list, this);
                         pilots[p->label] = p;
+                        if(friends.contains(p->userId)) friendsLatLon.append(QPair< double, double>(p->lat, p->lon));
                     }
                 }
                 else if(list[3] == "ATC") {
@@ -121,9 +123,11 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                         }
                         Controller *c = new Controller(list, this);
                         controllers[c->label] = c;
+                        if(friends.contains(c->userId)) friendsLatLon.append(QPair< double,double>(c->lat,c->lon));
                     } else if (type == ATCBOOKINGS) {
                         BookedController *bc = new BookedController(list, this);
                         bookedControllers.append(bc);
+                        //if(friends.contains(bc->userId)) bookedFriendControllers.append( bc);
                     }
                 }
             }
@@ -133,6 +137,7 @@ WhazzupData::WhazzupData(QBuffer* buffer, WhazzupType type):
                     QStringList list = line.split(':');
                     Pilot *p = new Pilot(list, this);
                     bookedPilots[p->label] = p;
+                    //if(friends.contains(p->userId)) prefiledFriendPilots.append( p);
                 }
             }
             break;
@@ -445,6 +450,7 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
         whazzupTime = data.whazzupTime;
         updateEarliest = data.updateEarliest;
         predictionBasedOnTime = data.predictionBasedOnTime;
+        friendsLatLon = data.friendsLatLon;
     }
     if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
         if(dataType == WHAZZUP) dataType = UNIFIED;

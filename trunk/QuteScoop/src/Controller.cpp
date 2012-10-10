@@ -56,7 +56,6 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
             else
                 assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date(), found, Qt::UTC);
         }
-        //qDebug() << "Found" << label << "to be online until" << assumeOnlineUntil << "(Controller Info)";
     }
 
     QString icao = this->getCenter();
@@ -247,6 +246,7 @@ QString Controller::mapLabel() const { // LOVV
 bool Controller::matches(const QRegExp& regex) const {
     if (frequency.contains(regex)) return true;
     if (atisMessage.contains(regex)) return true;
+    if(realName.contains(regex)) return true;
     if (sector != 0)
         if (sector->name.contains(regex)) return true;
     return MapObject::matches(regex);

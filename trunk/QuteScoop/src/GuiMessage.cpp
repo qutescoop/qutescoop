@@ -122,8 +122,8 @@ void GuiMessages::updateMessage(GuiMessage *guiMessage, bool callUpdate) {
 }
 void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
     //qDebug() << "GuiMessages::removeMessage() id=" << id;
-    foreach(int key, _messages.keys())
-        foreach(GuiMessage *gm, _messages.values(key))
+    foreach(int key, _messages.keys()) {
+        foreach(GuiMessage *gm, _messages.values(key)) {
             if (gm->id == id) {
                 if (_currentStatusMessage == gm)
                     setStatusMessage(new GuiMessage());
@@ -131,6 +131,8 @@ void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
                     setProgress(new GuiMessage());
                 _messages.remove(key, gm);
             }
+        }
+    }
     if (callUpdate)
         update();
 }
@@ -141,15 +143,15 @@ void GuiMessages::setStatusMessage(GuiMessage *gm, bool bold, bool italic, bool 
     //qDebug() << "GuiMessages::setStatusMessage()" << gm;
     foreach(QLabel *l, _labels.keys()) {
         l->setText(gm->msg);
-        if (_labels[l]) // boolean inicating hideIfNohingToDisplay
-            l->setVisible(!gm->msg.isEmpty() && !gm->type == GuiMessage::Uninitialized);
+        if (_labels[l]) { // boolean inicating hideIfNohingToDisplay
+            const bool visible = !gm->msg.isEmpty()
+                    && (gm->type != GuiMessage::Uninitialized);
+            l->setVisible(visible);
+        }
         if (instantRepaint)
             l->repaint();
     }
-    if (gm->msg.isEmpty())
-        _currentStatusMessage = 0;
-    else
-        _currentStatusMessage = gm;
+    _currentStatusMessage = (gm->msg.isEmpty()? 0: gm);
     if (!gm->shownSince.isValid())
         gm->shownSince = QDateTime::currentDateTimeUtc();
 }
@@ -159,9 +161,12 @@ void GuiMessages::setProgress(GuiMessage *gm, bool instantRepaint) {
         if (gm->progressMaximum != -1)
             pb->setMaximum(gm->progressMaximum);
         pb->setValue(gm->progressValue);
-        if (_bars[pb]) // boolean inicating hideIfNohingToDisplay
-            pb->setVisible(gm->progressValue != gm->progressMaximum
-                           || (gm->progressMaximum == -1 && gm->progressValue != -1));
+        if (_bars[pb]) { // boolean inicating hideIfNohingToDisplay
+            const bool visible =
+                    (gm->progressValue != gm->progressMaximum) ||
+                    (gm->progressMaximum == -1 && gm->progressValue != -1);
+            pb->setVisible(visible);
+        }
         if (instantRepaint)
             pb->repaint();
     }
@@ -175,7 +180,8 @@ void GuiMessages::update() {
             //qDebug() << " " << gm;
 
             if (gm->showMs != -1 && gm->shownSince.isValid() && // shown long enough
-                    gm->shownSince.addMSecs(gm->showMs) < QDateTime::currentDateTimeUtc()) {
+                    gm->shownSince.addMSecs(gm->showMs)
+                        < QDateTime::currentDateTimeUtc()) {
                 _messages.remove(key, gm);
             } else {
                 switch (gm->type) {
@@ -237,7 +243,10 @@ GuiMessages::GuiMessage *GuiMessages::messageById(const QString &id, const GuiMe
 ///////////////////////////////////////////////////////////////////////////////
 // GuiMessages::GuiMessage QDebug compatibility
 QDebug operator<<(QDebug dbg, const GuiMessages::GuiMessage *gm) {
-   dbg.nospace() << "id: " << gm->id << ", msg: " << gm->msg << ", type " << gm->type << ", val: " << gm->progressValue <<
-                    ", max: " << gm->progressMaximum << ", since: " << gm->shownSince.toString(Qt::ISODate) << ", ms: " << gm->showMs;
+   dbg.nospace() << "id: " << gm->id << ", msg: " << gm->msg
+                 << ", type " << gm->type << ", val: " << gm->progressValue
+                 << ", max: " << gm->progressMaximum
+                 << ", since: " << gm->shownSince.toString(Qt::ISODate)
+                 << ", ms: " << gm->showMs;
    return dbg.maybeSpace();
 }

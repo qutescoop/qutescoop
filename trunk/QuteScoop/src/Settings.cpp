@@ -320,7 +320,7 @@ void Settings::setUpdateVersionNumber(const QString& version) {
 }
 
 QString Settings::statusLocation() {
-    return getSettings()->value("download/statusLocation", "http://status.vatsim.net/status.txt").toString();
+    return getSettings()->value("download/statusLocation", "http://status.vatsim.net/").toString();
 }
 
 void Settings::setStatusLocation(const QString& location) {
@@ -368,7 +368,6 @@ void Settings::setProxyPassword(QString password) {
     getSettings()->setValue("proxy/password", password);
 }
 
-
 void Settings::applyProxySetting(QHttp *http) {
     if(!useProxy() || http == 0)
         return;
@@ -398,9 +397,24 @@ void Settings::setUseNavdata(bool value) {
     getSettings()->setValue("database/use", value);
 }
 
+bool Settings::useESAirlines(){
+    return getSettings()->value("database/useESAirlines", false).toBool();
+}
+void Settings::setUseESAirlnies(bool value){
+    getSettings()->setValue("database/useESAirlines", value);
+}
+
+QString Settings::ESAirlinesDirectory(){
+    return getSettings()->value("database/ESAirlinesDirectory").toString();
+}
+void Settings::setESAirlinesDirectory(QString directory){
+    getSettings()->setValue("database/ESAirlinesDirectory", directory);
+}
+
 bool Settings::showAllWaypoints() {
     return getSettings()->value("database/showAllWaypoints", false).toBool();
 }
+
 void Settings::setShowAllWaypoints(bool value) {
     getSettings()->setValue("database/showAllWaypoints", value);
 }
@@ -452,7 +466,6 @@ void Settings::setShowAllSectors(bool value){
 bool Settings::showUpperWind(){
     return getSettings()->value("display/showUpperWind", false).toBool();
 }
-
 void Settings::setShowUpperWind(bool value){
     getSettings()->setValue("display/showUpperWind", value);
 }
@@ -460,7 +473,6 @@ void Settings::setShowUpperWind(bool value){
 int Settings::upperWindAlt(){
     return getSettings()->value("display/upperWindAlt", 10000).toInt();
 }
-
 void Settings::setUpperWindAlt(int value){
     getSettings()->setValue("display/upperWindAlt", value);
 }
@@ -468,7 +480,6 @@ void Settings::setUpperWindAlt(int value){
 QColor Settings::upperWindColor(){
     return getSettings()->value("display/upperWindColor", QColor::fromRgb(136, 255, 134)).value<QColor>();
 }
-
 void Settings::setUpperWindColor(const QColor &value){
     getSettings()->setValue("display/upperWindColor", value);
 }
@@ -490,14 +501,26 @@ void Settings::setShowPilotsLabels(bool value){
 bool Settings::showInactiveAirports() {
     return getSettings()->value("display/showInactive", false).toBool(); // time-intensive function
 }
-
 void Settings::setShowInactiveAirports(const bool& value) {
     getSettings()->setValue("display/showInactive", value);
 }
 
+bool Settings::showClouds(){
+    return getSettings()->value("display/showClouds", false).toBool();
+}
+void Settings::setShowClouds(const bool value){
+    getSettings()->setValue("display/showClouds", value);
+}
 
+bool Settings::highlightFriends(){
+    return getSettings()->value("display/highlightFriends", false).toBool();
+}
+void Settings::setHighlightFriends(bool value){
+    getSettings()->setValue("display/highlightFriends", value);
+}
 
 // OpenGL
+
 bool Settings::displaySmoothLines() {
     return getSettings()->value("gl/smoothLines", true).toBool();
 }
@@ -1042,12 +1065,41 @@ QByteArray Settings::getSavedState() {
     return getSettings()->value("mainWindowState/state", QByteArray()).toByteArray();
 }
 
+void Settings::saveMaximized(const bool val) {
+    getSettings()->setValue("mainWindowState/maximized", val);
+}
+
+bool Settings::getMaximized() {
+    return getSettings()->value("mainWindowState/maximized", true).toBool();
+}
+
 void Settings::saveGeometry(const QByteArray& state) {
     getSettings()->setValue("mainWindowState/geometry", state);
 }
 
 QByteArray Settings::getSavedGeometry() {
     return getSettings()->value("mainWindowState/geometry", QByteArray()).toByteArray();
+}
+
+QColor Settings::highlightColor(){
+    return getSettings()->value("pilotDisplay/highlightColor", QColor::fromRgb(255, 0 , 0, 255)).value<QColor>();
+}
+void Settings::setHighlightColor(QColor &color){
+    getSettings()->setValue("pilotDisplay/highlightColor", color);
+}
+
+double Settings::highlightLineWidth(){
+    return getSettings()->value("pilotDisplay/highlightLineWidth" , 1.5).toDouble();
+}
+void Settings::setHighlightLineWidth(double value){
+    getSettings()->setValue("pilotDisplay/highlightLineWidth", value);
+}
+
+bool Settings::useHighlightAnimation(){
+    return getSettings()->value("pilotDisplay/useHighlightAnimation", false).toBool();
+}
+void Settings::setUseHighlightAnimation(bool value){
+    getSettings()->setValue("pilotDisplay/useHighlightAnimation", value);
 }
 
 void Settings::saveSize(const QSize& size) {
@@ -1207,13 +1259,29 @@ void Settings::setUseSelctionRectangle(bool value) {
 
 
 ////////////////////////////////////////
-// uncategorized
+// General
 
 bool Settings::saveWhazzupData() {
     return getSettings()->value("general/saveWhazzupData", false).toBool();
 }
 void Settings::setSaveWhazzupData(bool value) {
     getSettings()->setValue("general/saveWhazzupData" , value);
+}
+
+bool Settings::downloadClouds(){
+    return getSettings()->value("general/downloadClouds", false).toBool();
+}
+
+void Settings::setDownloadClouds(const bool value){
+    getSettings()->setValue("general/downloadClouds", value);
+}
+
+bool Settings::useHightResClouds(){
+    return getSettings()->value("general/useHightResClouds", false).toBool();
+}
+
+void Settings::setUseHightResClouds(const bool value){
+    getSettings()->setValue("general/useHightResClouds", value);
 }
 
 
@@ -1370,7 +1438,6 @@ void Settings::setPilotDetailsGeometry(const QByteArray &value){
     getSettings()->setValue("windowmanagment/pilotDetailsGeo", value);
 }
 
-
 QSize Settings::planFlightDialogSize(){
     return getSettings()->value("windowmanagment/planFlightDialogSize").toSize();
 }
@@ -1393,4 +1460,12 @@ QByteArray Settings::planFlightDialogGeometry(){
 
 void Settings::setPlanFlightDialogGeometry(const QByteArray &value){
     getSettings()->setValue("windowmanagment/planFlightDialogGeo", value);
+}
+
+void Settings::setSimpleLabels(bool value) {
+    getSettings()->setValue("gl/simpleLabels", value);
+}
+
+bool Settings::simpleLabels() {
+    return getSettings()->value("gl/simpleLabels", true).toBool();
 }

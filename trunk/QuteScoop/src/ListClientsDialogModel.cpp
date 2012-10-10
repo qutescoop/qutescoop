@@ -28,7 +28,8 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
         case 1: return QString("Rating");
         case 2: return QString("Name");
         case 3: return QString("Online");
-        case 4: return QString("Admin Rating"); //IVAO only
+        case 4: return QString("TTG");
+        case 5: return QString("Admin Rating"); //IVAO only
     }
 
     return QVariant();
@@ -50,12 +51,25 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
         }
         return QFont();
     } else if (role == Qt::DisplayRole) {
+        Controller *co = dynamic_cast <Controller*> (c);
+        Pilot *p = dynamic_cast <Pilot*> (c);
         switch(index.column()) {
             case 0: return c->label;
             case 1: return c->rank();
             case 2: return c->realName;
             case 3: return c->onlineTime();
-            case 4: return c->adminRating > 2? QString("%1").arg(c->adminRating): QString();
+            case 4:
+                if (co != 0) {
+                    if (co->assumeOnlineUntil.isValid())
+                        return QTime().addSecs(
+                           QDateTime::currentDateTimeUtc().secsTo(co->assumeOnlineUntil)
+                        );
+                    return QString();
+                }
+                if (p != 0)
+                    return p->eet();
+                break;
+            case 5: return c->adminRating > 2? QString("%1").arg(c->adminRating): QString();
         }
     }
 
@@ -67,7 +81,7 @@ int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
 }
 
 int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
-    return Whazzup::getInstance()->realWhazzupData().isIvao()? 5: 4;
+    return Whazzup::getInstance()->realWhazzupData().isIvao()? 6: 5;
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {

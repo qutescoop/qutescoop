@@ -100,7 +100,6 @@ void MetarModel::downloadMetarFor(Airport* airport) {
     if(location.isEmpty())
         return;
 
-    qDebug() << "location:" << location;
     QUrl url(location);
 
     downloader.setHost(url.host(), url.port() != -1 ? url.port() : 80);
@@ -137,19 +136,11 @@ void MetarModel::downloaded(int id, bool error) {
 
     if(!error) {
         dq.buffer->seek(0);
-        while(!dq.buffer->atEnd()){
-            qDebug() << "buffer: " << dq.buffer->readLine().trimmed();
-        }
         QString line = QString(dq.buffer->readLine()).trimmed();
-        qDebug() << "line:" << line;
-        if(!line.isEmpty()){
+        if(!line.isEmpty())
             dq.airport->metar = Metar(line);
-            qDebug() << "1.";
-        }
-        if(!dq.airport->metar.isNull() && dq.airport->metar.isValid()){
+        if(!dq.airport->metar.isNull() && dq.airport->metar.isValid())
             gotMetarFor(dq.airport);
-            qDebug() << "2.";
-        }
     }
 
     delete dq.buffer;

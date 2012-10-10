@@ -9,10 +9,10 @@
 
 #include "_pch.h"
 
-//#include "GLWidget.h" //For ne on screen settings
-#include "mapscreen.h"
+#include "MapScreen.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
+#include "FileReader.h"
 
 class Window : public QMainWindow, private Ui::MainWindow {
     Q_OBJECT
@@ -27,10 +27,14 @@ public slots:
     void updateMetarDecoder(const QString& airport, const QString& decodedText);
     void refreshFriends();
     void on_actionShowRoutes_triggered(bool checked);
+    void startCloudDownload();
+    void whazzupDownloaded(bool isNew = true);
 
 private slots:
     void on_actionShowWaypoints_triggered(bool checked);
     void on_actionDebugLog_triggered();
+    void on_actionHighlight_Friends_triggered(bool checked);
+    void on_pb_highlightFriends_toggled(bool checked);
 
     void on_actionZoomReset_triggered();
     void on_tbZoomOut_clicked();
@@ -73,11 +77,11 @@ private slots:
     void about();
 
     void toggleFullscreen();
-    void whazzupDownloaded(bool isNew = true);
     void openPreferences();
     void openPlanFlight();
     void openBookedAtc();
     void openListClients();
+    void openSectorView();
 
     void on_searchEdit_textChanged(const QString& text);
 
@@ -98,12 +102,13 @@ private slots:
     //void versionDownloaded(bool error);
     void downloadWatchdogTriggered();
 
-    void startWindDecoding(bool);
-
     void allSectorsChanged(bool);
+
+    void cloudDownloadFinished(bool error);
 
 protected:
     virtual void closeEvent(QCloseEvent *event);
+
 
 private:
     // singleton
@@ -114,13 +119,13 @@ private:
 
     SearchResultModel searchResultModel, friendsModel;
     QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer;
-    QTimer downloadWatchdog;
+    QTimer downloadWatchdog, cloudTimer;
     QSortFilterProxyModel *metarSortModel, *friendsSortModel;
     MetarModel metarModel;
 
     //void checkForUpdates();
-    QHttp *versionChecker, *windDataDownloader;
-    QBuffer *versionBuffer, *windDataBuffer;
+    QHttp *versionChecker, *cloudDownloader;
+    QBuffer *versionBuffer, *cloudBuffer;
 
     QDateTime dateTimePredict_old;
 

@@ -1,18 +1,62 @@
 Project page: <http://qutescoop.sourceforge.net>
-See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
+See the QuteScoop-Wiki <http://sourceforge.net/p/qutescoop/wiki/> for
 general project status and planned features.
 
-Version 2.0rc22
-added:
- * linker includes libGLU on UNIX. Should make compiling out of the
-   box possible again (Tested on Ubuntu 12.04 64bit with libgl1-mesa-dev).
-fixed:
- * VATRoute route provider: Our dear friend lost his domain michael-nagler.de
-   where the parsing webservice was hosted. Put the parsing in QuteScoop.
+Version 2.1.6
+ fixed:
+  * file naming conventions
+  * re-enabled View->Sectorview
+  * re-enabled Whazzup- and Bookings-download-progressbars
+  * friends-toggling had double update
+  * formatting error in QuteScoop.sh
+ added:
+  * label in launcher visible now (at least on Linux)
+  * launcher centerred (hopefully working on multi-monitor-systems)
+ changed:
+  * wiki-URL has changed
 
-Version 2.0rc21
+Version 2.1.5
+ fixed:
+  * 3D quality settings re-enabled (went lost in 2.1.2)
+ changed:
+  * reordered preferences
+  * clarified tooltip for the new 'simple labels' setting
+ added:
+  * 2 new big (25 MB each) earth textures
+
+Version 2.1.3
+ fixed:
+  * cleaned up network request code in Whazzup.cpp
+  * bookings download
+  * loading Whazzups from file
+
+Version 2.1.2
+ added:
+  * linker includes libGLU on UNIX. Should make compiling out of the
+    box possible again (Tested on Ubuntu 12.04 64bit with libgl1-mesa-dev).
+  * setting 'simple labels' greatly improves performance on low-end graphic cards.
+    It disables collision-checking between labels and thus relieves us from
+    transferring lat/lon- to x/y-coordinates. Drawback is that labels will
+    draw over each other and won't be centered with its objects. Enabled by default.
+  * TTG/online until - information in List Clients
+ changed:
+  * OpenGL quality settings to default.
+ fixed:
+  * VATRoute route provider: Our dear friend lost his domain michael-nagler.de
+    where the parsing webservice was hosted. Put the parsing in QuteScoop.
+
+
+Version 2.1.1
 fixed:
- *changed all VATSIM status urls to: http://status.vatsim.net/status.txt
+*VATSIM status file redirects
+changed:
+*airlinedatabase now in ES format
+added:
+*show clouds[experimental]
+*highlight friends
+*show transponder code
+*save map position
+*launcher
 
 Version 2.0rc20
 fixed:

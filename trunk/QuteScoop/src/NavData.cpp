@@ -24,9 +24,8 @@ NavData::NavData() {
     loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
-    loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));
-    if(Settings::checkForUpdates())
-        checkForDataUpdates();
+    if(Settings::useESAirlines()){loadAirlineCodes(Settings::ESAirlinesDirectory());}
+    else{ loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));}
 }
 NavData::~NavData() {
     foreach(const Airport *a, airports)
@@ -70,12 +69,20 @@ void NavData::loadSectors() {
 void NavData::loadAirlineCodes(const QString &filename)
 {
     airlineCodes.clear();
+    if(filename.isEmpty()){
+        qDebug() << "NavData::loadAirlineCodes -- no airline data loaded";
+        return;
+    }
     FileReader fileReader(filename);
 
     while(!fileReader.atEnd()){
 
-        QStringList line = fileReader.nextLine().split(0x09);  // 0x09 code for Tabulator
-        airlineCodes[line.value(0)] = line.value(1);
+        QStringList line = fileReader.nextLine().split(0x09);   // 0x09 code for Tabulator
+        if(line.size()< 3){         // if prefent crashing when loading a wrong format
+            GuiMessages::warning(QString(tr("%1 has not the correct format to load the airlines!")).arg(filename));
+            return;
+        }
+        airlineCodes[line.value(0)] = line.value(2);
     }
 }
 
@@ -231,11 +238,11 @@ QPair<double, double> NavData::greatCircleFraction(double lat1, double lon1, dou
 }
 
 QList<QPair<double, double> > NavData::greatCirclePoints(double lat1, double lon1, double lat2, double lon2,
-                                                         double pointEachNm) { // omits last point
+                                                         double intervalNm) { // omits last point
     QList<QPair<double, double> > result;
     if (qFuzzyCompare(lat1, lat2) && qFuzzyCompare(lon1, lon2))
         return (result << QPair<double, double>(lat1, lon1));
-    double fractionIncrement = qMin(1., pointEachNm / NavData::distance(lat1, lon1, lat2, lon2));
+    double fractionIncrement = qMin(1., intervalNm / NavData::distance(lat1, lon1, lat2, lon2));
     for (double currentFraction = 0.; currentFraction < 1.; currentFraction += fractionIncrement)
         result.append(greatCircleFraction(lat1, lon1, lat2, lon2, currentFraction));
     return result;
@@ -256,7 +263,10 @@ void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) { /
     VERTEX(points.last().first, points.last().second); // last points gets ommitted by greatCirclePoints by design
 }
 
-QPair<double, double> *NavData::fromArinc(const QString &str) { // returning 0 on error
+/* converts (oceanic) points from ARINC424 format
+  @return 0 on error
+*/
+QPair<double, double> *NavData::fromArinc(const QString &str) {
 	QRegExp arinc("(\\d{2})([NSEW]?)(\\d{2})([NSEW]?)"); // ARINC424 waypoints (strict)
 	if (arinc.exactMatch(str)) {
 		if (!arinc.capturedTexts()[2].isEmpty() ||
@@ -277,6 +287,9 @@ QPair<double, double> *NavData::fromArinc(const QString &str) { // returning 0 o
 	return 0;
 }
 
+/* converts (oceanic) points from ARINC424 format
+  @return QString("") on error
+*/
 QString NavData::toArinc(const short lat, const short lon) { // returning QString() on error
 	if (qAbs(lat) > 90 || qAbs(lon) > 180)
 		return QString();
@@ -299,165 +312,7 @@ QString NavData::toArinc(const short lat, const short lon) { // returning QStrin
 			arg(qAbs(lon) >= 100? "": q);
 }
 
-void NavData::checkForDataUpdates() {
-    if(dataVersionsAndFilesDownloader != 0)
-        dataVersionsAndFilesDownloader = 0;
-    dataVersionsAndFilesDownloader = new QHttp(this);
-    QUrl url("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
-    dataVersionsAndFilesDownloader->setHost(url.host());
-    Settings::applyProxySetting(dataVersionsAndFilesDownloader);
 
-    connect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
-
-    dataVersionsBuffer = new QBuffer;
-    dataVersionsBuffer->open(QBuffer::ReadWrite);
-
-    dataVersionsAndFilesDownloader->get(url.path(), dataVersionsBuffer);
-    qDebug() << "Checking for datafile versions:" << url.toString();
-}
-
-void NavData::dataVersionsDownloaded(bool error) {
-    disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
-    if(dataVersionsBuffer == 0)
-        return;
-
-    if(error) {
-        GuiMessages::criticalUserInteraction(dataVersionsAndFilesDownloader->errorString(), "Datafile download");
-        return;
-    }
-    qDebug() << "NavData::dataVersionsDownloaded";
-    QList< QPair< QString, int> > serverDataVersionsList, localDataVersionsList;
-
-    dataVersionsBuffer->seek(0);
-    while(!dataVersionsBuffer->atEnd()) {
-        QStringList splitLine = QString(dataVersionsBuffer->readLine()).split("%%");
-        QPair< QString, int> rawPair;
-        rawPair.first = splitLine.first();
-        rawPair.second = splitLine.last().toInt();
-        if (splitLine.size() == 2) // only xx%%xx accepted
-            serverDataVersionsList.append(rawPair);
-        //qDebug() << "Server versions are " << rawPair.first << " : " << rawPair.second;
-    }
-
-    QFile localVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
-    if (!localVersionsFile.open(QIODevice::ReadOnly | QIODevice::Text))  {
-        GuiMessages::informationUserAttention(QString("Could not read %1.\nThus we are updating all datafiles.")
-                       .arg(localVersionsFile.fileName()),
-                       "Complete datafiles update necessary");
-    }
-    while(!localVersionsFile.atEnd()) {
-        QStringList splitLine = QString(localVersionsFile.readLine()).split("%%");
-        QPair< QString, int> rawPair;
-        rawPair.first = splitLine.first();
-        rawPair.second = splitLine.last().toInt();
-        if (splitLine.size() == 2) // only xx%%xx accepted
-            localDataVersionsList.append(rawPair);
-        //qDebug() << "Local versions are " << rawPair.first << " : " << rawPair.second;
-    }
-    localVersionsFile.close();
-
-    //collecting files to update
-    connect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
-            this, SLOT(dataFilesRequestFinished(int,bool)));
-    connect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
-            this, SLOT(dataFilesDownloaded(bool)));
-    for(int i = 0; i < serverDataVersionsList.size(); i++) {
-        // download also files that are locally not available
-        if(serverDataVersionsList[i].second >
-           localDataVersionsList.value(i, QPair< QString, int>(QString(), 0)).second)
-        {
-            dataFilesToDownload.append(new QFile(Settings::applicationDataDirectory("data/%1.newFromServer")
-                                                 .arg(serverDataVersionsList[i].first)));
-            QUrl url(QString("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
-                 .arg(serverDataVersionsList[i].first));
-            dataVersionsAndFilesDownloader->get(url.path(), dataFilesToDownload.last());
-            //qDebug() << "Downloading datafile" << url.toString();
-        }
-    }
-    if (!dataFilesToDownload.isEmpty())
-        GuiMessages::informationUserAttention(QString("New sector-/ airport- or geography-files are available. They will be downloaded now."),
-                                             "New datafiles");
-    else {
-        disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
-                this, SLOT(dataFilesRequestFinished(int,bool)));
-        disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
-                this, SLOT(dataFilesDownloaded(bool)));
-        dataVersionsAndFilesDownloader->abort();
-        delete dataVersionsAndFilesDownloader;
-        delete dataVersionsBuffer;
-    }
-}
-
-void NavData::dataFilesRequestFinished(int id, bool error) {
-    if (error) {
-        GuiMessages::criticalUserInteraction(QString("Error downloading %1:\n%2")
-                                            .arg(dataVersionsAndFilesDownloader->currentRequest().path())
-                                            .arg(dataVersionsAndFilesDownloader->errorString()),
-                                            "New datafiles");
-        return;
-    }
-    GuiMessages::informationUserAttention(QString("Downloaded %1")
-                                         .arg(dataVersionsAndFilesDownloader->currentRequest().path()),
-                                         "New datafiles");
-}
-
-void NavData::dataFilesDownloaded(bool error) {
-    disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
-            this, SLOT(dataFilesRequestFinished(int,bool)));
-    disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
-            this, SLOT(dataFilesDownloaded(bool)));
-    if(dataVersionsBuffer == 0)
-        return;
-
-    if(error) {
-        GuiMessages::criticalUserInteraction(QString("New sector- / airport- / geography-files could not be downloaded.\n%1")
-                                            .arg(dataVersionsAndFilesDownloader->errorString()),
-                                            "New datafiles");
-        return;
-    }
-
-    GuiMessages::informationUserAttention("All scheduled files have been downloaded.\nThese changes will take effect on the next start of QuteScoop.",
-                                         "New datafiles");
-
-    int errors = 0;
-    for(int i = 0; i < dataFilesToDownload.size(); i++) {
-        dataFilesToDownload[i]->flush();
-        dataFilesToDownload[i]->close();
-
-        if(dataFilesToDownload[i]->exists()) {
-            QString datafileFilePath = dataFilesToDownload[i]->fileName().remove(".newFromServer");
-            if (QFile::exists(datafileFilePath) && !QFile::remove(datafileFilePath)) {
-                GuiMessages::criticalUserInteraction(QString("Unable to delete\n%1")
-                                                    .arg(datafileFilePath), "New datafiles");
-                errors++;
-            }
-            if (!dataFilesToDownload[i]->rename(datafileFilePath)) {
-                GuiMessages::criticalUserInteraction(QString("Unable to move downloaded file to\n%1")
-                                                    .arg(datafileFilePath), "New datafiles");
-                errors++;
-            }
-        }
-
-        delete dataFilesToDownload[i];
-    }
-
-    if (errors == 0) {
-        QFile localDataVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
-        if (localDataVersionsFile.open(QIODevice::WriteOnly))
-            localDataVersionsFile.write(dataVersionsBuffer->data());
-        else
-            GuiMessages::criticalUserInteraction(QString("Error writing %1").arg(localDataVersionsFile.fileName()),
-                                                "New datafiles");
-    } else
-        GuiMessages::criticalUserInteraction(QString("Errors occured. All datafiles will be redownloaded on next launch of QuteScoop."),
-                                            "New datafiles");
-
-    dataVersionsBuffer->close();
-    delete dataVersionsBuffer;
-    dataVersionsAndFilesDownloader->abort();
-    delete dataVersionsAndFilesDownloader;
-    dataFilesToDownload.clear();
-}
 
 QString NavData::getAirline(QString airlineCode)
 {

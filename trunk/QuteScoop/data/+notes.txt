@@ -137,8 +137,23 @@ Airlnie Name:	Ansett Australia
 Calsing:		ANSETT
 Country:		Australia
 
+
 ------
 
+CLOUDMIRRORS.dat
+
+This contains mirrors to download cloud images.
+Format:
+
+[2048px]
+http://xplanet-sydney.inside.net/clouds_2048.jpg
+;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg
+
+[2048px] -- for 2048 px images(low resolution)
+http://xplanet-sydney.inside.net/clouds_2048.jpg -- mirror
+;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg -- line comment out
+
+------
 
 Have fun! :)
 
