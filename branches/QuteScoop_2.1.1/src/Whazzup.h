@@ -10,7 +10,7 @@
 #include "WhazzupData.h"
 #include "Window.h"
 #include "GuiMessage.h"
-#include "networkmanager.h"
+#include "NetworkManager.h"
 
 class Whazzup: public QObject {
     Q_OBJECT
@@ -43,7 +43,9 @@ public slots:
 
 private slots:
     void statusDownloaded(QNetworkReply* reply);
+    void whazzupProgress(qint64 prog,qint64 tot);
     void whazzupDownloaded(QNetworkReply* reply);
+    void bookingsProgress(qint64 prog,qint64 tot);
     void bookingsDownloaded(QNetworkReply* reply);
 
 private:

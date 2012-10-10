@@ -37,7 +37,7 @@ public:
     static QPair<double, double> greatCircleFraction(double lat1, double lon1,
                                     double lat2, double lon2, double fraction);
     static QList<QPair<double, double> > greatCirclePoints(double lat1, double lon1, double lat2,
-                                                           double lon2, double pointEachNm = 30.);
+                                                           double lon2, double intervalNm = 30.);
     static void plotPointsOnEarth(const QList<QPair<double, double> > &points);
 
     //void checkForDataUpdates();

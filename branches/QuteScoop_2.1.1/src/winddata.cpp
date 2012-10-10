@@ -1,4 +1,4 @@
-#include "winddata.h"
+#include "WindData.h"
 
 
 

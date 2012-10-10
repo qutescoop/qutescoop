@@ -186,8 +186,12 @@ const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const
     // dirtily approximating present zenith Lat/Lon (where the sun is directly above).
     // scientific solution: http://openmap.bbn.com/svn/openmap/trunk/src/openmap/com/bbn/openmap/layer/daynight/SunPosition.java
     // [sunPosition()] - that would have been at least 100 lines of code...
-    return QPair<double, double>(-23. * qCos((double) dateTime.date().dayOfYear() / (double)dateTime.date().daysInYear() * 2.*M_PI),
-                                 -((double) dateTime.time().hour() + (double) dateTime.time().minute() / 60.) * 15. - 180.);
+    return QPair<double, double>(
+                -23. * qCos((double) dateTime.date().dayOfYear() /
+                        (double)dateTime.date().daysInYear() * 2.*M_PI),
+                -((double) dateTime.time().hour() +
+                        (double) dateTime.time().minute() / 60.) * 15. - 180.
+    );
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

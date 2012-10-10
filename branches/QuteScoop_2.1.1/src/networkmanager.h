@@ -12,7 +12,7 @@ public:
     NetworkManager();
 
 public slots:
-    void httpRequest(QNetworkRequest request);
+    QNetworkReply *httpRequest(QNetworkRequest request);
 
 signals:
     void requestFinished(QNetworkReply* reply );

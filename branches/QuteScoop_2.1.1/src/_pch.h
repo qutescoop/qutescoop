@@ -24,7 +24,6 @@
 #include <QtNetwork>
 #include <QtOpenGL>
 #include <QDebug>
-#include <GL/glu.h>
 
 #endif // __cplusplus
 

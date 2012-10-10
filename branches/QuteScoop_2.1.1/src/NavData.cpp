@@ -238,11 +238,11 @@ QPair<double, double> NavData::greatCircleFraction(double lat1, double lon1, dou
 }
 
 QList<QPair<double, double> > NavData::greatCirclePoints(double lat1, double lon1, double lat2, double lon2,
-                                                         double pointEachNm) { // omits last point
+                                                         double intervalNm) { // omits last point
     QList<QPair<double, double> > result;
     if (qFuzzyCompare(lat1, lat2) && qFuzzyCompare(lon1, lon2))
         return (result << QPair<double, double>(lat1, lon1));
-    double fractionIncrement = qMin(1., pointEachNm / NavData::distance(lat1, lon1, lat2, lon2));
+    double fractionIncrement = qMin(1., intervalNm / NavData::distance(lat1, lon1, lat2, lon2));
     for (double currentFraction = 0.; currentFraction < 1.; currentFraction += fractionIncrement)
         result.append(greatCircleFraction(lat1, lon1, lat2, lon2, currentFraction));
     return result;
@@ -263,7 +263,10 @@ void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) { /
     VERTEX(points.last().first, points.last().second); // last points gets ommitted by greatCirclePoints by design
 }
 
-QPair<double, double> *NavData::fromArinc(const QString &str) { // returning 0 on error
+/* converts (oceanic) points from ARINC424 format
+  @return 0 on error
+*/
+QPair<double, double> *NavData::fromArinc(const QString &str) {
 	QRegExp arinc("(\\d{2})([NSEW]?)(\\d{2})([NSEW]?)"); // ARINC424 waypoints (strict)
 	if (arinc.exactMatch(str)) {
 		if (!arinc.capturedTexts()[2].isEmpty() ||
@@ -284,6 +287,9 @@ QPair<double, double> *NavData::fromArinc(const QString &str) { // returning 0 o
 	return 0;
 }
 
+/* converts (oceanic) points from ARINC424 format
+  @return QString("") on error
+*/
 QString NavData::toArinc(const short lat, const short lon) { // returning QString() on error
 	if (qAbs(lat) > 90 || qAbs(lon) > 180)
 		return QString();

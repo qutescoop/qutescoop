@@ -9,8 +9,7 @@
 
 #include "_pch.h"
 
-//#include "GLWidget.h" //For ne on screen settings
-#include "mapscreen.h"
+#include "MapScreen.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
 #include "FileReader.h"
@@ -34,7 +33,7 @@ public slots:
 private slots:
     void on_actionShowWaypoints_triggered(bool checked);
     void on_actionDebugLog_triggered();
-    void on_actionHighlight_Friends_tiggered(bool checked);
+    void on_actionHighlight_Friends_triggered(bool checked);
     void on_pb_highlightFriends_toggled(bool checked);
 
     void on_actionZoomReset_triggered();

@@ -8,7 +8,7 @@
 #include "LogBrowserDialog.h"
 #include "helpers.h"
 #include "Settings.h"
-#include "launcher.h"
+#include "Launcher.h"
 
 
 /* logging */
@@ -55,7 +55,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
 
 /* main */
 int main(int argc, char *argv[]) {
-    QApplication app(argc, argv); // before QT_REQUIRE_VERSION to prevent creating duplicate
+    QApplication app(argc, argv); // before QT_REQUIRE_VERSION to prevent creating duplicate..
     QT_REQUIRE_VERSION(argc, argv, "4.8.1") // application objects
     // catch all messages
     qRegisterMetaType<QtMsgType>("QtMsgType");
@@ -69,21 +69,20 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
 
     // some initial debug logging
-    cacheLogByteArray.append(VERSION_STRING + "\n");
-    cacheLogByteArray.append(QString("Compiled on Qt %1, running on Qt %2.\n")
-                             .arg(QT_VERSION_STR, qVersion()));
+    qDebug() << VERSION_STRING;
+    qDebug() << QString("Compiled on Qt %1, running on Qt %2.")
+                             .arg(QT_VERSION_STR, qVersion());
 #ifdef QT_NO_DEBUG
-    cacheLogByteArray.append("COMPILED IN RELEASE MODE - this is best performance-wise.\n");
+    qDebug() << "COMPILED IN RELEASE MODE - this is best performance-wise.";
 #endif
 #ifdef QT_DEBUG
-    cacheLogByteArray.append("COMPILED IN DEBUG MODE - performance might be degraded.\n");
+    qDebug() << "COMPILED IN DEBUG MODE - performance might be degraded.";
 #endif
 #ifdef QT_NO_DEBUG_OUTPUT
-    cacheLogByteArray.append(
-             "COMPILED WITHOUT DEBUG OUTPUT - no debug messages will be captured.\n");
+    qDebug() << "COMPILED WITHOUT DEBUG OUTPUT - no debug messages will be captured.";
 #endif
     cacheLogByteArray.append(
-             "message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n\n");
+             "message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n");
 
     // directories
     Settings::calculateApplicationDataDirectory();
@@ -102,13 +101,13 @@ int main(int argc, char *argv[]) {
     Launcher launch;
     launch.fireUp();
 
-
-
     // starting event loop
     launch.close();
     Window::getInstance()->show();
     app.processEvents();
     return app.exec();
+
+    delete NetworkManager::getInstance(true);
 
     // closing log
     if (logFile->isOpen())

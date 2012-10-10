@@ -1,8 +1,11 @@
-#include "launcher.h"
+#include "Launcher.h"
 
 
-Launcher::Launcher(QWidget *parent)
-    : QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint)
+Launcher::Launcher(QWidget *parent) :
+        QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
+        windowReady(false),
+        navReady(false),
+        windReady(false)
 {
     map = QPixmap(":/startup/logo").scaled(600,600);
     /*qDebug() << "isNull:" << map.isNull();
@@ -11,6 +14,7 @@ Launcher::Launcher(QWidget *parent)
 
     image = new QLabel(this);
     text = new QLabel(this);
+    progress = new QProgressBar(this);
 
     image->setPixmap(map);
     image->resize(map.width(), map.height());
@@ -18,82 +22,89 @@ Launcher::Launcher(QWidget *parent)
     resize(map.width(), map.height());
 
     text->setText("Launcher started");
+    text->setStyleSheet(
+        "QLabel {"
+            "color: white;"
+            "font-weight: bold;"
+        "}"
+    );
     text->setAlignment(Qt::AlignCenter);
     text->setWordWrap(true);
-    text->resize(440, 30);
+    text->resize(440, text->height());
     //qDebug() << "text frames w:" << text->frameSize() << " text h:" << text->height();
-    text->move((map.width()/2)-220, (map.height()/3)*2 +30);
+    text->move((map.width() / 2) - 220, (map.height() / 3) * 2 + 30);
 
-    GuiMessages::getInstance()->addStatusLabel(text);
+    progress->resize(300, progress->height());
+    progress->move((map.width() / 2) - 150,
+                   (map.height() / 3) * 2 + 30 + text->height());
+
+    GuiMessages::getInstance()->addStatusLabel(text, true);
+    GuiMessages::getInstance()->addProgressBar(progress, false); // non-autohide
 
     image->lower();
     text->raise();
+    progress->raise();
 
     setMask(map.mask());
     //qDebug() << "Widget w:" << this->width() << " Widget h:" << this->height();
-
-    windowReady = false;
-    navReady = false;
-    windReady = false;
 
     finalTimer.setInterval(250);
     finalTimer.setSingleShot(false);
     windowTimer.setInterval(250);
     windowTimer.setSingleShot(false);
 
-    this->show();
-
-
+    move(qApp->desktop()->availableGeometry().center()
+         - rect().center());
+    show();
+    qApp->processEvents();
 }
 
-Launcher::~Launcher()
-{
+Launcher::~Launcher() {
     GuiMessages::getInstance()->removeStatusLabel(text);
+    GuiMessages::getInstance()->removeProgressBar(progress);
     delete image, text;
-
 }
 
 ///////////////////////////
 // Events
 ///////////////////////////
-void Launcher::keyReleaseEvent(QKeyEvent *event){
-    if(event->key() == Qt::Key_Escape){
+void Launcher::keyReleaseEvent(QKeyEvent *event) {
+    if(event->key() == Qt::Key_Escape) {
         event->accept();
-        QApplication::instance()->quit();
+        qApp->quit();
     }
 }
 
-void Launcher::mousePressEvent(QMouseEvent *event)
-{
+void Launcher::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
-             dragPosition = event->globalPos() - frameGeometry().topLeft();
-             event->accept();
-         }
+        dragPosition = event->globalPos() - frameGeometry().topLeft();
+        event->accept();
+    }
 }
 
-void Launcher::mouseMoveEvent(QMouseEvent *event)
-{
+void Launcher::mouseMoveEvent(QMouseEvent *event) {
     if (event->buttons() & Qt::LeftButton) {
-             move(event->globalPos() - dragPosition);
-             event->accept();
-         }
+         move(event->globalPos() - dragPosition);
+         event->accept();
+    }
 }
 
 ///////////////////////////
 // General
 ///////////////////////////
 
-void Launcher::fireUp()
-{
+void Launcher::fireUp() {
     qDebug() << "Launcher:fireUp -- started";
 
     //Check for navdataupdatets & loading navdata
-    GuiMessages::status(tr("Check for navdataupdates"), "checknavdata");
-    if(Settings::checkForUpdates())
-        checkForDataUpdates();
+    GuiMessages::status(tr("Checking for navdata updates"), "checknavdata");
+    qApp->processEvents();
 
     //after Update loadNavdata will be started
     connect(this, SIGNAL(navdataUpdated()), this, SLOT(loadNavdata()));
+    if(Settings::checkForUpdates())
+        checkForDataUpdates();
+
 
 
     //Download wind
@@ -101,12 +112,13 @@ void Launcher::fireUp()
 
 
     //get networksatus & Whazzupdata
-    GuiMessages::status(tr("Getting neworkstatus"), "gettingnetworkstatus");
+    GuiMessages::status(tr("Getting network status"), "gettingnetworkstatus");
+    qApp->processEvents();
 
     qDebug() << "Launcher::fireUp() creating Whazzup";
     Whazzup *whazzup = Whazzup::getInstance();
     qDebug() << "Launcher::fireUp() creating Whazzup --finished";
-    if(Settings::downloadOnStartup()){
+    if(Settings::downloadOnStartup()) {
         // download whazzup as soon as whazzup status download is complete
         connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
         connect(whazzup, SIGNAL(newData(bool)), this, SLOT(loadWindow()));
@@ -117,13 +129,11 @@ void Launcher::fireUp()
     whazzup->setStatusLocation(Settings::statusLocation());
 
 
-
     finalTimer.start();
-    while(finalTimer.isActive())
-    {
+    while(finalTimer.isActive()) {
         QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
-        if(windowReady && windReady){
-        finalTimer.stop();}
+        if(windowReady && windReady)
+            finalTimer.stop();
     }
 
 
@@ -137,7 +147,7 @@ void Launcher::checkForDataUpdates() {
     if(dataVersionsAndFilesDownloader != 0)
         dataVersionsAndFilesDownloader = 0;
     dataVersionsAndFilesDownloader = new QHttp(this);
-    QUrl url("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/dataversions.txt");
+    QUrl url("http://svn.code.sf.net/p/qutescoop/code/trunk/QuteScoop/data/dataversions.txt");
     dataVersionsAndFilesDownloader->setHost(url.host());
     Settings::applyProxySetting(dataVersionsAndFilesDownloader);
 
@@ -152,9 +162,10 @@ void Launcher::checkForDataUpdates() {
 
 void Launcher::dataVersionsDownloaded(bool error) {
     disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)), this, SLOT(dataVersionsDownloaded(bool)));
-    if(dataVersionsBuffer == 0){
+    if(dataVersionsBuffer == 0) {
         emit navdataUpdated();
-        return;}
+        return;
+    }
 
     if(error) {
         GuiMessages::criticalUserInteraction(dataVersionsAndFilesDownloader->errorString(), "Datafile download");
@@ -204,18 +215,17 @@ void Launcher::dataVersionsDownloaded(bool error) {
         {
             dataFilesToDownload.append(new QFile(Settings::applicationDataDirectory("data/%1.newFromServer")
                                                  .arg(serverDataVersionsList[i].first)));
-            QUrl url(QString("http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/data/%1")
+            QUrl url(QString("http://svn.code.sf.net/p/qutescoop/code/trunk/QuteScoop/data/%1")
                  .arg(serverDataVersionsList[i].first));
             dataVersionsAndFilesDownloader->get(url.path(), dataFilesToDownload.last());
             //qDebug() << "Downloading datafile" << url.toString();
         }
     }
-    if (!dataFilesToDownload.isEmpty())
-    {
-        GuiMessages::informationUserAttention(QString("New sector-/ airport- or geography-files are available. They will be downloaded now."),
-                                             "New datafiles");
-    }
-    else {
+    if (!dataFilesToDownload.isEmpty()) {
+        GuiMessages::informationUserAttention(
+                QString("New sector-/ airport- or geography-files are available. They will be downloaded now."),
+                "New datafiles");
+    } else {
         disconnect(dataVersionsAndFilesDownloader, SIGNAL(requestFinished(int,bool)),
                 this, SLOT(dataFilesRequestFinished(int,bool)));
         disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
@@ -245,20 +255,23 @@ void Launcher::dataFilesDownloaded(bool error) {
             this, SLOT(dataFilesRequestFinished(int,bool)));
     disconnect(dataVersionsAndFilesDownloader, SIGNAL(done(bool)),
             this, SLOT(dataFilesDownloaded(bool)));
-    if(dataVersionsBuffer == 0){
+    if (dataVersionsBuffer == 0){
         emit navdataUpdated();
         return;}
 
-    if(error) {
-        GuiMessages::criticalUserInteraction(QString("New sector- / airport- / geography-files could not be downloaded.\n%1")
-                                            .arg(dataVersionsAndFilesDownloader->errorString()),
-                                            "New datafiles");
+    if (error) {
+        GuiMessages::criticalUserInteraction(
+                    QString("New sector- / airport- / geography-files could not be downloaded.\n%1")
+                        .arg(dataVersionsAndFilesDownloader->errorString()),
+                    "New datafiles");
         emit navdataUpdated();
         return;
     }
 
-    GuiMessages::informationUserAttention("All scheduled files have been downloaded.\nThese changes will take effect on the next start of QuteScoop.",
-                                         "New datafiles");
+    GuiMessages::informationUserAttention(
+                "All scheduled files have been downloaded.\n"
+                "These changes will take effect on the next start of QuteScoop.",
+                "New datafiles");
 
     int errors = 0;
     for(int i = 0; i < dataFilesToDownload.size(); i++) {
@@ -287,11 +300,13 @@ void Launcher::dataFilesDownloaded(bool error) {
         if (localDataVersionsFile.open(QIODevice::WriteOnly))
             localDataVersionsFile.write(dataVersionsBuffer->data());
         else
-            GuiMessages::criticalUserInteraction(QString("Error writing %1").arg(localDataVersionsFile.fileName()),
-                                                "New datafiles");
+            GuiMessages::criticalUserInteraction(
+                        QString("Error writing %1").arg(localDataVersionsFile.fileName()),
+                        "New datafiles");
     } else
-        GuiMessages::criticalUserInteraction(QString("Errors occured. All datafiles will be redownloaded on next launch of QuteScoop."),
-                                            "New datafiles");
+        GuiMessages::criticalUserInteraction(
+                    QString("Errors occured. All datafiles will be redownloaded on next launch of QuteScoop."),
+                    "New datafiles");
 
     dataVersionsBuffer->close();
     delete dataVersionsBuffer;
@@ -308,11 +323,13 @@ void Launcher::loadNavdata()
 
     GuiMessages::remove("checknavdata");
     GuiMessages::status(tr("Loading Navdata"), "loadnavdata");
+    qApp->processEvents();
 
     NavData::getInstance();
     Airac::getInstance();
     navReady = true;
     GuiMessages::remove("loadnavdata");
+    qApp->processEvents();
     qDebug() << "Launcher:loadNavdata -- Finished";
 
 }
@@ -340,7 +357,6 @@ void Launcher::loadWindow()
     window->mapScreen->glWidget->newWhazzupData(true);
     windowReady = true;
     GuiMessages::remove("loadwindow");
-
 }
 
 /////////////////////////
@@ -369,8 +385,7 @@ void Launcher::startWindDecoding(bool error)
     qDebug() << "Launcher::startWindDecoding -- WindData downloaded";
     if(windDataBuffer == 0) return;
 
-    if(error)
-    {
+    if(error) {
         GuiMessages::criticalUserInteraction(windDataDownloader->errorString() , "WindData download");
         return;
     }

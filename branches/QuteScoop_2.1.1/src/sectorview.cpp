@@ -3,7 +3,7 @@
  **************************************************************************/
 
 
-#include "sectorview.h"
+#include "SectorView.h"
 #include "ui_sectorview.h"
 
 

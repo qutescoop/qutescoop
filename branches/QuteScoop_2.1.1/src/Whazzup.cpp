@@ -57,8 +57,8 @@ void Whazzup::statusDownloaded(QNetworkReply* reply) {
         return;
     }
 
-    if(reply->readBufferSize()== 0){
-        GuiMessages::warning(" Statusfile is empty");
+    if(reply->bytesAvailable() == 0) {
+        GuiMessages::warning("Statusfile is empty");
     }
 
     urls.clear();
@@ -154,11 +154,15 @@ void Whazzup::download() {
     GuiMessages::progress("whazzupDownload", QString("Updating whazzup from %1").
                          arg(url.toString(QUrl::RemoveUserInfo)));
 
-
     connect(NetworkManager::getInstance(),
             SIGNAL(requestFinished(QNetworkReply*)),
             this, SLOT(whazzupDownloaded(QNetworkReply*)));
-    NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
+    QNetworkReply *reply = NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(whazzupProgress(qint64,qint64)));
+}
+
+void Whazzup::whazzupProgress(qint64 prog, qint64 tot) {
+    GuiMessages::progress("whazzupDownload", prog, tot);
 }
 
 void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
@@ -166,7 +170,6 @@ void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
     disconnect(NetworkManager::getInstance(),
                SIGNAL(requestFinished(QNetworkReply*)),
                this, SLOT(whazzupDownloaded(QNetworkReply*)));
-
 
     if(reply == 0) {
         GuiMessages::errorUserAttention("Download Error. Buffer unavailable.");
@@ -242,11 +245,16 @@ void Whazzup::downloadBookings() {
     GuiMessages::progress("bookingsDownload",
                               QString("Updating ATC Bookings from %1")
                           .arg(url.toString(QUrl::RemoveUserInfo)));
-
     connect(NetworkManager::getInstance(),
             SIGNAL(requestFinished(QNetworkReply*)),
             this, SLOT(bookingsDownloaded(QNetworkReply*)));
-    NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
+    QNetworkReply *reply = NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
+    connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this,
+            SLOT(bookingsProgress(qint64,qint64)));
+}
+
+void Whazzup::bookingsProgress(qint64 prog, qint64 tot) {
+    GuiMessages::progress("bookingsDownload", prog, tot);
 }
 
 void Whazzup::bookingsDownloaded(QNetworkReply* reply) {
@@ -299,6 +307,7 @@ void Whazzup::bookingsDownloaded(QNetworkReply* reply) {
     GuiMessages::remove("bookingsProcess");
     reply->deleteLater();
 }
+
 
 QString Whazzup::getUserLink(const QString& id) const {
     if(userLink.isEmpty())

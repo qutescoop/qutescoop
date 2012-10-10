@@ -52,15 +52,16 @@ public:
     class GuiMessage {
     public:
         enum Type { // type corresponding to priority
-            All = 101, Uninitialized = 100, Persistent = 10, Temporary = 9, ProgressBar = 7, InformationUserAttention = 5,
-            Warning = 4, ErrorUserAttention = 3, CriticalUserInteraction = 1, FatalUserInteraction = 0
+            All = 101, Uninitialized = 100, Persistent = 10, Temporary = 9, ProgressBar = 7,
+            InformationUserAttention = 5, Warning = 4, ErrorUserAttention = 3,
+            CriticalUserInteraction = 1, FatalUserInteraction = 0
         };
-        GuiMessage(): // needed for _METATYPE
+        GuiMessage() : // needed for _METATYPE
             id(""), msg(""), type(Uninitialized), progressValue(-1),
             progressMaximum(-1), showMs(-1), shownSince(QDateTime())
         {}
         GuiMessage(const QString &id, const Type &type, const QString &msg,
-                   int progressValue = -1, int progressMaximum = -1):
+                   int progressValue = -1, int progressMaximum = -1) :
             id(id), msg(msg), type(type), progressValue(progressValue),
             progressMaximum(progressMaximum), showMs(-1), shownSince(QDateTime())
         {}
@@ -92,7 +93,7 @@ private:
 
     void setStatusMessage(GuiMessage *gm, bool bold = false, bool italic = false,
                           bool instantRepaint = true);
-    void setProgress(GuiMessage *gm, bool instantRepaint = false);
+    void setProgress(GuiMessage *gm, bool instantRepaint = true);
 
     GuiMessage *messageById(const QString &id, const GuiMessage::Type &type = GuiMessage::All);
 
@@ -103,7 +104,7 @@ private:
     QTimer _timer;
 };
 
-Q_DECLARE_METATYPE(GuiMessages::GuiMessage) // needed for QVariant and QDebug compatilbility
-QDebug operator<<(QDebug dbg, const GuiMessages::GuiMessage *gm);
+Q_DECLARE_METATYPE(GuiMessages::GuiMessage) // needed for QVariant and QDebug compatibility
+QDebug operator<< (QDebug dbg, const GuiMessages::GuiMessage *gm);
 
 #endif // GUIMESSAGE_H

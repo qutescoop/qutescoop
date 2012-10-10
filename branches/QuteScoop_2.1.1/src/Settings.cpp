@@ -1065,6 +1065,14 @@ QByteArray Settings::getSavedState() {
     return getSettings()->value("mainWindowState/state", QByteArray()).toByteArray();
 }
 
+void Settings::saveMaximized(const bool val) {
+    getSettings()->setValue("mainWindowState/maximized", val);
+}
+
+bool Settings::getMaximized() {
+    return getSettings()->value("mainWindowState/maximized", true).toBool();
+}
+
 void Settings::saveGeometry(const QByteArray& state) {
     getSettings()->setValue("mainWindowState/geometry", state);
 }

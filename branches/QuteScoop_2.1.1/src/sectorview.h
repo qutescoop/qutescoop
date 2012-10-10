@@ -10,7 +10,7 @@
 #include "ui_sectorview.h"
 #include "NavData.h"
 #include "Sector.h"
-#include "mapscreen.h"
+#include "MapScreen.h"
 
 
 /*namespace Ui {

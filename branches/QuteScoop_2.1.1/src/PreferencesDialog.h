@@ -8,7 +8,7 @@
 #include "_pch.h"
 
 #include "ui_PreferencesDialog.h"
-#include "winddata.h"
+#include "WindData.h"
 
 
 class PreferencesDialog: public QDialog, private Ui::PreferencesDialog

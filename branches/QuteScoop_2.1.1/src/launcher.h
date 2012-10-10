@@ -46,6 +46,7 @@ private:
     QPixmap map;
     QLabel *image;
     QLabel *text;
+    QProgressBar *progress;
     //required to move the widget
     QPoint dragPosition;
 

@@ -506,6 +506,8 @@ public:
     static QByteArray planFlightDialogGeometry();
     static void setPlanFlightDialogGeometry(const QByteArray& value);
 
+    static bool getMaximized();
+    static void saveMaximized(const bool val);
 public slots:
 
 private:

@@ -1,4 +1,4 @@
-#include "mapscreen.h"
+#include "MapScreen.h"
 #include <QHBoxLayout>
 
 static MapScreen *instance = 0;
@@ -285,7 +285,7 @@ void MapScreen::createWindWidget()
     W_layout1.addWidget(W_plus);
 
     W_windAlt = new QLabel();
-    W_windAlt->setText(QString("%1").arg((Settings::upperWindAlt()*1000)));
+    W_windAlt->setText(QString("%1ft").arg((Settings::upperWindAlt()*1000)));
     W_layout1.addWidget(W_windAlt);
 
     W_Vlayout.addLayout(&W_layout);
@@ -653,7 +653,7 @@ void MapScreen::W_plusClicked()
 void MapScreen::W_sliderChanged()
 {
     Settings::setUpperWindAlt(W_slider->value());
-    W_windAlt->setText(QString("%1").arg((W_slider->value()*1000)));
+    W_windAlt->setText(QString("%1ft").arg((W_slider->value()*1000)));
     glWidget->update();
 }
 

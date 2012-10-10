@@ -16,7 +16,7 @@
 #include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
 #include "Airac.h"
-#include "winddata.h"
+#include "WindData.h"
 
 
 class GLWidget : public QGLWidget

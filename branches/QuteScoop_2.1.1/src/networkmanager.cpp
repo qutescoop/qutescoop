@@ -1,30 +1,27 @@
-#include "networkmanager.h"
+#include "NetworkManager.h"
 
 
-//Singel instance
-NetworkManager *NewokeManagerInstance = 0;
+//Single instance
+NetworkManager *NetworkManagerInstance = 0;
 
 NetworkManager* NetworkManager::getInstance(bool createIfNoInstance) {
-    if(NewokeManagerInstance == 0)
-        if (createIfNoInstance)
-            NewokeManagerInstance = new NetworkManager;
-    return NewokeManagerInstance;
+    if((NetworkManagerInstance == 0) && createIfNoInstance)
+        NetworkManagerInstance = new NetworkManager();
+    return NetworkManagerInstance;
 }
 
-NetworkManager::NetworkManager()
-{
+NetworkManager::NetworkManager() {
     connect(this, SIGNAL(finished(QNetworkReply*)), this, SLOT(redirectCheck(QNetworkReply*)));
     if (Settings::useProxy())
         setProxy(QNetworkProxy(QNetworkProxy::DefaultProxy, Settings::proxyServer(), Settings::proxyPort(), Settings::proxyUser(), Settings::proxyPassword()));
 }
 
-void NetworkManager::httpRequest(QNetworkRequest request){
-    this->get(request);
+QNetworkReply* NetworkManager::httpRequest(QNetworkRequest request) {
     qDebug() << "NetworkManager::httpRequest " << request.url().toString();
+    return this->get(request);
 }
 
-void NetworkManager::redirectCheck(QNetworkReply *reply){
-
+void NetworkManager::redirectCheck(QNetworkReply *reply) {
     qDebug() << "Networkmanager::redirectCheck";
     //Get redirect headers
     QVariant possibleRedirectUrl =
@@ -35,7 +32,7 @@ void NetworkManager::redirectCheck(QNetworkReply *reply){
     else _urlRedirectedTo = QUrl();
 
     //redirected - make a new request
-    if(!_urlRedirectedTo.isEmpty()){
+    if (!_urlRedirectedTo.isEmpty()) {
         this->get(QNetworkRequest(_urlRedirectedTo));
         qDebug() << "NetworkManger::redirectCheck -- redirected to " << _urlRedirectedTo ;
     }

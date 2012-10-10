@@ -22,6 +22,7 @@
 #include "FriendsVisitor.h"
 #include "helpers.h"
 #include "GuiMessage.h"
+#include "SectorView.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -44,6 +45,7 @@ Window::Window(QWidget *parent) :
     if (!Settings::getSavedPosition().isNull()) move(Settings::getSavedPosition());
     if (!Settings::getSavedGeometry().isNull()) restoreGeometry(Settings::getSavedGeometry());
     if (!Settings::getSavedState().isNull())    restoreState(Settings::getSavedState());
+    if (Settings::getMaximized())               showMaximized();
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
@@ -400,10 +402,11 @@ void Window::performSearch() {
 }
 
 void Window::closeEvent(QCloseEvent *event) {
-    Settings::saveState(saveState()); //was: (VERSION_INT) but that should not harm
+    Settings::saveState(saveState());
     Settings::saveGeometry(saveGeometry()); // added this 'cause maximized wasn't saved
     Settings::saveSize(size()); // readded as Mac OS had problems with geometry only
     Settings::savePosition(pos());
+    Settings::saveMaximized(isMaximized());
     on_actionHideAllWindows_triggered();
     mapScreen->glWidget->savePosition();
     event->accept();
@@ -507,7 +510,7 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
 //    versionChecker = new QHttp(this);
 //    connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
 
-//    QString downloadUrl = "http://qutescoop.svn.sourceforge.net/svnroot/qutescoop/trunk/QuteScoop/version.txt";
+//    QString downloadUrl = "http://svn.code.sf.net/p/qutescoop/code/trunk/QuteScoop/version.txt";
 
 //    if(Settings::sendVersionInformation()) {
 //        // append platform, version and preferred network information to the download link
@@ -630,7 +633,8 @@ void Window::on_cbOnlyUseDownloaded_toggled(bool checked) {
 
 void Window::on_tbDisablePredict_clicked() {
     qDebug() << "Window::tbDisablePredict_clicked()";
-    this->on_actionPredict_toggled(false);
+    //this->on_actionPredict_toggled(false); // we do this by toggling the menu item
+    actionPredict->setChecked(false);
 }
 
 void Window::on_actionPredict_toggled(bool enabled) {
@@ -900,8 +904,7 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
     mapScreen->glWidget->updateGL();
 }
 
-void Window::allSectorsChanged(bool state)
-{
+void Window::allSectorsChanged(bool state) {
     if(actionDisplayAllSectors->isChecked() !=  state)
     {
         actionDisplayAllSectors->setChecked( state);
@@ -914,8 +917,7 @@ void Window::allSectorsChanged(bool state)
 
 }
 
-void Window::startCloudDownload()
-{
+void Window::startCloudDownload() {
     qDebug() << "Window::startCloudDownload -- prepare Download";
     cloudTimer.stop();
 
@@ -930,8 +932,7 @@ void Window::startCloudDownload()
     QList<QString> loResMirrors;
     QList<QString> hiResMirrors;
 
-    while(!file.atEnd())
-    {
+    while(!file.atEnd()) {
         QString line = file.nextLine();
         if(line.startsWith(";")) continue;
         if(line.startsWith("[2048px]")) {
@@ -948,11 +949,10 @@ void Window::startCloudDownload()
     }
 
     QUrl url;
-    if(Settings::useHightResClouds()){
+    if(Settings::useHightResClouds()) {
         if (!hiResMirrors.isEmpty())
             url.setUrl(hiResMirrors[qrand() % hiResMirrors.size()]);
-    }
-    else {
+    } else {
         if (!loResMirrors.isEmpty())
             url.setUrl(loResMirrors[qrand() % loResMirrors.size()]);
     }
@@ -971,8 +971,7 @@ void Window::startCloudDownload()
     qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
 }
 
-void Window::cloudDownloadFinished(bool error)
-{
+void Window::cloudDownloadFinished(bool error) {
     qDebug() << "Window::cloudDownloadFinished -- download finished";
     disconnect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
     if(cloudBuffer == 0)
@@ -987,36 +986,29 @@ void Window::cloudDownloadFinished(bool error)
     QImage cloudlayer;
     cloudlayer.load(cloudBuffer, "JPG");
     cloudlayer.save(Settings::applicationDataDirectory("textures/clouds/clouds.jpg"), "JPG");
-    qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:" << Settings::applicationDataDirectory("textures/clouds/");
+    qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:"
+             << Settings::applicationDataDirectory("textures/clouds/");
 
     cloudTimer.start(12600000); //start download in 3,5 h again
     mapScreen->glWidget->cloudsAvaliable = true;
     mapScreen->glWidget->useClouds();
 }
 
-void Window::on_actionHighlight_Friends_tiggered(bool checked){
+void Window::on_actionHighlight_Friends_triggered(bool checked) {
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
-    if(!checked) mapScreen->glWidget->destroyFriendHightlighter();
+    if (!checked) mapScreen->glWidget->destroyFriendHightlighter();
     mapScreen->glWidget->updateGL();
 }
 
-void Window::on_pb_highlightFriends_toggled(bool checked){
-    Settings::setHighlightFriends(checked);
+void Window::on_pb_highlightFriends_toggled(bool checked) {
     actionHighlight_Friends->setChecked(checked);
-    if(!checked) mapScreen->glWidget->destroyFriendHightlighter();
-    mapScreen->glWidget->updateGL();
+    on_actionHighlight_Friends_triggered(checked);
 }
 
-void Window::openSectorView(){
-    // SectorView not committed yet?
-//    Sectorview::getInstance(true, this)->show();
-//    Sectorview::getInstance(true)->raise();
-//    Sectorview::getInstance(true)->activateWindow();
-//    Sectorview::getInstance(true)->setFocus();
+void Window::openSectorView() {
+    Sectorview::getInstance(true, this)->show();
+    Sectorview::getInstance(true)->raise();
+    Sectorview::getInstance(true)->activateWindow();
+    Sectorview::getInstance(true)->setFocus();
 }
-
-
-
-
-
