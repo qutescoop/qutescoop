@@ -1,6 +1,19 @@
 Project page: <http://qutescoop.sourceforge.net>
-See the QuteScoop-Wiki <http://sourceforge.net/apps/mediawiki/qutescoop> for
+See the QuteScoop-Wiki <http://sourceforge.net/p/qutescoop/wiki/> for
 general project status and planned features.
+
+Version 2.1.6
+ fixed:
+  * file naming conventions
+  * re-enabled View->Sectorview
+  * re-enabled Whazzup- and Bookings-download-progressbars
+  * friends-toggling had double update
+  * formatting error in QuteScoop.sh
+ added:
+  * label in launcher visible now (at least on Linux)
+  * launcher centerred (hopefully working on multi-monitor-systems)
+ changed:
+  * wiki-URL has changed
 
 Version 2.1.5
  fixed:

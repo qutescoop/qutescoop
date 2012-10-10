@@ -137,7 +137,7 @@ FORMS = src/MainWindow.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui\
-    src/sectorview.ui
+    src/SectorView.ui
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \
@@ -149,7 +149,7 @@ HEADERS += src/_pch.h \
     src/NavAid.h \
     src/Metar.h \
     src/MapObject.h \
-    src/mapscreen.h\
+    src/MapScreen.h\
     src/LineReader.h \
     src/helpers.h \
     src/SectorReader.h \
@@ -190,11 +190,11 @@ HEADERS += src/_pch.h \
     src/Ping.h \
     src/LogBrowserDialog.h \
     src/GuiMessage.h \
-    src/winddata.h \
-    src/station.h \
-    src/launcher.h \
-    src/sectorview.h \
-    src/networkmanager.h
+    src/WindData.h \
+    src/Station.h \
+    src/Launcher.h \
+    src/SectorView.h \
+    src/NetworkManager.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -206,7 +206,7 @@ SOURCES += src/WhazzupData.cpp \
     src/NavAid.cpp \
     src/Metar.cpp \
     src/MapObject.cpp \
-    src/mapscreen.cpp\
+    src/MapScreen.cpp\
     src/LineReader.cpp \
     src/SectorReader.cpp \
     src/Sector.cpp \
@@ -244,11 +244,11 @@ SOURCES += src/WhazzupData.cpp \
     src/Ping.cpp \
     src/LogBrowserDialog.cpp \
     src/GuiMessage.cpp \
-    src/winddata.cpp \
-    src/station.cpp \
-    src/launcher.cpp \
-    src/sectorview.cpp \
-    src/networkmanager.cpp
+    src/WindData.cpp \
+    src/Station.cpp \
+    src/Launcher.cpp \
+    src/SectorView.cpp \
+    src/NetworkManager.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
