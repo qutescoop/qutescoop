@@ -1,0 +1,2 @@
+This directory is only use to save the cloudtexture temporary!
+Don't delete it, if you want to use the cloud feature of QuteScoop.

@@ -1,0 +1,161 @@
+Notes on Dolomynum data files
+
+These data files can be freely edited and distributed, but please avoid
+copyright violations. It is recommended to use only public domain data for
+updating or replacing these files.
+
+If you created up-to-date data files and wish to offer them to the community,
+please send them to the author of Dolomynum and/or QuteScoop so they can be
+included in the next update.
+
+Below you will find a short explanation to the contents and structure of each
+data file.
+
+
+------
+
+AIRPORTS.DAT
+
+This file contains data about airports. Each row refers to an airport and
+contains 6 fields separated with colons. An example of a row from this file:
+
+LRTM:Vidrasau:Targu Mures:RO:46.468:24.413
+
+LRTM        - airport code, usually an ICAO code but you can also use non-ICAO
+              codes
+Vidrasau    - name of the airport
+Targu Mures - name of the city to which the airport belongs
+RO          - ISO code of the country where this airport is
+46.468      - position of the airport - decimal latitude (north is positive,
+              south is negative)
+24.413      - position of the airport - decimal longitude (east is positive,
+              west is negative)
+
+
+To add an airport, simply add a line with the same formatting. Avoid having two
+lines with the same airport code (the code is an unique key for Dolomynum).
+
+
+------
+
+COASTLINE.DAT and COUNTRIES.DAT
+
+These are the world coastline (continents, islands, large lakes etc) and
+country borders, drawn as closed polygons on the globe. Each line contains
+either a pair of decimal latitude and longitude values separated by a colon, or
+the 'end' word. Lines are drawn between subsequent lat-lon pairs. The 'end'
+word means the beginning of a new polygon. At the end, a line is drawn to the
+beginning to close the polygon.
+
+The current files are based on World Data Base II from the USGS Coastline
+Extractor - http://rimmer.ngdc.noaa.gov/coast/ and adapted: some very fine
+reolution (<2 NM from each other) have been striped and lines arranged to be
+closed polygons for faster drawing.
+
+
+------
+
+FIRLIST.DAT
+
+This contains the list of sectors, each row referring to a sector and
+containing 6 fields separated with colons. An example of a row from this file:
+
+LRBB:Bucharest:RO:45.9:25.6:186
+
+LRBB      - FIR code, usually an ICAO code but you can also use non-ICAO
+            codes, or add middle letter(s) to them (e.g. LRBB_N)
+Bucharest - name of the sector
+RO        - ISO code of the country where this airspace is
+45.3      - position of the label - decimal latitude (north is positive,
+            south is negative)
+25.6      - position of the label - decimal longitude (east is positive,
+            west is negative)
+186       - Display List ID, a number that uniquely identifies the shape
+            in firdisplay.dat that is displayed when this sector is active
+
+
+To create a new sector, you must add a new line with the same formatting. To
+create aliases to existing sectors (different codes identifying the same
+airspace), use the same Display List ID (186 in the above example). If you
+want to add a new airspace, you should first add its shape to firdisplay.dat
+with a previously unused Display List ID (you can use any ID between 100 and
+9999).
+
+Avoid having two lines with the same airspace code (the code is a unique
+key for Dolomynum).
+
+
+------
+
+FIRDISPLAY.DAT
+
+This contains the shapes of the airspaces, constructed of points described as
+lat-lon pairs. The connection between firlist.dat and firdisplay.dat is made
+through the Display List IDs. The ID is mentioned at the beginning of each
+unit; after which the shape of the airspace will follow. For example:
+
+DISPLAY_LIST_186
+43.75:28.6
+43.83:28
+43.99:27.95
+(etc)
+
+You can edit existing airspace shapes, or add new ones (in the latter case,
+don't forget to update firlist.dat too). To create new shapes, you can use
+the sconv.exe in from Dolomynum \tools that can convert sector files of ATC
+clients (IvAc, ASRC, VRC, ProController), or Servinfo / IvAe data files to
+Dolomynum format. To view the existing (or newly created) airspaces on the
+globe, use sectorview.exe from Dolomynum \tools.
+
+Avoid having two shapes with the same Display List ID.
+
+
+------
+
+FIRDISPLAY.SUP
+
+Any shapes present in this file will suppress those in firdisplay.dat. These
+are not overwritten each time when firdisplay.dat is updated, so it is
+especially useful when you wish to change the shape of only a couple of
+airspaces (e.g. VATSIM-IVAO differences).
+
+
+------
+
+AIRLINES.DAT
+
+This contains the airlinedata for the searchfield and the pilots dialog
+Format is as follwoed:
+
+ICAO Code 	Airline Name	Callsing	Country
+
+Example:
+AAA	Ansett Australia	ANSETT	Australia
+
+ICAO Code:		AAA
+Airlnie Name:	Ansett Australia
+Calsing:		ANSETT
+Country:		Australia
+
+
+------
+
+CLOUDMIRRORS.dat
+
+This contains mirrors to download cloud images.
+Format:
+
+[2048px]
+http://xplanet-sydney.inside.net/clouds_2048.jpg
+;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg
+
+[2048px] -- for 2048 px images(low resolution)
+http://xplanet-sydney.inside.net/clouds_2048.jpg -- mirror
+;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg -- line comment out
+
+------
+
+Have fun! :)
+
+Gergely Kosa
+editted by Jonas Eberle and Markus Swarowsky to adapt to current QuteScoop circumstances.
