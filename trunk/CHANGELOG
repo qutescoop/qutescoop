@@ -6,6 +6,7 @@ Version 2.1.7
  fixed:
   * doubled libGLU-include for Linux
   * removed 'simple labels' default setting 
+  * changed URLs for auto-update (sectors, airlines, ...) due to new SVN-location
 
 Version 2.1.6
  fixed:

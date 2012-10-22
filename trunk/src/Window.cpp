@@ -510,7 +510,7 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
 //    versionChecker = new QHttp(this);
 //    connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
 
-//    QString downloadUrl = "http://svn.code.sf.net/p/qutescoop/code/trunk/QuteScoop/version.txt";
+//    QString downloadUrl = "http://svn.code.sf.net/p/qutescoop/code/trunk/version.txt";
 
 //    if(Settings::sendVersionInformation()) {
 //        // append platform, version and preferred network information to the download link
