@@ -11,4 +11,3 @@ include("QuteScoop.pro")
 
 OTHER_FILES += \
     QuteScoop.sh
-LIBS += -lGLU

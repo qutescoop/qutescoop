@@ -1467,5 +1467,5 @@ void Settings::setSimpleLabels(bool value) {
 }
 
 bool Settings::simpleLabels() {
-    return getSettings()->value("gl/simpleLabels", true).toBool();
+    return getSettings()->value("gl/simpleLabels", false).toBool();
 }

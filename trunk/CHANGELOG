@@ -2,6 +2,11 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/p/qutescoop/wiki/> for
 general project status and planned features.
 
+Version 2.1.7
+ fixed:
+  * doubled libGLU-include for Linux
+  * removed 'simple labels' default setting 
+
 Version 2.1.6
  fixed:
   * file naming conventions
