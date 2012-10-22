@@ -147,7 +147,7 @@ void Launcher::checkForDataUpdates() {
     if(dataVersionsAndFilesDownloader != 0)
         dataVersionsAndFilesDownloader = 0;
     dataVersionsAndFilesDownloader = new QHttp(this);
-    QUrl url("http://svn.code.sf.net/p/qutescoop/code/trunk/QuteScoop/data/dataversions.txt");
+    QUrl url("http://svn.code.sf.net/p/qutescoop/code/trunk/data/dataversions.txt");
     dataVersionsAndFilesDownloader->setHost(url.host());
     Settings::applyProxySetting(dataVersionsAndFilesDownloader);
 
@@ -215,7 +215,7 @@ void Launcher::dataVersionsDownloaded(bool error) {
         {
             dataFilesToDownload.append(new QFile(Settings::applicationDataDirectory("data/%1.newFromServer")
                                                  .arg(serverDataVersionsList[i].first)));
-            QUrl url(QString("http://svn.code.sf.net/p/qutescoop/code/trunk/QuteScoop/data/%1")
+            QUrl url(QString("http://svn.code.sf.net/p/qutescoop/code/trunk/data/%1")
                  .arg(serverDataVersionsList[i].first));
             dataVersionsAndFilesDownloader->get(url.path(), dataFilesToDownload.last());
             //qDebug() << "Downloading datafile" << url.toString();
