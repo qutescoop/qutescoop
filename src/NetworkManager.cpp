@@ -17,12 +17,12 @@ NetworkManager::NetworkManager() {
 }
 
 QNetworkReply* NetworkManager::httpRequest(QNetworkRequest request) {
-    qDebug() << "NetworkManager::httpRequest " << request.url().toString();
+    qDebug() << "NetworkManager::httpRequest() " << request.url().toString();
     return this->get(request);
 }
 
 void NetworkManager::redirectCheck(QNetworkReply *reply) {
-    qDebug() << "Networkmanager::redirectCheck";
+    //qDebug() << "Networkmanager::redirectCheck()";
     //Get redirect headers
     QVariant possibleRedirectUrl =
             reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
@@ -34,10 +34,8 @@ void NetworkManager::redirectCheck(QNetworkReply *reply) {
     //redirected - make a new request
     if (!_urlRedirectedTo.isEmpty()) {
         this->get(QNetworkRequest(_urlRedirectedTo));
-        qDebug() << "NetworkManger::redirectCheck -- redirected to " << _urlRedirectedTo ;
-    }
-    //no redirect
-    else {
+        qDebug() << "NetworkManager::redirectCheck() -- redirected to " << _urlRedirectedTo ;
+    } else {
         emit requestFinished(reply);
         _urlRedirectedTo.clear();
         return;

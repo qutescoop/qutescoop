@@ -59,8 +59,8 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
         }
 
         switch(state) {
-        case STATE_NONE:
-        case STATE_SERVERS: {
+            case STATE_NONE:
+            case STATE_SERVERS: {
                 QStringList list = line.split(':');
                 if(list.size() < 5)
                     continue;
@@ -68,8 +68,8 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                 //; !SERVERS section -         ident:hostname_or_IP:location:name:clients_connection_allowed:
                 //EUROPE-C2:88.198.19.202:Europe:Center Europe Server Two:1:
             }
-            break;
-        case STATE_VOICESERVERS: {
+                break;
+            case STATE_VOICESERVERS: {
                 QStringList list = line.split(':');
                 if(list.size() < 5)
                     continue;
@@ -77,8 +77,8 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                 //; !VOICE SERVERS section -   hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
                 //voice2.vacc-sag.org:Nurnberg:Europe-CW:1:R:
             }
-            break;
-        case STATE_GENERAL: {
+                break;
+            case STATE_GENERAL: {
                 QStringList list = line.split('=');
                 if(list.size() != 2)
                     continue;
@@ -102,8 +102,8 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                     whazzupVersion = list[1].trimmed().toInt();
                 }
             }
-            break;
-        case STATE_CLIENTS: {
+                break;
+            case STATE_CLIENTS: {
                 QStringList list = line.split(':');
                 if(list.size() < 4)
                     continue;
@@ -131,8 +131,8 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                     }
                 }
             }
-            break;
-        case STATE_PREFILE: {
+                break;
+            case STATE_PREFILE: {
                 if (type == WHAZZUP) {
                     QStringList list = line.split(':');
                     Pilot *p = new Pilot(list, this);
@@ -140,7 +140,7 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                     //if(friends.contains(p->userId)) prefiledFriendPilots.append( p);
                 }
             }
-            break;
+                break;
         }
     }
 
@@ -186,9 +186,9 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
 
             //atisMessage = getField(stringList, 35);
             sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
-                     .arg(bc->starts().toString("HHmm'z'"))
-                     .arg(bc->ends().toString("HHmm'z'"))
-                     .arg(bc->bookingInfoStr);
+                    .arg(bc->starts().toString("HHmm'z'"))
+                    .arg(bc->ends().toString("HHmm'z'"))
+                    .arg(bc->bookingInfoStr);
 
             //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddHHmmss");
             sl[37] = bc->timeConnected.toString("yyyyMMddHHmmss");
@@ -235,7 +235,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             continue; // sorry, no magic available yet. Just let him fly the last heading until etaPlan()? Does not make sense
         if(p->etd() > predictTime || p->eta() < predictTime) {
             if (p->flightStatus() == Pilot::PREFILED && p->etd() > predictTime) { // we want prefiled before their
-                                                                                        //departure as in non-Warped view
+                //departure as in non-Warped view
                 Pilot* np = new Pilot(*p);
                 np->whazzupTime = QDateTime(predictTime);
                 bookedPilots[np->label] = np; // just copy him over
@@ -382,7 +382,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
             if ((pilots[s]->lat != 0 || pilots[s]->lon != 0) &&
                 (pilots[s]->lat != data.pilots[s]->lat ||
                  pilots[s]->lon != data.pilots[s]->lon))
-            *pilots[s] = *data.pilots[s];
+                *pilots[s] = *data.pilots[s];
         }
     }
 

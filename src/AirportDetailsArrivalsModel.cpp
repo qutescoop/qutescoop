@@ -10,7 +10,7 @@ void AirportDetailsArrivalsModel::setClients(const QList<Pilot*>& pilots) {
 }
 
 QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         switch(section) {
         case 0: return QString("Callsign");
         case 1: return QString("Type");

@@ -28,9 +28,8 @@
 Window *windowInstance = 0;
 
 Window* Window::getInstance(bool createIfNoInstance) {
-    if(windowInstance == 0)
-        if (createIfNoInstance)
-            windowInstance = new Window;
+    if(windowInstance == 0 && createIfNoInstance)
+        windowInstance = new Window;
     return windowInstance;
 }
 
@@ -80,7 +79,6 @@ Window::Window(QWidget *parent) :
     statusbar->addPermanentWidget(tbZoomOut, 0);
 
     connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-    connect(actionAboutQt, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
     connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
     connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
     connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
@@ -188,9 +186,8 @@ Window::Window(QWidget *parent) :
 
     connect(&cloudTimer, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
 
-    if(Settings::showClouds()){
+    if(Settings::showClouds())
         startCloudDownload();
-    }
 
 
     //LogBrowser

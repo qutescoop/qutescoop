@@ -11,18 +11,18 @@
 
 class Route: public QObject
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    Route();
-    virtual ~Route();
+    public:
+        Route();
+        virtual ~Route();
 
-    QString provider, dep, dest, route, minFl, maxFl, airacCycle, lastChange,
+        QString provider, dep, dest, route, minFl, maxFl, airacCycle, lastChange,
         comments, routeDistance, waypointsStr;
 
-    QList<Waypoint*> waypoints;
+        QList<Waypoint*> waypoints;
 
-    void calculateWaypointsAndDistance();
+        void calculateWaypointsAndDistance();
 };
 
 #endif // ROUTE_H

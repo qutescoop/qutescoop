@@ -1,12 +1,14 @@
 /**************************************************************************
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
-
-
 #include "SectorView.h"
 
-
 Sectorview* instance = 0;
+Sectorview* Sectorview::getInstance(bool createIfNoInstance, QWidget *parent) {
+    if (instance == 0 && createIfNoInstance)
+        instance = new Sectorview(parent);
+    return instance;
+}
 
 Sectorview::Sectorview(QWidget *parent) :
     QDialog(parent)
@@ -16,10 +18,8 @@ Sectorview::Sectorview(QWidget *parent) :
     loadSectorList();
 }
 
-Sectorview::~Sectorview()
-{
-
-    for(int i = 0; i < listeView_sectors->count(); i++){
+Sectorview::~Sectorview() {
+    for(int i = 0; i < listeView_sectors->count(); i++) {
         QListWidgetItem *item = listeView_sectors->currentItem();
         listeView_sectors->removeItemWidget(item);
         delete item;
@@ -27,18 +27,10 @@ Sectorview::~Sectorview()
     MapScreen::getInstance(true)->glWidget->renderStaticSectors(false);
 }
 
-Sectorview* Sectorview::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if(instance == 0)
-        if (createIfNoInstance)
-            instance = new Sectorview(parent);
-    return instance;
-}
-
-void Sectorview::loadSectorList(){
+void Sectorview::loadSectorList() {
     qDebug() << "Sectorview::loadSectorList -- started";
     QList<Sector*> list = sectorsHash.values();
-    for(int i = 0; i < list.size() ; i++)
-    {
+    for(int i = 0; i < list.size() ; i++) {
         QListWidgetItem *item = new QListWidgetItem();
         QString itemText = list[i]->icao;
         itemText.append("(");
@@ -54,30 +46,26 @@ void Sectorview::loadSectorList(){
     qDebug() << "Sectorview::loadSectorList -- finsished";
 }
 
-void Sectorview::on_bt_apply_clicked()
-{
+void Sectorview::on_bt_apply_clicked() {
     QStringList CheckedSectorList;
     QList<Sector*> renderSectors;
 
-    for(int i = listeView_sectors->count()-1; i >= 0 ; i--)
-    {
+    for(int i = listeView_sectors->count()-1; i >= 0 ; i--) {
         if(listeView_sectors->item(i)->checkState() == Qt::Checked){
             QString text = listeView_sectors->item(i)->text();
             CheckedSectorList.append(text.split("(").first());
         }
     }
 
-    for(int i = CheckedSectorList.count()-1; i >=0 ; i--){
+    for(int i = CheckedSectorList.count()-1; i >=0 ; i--)
         renderSectors.append(sectorsHash[CheckedSectorList[i]]);
-    }
 
     MapScreen::getInstance(true)->glWidget->renderStaticSectors(true);
     MapScreen::getInstance(true)->glWidget->createSaticSectorLists(renderSectors);
     MapScreen::getInstance(true)->glWidget->update();
 
 }
-void Sectorview::on_bt_close_clicked()
-{
+void Sectorview::on_bt_close_clicked() {
     MapScreen::getInstance(true)->glWidget->renderStaticSectors(false);
 }
 

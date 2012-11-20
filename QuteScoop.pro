@@ -11,11 +11,14 @@ TARGET = QuteScoop
 win32:PLATFORM = "win32"
 macx:PLATFORM = "macx"
 unix:PLATFORM = "unix"
+
+# Qt libraries
 QT *= core \
     gui \
     network \
     opengl \
     xml
+# in debug mode, we output to current directory
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
@@ -28,7 +31,7 @@ CONFIG(debug,release|debug) {
     precompile_header:!isEmpty(PRECOMPILED_HEADER):!build_pass:message("Using precompiled headers.")
 }
 
-# Included for release/dist
+# in release mode, we include a 'make install' target and output to ./DIST-$PLATFORM
 CONFIG(release,release|debug) { 
     !build_pass:message("RELEASE")
     DEBUGRELEASE = "release"
@@ -59,7 +62,9 @@ CONFIG(release,release|debug) {
         ./COPYING \
         ./CHANGELOG
     unix:rootFiles.files += ./QuteScoop.sh \
-        ./src/qutescoop.png
+        ./QuteScoop.desktop \
+        ./src/qutescoop.png \
+        ./picsToMovie.sh
     dataFiles.path = $$DESTDIR/data
     dataFiles.files += ./data/+notes.txt
     dataFiles.files += ./data/airports.dat
@@ -94,7 +99,7 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/8192px-topo.png
     cloudsFiles.path = $$DESTDIR/textures/clouds
     cloudsFiles.files += ./textures/clouds/+notes.txt
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}")
+    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}. Run 'make install' to copy them to the correct locations")
     
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
@@ -121,7 +126,8 @@ mac { # could be "macx" also, I am not sure
     CONFIG *= ppc
     LIBS += -lGLU
 }
-win32 { RC_FILE = src/windowsicon.rc
+win32 {
+    RC_FILE = src/windowsicon.rc
     LIBS += -lglu32
 }
 unix {
@@ -194,7 +200,8 @@ HEADERS += src/_pch.h \
     src/Station.h \
     src/Launcher.h \
     src/SectorView.h \
-    src/NetworkManager.h
+    src/NetworkManager.h \
+    src/helpersPlatform.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \

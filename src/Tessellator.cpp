@@ -6,11 +6,10 @@
 
 #include "helpers.h"
 
-GLdouble vertices[64][6]; // arrary to store newly created vertices (x,y,z,r,g,b) by combine callback
+GLdouble vertices[64][6]; // newly created vertices (x,y,z,r,g,b) by combine callback
 int vertexIndex;          // array index for above array incremented inside combine callback
 
-Tessellator::Tessellator()
-{
+Tessellator::Tessellator() {
     tess = gluNewTess();
     gluTessCallback(tess, GLU_TESS_BEGIN,	CALLBACK_CAST tessBeginCB);
     gluTessCallback(tess, GLU_TESS_END,		CALLBACK_CAST tessEndCB);
@@ -19,8 +18,7 @@ Tessellator::Tessellator()
     gluTessCallback(tess, GLU_TESS_COMBINE, CALLBACK_CAST tessCombineCB);
 }
 
-Tessellator::~Tessellator()
-{
+Tessellator::~Tessellator() {
     gluDeleteTess(tess);
 }
 
@@ -33,7 +31,7 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
     // param, but It can be more than vertex coord, for example, color, normal
     // and UV coords which are needed for actual drawing.
     // Here, we are looking at only vertex coods, so the 2nd and 3rd params are
-    // pointing same address.
+    // pointing to the same address.
 
     pointList.clear();
     vertexIndex = 0;

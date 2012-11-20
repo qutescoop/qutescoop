@@ -94,7 +94,7 @@ void Launcher::mouseMoveEvent(QMouseEvent *event) {
 ///////////////////////////
 
 void Launcher::fireUp() {
-    qDebug() << "Launcher:fireUp -- started";
+    qDebug() << "Launcher::fireUp -- started";
 
     //Check for navdataupdatets & loading navdata
     GuiMessages::status(tr("Checking for navdata updates"), "checknavdata");

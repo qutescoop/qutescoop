@@ -22,7 +22,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
         xRot(0), yRot(0), zRot(0), zoom(2), aspectRatio(1), earthTex(0),
         earthList(0), coastlinesList(0), countriesList(0), gridlinesList(0),
-        pilotsList(0), activeAirportsList(0), inactiveAirportsList(0), congestionsList(0), FixesList(0),
+        pilotsList(0), activeAirportsList(0), inactiveAirportsList(0), congestionsList(0), fixesList(0),
         usedWaypointsList(0), sectorPolygonsList(0), sectorPolygonBorderLinesList(0),
         appBorderLinesList(0), windList(0),
         pilotLabelZoomTreshold(.9), activeAirportLabelZoomTreshold(1.2), inactiveAirportLabelZoomTreshold(.15),
@@ -51,7 +51,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 GLWidget::~GLWidget() {
     makeCurrent();
     glDeleteLists(earthList, 1); glDeleteLists(gridlinesList, 1);
-    glDeleteLists(coastlinesList, 1); glDeleteLists(countriesList, 1); glDeleteLists(FixesList, 1);
+    glDeleteLists(coastlinesList, 1); glDeleteLists(countriesList, 1); glDeleteLists(fixesList, 1);
     glDeleteLists(usedWaypointsList, 1); glDeleteLists(pilotsList, 1);
     glDeleteLists(activeAirportsList, 1); glDeleteLists(inactiveAirportsList, 1); glDeleteLists(congestionsList, 1);
     glDeleteLists(appBorderLinesList, 1); glDeleteLists(windList, 1);
@@ -581,10 +581,10 @@ void GLWidget::createStaticLists(){
     glEndList();
 
     // all waypoints (fixes + navaids)
-    FixesList = glGenLists(1);
+    fixesList = glGenLists(1);
     if(Settings::showAllWaypoints()) {
         qDebug() << "GLWidget::createStaticLists() allWaypoints";
-        glNewList(FixesList, GL_COMPILE);
+        glNewList(fixesList, GL_COMPILE);
         qglColor(Settings::waypointsDotColor());
         glLineWidth(Settings::countryLineStrength());
         double sin30 = .5; double cos30 = .8660254037;
@@ -856,7 +856,7 @@ void GLWidget::paintGL() {
     glCallList(countriesList);
     glCallList(gridlinesList);
     if(Settings::showAllWaypoints() && zoom < allWaypointsLabelZoomTreshold * .7)
-        glCallList(FixesList);
+        glCallList(fixesList);
     if(Settings::showUsedWaypoints() && zoom < usedWaypointsLabelZoomThreshold * .7)
         glCallList(usedWaypointsList);
 
@@ -1709,6 +1709,3 @@ void GLWidget::createLights()
     glEnable(GL_NORMALIZE);
     lightsGenerated = true;
 }
-
-
-

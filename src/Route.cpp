@@ -3,13 +3,11 @@
  **************************************************************************/
 
 #include "Route.h"
-
 #include "NavData.h"
 
 Route::Route() {
 }
-Route::~Route()
-{
+Route::~Route() {
 }
 
 void Route::calculateWaypointsAndDistance() {

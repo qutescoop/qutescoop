@@ -12,58 +12,58 @@
 
 class Launcher : public QWidget
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    Launcher(QWidget *parent = 0);
-    ~Launcher();
-    void fireUp();
+    public:
+        Launcher(QWidget *parent = 0);
+        ~Launcher();
+        void fireUp();
 
-public slots:
-    void loadWindow();
+    public slots:
+        void loadWindow();
 
-protected:
-    void mouseMoveEvent(QMouseEvent *);
-    void mousePressEvent(QMouseEvent *);
-    void keyReleaseEvent(QKeyEvent *event);
+    protected:
+        void mouseMoveEvent(QMouseEvent *);
+        void mousePressEvent(QMouseEvent *);
+        void keyReleaseEvent(QKeyEvent *event);
 
-signals:
-    void navdataUpdated();
+    signals:
+        void navdataUpdated();
 
-private slots:
-    // NavdataUpdate update
-    void dataVersionsDownloaded(bool error);
-    void dataFilesRequestFinished(int id, bool error);
-    void dataFilesDownloaded(bool error);
-    void loadNavdata();
+    private slots:
+        // NavdataUpdate update
+        void dataVersionsDownloaded(bool error);
+        void dataFilesRequestFinished(int id, bool error);
+        void dataFilesDownloaded(bool error);
+        void loadNavdata();
 
-    //Wind
-    void startWindDecoding(bool error);
+        //Wind
+        void startWindDecoding(bool error);
 
-private:
+    private:
 
-    //Startupimage
-    QPixmap map;
-    QLabel *image;
-    QLabel *text;
-    QProgressBar *progress;
-    //required to move the widget
-    QPoint dragPosition;
+        //Startupimage
+        QPixmap map;
+        QLabel *image;
+        QLabel *text;
+        QProgressBar *progress;
+        //required to move the widget
+        QPoint dragPosition;
 
-    //For NavDataUpdate
-    void checkForDataUpdates();
-    QHttp *dataVersionsAndFilesDownloader;
-    QBuffer *dataVersionsBuffer;
-    QList<QFile*> dataFilesToDownload;
+        //For NavDataUpdate
+        void checkForDataUpdates();
+        QHttp *dataVersionsAndFilesDownloader;
+        QBuffer *dataVersionsBuffer;
+        QList<QFile*> dataFilesToDownload;
 
-    // Wind
-    void startWindDownload();
-    QHttp *windDataDownloader;
-    QBuffer *windDataBuffer;
+        // Wind
+        void startWindDownload();
+        QHttp *windDataDownloader;
+        QBuffer *windDataBuffer;
 
 
-    bool navReady, windowReady, windReady;
-    QTimer finalTimer,windowTimer;
+        bool navReady, windowReady, windReady;
+        QTimer finalTimer,windowTimer;
 
 };
 

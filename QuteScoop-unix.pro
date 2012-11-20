@@ -10,4 +10,6 @@
 include("QuteScoop.pro")
 
 OTHER_FILES += \
-    QuteScoop.sh
+    QuteScoop.sh \
+    QuteScoop.desktop \
+    picsToMovie.sh

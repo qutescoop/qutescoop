@@ -13,14 +13,14 @@
 
 class FriendsVisitor : public MapObjectVisitor
 {
-public:
-	FriendsVisitor();
-	virtual void visit(MapObject *object);
-	virtual QList<MapObject*> result() const { return friends; }
+    public:
+        FriendsVisitor();
+        virtual void visit(MapObject *object);
+        virtual QList<MapObject*> result() const { return friends; }
 
-private:
-	QStringList friendList;
-	QList<MapObject*> friends;
+    private:
+        QStringList friendList;
+        QList<MapObject*> friends;
 };
 
 #endif /*FRIENDSVISITOR_H_*/

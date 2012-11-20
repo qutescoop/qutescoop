@@ -115,20 +115,16 @@ private:
     Window(QWidget *parent = 0);
     ~Window();
     void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
-
+    //void checkForUpdates();
 
     SearchResultModel searchResultModel, friendsModel;
-    QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer;
-    QTimer downloadWatchdog, cloudTimer;
+    QTimer searchTimer, metarTimer, editPredictTimer, runPredictTimer,
+    downloadWatchdog, cloudTimer;
     QSortFilterProxyModel *metarSortModel, *friendsSortModel;
     MetarModel metarModel;
-
-    //void checkForUpdates();
     QHttp *versionChecker, *cloudDownloader;
     QBuffer *versionBuffer, *cloudBuffer;
-
     QDateTime dateTimePredict_old;
-
     QLabel *lblStatus;
     QProgressBar *progressBar;
 };

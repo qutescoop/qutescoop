@@ -7,15 +7,16 @@
 #include "Window.h"
 #include "LogBrowserDialog.h"
 #include "helpers.h"
+#include "helpersPlatform.h"
 #include "Settings.h"
 #include "Launcher.h"
 
+#include <QSysInfo>
 
 /* logging */
 QFile *logFile = new QFile();
 QByteArray cacheLogByteArray;
-void myMessageOutput(QtMsgType type, const char *msg)
-{
+void myMessageOutput(QtMsgType type, const char *msg) {
     // uninstall this routine for "normal" debug output
     qInstallMsgHandler(0);
 
@@ -81,6 +82,11 @@ int main(int argc, char *argv[]) {
 #ifdef QT_NO_DEBUG_OUTPUT
     qDebug() << "COMPILED WITHOUT DEBUG OUTPUT - no debug messages will be captured.";
 #endif
+
+    qDebug() << "platform info:\t" << platformOS();
+    qDebug() << "RAM:\t" << memoryOverall() << "," << memoryFree() << "free";
+    qDebug() << "compiler:\t" << compiler();
+
     cacheLogByteArray.append(
              "message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n");
 

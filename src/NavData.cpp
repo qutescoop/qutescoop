@@ -14,9 +14,8 @@
 
 NavData *navDataInstance = 0;
 NavData *NavData::getInstance(bool createIfNoInstance) {
-    if(navDataInstance == 0)
-        if (createIfNoInstance)
-            navDataInstance = new NavData();
+    if(navDataInstance == 0 && createIfNoInstance)
+        navDataInstance = new NavData();
     return navDataInstance;
 }
 
@@ -24,8 +23,15 @@ NavData::NavData() {
     loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
-    if(Settings::useESAirlines()){loadAirlineCodes(Settings::ESAirlinesDirectory());}
-    else{ loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));}
+    if(Settings::useESAirlines()) {
+        qDebug() << "NavData::NavData() loading airline codes from"
+                    << Settings::ESAirlinesDirectory();
+        loadAirlineCodes(Settings::ESAirlinesDirectory());
+    } else {
+        qDebug() << "NavData::NavData() loading airline codes from"
+                    << Settings::applicationDataDirectory("data/airlines.dat");
+        loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));
+    }
 }
 NavData::~NavData() {
     foreach(const Airport *a, airports)
@@ -70,7 +76,7 @@ void NavData::loadAirlineCodes(const QString &filename)
 {
     airlineCodes.clear();
     if(filename.isEmpty()){
-        qDebug() << "NavData::loadAirlineCodes -- no airline data loaded";
+        qWarning() << "NavData::loadAirlineCodes() -- bad filename";
         return;
     }
     FileReader fileReader(filename);
@@ -78,8 +84,9 @@ void NavData::loadAirlineCodes(const QString &filename)
     while(!fileReader.atEnd()){
 
         QStringList line = fileReader.nextLine().split(0x09);   // 0x09 code for Tabulator
-        if(line.size()< 3){         // if prefent crashing when loading a wrong format
-            GuiMessages::warning(QString(tr("%1 has not the correct format to load the airlines!")).arg(filename));
+        if (line.size() < 3) {
+            GuiMessages::warning(QString(tr("%1 has not the correct format to load the airlines!"))
+                                 .arg(filename));
             return;
         }
         airlineCodes[line.value(0)] = line.value(2);

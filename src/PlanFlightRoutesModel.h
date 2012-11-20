@@ -28,7 +28,7 @@ public:
 
 public slots:
     void setClients(const QList<Route*>& routes);
-    void modelSelected(const QModelIndex& index);
+//    void modelSelected(const QModelIndex& index);
 
 private:
     QList<Route*> routes;
