@@ -155,7 +155,7 @@ QString platformOS() {
     os += "[compiled on OS_WINCE]";
 #endif
 
-    os += QString (" | running on %1 bit, %2 endian")
+    os += QString (" | %1 bit, %2 endian")
             .arg(QSysInfo::WordSize)
             .arg(QSysInfo::ByteOrder == QSysInfo::BigEndian? "big": "little");
 
