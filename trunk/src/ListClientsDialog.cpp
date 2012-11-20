@@ -15,11 +15,10 @@
 // singleton instance
 ListClientsDialog *listClientsDialog = 0;
 ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if(listClientsDialog == 0)
-        if (createIfNoInstance) {
-            if (parent == 0) parent = Window::getInstance(true);
-            listClientsDialog = new ListClientsDialog(parent);
-        }
+    if(listClientsDialog == 0 && createIfNoInstance) {
+        if (parent == 0) parent = Window::getInstance(true);
+        listClientsDialog = new ListClientsDialog(parent);
+    }
     return listClientsDialog;
 }
 
@@ -34,7 +33,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
 {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-//    setWindowFlags(Qt::Tool);
+    //    setWindowFlags(Qt::Tool);
 
     // clients
     clientsModel = new ListClientsDialogModel;
@@ -56,7 +55,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     // servers
     QStringList serverHeaders;
     serverHeaders << "ident" << "URL" << "ping" << "ping" << "ping" << QString::fromUtf8("Ø ping")
-            << "connected\nclients" << "location" << "description";
+                  << "connected\nclients" << "location" << "description";
     serversTable->setColumnCount(serverHeaders.size());
     serversTable->setHorizontalHeaderLabels(serverHeaders);
     connect(voiceServersTable, SIGNAL(cellClicked(int, int)), this, SLOT(voiceServerClicked(int, int)));
@@ -64,7 +63,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     // voiceServers
     QStringList voiceServerHeaders;
     voiceServerHeaders << "URL" << "ping" << "ping" << "ping" << QString::fromUtf8("Ø ping")
-            << "connected\ncontrollers" << "location" << "description";
+                       << "connected\ncontrollers" << "location" << "description";
     voiceServersTable->setColumnCount(voiceServerHeaders.size());
     voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
 
@@ -117,7 +116,7 @@ void ListClientsDialog::refresh() {
                 case 1: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][1]));
                     break; // hostname_or_IP
                 case 6: serversTable->setItem(row, col, new QTableWidgetItem(QString::number(
-                            serversConnected[data.servers[row][0]])));
+                                                                                 serversConnected[data.servers[row][0]])));
                     break; // connected
                 case 7: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][2]));
                     break; // location
@@ -146,7 +145,7 @@ void ListClientsDialog::refresh() {
                 case 0: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][0]));
                     break; // hostname_or_IP
                 case 5: voiceServersTable->setItem(row, col, new QTableWidgetItem(QString::number(
-                        voiceServerChannels[data.voiceServers[row][0].toLower()])));
+                                                                                      voiceServerChannels[data.voiceServers[row][0].toLower()])));
                     break; // channels
                 case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][1]));
                     break; // location
@@ -174,9 +173,9 @@ void ListClientsDialog::refresh() {
         voiceServersTable->setItem(row, 3, new QTableWidgetItem());
         voiceServersTable->setItem(row, 4, new QTableWidgetItem());
         voiceServersTable->setItem(row, 5, new QTableWidgetItem(QString::number(
-                voiceServerChannels[server])));
+                                                                    voiceServerChannels[server])));
         voiceServersTable->setItem(row, 6, new QTableWidgetItem(
-                "(not advertised in Whazzup)"));
+                                       "(not advertised in Whazzup)"));
         // styles
         voiceServersTable->item(row, 1)->setTextAlignment(Qt::AlignCenter);
         voiceServersTable->item(row, 2)->setTextAlignment(Qt::AlignCenter);
@@ -190,12 +189,12 @@ void ListClientsDialog::refresh() {
 
     // Status
     QString msg = QString("Whazzup %1 updated")
-                  .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-                        ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
-                        : (data.whazzupTime.isValid()
-                           ? data.whazzupTime.toString("ddd yyyy/MM/dd HHmm'z'")
-                           : "never")
-                        );
+            .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                 ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
+                 : (data.whazzupTime.isValid()
+                    ? data.whazzupTime.toString("ddd yyyy/MM/dd HHmm'z'")
+                    : "never")
+                   );
     lblStatusInfo->setText(msg);
 
     // Set Item Titles
@@ -348,7 +347,7 @@ void ListClientsDialog::pingNextFromStack() {
 }
 
 QColor ListClientsDialog::mapPingToColor(int ms) {
-#define BEST 50
+#define BEST 50 // ping in ms we consider best
 #define WORST 250
 
     if(ms == -1) // "n/a"
@@ -360,10 +359,15 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 
 void ListClientsDialog::voiceServerClicked(int row, int col) {
     QUrl url = QUrl(
-            QString("http://%1:18009/?opts=-R-D")
+                QString("http://%1:18009/?opts=-R-D")
                 .arg(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString())
-            , QUrl::TolerantMode);
-    if(QMessageBox::question(this, tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+                , QUrl::TolerantMode);
+    if(QMessageBox::question(this,
+                             tr("Question"),
+                             tr("Open %1 in your browser?")
+                             .arg(url.toString()),
+                             QMessageBox::Yes | QMessageBox::No
+                             ) == QMessageBox::Yes) {
         if (url.isValid()) {
             if(!QDesktopServices::openUrl(url))
                 QMessageBox::critical(this, tr("Error"), tr("Could not invoke browser"));

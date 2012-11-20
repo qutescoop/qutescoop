@@ -1228,10 +1228,11 @@ void PreferencesDialog::on_cbUseESAirlines_stateChanged(int state){
 }
 
 void PreferencesDialog::on_bt_browseESAirlines_clicked(){
-    QString path = QFileDialog::getOpenFileName(this, tr("Open ICAO_Airlines.txt"), QDir::homePath(),"Textfile (*.txt)");
+    QString path = QFileDialog::getOpenFileName(this,
+                                                tr("Open ICAO_Airlines.txt"),
+                                                QDir::homePath(),"EuroScope airlines (ICAO_Airlines.txt)");
     Settings::setESAirlinesDirectory(path);
     editESAirlines->setText(Settings::ESAirlinesDirectory());
-    qDebug() << "directory for alternativ airline data set: " << Settings::ESAirlinesDirectory();
 }
 
 void PreferencesDialog::on_editESAirlines_editingFinished(){

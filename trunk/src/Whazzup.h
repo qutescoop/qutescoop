@@ -13,55 +13,57 @@
 #include "NetworkManager.h"
 
 class Whazzup: public QObject {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    static Whazzup* getInstance();
+    public:
+        static Whazzup* getInstance();
 
-    const WhazzupData& whazzupData() { return (predictedTime.isValid()?
-                                                   predictedData: data); } // we fake it when predicting a certain time
-    const WhazzupData& realWhazzupData() { return data; } // this is always the really downloaded thing
+        const WhazzupData& whazzupData() {
+            return (predictedTime.isValid()?
+                        predictedData: data);
+        } // we fake it when predicting a certain time
+        const WhazzupData& realWhazzupData() {
+            return data;
+        } // this is always the really downloaded thing
 
-    void setPredictedTime(QDateTime predictedTime);
-    QDateTime getPredictedTime() const { return predictedTime; }
+        void setPredictedTime(QDateTime predictedTime);
+        QDateTime getPredictedTime() const {
+            return predictedTime;
+        }
 
-    QString getUserLink(const QString& id) const;
-    QString getAtisLink(const QString& id) const;
+        QString getUserLink(const QString& id) const,
+        getAtisLink(const QString& id) const;
 
-    QList <QPair <QDateTime, QString> > getDownloadedWhazzups() const;
+        QList <QPair <QDateTime, QString> > getDownloadedWhazzups() const;
 
-signals:
-    void newData(bool isNew);
-    void statusDownloaded();
-    void needBookings();
+    signals:
+        void newData(bool isNew);
+        void statusDownloaded();
+        void needBookings();
 
-public slots:
-    void download();
-    void fromFile(QString filename);
-    void setStatusLocation(const QString& url);
-    void downloadBookings();
+    public slots:
+        void download();
+        void fromFile(QString filename);
+        void setStatusLocation(const QString& url);
+        void downloadBookings();
 
-private slots:
-    void statusDownloaded(QNetworkReply* reply);
-    void whazzupProgress(qint64 prog,qint64 tot);
-    void whazzupDownloaded(QNetworkReply* reply);
-    void bookingsProgress(qint64 prog,qint64 tot);
-    void bookingsDownloaded(QNetworkReply* reply);
+    private slots:
+        void statusDownloaded(QNetworkReply* reply);
+        void whazzupProgress(qint64 prog,qint64 tot);
+        void whazzupDownloaded(QNetworkReply* reply);
+        void bookingsProgress(qint64 prog,qint64 tot);
+        void bookingsDownloaded(QNetworkReply* reply);
 
-private:
-    Whazzup();
-    virtual ~Whazzup();
+    private:
+        Whazzup();
+        virtual ~Whazzup();
 
-    WhazzupData data, predictedData;
-
-    QDateTime predictedTime;
-
-    QStringList urls, gzurls;
-    QString metarUrl, tafUrl, shorttafUrl, userLink, atisLink, message;
-
-    QTime lastDownloadTime;
-
-    QTimer *downloadTimer, *bookingsTimer;
+        WhazzupData data, predictedData;
+        QDateTime predictedTime;
+        QStringList urls, gzurls;
+        QString metarUrl, tafUrl, shorttafUrl, userLink, atisLink, message;
+        QTime lastDownloadTime;
+        QTimer *downloadTimer, *bookingsTimer;
 };
 
 #endif /*WHAZZUP_H_*/

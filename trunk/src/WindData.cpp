@@ -3,11 +3,9 @@
 
 
 WindData *windDataInstance = 0;
-WindData *WindData::getInstance()
-{
-    if(windDataInstance == 0){
+WindData *WindData::getInstance() {
+    if(windDataInstance == 0)
         windDataInstance = new WindData();
-    }
     return windDataInstance;
 }
 
@@ -21,63 +19,59 @@ WindData::WindData(QObject *parent) :
     status = -1;
 }
 
-void WindData::decodeData()
-{
-    qDebug() << "WindData::decodeData -- started";
+void WindData::decodeData() {
+    qDebug() << "WindData::decodeData() -- started";
     status = 1;
-    if(stationList.isEmpty()) //Load station data from file
-    {
-
+    if(stationList.isEmpty()) { // Load station data from file
         FileReader file(Settings::applicationDataDirectory("data/station.dat"));
         StationIDs.clear();
 
-        while(!file.atEnd())
-        {
-           QString rawLine =  file.nextLine();
-           QString workLine = rawLine;
+        while(!file.atEnd()) {
+            QString rawLine =  file.nextLine();
+            QString workLine = rawLine;
 
-           workLine.remove(6, 51);          //Station number
-           workLine.resize(5);              //Stationnumbers in station.dat are 6 digits long but we get only 5
-           int num = workLine.toInt();
+            workLine.remove(6, 51);          //Station number
+            workLine.resize(5);              //Stationnumbers in station.dat are 6 digits long but we get only 5
+            int num = workLine.toInt();
 
-           workLine = rawLine;              //Station name
-           workLine.remove(34, 23);
-           workLine.remove(0, 14);
-           QString name = workLine;
+            workLine = rawLine;              //Station name
+            workLine.remove(34, 23);
+            workLine.remove(0, 14);
+            QString name = workLine;
 
-           workLine = rawLine;              // Lat
-           workLine.remove(42, 15);
-           workLine.remove(0, 37);
-           int north_south = 1;
-           if(workLine[4] == 'S') north_south = -1;
-           workLine.remove(4,1);
-           double lat = workLine.toDouble();
-           lat = lat*north_south;
-           lat = lat/100;
+            workLine = rawLine;              // Lat
+            workLine.remove(42, 15);
+            workLine.remove(0, 37);
+            int north_south = 1;
+            if(workLine[4] == 'S') north_south = -1;
+            workLine.remove(4,1);
+            double lat = workLine.toDouble();
+            lat = lat*north_south;
+            lat = lat/100;
 
-           workLine = rawLine;              // Lon
-           workLine.remove(49, 8);
-           workLine.remove(0, 43);
-           int east_west = 1;
-           if(workLine[5] == 'W') east_west = -1;
-           workLine.remove(5,1);
-           double lon = workLine.toDouble();
-           lon = lon*east_west;
-           lon = lon/100;
+            workLine = rawLine;              // Lon
+            workLine.remove(49, 8);
+            workLine.remove(0, 43);
+            int east_west = 1;
+            if(workLine[5] == 'W') east_west = -1;
+            workLine.remove(5,1);
+            double lon = workLine.toDouble();
+            lon = lon*east_west;
+            lon = lon/100;
 
-           workLine = rawLine;              // Elev
-           workLine.remove(54, 3);
-           workLine.remove(0, 50);
-           int elev = workLine.toInt();
+            workLine = rawLine;              // Elev
+            workLine.remove(54, 3);
+            workLine.remove(0, 50);
+            int elev = workLine.toInt();
 
-           stationList[num] = Station(num, lat, lon, elev, name);
-           StationIDs.append(num);
-           //qDebug() << "WindData::decode -- wind stations num" << num << " lat:" << lat << " lon:" << lon;
+            stationList[num] = Station(num, lat, lon, elev, name);
+            StationIDs.append(num);
+            qDebug() << "WindData::decodeData() -- wind stations" << num << " lat:" << lat << " lon:" << lon;
 
         }
     }
 
-    qDebug() << "WindData::decodeData -- stationdata loaded";
+    qDebug() << "WindData::decodeData() -- stationdata loaded";
 
     stationRawData.clear();
     if(rawData.isEmpty()) return;
@@ -86,8 +80,7 @@ void WindData::decodeData()
     //infos about decoding radiosonde code see here: http://apollo.lsc.vsc.edu/classes/met1211L/raob.html#ident
 
     QStringList stationRawList;
-    for(int i = stationRawData.size(); i > 0; i--)
-    {
+    for(int i = stationRawData.size(); i > 0; i--) {
         stationRawList.clear();
         stationRawList = stationRawData.value(i-1).split(QRegExp("\\s+"));
 
@@ -96,138 +89,127 @@ void WindData::decodeData()
         if(stationRawList[0] == "PPBB") mode = 2; // Wind
         stationRawList.removeFirst(); //remove mode
 
-        if( mode == 0 )
-        {
+        if (mode == 0) {
             int stationID = stationRawList[1].toInt();
-
 
             if(!stationRawList.isEmpty()) stationRawList.removeFirst();
             if(!stationRawList.isEmpty()) stationRawList.removeFirst();
             if(stationRawList.isEmpty() || stationRawList.size() < 3){
                 continue;}
 
-
             bool isLevel = false;
-            while(1)
-            {
+            while (true) {
                 int alt = 0;
                 int ralt;
 
-
-                switch(stationRawList[0].left(2).toInt())
-                {
-                case 0:
-                    ralt = stationRawList[0].right(3).toInt(); //alt in meters
-                    ralt = ralt*3.28;  // alt in feet
-                    alt = round(ralt, 1000);
-                    isLevel = true;
-                    break;
-                case 92:
-                    ralt = stationRawList[0].right(3).toInt(); //alt in meters
-                    ralt = ralt*3.28;  // alt in feet
-                    alt = round(ralt, 1000);
-                    isLevel = true;
-                    break;
-                case 85:
-                    ralt = stationRawList[0].right(3).toInt(); // alt in meters
-                    ralt += 1000;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 70:
-                    ralt = stationRawList[0].right(3).toInt();
-                    ralt += 3000;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 50:
-                    ralt = stationRawList[0].right(3).toInt();
-                    ralt = ralt*10;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 40:
-                    ralt = stationRawList[0].right(3).toInt();
-                    ralt = ralt*10;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 30:
-                    ralt = stationRawList[0].right(3).toInt();
-                    ralt = ralt*10;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 25:
-                    ralt =stationRawList[0].right(3).toInt();
-                    ralt = (ralt*10) + 10000;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 20:
-                    ralt =stationRawList[0].right(3).toInt();
-                    ralt = (ralt*10) + 10000;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 15:
-                    ralt =stationRawList[0].right(3).toInt();
-                    ralt = (ralt*10) + 10000;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 10:
-                    ralt =stationRawList[0].right(3).toInt();
-                    ralt = (ralt*10) + 10000;
-                    alt = round(ralt*3.28, 1000);
-                    isLevel = true;
-                    break;
-                case 88:
-                    isLevel = false;
-                    break;
-                case 77:
-                    isLevel = false;
-                    break;
-                default:
-                    alt= -1;     //unable to identify the altitude so disable via -1
-                    isLevel = false;
-                    break;
+                switch(stationRawList[0].left(2).toInt()) {
+                    case 0:
+                        ralt = stationRawList[0].right(3).toInt(); //alt in meters
+                        ralt = ralt*3.28;  // alt in feet
+                        alt = round(ralt, 1000);
+                        isLevel = true;
+                        break;
+                    case 92:
+                        ralt = stationRawList[0].right(3).toInt(); //alt in meters
+                        ralt = ralt*3.28;  // alt in feet
+                        alt = round(ralt, 1000);
+                        isLevel = true;
+                        break;
+                    case 85:
+                        ralt = stationRawList[0].right(3).toInt(); // alt in meters
+                        ralt += 1000;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 70:
+                        ralt = stationRawList[0].right(3).toInt();
+                        ralt += 3000;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 50:
+                        ralt = stationRawList[0].right(3).toInt();
+                        ralt = ralt*10;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 40:
+                        ralt = stationRawList[0].right(3).toInt();
+                        ralt = ralt*10;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 30:
+                        ralt = stationRawList[0].right(3).toInt();
+                        ralt = ralt*10;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 25:
+                        ralt =stationRawList[0].right(3).toInt();
+                        ralt = (ralt*10) + 10000;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 20:
+                        ralt =stationRawList[0].right(3).toInt();
+                        ralt = (ralt*10) + 10000;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 15:
+                        ralt =stationRawList[0].right(3).toInt();
+                        ralt = (ralt*10) + 10000;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 10:
+                        ralt =stationRawList[0].right(3).toInt();
+                        ralt = (ralt*10) + 10000;
+                        alt = round(ralt*3.28, 1000);
+                        isLevel = true;
+                        break;
+                    case 88:
+                        isLevel = false;
+                        break;
+                    case 77:
+                        isLevel = false;
+                        break;
+                    default:
+                        alt= -1;     //unable to identify the altitude so disable via -1
+                        isLevel = false;
+                        break;
                 }
 
-                if(isLevel)
-                {
+                if(isLevel) {
                     int dir = 0;
                     int speed = 0;
                     int temp = 0;
 
-                    if(stationRawList[2].contains("//"))
-                    {
+                    if(stationRawList[2].contains("//")) {
                         stationRawList.removeFirst();       //remove the processed group
                         if(!stationRawList.isEmpty()) stationRawList.removeFirst();
                         if(!stationRawList.isEmpty()) stationRawList.removeFirst();
                         if(stationRawList.isEmpty() || stationRawList.size() < 3) break;
                         continue;
                     }
-                    if(stationRawList[2].size() < 5  || stationRawList[1].size() < 5 || stationRawList[0].size() < 5){
+                    if(stationRawList[2].size() < 5
+                            || stationRawList[1].size() < 5
+                            || stationRawList[0].size() < 5) {
                         stationRawList.removeFirst();       //remove the processed group
                         if(!stationRawList.isEmpty()) stationRawList.removeFirst();
                         if(!stationRawList.isEmpty()) stationRawList.removeFirst();
                         if(stationRawList.isEmpty() || stationRawList.size() < 3) break;
                         continue;
-
                     }
 
-                    if(stationRawList[1].left(3).toInt()%2 == 0)
-                    {
+                    if(stationRawList[1].left(3).toInt() % 2 == 0) {
                         temp = static_cast<int>(stationRawList[1].left(3).toInt()/10.f);
-                    }
-                    else
-                    {
+                    } else {
                         temp = static_cast<int>( 0 - stationRawList[1].left(3).toInt()/10.f);
                     }
 
-                    if(stationRawList.value(2).left(3).toInt()%5 == 1)
-                    {
+                    if(stationRawList.value(2).left(3).toInt() % 5 == 1) {
                         speed += 100;
                         dir -= 1;
                     }
@@ -235,8 +217,6 @@ void WindData::decodeData()
                     speed += stationRawList[2].right(2).toInt();
 
                     dir += stationRawList[2].left(3).toInt();
-
-
 
                     stationList[stationID].addWind(alt, dir, speed);
                     stationList[stationID].addTemp(alt, temp);
@@ -255,9 +235,7 @@ void WindData::decodeData()
     qDebug() << "WindData::decodeData  -- radiosondedata decoded";
 
     for(int i = 1; i <= 40 ; i++)
-    {
         WindList.append( createWindArrowList(i*1000));
-    }
     //createWindArrowList(10000);
 
 
@@ -265,13 +243,11 @@ void WindData::decodeData()
     status = 0;
 }
 
-void WindData::setRawData(QString data)
-{
+void WindData::setRawData(QString data) {
     rawData = data;
 }
 
-int WindData::round(int a, double b)
-{
+int WindData::round(int a, double b) {
     double temp = static_cast<double>(a);
     temp = temp/b;
     temp += 0.5;
@@ -281,8 +257,7 @@ int WindData::round(int a, double b)
     return result;
 }
 
-GLuint WindData::createWindArrowList(int alt) // alt in ft
-{
+GLuint WindData::createWindArrowList(int alt) { // alt in ft
     //GLuint result;
     result = 0;
 
@@ -291,8 +266,7 @@ GLuint WindData::createWindArrowList(int alt) // alt in ft
 
     glNewList(result, GL_COMPILE);
 
-    for(int i = StationIDs.size(); i > 0; i--)
-    {
+    for(int i = StationIDs.size(); i > 0; i--) {
         stationList[StationIDs[i-1]].getWindArrow(alt);
         //qDebug() << "ID: " << StationIDs[i-1] << " alt:" << alt;
     }
@@ -301,21 +275,17 @@ GLuint WindData::createWindArrowList(int alt) // alt in ft
     return result;
 }
 
-GLuint WindData::getWindArrows(int alt) // alt in 1000 ft
-{
+GLuint WindData::getWindArrows(int alt) { // alt in 1000 ft
     //qDebug() << "WindData::getWindArrows -- alt:" << alt;
     if(alt < 0 || alt > 40) return 0;
     return WindList.value(alt);
-
 }
 
-void WindData::refreshLists(){
+void WindData::refreshLists() {
     WindList.clear();
 
     for(int i = 1; i <= 40 ; i++)
-    {
         WindList.append( createWindArrowList(i*1000));
-    }
     qDebug() << "WindData::refreshLists -- done";
 }
 

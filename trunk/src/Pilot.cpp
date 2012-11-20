@@ -108,12 +108,10 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     double distRemaining = totalDist - distDone;
 
     // arriving?
-    bool arriving = false;
-    if(distRemaining < 50) arriving = true;
+    bool arriving = distRemaining < 50;
 
     // departing?
-    bool departing = false;
-    if(distDone < 50) departing = true;
+    bool departing = distDone < 50;
 
 
     // BOARDING: !flying, speed = 0, departing
@@ -172,24 +170,24 @@ QString Pilot::flightStatusString() const {
         case CRASHED: return QString();
         case BUSH: return QString();
         case EN_ROUTE: {
-                result = QString();
-                Airport *dep = depAirport();
-                Airport *dst = destAirport();
-                if(dst == 0)
-                    return result;
-                if(dep != 0) {
-                    // calculate %done
-                    int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
-                    if(total_dist > 0) {
-                        int dist_done = (int)NavData::distance(lat, lon, dep->lat, dep->lon);
-                        result += QString("%1%").arg(dist_done * 100 / total_dist);
-                    }
-                }
-                result += ", TTG " + eet().toString("H:mm") + " hrs";
-                result += ", ETA " + eta().toString("HHmm") + "z";
-                result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+            result = QString();
+            Airport *dep = depAirport();
+            Airport *dst = destAirport();
+            if(dst == 0)
                 return result;
+            if(dep != 0) {
+                // calculate %done
+                int total_dist = (int)NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
+                if(total_dist > 0) {
+                    int dist_done = (int)NavData::distance(lat, lon, dep->lat, dep->lon);
+                    result += QString("%1%").arg(dist_done * 100 / total_dist);
+                }
             }
+            result += ", TTG " + eet().toString("H:mm") + " hrs";
+            result += ", ETA " + eta().toString("HHmm") + "z";
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+            return result;
+        }
         case PREFILED:
             return QString();
     }
@@ -235,45 +233,43 @@ QString Pilot::toolTip() const {
 QString Pilot::rank() const {
     if(network == IVAO) {
         switch(rating) {
-        case 2: return "FS1"; break; //Basic Flight Student
-        case 3: return "FS2"; break; //Flight Student
-        case 4: return "FS3"; break; //Advanced Flight Student
-        case 5: return "PP"; break; //Private Pilot
-        case 6: return "SPP"; break; //Senior Private Pilot
-        case 7: return "CP"; break; //Commercial Pilot
-        case 8: return "ATP"; break; //Airline Transport Pilot (currently not available)
-        case 9: return "SFI"; break; //Senior Flight Instructor
-        case 10: return "CFI"; break; //Chief Flight Instructor
-        default: return QString("? (%1)").arg(rating); break;
+            case 2: return "FS1"; //Basic Flight Student
+            case 3: return "FS2"; //Flight Student
+            case 4: return "FS3"; //Advanced Flight Student
+            case 5: return "PP"; //Private Pilot
+            case 6: return "SPP"; //Senior Private Pilot
+            case 7: return "CP"; //Commercial Pilot
+            case 8: return "ATP"; //Airline Transport Pilot (currently not available)
+            case 9: return "SFI"; //Senior Flight Instructor
+            case 10: return "CFI"; //Chief Flight Instructor
+            default: return QString("? (%1)").arg(rating);
         }
     } /*else if(network == VATSIM) {
         switch(rating) { // experimental, I do not know which ratings really get reported yet
-        case 1: return "P0"; break; // Unrated Pilot
-        case 2: return "P1"; break; // Pilot
-        case 3: return "P2"; break; // VFR Pilot
-        case 4: return "P3"; break; // IFR Pilot
-        case 5: return "P4"; break; // Command Pilot
-        case 6: return "P5"; break; // Master Pilot
-        default: return QString("? (%1)").arg(rating); break;
-        }*/
-
+            case 1: return "P0"; // Unrated Pilot
+            case 2: return "P1"; // Pilot
+            case 3: return "P2"; // VFR Pilot
+            case 4: return "P3"; // IFR Pilot
+            case 5: return "P4"; // Command Pilot
+            case 6: return "P5"; // Master Pilot
+            default: return QString("? (%1)").arg(rating);
+        }
+    }*/
     return QString();
 }
 
 QString Pilot::aircraftType() const {
     QStringList acftSegments = planAircraft.split("/");
 
-    if(network == IVAO && acftSegments.size() >= 2) {
+    if(network == IVAO && acftSegments.size() >= 2)
         return acftSegments[1];
-    }
 
     if(network == VATSIM) {
         // VATSIM can be a real PITA.
-        QString result = planAircraft;
-        if(acftSegments.size() == 2 && acftSegments[0].length() > 2) result = acftSegments[0];
-        else if(acftSegments.size() >= 2) result = acftSegments[1];
-
-        return result;
+        if(acftSegments.size() == 2 && acftSegments[0].length() > 2)
+            return acftSegments[0];
+        else if(acftSegments.size() >= 2)
+            return acftSegments[1];
     }
 
     return planAircraft;
@@ -356,8 +352,7 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
             enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
         } else
             enrouteSecs = (int) (distanceToDestination() * 3600) / groundspeed;
-        QDateTime ret = whazzupTime.addSecs(enrouteSecs);
-        return ret;
+        return whazzupTime.addSecs(enrouteSecs);
     } else if(status == GROUND_ARR || status == BLOCKED)
         return whazzupTime;
     return QDateTime();
@@ -390,9 +385,9 @@ QString Pilot::delayStr() const { // delay
 
 int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from various flightplan strings
     altStr = altStr.trimmed();
-    if(altStr.length() < 4 && altStr.toInt() != 0) // 280
+    if(altStr.length() < 4 && altStr.toInt() != 0) // 280: naive mode
         return altStr.toInt() * 100;
-    if(altStr.left(2) == "FL") // FL280
+    if(altStr.left(2) == "FL") // FL280: bastard mode
         return altStr.mid(2).toInt() * 100;
     if(altStr.left(1) == "F") // F280
         return altStr.mid(1).toInt() * 100;
@@ -405,11 +400,11 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
 
 QStringList Pilot::waypoints() const {
     return planRoute.toUpper().split(
-            QRegExp("[\\s\\-+.,/]|"
-                    "\\b(?:[MNAFSMK]\\d{3,4}){2,}\\b|"
-                    "\\b\\d{2}\\D?\\b|"
-                    "DCT"),
-            QString::SkipEmptyParts); // split and throw away DCT + /N450F230 etc.
+                QRegExp("[\\s\\-+.,/]|"
+                        "\\b(?:[MNAFSMK]\\d{3,4}){2,}\\b|"
+                        "\\b\\d{2}\\D?\\b|"
+                        "DCT"),
+                QString::SkipEmptyParts); // split and throw away DCT + /N450F230 etc.
 }
 
 QPair<double, double> Pilot::positionInFuture(int seconds) const {
@@ -486,10 +481,10 @@ QList<Waypoint*> Pilot::routeWaypoints() {
 
     if (depAirport() != 0)
         routeWaypointsCache = Airac::getInstance()->resolveFlightplan(
-                waypoints(), depAirport()->lat, depAirport()->lon);
+                    waypoints(), depAirport()->lat, depAirport()->lon);
     else if (!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon))
         routeWaypointsCache = Airac::getInstance()->resolveFlightplan(
-                waypoints(), lat, lon);
+                    waypoints(), lat, lon);
     else
         routeWaypointsCache = QList<Waypoint*>();
 
@@ -515,40 +510,11 @@ QList<Waypoint*> Pilot::routeWaypointsWithDepDest() {
     return waypoints;
 }
 
-void Pilot::checkStatus()
-{
-    switch(flightStatus()){
-    case Pilot::BOARDING:
-        this->drawLabel = false;
-        break;
-    case Pilot::GROUND_DEP:
-        this->drawLabel = false;
-        break;
-    case Pilot::DEPARTING:
-        this->drawLabel = true;
-        break;
-    case Pilot::EN_ROUTE:
-        this->drawLabel = true;
-        break;
-    case Pilot::ARRIVING:
-        this->drawLabel = true;
-        break;
-    case Pilot::GROUND_ARR:
-        this->drawLabel = false;
-        break;
-    case Pilot::BLOCKED:
-        this->drawLabel = false;
-        break;
-    case Pilot::CRASHED:
-        this->drawLabel = true;
-        break;
-    case Pilot::BUSH:
-        this->drawLabel = true;
-        break;
-    case Pilot::PREFILED:
-        this->drawLabel = true;
-        break;
-    default:
-        this->drawLabel = true;
-    }
+void Pilot::checkStatus() {
+    this->drawLabel = flightStatus() == Pilot::DEPARTING
+            || flightStatus() == Pilot::EN_ROUTE
+            || flightStatus() == Pilot::ARRIVING
+            || flightStatus() == Pilot::CRASHED
+            || flightStatus() == Pilot::BUSH
+            || flightStatus() == Pilot::PREFILED;
 }

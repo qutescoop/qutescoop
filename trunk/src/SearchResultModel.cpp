@@ -15,10 +15,7 @@ int SearchResultModel::columnCount(const QModelIndex &parent) const {
 }
 
 QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
-	if(!index.isValid())
-		return QVariant();
-
-	if(index.row() >= content.size())
+    if(!index.isValid() || index.row() >= content.size())
 		return QVariant();
 
 	if(role == Qt::DisplayRole) {
@@ -63,9 +60,7 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 
 	if (content.isEmpty())
 		return QString("No Results");
-	if (content.size() == 1)
-		return QString("1 Result");
-	return QString("%1 Results").arg(content.size());
+    return QString("%1 Result%2").arg(content.size()).arg(content.size() == 1? "": "s");
 }
 
 void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center

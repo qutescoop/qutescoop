@@ -74,12 +74,21 @@ void BookedAtcDialogModel::modelSelected(const QModelIndex& index) const {
     if(controllers[index.row()] != 0) {
         if(!controllers[index.row()]->link.isEmpty()) {
             QUrl url = QUrl(controllers[index.row()]->link, QUrl::TolerantMode);
-            if(QMessageBox::question(qApp->activeWindow(), tr("Question"), tr("Open %1 in your browser?").arg(url.toString()), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+            if(QMessageBox::question(qApp->activeWindow(),
+                                     tr("Question"),
+                                     tr("Open %1 in your browser?")
+                                        .arg(url.toString()),
+                                     QMessageBox::Yes | QMessageBox::No
+            ) == QMessageBox::Yes) {
                 if (url.isValid()) {
                     if(!QDesktopServices::openUrl(url))
-                        QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("Could not invoke browser"));
+                        QMessageBox::critical(qApp->activeWindow(),
+                                              tr("Error"),
+                                              tr("Could not invoke browser"));
                 } else
-                    QMessageBox::critical(qApp->activeWindow(), tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
+                    QMessageBox::critical(qApp->activeWindow(),
+                                          tr("Error"),
+                                          tr("URL %1 is invalid").arg(url.toString()));
             }
         }
         controllers[index.row()]->showDetailsDialog();

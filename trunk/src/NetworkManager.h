@@ -4,7 +4,7 @@
 #include "_pch.h"
 #include "Settings.h"
 
-class NetworkManager : public QNetworkAccessManager
+class NetworkManager: public QNetworkAccessManager
 {
     Q_OBJECT
 public:

@@ -6,8 +6,7 @@
 #include "Settings.h"
 #include "Client.h"
 
-FriendsVisitor::FriendsVisitor()
-{
+FriendsVisitor::FriendsVisitor() {
 	friendList = Settings::friends();
 }
 

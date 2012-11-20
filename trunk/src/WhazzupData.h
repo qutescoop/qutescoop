@@ -47,7 +47,7 @@ public:
 
     bool isIvao() const { return whazzupVersion == 5; }
     bool isVatsim() const { return whazzupVersion == 8; }
-    int network() const { switch(whazzupVersion) { case 5: return 0; case 8: return 1; default: return 2; } }
+//    int network() const { switch(whazzupVersion) { case 5: return 0; case 8: return 1; default: return 2; } }
 
     void accept(MapObjectVisitor *visitor) const;
 

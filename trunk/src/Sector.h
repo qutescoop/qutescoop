@@ -9,25 +9,25 @@
 
 
 class Sector {
-public:
-    Sector() :
+    public:
+        Sector() :
             icao(), name(), countryCode(), lat(0.), lon(0.), id(), _polygon(0), _borderline(0)
-    {}
-    Sector(QStringList strings);
-    ~Sector();
+        {}
+        Sector(QStringList strings);
+        ~Sector();
 
-    bool isNull() const { return icao.isNull(); }
+        bool isNull() const { return icao.isNull(); }
 
-    const QPolygonF& sectorPolygon() const;
+        const QPolygonF& sectorPolygon() const;
 
-	QList<QPair<double, double> > points;
-	QString icao, name, countryCode, id;
-	double lat, lon;
+        QList<QPair<double, double> > points;
+        QString icao, name, countryCode, id;
+        double lat, lon;
 
-	GLuint getGlPolygon();
-	GLuint getGlBorderLine();
-private:
-	GLuint _polygon, _borderline;
+        GLuint getGlPolygon();
+        GLuint getGlBorderLine();
+    private:
+        GLuint _polygon, _borderline;
 };
 
 #endif /*SECTOR_H_*/

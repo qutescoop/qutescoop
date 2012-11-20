@@ -10,14 +10,14 @@
 
 class Waypoint: public MapObject
 {
-public:
-	Waypoint() {}
-	Waypoint(const QStringList& stringList);
-	Waypoint(const QString& id, const double lat, const double lon);
+    public:
+        Waypoint() {}
+        Waypoint(const QStringList& stringList);
+        Waypoint(const QString& id, const double lat, const double lon);
 
-	virtual QString mapLabel() const { return label; }
-	virtual QString toolTip() const;
-	virtual void showDetailsDialog() {} // not applicable
+        virtual QString mapLabel() const { return label; }
+        virtual QString toolTip() const;
+        virtual void showDetailsDialog() {} // not applicable
         virtual int getTyp() { return 0;}
 };
 

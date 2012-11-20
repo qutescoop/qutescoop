@@ -2,6 +2,20 @@ Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/p/qutescoop/wiki/> for
 general project status and planned features.
 
+Version 2.1.8
+ fixed:
+  * about box (no clickable links)
+ changed:
+  * removed Qt info box (no user cares about the framework used although Qt is the
+    greatest of all)
+  * some code refactoring and code style
+ added:
+  * debug messages during wind data decoding - somewhere there happen to be some
+    crashes, please report!
+  * platform info and used compiler in debug log
+  * added QuteScoop.desktop file for Unix/Linux desktop users - not included in the
+    installer and needs to be adapted to suit your paths
+
 Version 2.1.7
  fixed:
   * doubled libGLU-include for Linux
