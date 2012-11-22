@@ -44,8 +44,7 @@ class Launcher : public QWidget
 
         //Startupimage
         QPixmap map;
-        QLabel *image;
-        QLabel *text;
+        QLabel *image, *text;
         QProgressBar *progress;
         //required to move the widget
         QPoint dragPosition;
@@ -63,7 +62,7 @@ class Launcher : public QWidget
 
 
         bool navReady, windowReady, windReady;
-        QTimer finalTimer,windowTimer;
+        QTimer finalTimer, windowTimer;
 
 };
 

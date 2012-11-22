@@ -8,5 +8,3 @@
 # This files does not have any functionality in its own.
 
 include("QuteScoop.pro")
-OTHER_FILES += \
-    macbundle.sh

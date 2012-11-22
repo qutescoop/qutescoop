@@ -1,6 +1,11 @@
 # #####################################################################
 # This file is part of QuteScoop. See README for license
 # #####################################################################
+
+# The QuteScoop version
+VERSION = "2.1.8"
+DEFINES += VERSION_NUMBER=\\\"$$VERSION\\\"
+
 TEMPLATE = app
 CONFIG *= qt
 
@@ -8,9 +13,32 @@ CONFIG *= qt
 # CONFIG += release
 CONFIG *= warn_off
 TARGET = QuteScoop
-win32:PLATFORM = "win32"
-macx:PLATFORM = "macx"
-unix:PLATFORM = "unix"
+
+# Let's make sure we do not mix up 32 and 64bit binaries. Always provide
+# 32bit installers!
+# Hint: Setting up a virtual machine (e.g. in VirtualBox) is from my
+# experience much easier than cross-compiling 32bit from a 64bit host.
+
+win32: {
+    contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "win64"
+    else:PLATFORM = "win32"
+}
+macx: {
+    # QMAKE_TARGET.arch is only available on Windows?!
+    QMAKE_TARGET.arch = $$QMAKE_HOST.arch
+    contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "macx64"
+    else:PLATFORM = "macx32"
+}
+unix: {
+    # QMAKE_TARGET.arch is only available on Windows?!
+    linux-g++:QMAKE_TARGET.arch = $$QMAKE_HOST.arch
+    # allow for 32bit cross-compiling on 64bit with g++ (_HOST and _TARGET different)
+    linux-g++-32:QMAKE_TARGET.arch = x86
+    linux-g++-64:QMAKE_TARGET.arch = x86_64
+
+    contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "unix64"
+    else:PLATFORM = "unix32"
+}
 
 # Qt libraries
 QT *= core \
@@ -66,7 +94,7 @@ CONFIG(release,release|debug) {
         ./src/qutescoop.png \
         ./picsToMovie.sh
     dataFiles.path = $$DESTDIR/data
-    dataFiles.files += ./data/+notes.txt
+    dataFiles.files += ./data/_notes.txt
     dataFiles.files += ./data/airports.dat
     dataFiles.files += ./data/coastline.dat
     dataFiles.files += ./data/countries.dat
@@ -78,13 +106,13 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat
     dataFiles.files += ./data/cloudmirrors.dat
-    dataFiles.files += ./data/clouds/+notes.txt
+    dataFiles.files += "./data/clouds/_notes.txt"
     downloadedFiles.path = $$DESTDIR/downloaded
-    downloadedFiles.files += ./downloaded/+notes.txt
+    downloadedFiles.files += ./downloaded/_notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
-    screenshotsFiles.files += ./screenshots/+notes.txt
+    screenshotsFiles.files += ./screenshots/_notes.txt
     texturesFiles.path = $$DESTDIR/textures
-    texturesFiles.files += ./textures/+notes.txt
+    texturesFiles.files += ./textures/_notes.txt
     texturesFiles.files += ./textures/1024px-continents.png
     texturesFiles.files += ./textures/1024px-toposhaded.png
     texturesFiles.files += ./textures/1440px-elevation.png
@@ -98,8 +126,9 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/8192px-arctic-toposhaded.png
     texturesFiles.files += ./textures/8192px-topo.png
     cloudsFiles.path = $$DESTDIR/textures/clouds
-    cloudsFiles.files += ./textures/clouds/+notes.txt
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}. Run 'make install' to copy them to the correct locations")
+    cloudsFiles.files += ./textures/clouds/_notes.txt
+    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}.")
+    !build_pass:message("Run 'make install' to copy them to the correct locations")
     
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
@@ -112,14 +141,7 @@ CONFIG(release,release|debug) {
         myQtLib \
         myCompilerLib
 }
-macx { # could be "mac" also, I am not sure
-    CONFIG += app_bundle
-    ICON = src/Dolomynum.icns
-    CONFIG *= x86
-    CONFIG *= ppc
-    LIBS += -lGLU
-}
-mac { # could be "macx" also, I am not sure
+macx {
     CONFIG += app_bundle
     ICON = src/Dolomynum.icns
     CONFIG *= x86
@@ -259,15 +281,28 @@ SOURCES += src/WhazzupData.cpp \
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
-    downloaded/+notes.txt \
-    data/+notes.txt \
     data/dataversions.txt \
-    screenshots/+notes.txt \
-    textures/+notes.txt \
-    textures/clouds/+notes.txt
+    QuteScoop-upload.pri \
+    data/_notes.txt \
+    downloaded/_notes.txt \
+    screenshots/_notes.txt \
+    textures/_notes.txt \
+    textures/clouds/_notes.txt
+macx:OTHER_FILES += \
+    macbundle.sh
+unix:OTHER_FILES += \
+    QuteScoop.sh \
+    QuteScoop.desktop \
+    picsToMovie.sh
+
+# Report DESTDIR to user
+!build_pass:message("Compiled $$TARGET will be put to $$DESTDIR")
 
 # temp files
 MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+
+# include 'make installer-*' targets which builds installers
+include("QuteScoop-makeInstaller.pri")

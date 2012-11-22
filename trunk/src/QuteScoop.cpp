@@ -106,12 +106,14 @@ int main(int argc, char *argv[]) {
     // show Launcher
     Launcher launch;
     launch.fireUp();
-    launch.close();
 
     // start event loop
-    Window::getInstance()->show();
+    Window::getInstance(true)->show();
     app.processEvents();
-    return app.exec();
+
+    launch.close();
+
+    int ret = app.exec();
 
     delete NetworkManager::getInstance(true);
 
@@ -119,4 +121,6 @@ int main(int argc, char *argv[]) {
     if (logFile->isOpen())
         logFile->close();
     delete logFile;
+
+    return ret;
 }

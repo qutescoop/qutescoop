@@ -44,6 +44,7 @@ public:
     // METHODS TO SET ACTIVE OUTPUT WIDGETS
     void addStatusLabel(QLabel *label, bool hideIfNothingToDisplay = true);
     void removeStatusLabel(QLabel *label);
+
     void addProgressBar(QProgressBar *progressBar, bool hideIfNothingToDisplay = true);
     void removeProgressBar(QProgressBar *progressBar);
 
