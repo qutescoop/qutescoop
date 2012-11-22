@@ -1,10 +1,12 @@
 Project page: <http://qutescoop.sourceforge.net>
 See the QuteScoop-Wiki <http://sourceforge.net/p/qutescoop/wiki/> for
-general project status and planned features.
+help, project status and planned features.
 
 Version 2.1.8
  fixed:
   * about box (no clickable links)
+  * for developpers and self-compilers:
+    renamed +notes to _notes to suppress errors in 'make install' (buggy qmake...)
  changed:
   * removed Qt info box (no user cares about the framework used although Qt is the
     greatest of all)
@@ -15,6 +17,12 @@ Version 2.1.8
   * platform info and used compiler in debug log
   * added QuteScoop.desktop file for Unix/Linux desktop users - not included in the
     installer and needs to be adapted to suit your paths
+  * for developpers: 'make installer-linux' and 'make installer-windows' builds
+    the installer, provided the BitRock InstallBuilder is available on the system.
+    Make sure to always ever only deploy 32bit QuteScoop binaries! There is nothing
+    to be gained from 64bit for QuteScoop and we do not want to unnecessarily lock
+    out users with 32bit systems!
+  * for developpers, too: ./upload.sh uploads release files to Sourceforge
 
 Version 2.1.7
  fixed:

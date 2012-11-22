@@ -43,22 +43,22 @@
                     <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>DIST-unix/README.html</origin>
+                            <origin>DIST-unix32/README.html</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix/CHANGELOG</origin>
+                            <origin>DIST-unix32/CHANGELOG</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix/COPYING</origin>
+                            <origin>DIST-unix32/COPYING</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix/QuteScoop</origin>
+                            <origin>DIST-unix32/QuteScoop</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix/qutescoop.png</origin>
+                            <origin>DIST-unix32/qutescoop.png</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix/QuteScoop.sh</origin>
+                            <origin>DIST-unix32/QuteScoop.sh</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -110,13 +110,13 @@
                     <platforms>osx</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>DIST-macx/CHANGELOG</origin>
+                            <origin>DIST-macx32/CHANGELOG</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-macx/COPYING</origin>
+                            <origin>DIST-macx32/COPYING</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-macx/README.html</origin>
+                            <origin>DIST-macx32/README.html</origin>
                         </distributionFile>
                     </distributionFileList>
                 </folder>
@@ -147,16 +147,16 @@
                     <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionDirectory>
-                            <origin>DIST-unix/data</origin>
+                            <origin>DIST-unix32/data</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-unix/downloaded</origin>
+                            <origin>DIST-unix32/downloaded</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-unix/screenshots</origin>
+                            <origin>DIST-unix32/screenshots</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-unix/textures</origin>
+                            <origin>DIST-unix32/textures</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
@@ -167,16 +167,16 @@
                     <platforms>osx</platforms>
                     <distributionFileList>
                         <distributionDirectory>
-                            <origin>DIST-macx/data</origin>
+                            <origin>DIST-macx32/data</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-macx/downloaded</origin>
+                            <origin>DIST-macx32/downloaded</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-macx/screenshots</origin>
+                            <origin>DIST-macx32/screenshots</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-macx/textures</origin>
+                            <origin>DIST-macx32/textures</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>

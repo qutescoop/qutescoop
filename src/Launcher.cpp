@@ -7,7 +7,7 @@ Launcher::Launcher(QWidget *parent) :
         navReady(false),
         windReady(false)
 {
-    map = QPixmap(":/startup/logo").scaled(600,600);
+    map = QPixmap(":/startup/logo").scaled(600, 600);
     /*qDebug() << "isNull:" << map.isNull();
     qDebug() << "hasAlphaChannel:" << map.hasAlphaChannel();
     qDebug() << "w:" << map.width() << " h:" << map.height();*/
@@ -60,8 +60,6 @@ Launcher::Launcher(QWidget *parent) :
 }
 
 Launcher::~Launcher() {
-    GuiMessages::getInstance()->removeStatusLabel(text);
-    GuiMessages::getInstance()->removeProgressBar(progress);
     delete image, text;
 }
 
@@ -101,9 +99,11 @@ void Launcher::fireUp() {
     qApp->processEvents();
 
     //after Update loadNavdata will be started
-    connect(this, SIGNAL(navdataUpdated()), this, SLOT(loadNavdata()));
-    if(Settings::checkForUpdates())
+    if (Settings::checkForUpdates()) {
+        connect(this, SIGNAL(navdataUpdated()), SLOT(loadNavdata()));
         checkForDataUpdates();
+    } else
+        loadNavdata();
 
 
 
@@ -317,8 +317,7 @@ void Launcher::dataFilesDownloaded(bool error) {
     emit navdataUpdated();
 }
 
-void Launcher::loadNavdata()
-{
+void Launcher::loadNavdata() {
     qDebug() << "Launcher:loadNavdata -- Started";
 
     GuiMessages::remove("checknavdata");
@@ -337,7 +336,7 @@ void Launcher::loadNavdata()
 
 
 //////////////////////////
-//Whatzupp & Window
+//Whazzup & Window
 //////////////////////////
 
 void Launcher::loadWindow()
@@ -352,9 +351,8 @@ void Launcher::loadWindow()
     GuiMessages::remove("gettingnetworkstatus");
     GuiMessages::status(tr("Loading window"), "loadwindow");
 
-    Window *window = Window::getInstance(true);
-    window->whazzupDownloaded(true);
-    window->mapScreen->glWidget->newWhazzupData(true);
+    Window::getInstance(true)->whazzupDownloaded(true);
+    Window::getInstance(true)->mapScreen->glWidget->newWhazzupData(true);
     windowReady = true;
     GuiMessages::remove("loadwindow");
 }
