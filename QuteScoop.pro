@@ -141,19 +141,23 @@ CONFIG(release,release|debug) {
         myQtLib \
         myCompilerLib
 }
+
+# Notice: 32bit support dropped for OSX, all versions past 10.5 are able to execute 64bit-binaries
 macx {
     CONFIG += app_bundle
     ICON = src/Dolomynum.icns
-    CONFIG *= x86
-    CONFIG *= ppc
-    LIBS += -lGLU
+    CONFIG *= x86_64
+    LIBS += -framework OpenGL
 }
 win32 {
     RC_FILE = src/windowsicon.rc
     LIBS += -lglu32
 }
 unix {
-    LIBS += -lGLU
+        #OSX also considered as unix, therefore condition added to check
+        #if the platform is a "real" Unix
+         !macx:LIBS += -lGLU
+
 }
 
 # Input

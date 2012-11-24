@@ -6,7 +6,11 @@
 #define TESSELLATOR_H_
 
 #include "_pch.h"
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
+#endif
 
 // platform specific stuff. tessellator callback definitions are not the
 // same on all platforms
