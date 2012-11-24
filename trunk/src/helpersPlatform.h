@@ -36,17 +36,17 @@ QString platformOS() {
 #ifdef Q_WS_MAC
     os += "[compiled on WS_MAC]";
     switch (QSysInfo::MacintoshVersion) {
-        case QSysInfo::MV_9;        os += "[running on MV_9]";       break;
-        case QSysInfo::MV_10_0;     os += "[running on MV_10_0]";    break;
-        case QSysInfo::MV_10_1;     os += "[running on MV_10_1]";    break;
-        case QSysInfo::MV_10_2;     os += "[running on MV_10_2]";    break;
-        case QSysInfo::MV_10_3;     os += "[running on MV_10_3]";    break;
-        case QSysInfo::MV_10_4;     os += "[running on MV_10_4]";    break;
-        case QSysInfo::MV_10_5;     os += "[running on MV_10_5]";    break;
-        case QSysInfo::MV_10_6;     os += "[running on MV_10_6]";    break;
-        case QSysInfo::MV_10_7;     os += "[running on MV_10_7]";    break;
-        case QSysInfo::MV_10_8;     os += "[running on MV_10_8]";    break;
-        case QSysInfo::MV_Unknown;  os += "[running on MV_Unknown]"; break;
+        case QSysInfo::MV_9:        os += "[running on MV_9]";       break;
+        case QSysInfo::MV_10_0:     os += "[running on MV_10_0]";    break;
+        case QSysInfo::MV_10_1:     os += "[running on MV_10_1]";    break;
+        case QSysInfo::MV_10_2:     os += "[running on MV_10_2]";    break;
+        case QSysInfo::MV_10_3:     os += "[running on MV_10_3]";    break;
+        case QSysInfo::MV_10_4:     os += "[running on MV_10_4]";    break;
+        case QSysInfo::MV_10_5:     os += "[running on MV_10_5]";    break;
+        case QSysInfo::MV_10_6:     os += "[running on MV_10_6]";    break;
+        case QSysInfo::MV_10_7:     os += "[running on MV_10_7]";    break;
+        case QSysInfo::MV_10_8:     os += "[running on MV_10_8]";    break;
+        case QSysInfo::MV_Unknown:  os += "[running on MV_Unknown]"; break;
         default: os += QString("[running on unknown MAC (QSysInfo::MacintoshVersion=%1)]")
                     .arg(QSysInfo::MacintoshVersion);
     }

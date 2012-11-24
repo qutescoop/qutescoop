@@ -7,8 +7,11 @@
 
 #include "_pch.h"
 #include <QPoint>
+#ifdef __APPLE__
+#include <OpenGL/glu.h>
+#else
 #include <GL/glu.h>
-
+#endif
 #include "MapObject.h"
 #include "Sector.h"
 #include "Airport.h"
