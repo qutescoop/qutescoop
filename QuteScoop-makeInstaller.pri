@@ -20,7 +20,7 @@ BITROCK_PROJECT="BitRockInstallBuilderQt-QuteScoop.xml"
 
 installer_linux.target = installer-linux
 installer_linux.commands = "$${BITROCK_BUILDER_PATH} build $${BITROCK_PROJECT} linux --setvars product_version=$${VERSION}"
-installer_linux.depends = install
+#installer_linux.depends = install
 QMAKE_EXTRA_TARGETS += installer_linux
 
 installer_windows.target = installer-windows

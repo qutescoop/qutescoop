@@ -398,7 +398,7 @@ void Launcher::startWindDecoding(bool error) {
 
     QString data = QString(windDataBuffer->readAll());
 
-    GuiMessages::status("Decodíng wind data", "decodewind");
+    GuiMessages::status("Decoding wind data...", "decodewind");
     WindData::getInstance()->setRawData(data);
     WindData::getInstance()->decodeData();
     GuiMessages::remove("decodewind");
