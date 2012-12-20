@@ -1,5 +1,5 @@
 #include "WindData.h"
-
+#include "Window.h"
 
 
 WindData *windDataInstance = 0;
@@ -24,8 +24,6 @@ void WindData::decodeData() {
     status = 1;
     if(stationList.isEmpty()) { // Load station data from file
         FileReader file(Settings::applicationDataDirectory("data/station.dat"));
-        StationIDs.clear();
-
         while(!file.atEnd()) {
             QString rawLine =  file.nextLine();
             QString workLine = rawLine;
@@ -37,7 +35,7 @@ void WindData::decodeData() {
             workLine = rawLine;              //Station name
             workLine.remove(34, 23);
             workLine.remove(0, 14);
-            QString name = workLine;
+            QString name = workLine.trimmed();
 
             workLine = rawLine;              // Lat
             workLine.remove(42, 15);
@@ -53,36 +51,41 @@ void WindData::decodeData() {
             workLine.remove(49, 8);
             workLine.remove(0, 43);
             int east_west = 1;
-            if(workLine[5] == 'W') east_west = -1;
+            if(workLine[5] == 'W')
+                east_west = -1;
             workLine.remove(5,1);
             double lon = workLine.toDouble();
-            lon = lon*east_west;
-            lon = lon/100;
+            lon = lon * east_west;
+            lon = lon / 100;
 
             workLine = rawLine;              // Elev
             workLine.remove(54, 3);
             workLine.remove(0, 50);
             int elev = workLine.toInt();
 
-            stationList[num] = Station(num, lat, lon, elev, name);
-            StationIDs.append(num);
-            qDebug() << "WindData::decodeData() -- wind stations" << num << " lat:" << lat << " lon:" << lon;
-
+            if (!(num == 0 && qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
+                stationList[num] = Station(num, lat, lon, elev, name);
+//                qDebug() << "WindData::decodeData read" << num << name
+//                         << "lat:" << lat << "lon:" << lon << "elev:" << elev;
+            }
         }
     }
 
     qDebug() << "WindData::decodeData() -- stationdata loaded";
 
     stationRawData.clear();
-    if(rawData.isEmpty()) return;
+    if(rawData.isEmpty())
+        return;
     stationRawData = rawData.split(QRegExp("=\\s+"));
 
-    //infos about decoding radiosonde code see here: http://apollo.lsc.vsc.edu/classes/met1211L/raob.html#ident
+    // infos about decoding radiosonde code see here: http://apollo.lsc.vsc.edu/classes/met1211L/raob.html#ident
 
     QStringList stationRawList;
     for(int i = stationRawData.size(); i > 0; i--) {
         stationRawList.clear();
         stationRawList = stationRawData.value(i-1).split(QRegExp("\\s+"));
+
+        qDebug() << stationRawList;
 
         if(stationRawList[0] == "TTAA") mode = 0; // Temp + Wind
         if(stationRawList[0] == "TTBB") mode = 1; // temp only
@@ -218,9 +221,19 @@ void WindData::decodeData() {
 
                     dir += stationRawList[2].left(3).toInt();
 
-                    stationList[stationID].addWind(alt, dir, speed);
-                    stationList[stationID].addTemp(alt, temp);
-                    //qDebug() << "WindData::decode() -- ID:" << stationID << " alt:" << alt << " dir:" << dir << " speed:" << speed << " temp:" << temp;
+                    if (stationList.keys().contains(stationID)) {
+                        stationList[stationID].addWind(alt, dir, speed);
+                        stationList[stationID].addTemp(alt, temp);
+//                        qDebug() << "WindData::decodeData decode" << stationID
+//                                 << stationList[stationID].getName()
+//                                 << "lat" << stationList[stationID].getLat()
+//                                 << "lon" << stationList[stationID].getLon()
+//                                 << "alt" << alt
+//                                 << "dir" << dir << "speed" << speed << "temp" << temp;
+                    } else {
+//                        qDebug() << "data for station" << stationID << "available but we have no location"
+//                                 << "from 'data/station.dat'";
+                    }
                 }
 
                 stationRawList.removeFirst();       //remove the processed group
@@ -234,13 +247,16 @@ void WindData::decodeData() {
 
     qDebug() << "WindData::decodeData  -- radiosondedata decoded";
 
-    for(int i = 1; i <= 40 ; i++)
-        WindList.append( createWindArrowList(i*1000));
-    //createWindArrowList(10000);
-
+    for(quint8 i = 1; i <= 40 ; i++)
+        windList.append(createWindArrowList(i * 1000));
 
     qDebug() << "WindData::decodeData  -- finished";
     status = 0;
+
+    // update GL if already created
+    if (Window::getInstance(false)) {
+        Window::getInstance(true)->mapScreen->glWidget->update();
+    }
 }
 
 void WindData::setRawData(QString data) {
@@ -266,8 +282,9 @@ GLuint WindData::createWindArrowList(int alt) { // alt in ft
 
     glNewList(result, GL_COMPILE);
 
-    for(int i = StationIDs.size(); i > 0; i--) {
-        stationList[StationIDs[i-1]].getWindArrow(alt);
+    foreach(const Station s, stationList) {
+//  for(int i = stationIds.size(); i > 0; i--) {
+        s.getWindArrow(alt);
         //qDebug() << "ID: " << StationIDs[i-1] << " alt:" << alt;
     }
     glEndList();
@@ -278,18 +295,13 @@ GLuint WindData::createWindArrowList(int alt) { // alt in ft
 GLuint WindData::getWindArrows(int alt) { // alt in 1000 ft
     //qDebug() << "WindData::getWindArrows -- alt:" << alt;
     if(alt < 0 || alt > 40) return 0;
-    return WindList.value(alt);
+    return windList.value(alt);
 }
 
 void WindData::refreshLists() {
-    WindList.clear();
+    windList.clear();
 
     for(int i = 1; i <= 40 ; i++)
-        WindList.append( createWindArrowList(i*1000));
+        windList.append( createWindArrowList(i*1000));
     qDebug() << "WindData::refreshLists -- done";
 }
-
-
-
-
-

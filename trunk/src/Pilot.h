@@ -47,7 +47,7 @@ public:
     int planTasInt() const; // defuck TAS for Mach numbers
     int defuckPlanAlt(QString alt) const; // returns an altitude from various flightplan strings
     QPair<double, double> positionInFuture(int seconds) const;
-    const int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
+    int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
     bool showDepLine() const,
         showDestLine() const;
     QString routeWaypointsStr();

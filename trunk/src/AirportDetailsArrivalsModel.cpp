@@ -30,10 +30,12 @@ QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientati
 }
 
 int AirportDetailsArrivalsModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return 12;
 }
 
 int AirportDetailsArrivalsModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return pilots.count();
 }
 

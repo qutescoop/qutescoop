@@ -295,8 +295,8 @@ void MapScreen::createWindWidget()
     W_Weather->lower();
 }
 
-void MapScreen::resizeEvent(QResizeEvent *event)
-{
+void MapScreen::resizeEvent(QResizeEvent *event) {
+    Q_UNUSED(event);
     glWidget->resize(this->width(),this->height());
 }
 

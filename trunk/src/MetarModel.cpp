@@ -17,6 +17,7 @@ MetarModel::MetarModel(QObject *parent):
 }
 
 int MetarModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     if(airportList.size() > MAX_METARS)
         return 1;
 
@@ -24,6 +25,7 @@ int MetarModel::rowCount(const QModelIndex &parent) const {
 }
 
 int MetarModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return 1;
 }
 

@@ -2,20 +2,37 @@
 # This file is part of QuteScoop. See README for license
 # #####################################################################
 
-# The QuteScoop version
-VERSION = "2.1.8"
-DEFINES += VERSION_NUMBER=\\\"$$VERSION\\\"
+# QuteScoop version
+VERSION = "2.1.9" # should not include spaces
+VER_STR = '\\"$${VERSION}\\"'
+DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
+                                            # string through qmake -> console ->
+                                            # compiler
+# Subversion revision
+CVS_REVISION = '\\"$Revision: 297 $\\"' # Gets set automatically on commit of THIS file.
+                                  # This is just the revision of THIS file, not the whole working copy.
+                                  # Well, better than nothing. No working copy revision information is
+                                  # available cross-platform :(
+
+CVS_REVISION = $$replace(CVS_REVISION, "\\$", "") # strip away any special characters...
+CVS_REVISION = $$replace(CVS_REVISION, "Revision:", "Rev")   # as these tend to give compiler errors
+CVS_REVISION = $$replace(CVS_REVISION, " ", "")
+
+DEFINES += CVS_REVISION=\"$$CVS_REVISION\" # complex escaping to preserve
+                                                 # string through qmake -> console ->
+                                                 # compiler
+
 
 TEMPLATE = app
 CONFIG *= qt
 
-# CONFIG = debug
-# CONFIG += release
-CONFIG *= warn_off
+# CONFIG *= debug
+# CONFIG *= release
+CONFIG *= warn_on
 TARGET = QuteScoop
 
-# Let's make sure we do not mix up 32 and 64bit binaries. Always provide
-# 32bit installers!
+# Let's make sure we do not mix up 32 and 64bit binaries. Provide
+# 32bit installers or clearly mark them as 64bit to avaoid confusion.
 # Hint: Setting up a virtual machine (e.g. in VirtualBox) is from my
 # experience much easier than cross-compiling 32bit from a 64bit host.
 
@@ -41,11 +58,7 @@ unix: {
 }
 
 # Qt libraries
-QT *= core \
-    gui \
-    network \
-    opengl \
-    xml
+QT *= core gui network opengl xml
 # in debug mode, we output to current directory
 CONFIG(debug,release|debug) { 
     !build_pass:message("DEBUG")
@@ -153,15 +166,14 @@ win32 {
     RC_FILE = src/windowsicon.rc
     LIBS += -lglu32
 }
-unix {
-        #OSX also considered as unix, therefore condition added to check
-        #if the platform is a "real" Unix
-         !macx:LIBS += -lGLU
-
+# OSX also considered as unix, therefore condition added to check
+# if the platform is a "real" Unix
+!macx:unix {
+    LIBS += -lGLU
 }
 
 # Input
-FORMS = src/MainWindow.ui \
+FORMS = \
     src/PilotDetails.ui \
     src/ControllerDetails.ui \
     src/AirportDetails.ui \
@@ -169,7 +181,8 @@ FORMS = src/MainWindow.ui \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui\
-    src/SectorView.ui
+    src/SectorView.ui \
+    src/Window.ui
 HEADERS += src/_pch.h \
     src/WhazzupData.h \
     src/Whazzup.h \
@@ -285,9 +298,19 @@ SOURCES += src/WhazzupData.cpp \
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
-    data/dataversions.txt \
-    QuteScoop-upload.pri \
     data/_notes.txt \
+    data/dataversions.txt \
+    data/station.dat \
+    data/firlist.dat \
+    data/firdisplay.dat \
+    data/firdisplay.sup \
+    data/countrycodes.dat \
+    data/countries.dat \
+    data/coastline.dat \
+    data/cloudmirrors.dat \
+    data/airports.dat \
+    data/airlines.dat \
+    QuteScoop-upload.pri \
     downloaded/_notes.txt \
     screenshots/_notes.txt \
     textures/_notes.txt \
@@ -308,5 +331,5 @@ UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 
-# include 'make installer-*' targets which builds installers
+# include 'make installer-*' targets which build installers for Linux & Win
 include("QuteScoop-makeInstaller.pri")

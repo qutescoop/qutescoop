@@ -43,7 +43,13 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     treeBookedAtc->setModel(bookedAtcSortModel);
     connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
 
+    // disconnect to set DateTime without being disturbed
+    // fixes https://sourceforge.net/p/qutescoop/tickets/5/
+    disconnect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
+               this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
     dateTimeFilter->setDateTime(QDateTime::currentDateTimeUtc());
+    connect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
+               this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
     connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
     QFont font = lblStatusInfo->font();
@@ -83,10 +89,10 @@ void BookedAtcDialog::refresh() {
     qDebug() << "BookedAtcDialog/refresh() -- finished";
 }
 
-void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime)
-{
+void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
-    disconnect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
+    disconnect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
+               this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
     editFilterTimer.stop();
 
     // make year change if M 12+ or 0-
@@ -137,13 +143,13 @@ void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime)
     editFilterTimer.start(1000);
 }
 
-void BookedAtcDialog::on_editFilter_textChanged(QString searchStr)
-{
+void BookedAtcDialog::on_editFilter_textChanged(QString searchStr) {
+    Q_UNUSED(searchStr);
     editFilterTimer.start(1000);
 }
 
-void BookedAtcDialog::on_spinHours_valueChanged(int val)
-{
+void BookedAtcDialog::on_spinHours_valueChanged(int val) {
+    Q_UNUSED(val);
     editFilterTimer.start(1000);
 }
 
@@ -185,8 +191,7 @@ void BookedAtcDialog::modelSelected(const QModelIndex& index) {
     bookedAtcModel->modelSelected(bookedAtcSortModel->mapToSource(index));
 }
 
-void BookedAtcDialog::on_tbPredict_clicked()
-{
+void BookedAtcDialog::on_tbPredict_clicked() {
     close();
     Whazzup::getInstance()->setPredictedTime(dateTimeFilter->dateTime());
 }

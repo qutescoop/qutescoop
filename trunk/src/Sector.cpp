@@ -29,7 +29,7 @@ Sector::~Sector() {
         glDeleteLists(_borderline, 1);
 }
 
-const QPolygonF& Sector::sectorPolygon() const {
+const QPolygonF Sector::sectorPolygon() const {
     QPolygonF pol;
     foreach(const DoublePair p, points)
         pol.append(QPointF(p.first, p.second));

@@ -216,9 +216,10 @@ void Window::toggleFullscreen() {
 }
 
 void Window::about() {
-    QFile readmeFile(qApp->applicationDirPath() + "/README.html");
-    readmeFile.open(QIODevice::ReadOnly);
-    QMessageBox::about(this, tr("About QuteScoop"), readmeFile.readAll());
+    QFile file(qApp->applicationDirPath() + "/README.html");
+    if (file.open(QIODevice::ReadOnly))
+        QMessageBox::about(this, tr("About QuteScoop"), file.readAll());
+    file.close();
 }
 
 void Window::whazzupDownloaded(bool isNew) {
@@ -500,6 +501,7 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
         // set vertical title bar
         dock->setFeatures(searchDock->features() | QDockWidget::DockWidgetVerticalTitleBar);
         break;
+    default: {}
     }
 }
 
@@ -848,9 +850,11 @@ void Window::on_tbZoomOut_clicked(){
 }
 // we use this to catch right-clicks on the buttons
 void Window::on_tbZoomOut_customContextMenuRequested(QPoint pos){
+    Q_UNUSED(pos);
     mapScreen->glWidget->zoomTo(2.);
 }
 void Window::on_tbZoomIn_customContextMenuRequested(QPoint pos){
+    Q_UNUSED(pos);
     mapScreen->glWidget->zoomTo(2.);
 }
 void Window::on_actionZoomReset_triggered(){
@@ -1008,4 +1012,32 @@ void Window::openSectorView() {
     Sectorview::getInstance(true)->raise();
     Sectorview::getInstance(true)->activateWindow();
     Sectorview::getInstance(true)->setFocus();
+}
+
+void Window::on_actionChangelog_triggered() {
+    QFile file(qApp->applicationDirPath() + "/CHANGELOG");
+    if (file.open(QIODevice::ReadOnly)) {
+        QDialog *dlg = new QDialog(this);
+        QTextEdit *lbl = new QTextEdit(dlg);
+        QDialogButtonBox *btns = new QDialogButtonBox(
+                    QDialogButtonBox::Ok,
+                    Qt::Horizontal,
+                    dlg
+        );
+
+        dlg->connect(btns, SIGNAL(accepted()), SLOT(close()));
+        lbl->setReadOnly(true);
+        lbl->setText(file.readAll());
+
+        dlg->setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
+        dlg->setWindowTitle("Changelog");
+
+        dlg->setLayout(new QVBoxLayout);
+        dlg->layout()->addWidget(lbl);
+        dlg->layout()->addWidget(btns);
+
+        dlg->setModal(true);
+        dlg->showMaximized();
+    }
+    file.close();
 }

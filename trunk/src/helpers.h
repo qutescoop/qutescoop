@@ -17,15 +17,14 @@ static double inline modPositive(double x, double y) {
     return x - y * floor(x/y);
 }
 
-/* version information */
-#define CVS_REVISION "$Revision$" // Gets set automatically on commit of THIS file.
-                                        // This is just the revision of THIS file, not the whole working copy.
-                                        // Well, better than nothing. No working copy revision information is
-                                        // available cross-platform :(
-
-// VERSION_NUMBER is defined in the qmake QuteScoop.pro file
-//#define VERSION_STRING QString("QuteScoop %1 - %2").arg(VERSION_NUMBER, CVS_REVISION)
-#define VERSION_STRING "QuteScoop " VERSION_NUMBER " - " CVS_REVISION
+class Version {
+public:
+    /* something like "QuteScoop 2.1.8 - Revision 212" */
+    static QString str() {
+        // VERSION_NUMBER and CVS_REVISION are defined in the qmake QuteScoop.pro file
+        return QString("QuteScoop %1 - %2").arg(VERSION_NUMBER).arg(CVS_REVISION);
+    }
+};
 
 /* mathematical constants */
 const double Pi180 = M_PI / 180.;

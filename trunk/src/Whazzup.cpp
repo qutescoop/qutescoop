@@ -35,19 +35,20 @@ Whazzup::~Whazzup() {
 
 void Whazzup::setStatusLocation(const QString& statusLocation) {
     qDebug() << "Downloading network status from\t" << statusLocation;
+    GuiMessages::message("Getting network status...");
 
     QUrl url(statusLocation);
 
     connect(NetworkManager::getInstance(),
             SIGNAL(requestFinished(QNetworkReply*)),
-            this, SLOT(statusDownloaded(QNetworkReply*)));
+            this, SLOT(processStatus(QNetworkReply*)));
     NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
 }
 
-void Whazzup::statusDownloaded(QNetworkReply* reply) {
+void Whazzup::processStatus(QNetworkReply* reply) {
     disconnect(NetworkManager::getInstance(),
                SIGNAL(requestFinished(QNetworkReply*)),
-               this, SLOT(statusDownloaded(QNetworkReply*)));
+               this, SLOT(processStatus(QNetworkReply*)));
 
     if(reply == 0)
         return;
@@ -116,7 +117,7 @@ void Whazzup::statusDownloaded(QNetworkReply* reply) {
     if(urls.size() == 0)
         GuiMessages::warning("No Whazzup-URLs found. Try again later.");
     else
-        emit statusDownloaded();
+        download();
 }
 
 void Whazzup::fromFile(QString filename) {
@@ -127,13 +128,12 @@ void Whazzup::fromFile(QString filename) {
 
     connect(NetworkManager::getInstance(),
             SIGNAL(requestFinished(QNetworkReply*)),
-            this, SLOT(whazzupDownloaded(QNetworkReply*)));
+            this, SLOT(processWhazzup(QNetworkReply*)));
     NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
 }
 
 void Whazzup::download() {
     if(urls.size() == 0) {
-        GuiMessages::errorUserAttention("No Whazzup URLs in network status. Trying to get a new network status.");
         setStatusLocation(Settings::statusLocation());
         return;
     }
@@ -151,12 +151,12 @@ void Whazzup::download() {
 
     QUrl url(urls[qrand() % urls.size()]);
 
-    GuiMessages::progress("whazzupDownload", QString("Updating whazzup from %1").
+    GuiMessages::progress("whazzupDownload", QString("Updating whazzup from %1...").
                          arg(url.toString(QUrl::RemoveUserInfo)));
 
     connect(NetworkManager::getInstance(),
             SIGNAL(requestFinished(QNetworkReply*)),
-            this, SLOT(whazzupDownloaded(QNetworkReply*)));
+            this, SLOT(processWhazzup(QNetworkReply*)));
     QNetworkReply *reply = NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
     connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(whazzupProgress(qint64,qint64)));
 }
@@ -165,11 +165,11 @@ void Whazzup::whazzupProgress(qint64 prog, qint64 tot) {
     GuiMessages::progress("whazzupDownload", prog, tot);
 }
 
-void Whazzup::whazzupDownloaded(QNetworkReply* reply) {
+void Whazzup::processWhazzup(QNetworkReply* reply) {
     GuiMessages::remove("whazzupDownload");
     disconnect(NetworkManager::getInstance(),
                SIGNAL(requestFinished(QNetworkReply*)),
-               this, SLOT(whazzupDownloaded(QNetworkReply*)));
+               this, SLOT(processWhazzup(QNetworkReply*)));
 
     if(reply == 0) {
         GuiMessages::errorUserAttention("Download Error. Buffer unavailable.");
@@ -243,11 +243,11 @@ void Whazzup::downloadBookings() {
     bookingsTimer->stop();
 
     GuiMessages::progress("bookingsDownload",
-                              QString("Updating ATC Bookings from %1")
+                              QString("Updating ATC Bookings from %1...")
                           .arg(url.toString(QUrl::RemoveUserInfo)));
     connect(NetworkManager::getInstance(),
             SIGNAL(requestFinished(QNetworkReply*)),
-            this, SLOT(bookingsDownloaded(QNetworkReply*)));
+            this, SLOT(processBookings(QNetworkReply*)));
     QNetworkReply *reply = NetworkManager::getInstance()->httpRequest(QNetworkRequest(url));
     connect(reply, SIGNAL(downloadProgress(qint64,qint64)), this,
             SLOT(bookingsProgress(qint64,qint64)));
@@ -257,11 +257,11 @@ void Whazzup::bookingsProgress(qint64 prog, qint64 tot) {
     GuiMessages::progress("bookingsDownload", prog, tot);
 }
 
-void Whazzup::bookingsDownloaded(QNetworkReply* reply) {
+void Whazzup::processBookings(QNetworkReply* reply) {
     GuiMessages::remove("bookingsDownload");
     disconnect(NetworkManager::getInstance(),
                SIGNAL(requestFinished(QNetworkReply*)),
-               this, SLOT(whazzupDownloaded(QNetworkReply*)));
+               this, SLOT(processWhazzup(QNetworkReply*)));
     if(reply == 0) {
         GuiMessages::errorUserAttention("Download Error. Buffer unavailable.");
         return;

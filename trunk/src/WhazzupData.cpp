@@ -14,14 +14,14 @@
 
 WhazzupData::WhazzupData():
     servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
-    whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime()),
-    dataType(UNIFIED), whazzupVersion(0)
+    updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
+    whazzupVersion(0), dataType(UNIFIED)
 {
 }
 
 WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
-    servers(QList<QStringList>()), voiceServers(QList<QStringList>()), whazzupVersion(0),
-    whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime())
+    servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
+    updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()), whazzupVersion(0)
 {
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
@@ -153,9 +153,10 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
 
 //faking WhazzupData based on valid data and a predictTime
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
-    servers(QList<QStringList>()), voiceServers(QList<QStringList>()), whazzupVersion(0),
-    whazzupTime(QDateTime()), bookingsTime(QDateTime()), updateEarliest(QDateTime()),
-    predictionBasedOnTime(QDateTime()), predictionBasedOnBookingsTime(QDateTime())
+    servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
+    updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
+    predictionBasedOnTime(QDateTime()),  predictionBasedOnBookingsTime(QDateTime()),
+    whazzupVersion(0)
 {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;

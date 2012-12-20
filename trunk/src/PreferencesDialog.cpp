@@ -115,7 +115,7 @@ void PreferencesDialog::loadSettings() {
     glTextureEarth->setCurrentIndex(glTextureEarth->findText(Settings::glTextureEarth()));
 
     glStippleLines->setChecked(Settings::glStippleLines());
-    cbBlend->setChecked(Settings::glBlending);
+    cbBlend->setChecked(Settings::glBlending());
     cbLineSmoothing->setChecked(Settings::displaySmoothLines());
     cbDotSmoothing->setChecked(Settings::displaySmoothDots());
     cbLighting->setChecked(Settings::glLighting());

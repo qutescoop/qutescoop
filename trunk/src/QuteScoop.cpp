@@ -47,12 +47,11 @@ void myMessageOutput(QtMsgType type, const char *msg) {
         qCritical() << msg;
         break;
     case QtFatalMsg:
-        qFatal(msg);
+        qFatal("%s", msg);
         break;
     }
     qInstallMsgHandler(myMessageOutput);
 }
-
 
 /* main */
 int main(int argc, char *argv[]) {
@@ -66,12 +65,12 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName("QuteScoop");
     app.setOrganizationDomain("qutescoop.sourceforge.net");
     app.setApplicationName("QuteScoop");
-    app.setApplicationVersion(VERSION_STRING);
+    app.setApplicationVersion(Version::str());
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
 
     // some initial debug logging
-    qDebug() << VERSION_STRING;
-    qDebug() << QString("Compiled on Qt %1, running on Qt %2.")
+    qDebug() << Version::str();
+    qDebug() << QString("Compiled with Qt %1, running with Qt %2.")
                              .arg(QT_VERSION_STR, qVersion());
 #ifdef QT_NO_DEBUG
     qDebug() << "COMPILED IN RELEASE MODE - this is best performance-wise.";
@@ -102,6 +101,11 @@ int main(int argc, char *argv[]) {
     qDebug() << "Expecting application data directory at"
              << Settings::applicationDataDirectory() << "(gets calculated on each start)";
 
+//    QObject::connect(Whazzup::getInstance(), SIGNAL(statusDownloaded()),
+//            Whazzup::getInstance(), SLOT(download()));
+
+    if(Settings::downloadOnStartup())
+        Whazzup::getInstance()->download();
 
     // show Launcher
     Launcher launch;
@@ -109,13 +113,9 @@ int main(int argc, char *argv[]) {
 
     // start event loop
     Window::getInstance(true)->show();
-    app.processEvents();
-
-    launch.close();
-
     int ret = app.exec();
 
-    delete NetworkManager::getInstance(true);
+//    delete NetworkManager::getInstance(true);
 
     // close log
     if (logFile->isOpen())

@@ -11,14 +11,14 @@
 class Sector {
     public:
         Sector() :
-            icao(), name(), countryCode(), lat(0.), lon(0.), id(), _polygon(0), _borderline(0)
+            icao(), name(), countryCode(), id(), lat(0.), lon(0.), _polygon(0), _borderline(0)
         {}
         Sector(QStringList strings);
         ~Sector();
 
         bool isNull() const { return icao.isNull(); }
 
-        const QPolygonF& sectorPolygon() const;
+        const QPolygonF sectorPolygon() const;
 
         QList<QPair<double, double> > points;
         QString icao, name, countryCode, id;

@@ -72,8 +72,7 @@ void NavData::loadSectors() {
     SectorReader().loadSectors(sectors);
 }
 
-void NavData::loadAirlineCodes(const QString &filename)
-{
+void NavData::loadAirlineCodes(const QString &filename) {
     airlineCodes.clear();
     if(filename.isEmpty()){
         qWarning() << "NavData::loadAirlineCodes() -- bad filename";
@@ -262,7 +261,8 @@ void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) { /
         DoublePair wpOld = points[0];
         for (int i=1; i < points.size(); i++) {
             foreach(const DoublePair p, greatCirclePoints(wpOld.first, wpOld.second,
-                                                    points[i].first, points[i].second))
+                                                    points[i].first, points[i].second,
+                                                          400.))
                 VERTEX(p.first, p.second);
             wpOld = points[i];
         }

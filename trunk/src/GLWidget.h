@@ -59,12 +59,12 @@ class GLWidget : public QGLWidget
         void createAirportsList();
         void createControllersLists();
         void createStaticLists();
-        void createSaticSectorLists(QList<Sector*> sectors);
+        void createStaticSectorLists(QList<Sector*> sectors);
 
         void useClouds();
 
         void destroyFriendHightlighter();
-        void renderStaticSectors(bool value) {renderstaticSectors = value;}
+        void renderStaticSectors(bool value) { isRenderStaticSectors = value; }
 
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
@@ -101,7 +101,7 @@ class GLWidget : public QGLWidget
         //void createWindList();
         //void renderWindStation(double lat, double lon ,double knots  ,double deg);
 
-        void parseEarthClouds(void);
+        void parseEarthClouds();
         void createLights();
 
         void createFriendHighlighter();
@@ -117,7 +117,7 @@ class GLWidget : public QGLWidget
 
         QSet<FontRectangle*> fontRectangles, allFontRectangles;
         QPoint lastPos, mouseDownPos;
-        bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting, renderstaticSectors,
+        bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting, isRenderStaticSectors,
         lightsGenerated;
         QImage completedEarthTexIm;
         GLUquadricObj *earthQuad;

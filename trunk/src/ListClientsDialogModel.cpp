@@ -77,10 +77,12 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
 }
 
 int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return clients.count();
 }
 
 int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return Whazzup::getInstance()->realWhazzupData().isIvao()? 6: 5;
 }
 

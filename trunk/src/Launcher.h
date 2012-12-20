@@ -35,6 +35,7 @@ class Launcher : public QWidget
         void dataVersionsDownloaded(bool error);
         void dataFilesRequestFinished(int id, bool error);
         void dataFilesDownloaded(bool error);
+        void windProgress(int prog, int total);
         void loadNavdata();
 
         //Wind
