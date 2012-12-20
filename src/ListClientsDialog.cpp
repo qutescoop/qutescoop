@@ -211,6 +211,7 @@ void ListClientsDialog::refresh() {
 }
 
 void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
+    Q_UNUSED(searchStr);
     editFilterTimer.start(1000);
 }
 
@@ -358,6 +359,7 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 }
 
 void ListClientsDialog::voiceServerClicked(int row, int col) {
+    Q_UNUSED(col);
     QUrl url = QUrl(
                 QString("http://%1:18009/?opts=-R-D")
                 .arg(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString())

@@ -1,6 +1,32 @@
-Project page: <http://qutescoop.sourceforge.net>
-See the QuteScoop-Wiki <http://sourceforge.net/p/qutescoop/wiki/> for
+Project page: [http://qutescoop.sourceforge.net]
+See the QuteScoop-Wiki [http://sourceforge.net/p/qutescoop/wiki/] for
 help, project status and planned features.
+Find known bugs or report bugs to our bug tracker:
+  [http://sourceforge.net/p/qutescoop/tickets]
+
+Version 2.1.9
+ fixed:
+  * OpenGL setting value 'blend' was never reflected in preferences dialog
+  * Booked ATC dialog set wrong date and did not show booked stations
+    (https://sourceforge.net/p/qutescoop/tickets/5/)
+  * ignore wind data that contains only 0's
+  * prevent access to non-initialized wind stations
+ added:
+  * when zooming through right or left double click, the cursor is moved to the
+    map position on which the zoom in/out was just initiated
+  * wind arrows have a darker background for readability
+  * the popup window at program start (aka 'Launcher') won't wait until Whazzup- or
+    wind data is fully downloaded but load the map right away
+  * weather data download shows a progressbar - we will need to integrate the UI for
+    simultaneous downloads better, though
+  * this changelog is now accessible from the menu
+ changed:
+  * wind arrows UI: changed appeareance for better readability and anti-aliasing
+  * less points drawn during a great-circle route plot (only each 400NM now, was 30NM)
+  * for developpers: version number and Subversion revision get set from the profile
+    file QuteScoop.pro. To get the auto-updated revision right, change the version,
+    check in changes to SVN, then create the release
+  * for developpers: MainWindow is now called Window for consistency
 
 Version 2.1.8
  fixed:

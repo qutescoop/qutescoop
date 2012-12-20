@@ -309,7 +309,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
     //qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;
     if(plan.isEmpty()) return result;
-    Waypoint* currPoint;
+    Waypoint* currPoint = 0;
     bool wantAirway = false;
     while (!plan.isEmpty()) {
         QString id = plan.takeFirst();
@@ -322,7 +322,8 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
             QString endId = plan.first();
             Waypoint* wp = getWaypoint(endId, lat, lon);
             if(wp != 0) {
-                result += awy->expand(currPoint->label, wp->label);
+                if (currPoint != 0)
+                    result += awy->expand(currPoint->label, wp->label);
                 currPoint = wp;
                 lat = wp->lat;
                 lon = wp->lon;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Window</class>
+ <widget class="QMainWindow" name="Window">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -403,6 +403,7 @@ Whazzups (replay)</string>
      <string>&amp;QuteScoop</string>
     </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionChangelog"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
@@ -622,7 +623,7 @@ Whazzups (replay)</string>
           <string>Refresh already downloaded METARs.</string>
          </property>
          <property name="text">
-          <string>Refresh</string>
+          <string>refresh</string>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -691,6 +692,9 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:9pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -756,8 +760,11 @@ p, li { white-space: pre-wrap; }
      </property>
      <item>
       <widget class="QPushButton" name="pb_highlightFriends">
+       <property name="toolTip">
+        <string>draws a circle around friends on the map</string>
+       </property>
        <property name="text">
-        <string>Highlight</string>
+        <string>highlight</string>
        </property>
        <property name="checkable">
         <bool>true</bool>
@@ -1243,13 +1250,31 @@ p, li { white-space: pre-wrap; }
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/friends16.png</normaloff>:/icons/images/friends16.png</iconset>
+   </property>
    <property name="text">
-    <string>Hightlight Friends</string>
+    <string>Highlight friends</string>
+   </property>
+   <property name="toolTip">
+    <string>draws a circle around friends on the map</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F2</string>
    </property>
   </action>
   <action name="actionSectorview">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
-    <string>Sectorview</string>
+    <string>S&amp;ectorview</string>
+   </property>
+  </action>
+  <action name="actionChangelog">
+   <property name="text">
+    <string>&amp;Changelog</string>
    </property>
   </action>
  </widget>

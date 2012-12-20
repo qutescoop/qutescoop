@@ -3,9 +3,7 @@
 
 Launcher::Launcher(QWidget *parent) :
         QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint),
-        windowReady(false),
-        navReady(false),
-        windReady(false)
+        navReady(false), windowReady(false), windReady(false)
 {
     map = QPixmap(":/startup/logo").scaled(600, 600);
     /*qDebug() << "isNull:" << map.isNull();
@@ -60,7 +58,8 @@ Launcher::Launcher(QWidget *parent) :
 }
 
 Launcher::~Launcher() {
-    delete image, text;
+    delete image;
+    delete text;
 }
 
 ///////////////////////////
@@ -111,32 +110,32 @@ void Launcher::fireUp() {
     startWindDownload();
 
 
-    //get networksatus & Whazzupdata
-    GuiMessages::status(tr("Getting network status"), "gettingnetworkstatus");
-    qApp->processEvents();
+//    //get networksatus & Whazzupdata
+//    GuiMessages::status(tr("Getting network status"), "gettingnetworkstatus");
+//    qApp->processEvents();
 
-    qDebug() << "Launcher::fireUp() creating Whazzup";
-    Whazzup *whazzup = Whazzup::getInstance();
-    qDebug() << "Launcher::fireUp() creating Whazzup --finished";
-    if(Settings::downloadOnStartup()) {
-        // download whazzup as soon as whazzup status download is complete
-        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
-        connect(whazzup, SIGNAL(newData(bool)), this, SLOT(loadWindow()));
-    }
-
-
-    // Always download status
-    whazzup->setStatusLocation(Settings::statusLocation());
+//    qDebug() << "Launcher::fireUp() creating Whazzup";
+//    Whazzup *whazzup = Whazzup::getInstance();
+//    qDebug() << "Launcher::fireUp() creating Whazzup --finished";
+//    if(Settings::downloadOnStartup()) {
+//        // download whazzup as soon as whazzup status download is complete
+//        connect(whazzup, SIGNAL(statusDownloaded()), whazzup, SLOT(download()));
+//        connect(whazzup, SIGNAL(newData(bool)), this, SLOT(loadWindow()));
+//    }
 
 
-    finalTimer.start();
-    while(finalTimer.isActive()) {
-        QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
-        if(windowReady && windReady)
-            finalTimer.stop();
-    }
+//    // Always download status
+//    whazzup->setStatusLocation(Settings::statusLocation());
 
 
+//    finalTimer.start();
+//    while(finalTimer.isActive()) {
+//        QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
+//        if(windowReady && windReady)
+//            finalTimer.stop();
+//    }
+
+    close();
     qDebug() << "Launcher::fireUp -- finished";
 }
 
@@ -238,6 +237,7 @@ void Launcher::dataVersionsDownloaded(bool error) {
 }
 
 void Launcher::dataFilesRequestFinished(int id, bool error) {
+    Q_UNUSED(id);
     if (error) {
         GuiMessages::criticalUserInteraction(QString("Error downloading %1:\n%2")
                                             .arg(dataVersionsAndFilesDownloader->currentRequest().path())
@@ -339,8 +339,7 @@ void Launcher::loadNavdata() {
 //Whazzup & Window
 //////////////////////////
 
-void Launcher::loadWindow()
-{
+void Launcher::loadWindow() {
     windowTimer.start();
     while(windowTimer.isActive()){
         QCoreApplication::processEvents(QEventLoop::AllEvents, 250);
@@ -355,6 +354,7 @@ void Launcher::loadWindow()
     Window::getInstance(true)->mapScreen->glWidget->newWhazzupData(true);
     windowReady = true;
     GuiMessages::remove("loadwindow");
+    close();
 }
 
 /////////////////////////
@@ -364,23 +364,29 @@ void Launcher::loadWindow()
 void Launcher::startWindDownload(){
     if(windDataDownloader != 0) windDataDownloader = 0;
 
-    GuiMessages::status(tr("Download wind data"), "loadwind");
-
     windDataDownloader= new QHttp(this);
     QUrl url("http://fsrealwx.rs-transline.de/upperair.txt");
     connect(windDataDownloader, SIGNAL(done(bool)) , this , SLOT(startWindDecoding(bool)));
+    connect(windDataDownloader, SIGNAL(dataReadProgress(int,int)) , this , SLOT(windProgress(int, int)));
 
+    GuiMessages::progress("loadwind",
+                          QString("Downloading wind data from %1...").arg(url.toString(QUrl::RemoveUserInfo)));
     windDataBuffer = new QBuffer;
     windDataBuffer->open(QBuffer::ReadWrite);
 
     windDataDownloader->setHost(url.host());
     windDataDownloader->get(url.path(), windDataBuffer);
-    qDebug() << "Launcher::startWindDownload -- WindData download started";
+    qDebug() << "Launcher::startWindDownload" << url;
 }
 
-void Launcher::startWindDecoding(bool error)
-{
+void Launcher::windProgress(int prog, int total) {
+    GuiMessages::progress("loadwind", prog, total);
+}
+
+void Launcher::startWindDecoding(bool error) {
     qDebug() << "Launcher::startWindDecoding -- WindData downloaded";
+
+    GuiMessages::remove("loadwind");
     if(windDataBuffer == 0) return;
 
     if(error) {
@@ -392,13 +398,10 @@ void Launcher::startWindDecoding(bool error)
 
     QString data = QString(windDataBuffer->readAll());
 
-    GuiMessages::remove("loadwind");
-    GuiMessages::status(tr("Decode wind data"), "decodewind");
-
+    GuiMessages::status("Decodíng wind data", "decodewind");
     WindData::getInstance()->setRawData(data);
-
     WindData::getInstance()->decodeData();
-
     GuiMessages::remove("decodewind");
+
     windReady = true;
 }

@@ -74,7 +74,7 @@ public:
         }
         ~GuiMessage() {} // needed for _METATYPE
 
-        QString msg, id;
+        QString id, msg;
         Type type;
         int progressValue, progressMaximum, showMs;
         QDateTime shownSince;
@@ -90,7 +90,7 @@ private slots:
     void update();
 private:
     GuiMessages();
-    ~GuiMessages() { delete _currentStatusMessage, _currentProgressMessage; }
+    ~GuiMessages() { delete _currentStatusMessage; delete _currentProgressMessage; }
 
     void setStatusMessage(GuiMessage *gm, bool bold = false, bool italic = false,
                           bool instantRepaint = true);

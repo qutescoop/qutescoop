@@ -1046,6 +1046,7 @@ void Settings::getRememberedMapPosition(double *xrot, double *yrot, double *zrot
     *xrot = getSettings()->value("defaultMapPosition/xrot" + QString("%1").arg(nr), *xrot).toDouble();
     // ignore yRot: no Earth tilting
     //*yrot = getSettings()->value("defaultMapPosition/yrot" + QString("%1").arg(nr), *yrot).toDouble();
+    Q_UNUSED(yrot);
     *zrot = getSettings()->value("defaultMapPosition/zrot" + QString("%1").arg(nr), *zrot).toDouble();
     *zoom = getSettings()->value("defaultMapPosition/zoom" + QString("%1").arg(nr), *zoom).toDouble();
 }

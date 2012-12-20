@@ -8,8 +8,8 @@
 #include "Client.h"
 #include "WhazzupData.h"
 #include "ClientDetails.h"
-#include "Sector.h";
-#include "Airport.h";
+#include "Sector.h"
+#include "Airport.h"
 
 class Airport;
 

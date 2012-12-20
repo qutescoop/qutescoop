@@ -140,6 +140,8 @@ void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
 ///////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 void GuiMessages::setStatusMessage(GuiMessage *gm, bool bold, bool italic, bool instantRepaint) {
+    Q_UNUSED(bold);
+    Q_UNUSED(italic);
     //qDebug() << "GuiMessages::setStatusMessage()" << gm;
     foreach(QLabel *l, _labels.keys()) {
         l->setText(gm->msg);
@@ -187,12 +189,12 @@ void GuiMessages::update() {
                 switch (gm->type) {
                 case GuiMessage::FatalUserInteraction:
                     QMessageBox::critical(qApp->desktop(), gm->id, gm->msg);
-                    qFatal(gm->id.toAscii() + " " + gm->msg.toAscii());
+                    qFatal("%s %s", (const char*) gm->id.constData(), (const char*) gm->msg.constData());
                     _messages.remove(key, gm);
                     return;
                 case GuiMessage::CriticalUserInteraction:
                     QMessageBox::critical(qApp->desktop(), gm->id, gm->msg);
-                    qCritical(gm->id.toAscii() + " " + gm->msg.toAscii());
+                    qCritical("%s %s", (const char*) gm->id.constData(), (const char*) gm->msg.constData());
                     _messages.remove(key, gm);
                     return;
                 case GuiMessage::ErrorUserAttention:
@@ -226,6 +228,7 @@ void GuiMessages::update() {
                     setStatusMessage(gm);
                     setProgress(new GuiMessage());
                     return;
+                default: {}
                 }
             }
         }

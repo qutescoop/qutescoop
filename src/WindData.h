@@ -41,15 +41,11 @@ private:
     QString rawData;
     QStringList stationRawData;
     QHash< int , Station> stationList;
-    QList< int > StationIDs;
-    QList<GLuint> WindList;
-    QMutex mutex;
+    QList<GLuint> windList;
     GLuint result;
 
     int status;
-    int mode; // 0 = TTAA; 1 = TTBB;2 =  PPBB; 3 = UNKNOWEN
-
-
+    int mode; // 0 = TTAA; 1 = TTBB;2 =  PPBB; 3 = UNKNOWN
 };
 
 

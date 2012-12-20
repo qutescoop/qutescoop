@@ -84,6 +84,9 @@ CALLBACK_DECL Tessellator::tessVertexCB(const GLvoid *data) {
 ///////////////////////////////////////////////////////////////////////////////
 CALLBACK_DECL Tessellator::tessCombineCB(const GLdouble newVertex[3], const GLdouble *neighborVertex[4],
                                          const GLfloat neighborWeight[4], GLdouble **outData) {
+    Q_UNUSED(neighborVertex);
+    Q_UNUSED(neighborWeight);
+
     // copy new intersect vertex to local array
     // Because newVertex is temporal and cannot be hold by tessellator until next
     // vertex callback called, it must be copied to the safe place in the app.

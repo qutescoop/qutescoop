@@ -61,7 +61,7 @@ void Sectorview::on_bt_apply_clicked() {
         renderSectors.append(sectorsHash[CheckedSectorList[i]]);
 
     MapScreen::getInstance(true)->glWidget->renderStaticSectors(true);
-    MapScreen::getInstance(true)->glWidget->createSaticSectorLists(renderSectors);
+    MapScreen::getInstance(true)->glWidget->createStaticSectorLists(renderSectors);
     MapScreen::getInstance(true)->glWidget->update();
 
 }

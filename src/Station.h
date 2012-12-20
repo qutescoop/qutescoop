@@ -11,28 +11,26 @@
 class Station
 {
 public:
-    Station();
-    Station( int num, double la, double lo, int ele , QString nam="none");
+    Station() {}
+    Station(int num, double lat, double lon, int elev , QString name = "");
 
     void setName(QString s) { name = s; }
-    QString getName() { return name; }
+    QString getName() const { return name; }
 
-    int getNumber() { return number; }
-    double getLat() { return lat; }
-    double getLon() { return lon; }
-    int getElev() { return elev; }
+    double getLat() const { return lat; }
+    double getLon() const { return lon; }
+    int getElev() const { return elev; }
 
-    void getWindArrow(int alt);
+    void getWindArrow(int alt) const;
 
     void addWind(int alt, int dir, int speed);
     void addTemp(int alt, int temp);
 
-    QPair<int, int> getWind(int alt);
-    QHash< int , QPair < int , int > > getWind();
-    //GLunit getWindArror(int alt);
+    QPair<int, int> getWind(int alt) const;
+    QHash< int , QPair < int , int > > getWind() const;
 
 private:
-    void renderWindStation(double deg, double knots);
+    void renderWindStation(double deg, double knots) const;
 
     QString name;
     int number, elev;
@@ -40,7 +38,6 @@ private:
 
     QHash< int, QPair < int, int > > windData;  // < alt(feet) , < dir, speed >>
     QHash< int, int> tempData ;// <alt(feet), temp(degree C)>
-
 };
 
 #endif // STATION_H

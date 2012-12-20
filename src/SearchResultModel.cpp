@@ -7,11 +7,13 @@
 #include "Window.h"
 
 int SearchResultModel::rowCount(const QModelIndex &parent) const {
-	return content.count();
+    Q_UNUSED(parent);
+    return content.count();
 }
 
 int SearchResultModel::columnCount(const QModelIndex &parent) const {
-	return 1;
+    Q_UNUSED(parent);
+    return 1;
 }
 
 QVariant SearchResultModel::data(const QModelIndex &index, int role) const {

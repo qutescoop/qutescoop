@@ -38,7 +38,6 @@ class Whazzup: public QObject {
 
     signals:
         void newData(bool isNew);
-        void statusDownloaded();
         void needBookings();
 
     public slots:
@@ -48,11 +47,11 @@ class Whazzup: public QObject {
         void downloadBookings();
 
     private slots:
-        void statusDownloaded(QNetworkReply* reply);
+        void processStatus(QNetworkReply* reply);
         void whazzupProgress(qint64 prog,qint64 tot);
-        void whazzupDownloaded(QNetworkReply* reply);
+        void processWhazzup(QNetworkReply* reply);
         void bookingsProgress(qint64 prog,qint64 tot);
-        void bookingsDownloaded(QNetworkReply* reply);
+        void processBookings(QNetworkReply* reply);
 
     private:
         Whazzup();

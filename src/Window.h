@@ -5,7 +5,7 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
-#include "ui_MainWindow.h"
+#include "ui_Window.h"
 
 #include "_pch.h"
 
@@ -14,7 +14,7 @@
 #include "MetarModel.h"
 #include "FileReader.h"
 
-class Window : public QMainWindow, private Ui::MainWindow {
+class Window : public QMainWindow, private Ui::Window {
     Q_OBJECT
 public:
     static Window* getInstance(bool createIfNoInstance = false);
@@ -106,7 +106,9 @@ private slots:
 
     void cloudDownloadFinished(bool error);
 
-protected:
+    void on_actionChangelog_triggered();
+
+    protected:
     virtual void closeEvent(QCloseEvent *event);
 
 

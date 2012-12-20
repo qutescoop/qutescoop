@@ -33,6 +33,7 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
 }
 
 int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return 9;
 }
 
@@ -67,6 +68,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
 }
 
 int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const {
+    Q_UNUSED(parent);
     return controllers.count();
 }
 

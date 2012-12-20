@@ -78,7 +78,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 }
 
 void Pilot::showDetailsDialog() {
-    qDebug() << "Pilot::showDetailsDialog()";
+    //qDebug() << "Pilot::showDetailsDialog()";
     PilotDetails *infoDialog = PilotDetails::getInstance(true);
     infoDialog->refresh(this);
     infoDialog->show();
@@ -376,7 +376,7 @@ QString Pilot::delayStr() const { // delay
     int secs, calcSecs;
     secs = etaPlan().secsTo(eta());
     if (secs == 0)
-        return QString("none");
+        return QString("n/a");
     calcSecs = (secs < 0? -secs: secs);
     return QString("%1%2")
             .arg(secs < 0? "-": "")
@@ -412,7 +412,7 @@ QPair<double, double> Pilot::positionInFuture(int seconds) const {
     return NavData::pointDistanceBearing(lat, lon, dist, trueHeading);
 }
 
-const int Pilot::nextPointOnRoute(const QList<Waypoint *> &waypoints) const { // next point after present position
+int Pilot::nextPointOnRoute(const QList<Waypoint *> &waypoints) const { // next point after present position
     if((qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) || waypoints.isEmpty())
         return 0; // prefiled flight or no known position
     int nextPoint;

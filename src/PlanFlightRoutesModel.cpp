@@ -69,11 +69,15 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
 }
 
 bool PlanFlightRoutesModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+    Q_UNUSED(index);
+    Q_UNUSED(value);
+    Q_UNUSED(role);
     //qDebug() << "setData" << role << value;
     return true;
 }
 
 Qt::ItemFlags PlanFlightRoutesModel::flags(const QModelIndex &index) const {
+    Q_UNUSED(index);
     // make column 4 edittable
     //if (index.column() == 4)
     //    return Qt::ItemIsEditable | Qt::ItemIsEnabled | Qt::ItemIsSelectable;

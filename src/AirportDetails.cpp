@@ -196,10 +196,12 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
 }
 
 void AirportDetails::on_cbObservers_toggled(bool checked) {
+    Q_UNUSED(checked);
     refresh();
 }
 
 void AirportDetails::on_cbAtis_toggled(bool checked) {
+    Q_UNUSED(checked);
     refresh();
 }
 
