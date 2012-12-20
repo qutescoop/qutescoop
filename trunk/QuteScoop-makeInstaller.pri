@@ -25,7 +25,7 @@ QMAKE_EXTRA_TARGETS += installer_linux
 
 installer_windows.target = installer-windows
 installer_windows.commands = "$${BITROCK_BUILDER_PATH} build $${BITROCK_PROJECT} windows --setvars product_version=$${VERSION}"
-installer_windows.depends = install
+#installer_windows.depends = install
 QMAKE_EXTRA_TARGETS += installer_windows
 
 !build_pass:message("If you have built 32bit (we only want to deploy 32bit to users!) and have \
