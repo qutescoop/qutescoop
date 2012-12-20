@@ -27,7 +27,7 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     dataType = type;
     QStringList friends = Settings::friends();
-    int reloadInMin;
+    int reloadInMin = Settings::downloadInterval();
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
     ParserState state = STATE_NONE;
     while(buffer->canReadLine()) {
