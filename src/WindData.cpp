@@ -85,7 +85,7 @@ void WindData::decodeData() {
         stationRawList.clear();
         stationRawList = stationRawData.value(i-1).split(QRegExp("\\s+"));
 
-        qDebug() << stationRawList;
+        //qDebug() << stationRawList;
 
         if(stationRawList[0] == "TTAA") mode = 0; // Temp + Wind
         if(stationRawList[0] == "TTBB") mode = 1; // temp only

@@ -991,7 +991,6 @@ void Window::cloudDownloadFinished(bool error) {
              << Settings::applicationDataDirectory("textures/clouds/");
 
     cloudTimer.start(12600000); //start download in 3,5 h again
-    mapScreen->glWidget->cloudsAvaliable = true;
     mapScreen->glWidget->useClouds();
 }
 

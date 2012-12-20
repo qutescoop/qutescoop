@@ -69,9 +69,9 @@ void Station::renderWindStation(double deg, double knots) const {
     int pos = 0;
     for(int i = 0; i < n_Fifty; i++) {
         QPair<double, double> lineA = NavData::pointDistanceBearing(lat, lon, dist - pos + .5 , deg);
-        QPair<double, double> lineB = NavData::pointDistanceBearing(lat, lon, dist - pos - 6.5, deg);
+        QPair<double, double> lineB = NavData::pointDistanceBearing(lat, lon, dist - pos - 7.5, deg);
         QPair<double, double> out = NavData::pointDistanceBearing(lineA.first, lineA.second, 30, deg - 74);
-        pos += 10;
+        pos += 12;
 
         glBegin(GL_TRIANGLES);
         VERTEX(lineA.first, lineA.second);
@@ -83,7 +83,7 @@ void Station::renderWindStation(double deg, double knots) const {
     for(int i = 0; i < n_Ten; i++) {
         QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, deg);
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, deg - 70);
-        pos += 7;
+        pos += 9;
 
         glBegin(GL_LINES);
         VERTEX(a.first, a.second);
@@ -93,11 +93,11 @@ void Station::renderWindStation(double deg, double knots) const {
 
     // set apart if only 5kts
     if (n_Fifty + n_Ten == 0)
-        pos = 7;
+        pos = 9;
     for(int i = 0; i < n_Five; i++) {
         QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, deg);
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 13, deg - 70);
-        pos += 7;
+        pos += 9;
 
         glBegin(GL_LINES);
         VERTEX(a.first, a.second);
@@ -117,9 +117,9 @@ void Station::renderWindStation(double deg, double knots) const {
     pos = 0;
     for(int i = 0; i < n_Fifty; i++) {
         QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, deg);
-        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist - pos - 6, deg);
+        QPair<double, double> c = NavData::pointDistanceBearing(lat, lon, dist - pos - 7, deg);
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, deg - 74);
-        pos += 10;
+        pos += 12;
 
         glBegin(GL_TRIANGLES);
         VERTEX(a.first, a.second);
@@ -131,7 +131,7 @@ void Station::renderWindStation(double deg, double knots) const {
     for(int i = 0; i < n_Ten; i++) {
         QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, deg);
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 26, deg - 70);
-        pos += 7;
+        pos += 9;
 
         glBegin(GL_LINES);
         VERTEX(a.first, a.second);
@@ -141,11 +141,11 @@ void Station::renderWindStation(double deg, double knots) const {
 
     // set apart if only 5kts
     if (n_Fifty + n_Ten == 0)
-        pos = 7;
+        pos = 9;
     for(int i = 0; i < n_Five; i++) {
         QPair<double, double> a = NavData::pointDistanceBearing(lat, lon, dist - pos, deg);
         QPair<double, double> b = NavData::pointDistanceBearing(a.first, a.second, 13, deg - 70);
-        pos += 7;
+        pos += 9;
 
         glBegin(GL_LINES);
         VERTEX(a.first, a.second);
