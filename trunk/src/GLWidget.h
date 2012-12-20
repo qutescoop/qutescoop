@@ -32,8 +32,6 @@ class GLWidget : public QGLWidget
 
         QPair<double, double> currentPosition() const;
         ClientSelectionWidget *clientSelection;
-        bool cloudsAvaliable;
-
         void savePosition();
 
     public slots:

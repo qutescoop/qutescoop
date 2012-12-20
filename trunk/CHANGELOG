@@ -4,6 +4,10 @@ help, project status and planned features.
 Find known bugs or report bugs to our bug tracker:
   [http://sourceforge.net/p/qutescoop/tickets]
 
+Version 2.1.10
+ fixed:
+  * combining earth and cloud textures faster and less error-prone
+
 Version 2.1.9
  fixed:
   * OpenGL setting value 'blend' was never reflected in preferences dialog

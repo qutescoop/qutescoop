@@ -36,7 +36,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     setAutoFillBackground(false);
     setMouseTracking(true);
     lightsGenerated = false;
-    cloudsAvaliable = false;
     highlighter = 0;
     // call default (=1) map position
     Settings::getRememberedMapPosition(&xRot, &yRot, &zRot, &zoom, 1);
@@ -1568,86 +1567,73 @@ void GLWidget::parseEarthClouds() {
     QImage earthTexIm, cloudsIm;
 
     //Check if clouds available
-    if(cloudsAvaliable && Settings::showClouds()){
-        QString cloudsTexFile =
-                Settings::applicationDataDirectory(QString("textures/clouds/clouds.jpg"));
+    QString cloudsTexFile =
+            Settings::applicationDataDirectory("textures/clouds/clouds.jpg");
+    QFileInfo cloudsTexFI(cloudsTexFile);
+    if(Settings::showClouds() && cloudsTexFI.exists()){
+        qDebug() << "GLWidget::parseEarthClouds -- loading cloud texture";
         cloudsIm = QImage(cloudsTexFile);
     }
 
     if(Settings::glTextures()) {
         QString earthTexFile = Settings::applicationDataDirectory(
                     QString("textures/%1").arg(Settings::glTextureEarth()));
+        qDebug() << "GLWidget::parseEarthClouds -- loading earth texture";
         earthTexIm.load(earthTexFile);
     } else {
+        qDebug() << "GLWidget::parseEarthClouds -- finishing using clouds";
         completedEarthTexIm = cloudsIm;
-        qDebug() << "GLWidget::parseEarthClouds -- finished using clouds";
     }
 
-    if(cloudsIm.isNull() && Settings::glTextures()) {
+    if((!Settings::showClouds() || cloudsIm.isNull()) && Settings::glTextures()) {
+        qDebug() << "GLWidget::parseEarthClouds -- finishing using earthTex"
+                 << "(clouds deactivated or cloudsIm.isNull())";
         completedEarthTexIm = earthTexIm;
-        qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex (no cloud tex found)";
-    }
-
-    if(!Settings::showClouds() && Settings::glTextures()) {
-        completedEarthTexIm = earthTexIm;
-        qDebug() << "GLWidget::parseEarthClouds -- finished using earthTex";
     }
 
     if(!cloudsIm.isNull() && !earthTexIm.isNull() && Settings::showClouds()) {
+        qDebug() << "GLWidget::parseEarthClouds -- getting cloud image dimensions";
         //transform so same size, take the bigger image
         int width = cloudsIm.width();
         int height = cloudsIm.height();
 
         if(earthTexIm.width() > width) {
+            qDebug() << "GLWidget::parseEarthClouds -- upscaling cloud image horizontally";
             cloudsIm = cloudsIm.scaledToWidth(earthTexIm.width(), Qt::SmoothTransformation);
             width = earthTexIm.width();
         } else {
+            qDebug() << "GLWidget::parseEarthClouds -- downscaling cloud image horizontally";
             earthTexIm = earthTexIm.scaledToWidth(width, Qt::SmoothTransformation);
         }
 
         if(earthTexIm.height() > height) {
+            qDebug() << "GLWidget::parseEarthClouds -- upscaling cloud image vertically";
             cloudsIm = cloudsIm.scaledToHeight(earthTexIm.height(),
                                                Qt::SmoothTransformation);
             height = earthTexIm.height();
         } else {
+            qDebug() << "GLWidget::parseEarthClouds -- downscaling cloud image vertically";
             earthTexIm = earthTexIm.scaledToHeight(height, Qt::SmoothTransformation);
         }
 
         completedEarthTexIm = earthTexIm;
+        qDebug() << "GLWidget::parseEarthClouds -- converting image to ARGB32";
         completedEarthTexIm =
                 completedEarthTexIm.convertToFormat(QImage::Format_ARGB32);
 
-
-
-        //read every pixel and add clouds to earth
-        for (int line = 0; line < completedEarthTexIm.height(); line++) {
-            QRgb* cloudPixel = reinterpret_cast<QRgb*>(
-                        cloudsIm.scanLine(line));
-            QRgb* pixel = reinterpret_cast<QRgb*>(
-                        completedEarthTexIm.scanLine(line));
-
-            for (int pos = 0; pos < completedEarthTexIm.width() ; pos++) {
-                int cRed = qRed(cloudPixel[pos]);
-                int cGreen = qGreen(cloudPixel[pos]);
-                int cBlue =  qBlue(cloudPixel[pos]);
-
-                int red = qRed(pixel[pos]);
-                int green = qGreen(pixel[pos]);
-                int blue = qBlue(pixel[pos]);
-                int alpha = qAlpha(pixel[pos]);
-
-                red += cRed;
-                green += cGreen;
-                blue += cBlue;
-
-                if(red > 255) red = 255;
-                if(green > 255) green = 255;
-                if(blue > 255) blue = 255;
-
-                pixel[pos] = qRgba( red, green, blue, alpha);
-            }
-        }
-        qDebug() << "GLWidget::parseEarthClouds -- finished parsing using clouds and earthTex";
+        qDebug() << "GLWidget::parseEarthClouds -- combining earth+clouds";
+        QPainter painter(&completedEarthTexIm);
+        painter.setCompositionMode(QPainter::CompositionMode_Screen);
+                // more modes available:
+                // QPainter::CompositionMode_Screen
+                // QPainter::CompositionMode_ColorDodge
+                // QPainter::CompositionMode_Plus
+                // QPainter::CompositionMode_Lighten
+                // QPainter::CompositionMode_HardLight
+                // QPainter::CompositionMode_Exclusion
+                // QPainter::CompositionMode_Multiply
+        painter.drawImage(0, 0, cloudsIm);
+        painter.end();
     }
 
     if (completedEarthTexIm.isNull())
@@ -1663,6 +1649,7 @@ void GLWidget::parseEarthClouds() {
         //qDebug() << "OpenGL reported MAX_TEXTURE_UNITS as" << max_texture_units;
         qDebug() << "Binding parsed texture as" << completedEarthTexIm.width()
                  << "x" << completedEarthTexIm.height() << "px texture";
+        qDebug() << "Generating texture coordinates";
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already

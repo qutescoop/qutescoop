@@ -3,7 +3,7 @@
 # #####################################################################
 
 # QuteScoop version
-VERSION = "2.1.9" # should not include spaces
+VERSION = "2.1.10" # should not include spaces
 VER_STR = '\\"$${VERSION}\\"'
 DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
                                             # string through qmake -> console ->
