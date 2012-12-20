@@ -9,7 +9,7 @@ DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
                                             # string through qmake -> console ->
                                             # compiler
 # Subversion revision
-CVS_REVISION = '\\"$Revision: 297 $\\"' # Gets set automatically on commit of THIS file.
+CVS_REVISION = '\\"$Revision$\\"' # Gets set automatically on commit of THIS file.
                                   # This is just the revision of THIS file, not the whole working copy.
                                   # Well, better than nothing. No working copy revision information is
                                   # available cross-platform :(
