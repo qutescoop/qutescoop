@@ -15,8 +15,8 @@ ClientDetails::ClientDetails(QWidget *parent):
 }
 
 void ClientDetails::setMapObject(MapObject *object) {
-    lat = object->lat;
-    lon = object->lon;
+    _lat = object->lat;
+    _lon = object->lon;
     Client *c = dynamic_cast<Client*>(object);
     if(c != 0) {
         userId = c->userId;
@@ -28,8 +28,8 @@ void ClientDetails::setMapObject(MapObject *object) {
 }
 
 void ClientDetails::showOnMap() const {
-    if ((!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon)) && Window::getInstance(false) != 0)
-        Window::getInstance(true)->mapScreen->glWidget->setMapPosition(lat, lon, 0.1);
+    if ((!qFuzzyIsNull(_lat) || !qFuzzyIsNull(_lon)) && Window::instance(false) != 0)
+        Window::instance(true)->mapScreen->glWidget->setMapPosition(_lat, _lon, 0.1);
 }
 
 void ClientDetails::friendClicked() const {
@@ -38,7 +38,7 @@ void ClientDetails::friendClicked() const {
             Settings::removeFriend(userId);
         else // new friend
             Settings::addFriend(userId);
-        if (Window::getInstance(false) != 0)
-            Window::getInstance(true)->refreshFriends();
+        if (Window::instance(false) != 0)
+            Window::instance(true)->refreshFriends();
     }
 }

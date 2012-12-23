@@ -20,7 +20,7 @@ class SectorReader
         void loadSectorlist(QHash<QString, Sector*>& sectors);
         void loadSectordisplay(QHash<QString, Sector*>& sectors, const QString& filename);
 
-        QMultiMap<QString, QString> idIcaoMapping;
+        QMultiMap<QString, QString> _idIcaoMapping;
 };
 
 #endif /*SECTORREADER_H_*/

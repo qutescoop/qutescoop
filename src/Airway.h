@@ -10,44 +10,44 @@
 #include "Waypoint.h"
 
 class Airway {
-public:
-	enum Type {
-		LOW = 1,
-		HIGH = 2
-	};
+    public:
+        enum Type {
+            LOW = 1,
+            HIGH = 2
+        };
 
-	Airway(const QString& name, Type type, int base, int top);
-	virtual ~Airway() {}
+        Airway(const QString& name, Type type, int base, int top);
+        virtual ~Airway() {}
 
-	/**
-	 * Returns a list of all fixes along this airway from start
-	 * to end. The expanded list will not include the given start
-	 * point, but will include the given end point.
-	 */
-	QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
-	Waypoint* getClosestPointTo(double lat, double lon) const;
-	void addSegment(Waypoint* from, Waypoint* to);
-	QList<Airway*> sort();
+        /**
+     * Returns a list of all fixes along this airway from start
+     * to end. The expanded list will not include the given start
+     * point, but will include the given end point.
+     */
+        QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
+        Waypoint* closestPointTo(double lat, double lon) const;
+        void addSegment(Waypoint* from, Waypoint* to);
+        QList<Airway*> sort();
 
-	Type type;
-	int base, top;
-	QString name;
+        Type type;
+        int base, top;
+        QString name;
 
-private:
-	int getIndex(const QString& id) const;
+    private:
+        int index(const QString& id) const;
 
-	class Segment {
-	public:
-		Segment(Waypoint *from, Waypoint *to);
-		bool operator==(const Segment& other) const;
-		Waypoint *from;
-		Waypoint *to;
-	};
+        class Segment {
+            public:
+                Segment(Waypoint *from, Waypoint *to);
+                bool operator==(const Segment& other) const;
+                Waypoint *from;
+                Waypoint *to;
+        };
 
-	QList<Segment> segments;
-	QList<Waypoint*> waypoints;
+        QList<Segment> _segments;
+        QList<Waypoint*> _waypoints;
 
-	Airway* createFromSegments();
+        Airway* createFromSegments();
 };
 
 #endif /* AIRWAY_H_ */

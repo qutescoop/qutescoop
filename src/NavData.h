@@ -14,55 +14,44 @@
 #include "SearchVisitor.h"
 
 class NavData: public QObject {
-    Q_OBJECT
-public:
-    static NavData *getInstance(bool createIfNoInstance = true);
-    virtual ~NavData();
+        Q_OBJECT
+    public:
+        static NavData *instance(bool createIfNoInstance = true);
+        virtual ~NavData();
 
-    QHash<QString, Airport*> airports;
-    QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
-    QHash<QString, Sector*> sectors;
-    QHash<QString, QString> countryCodes;
-    QString getAirline(QString airlineCode);
+        QHash<QString, Airport*> airports;
+        QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
+        QHash<QString, Sector*> sectors;
+        QHash<QString, QString> countryCodes;
+        QString airline(QString airlineCode);
 
-    Airport* airportAt(double lat, double lon, double maxDist) const;
+        Airport* airportAt(double lat, double lon, double maxDist) const;
 
-    static QPair<double, double> *fromArinc(const QString &str);
-    static QString toArinc(const short lat, const short lon);
+        static QPair<double, double> *fromArinc(const QString &str);
+        static QString toArinc(const short lat, const short lon);
 
-    static double distance(double lat1, double lon1, double lat2, double lon2);
-    static QPair<double, double> pointDistanceBearing(double lat, double lon,
-                                                      double dist, double heading);
-    static double courseTo(double lat1, double lon1, double lat2, double lon2);
-    static QPair<double, double> greatCircleFraction(double lat1, double lon1,
-                                    double lat2, double lon2, double fraction);
-    static QList<QPair<double, double> > greatCirclePoints(double lat1, double lon1, double lat2,
-                                                           double lon2, double intervalNm = 30.);
-    static void plotPointsOnEarth(const QList<QPair<double, double> > &points);
+        static double distance(double lat1, double lon1, double lat2, double lon2);
+        static QPair<double, double> pointDistanceBearing(double lat, double lon,
+                                                          double dist, double heading);
+        static double courseTo(double lat1, double lon1, double lat2, double lon2);
+        static QPair<double, double> greatCircleFraction(double lat1, double lon1,
+                                                         double lat2, double lon2, double fraction);
+        static QList<QPair<double, double> > greatCirclePoints(double lat1, double lon1, double lat2,
+                                                               double lon2, double intervalNm = 30.);
+        static void plotPointsOnEarth(const QList<QPair<double, double> > &points);
 
-    //void checkForDataUpdates();
+        void updateData(const WhazzupData& whazzupData);
+        void accept(SearchVisitor* visitor);
 
-    void updateData(const WhazzupData& whazzupData);
-    void accept(SearchVisitor* visitor);
+    private:
+        NavData();
 
-private slots:
-    // datafiles update
-    //void dataVersionsDownloaded(bool error);
-    //void dataFilesRequestFinished(int id, bool error);
-    //void dataFilesDownloaded(bool error);
+        void loadAirports(const QString& filename);
+        void loadSectors();
+        void loadCountryCodes(const QString& filename);
+        void loadAirlineCodes(const QString& filename);
 
-private:
-    NavData();
-
-    void loadAirports(const QString& filename);
-    void loadSectors();
-    void loadCountryCodes(const QString& filename);
-    void loadAirlineCodes(const QString& filename);
-
-    QHash<QString, QString> airlineCodes;
-    QHttp *dataVersionsAndFilesDownloader;
-    QBuffer *dataVersionsBuffer;
-    QList<QFile*> dataFilesToDownload;
+        QHash<QString, QString> _airlineCodes;
 };
 
 #endif /*NAVDATA_H_*/

@@ -3,7 +3,7 @@
 
 
 WindData *windDataInstance = 0;
-WindData *WindData::getInstance() {
+WindData *WindData::instance() {
     if(windDataInstance == 0)
         windDataInstance = new WindData();
     return windDataInstance;
@@ -12,17 +12,20 @@ WindData *WindData::getInstance() {
 WindData::WindData(QObject *parent) :
     QObject(parent)
 {
-    rawData.clear();
-    stationRawData.clear();
-    stationList.clear();
-    mode = 3;
-    status = -1;
+    _rawData.clear();
+    _stationRawData.clear();
+    _stationList.clear();
+    _mode = 3;
+    _status = -1;
 }
 
 void WindData::decodeData() {
     qDebug() << "WindData::decodeData() -- started";
-    status = 1;
-    if(stationList.isEmpty()) { // Load station data from file
+    // showing an hourglass cursor during long operations
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+
+    _status = 1;
+    if(_stationList.isEmpty()) { // Load station data from file
         FileReader file(Settings::applicationDataDirectory("data/station.dat"));
         while(!file.atEnd()) {
             QString rawLine =  file.nextLine();
@@ -64,7 +67,7 @@ void WindData::decodeData() {
             int elev = workLine.toInt();
 
             if (!(num == 0 && qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
-                stationList[num] = Station(num, lat, lon, elev, name);
+                _stationList[num] = Station(num, lat, lon, elev, name);
 //                qDebug() << "WindData::decodeData read" << num << name
 //                         << "lat:" << lat << "lon:" << lon << "elev:" << elev;
             }
@@ -73,31 +76,31 @@ void WindData::decodeData() {
 
     qDebug() << "WindData::decodeData() -- stationdata loaded";
 
-    stationRawData.clear();
-    if(rawData.isEmpty())
+    _stationRawData.clear();
+    if(_rawData.isEmpty())
         return;
-    stationRawData = rawData.split(QRegExp("=\\s+"));
+    _stationRawData = _rawData.split(QRegExp("=\\s+"));
 
     // infos about decoding radiosonde code see here: http://apollo.lsc.vsc.edu/classes/met1211L/raob.html#ident
 
     QStringList stationRawList;
-    for(int i = stationRawData.size(); i > 0; i--) {
+    for(int i = _stationRawData.size(); i > 0; i--) {
         stationRawList.clear();
-        stationRawList = stationRawData.value(i-1).split(QRegExp("\\s+"));
+        stationRawList = _stationRawData.value(i-1).split(QRegExp("\\s+"));
 
         //qDebug() << stationRawList;
 
-        if(stationRawList[0] == "TTAA") mode = 0; // Temp + Wind
-        if(stationRawList[0] == "TTBB") mode = 1; // temp only
-        if(stationRawList[0] == "PPBB") mode = 2; // Wind
+        if(stationRawList[0] == "TTAA") _mode = 0; // Temp + Wind
+        if(stationRawList[0] == "TTBB") _mode = 1; // temp only
+        if(stationRawList[0] == "PPBB") _mode = 2; // Wind
         stationRawList.removeFirst(); //remove mode
 
-        if (mode == 0) {
+        if (_mode == 0) {
             int stationID = stationRawList[1].toInt();
 
             if(!stationRawList.isEmpty()) stationRawList.removeFirst();
             if(!stationRawList.isEmpty()) stationRawList.removeFirst();
-            if(stationRawList.isEmpty() || stationRawList.size() < 3){
+            if(stationRawList.isEmpty() || stationRawList.size() < 3) {
                 continue;}
 
             bool isLevel = false;
@@ -221,9 +224,9 @@ void WindData::decodeData() {
 
                     dir += stationRawList[2].left(3).toInt();
 
-                    if (stationList.keys().contains(stationID)) {
-                        stationList[stationID].addWind(alt, dir, speed);
-                        stationList[stationID].addTemp(alt, temp);
+                    if (_stationList.keys().contains(stationID)) {
+                        _stationList[stationID].addWind(alt, dir, speed);
+                        _stationList[stationID].addTemp(alt, temp);
 //                        qDebug() << "WindData::decodeData decode" << stationID
 //                                 << stationList[stationID].getName()
 //                                 << "lat" << stationList[stationID].getLat()
@@ -248,19 +251,22 @@ void WindData::decodeData() {
     qDebug() << "WindData::decodeData  -- radiosondedata decoded";
 
     for(quint8 i = 1; i <= 40 ; i++)
-        windList.append(createWindArrowList(i * 1000));
+        _windList.append(createWindArrowList(i * 1000));
 
     qDebug() << "WindData::decodeData  -- finished";
-    status = 0;
+    _status = 0;
 
     // update GL if already created
-    if (Window::getInstance(false)) {
-        Window::getInstance(true)->mapScreen->glWidget->update();
+    if (Window::instance(false) != 0) {
+        Window::instance(true)->mapScreen->glWidget->update();
     }
+
+    // showing an hourglass cursor during long operations
+    qApp->restoreOverrideCursor();
 }
 
 void WindData::setRawData(QString data) {
-    rawData = data;
+    _rawData = data;
 }
 
 int WindData::round(int a, double b) {
@@ -275,33 +281,33 @@ int WindData::round(int a, double b) {
 
 GLuint WindData::createWindArrowList(int alt) { // alt in ft
     //GLuint result;
-    result = 0;
+    _result = 0;
 
-    if (result == 0)
-        result = glGenLists(1);
+    if (_result == 0)
+        _result = glGenLists(1);
 
-    glNewList(result, GL_COMPILE);
+    glNewList(_result, GL_COMPILE);
 
-    foreach(const Station s, stationList) {
+    foreach(const Station s, _stationList) {
 //  for(int i = stationIds.size(); i > 0; i--) {
-        s.getWindArrow(alt);
+        s.windArrow(alt);
         //qDebug() << "ID: " << StationIDs[i-1] << " alt:" << alt;
     }
     glEndList();
 
-    return result;
+    return _result;
 }
 
-GLuint WindData::getWindArrows(int alt) { // alt in 1000 ft
+GLuint WindData::windArrows(int alt) { // alt in 1000 ft
     //qDebug() << "WindData::getWindArrows -- alt:" << alt;
     if(alt < 0 || alt > 40) return 0;
-    return windList.value(alt);
+    return _windList.value(alt);
 }
 
 void WindData::refreshLists() {
-    windList.clear();
+    _windList.clear();
 
     for(int i = 1; i <= 40 ; i++)
-        windList.append( createWindArrowList(i*1000));
+        _windList.append( createWindArrowList(i*1000));
     qDebug() << "WindData::refreshLists -- done";
 }

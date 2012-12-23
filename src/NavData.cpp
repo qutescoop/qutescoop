@@ -13,7 +13,7 @@
 
 
 NavData *navDataInstance = 0;
-NavData *NavData::getInstance(bool createIfNoInstance) {
+NavData *NavData::instance(bool createIfNoInstance) {
     if(navDataInstance == 0 && createIfNoInstance)
         navDataInstance = new NavData();
     return navDataInstance;
@@ -73,14 +73,14 @@ void NavData::loadSectors() {
 }
 
 void NavData::loadAirlineCodes(const QString &filename) {
-    airlineCodes.clear();
-    if(filename.isEmpty()){
+    _airlineCodes.clear();
+    if(filename.isEmpty()) {
         qWarning() << "NavData::loadAirlineCodes() -- bad filename";
         return;
     }
     FileReader fileReader(filename);
 
-    while(!fileReader.atEnd()){
+    while(!fileReader.atEnd()) {
 
         QStringList line = fileReader.nextLine().split(0x09);   // 0x09 code for Tabulator
         if (line.size() < 3) {
@@ -88,7 +88,7 @@ void NavData::loadAirlineCodes(const QString &filename) {
                                  .arg(filename));
             return;
         }
-        airlineCodes[line.value(0)] = line.value(2);
+        _airlineCodes[line.value(0)] = line.value(2);
     }
 }
 
@@ -197,10 +197,10 @@ void NavData::updateData(const WhazzupData& whazzupData) {
 }
 
 void NavData::accept(SearchVisitor* visitor) {
-    foreach(Airport *a, airports){
+    foreach(Airport *a, airports) {
         visitor->visit(a);
     }
-    visitor->AirlineCodes = airlineCodes;
+    visitor->AirlineCodes = _airlineCodes;
     visitor->checkAirlines();
 }
 
@@ -254,7 +254,10 @@ QList<QPair<double, double> > NavData::greatCirclePoints(double lat1, double lon
     return result;
 }
 
-void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) { // plot greatcircles of lat/lon points on Earth
+/**
+  plot great-circles of lat/lon points on Earth
+**/
+void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) {
     if (points.isEmpty())
         return;
     if (points.size() > 1) {
@@ -270,7 +273,7 @@ void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) { /
     VERTEX(points.last().first, points.last().second); // last points gets ommitted by greatCirclePoints by design
 }
 
-/* converts (oceanic) points from ARINC424 format
+/** converts (oceanic) points from ARINC424 format
   @return 0 on error
 */
 QPair<double, double> *NavData::fromArinc(const QString &str) {
@@ -294,7 +297,7 @@ QPair<double, double> *NavData::fromArinc(const QString &str) {
 	return 0;
 }
 
-/* converts (oceanic) points from ARINC424 format
+/** converts (oceanic) points to ARINC424 format
   @return QString("") on error
 */
 QString NavData::toArinc(const short lat, const short lon) { // returning QString() on error
@@ -319,12 +322,9 @@ QString NavData::toArinc(const short lat, const short lon) { // returning QStrin
 			arg(qAbs(lon) >= 100? "": q);
 }
 
-
-
-QString NavData::getAirline(QString airlineCode)
-{
+QString NavData::airline(QString airlineCode) {
     QString result;
-    result = airlineCodes[airlineCode];
+    result = _airlineCodes[airlineCode];
     if(result.isEmpty()) result = tr("general aviation");
     return result;
 }

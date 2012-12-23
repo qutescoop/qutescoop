@@ -16,50 +16,50 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
-    altitude = getField(stringList, 7).toInt(); // we could do some barometric calculations here (only for VATSIM needed)
-    groundspeed = getField(stringList, 8).toInt();
-    planAircraft = getField(stringList, 9);
-    planTAS = getField(stringList, 10);
-    planDep = getField(stringList, 11);
-    planAlt = getField(stringList, 12);
-    planDest = getField(stringList, 13);
+    altitude = field(stringList, 7).toInt(); // we could do some barometric calculations here (only for VATSIM needed)
+    groundspeed = field(stringList, 8).toInt();
+    planAircraft = field(stringList, 9);
+    planTAS = field(stringList, 10);
+    planDep = field(stringList, 11);
+    planAlt = field(stringList, 12);
+    planDest = field(stringList, 13);
 
-    QString airlineCode = getField(stringList,0);
+    QString airlineCode = field(stringList,0);
     airlineCode.resize(3);
-    airline = NavData::getInstance()->getAirline(airlineCode);
+    airline = NavData::instance()->airline(airlineCode);
 
-    transponder = getField(stringList, 17);
-    planRevision = getField(stringList, 20);
-    planFlighttype = getField(stringList, 21);
-    planDeptime = getField(stringList, 22);
-    planActtime = getField(stringList, 23);
+    transponder = field(stringList, 17);
+    planRevision = field(stringList, 20);
+    planFlighttype = field(stringList, 21);
+    planDeptime = field(stringList, 22);
+    planActtime = field(stringList, 23);
 
-    QString tmpStr = getField(stringList, 24);
+    QString tmpStr = field(stringList, 24);
     if(tmpStr.isNull())
         planHrsEnroute = -1;
     else
         planHrsEnroute = tmpStr.toInt();
-    planMinEnroute = getField(stringList, 25).toInt();
-    planHrsFuel = getField(stringList, 26).toInt();
-    planMinFuel = getField(stringList, 27).toInt();
-    planAltAirport = getField(stringList, 28);
-    planRemarks = getField(stringList, 29);
-    planRoute = getField(stringList, 30);
+    planMinEnroute = field(stringList, 25).toInt();
+    planHrsFuel = field(stringList, 26).toInt();
+    planMinFuel = field(stringList, 27).toInt();
+    planAltAirport = field(stringList, 28);
+    planRemarks = field(stringList, 29);
+    planRoute = field(stringList, 30);
 
 
     if(whazzup->isIvao()) {
-        planAltAirport2 = getField(stringList, 42); // IVAO only
-        planTypeOfFlight = getField(stringList, 43); // IVAO only
-        pob = getField(stringList, 44).toInt(); // IVAO only
+        planAltAirport2 = field(stringList, 42); // IVAO only
+        planTypeOfFlight = field(stringList, 43); // IVAO only
+        pob = field(stringList, 44).toInt(); // IVAO only
 
-        trueHeading = getField(stringList, 45).toInt();
-        onGround = getField(stringList, 46).toInt() == 1; // IVAO only
+        trueHeading = field(stringList, 45).toInt();
+        onGround = field(stringList, 46).toInt() == 1; // IVAO only
     }
 
     if(whazzup->isVatsim()) {
-        trueHeading = getField(stringList, 38).toInt();
-        qnhInHg = getField(stringList, 39); // VATSIM only
-        qnhMb = getField(stringList, 40); // VATSIM only
+        trueHeading = field(stringList, 38).toInt();
+        qnhInHg = field(stringList, 39); // VATSIM only
+        qnhMb = field(stringList, 40); // VATSIM only
     }
     // day of flight
     if(!QTime::fromString(planDeptime, "HHmm").isValid()) // no Plan ETA given: maybe some more magic needed here
@@ -79,7 +79,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 
 void Pilot::showDetailsDialog() {
     //qDebug() << "Pilot::showDetailsDialog()";
-    PilotDetails *infoDialog = PilotDetails::getInstance(true);
+    PilotDetails *infoDialog = PilotDetails::instance(true);
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -97,7 +97,7 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     if(onGround) flying = false;
 
     if ( dep == NULL || dst == NULL ) {
-        if(flying){
+        if(flying) {
             return EN_ROUTE;}
         else{
             return BUSH;}
@@ -123,21 +123,21 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     // BLOCKED: !flying, speed = 0, arriving
     // PREFILED: !flying, lat=0, lon=0
 
-    if(!flying && groundspeed == 0 && departing){
+    if(!flying && groundspeed == 0 && departing) {
         return BOARDING;}
-    if(!flying && groundspeed > 0 && departing){
+    if(!flying && groundspeed > 0 && departing) {
         return GROUND_DEP;}
-    if(flying && arriving){
+    if(flying && arriving) {
         return ARRIVING;} // put before departing; on small hops tend to show "arriving", not departing
-    if(flying && departing){
+    if(flying && departing) {
         return DEPARTING;}
-    if(flying && !departing && !arriving){
+    if(flying && !departing && !arriving) {
         return EN_ROUTE;}
-    if(!flying && groundspeed > 0 && arriving){
+    if(!flying && groundspeed > 0 && arriving) {
         return GROUND_ARR;}
-    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)){ // must be before BLOCKED
+    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) { // must be before BLOCKED
         return PREFILED;}
-    if(!flying && groundspeed == 0 && arriving){
+    if(!flying && groundspeed == 0 && arriving) {
         return BLOCKED;}
     return CRASHED;
 }
@@ -276,20 +276,20 @@ QString Pilot::aircraftType() const {
 }
 
 Airport *Pilot::depAirport() const {
-    if(NavData::getInstance()->airports.contains(planDep))
-        return NavData::getInstance()->airports[planDep];
+    if(NavData::instance()->airports.contains(planDep))
+        return NavData::instance()->airports[planDep];
     else return 0;
 }
 
 Airport *Pilot::destAirport() const {
-    if(NavData::getInstance()->airports.contains(planDest))
-        return NavData::getInstance()->airports[planDest];
+    if(NavData::instance()->airports.contains(planDest))
+        return NavData::instance()->airports[planDest];
     else return 0;
 }
 
 Airport *Pilot::altAirport() const {
-    if(NavData::getInstance()->airports.contains(planAltAirport))
-        return NavData::getInstance()->airports[planAltAirport];
+    if(NavData::instance()->airports.contains(planAltAirport))
+        return NavData::instance()->airports[planAltAirport];
     else return 0;
 }
 
@@ -480,10 +480,10 @@ QList<Waypoint*> Pilot::routeWaypoints() {
     routeWaypointsPlanRouteCache = planRoute;
 
     if (depAirport() != 0)
-        routeWaypointsCache = Airac::getInstance()->resolveFlightplan(
+        routeWaypointsCache = Airac::instance()->resolveFlightplan(
                     waypoints(), depAirport()->lat, depAirport()->lon);
     else if (!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon))
-        routeWaypointsCache = Airac::getInstance()->resolveFlightplan(
+        routeWaypointsCache = Airac::instance()->resolveFlightplan(
                     waypoints(), lat, lon);
     else
         routeWaypointsCache = QList<Waypoint*>();

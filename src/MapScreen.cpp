@@ -1,17 +1,18 @@
 #include "MapScreen.h"
-#include <QHBoxLayout>
+#include "Launcher.h"
 
-static MapScreen *instance = 0;
+static MapScreen *mapScreenInstance = 0;
+MapScreen* MapScreen::instance(bool createIfNotExists = true) {
+    if(mapScreenInstance == 0 && createIfNotExists)
+        mapScreenInstance = new MapScreen;
+    return mapScreenInstance;
+}
 
 MapScreen::MapScreen(QWidget *parent) :
     QWidget(parent)
 {
-
-    this->setMouseTracking(true);
-    xDistance = 0;
-
-
-
+    setMouseTracking(true);
+    _xDistance = 0;
 
     //OpenGL config
     QSettings* settings = new QSettings();
@@ -42,94 +43,86 @@ MapScreen::MapScreen(QWidget *parent) :
     qDebug() << "MapScreen::MapScreen() creating GLWidget --finished";
 
 
-    L_Pilots = new OnScreenLabel(this);
-    L_Pilots->typ = 1;
-    connect(L_Pilots, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
-    connect(L_Pilots, SIGNAL(left(int)), this,  SLOT(LabelLeft(int)));        // causes strange flickering on linux
-    L_Pilots->setText(tr("Pilots"));
-    L_Pilots->setFont(QFont("Arial", 16, QFont::Bold));
-    L_Pilots->setAutoFillBackground(true);
-    L_Pilots->setMouseTracking(true);
-    L_Pilots->raise();
-    xDistance += 59;
+    _oslPilots = new OnScreenLabel(this);
+    _oslPilots->typ = 1;
+    connect(_oslPilots, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    connect(_oslPilots, SIGNAL(left(int)), this,  SLOT(LabelLeft(int)));        // causes strange flickering on linux
+    _oslPilots->setText(tr("Pilots"));
+    _oslPilots->setFont(QFont("Arial", 16, QFont::Bold));
+    _oslPilots->setAutoFillBackground(true);
+    _oslPilots->setMouseTracking(true);
+    _oslPilots->raise();
+    _xDistance += 59;
 
-    L_Controller = new OnScreenLabel(this);
-    L_Controller->typ = 2;
-    connect(L_Controller, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    _oslController = new OnScreenLabel(this);
+    _oslController->typ = 2;
+    connect(_oslController, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
     //connect(L_Controller, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));     // see L_Pilots
-    L_Controller->setText(tr("Controller"));
-    L_Controller->setFont(QFont("Arial", 16, QFont::Bold));
-    L_Controller->setAutoFillBackground(true);
-    L_Controller->setMouseTracking(true);
-    L_Controller->move(xDistance, 0);
-    L_Controller->raise();
-    xDistance += 103;
+    _oslController->setText(tr("Controller"));
+    _oslController->setFont(QFont("Arial", 16, QFont::Bold));
+    _oslController->setAutoFillBackground(true);
+    _oslController->setMouseTracking(true);
+    _oslController->move(_xDistance, 0);
+    _oslController->raise();
+    _xDistance += 103;
 
-    L_NavData = new OnScreenLabel(this);
-    L_NavData->typ = 3;
-    connect(L_NavData, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    _oslNavData = new OnScreenLabel(this);
+    _oslNavData->typ = 3;
+    connect(_oslNavData, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
     //connect(L_NavData, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));        // see L_Pilots
-    L_NavData->setText(tr("NavData"));
-    L_NavData->setFont(QFont("Arial", 16, QFont::Bold));
-    L_NavData->setAutoFillBackground(true);
-    L_NavData->setMouseTracking(true);
-    L_NavData->move(xDistance,0);
-    L_NavData->raise();
-    xDistance += 87;
+    _oslNavData->setText(tr("NavData"));
+    _oslNavData->setFont(QFont("Arial", 16, QFont::Bold));
+    _oslNavData->setAutoFillBackground(true);
+    _oslNavData->setMouseTracking(true);
+    _oslNavData->move(_xDistance,0);
+    _oslNavData->raise();
+    _xDistance += 87;
 
-    L_Weather = new OnScreenLabel(this);
-    L_Weather->typ = 4;
-    connect(L_Weather, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    _oslWeather = new OnScreenLabel(this);
+    _oslWeather->typ = 4;
+    connect(_oslWeather, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
     //connect(L_Weather, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));       // see L_Pilots
-    L_Weather->setText(tr("Weather"));
-    L_Weather->setFont(QFont("Arial", 16, QFont::Bold));
-    L_Weather->setAutoFillBackground(true);
-    L_Weather->setMouseTracking(true);
-    L_Weather->move(xDistance,0);
-    L_Weather->raise();
+    _oslWeather->setText(tr("Weather"));
+    _oslWeather->setFont(QFont("Arial", 16, QFont::Bold));
+    _oslWeather->setAutoFillBackground(true);
+    _oslWeather->setMouseTracking(true);
+    _oslWeather->move(_xDistance,0);
+    _oslWeather->raise();
 
-    W_Pilots = new OnScreenWidget(this);
-    W_Pilots->typ = 1;
-    connect(W_Pilots, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(W_Pilots, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    _oswPilots = new OnScreenWidget(this);
+    _oswPilots->typ = 1;
+    connect(_oswPilots, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
+    connect(_oswPilots, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
-    W_Controller = new OnScreenWidget(this);
-    W_Controller->typ = 2;
-    connect(W_Controller, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(W_Controller, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    _oswController = new OnScreenWidget(this);
+    _oswController->typ = 2;
+    connect(_oswController, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
+    connect(_oswController, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
-    W_NavData = new OnScreenWidget(this);
-    W_NavData->typ = 3;
-    connect(W_NavData, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(W_NavData, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    _oswNavData = new OnScreenWidget(this);
+    _oswNavData->typ = 3;
+    connect(_oswNavData, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
+    connect(_oswNavData, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
-    W_Weather = new OnScreenWidget(this);
-    W_Weather->typ = 4;
-    connect(W_Weather, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(W_Weather, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    _oswWeather = new OnScreenWidget(this);
+    _oswWeather->typ = 4;
+    connect(_oswWeather, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
+    connect(_oswWeather, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
 
     createPilotWidget();
-    W_Pilots->move(0,L_Pilots->height()-5);
+    _oswPilots->move(0,_oslPilots->height()-5);
     createControllerWidget();
-    W_Controller->move(0,L_Pilots->height()-5);
+    _oswController->move(0,_oslPilots->height()-5);
     createNavDataWidget();
-    W_NavData->move(0,L_Pilots->height()-5);
+    _oswNavData->move(0,_oslPilots->height()-5);
     createWindWidget();
-    W_Weather->move(0, L_Pilots->height()-5);
+    _oswWeather->move(0, _oslPilots->height()-5);
 
 
 
     qDebug() << "MapScreen::MapScreen() created";
 
 }
-
-MapScreen* MapScreen::getInstance(bool create = true){
-    if(instance == 0)
-        if (create)
-            instance = new MapScreen;
-    return instance;
-}
-
 
 ////////////////////////////
 // Creating the widgets
@@ -138,161 +131,160 @@ MapScreen* MapScreen::getInstance(bool create = true){
 void MapScreen::createPilotWidget()
 {
 
-    W_Pilots->setMouseTracking(true);
-    W_Pilots->setAutoFillBackground(true);
+    _oswPilots->setMouseTracking(true);
+    _oswPilots->setAutoFillBackground(true);
     //W_Pilots->setContentsMargins(3, L_Pilots->height(), 3, 3);
-    W_Pilots->setMinimumWidth(xDistance+L_Weather->width());
+    _oswPilots->setMinimumWidth(_xDistance+_oslWeather->width());
 
     //Show all routes button
-    P_toggleRoutes = new QPushButton();
-    P_toggleRoutes->setText(tr("all routes"));
-    P_toggleRoutes->setCheckable(true);
-    connect(P_toggleRoutes, SIGNAL(clicked()), this, SLOT(P_toggleRoutesClicked()));
-    P_layout.addWidget(P_toggleRoutes);
+    _pbRoutes = new QPushButton();
+    _pbRoutes->setText(tr("all routes"));
+    _pbRoutes->setCheckable(true);
+    connect(_pbRoutes, SIGNAL(clicked()), this, SLOT(P_toggleRoutesClicked()));
+    _hblP.addWidget(_pbRoutes);
 
     //Show pilots labels button
-    P_togglePilotLabels = new QPushButton();
-    P_togglePilotLabels->setText(tr("pilot labels"));
-    P_togglePilotLabels->setCheckable(true);
-    P_togglePilotLabels->setChecked(Settings::showPilotsLabels());
-    connect(P_togglePilotLabels, SIGNAL(clicked()), this, SLOT(P_togglePilotLabelsClicked()));
-    P_layout.addWidget(P_togglePilotLabels);
+    _pbPilotLabels = new QPushButton();
+    _pbPilotLabels->setText(tr("pilot labels"));
+    _pbPilotLabels->setCheckable(true);
+    _pbPilotLabels->setChecked(Settings::showPilotsLabels());
+    connect(_pbPilotLabels, SIGNAL(clicked()), this, SLOT(P_togglePilotLabelsClicked()));
+    _hblP.addWidget(_pbPilotLabels);
 
 
-    W_Pilots->setLayout(&P_layout);
-    W_Pilots->lower();
+    _oswPilots->setLayout(&_hblP);
+    _oswPilots->lower();
 }
 
 void MapScreen::createControllerWidget()
 {
 
-    W_Controller->setMouseTracking(true);
-    W_Controller->setAutoFillBackground(true);
+    _oswController->setMouseTracking(true);
+    _oswController->setAutoFillBackground(true);
     //W_Controller->setContentsMargins(3, L_Pilots->height(), 3, 3);
-    W_Controller->setMinimumWidth(xDistance+L_Weather->width());
+    _oswController->setMinimumWidth(_xDistance+_oslWeather->width());
 
 
 
-    C_toggleCTR = new QPushButton();
-    C_toggleCTR->setText(tr("CTR/FSS"));
-    C_toggleCTR->setCheckable(true);
-    C_toggleCTR->setChecked(Settings::showCTR());
-    connect(C_toggleCTR, SIGNAL(clicked()), this, SLOT(C_toggleCTRClicked()));
-    C_layout.addWidget(C_toggleCTR);
+    _pbCtr = new QPushButton();
+    _pbCtr->setText(tr("CTR/FSS"));
+    _pbCtr->setCheckable(true);
+    _pbCtr->setChecked(Settings::showCTR());
+    connect(_pbCtr, SIGNAL(clicked()), this, SLOT(C_toggleCTRClicked()));
+    _hblC.addWidget(_pbCtr);
 
-    C_toggleAPP = new QPushButton();
-    C_toggleAPP->setText(tr("APP"));
-    C_toggleAPP->setCheckable(true);
-    C_toggleAPP->setChecked(Settings::showAPP());
-    connect(C_toggleAPP, SIGNAL(clicked()), this, SLOT(C_toggleAPPClicked()));
-    C_layout.addWidget(C_toggleAPP);
+    _pbApp = new QPushButton();
+    _pbApp->setText(tr("APP"));
+    _pbApp->setCheckable(true);
+    _pbApp->setChecked(Settings::showAPP());
+    connect(_pbApp, SIGNAL(clicked()), this, SLOT(C_toggleAPPClicked()));
+    _hblC.addWidget(_pbApp);
 
-    C_toggleTWR = new QPushButton();
-    C_toggleTWR->setText(tr("TWR"));
-    C_toggleTWR->setCheckable(true);
-    C_toggleTWR->setChecked(Settings::showTWR());
-    connect(C_toggleTWR, SIGNAL(clicked()), this, SLOT(C_toggleTWRClicked()));
-    C_layout.addWidget(C_toggleTWR);
+    _pbTwr = new QPushButton();
+    _pbTwr->setText(tr("TWR"));
+    _pbTwr->setCheckable(true);
+    _pbTwr->setChecked(Settings::showTWR());
+    connect(_pbTwr, SIGNAL(clicked()), this, SLOT(C_toggleTWRClicked()));
+    _hblC.addWidget(_pbTwr);
 
-    C_toggleGND = new QPushButton();
-    C_toggleGND->setText(tr("GND"));
-    C_toggleGND->setCheckable(true);
-    C_toggleGND->setChecked(Settings::showGND());
-    connect(C_toggleGND, SIGNAL(clicked()), this, SLOT(C_toggleGNDClicked()));
-    C_layout.addWidget(C_toggleGND);
+    _pbGnd = new QPushButton();
+    _pbGnd->setText(tr("GND"));
+    _pbGnd->setCheckable(true);
+    _pbGnd->setChecked(Settings::showGND());
+    connect(_pbGnd, SIGNAL(clicked()), this, SLOT(C_toggleGNDClicked()));
+    _hblC.addWidget(_pbGnd);
 
 
-    W_Controller->setLayout(&C_layout);
-    W_Controller->lower();
+    _oswController->setLayout(&_hblC);
+    _oswController->lower();
 }
 
 void MapScreen::createNavDataWidget()
 {
 
-    W_NavData->setMouseTracking(true);
-    W_NavData->setAutoFillBackground(true);
-    W_NavData->setMinimumWidth(xDistance+L_Weather->width());
+    _oswNavData->setMouseTracking(true);
+    _oswNavData->setAutoFillBackground(true);
+    _oswNavData->setMinimumWidth(_xDistance+_oslWeather->width());
     //W_NavData->setContentsMargins(3, L_Pilots->height(), 3, 3);
 
-    N_sectorsAll = new QPushButton();
-    N_sectorsAll->setText(tr("all sectors"));
-    N_sectorsAll->setCheckable(true);
-    N_sectorsAll->setChecked(Settings::showAllSectors());
-    connect(N_sectorsAll, SIGNAL(clicked()), this, SLOT(N_toggleSectorClicked()));
-    N_layout.addWidget(N_sectorsAll);
+    _pbSectorsAll = new QPushButton();
+    _pbSectorsAll->setText(tr("all sectors"));
+    _pbSectorsAll->setCheckable(true);
+    _pbSectorsAll->setChecked(Settings::showAllSectors());
+    connect(_pbSectorsAll, SIGNAL(clicked()), this, SLOT(N_toggleSectorClicked()));
+    _hblN.addWidget(_pbSectorsAll);
 
-    N_RouteWaypoints = new QPushButton();
-    N_RouteWaypoints->setText(tr("route waypoints"));
-    N_RouteWaypoints->setCheckable(true);
-    N_RouteWaypoints->setChecked(Settings::showRouteFix());
-    connect(N_RouteWaypoints, SIGNAL(clicked()), this, SLOT(N_toggleRouteFixClicked()));
-    N_layout.addWidget(N_RouteWaypoints);
+    _pbRouteWaypoints = new QPushButton();
+    _pbRouteWaypoints->setText(tr("route waypoints"));
+    _pbRouteWaypoints->setCheckable(true);
+    _pbRouteWaypoints->setChecked(Settings::showRouteFix());
+    connect(_pbRouteWaypoints, SIGNAL(clicked()), this, SLOT(N_toggleRouteFixClicked()));
+    _hblN.addWidget(_pbRouteWaypoints);
 
-    N_InactiveAirports = new QPushButton();
-    N_InactiveAirports->setText(tr("inactive airports"));
-    N_InactiveAirports->setCheckable(true);
-    N_InactiveAirports->setChecked(Settings::showInactiveAirports());
-    connect(N_InactiveAirports, SIGNAL(clicked()), this, SLOT(N_toggleInactiveClicked()));
-    N_layout.addWidget(N_InactiveAirports);
+    _pbInactiveAirports = new QPushButton();
+    _pbInactiveAirports->setText(tr("inactive airports"));
+    _pbInactiveAirports->setCheckable(true);
+    _pbInactiveAirports->setChecked(Settings::showInactiveAirports());
+    connect(_pbInactiveAirports, SIGNAL(clicked()), this, SLOT(N_toggleInactiveClicked()));
+    _hblN.addWidget(_pbInactiveAirports);
 
 
 
-    N_Vlayout.addLayout(&N_layout);
-    W_NavData->setLayout(&N_Vlayout);
-    W_NavData->lower();
+    _vblN.addLayout(&_hblN);
+    _oswNavData->setLayout(&_vblN);
+    _oswNavData->lower();
 }
 
-void MapScreen::createWindWidget()
-{
-    W_Weather->setMouseTracking(true);
-    W_Weather->setAutoFillBackground(true);
-    W_Weather->setMinimumWidth(xDistance+L_Weather->width());
+void MapScreen::createWindWidget() {
+    _oswWeather->setMouseTracking(true);
+    _oswWeather->setAutoFillBackground(true);
+    _oswWeather->setMinimumWidth(_xDistance+_oslWeather->width());
 
 
     // On/Off buttons for wind and clouds
-    W_toggleWind = new QPushButton();
-    W_toggleWind->setText(tr("upperwind"));
-    W_toggleWind->setCheckable(true);
-    W_toggleWind->setChecked(Settings::showUpperWind());
-    connect(W_toggleWind, SIGNAL(clicked()), this, SLOT(W_toggleWindClicked()));
-    W_layout.addWidget(W_toggleWind);
+    _pbWind = new QPushButton();
+    _pbWind->setText(tr("upperwind"));
+    _pbWind->setCheckable(true);
+    _pbWind->setChecked(Settings::showWind());
+    connect(_pbWind, SIGNAL(clicked()), this, SLOT(W_toggleWindClicked()));
+    _hblW.addWidget(_pbWind);
 
-    W_toggleClouds = new QPushButton;
-    W_toggleClouds->setText(tr("clouds"));
-    W_toggleClouds->setCheckable(true);
-    W_toggleClouds->setChecked(Settings::showClouds());
+    _pbClouds = new QPushButton;
+    _pbClouds->setText(tr("clouds"));
+    _pbClouds->setCheckable(true);
+    _pbClouds->setChecked(Settings::showClouds());
     //if(!Settings::downloadClouds()) W_toggleClouds->setEnabled(false);
-    connect(W_toggleClouds, SIGNAL(clicked()), this, SLOT(W_toggleCloudsClicked()));
-    W_layout.addWidget(W_toggleClouds);
+    connect(_pbClouds, SIGNAL(clicked()), this, SLOT(W_toggleCloudsClicked()));
+    _hblW.addWidget(_pbClouds);
 
 
     //upperwind settings
-    W_minus = new QPushButton();
-    W_minus->setText(tr("-"));
-    connect(W_minus, SIGNAL(clicked()), this, SLOT(W_minusClicked()));
-    W_layout1.addWidget(W_minus);
+    _pbWindAltDec = new QPushButton();
+    _pbWindAltDec->setText(tr("-"));
+    connect(_pbWindAltDec, SIGNAL(clicked()), this, SLOT(W_minusClicked()));
+    _hblW1.addWidget(_pbWindAltDec);
 
-    W_slider = new QSlider();
-    W_slider->setRange(0, 40);
-    W_slider->setOrientation(Qt::Horizontal);
-    W_slider->setValue(Settings::upperWindAlt());
-    connect(W_slider, SIGNAL(valueChanged(int)), this, SLOT(W_sliderChanged()));
-    W_layout1.addWidget(W_slider);
+    _slider = new QSlider();
+    _slider->setRange(0, 40);
+    _slider->setOrientation(Qt::Horizontal);
+    _slider->setValue(Settings::windAlt());
+    connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(W_sliderChanged()));
+    _hblW1.addWidget(_slider);
 
-    W_plus = new QPushButton();
-    W_plus->setText(tr("+"));
-    connect(W_plus, SIGNAL(clicked()), this, SLOT(W_plusClicked()));
-    W_layout1.addWidget(W_plus);
+    _pbWindAltInc = new QPushButton();
+    _pbWindAltInc->setText(tr("+"));
+    connect(_pbWindAltInc, SIGNAL(clicked()), this, SLOT(W_plusClicked()));
+    _hblW1.addWidget(_pbWindAltInc);
 
-    W_windAlt = new QLabel();
-    W_windAlt->setText(QString("%1ft").arg((Settings::upperWindAlt()*1000)));
-    W_layout1.addWidget(W_windAlt);
+    _lblWindAlt = new QLabel();
+    _lblWindAlt->setText(QString("%1ft").arg((Settings::windAlt()*1000)));
+    _hblW1.addWidget(_lblWindAlt);
 
-    W_Vlayout.addLayout(&W_layout);
-    W_Vlayout.addLayout(&W_layout1);
+    _vblW.addLayout(&_hblW);
+    _vblW.addLayout(&_hblW1);
 
-    W_Weather->setLayout(&W_Vlayout);
-    W_Weather->lower();
+    _oswWeather->setLayout(&_vblW);
+    _oswWeather->lower();
 }
 
 void MapScreen::resizeEvent(QResizeEvent *event) {
@@ -309,74 +301,74 @@ void MapScreen::LabelEntered(int typ)
 {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(true);
-    switch(typ){
+    switch(typ) {
     case 0:
         return;
         break;
     case 1:
-        W_Pilots->raise();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        L_Weather->raise();
-        W_Controller->lower();
-        W_NavData->lower();
-        W_Weather->lower();
+        _oswPilots->raise();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
+        _oswController->lower();
+        _oswNavData->lower();
+        _oswWeather->lower();
 
-        L_Pilots->setFont(f);
+        _oslPilots->setFont(f);
         f.setUnderline(false);
-        L_Controller->setFont(f);
-        L_NavData->setFont(f);
-        L_Weather->setFont(f);
+        _oslController->setFont(f);
+        _oslNavData->setFont(f);
+        _oslWeather->setFont(f);
         break;
     case 2:
-        W_Controller->raise();
-        L_Controller->raise();
-        L_Pilots->raise();
-        L_NavData->raise();
-        L_Weather->raise();
-        W_Pilots->lower();
-        W_NavData->lower();
-        W_Weather->lower();
+        _oswController->raise();
+        _oslController->raise();
+        _oslPilots->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
+        _oswPilots->lower();
+        _oswNavData->lower();
+        _oswWeather->lower();
 
-        L_Controller->setFont(f);
+        _oslController->setFont(f);
         f.setUnderline(false);
-        L_Pilots->setFont(f);
-        L_NavData->setFont(f);
-        L_Weather->setFont(f);
+        _oslPilots->setFont(f);
+        _oslNavData->setFont(f);
+        _oslWeather->setFont(f);
         break;
     case 3:
-        W_NavData->raise();
-        L_NavData->raise();
-        L_Weather->raise();
-        L_Controller->raise();
-        L_Pilots->raise();
-        W_Pilots->lower();
-        W_Controller->lower();
-        W_Weather->lower();
+        _oswNavData->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
+        _oslController->raise();
+        _oslPilots->raise();
+        _oswPilots->lower();
+        _oswController->lower();
+        _oswWeather->lower();
 
-        L_NavData->setFont(f);
+        _oslNavData->setFont(f);
         f.setUnderline(false);
-        L_Pilots->setFont(f);
-        L_Controller->setFont(f);
-        L_Weather->setFont(f);
+        _oslPilots->setFont(f);
+        _oslController->setFont(f);
+        _oslWeather->setFont(f);
         break;
 
     case 4:
-        W_Weather->raise();
-        L_Weather->raise();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        W_Pilots->lower();
-        W_Controller->lower();
-        W_NavData->lower();
+        _oswWeather->raise();
+        _oslWeather->raise();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oswPilots->lower();
+        _oswController->lower();
+        _oswNavData->lower();
 
-        L_Weather->setFont(f);
+        _oslWeather->setFont(f);
         f.setUnderline(false);
-        L_Pilots->setFont(f);
-        L_Controller->setFont(f);
-        L_NavData->setFont(f);
+        _oslPilots->setFont(f);
+        _oslController->setFont(f);
+        _oslNavData->setFont(f);
         break;
 
     default:
@@ -389,25 +381,25 @@ void MapScreen::LabelLeft(int typ)
 {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(false);
-    switch(typ){
+    switch(typ) {
     case 0:
         return;
         break;
     case 1:
-        L_Pilots->setFont(f);
+        _oslPilots->setFont(f);
         //W_Pilots->lower();
         break;
     case 2:
-        L_Controller->setFont(f);
+        _oslController->setFont(f);
         //W_Controller->lower();
         break;
     case 3:
-        L_NavData->setFont(f);
+        _oslNavData->setFont(f);
         //W_NavData->lower();
         break;
 
     case 4:
-        L_Weather->setFont(f);
+        _oslWeather->setFont(f);
         //W_Weather->lower();
         break;
 
@@ -421,74 +413,74 @@ void MapScreen::WidgetEntered(int typ)
 {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(true);
-    switch(typ){
+    switch(typ) {
     case 0:
         return;
         break;
     case 1:
-        W_Pilots->raise();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        L_Weather->raise();
-        W_Controller->lower();
-        W_NavData->lower();
-        W_Weather->lower();
+        _oswPilots->raise();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
+        _oswController->lower();
+        _oswNavData->lower();
+        _oswWeather->lower();
 
-        L_Pilots->setFont(f);
+        _oslPilots->setFont(f);
         f.setUnderline(false);
-        L_Controller->setFont(f);
-        L_NavData->setFont(f);
-        L_Weather->setFont(f);
+        _oslController->setFont(f);
+        _oslNavData->setFont(f);
+        _oslWeather->setFont(f);
         break;
     case 2:
-        W_Controller->raise();
-        L_Controller->raise();
-        L_Pilots->raise();
-        L_NavData->raise();
-        L_Weather->raise();
-        W_Pilots->lower();
-        W_NavData->lower();
-        W_Weather->lower();
+        _oswController->raise();
+        _oslController->raise();
+        _oslPilots->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
+        _oswPilots->lower();
+        _oswNavData->lower();
+        _oswWeather->lower();
 
-        L_Controller->setFont(f);
+        _oslController->setFont(f);
         f.setUnderline(false);
-        L_Pilots->setFont(f);
-        L_NavData->setFont(f);
-        L_Weather->setFont(f);
+        _oslPilots->setFont(f);
+        _oslNavData->setFont(f);
+        _oslWeather->setFont(f);
         break;
     case 3:
-        W_NavData->raise();
-        L_NavData->raise();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_Weather->raise();
-        W_Pilots->lower();
-        W_Controller->lower();
-        W_Weather->lower();
+        _oswNavData->raise();
+        _oslNavData->raise();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslWeather->raise();
+        _oswPilots->lower();
+        _oswController->lower();
+        _oswWeather->lower();
 
-        L_NavData->setFont(f);
+        _oslNavData->setFont(f);
         f.setUnderline(false);
-        L_Pilots->setFont(f);
-        L_Controller->setFont(f);
-        L_Weather->setFont(f);
+        _oslPilots->setFont(f);
+        _oslController->setFont(f);
+        _oslWeather->setFont(f);
         break;
 
     case 4:
-        W_Weather->raise();
-        L_Weather->raise();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        W_Pilots->lower();
-        W_Controller->lower();
-        W_NavData->lower();
+        _oswWeather->raise();
+        _oslWeather->raise();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oswPilots->lower();
+        _oswController->lower();
+        _oswNavData->lower();
 
-        L_Weather->setFont(f);
+        _oslWeather->setFont(f);
         f.setUnderline(false);
-        L_Pilots->setFont(f);
-        L_Controller->setFont(f);
-        L_NavData->setFont(f);
+        _oslPilots->setFont(f);
+        _oslController->setFont(f);
+        _oslNavData->setFont(f);
         break;
     default:
         return;
@@ -500,45 +492,45 @@ void MapScreen::WidgetLeft(int typ)
 {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(false);
-    switch(typ){
+    switch(typ) {
     case 0:
         return;
         break;
     case 1:
-        W_Pilots->lower();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        L_Weather->raise();
+        _oswPilots->lower();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
 
-        L_Pilots->setFont(f);
+        _oslPilots->setFont(f);
         break;
     case 2:
-        W_Controller->lower();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        L_Weather->raise();
+        _oswController->lower();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
 
-        L_Controller->setFont(f);
+        _oslController->setFont(f);
         break;
     case 3:
-        W_NavData->lower();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        L_Weather->raise();
+        _oswNavData->lower();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
 
-        L_NavData->setFont(f);
+        _oslNavData->setFont(f);
         break;
     case 4:
-        W_Weather->lower();
-        L_Pilots->raise();
-        L_Controller->raise();
-        L_NavData->raise();
-        L_Weather->raise();
+        _oswWeather->lower();
+        _oslPilots->raise();
+        _oslController->raise();
+        _oslNavData->raise();
+        _oslWeather->raise();
 
-        L_Weather->setFont(f);
+        _oslWeather->setFont(f);
         break;
     default:
         return;
@@ -559,7 +551,7 @@ void MapScreen::P_toggleRoutesClicked()
 
 void MapScreen::P_togglePilotLabelsClicked()
 {
-    Settings::setShowPilotsLabels(P_togglePilotLabels->isChecked());
+    Settings::setShowPilotsLabels(_pbPilotLabels->isChecked());
     glWidget->updateGL();
 }
 
@@ -569,25 +561,25 @@ void MapScreen::P_togglePilotLabelsClicked()
 
 void MapScreen::C_toggleCTRClicked()
 {
-    Settings::setShowCTR(C_toggleCTR->isChecked());
+    Settings::setShowCTR(_pbCtr->isChecked());
     glWidget->updateGL();
 }
 
 void MapScreen::C_toggleAPPClicked()
 {
-    Settings::setShowAPP(C_toggleAPP->isChecked());
+    Settings::setShowAPP(_pbApp->isChecked());
     glWidget->updateGL();
 }
 
 void MapScreen::C_toggleTWRClicked()
 {
-    Settings::setShowTWR(C_toggleTWR->isChecked());
+    Settings::setShowTWR(_pbTwr->isChecked());
     glWidget->updateGL();
 }
 
 void MapScreen::C_toggleGNDClicked()
 {
-    Settings::setShowGND(C_toggleGND->isChecked());
+    Settings::setShowGND(_pbGnd->isChecked());
     glWidget->updateGL();
 }
 
@@ -599,26 +591,25 @@ void MapScreen::C_toggleGNDClicked()
 void MapScreen::N_toggleSectorClicked()
 {
     //Settings::setShowAllSectors(N_sectorsAll->isChecked());
-    emit toggleSectors(N_sectorsAll->isChecked());
+    emit toggleSectors(_pbSectorsAll->isChecked());
 }
 
 void MapScreen::toggleSectorChanged(bool state)
 {
-    if(N_sectorsAll->isChecked() != state)
+    if(_pbSectorsAll->isChecked() != state)
     {
-        N_sectorsAll->setChecked(state);
+        _pbSectorsAll->setChecked(state);
     }
 }
 
 void MapScreen::N_toggleRouteFixClicked()
 {
-    Settings::setShowRouteFix(N_RouteWaypoints->isChecked());
+    Settings::setShowRouteFix(_pbRouteWaypoints->isChecked());
     emit toggleRouteWaypoints();
 }
 
-void MapScreen::N_toggleInactiveClicked()
-{
-    Settings::setShowInactiveAirports(N_InactiveAirports->isChecked());
+void MapScreen::N_toggleInactiveClicked() {
+    Settings::setShowInactiveAirports(_pbInactiveAirports->isChecked());
     emit toggleInactiveAirports();
 }
 
@@ -626,40 +617,41 @@ void MapScreen::N_toggleInactiveClicked()
 // Weather funktions
 ////////////////////////////
 
-void MapScreen::W_toggleWindClicked()
-{
-    Settings::setShowUpperWind(!Settings::showUpperWind());
+void MapScreen::W_toggleWindClicked() {
+    Settings::setShowWind(!Settings::showWind());
+    if (WindData::instance()->status() == -1) // not yet downloaded
+        Launcher::instance(true)->startWindDownload();
     glWidget->update();
 }
 
 void MapScreen::W_minusClicked()
 {
-    int value = W_slider->value();
+    int value = _slider->value();
     if(value == 0) return;
 
     value -= 1;
-    W_slider->setValue(value);
+    _slider->setValue(value);
 }
 
 void MapScreen::W_plusClicked()
 {
-    int value = W_slider->value();
+    int value = _slider->value();
     if(value == 40) return;
 
     value += 1;
-    W_slider->setValue(value);
+    _slider->setValue(value);
 }
 
 void MapScreen::W_sliderChanged()
 {
-    Settings::setUpperWindAlt(W_slider->value());
-    W_windAlt->setText(QString("%1ft").arg((W_slider->value()*1000)));
+    Settings::setWindAlt(_slider->value());
+    _lblWindAlt->setText(QString("%1ft").arg((_slider->value()*1000)));
     glWidget->update();
 }
 
 void MapScreen::W_toggleCloudsClicked()
 {
-    if(!Settings::showClouds()){
+    if(!Settings::showClouds()) {
         Settings::setShowClouds(true);
         glWidget->useClouds();
         return;

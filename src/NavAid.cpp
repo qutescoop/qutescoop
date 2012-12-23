@@ -10,7 +10,7 @@ NavAid::NavAid(const QStringList& stringList) {
 
 	bool ok;
 
-	type = (Type)stringList[0].toInt(&ok);
+    _type = (Type)stringList[0].toInt(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList;
 		return;
@@ -25,31 +25,31 @@ NavAid::NavAid(const QStringList& stringList) {
 		qWarning() << "NavAid::NavAid() unable to parse lon (double):" << stringList;
 		return;
 	}
-	altitude = stringList[3].toInt(&ok);
+	_alt = stringList[3].toInt(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse altitude (int):" << stringList;
 		return;
 	}
-	frequency = stringList[4].toInt(&ok);
+	_freq = stringList[4].toInt(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse frequency (int):" << stringList;
 		return;
 	}
-	range = stringList[5].toInt(&ok);
+	_range = stringList[5].toInt(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse range (int):" << stringList;
 		return;
 	}
-	heading = stringList[6].toFloat(&ok);
+	_hdg = stringList[6].toFloat(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse heading (float):" << stringList;
 		return;
 	}
 	label = stringList[7];
 
-	name = "";
+	_name = "";
 	for(int i = 8; i < stringList.size(); i++)
-		name += stringList[i] + (i > 8? " ": "");
+		_name += stringList[i] + (i > 8? " ": "");
 }
 
 QString NavAid::typeStr(Type type) {
@@ -91,20 +91,15 @@ QString NavAid::typeStr(Type type) {
 
 QString NavAid::toolTip() const {
 	QString ret = Waypoint::toolTip();
-	if (type == NDB)
-		ret.append(QString(" %1 kHz").arg(frequency));
-	else if (type == VOR || type == DME || type == DME_NO_FREQ || type == ILS_LOC || type == LOC || type == GS)
-		ret.append(QString(" %1 MHz").arg(frequency / 100., 0, 'f', 2));
-	else if (frequency != 0)
-		ret.append(QString(" %1?").arg(frequency));
-	if ((type == ILS_LOC || type == LOC) && heading != 0)
-		ret.append(QString(" %1").arg((double) heading, 0, 'f', 0));
-	if (!NavAid::typeStr(type).isEmpty())
-		ret.append(QString(" [%1]").arg(NavAid::typeStr(type)));
+    if (_type == NDB)
+		ret.append(QString(" %1 kHz").arg(_freq));
+    else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS)
+		ret.append(QString(" %1 MHz").arg(_freq / 100., 0, 'f', 2));
+	else if (_freq != 0)
+		ret.append(QString(" %1?").arg(_freq));
+    if ((_type == ILS_LOC || _type == LOC) && _hdg != 0)
+		ret.append(QString(" %1").arg((double) _hdg, 0, 'f', 0));
+    if (!NavAid::typeStr(_type).isEmpty())
+        ret.append(QString(" [%1]").arg(NavAid::typeStr(_type)));
 	return ret;
-}
-
-int NavAid::getTyp()
-{
-    return Type(type);
 }

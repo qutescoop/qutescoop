@@ -10,24 +10,24 @@
 #include "MapObject.h"
 
 class SearchResultModel: public QAbstractListModel {
-	Q_OBJECT
-	
-public:
-	SearchResultModel(QObject *parent = 0): QAbstractListModel(parent) {}
-	
-	virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-	
-	virtual QVariant data(const QModelIndex &index, int role) const;
-	virtual QVariant headerData(int section, Qt::Orientation orientation,
-	                         int role = Qt::DisplayRole) const;
-public slots:
-	void setData(const QList<MapObject*>& searchResult) { content = searchResult; reset(); }
-	void modelDoubleClicked(const QModelIndex& index);
-	void modelClicked(const QModelIndex& index);
+        Q_OBJECT
 
-private:
-	QList<MapObject*> content;
+    public:
+        SearchResultModel(QObject *parent = 0): QAbstractListModel(parent) {}
+
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                    int role = Qt::DisplayRole) const;
+    public slots:
+        void setData(const QList<MapObject*>& searchResult) { _content = searchResult; reset(); }
+        void modelDoubleClicked(const QModelIndex& index);
+        void modelClicked(const QModelIndex& index);
+
+    private:
+        QList<MapObject*> _content;
 };
 
 #endif /*SEARCHRESULTMODEL_H_*/

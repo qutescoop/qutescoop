@@ -4,10 +4,54 @@ help, project status and planned features.
 Find known bugs or report bugs to our bug tracker:
   [http://sourceforge.net/p/qutescoop/tickets]
 
+TODO (this is why this is beta):
+  * any class itself should be responsible for its needed data. Moved the
+    check methods inside the using classes (were mostly in Launcher.cpp).
+    This allows more flexible use of functionality in other places
+  * needs thorough testing
+
+Version 2.1.11beta
+ fixed:
+  * network code got a major rework. All previous 2.1-releases shall be
+    regarded unstable - the correlation between a download and the function
+    that should process the received data was not made bullet-proof during
+    parallel, asynchronous downloads. This was used widely within QuteScoop
+    and could lead to a Whazzup-function trying to process wind data etc.
+    Lots of strange bugs that have been reported recently are probably
+    connected to this issue.
+  * graphic filters for .gif/.ico/.jpeg/.mng/.svg/.tga/.tiff images are now
+    properly included. This means from now on you will be able to use textures
+    and cloud imagery in these formats without having to install the whole
+    Qt library.
+    (fixes https://sourceforge.net/p/qutescoop/tickets/11/)
+    For developpers: they are in the imageformats/ subdirectory after a 'make
+    install'. It should become a subdirectory of the QuteScoop executable
+    after deployment.
+  * time-selection fields for bookings still had an unpredicted behaviour
+    (fixes https://sourceforge.net/p/qutescoop/tickets/5/)
+  * Whazzups and bookings were not saved to disc
+ added:
+  * show great-circle-distance and true course while dragging a selection
+    rectangle on the globe
+ changed:
+  * saved bookings filenames now in the same format as saved Whazzups
+  * new preferences tab 'Weather' for cloud, temperature and wind settings
+  * forcing a network status refresh (F5) also re-downloads bookings
+  * bigger wind arrows
+  * for developpers: code style refactoring, in line with the (in my opinion)
+    good advises for the Qt library itself:
+    * all variables are lower camelCase
+    * all classes and source-filenames are upper CamelCase
+    * all private variables prefixed with _
+    * getter()-methods leave out 'get', e.g. status() instead of getStatus()
+    * no newline before { : looks more compact
+    * class declarations (.h): indent after public:, protected:,...
+
+
 Version 2.1.10
  fixed:
   * combining earth and cloud textures faster and less error-prone
-
+    (https://sourceforge.net/p/qutescoop/tickets/9/)
 Version 2.1.9
  fixed:
   * OpenGL setting value 'blend' was never reflected in preferences dialog
@@ -27,6 +71,8 @@ Version 2.1.9
  changed:
   * wind arrows UI: changed appeareance for better readability and anti-aliasing
   * less points drawn during a great-circle route plot (only each 400NM now, was 30NM)
+  * last downloaded cloud texture from %application data directory%/textures/clouds 
+    shown on program start (while new texture is downloading)
   * for developpers: version number and Subversion revision get set from the profile
     file QuteScoop.pro. To get the auto-updated revision right, change the version,
     check in changes to SVN, then create the release

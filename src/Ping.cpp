@@ -6,19 +6,19 @@
 
 void Ping::pingReadyRead() {
     QRegExp findMs = QRegExp("(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);
-    if (findMs.indexIn(pingProcess->readAll()) > 0) {
+    if (findMs.indexIn(_pingProcess->readAll()) > 0) {
         int ping = (int) findMs.cap(1).toDouble();
-        emit havePing(server, ping);
+        emit havePing(_server, ping);
     } else {
-        emit havePing(server, -1);
+        emit havePing(_server, -1);
     }
 }
 
 void Ping::startPing(QString server) {
-    this->server = server;
+    this->_server = server;
 
-    pingProcess = new QProcess(this);
-    connect(pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
+    _pingProcess = new QProcess(this);
+    connect(_pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
 
 #ifdef Q_WS_WIN
     QString pingCmd = QString("ping -n 1 %1").arg(server);
@@ -30,5 +30,5 @@ void Ping::startPing(QString server) {
     QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
     qDebug() << "Ping::startPing() executing" << pingCmd;
-    pingProcess->start(pingCmd);
+    _pingProcess->start(pingCmd);
 }

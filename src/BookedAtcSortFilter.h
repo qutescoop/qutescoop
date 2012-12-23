@@ -9,15 +9,15 @@
 
 class BookedAtcSortFilter : public QSortFilterProxyModel {
 
-public:
-    BookedAtcSortFilter(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
-    void setDateTimeRange(QDateTime& dtfrom, QDateTime& dtto);
+    public:
+        BookedAtcSortFilter(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
+        void setDateTimeRange(QDateTime& dtfrom, QDateTime& dtto);
 
-protected:
-    bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
+    protected:
+        bool filterAcceptsRow(int source_row, const QModelIndex& source_parent) const;
 
-private:
-    QDateTime from, to;
+    private:
+        QDateTime _from, _to;
 };
 
 #endif // BOOKEDATCSORTFILTER_H

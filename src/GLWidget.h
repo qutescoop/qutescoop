@@ -42,7 +42,7 @@ class GLWidget : public QGLWidget
         void scrollBy(int moveByX, int moveByY);
         void rightClick(const QPoint& pos);
         void zoomIn(double factor);
-        void zoomTo(double zoom);
+        void zoomTo(double _zoom);
 
         // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
         QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
@@ -62,7 +62,7 @@ class GLWidget : public QGLWidget
         void useClouds();
 
         void destroyFriendHightlighter();
-        void renderStaticSectors(bool value) { isRenderStaticSectors = value; }
+        void renderStaticSectors(bool value) { _renderStaticSectors = value; }
 
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
@@ -81,11 +81,11 @@ class GLWidget : public QGLWidget
     private:
         void resetZoom();
         void handleRotation(QMouseEvent *event);
-        bool mouseOnGlobe(int x, int y) const;
+        bool isOnGlobe(int x, int y) const;
         bool mouse2latlon(int x, int y, double &lat, double &lon) const;
-        bool pointIsVisible(double lat, double lon, int *px = 0, int *py = 0) const;
+        bool isPointVisible(double lat, double lon, int *px = 0, int *py = 0) const;
 
-        void drawSelectionRectangle() const;
+        void drawSelectionRectangle();
         void drawCoordinateAxii() const;
 
         const QPair<double, double> sunZenith(const QDateTime &dt) const;
@@ -113,26 +113,25 @@ class GLWidget : public QGLWidget
         };
         bool shouldDrawLabel(const QRectF &rect);
 
-        QSet<FontRectangle*> fontRectangles, allFontRectangles;
-        QPoint lastPos, mouseDownPos;
-        bool mapIsMoving, mapIsZooming, mapIsRectangleSelecting, isRenderStaticSectors,
-        lightsGenerated;
-        QImage completedEarthTexIm;
-        GLUquadricObj *earthQuad;
-        GLuint earthTex, cloudTex,
-        earthList, coastlinesList, countriesList, gridlinesList,
-        pilotsList, activeAirportsList, inactiveAirportsList,
-        fixesList, usedWaypointsList, plannedRouteList,
-        sectorPolygonsList, sectorPolygonBorderLinesList, appBorderLinesList, congestionsList,
-        windList, staticSectorPolygonsList, staticSectorPolygonBorderLinesList;
+        QSet<FontRectangle*> _fontRectangles, _allFontRectangles;
+        QPoint _lastPos, _mouseDownPos;
+        bool _mapMoving, _mapZooming, _mapRectSelecting, _renderStaticSectors,
+        _lightsGenerated, _allSectorsDisplayed;
+        QImage _completedEarthIm;
+        GLUquadricObj *_earthQuad;
+        GLuint _earthTex, _cloudTex,
+        _earthList, _coastlinesList, _countriesList, _gridlinesList,
+        _pilotsList, _activeAirportsList, _inactiveAirportsList,
+        _fixesList, _usedWaypointsList, _plannedRouteList,
+        _sectorPolygonsList, _sectorPolygonBorderLinesList, _appBorderLinesList, _congestionsList,
+        _windList, _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList;
         //GLuint airportControllersList,
-        bool allSectorsDisplayed;
-        QSet<Controller*> sectorsToDraw;
-        double pilotLabelZoomTreshold, activeAirportLabelZoomTreshold, inactiveAirportLabelZoomTreshold,
-        controllerLabelZoomTreshold, allWaypointsLabelZoomTreshold, usedWaypointsLabelZoomThreshold,
-        xRot, yRot, zRot, zoom, aspectRatio;
-        QTimer *highlighter;
-        QList< QPair<double , double> > friends;
+        QSet<Controller*> _sectorsToDraw;
+        double _pilotLabelZoomTreshold, _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
+        _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
+        _xRot, _yRot, _zRot, _zoom, _aspectRatio;
+        QTimer *_highlighter;
+        QList< QPair<double , double> > _friends;
 };
 
 #endif /*GLWIDGET_H_*/

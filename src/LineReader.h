@@ -8,12 +8,12 @@
 
 class LineReader: public FileReader
 {
-public:
-	LineReader(const QString& filename): FileReader(filename) {}
-	const QList<QPair<double, double> >& readLine();
-	
-private:
-	QList<QPair<double, double> > currentLine;
+    public:
+        LineReader(const QString& filename): FileReader(filename) {}
+        const QList<QPair<double, double> >& readLine();
+
+    private:
+        QList<QPair<double, double> > _currentLine;
 };
 
 #endif /*COASTLINEREADER_H_*/

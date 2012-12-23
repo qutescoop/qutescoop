@@ -9,20 +9,20 @@
 
 class Ping: public QObject
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    void startPing(QString server);
+    public:
+        void startPing(QString server);
 
-signals:
-    void havePing(QString,int);
+    signals:
+        void havePing(QString,int);
 
-private slots:
-    void pingReadyRead();
+    private slots:
+        void pingReadyRead();
 
-private:
-    QProcess *pingProcess;
-    QString server;
+    private:
+        QProcess *_pingProcess;
+        QString _server;
 };
 
 #endif // PING_H

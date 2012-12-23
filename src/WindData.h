@@ -11,41 +11,41 @@
 
 class WindData : public QObject
 {
-    Q_OBJECT
-public:
-    static WindData *getInstance();
-    explicit WindData(QObject *parent = 0);
+        Q_OBJECT
+    public:
+        static WindData *instance();
+        explicit WindData(QObject *parent = 0);
 
-    int getStatus() { return status;}
-    GLuint getWindArrows( int alt);
+        int status() { return _status;}
+        GLuint windArrows( int alt);
 
-    void setRawData(QString);
-    void decodeData();
+        void setRawData(QString);
+        void decodeData();
 
-    void refreshLists();
-
-
-signals:
-
-public slots:
-
-protected:
+        void refreshLists();
 
 
-private slots:
+    signals:
 
-private:
-    int round (int a, double b);
-    GLuint createWindArrowList(int alt);
+    public slots:
 
-    QString rawData;
-    QStringList stationRawData;
-    QHash< int , Station> stationList;
-    QList<GLuint> windList;
-    GLuint result;
+    protected:
 
-    int status;
-    int mode; // 0 = TTAA; 1 = TTBB;2 =  PPBB; 3 = UNKNOWN
+
+    private slots:
+
+    private:
+        int round (int a, double b);
+        GLuint createWindArrowList(int alt);
+
+        QString _rawData;
+        QStringList _stationRawData;
+        QHash< int , Station> _stationList;
+        QList<GLuint> _windList;
+        GLuint _result;
+
+        int _status;
+        int _mode; // 0 = TTAA; 1 = TTBB;2 =  PPBB; 3 = UNKNOWN
 };
 
 

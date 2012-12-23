@@ -14,18 +14,18 @@
 
 
 class Airac {
-public:
-    static Airac *getInstance(bool createIfNoInstance = true);
+    public:
+        static Airac *instance(bool createIfNoInstance = true);
 
-    void load(const QString& directory);
-    bool isEmpty() const { return waypoints.isEmpty(); }
+        void load(const QString& directory);
+        bool isEmpty() const { return waypoints.isEmpty(); }
 
-    /**
+        /**
      * Returns the waypoint with the given id closest to the given lat/lon.
      */
-    Waypoint* getWaypoint(const QString &id, double lat, double lon, double maxDist = 2000.0) const;
+        Waypoint* waypoint(const QString &id, double lat, double lon, double maxDist = 2000.0) const;
 
-    /**
+        /**
      * Returns a list of waypoints for the given planned route, starting at lat/lon.
      * Airways along the route will be replaced by the appropriate fixes along that
      * airway. lat/lon is being used as a hint and should be the position of the
@@ -37,26 +37,26 @@ public:
      *
      * Unknown fixes and/or airways will be ignored.
      */
-    QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon) const;
+        QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon) const;
 
-    Airway* getAirway(const QString& name, double lat, double lon) const;
-    QSet<Waypoint*> allPoints;
-    //QSet<MapObject*> mapObjects;
+        Airway* airway(const QString& name, double lat, double lon) const;
+        QSet<Waypoint*> allPoints;
+        //QSet<MapObject*> mapObjects;
 
-    QHash<QString, QSet<Waypoint*> > waypoints;
-    QHash<QString, QSet<NavAid*> > navaids;
-    QHash<QString, QList<Airway*> > airways;
+        QHash<QString, QSet<Waypoint*> > waypoints;
+        QHash<QString, QSet<NavAid*> > navaids;
+        QHash<QString, QList<Airway*> > airways;
 
-private:
-    Airac();
+    private:
+        Airac();
 
-    void readFixes(const QString &directory);
-    void readNavaids(const QString &directory);
-    void readAirways(const QString &directory);
+        void readFixes(const QString &directory);
+        void readNavaids(const QString &directory);
+        void readAirways(const QString &directory);
 
-    void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString &name);
+        void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type, int base, int top, const QString &name);
 
-    Airway* getAirway(const QString& name, Airway::Type type, int base, int top);
+        Airway* airway(const QString& name, Airway::Type type, int base, int top);
 };
 
 #endif /* AIRAC_H_ */

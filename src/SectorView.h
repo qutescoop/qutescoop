@@ -17,24 +17,21 @@
     class Sectorview;
 }*/
 
-class Sectorview : public QDialog, private Ui::Sectorview
+class Sectorview : public QDialog, public Ui::Sectorview
 {
-    Q_OBJECT
+        Q_OBJECT
+    public:
+        explicit Sectorview(QWidget *parent = 0);
+        static Sectorview* instance (bool createIfNoInstance = false, QWidget *parent = 0);
+        ~Sectorview();
 
-public:
-    explicit Sectorview(QWidget *parent = 0);
-    static Sectorview* getInstance (bool createIfNoInstance = false, QWidget *parent = 0);
-    ~Sectorview();
+    protected slots:
+        void on_bt_apply_clicked();
+        void on_bt_close_clicked();
 
-protected slots:
-    void on_bt_apply_clicked();
-    void on_bt_close_clicked();
-
-
-private:
-    Ui::Sectorview *ui;
-    void loadSectorList();
-    QHash <QString, Sector*> sectorsHash;
+    private:
+        void loadSectorList();
+        QHash <QString, Sector*> sectorsHash;
 };
 
 

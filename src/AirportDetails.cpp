@@ -12,10 +12,10 @@
 
 // singleton instance
 AirportDetails *airportDetails = 0;
-AirportDetails *AirportDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
+AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(airportDetails == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::getInstance(true);
+            if (parent == 0) parent = Window::instance(true);
             airportDetails = new AirportDetails(parent);
         }
     return airportDetails;
@@ -29,7 +29,7 @@ void AirportDetails::destroyInstance() {
 
 AirportDetails::AirportDetails(QWidget *parent):
     ClientDetails(parent),
-    airport(0)
+    _airport(0)
 {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
@@ -38,10 +38,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
 
     // ATC list
-    atcSortModel = new QSortFilterProxyModel;
-    atcSortModel->setDynamicSortFilter(true);
-    atcSortModel->setSourceModel(&atcModel);
-    treeAtc->setModel(atcSortModel);
+    _atcSortModel = new QSortFilterProxyModel;
+    _atcSortModel->setDynamicSortFilter(true);
+    _atcSortModel->setSourceModel(&_atcModel);
+    treeAtc->setModel(_atcSortModel);
     treeAtc->sortByColumn(0, Qt::AscendingOrder);
     treeAtc->header()->setResizeMode(QHeaderView::Interactive);
 
@@ -51,10 +51,10 @@ AirportDetails::AirportDetails(QWidget *parent):
             this, SLOT(atcSelected(const QModelIndex&)));
 
     // arrivals
-    arrivalsSortModel = new QSortFilterProxyModel;
-    arrivalsSortModel->setDynamicSortFilter(true);
-    arrivalsSortModel->setSourceModel(&arrivalsModel);
-    treeArrivals->setModel(arrivalsSortModel);
+    _arrivalsSortModel = new QSortFilterProxyModel;
+    _arrivalsSortModel->setDynamicSortFilter(true);
+    _arrivalsSortModel->setSourceModel(&_arrivalsModel);
+    treeArrivals->setModel(_arrivalsSortModel);
     treeArrivals->sortByColumn(9, Qt::AscendingOrder);
     treeArrivals->header()->setResizeMode(QHeaderView::Interactive);
 
@@ -64,10 +64,10 @@ AirportDetails::AirportDetails(QWidget *parent):
             this, SLOT(arrivalSelected(const QModelIndex&)));
 
     // departures
-    departuresSortModel = new QSortFilterProxyModel;
-    departuresSortModel->setDynamicSortFilter(true);
-    departuresSortModel->setSourceModel(&departuresModel);
-    treeDepartures->setModel(departuresSortModel);
+    _departuresSortModel = new QSortFilterProxyModel;
+    _departuresSortModel->setDynamicSortFilter(true);
+    _departuresSortModel->setSourceModel(&_departuresModel);
+    treeDepartures->setModel(_departuresSortModel);
     treeDepartures->sortByColumn(8, Qt::AscendingOrder);
     treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
 
@@ -76,7 +76,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(departureSelected(const QModelIndex&)));
 
-    metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
+    _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
     refresh();
 }
@@ -87,31 +87,31 @@ void AirportDetails::refresh(Airport* newAirport) {
     if (!Settings::airportDetailsGeometry().isNull()) restoreGeometry(Settings::airportDetailsGeometry());
 
     if(newAirport != 0) {
-        if(newAirport != airport) {
+        if(newAirport != _airport) {
             // scroll Boxes to top on new Data
-            treeAtc->scrollTo(atcSortModel->index(0, 0));
-            treeArrivals->scrollTo(arrivalsSortModel->index(0, 0));
-            treeDepartures->scrollTo(departuresSortModel->index(0, 0));
+            treeAtc->scrollTo(_atcSortModel->index(0, 0));
+            treeArrivals->scrollTo(_arrivalsSortModel->index(0, 0));
+            treeDepartures->scrollTo(_departuresSortModel->index(0, 0));
         }
-        airport = newAirport;
+        _airport = newAirport;
     }
-    if(airport == 0) return;
-    setMapObject(airport);
+    if(_airport == 0) return;
+    setMapObject(_airport);
 
-    setWindowTitle(airport->toolTip());
+    setWindowTitle(_airport->toolTip());
 
-    lblName->setText(QString("%1\n%2").arg(airport->city).arg(airport->name));
+    lblName->setText(QString("%1\n%2").arg(_airport->city).arg(_airport->name));
     lblCountry->setText(QString("%1 (%2)")
-                        .arg(airport->countryCode)
-                        .arg(NavData::getInstance()->countryCodes[airport->countryCode]));
+                        .arg(_airport->countryCode)
+                        .arg(NavData::instance()->countryCodes[_airport->countryCode]));
     lblLocation->setText(QString("%1%2 %3%4").
-                         arg(airport->lat > 0? "N": "S").
-                         arg(qAbs(airport->lat), 6, 'f', 3, '0').
-                         arg(airport->lon > 0? "E": "W").
-                         arg(qAbs(airport->lon), 7, 'f', 3, '0'));
+                         arg(_airport->lat > 0? "N": "S").
+                         arg(qAbs(_airport->lat), 6, 'f', 3, '0').
+                         arg(_airport->lon > 0? "E": "W").
+                         arg(qAbs(_airport->lon), 7, 'f', 3, '0'));
 
-    int utcDev = (int) (airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
-    QString lt = Whazzup::getInstance()->whazzupData().whazzupTime.
+    int utcDev = (int) (_airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
+    QString lt = Whazzup::instance()->whazzupData().whazzupTime.
                  addSecs(utcDev * 3600).time().toString("HH:mm");
     lblTime->setText(QString("%1 loc, UTC %2%3")
                         .arg(lt)
@@ -119,41 +119,41 @@ void AirportDetails::refresh(Airport* newAirport) {
                         .arg(utcDev));
 
     // arrivals
-    arrivalsModel.setClients(airport->arrivals.toList());
-    arrivalsSortModel->invalidate();
+    _arrivalsModel.setClients(_airport->arrivals.toList());
+    _arrivalsSortModel->invalidate();
     treeArrivals->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // departures
-    departuresModel.setClients(airport->departures.toList());
-    departuresSortModel->invalidate();
+    _departuresModel.setClients(_airport->departures.toList());
+    _departuresSortModel->invalidate();
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // set titles
     if (Settings::filterTraffic()) {
         groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").
-                                   arg(airport->numFilteredArrivals).arg(airport->arrivals.size()));
+                                   arg(_airport->numFilteredArrivals).arg(_airport->arrivals.size()));
         groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").
-                                     arg(airport->numFilteredDepartures).arg(airport->departures.size()));
+                                     arg(_airport->numFilteredDepartures).arg(_airport->departures.size()));
     } else {
-        groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(airport->arrivals.size()));
-        groupBoxDepartures->setTitle(QString("Departures (%1)").arg(airport->departures.size()));
+        groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(_airport->arrivals.size()));
+        groupBoxDepartures->setTitle(QString("Departures (%1)").arg(_airport->departures.size()));
     }
 
-    QSet<Controller*> atcContent = airport->getAllControllers() + checkSectors();
+    QSet<Controller*> atcContent = _airport->allControllers() + checkSectors();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
     // ATIS
     if(cbAtis->isChecked()) {
-        Controller* atis = Whazzup::getInstance()->whazzupData().controllers[airport->label + "_ATIS"];
+        Controller* atis = Whazzup::instance()->whazzupData().controllers[_airport->label + "_ATIS"];
         if (atis != 0)
             atcContent.insert(atis);
     }
 
     // observers
     if(cbObservers->isChecked()) {
-        foreach(Controller *c, Whazzup::getInstance()->whazzupData().controllers) {
+        foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {
             if(c->isObserver())
-                if(NavData::distance(airport->lat, airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
+                if(NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
                     atcContent.insert(c);
         }
     }
@@ -164,34 +164,34 @@ void AirportDetails::refresh(Airport* newAirport) {
         controllers.append(dynamic_cast <Controller*> (bookedcontrollers[i]));
     */
 
-    atcModel.setClients(atcContent.values());
-    atcSortModel->invalidate();
+    _atcModel.setClients(atcContent.values());
+    _atcSortModel->invalidate();
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
-    cbPlotRoutes->setChecked(airport->showFlightLines);
+    cbPlotRoutes->setChecked(_airport->showFlightLines);
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {
-    atcModel.modelSelected(atcSortModel->mapToSource(index));
+    _atcModel.modelSelected(_atcSortModel->mapToSource(index));
 }
 
 void AirportDetails::arrivalSelected(const QModelIndex& index) {
-    arrivalsModel.modelSelected(arrivalsSortModel->mapToSource(index));
+    _arrivalsModel.modelSelected(_arrivalsSortModel->mapToSource(index));
 }
 
 void AirportDetails::departureSelected(const QModelIndex& index) {
-    departuresModel.modelSelected(departuresSortModel->mapToSource(index));
+    _departuresModel.modelSelected(_departuresSortModel->mapToSource(index));
 }
 
 void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
-    if(airport->showFlightLines != checked) {
-        airport->showFlightLines = checked;
-        if (Window::getInstance(false) != 0) {
-            Window::getInstance(true)->mapScreen->glWidget->createPilotsList();
-            Window::getInstance(true)->mapScreen->glWidget->updateGL();;
+    if(_airport->showFlightLines != checked) {
+        _airport->showFlightLines = checked;
+        if (Window::instance(false) != 0) {
+            Window::instance(true)->mapScreen->glWidget->createPilotsList();
+            Window::instance(true)->mapScreen->glWidget->updateGL();;
         }
-        if (PilotDetails::getInstance(false) != 0)
-            PilotDetails::getInstance(true)->refresh();
+        if (PilotDetails::instance(false) != 0)
+            PilotDetails::instance(true)->refresh();
     }
 }
 
@@ -206,22 +206,22 @@ void AirportDetails::on_cbAtis_toggled(bool checked) {
 }
 
 void AirportDetails::on_pbMetar_clicked() {
-    disconnect(metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
+    disconnect(_metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
     QList<Airport*> airports;
-    if (airport != 0) {
-        airports += airport;
-        metarModel->setData(airports);
-        if(metarModel->rowCount() == 1) // means that the METAR is readily downloaded
-            metarModel->modelClicked(metarModel->index(0));
+    if (_airport != 0) {
+        airports += _airport;
+        _metarModel->setData(airports);
+        if(_metarModel->rowCount() == 1) // means that the METAR is readily downloaded
+            _metarModel->modelClicked(_metarModel->index(0));
         else
-            connect(metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
+            connect(_metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
     }
 }
 
 QSet<Controller*> AirportDetails::checkSectors() const {
     QSet<Controller*> result;
 
-    foreach(Controller *c, Whazzup::getInstance()->whazzupData().activeSectors()) {
+    foreach(Controller *c, Whazzup::instance()->whazzupData().activeSectors()) {
         int crossings = 0;
         double x1, x2;
 
@@ -239,9 +239,9 @@ QSet<Controller*> AirportDetails::checkSectors() const {
             }
 
             /* First check if the ray is possible to cross the line */
-            if(airport->lat > x1 && airport->lat <= x2 && (
-                    airport->lon < c->sector->points.value(ii).second
-                    || airport->lon <= c->sector->points.value((ii + 1) % 8).second)) {
+            if(_airport->lat > x1 && _airport->lat <= x2 && (
+                    _airport->lon < c->sector->points.value(ii).second
+                    || _airport->lon <= c->sector->points.value((ii + 1) % 8).second)) {
                 /* Calculate the equation of the line */
                 double dx = c->sector->points.value((ii + 1) % size).first
                             - c->sector->points.value(ii).first;
@@ -258,8 +258,8 @@ QSet<Controller*> AirportDetails::checkSectors() const {
                            - k * c->sector->points.value(ii).first;
 
                 /* Find if the ray crosses the line */
-                double y2 = k * airport->lat + m;
-                if(airport->lon <= y2)
+                double y2 = k * _airport->lat + m;
+                if(_airport->lon <= y2)
                     crossings++;
             }
         }
@@ -269,7 +269,7 @@ QSet<Controller*> AirportDetails::checkSectors() const {
     return result;
 }
 
-void AirportDetails::closeEvent(QCloseEvent *event){
+void AirportDetails::closeEvent(QCloseEvent *event) {
    Settings::setAirportDetailsPos(pos());
    Settings::setAirportDetailsSize(size());
    Settings::setAirportDetailsGeometry(saveGeometry());

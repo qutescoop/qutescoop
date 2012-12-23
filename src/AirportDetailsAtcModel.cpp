@@ -5,7 +5,7 @@
 #include "AirportDetailsAtcModel.h"
 
 void AirportDetailsAtcModel::setClients(const QList<Controller*>& controllers) {
-    this->controllers = controllers;
+    this->_controllers = controllers;
     reset();
 }
 
@@ -26,9 +26,9 @@ QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation or
 }
 
 QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid() || index.row() >= controllers.size())
+    if(!index.isValid() || index.row() >= _controllers.size())
         return QVariant();
-    Controller* c = controllers[index.row()];
+    Controller* c = _controllers[index.row()];
 
     if(role == Qt::FontRole) {
         if (c->isFriend()) {
@@ -54,5 +54,5 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
 }
 
 void AirportDetailsAtcModel::modelSelected(const QModelIndex& index) const {
-    controllers[index.row()]->showDetailsDialog();
+    _controllers[index.row()]->showDetailsDialog();
 }

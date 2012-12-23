@@ -15,12 +15,14 @@ class Launcher : public QWidget
         Q_OBJECT
 
     public:
-        Launcher(QWidget *parent = 0);
-        ~Launcher();
+        static Launcher* instance(bool createIfNoInstance = false);
         void fireUp();
 
     public slots:
         void loadWindow();
+
+        // Wind
+        void startWindDownload();
 
     protected:
         void mouseMoveEvent(QMouseEvent *);
@@ -42,28 +44,29 @@ class Launcher : public QWidget
         void startWindDecoding(bool error);
 
     private:
+        Launcher(QWidget *parent = 0);
+        ~Launcher();
 
         //Startupimage
         QPixmap map;
-        QLabel *image, *text;
-        QProgressBar *progress;
+        QLabel *_image, *_text;
+        QProgressBar *_progress;
         //required to move the widget
-        QPoint dragPosition;
+        QPoint _dragPosition;
 
         //For NavDataUpdate
         void checkForDataUpdates();
-        QHttp *dataVersionsAndFilesDownloader;
-        QBuffer *dataVersionsBuffer;
-        QList<QFile*> dataFilesToDownload;
+        QHttp *_dataVersionsAndFilesDownloader;
+        QBuffer *_dataVersionsBuffer;
+        QList<QFile*> _dataFilesToDownload;
 
         // Wind
-        void startWindDownload();
-        QHttp *windDataDownloader;
-        QBuffer *windDataBuffer;
+        QHttp *_windDataDownloader;
+        QBuffer *_windDataBuffer;
 
 
-        bool navReady, windowReady, windReady;
-        QTimer finalTimer, windowTimer;
+        bool _navReady, _windowReady, _windReady;
+        QTimer _finalTimer, _windowTimer;
 
 };
 

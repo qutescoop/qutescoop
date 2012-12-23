@@ -11,45 +11,45 @@
 #include "Airport.h"
 
 class MetarModel: public QAbstractListModel {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    MetarModel(QObject *parent = 0);
-
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-
-    virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                             int role = Qt::DisplayRole) const;
-
-signals:
-    void gotMetar(QString icao);
-
-public slots:
-    void setData(const QList<Airport*>& airports);
-    void modelClicked(const QModelIndex& index);
-    void refresh();
-
-private slots:
-    void downloaded(int id, bool error);
-    void gotMetarFor(Airport *airport);
-
-private:
-    class DownloadQueue {
     public:
-        Airport *airport;
-        QBuffer *buffer;
-    };
-    QHash<int, DownloadQueue> downloadQueue;
+        MetarModel(QObject *parent = 0);
 
-    void abortAll();
-    void downloadMetarFor(Airport* airport);
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
-    QList<Airport*> airportList;
-    QList<Airport*> metarList;
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                    int role = Qt::DisplayRole) const;
 
-    QHttp downloader;
+    signals:
+        void gotMetar(QString icao);
+
+    public slots:
+        void setData(const QList<Airport*>& airports);
+        void modelClicked(const QModelIndex& index);
+        void refresh();
+
+    private slots:
+        void downloaded(int id, bool error);
+        void gotMetarFor(Airport *airport);
+
+    private:
+        class DownloadQueue {
+            public:
+                Airport *airport;
+                QBuffer *buffer;
+        };
+        QHash<int, DownloadQueue> _downloadQueue;
+
+        void abortAll();
+        void downloadMetarFor(Airport* airport);
+
+        QList<Airport*> _airportList;
+        QList<Airport*> _metarList;
+
+        QHttp _downloader;
 };
 
 #endif /*METARMODEL_H_*/

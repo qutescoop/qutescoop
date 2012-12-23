@@ -24,8 +24,8 @@ class Sector {
         QString icao, name, countryCode, id;
         double lat, lon;
 
-        GLuint getGlPolygon();
-        GLuint getGlBorderLine();
+        GLuint glPolygon();
+        GLuint glBorderLine();
     private:
         GLuint _polygon, _borderline;
 };

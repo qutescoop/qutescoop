@@ -8,12 +8,12 @@
 // GuiMessageProxy (singleton)
 ////////////////////////////////////////////////////////////////////////
 
-GuiMessages *guiMessageProxyInstance = 0;
-GuiMessages *GuiMessages::getInstance(bool createIfNoInstance) {
-    if(guiMessageProxyInstance == 0)
+GuiMessages *guiMessagesInstance = 0;
+GuiMessages *GuiMessages::instance(bool createIfNoInstance) {
+    if(guiMessagesInstance == 0)
         if (createIfNoInstance)
-            guiMessageProxyInstance = new GuiMessages();
-    return guiMessageProxyInstance;
+            guiMessagesInstance = new GuiMessages();
+    return guiMessagesInstance;
 }
 GuiMessages::GuiMessages() :
     _currentStatusMessage(new GuiMessage()),
@@ -27,37 +27,37 @@ GuiMessages::GuiMessages() :
 // STATIC METHODS TO SEND MESSAGES
 // text:
 void GuiMessages::message(const QString &msg, const QString &id) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::Temporary, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::Temporary, msg));
 }
 void GuiMessages::warning(const QString &msg, const QString &id) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::Warning, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::Warning, msg));
 }
 void GuiMessages::status (const QString &msg, const QString &id) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::Persistent, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::Persistent, msg));
 }
 void GuiMessages::informationUserAttention(const QString &msg, const QString &id) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::InformationUserAttention, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::InformationUserAttention, msg));
 }
 void GuiMessages::errorUserAttention      (const QString &msg, const QString &id) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::ErrorUserAttention, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::ErrorUserAttention, msg));
 }
 void GuiMessages::criticalUserInteraction (const QString &msg, const QString &titleAndId) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(titleAndId, GuiMessage::CriticalUserInteraction, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(titleAndId, GuiMessage::CriticalUserInteraction, msg));
 }
 void GuiMessages::fatalUserInteraction    (const QString &msg, const QString &titleAndId) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(titleAndId, GuiMessage::FatalUserInteraction, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(titleAndId, GuiMessage::FatalUserInteraction, msg));
 }
 // progress (including text):
 void GuiMessages::progress(const QString &id, int value, int maximum) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::ProgressBar, "", value, maximum));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::ProgressBar, "", value, maximum));
 }
 void GuiMessages::progress(const QString &id, const QString &msg) {
-    GuiMessages::getInstance()->updateMessage(new GuiMessage(id, GuiMessage::ProgressBar, msg));
+    GuiMessages::instance()->updateMessage(new GuiMessage(id, GuiMessage::ProgressBar, msg));
 }
 
 void GuiMessages::remove(const QString &id) {
     if (!id.isEmpty())
-        GuiMessages::getInstance()->removeMessageById(id);
+        GuiMessages::instance()->removeMessageById(id);
 }
 
 ///////////////////////////////////////////////////////////////////////////

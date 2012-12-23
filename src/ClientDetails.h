@@ -11,20 +11,20 @@
 class MapObject;
 
 class ClientDetails : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
-protected:
-    ClientDetails(QWidget *parent);
-    virtual void refresh() {}
-    void setMapObject(MapObject *object);
+    protected:
+        ClientDetails(QWidget *parent);
+        virtual void refresh() {}
+        void setMapObject(MapObject *object);
 
-protected slots:
-    void showOnMap() const;
-    void friendClicked() const;
+    protected slots:
+        void showOnMap() const;
+        void friendClicked() const;
 
-protected:
-    double lat, lon;
-    QString userId, callsign;
+    protected:
+        double _lat, _lon;
+        QString userId, callsign;
 };
 
 #endif /*CLIENTDETAILS_H_*/

@@ -6,33 +6,33 @@
 
 FileReader::FileReader(const QString& filename)
 {
-	stream = 0;
-	file = new QFile(filename);
-	if(!file->open(QIODevice::ReadOnly | QIODevice::Text)) {
-		delete file;
-		file = 0;
+	_stream = 0;
+	_file = new QFile(filename);
+	if(!_file->open(QIODevice::ReadOnly | QIODevice::Text)) {
+		delete _file;
+		_file = 0;
 		return;
 	}
-	stream = new QTextStream(file);
+	_stream = new QTextStream(_file);
 }
 
 FileReader::~FileReader()
 {
-	if(file != 0)
-		delete file;
-	if(stream != 0)
-		delete stream;
+	if(_file != 0)
+		delete _file;
+	if(_stream != 0)
+		delete _stream;
 }
 
 QString FileReader::nextLine() const {
-	if(stream == 0 || stream->atEnd())
+	if(_stream == 0 || _stream->atEnd())
 		return QString();
-	return stream->readLine();
+	return _stream->readLine();
 }
 
 bool FileReader::atEnd() const {
-	if(stream == 0)
+	if(_stream == 0)
 		return true;
 
-	return stream->atEnd();
+	return _stream->atEnd();
 }

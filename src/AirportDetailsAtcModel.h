@@ -10,30 +10,30 @@
 #include "Controller.h"
 
 class AirportDetailsAtcModel : public QAbstractTableModel {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    AirportDetailsAtcModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
+    public:
+        AirportDetailsAtcModel(QObject *parent = 0) : QAbstractTableModel(parent) {}
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const {
-        Q_UNUSED(parent);
-        return controllers.count();
-    }
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const {
-        Q_UNUSED(parent);
-        return 8;
-    }
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const {
+            Q_UNUSED(parent);
+            return _controllers.count();
+        }
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const {
+            Q_UNUSED(parent);
+            return 8;
+        }
 
-    virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual QVariant headerData(int section, Qt::Orientation orientation,
-                             int role = Qt::DisplayRole) const;
+        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant headerData(int section, Qt::Orientation orientation,
+                                    int role = Qt::DisplayRole) const;
 
-public slots:
-    void setClients(const QList<Controller*>& controllers);
-    void modelSelected(const QModelIndex& index) const;
+    public slots:
+        void setClients(const QList<Controller*>& controllers);
+        void modelSelected(const QModelIndex& index) const;
 
-private:
-    QList<Controller*> controllers;
+    private:
+        QList<Controller*> _controllers;
 };
 
 #endif /*CLIENTLISTMODEL_H_*/

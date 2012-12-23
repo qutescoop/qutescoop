@@ -10,16 +10,16 @@ GLdouble vertices[64][6]; // newly created vertices (x,y,z,r,g,b) by combine cal
 int vertexIndex;          // array index for above array incremented inside combine callback
 
 Tessellator::Tessellator() {
-    tess = gluNewTess();
-    gluTessCallback(tess, GLU_TESS_BEGIN,	CALLBACK_CAST tessBeginCB);
-    gluTessCallback(tess, GLU_TESS_END,		CALLBACK_CAST tessEndCB);
-    gluTessCallback(tess, GLU_TESS_ERROR,	CALLBACK_CAST tessErrorCB);
-    gluTessCallback(tess, GLU_TESS_VERTEX,	CALLBACK_CAST tessVertexCB);
-    gluTessCallback(tess, GLU_TESS_COMBINE, CALLBACK_CAST tessCombineCB);
+    _tess = gluNewTess();
+    gluTessCallback(_tess, GLU_TESS_BEGIN,	CALLBACK_CAST tessBeginCB);
+    gluTessCallback(_tess, GLU_TESS_END,		CALLBACK_CAST tessEndCB);
+    gluTessCallback(_tess, GLU_TESS_ERROR,	CALLBACK_CAST tessErrorCB);
+    gluTessCallback(_tess, GLU_TESS_VERTEX,	CALLBACK_CAST tessVertexCB);
+    gluTessCallback(_tess, GLU_TESS_COMBINE, CALLBACK_CAST tessCombineCB);
 }
 
 Tessellator::~Tessellator() {
-    gluDeleteTess(tess);
+    gluDeleteTess(_tess);
 }
 
 void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
@@ -33,25 +33,25 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
     // Here, we are looking at only vertex coods, so the 2nd and 3rd params are
     // pointing to the same address.
 
-    pointList.clear();
+    _pointList.clear();
     vertexIndex = 0;
 
-    gluTessBeginPolygon(tess, 0);
-    gluTessBeginContour(tess);
+    gluTessBeginPolygon(_tess, 0);
+    gluTessBeginContour(_tess);
     for(int i = 0; i < points.size(); i++) {
         GLdouble *p = new GLdouble[3];
-        pointList.append(p);
+        _pointList.append(p);
         p[0] = SXhigh(points[i].first, points[i].second);
         p[1] = SYhigh(points[i].first, points[i].second);
         p[2] = SZhigh(points[i].first, points[i].second);
-        gluTessVertex(tess, p, p);
+        gluTessVertex(_tess, p, p);
     }
-    gluTessEndContour(tess);
-    gluTessEndPolygon(tess);
+    gluTessEndContour(_tess);
+    gluTessEndPolygon(_tess);
 
-    for(int i = 0; i < pointList.size(); i++)
-        delete pointList[i];
-    pointList.clear();
+    for(int i = 0; i < _pointList.size(); i++)
+        delete _pointList[i];
+    _pointList.clear();
 }
 
 CALLBACK_DECL Tessellator::tessErrorCB(GLenum errorCode) {

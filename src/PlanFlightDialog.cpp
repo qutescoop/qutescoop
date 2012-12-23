@@ -13,10 +13,10 @@
 #include "helpers.h"
 
 PlanFlightDialog *planFlightDialogInstance = 0;
-PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
+PlanFlightDialog *PlanFlightDialog::instance(bool createIfNoInstance, QWidget *parent) {
     if(planFlightDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::getInstance(true);
+            if (parent == 0) parent = Window::instance(true);
             planFlightDialogInstance = new PlanFlightDialog(parent);
         }
     return planFlightDialogInstance;
@@ -25,7 +25,7 @@ PlanFlightDialog *PlanFlightDialog::getInstance(bool createIfNoInstance, QWidget
 PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     QDialog(parent),
     selectedRoute(0),
-    vrouteBuffer(0), vatrouteBuffer(0)
+    _vrouteBuffer(0), _vatrouteBuffer(0)
 {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
@@ -34,11 +34,11 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     bDepDetails->hide(); bDestDetails->hide();
     edCycle->setText(QDate::currentDate().toString("yyMM"));
 
-    routesSortModel = new QSortFilterProxyModel;
-    routesSortModel->setDynamicSortFilter(true);
-    routesSortModel->setSourceModel(&routesModel);
+    _routesSortModel = new QSortFilterProxyModel;
+    _routesSortModel->setDynamicSortFilter(true);
+    _routesSortModel->setSourceModel(&_routesModel);
 
-    treeRoutes->setModel(routesSortModel);
+    treeRoutes->setModel(_routesSortModel);
     treeRoutes->header()->setResizeMode(QHeaderView::Interactive);
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
@@ -52,12 +52,12 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
 }
 
 void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected providers
-    routes.clear();
-    routesModel.setClients(routes);
+    _routes.clear();
+    _routesModel.setClients(_routes);
     gbResults->setTitle(QString("Results [%1-%2] (%3)")
                          .arg(edDep->text())
                          .arg(edDest->text())
-                         .arg(routes.size()));
+                         .arg(_routes.size()));
     lblGeneratedStatus->setText(QString());
     lblVrouteStatus->setText(QString());
     lblVatrouteStatus->setText(QString());
@@ -87,15 +87,15 @@ void PlanFlightDialog::requestGenerated() {
 
     r->calculateWaypointsAndDistance();
 
-    routes.append(r);
+    _routes.append(r);
     lblGeneratedStatus->setText(QString("1 route"));
-    routesModel.setClients(routes);
-    routesSortModel->invalidate();
+    _routesModel.setClients(_routes);
+    _routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
     gbResults->setTitle(QString("Results [%1-%2] (%3)")
                          .arg(edDep->text())
                          .arg(edDest->text())
-                         .arg(routes.size()));
+                         .arg(_routes.size()));
 }
 
 void PlanFlightDialog::requestVroute() {
@@ -115,27 +115,27 @@ void PlanFlightDialog::requestVroute() {
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("arr"), edDest->text().trimmed());
 
-    vrouteDownloader = new QHttp(url.host(), url.port() != -1? url.port(): 80);
-    connect(vrouteDownloader, SIGNAL(done(bool)), this, SLOT(vrouteDownloaded(bool)));
-    Settings::applyProxySetting(vrouteDownloader);
+    _vrouteDownloader = new QHttp(url.host(), url.port() != -1? url.port(): 80);
+    connect(_vrouteDownloader, SIGNAL(done(bool)), this, SLOT(vrouteDownloaded(bool)));
+    Settings::applyProxySetting(_vrouteDownloader);
 
-    if(vrouteBuffer != 0) delete vrouteBuffer;
-    vrouteBuffer = new QBuffer;
-    vrouteBuffer->open(QBuffer::ReadWrite);
+    if(_vrouteBuffer != 0) delete _vrouteBuffer;
+    _vrouteBuffer = new QBuffer;
+    _vrouteBuffer->open(QBuffer::ReadWrite);
 
-    vrouteDownloader->get(url.toEncoded(), vrouteBuffer);
+    _vrouteDownloader->get(url.toEncoded(), _vrouteBuffer);
     lblVrouteStatus->setText(QString("request sent..."));
 }
 
 void PlanFlightDialog::vrouteDownloaded(bool error) {
-    if(vrouteBuffer == 0) {
+    if(_vrouteBuffer == 0) {
         lblVatrouteStatus->setText(QString("nothing returned"));
         return;
     }
 
     if(error) {
         lblVrouteStatus->setText(QString("error: %1")
-                              .arg(vrouteDownloader->errorString()));
+                              .arg(_vrouteDownloader->errorString()));
         return;
     }
 
@@ -143,8 +143,8 @@ void PlanFlightDialog::vrouteDownloaded(bool error) {
     QString msg;
 
     QDomDocument domdoc = QDomDocument();
-    vrouteBuffer->seek(0);
-    if (!domdoc.setContent(vrouteBuffer)) return;
+    _vrouteBuffer->seek(0);
+    if (!domdoc.setContent(_vrouteBuffer)) return;
     QDomElement root = domdoc.documentElement();
     if (root.nodeName() != "flightplans") return;
     QDomElement e = root.firstChildElement();
@@ -199,18 +199,18 @@ void PlanFlightDialog::vrouteDownloaded(bool error) {
         msg = QString("%1 route%2").arg(newroutes.size()).arg(newroutes.size() == 1 ? "": "s");
     lblVrouteStatus->setText(msg);
 
-    routes += newroutes;
-    routesModel.setClients(routes);
-    routesSortModel->invalidate();
+    _routes += newroutes;
+    _routesModel.setClients(_routes);
+    _routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
     gbResults->setTitle(QString("Results [%1-%2] (%3)")
                          .arg(edDep->text())
                          .arg(edDest->text())
-                         .arg(routes.size()));
+                         .arg(_routes.size()));
 
-    delete vrouteBuffer;
-    vrouteBuffer = 0;
-    delete vrouteDownloader;
+    delete _vrouteBuffer;
+    _vrouteBuffer = 0;
+    delete _vrouteDownloader;
 }
 
 void PlanFlightDialog::requestVatroute() {
@@ -222,27 +222,27 @@ void PlanFlightDialog::requestVatroute() {
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("dest"), edDest->text().trimmed());
 
-    vatrouteDownloader = new QHttp(url.host(), url.port() != -1 ? url.port() : 80);
-    connect(vatrouteDownloader, SIGNAL(done(bool)), this, SLOT(vatrouteDownloaded(bool)));
-    Settings::applyProxySetting(vatrouteDownloader);
+    _vatrouteDownloader = new QHttp(url.host(), url.port() != -1 ? url.port() : 80);
+    connect(_vatrouteDownloader, SIGNAL(done(bool)), this, SLOT(vatrouteDownloaded(bool)));
+    Settings::applyProxySetting(_vatrouteDownloader);
 
-    if(vatrouteBuffer == 0) delete vatrouteBuffer;
-    vatrouteBuffer = new QBuffer;
-    vatrouteBuffer->open(QBuffer::ReadWrite);
+    if(_vatrouteBuffer == 0) delete _vatrouteBuffer;
+    _vatrouteBuffer = new QBuffer;
+    _vatrouteBuffer->open(QBuffer::ReadWrite);
 
-    vatrouteDownloader->get(url.toEncoded(), vatrouteBuffer);
+    _vatrouteDownloader->get(url.toEncoded(), _vatrouteBuffer);
     lblVatrouteStatus->setText(QString("request sent..."));
 }
 
 void PlanFlightDialog::vatrouteDownloaded(bool error) {
-    if(vatrouteBuffer == 0) {
+    if(_vatrouteBuffer == 0) {
         lblVatrouteStatus->setText(QString("nothing returned"));
         return;
     }
 
     if(error) {
         lblVatrouteStatus->setText(QString("error: %1")
-                              .arg(vatrouteDownloader->errorString()));
+                              .arg(_vatrouteDownloader->errorString()));
         return;
     }
 
@@ -251,7 +251,7 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
     QRegExp rxRoutes("(?:<tr[^>]*>.*){23}.*(<tr.*>.*<\\/tr>.*)<\\/table>");
     rxRoutes.setMinimal(true);
 
-    if (rxRoutes.indexIn(vatrouteBuffer->data()) != -1) {
+    if (rxRoutes.indexIn(_vatrouteBuffer->data()) != -1) {
         QRegExp rx("\\s*<tr[^<]*<td[^<]*(?:<.><\\/.>)?FL(\\d{3})-FL(\\d{3})(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<\\/tr>");
         QString rStr = rxRoutes.cap(1);
 
@@ -276,36 +276,36 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
     lblVatrouteStatus->setText(QString("%1 route%2").arg(newRoutes.size()).
                                arg(newRoutes.size() == 1 ? "": "s"));
 
-    routes += newRoutes;
-    routesModel.setClients(routes);
-    routesSortModel->invalidate();
+    _routes += newRoutes;
+    _routesModel.setClients(_routes);
+    _routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
     gbResults->setTitle(QString("Results [%1-%2] (%3)")
                          .arg(edDep->text())
                          .arg(edDest->text())
-                         .arg(routes.size()));
+                         .arg(_routes.size()));
 
-    delete vatrouteBuffer;
-    vatrouteBuffer = 0;
-    delete vatrouteDownloader;
+    delete _vatrouteBuffer;
+    _vatrouteBuffer = 0;
+    delete _vatrouteDownloader;
 }
 
 void PlanFlightDialog::on_edDep_textChanged(QString str) {
-    bDepDetails->setVisible(NavData::getInstance()->airports.contains(str));
+    bDepDetails->setVisible(NavData::instance()->airports.contains(str));
 }
 
 void PlanFlightDialog::on_edDest_textChanged(QString str) {
-    bDestDetails->setVisible(NavData::getInstance()->airports.contains(str));
+    bDestDetails->setVisible(NavData::instance()->airports.contains(str));
 }
 
 void PlanFlightDialog::on_bDepDetails_clicked() {
-    Airport *airport = NavData::getInstance()->airports.value(edDep->text());
+    Airport *airport = NavData::instance()->airports.value(edDep->text());
     if (airport != 0)
         airport->showDetailsDialog();
 }
 
 void PlanFlightDialog::on_bDestDetails_clicked() {
-    Airport *airport = NavData::getInstance()->airports.value(edDest->text());
+    Airport *airport = NavData::instance()->airports.value(edDest->text());
     if (airport != 0)
         airport->showDetailsDialog();
 }
@@ -315,8 +315,8 @@ void PlanFlightDialog::routeSelected(const QModelIndex& index) {
         selectedRoute = 0;
         return;
     }
-    if(selectedRoute != routes[routesSortModel->mapToSource(index).row()]) {
-        selectedRoute = routes[routesSortModel->mapToSource(index).row()];
+    if(selectedRoute != _routes[_routesSortModel->mapToSource(index).row()]) {
+        selectedRoute = _routes[_routesSortModel->mapToSource(index).row()];
         if(cbPlot->isChecked()) on_cbPlot_toggled(true);
     }
 }
@@ -346,9 +346,9 @@ void PlanFlightDialog::plotPlannedRoute() const {
 }
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
-    if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->mapScreen->glWidget->createPilotsList();
-        Window::getInstance(true)->mapScreen->glWidget->updateGL();
+    if (Window::instance(false) != 0) {
+        Window::instance(true)->mapScreen->glWidget->createPilotsList();
+        Window::instance(true)->mapScreen->glWidget->updateGL();
     }
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);
@@ -374,7 +374,7 @@ void PlanFlightDialog::on_pbVatsimPrefile_clicked() {
     }
 }
 
-void PlanFlightDialog::closeEvent(QCloseEvent *event){
+void PlanFlightDialog::closeEvent(QCloseEvent *event) {
     Settings::setPlanFlightDialogPos(pos());
     Settings::setPlanFlightDialogSize(size());
     Settings::setPlanFlightDialogGeometry(saveGeometry());

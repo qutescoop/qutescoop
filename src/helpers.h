@@ -18,12 +18,12 @@ static double inline modPositive(double x, double y) {
 }
 
 class Version {
-public:
-    /* something like "QuteScoop 2.1.8 - Revision 212" */
-    static QString str() {
-        // VERSION_NUMBER and CVS_REVISION are defined in the qmake QuteScoop.pro file
-        return QString("QuteScoop %1 - %2").arg(VERSION_NUMBER).arg(CVS_REVISION);
-    }
+    public:
+        /* something like "QuteScoop 2.1.8 - Revision 212" */
+        static QString str() {
+            // VERSION_NUMBER and CVS_REVISION are defined in the qmake QuteScoop.pro file
+            return QString("QuteScoop %1 - %2").arg(VERSION_NUMBER).arg(CVS_REVISION);
+        }
 };
 
 /* mathematical constants */

@@ -16,50 +16,50 @@ class Pilot;
 
 class Airport: public MapObject
 {
-public:
-    Airport();
-    Airport(const QStringList &list);
-    ~Airport();
+    public:
+        Airport();
+        Airport(const QStringList &list);
+        ~Airport();
 
-    virtual void showDetailsDialog();
+        virtual void showDetailsDialog();
 
-    virtual QString toolTip() const;
-    virtual QString mapLabel() const;
-    virtual bool matches(const QRegExp &regex) const;
+        virtual QString toolTip() const;
+        virtual QString mapLabel() const;
+        virtual bool matches(const QRegExp &regex) const;
 
-    void resetWhazzupStatus();
+        void resetWhazzupStatus();
 
-    bool active;
+        bool active;
 
-    QSet<Controller*> approaches, towers, grounds, deliveries;
-    QSet<Pilot*> arrivals, departures;
-    QSet<Controller*> getAllControllers() const;
+        QSet<Controller*> approaches, towers, grounds, deliveries;
+        QSet<Pilot*> arrivals, departures;
+        QSet<Controller*> allControllers() const;
 
-    void addArrival(Pilot *client);
-    void addDeparture(Pilot *client);
-    int numFilteredArrivals, numFilteredDepartures;
+        void addArrival(Pilot *client);
+        void addDeparture(Pilot *client);
+        int numFilteredArrivals, numFilteredDepartures;
 
-    //void addCenter(Controller *client);
-    void addApproach(Controller *client);
-    void addTower(Controller *client);
-    void addGround(Controller *client);
-    void addDelivery(Controller *client);
+        //void addCenter(Controller *client);
+        void addApproach(Controller *client);
+        void addTower(Controller *client);
+        void addGround(Controller *client);
+        void addDelivery(Controller *client);
 
-    QString name, city, countryCode;
+        QString name, city, countryCode;
 
-    bool showFlightLines;
+        bool showFlightLines;
 
-    const GLuint &getAppDisplayList();
-    const GLuint &getAppBorderDisplayList();
-    const GLuint &getTwrDisplayList();
-    const GLuint &getGndDisplayList();
-    const GLuint &getDelDisplayList();
+        const GLuint &appDisplayList();
+        const GLuint &appBorderDisplayList();
+        const GLuint &twrDisplayList();
+        const GLuint &gndDisplayList();
+        const GLuint &delDisplayList();
 
-    Metar metar;
+        Metar metar;
 
-private:
-    GLuint appDisplayList, appBorderDisplayList, twrDisplayList,
-        gndDisplayList, delDisplayList;
+    private:
+        GLuint _appDisplayList, _appBorderDisplayList, _twrDisplayList,
+        _gndDisplayList, _delDisplayList;
 };
 
 #endif /*AIRPORT_H_*/
