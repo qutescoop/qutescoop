@@ -7,3 +7,4 @@ firdisplay.sup%%263
 firlist.dat%%268
 airlines.dat%%250
 station.dat%%245
+cloudmirrors.dat%%2
