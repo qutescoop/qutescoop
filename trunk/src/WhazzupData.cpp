@@ -15,26 +15,26 @@
 WhazzupData::WhazzupData():
     servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
     updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
-    whazzupVersion(0), dataType(UNIFIED)
+    _whazzupVersion(0), _dataType(UNIFIED)
 {
 }
 
-WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
+WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
     servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
-    updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()), whazzupVersion(0)
+    updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()), _whazzupVersion(0)
 {
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
-    dataType = type;
+    _dataType = type;
     QStringList friends = Settings::friends();
     int reloadInMin = Settings::downloadInterval();
     enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
     ParserState state = STATE_NONE;
-    while(buffer->canReadLine()) {
+    foreach(QString line, bytes->split('\n')) {
         // keep GUI responsive - leads to hangups?
         qApp->processEvents();
 
-        QString line = QString(buffer->readLine()).trimmed();
+        line = line.trimmed();
         if(line.isEmpty())
             continue;
 
@@ -99,7 +99,7 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                 } else if(line.startsWith("RELOAD")) {
                     reloadInMin = list[1].trimmed().toInt();
                 } else if(line.startsWith("VERSION")) {
-                    whazzupVersion = list[1].trimmed().toInt();
+                    _whazzupVersion = list[1].trimmed().toInt();
                 }
             }
                 break;
@@ -117,7 +117,7 @@ WhazzupData::WhazzupData(QNetworkReply* buffer, WhazzupType type):
                 }
                 else if(list[3] == "ATC") {
                     if (type == WHAZZUP) {
-                        while (list.size() > 42 && whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
+                        while (list.size() > 42 && _whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
                             list[35] = list[35] + ":" + list[36];
                             list.removeAt(36);
                         }
@@ -156,17 +156,17 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
     servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
     updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
     predictionBasedOnTime(QDateTime()),  predictionBasedOnBookingsTime(QDateTime()),
-    whazzupVersion(0)
+    _whazzupVersion(0)
 {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
 
-    whazzupVersion = data.whazzupVersion;
+    _whazzupVersion = data._whazzupVersion;
     whazzupTime = predictTime;
     predictionBasedOnTime = QDateTime(data.whazzupTime);
     predictionBasedOnBookingsTime = QDateTime(data.bookingsTime);
 
-    dataType = data.dataType;
+    _dataType = data._dataType;
     // so now lets fake some controllers
     foreach(const BookedController* bc, data.bookedControllers) {
         //if (bc == 0) continue;
@@ -325,8 +325,8 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
     if(this == &data)
         return;
 
-    if (data.dataType == WHAZZUP || data.dataType == UNIFIED) {
-        if(dataType == ATCBOOKINGS) dataType = UNIFIED;
+    if (data._dataType == WHAZZUP || data._dataType == UNIFIED) {
+        if(_dataType == ATCBOOKINGS) _dataType = UNIFIED;
         servers = data.servers;
         voiceServers = data.voiceServers;
         whazzupTime = data.whazzupTime;
@@ -345,8 +345,8 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
         foreach(const QString s, data.controllers.keys())
             controllers[s] = new Controller(*data.controllers[s]);
     }
-    if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
-        if(dataType == WHAZZUP) dataType = UNIFIED;
+    if (data._dataType == ATCBOOKINGS || data._dataType == UNIFIED) {
+        if(_dataType == WHAZZUP) _dataType = UNIFIED;
 
         bookedControllers.clear();
         foreach(const BookedController *bc, data.bookedControllers)
@@ -440,21 +440,21 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
     if(data.isNull())
         return;
 
-    if (data.dataType == WHAZZUP || data.dataType == UNIFIED) {
-        if(dataType == ATCBOOKINGS) dataType = UNIFIED;
+    if (data._dataType == WHAZZUP || data._dataType == UNIFIED) {
+        if(_dataType == ATCBOOKINGS) _dataType = UNIFIED;
         updatePilotsFrom(data);
         updateControllersFrom(data);
 
         servers = data.servers;
         voiceServers = data.voiceServers;
-        whazzupVersion = data.whazzupVersion;
+        _whazzupVersion = data._whazzupVersion;
         whazzupTime = data.whazzupTime;
         updateEarliest = data.updateEarliest;
         predictionBasedOnTime = data.predictionBasedOnTime;
         friendsLatLon = data.friendsLatLon;
     }
-    if (data.dataType == ATCBOOKINGS || data.dataType == UNIFIED) {
-        if(dataType == WHAZZUP) dataType = UNIFIED;
+    if (data._dataType == ATCBOOKINGS || data._dataType == UNIFIED) {
+        if(_dataType == WHAZZUP) _dataType = UNIFIED;
         updateBookedControllersFrom(data);
         bookingsTime = data.bookingsTime;
         predictionBasedOnBookingsTime = data.predictionBasedOnBookingsTime;

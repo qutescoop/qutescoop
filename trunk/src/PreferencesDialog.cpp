@@ -8,11 +8,11 @@
 #include "Window.h"
 
 PreferencesDialog *preferencesDialogInstance = 0;
-PreferencesDialog *PreferencesDialog::getInstance(bool createIfNoInstance,
+PreferencesDialog *PreferencesDialog::instance(bool createIfNoInstance,
                                                   QWidget *parent) {
     if(preferencesDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::getInstance(true);
+            if (parent == 0) parent = Window::instance(true);
             preferencesDialogInstance = new PreferencesDialog(parent);
         }
     return preferencesDialogInstance;
@@ -25,7 +25,7 @@ void PreferencesDialog::destroyInstance() {
 
 PreferencesDialog::PreferencesDialog(QWidget *parent):
     QDialog(parent),
-    settingsLoaded(false)
+    _settingsLoaded(false)
 {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
@@ -38,9 +38,9 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
 }
 
 void PreferencesDialog::loadSettings() {
-    settingsLoaded = false;
-    QColor color;
+    _settingsLoaded = false;
 
+    QColor color;
     spinBoxDownloadInterval->setValue(Settings::downloadInterval());
     cbDownloadOnStartup->setChecked(Settings::downloadOnStartup());
     cbDownloadPeriodically->setChecked(Settings::downloadPeriodically());
@@ -174,7 +174,7 @@ void PreferencesDialog::loadSettings() {
     pbFirFontColor->setPalette(QPalette(color));
     pbFirFont->setFont(Settings::firFont());
 
-    color = Settings::upperWindColor();
+    color = Settings::windColor();
     pbUpperWindColor->setText(color.name());
     pbUpperWindColor->setPalette(QPalette(color));
 
@@ -309,7 +309,7 @@ void PreferencesDialog::loadSettings() {
     cb_Animation->setChecked(Settings::useHighlightAnimation());
 
     // FINISHED
-    settingsLoaded = true;
+    _settingsLoaded = true;
 }
 
 // icons: this might be time-consuming because all textures are loaded, but it is
@@ -338,58 +338,86 @@ void PreferencesDialog::lazyloadTextureIcons() {
 
 // airport traffic settings
 void PreferencesDialog::on_cbFilterTraffic_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setFilterTraffic(state);
 }
 
 void PreferencesDialog::on_spFilterDistance_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setFilterDistance(value);
 }
 
 void PreferencesDialog::on_spFilterArriving_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setFilterArriving(value);
 }
 
 void PreferencesDialog::on_sbCongestionMinimum_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setAirportCongestionMinimum(value);
 }
 
 void PreferencesDialog::on_sbMaxTextLabels_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setMaxLabels(value);
 }
 
 void PreferencesDialog::on_spinBoxDownloadInterval_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDownloadInterval(value);
 }
 
 void PreferencesDialog::on_cbDownloadPeriodically_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDownloadPeriodically(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbUseNavDatabase_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setUseNavdata(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbResetConfiguration_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setResetOnNextStart(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbCheckForUpdates_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setCheckForUpdates(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbSendVersionInfo_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setSendVersionInformation(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbDownloadOnStartup_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDownloadOnStartup(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbReadSupFile_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setUseSupFile(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDownloadNetwork(index);
 
     switch(index) {
@@ -412,48 +440,69 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 }
 
 void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setUserDownloadLocation(editUserDefinedLocation->text());
     Settings::setStatusLocation(editUserDefinedLocation->text());
 }
 
-void PreferencesDialog::on_cbSaveWhazzupData_stateChanged(int state)
-{
+void PreferencesDialog::on_cbSaveWhazzupData_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setSaveWhazzupData(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_groupBoxProxy_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setUseProxy(checked);
 }
 
 void PreferencesDialog::on_editProxyServer_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setProxyServer(editProxyServer->text());
 }
 
 void PreferencesDialog::on_editProxyPort_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setProxyPort(editProxyPort->text().toInt());
 }
 
 void PreferencesDialog::on_editProxyUser_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setProxyUser(editProxyUser->text());
 }
 
 void PreferencesDialog::on_editProxyPassword_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setProxyPassword(editProxyPassword->text());
 }
 
 void PreferencesDialog::on_spinBoxTimeline_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setTimelineSeconds(value);
 }
 
 void PreferencesDialog::on_cbLineSmoothing_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDisplaySmoothLines(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbDotSmoothing_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDisplaySmoothDots(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_editNavdir_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setNavdataDirectory(editNavdir->text());
 }
 
@@ -505,6 +554,8 @@ void PreferencesDialog::on_pbGridLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbGridLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGridLineStrength(value);
 }
 
@@ -519,6 +570,8 @@ void PreferencesDialog::on_pbCountryLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbCountryLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setCountryLineStrength(value);
 }
 
@@ -533,6 +586,8 @@ void PreferencesDialog::on_pbCoastLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbCoastLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setCoastLineStrength(value);
 }
 
@@ -560,6 +615,8 @@ void PreferencesDialog::on_pbFirBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbFirBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setFirBorderLineStrength(value);
 }
 
@@ -630,6 +687,8 @@ void PreferencesDialog::on_pbAppBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbAppBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setAppBorderLineStrength(value);
 }
 
@@ -684,6 +743,8 @@ void PreferencesDialog::on_pbGndBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbGndBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGndBorderLineStrength(value);
 }
 
@@ -708,6 +769,8 @@ void PreferencesDialog::on_pbAirportDotColor_clicked() {
 }
 
 void PreferencesDialog::on_sbAirportDotSize_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setAirportDotSize(value);
 }
 
@@ -741,6 +804,8 @@ void PreferencesDialog::on_pbPilotDotColor_clicked() {
 }
 
 void PreferencesDialog::on_sbPilotDotSize_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setPilotDotSize(value);
 }
 
@@ -755,6 +820,8 @@ void PreferencesDialog::on_pbTimeLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbTimeLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setTimeLineStrength(value);
 }
 
@@ -768,6 +835,8 @@ void PreferencesDialog::on_pbDepLineColor_clicked() {
     }
 }
 void PreferencesDialog::on_sbDepLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDepLineStrength(value);
 }
 void PreferencesDialog::on_pbDestLineColor_clicked() {
@@ -780,19 +849,25 @@ void PreferencesDialog::on_pbDestLineColor_clicked() {
     }
 }
 void PreferencesDialog::on_sbDestLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDestLineStrength(value);
 }
-void PreferencesDialog::on_cbDepLineDashed_toggled(bool checked)
-{
+void PreferencesDialog::on_cbDepLineDashed_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDepLineDashed(checked);
 }
 
-void PreferencesDialog::on_cbDestLineDashed_toggled(bool checked)
-{
+void PreferencesDialog::on_cbDestLineDashed_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDestLineDashed(checked);
 }
 
 void PreferencesDialog::on_waypointsDotSize_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setWaypointsDotSize(value);
 }
 void PreferencesDialog::on_waypointsDotColor_clicked() {
@@ -831,14 +906,20 @@ void PreferencesDialog::on_buttonResetPilot_clicked() {
 }
 
 void PreferencesDialog::on_editVoiceCallsign_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setVoiceCallsign(editVoiceCallsign->text());
 }
 
 void PreferencesDialog::on_editVoiceUser_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setVoiceUser(editVoiceUser->text());
 }
 
 void PreferencesDialog::on_editVoicePassword_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setVoicePassword(editVoicePassword->text());
 }
 
@@ -860,13 +941,13 @@ void PreferencesDialog::on_rbVRC_clicked(bool value) {
     }
 }
 
-void PreferencesDialog::on_cbShowFixes_toggled(bool checked)
-{
+void PreferencesDialog::on_cbShowFixes_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setShowAllWaypoints(checked);
 }
 
-void PreferencesDialog::on_pbInactAirportFontColor_clicked()
-{
+void PreferencesDialog::on_pbInactAirportFontColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::inactiveAirportFontColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
@@ -876,8 +957,7 @@ void PreferencesDialog::on_pbInactAirportFontColor_clicked()
     }
 }
 
-void PreferencesDialog::on_pbInactAirportFont_clicked()
-{
+void PreferencesDialog::on_pbInactAirportFont_clicked() {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, Settings::inactiveAirportFont(), this);
     if(ok) {
@@ -886,8 +966,7 @@ void PreferencesDialog::on_pbInactAirportFont_clicked()
     }
 }
 
-void PreferencesDialog::on_pbInactAirportDotColor_clicked()
-{
+void PreferencesDialog::on_pbInactAirportDotColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::inactiveAirportDotColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
@@ -897,18 +976,17 @@ void PreferencesDialog::on_pbInactAirportDotColor_clicked()
     }
 }
 
-void PreferencesDialog::on_sbInactAirportDotSize_valueChanged(double value)
-{
+void PreferencesDialog::on_sbInactAirportDotSize_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setInactiveAirportDotSize(value);
 }
 
-void PreferencesDialog::on_cbShowCongestion_clicked(bool checked)
-{
+void PreferencesDialog::on_cbShowCongestion_clicked(bool checked) {
     Settings::setAirportCongestion(checked);
 }
 
-void PreferencesDialog::on_pbCongestionBorderLineColor_clicked()
-{
+void PreferencesDialog::on_pbCongestionBorderLineColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::airportCongestionBorderLineColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
@@ -918,13 +996,13 @@ void PreferencesDialog::on_pbCongestionBorderLineColor_clicked()
     }
 }
 
-void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double value)
-{
+void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setAirportCongestionBorderLineStrength(value);
 }
 
-void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
-{
+void PreferencesDialog::on_buttonResetAirportTraffic_clicked() {
     QSettings settings;
     settings.beginGroup("airportDisplay");
     settings.remove("");
@@ -937,29 +1015,32 @@ void PreferencesDialog::on_buttonResetAirportTraffic_clicked()
     loadSettings();
 }
 
-void PreferencesDialog::on_cbBlend_toggled(bool checked)
-{
+void PreferencesDialog::on_cbBlend_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGlBlending(checked);
 }
 
-void PreferencesDialog::on_editBookingsLocation_editingFinished()
-{
+void PreferencesDialog::on_editBookingsLocation_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setBookingsLocation(editBookingsLocation->text());
 }
 
-void PreferencesDialog::on_cbBookingsPeriodically_toggled(bool checked)
-{
+void PreferencesDialog::on_cbBookingsPeriodically_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setBookingsPeriodically(checked);
 }
 
-void PreferencesDialog::on_sbBookingsInterval_valueChanged(int value)
-{
+void PreferencesDialog::on_sbBookingsInterval_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setBookingsInterval(value);
 }
 
 // zooming
-void PreferencesDialog::on_pbWheelCalibrate_clicked()
-{
+void PreferencesDialog::on_pbWheelCalibrate_clicked() {
     QSettings settings;
     settings.beginGroup("mouseWheel");
     settings.remove("");
@@ -968,21 +1049,22 @@ void PreferencesDialog::on_pbWheelCalibrate_clicked()
     loadSettings();
 }
 
-void PreferencesDialog::on_sbZoomFactor_valueChanged(double value)
-{
+void PreferencesDialog::on_sbZoomFactor_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setZoomFactor(value);
 }
 
-void PreferencesDialog::on_gbDownloadBookings_toggled(bool checked)
-{
+void PreferencesDialog::on_gbDownloadBookings_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setDownloadBookings(checked);
     qobject_cast<Window *>(this->parent())->setEnableBookedAtc(checked);
 }
 
 
 //import & export
-void PreferencesDialog::on_pbImportFromFile_clicked()
-{
+void PreferencesDialog::on_pbImportFromFile_clicked() {
     QString fileName = QFileDialog::getOpenFileName(
             this, "Import from File",
             QApplication::applicationDirPath(), "Settings Files (*.ini);; All Files (*.*)"
@@ -997,8 +1079,7 @@ void PreferencesDialog::on_pbImportFromFile_clicked()
     }
 }
 
-void PreferencesDialog::on_pbExportToFile_clicked()
-{
+void PreferencesDialog::on_pbExportToFile_clicked() {
     QString fileName = QFileDialog::getSaveFileName(
             this, "Export to File",
             QApplication::applicationDirPath(), "Settings Files (*.ini);; All Files (*.*)"
@@ -1009,19 +1090,18 @@ void PreferencesDialog::on_pbExportToFile_clicked()
     }
 }
 
-void PreferencesDialog::on_cbShootScreenshots_toggled(bool checked)
-{
+void PreferencesDialog::on_cbShootScreenshots_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setShootScreenshots(checked);
 }
 
-void PreferencesDialog::on_pbStylesheetUpdate_clicked()
-{
+void PreferencesDialog::on_pbStylesheetUpdate_clicked() {
     qobject_cast<Window *>(this->parent())->setStyleSheet(tedStylesheet->toPlainText());
     Settings::setStylesheet(tedStylesheet->toPlainText());
 }
 
-void PreferencesDialog::on_pbStylesheetExample1_clicked()
-{
+void PreferencesDialog::on_pbStylesheetExample1_clicked() {
     if (
             QMessageBox::question(
                     this, "Overwrite stylesheet?", "Are you sure?",
@@ -1048,8 +1128,7 @@ background: QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eee, stop: 1 #f
     }
 }
 
-void PreferencesDialog::on_pbStylesheetExample2_clicked()
-{
+void PreferencesDialog::on_pbStylesheetExample2_clicked() {
     if (
             QMessageBox::question(
                     this, "Overwrite stylesheet?", "Are you sure?",
@@ -1083,13 +1162,13 @@ QLabel {\n\
     }
 }
 
-void PreferencesDialog::on_cbLighting_toggled(bool checked)
-{
+void PreferencesDialog::on_cbLighting_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setEnableLighting(checked);
 }
 
-void PreferencesDialog::on_pbSunLightColor_clicked()
-{
+void PreferencesDialog::on_pbSunLightColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::sunLightColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
@@ -1099,8 +1178,7 @@ void PreferencesDialog::on_pbSunLightColor_clicked()
     }
 }
 
-void PreferencesDialog::on_pbSpecularLightColor_clicked()
-{
+void PreferencesDialog::on_pbSpecularLightColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::specularColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
@@ -1111,8 +1189,9 @@ void PreferencesDialog::on_pbSpecularLightColor_clicked()
 
 }
 
-void PreferencesDialog::on_glLights_valueChanged(int value)
-{
+void PreferencesDialog::on_glLights_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGlLights(value);
     if (value == 1)
         glLightsSpread->setEnabled(false);
@@ -1120,114 +1199,124 @@ void PreferencesDialog::on_glLights_valueChanged(int value)
         glLightsSpread->setEnabled(true);
 }
 
-void PreferencesDialog::on_glEarthShininess_valueChanged(int value)
-{
+void PreferencesDialog::on_glEarthShininess_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setEarthShininess(value);
 }
 
-void PreferencesDialog::on_glLightsSpread_valueChanged(int value)
-{
+void PreferencesDialog::on_glLightsSpread_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGlLightsSpread(value);
 }
 
-void PreferencesDialog::on_pbReinitOpenGl_clicked()
-{
-    if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->mapScreen->glWidget->initializeGL();
-        Window::getInstance(true)->mapScreen->glWidget->updateGL();
+void PreferencesDialog::on_pbReinitOpenGl_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance(true)->mapScreen->glWidget->initializeGL();
+        Window::instance(true)->mapScreen->glWidget->updateGL();
     }
 }
 
-void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value)
-{
+void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setEarthGridEach(value);
 }
 
-void PreferencesDialog::on_applyAirports_clicked()
-{
-    if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->mapScreen->glWidget->createAirportsList();
-        Window::getInstance(true)->mapScreen->glWidget->createControllersLists();
-        Window::getInstance(true)->mapScreen->glWidget->updateGL();
+void PreferencesDialog::on_applyAirports_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance(true)->mapScreen->glWidget->createAirportsList();
+        Window::instance(true)->mapScreen->glWidget->createControllersLists();
+        Window::instance(true)->mapScreen->glWidget->updateGL();
     }
 
 }
 
-void PreferencesDialog::on_applyPilots_clicked()
-{
-    if (Window::getInstance(false) != 0) {
-        Window::getInstance(true)->mapScreen->glWidget->createPilotsList();
-        Window::getInstance(true)->mapScreen->glWidget->createControllersLists();
-        Window::getInstance(true)->mapScreen->glWidget->updateGL();
+void PreferencesDialog::on_applyPilots_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance(true)->mapScreen->glWidget->createPilotsList();
+        Window::instance(true)->mapScreen->glWidget->createControllersLists();
+        Window::instance(true)->mapScreen->glWidget->updateGL();
     }
 }
 
 void PreferencesDialog::on_glStippleLines_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGlStippleLines(checked);
 }
 
 void PreferencesDialog::on_glTextures_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setGlTextures(checked);
 }
 
 void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
-    if(settingsLoaded){
-        Settings::setGlTextureEarth(tex);
-        Window::getInstance()->mapScreen->glWidget->useClouds();
-    }
+    if (!_settingsLoaded)
+        return;
+    Settings::setGlTextureEarth(tex);
+    Window::instance()->mapScreen->glWidget->useClouds();
 }
 
 void PreferencesDialog::on_cbScreenshotMethod_currentIndexChanged(int index) {
+    if (!_settingsLoaded)
+        return;
     Settings::setScreenshotMethod(index);
 }
 
 void PreferencesDialog::on_cbScreenshotFormat_currentIndexChanged(QString value) {
-    if(settingsLoaded)
-        Settings::setScreenshotFormat(value);
+    if (!_settingsLoaded)
+        return;
+    Settings::setScreenshotFormat(value);
 }
 
-void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked)
-{
-    if(settingsLoaded)
-        Settings::setUseSelctionRectangle(checked);
+void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setUseSelctionRectangle(checked);
 }
 
-void PreferencesDialog::on_pbUpperWindColor_clicked(){
-    QColor color = QColorDialog::getColor(Settings::upperWindColor(), this,
+void PreferencesDialog::on_pbUpperWindColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::windColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
         pbUpperWindColor->setText(color.name());
         pbUpperWindColor->setPalette(QPalette(color));
-        Settings::setUpperWindColor(color);
+        Settings::setWindColor(color);
     }
-    WindData::getInstance()->refreshLists();
+    WindData::instance()->refreshLists();
 }
 
-void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state){
-    if(state == Qt::Checked) Settings::setDownloadClouds(true);
-    if(state == Qt::Unchecked) Settings::setDownloadClouds(false);
-    Window::getInstance()->startCloudDownload();
+void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setDownloadClouds(state == Qt::Checked);
+    Window::instance(true)->startCloudDownload();
 }
 
-void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state){
-    if(state == Qt::Checked) Settings::setUseHightResClouds(true);
-    if(state == Qt::Unchecked) Settings::setUseHightResClouds(false);
-    Window::getInstance()->startCloudDownload();
+void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setUseHightResClouds(state == Qt::Checked);
+    Window::instance(true)->startCloudDownload();
 }
 
-void PreferencesDialog::closeEvent(QCloseEvent *event){
+void PreferencesDialog::closeEvent(QCloseEvent *event) {
     Settings::setPreferencesDialogSize(size());
     Settings::setPreferencesDialogPos(pos());
     Settings::setPreferencesDialogGeometry(saveGeometry());
     event->accept();
 }
 
-void PreferencesDialog::on_cbUseESAirlines_stateChanged(int state){
-    if(state == Qt::Checked) Settings::setUseESAirlnies(true);
-    if(state == Qt::Unchecked) Settings::setUseESAirlnies(false);
+void PreferencesDialog::on_cbUseESAirlines_stateChanged(int state) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setUseESAirlnies(state == Qt::Checked);
 }
 
-void PreferencesDialog::on_bt_browseESAirlines_clicked(){
+void PreferencesDialog::on_bt_browseESAirlines_clicked() {
     QString path = QFileDialog::getOpenFileName(this,
                                                 tr("Open ICAO_Airlines.txt"),
                                                 QDir::homePath(),"EuroScope airlines (ICAO_Airlines.txt)");
@@ -1235,36 +1324,37 @@ void PreferencesDialog::on_bt_browseESAirlines_clicked(){
     editESAirlines->setText(Settings::ESAirlinesDirectory());
 }
 
-void PreferencesDialog::on_editESAirlines_editingFinished(){
+void PreferencesDialog::on_editESAirlines_editingFinished() {
+    if (!_settingsLoaded)
+        return;
     Settings::setESAirlinesDirectory(editESAirlines->text());
 }
 
-void PreferencesDialog::on_sb_highlightFriendsLineWidth_valueChanged(double value){
+void PreferencesDialog::on_sb_highlightFriendsLineWidth_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
     Settings::setHighlightLineWidth(value);
 }
 
-void PreferencesDialog::on_cb_Animation_stateChanged(int state){
-    if(state == Qt::Checked){
-        Settings::setUseHighlightAnimation(true);
+void PreferencesDialog::on_cb_Animation_stateChanged(int state) {
+    if (!_settingsLoaded)
         return;
-    }
-    if(state == Qt::Unchecked){
-        Settings::setUseHighlightAnimation(false);
-    }
+    Settings::setUseHighlightAnimation(state == Qt::Checked);
 }
 
-void PreferencesDialog::on_pb_highlightFriendsColor_clicked(){
+void PreferencesDialog::on_pb_highlightFriendsColor_clicked() {
     QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
 
-    if(color.isValid()){
+    if(color.isValid()) {
         pb_highlightFriendsColor->setText(color.name());
         pb_highlightFriendsColor->setPalette(QPalette(color));
         Settings::setHighlightColor(color);
     }
 }
 
-void PreferencesDialog::on_cbSimpleLabels_toggled(bool checked)
-{
+void PreferencesDialog::on_cbSimpleLabels_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
     Settings::setSimpleLabels(checked);
 }

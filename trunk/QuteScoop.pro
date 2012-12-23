@@ -3,7 +3,7 @@
 # #####################################################################
 
 # QuteScoop version
-VERSION = "2.1.10" # should not include spaces
+VERSION = "2.1.11beta" # should not include spaces
 VER_STR = '\\"$${VERSION}\\"'
 DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
                                             # string through qmake -> console ->
@@ -22,7 +22,6 @@ DEFINES += CVS_REVISION=\"$$CVS_REVISION\" # complex escaping to preserve
                                                  # string through qmake -> console ->
                                                  # compiler
 
-
 TEMPLATE = app
 CONFIG *= qt
 
@@ -35,7 +34,6 @@ TARGET = QuteScoop
 # 32bit installers or clearly mark them as 64bit to avaoid confusion.
 # Hint: Setting up a virtual machine (e.g. in VirtualBox) is from my
 # experience much easier than cross-compiling 32bit from a 64bit host.
-
 win32: {
     contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "win64"
     else:PLATFORM = "win32"
@@ -58,6 +56,20 @@ unix: {
 }
 
 # Qt libraries
+# finding Qt's paths:
+#message(Qt version: $$[QT_VERSION])
+#message(Qt is installed in $$[QT_INSTALL_PREFIX])
+#message(Documentation: $$[QT_INSTALL_DOCS])
+#message(Header files: $$[QT_INSTALL_HEADERS])
+message(Libraries: $$[QT_INSTALL_LIBS])
+message(Binary files (executables): $$[QT_INSTALL_BINS])
+message(Plugins: $$[QT_INSTALL_PLUGINS])
+#message(Data files: $$[QT_INSTALL_DATA])
+#message(Translation files: $$[QT_INSTALL_TRANSLATIONS])
+#message(Settings: $$[QT_INSTALL_SETTINGS])
+#message(Examples: $$[QT_INSTALL_EXAMPLES])
+#message(Demonstrations: $$[QT_INSTALL_DEMOS])
+
 QT *= core gui network opengl xml
 # in debug mode, we output to current directory
 CONFIG(debug,release|debug) { 
@@ -67,7 +79,8 @@ CONFIG(debug,release|debug) {
     
     # If precompiled headers are not possible, qmake should deactivate it.
     # If compiling/linking problems arise, this should be deactivated.
-    CONFIG += precompile_header
+    # uncomment to activate:
+    #CONFIG += precompile_header
     PRECOMPILED_HEADER = src/_pch.h
     precompile_header:!isEmpty(PRECOMPILED_HEADER):!build_pass:message("Using precompiled headers.")
 }
@@ -81,13 +94,37 @@ CONFIG(release,release|debug) {
     # Add a "make install" target for deploying Qt/compiler/QuteScoop files.
     # Qt library files
     myQtLib.path = $$DESTDIR
-    myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtCore4.*
-    myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtGui4.*
-    myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtNetwork4.*
-    myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtXml4.*
-    myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtOpenGL4.*
-    !build_pass:message("Library files added to 'install': $${myQtLib.files}")
-    
+    win32 {
+        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtCore4.dll
+        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtGui4.dll
+        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtNetwork4.dll
+        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtXml4.dll
+        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtOpenGL4.dll
+    }
+    unix {
+        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtCore.so.4
+        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtGui.so.4
+        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtNetwork.so.4
+        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtXml.so.4
+        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtOpenGL.so.4
+    }
+
+    # Image plugins: http://doc.qt.digia.com/qt/deployment-plugins.html
+    imageLib.path = $$DESTDIR/imageformats
+    IMAGEPLUGINS = qgif qico qjpeg qmng qsvg qtga qtiff
+    unix {
+        IMAGEPLUGINSDIR = $$[QT_INSTALL_PLUGINS]$${DIR_SEPARATOR}imageformats$${DIR_SEPARATOR}
+        for(plugin, IMAGEPLUGINS) {
+            imageLib.files += $${IMAGEPLUGINSDIR}lib$${plugin}.so
+        }
+    } else:win32 {
+        IMAGEPLUGINSDIR = $$[QT_INSTALL_PLUGINS]$${DIR_SEPARATOR}imageformats$${DIR_SEPARATOR}
+        for(plugin, IMAGEPLUGINS) {
+            imageLib.files += $${IMAGEPLUGINSDIR}$${plugin}4.dll
+        }
+    }
+    !build_pass:message("Qt library files added to 'install': $${myQtLib.files} $${imageLib.files}")
+
     # Compiler libraries
     myCompilerLib.path = $$DESTDIR
     win32-g++ { # For MingW
@@ -102,6 +139,7 @@ CONFIG(release,release|debug) {
     rootFiles.files += ./README.html \
         ./COPYING \
         ./CHANGELOG
+
     unix:rootFiles.files += ./QuteScoop.sh \
         ./QuteScoop.desktop \
         ./src/qutescoop.png \
@@ -151,6 +189,7 @@ CONFIG(release,release|debug) {
         screenshotsFiles \
         texturesFiles \
         cloudsFiles \
+        imageLib \
         myQtLib \
         myCompilerLib
 }
@@ -239,8 +278,8 @@ HEADERS += src/_pch.h \
     src/Station.h \
     src/Launcher.h \
     src/SectorView.h \
-    src/NetworkManager.h \
-    src/helpersPlatform.h
+    src/helpersPlatform.h \
+    src/Net.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -294,7 +333,7 @@ SOURCES += src/WhazzupData.cpp \
     src/Station.cpp \
     src/Launcher.cpp \
     src/SectorView.cpp \
-    src/NetworkManager.cpp
+    src/Net.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \

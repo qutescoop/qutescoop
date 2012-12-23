@@ -36,7 +36,7 @@ const QPolygonF Sector::sectorPolygon() const {
     return pol;
 }
 
-GLuint Sector::getGlPolygon() {
+GLuint Sector::glPolygon() {
     if (_polygon == 0) {
         _polygon = glGenLists(1);
         glNewList(_polygon, GL_COMPILE);
@@ -53,7 +53,7 @@ GLuint Sector::getGlPolygon() {
     return _polygon;
 }
 
-GLuint Sector::getGlBorderLine() {
+GLuint Sector::glBorderLine() {
     if (_borderline == 0) {
         _borderline = glGenLists(1);
         glNewList(_borderline, GL_COMPILE);

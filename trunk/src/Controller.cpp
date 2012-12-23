@@ -17,18 +17,18 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
         Client(stringList, whazzup),
         sector(0)
 {
-    frequency = getField(stringList, 4);
-    facilityType = getField(stringList, 18).toInt();
+    frequency = field(stringList, 4);
+    facilityType = field(stringList, 18).toInt();
     if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
 
-    visualRange = getField(stringList, 19).toInt();
-    atisMessage = getField(stringList, 35);
-    timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddHHmmss");
+    visualRange = field(stringList, 19).toInt();
+    atisMessage = field(stringList, 35);
+    timeLastAtisReceived = QDateTime::fromString(field(stringList, 36), "yyyyMMddHHmmss");
 
     QStringList atisLines = atisMessage.split(QString::fromUtf8("^§")); // needed due to source encoded in UTF8 -
                                                                         // found after some headache...
 
-    if(network== Client::IVAO){
+    if(network== Client::IVAO) {
         voiceChannel = atisLines.first();
         atisLines.removeFirst();
     }
@@ -60,7 +60,7 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
 
     QString icao = this->getCenter();
     if (!icao.isEmpty()) {
-        while(!NavData::getInstance()->sectors.contains(icao) && !icao.isEmpty()) {
+        while(!NavData::instance()->sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
             if(p == -1) {
                 qDebug() << "Unknown sector/FIR\t" << icao << "\tPlease provide sector information if you can";
@@ -77,12 +77,12 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
                                                            lon + qSin(u) * visualRange / 2. / 60. /
                                                                 qCos(qAbs(lat) * Pi180)));
                 }
-                NavData::getInstance()->sectors.insert(icao, s); // adding to the pool
+                NavData::instance()->sectors.insert(icao, s); // adding to the pool
             } else
                 icao = icao.left(p);
         }
-        if(NavData::getInstance()->sectors.contains(icao) && !icao.isEmpty())
-            this->sector = NavData::getInstance()->sectors[icao];
+        if(NavData::instance()->sectors.contains(icao) && !icao.isEmpty())
+            this->sector = NavData::instance()->sectors[icao];
     }
 }
 
@@ -173,13 +173,13 @@ Airport *Controller::airport() const {
         tryAirport = label.split("_").first();
     if (tryAirport.size() == 3)
         tryAirport = "K" + tryAirport;
-    if(NavData::getInstance()->airports.contains(tryAirport))
-        return NavData::getInstance()->airports[tryAirport];
+    if(NavData::instance()->airports.contains(tryAirport))
+        return NavData::instance()->airports[tryAirport];
     else return 0;
 }
 
 void Controller::showDetailsDialog() {
-    ControllerDetails *infoDialog = ControllerDetails::getInstance(true);
+    ControllerDetails *infoDialog = ControllerDetails::instance(true);
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();

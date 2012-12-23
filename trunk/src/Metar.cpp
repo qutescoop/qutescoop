@@ -307,7 +307,7 @@ QString Metar::decodedHtml() const {
     QStringList tokens = encoded.split(" ", QString::SkipEmptyParts);
 
     // LOWW 012020Z 35006KT 320V040 9999 -RA FEW060 SCT070 BKN080 08/05 Q1014 NOSIG
-    Airport *a = NavData::getInstance()->airports[tokens.first()];
+    Airport *a = NavData::instance()->airports[tokens.first()];
     if(a == 0) result = tokens.first();
     else result = a->city;
     result += " Weather Information, Recorded ";

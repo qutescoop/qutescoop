@@ -7,17 +7,17 @@
 void MetarSearchVisitor::visit(MapObject *object) {
 	Airport *a = dynamic_cast<Airport*>(object);
 	if(a == 0) return;
-	if(a->label.contains(regex))
-		airportMap[a->label] = a;
+	if(a->label.contains(_regex))
+		_airportMap[a->label] = a;
 }
 
 QList<Airport*> MetarSearchVisitor::airports() {
 	QList<Airport*> res;
 	
-	QList<QString> labels = airportMap.keys();
+	QList<QString> labels = _airportMap.keys();
 	qSort(labels);	
 	for(int i = 0; i < labels.size(); i++)
-		res.append(airportMap[labels[i]]);
+		res.append(_airportMap[labels[i]]);
 	
 	return res;
 }

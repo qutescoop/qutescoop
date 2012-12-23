@@ -11,7 +11,7 @@
 void BookedAtcDialogModel::setClients(const QList<BookedController*> &controllers) {
     qDebug() << "BookedAtcDialogModel/setClients()";
     beginResetModel();
-    this->controllers = controllers;
+    this->_controllers = controllers;
     endResetModel();
 }
 
@@ -42,7 +42,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 
     if(role == Qt::DisplayRole) {
-        BookedController* c = controllers[index.row()];
+        BookedController* c = _controllers[index.row()];
         switch(index.column()) {
             case 0: return c->label;
             case 1: return c->facilityString();
@@ -55,7 +55,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 8: return c->link;
         }
     } else if(role == Qt::EditRole) { // we are faking "EditRole" to access raw data
-        BookedController* c = controllers[index.row()];
+        BookedController* c = _controllers[index.row()];
         switch(index.column()) {
             case 5: return c->starts(); break;
             case 6: return c->ends(); break;
@@ -69,13 +69,13 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
 
 int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return controllers.count();
+    return _controllers.count();
 }
 
 void BookedAtcDialogModel::modelSelected(const QModelIndex& index) const {
-    if(controllers[index.row()] != 0) {
-        if(!controllers[index.row()]->link.isEmpty()) {
-            QUrl url = QUrl(controllers[index.row()]->link, QUrl::TolerantMode);
+    if(_controllers[index.row()] != 0) {
+        if(!_controllers[index.row()]->link.isEmpty()) {
+            QUrl url = QUrl(_controllers[index.row()]->link, QUrl::TolerantMode);
             if(QMessageBox::question(qApp->activeWindow(),
                                      tr("Question"),
                                      tr("Open %1 in your browser?")
@@ -93,6 +93,6 @@ void BookedAtcDialogModel::modelSelected(const QModelIndex& index) const {
                                           tr("URL %1 is invalid").arg(url.toString()));
             }
         }
-        controllers[index.row()]->showDetailsDialog();
+        _controllers[index.row()]->showDetailsDialog();
     }
 }

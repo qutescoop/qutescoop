@@ -14,25 +14,25 @@ class QPushButton;
 
 class LogBrowserDialog : public QDialog
 {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    static LogBrowserDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
-    ~LogBrowserDialog();
+    public:
+        static LogBrowserDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        ~LogBrowserDialog();
 
-public slots:
-    void outputMessage(const QString &msg);
+    public slots:
+        void outputMessage(const QString &msg);
 
-protected slots:
-    void slotSave();
-    void slotCopy();
+    protected slots:
+        void slotSave();
+        void slotCopy();
 
-protected:
-    QTextBrowser *browser;
-    QPushButton *clearButton, *saveButton, *copyButton;
+    protected:
+        QTextBrowser *_browser;
+        QPushButton *_btnClear, *_btnSave, *_btnCopy;
 
-private:
-    LogBrowserDialog(QWidget *parent = 0);
+    private:
+        LogBrowserDialog(QWidget *parent = 0);
 };
 
 #endif // LOGBROWSERDIALOG_H

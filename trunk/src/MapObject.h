@@ -11,24 +11,24 @@
 
 class MapObject: public QObject
 {
-	Q_OBJECT
+        Q_OBJECT
 
-public:
-	MapObject();
-	MapObject(const MapObject& obj);
-	MapObject& operator=(const MapObject& obj);
-	virtual ~MapObject();
+    public:
+        MapObject();
+        MapObject(const MapObject& obj);
+        MapObject& operator=(const MapObject& obj);
+        virtual ~MapObject();
 
-	bool isNull() const { return label.isNull(); }
+        bool isNull() const { return label.isNull(); }
 
         virtual bool matches(const QRegExp& regex) const { return label.contains(regex); }
-	virtual QString mapLabel() const { return label; }
-	virtual QString toolTip() const { return label; }
+        virtual QString mapLabel() const { return label; }
+        virtual QString toolTip() const { return label; }
 
         virtual void showDetailsDialog() {return;}
 
-	double lat, lon;
-	QString label;
+        double lat, lon;
+        QString label;
         bool drawLabel;
 };
 

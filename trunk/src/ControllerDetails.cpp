@@ -10,10 +10,10 @@
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;
-ControllerDetails* ControllerDetails::getInstance(bool createIfNoInstance, QWidget *parent) {
+ControllerDetails* ControllerDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(controllerDetails == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::getInstance(true);
+            if (parent == 0) parent = Window::instance(true);
             controllerDetails = new ControllerDetails(parent);
         }
     return controllerDetails;
@@ -27,7 +27,7 @@ void ControllerDetails::destroyInstance() {
 
 ControllerDetails::ControllerDetails(QWidget *parent):
     ClientDetails(parent),
-    controller(0)
+    _controller(0)
 {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
@@ -42,60 +42,60 @@ void ControllerDetails::refresh(Controller *newController) {
     if (!Settings::controllerDetailsGeometry().isNull()) restoreGeometry(Settings::controllerDetailsGeometry());
 
     if(newController != 0)
-        controller = newController;
+        _controller = newController;
     else
-        controller = Whazzup::getInstance()->whazzupData().controllers[callsign];
-    if(controller == 0)
+        _controller = Whazzup::instance()->whazzupData().controllers[callsign];
+    if(_controller == 0)
         return;
-    setMapObject(controller);
-    setWindowTitle(controller->toolTip());
+    setMapObject(_controller);
+    setWindowTitle(_controller->toolTip());
 
     // Controller Information
-    QString controllerInfo = QString("<strong>%1</strong><br>").arg(controller->displayName(true));
+    QString controllerInfo = QString("<strong>%1</strong><br>").arg(_controller->displayName(true));
 
-    QString details = controller->detailInformation();
+    QString details = _controller->detailInformation();
     if(!details.isEmpty())
         controllerInfo += details + "<br>";
 
     controllerInfo += QString("on %3 for %4")
-                      .arg(controller->server)
-                      .arg(controller->onlineTime());
-    if(!controller->clientInformation().isEmpty())
-        controllerInfo += ", " + controller->clientInformation();
+                      .arg(_controller->server)
+                      .arg(_controller->onlineTime());
+    if(!_controller->clientInformation().isEmpty())
+        controllerInfo += ", " + _controller->clientInformation();
     lblControllerInfo->setText(controllerInfo);
 
-    QString stationInfo = controller->facilityString();
-    if(!controller->isObserver() && !controller->frequency.length() == 0)
+    QString stationInfo = _controller->facilityString();
+    if(!_controller->isObserver() && !_controller->frequency.length() == 0)
         stationInfo += QString(" on frequency %1<br>Voice: %2")
-                .arg(controller->frequency)
-                .arg(controller->voiceChannel);
+                .arg(_controller->frequency)
+                .arg(_controller->voiceChannel);
     lblStationInformatoin->setText(stationInfo);
 
-    pbAirportDetails->setVisible(controller->airport() != 0);
-    pbAirportDetails->setText(   controller->airport() != 0? controller->airport()->toolTip(): "");
+    pbAirportDetails->setVisible(_controller->airport() != 0);
+    pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
 
-    QString atis = controller->atisMessage;
-    if (controller->assumeOnlineUntil.isValid())
+    QString atis = _controller->atisMessage;
+    if (_controller->assumeOnlineUntil.isValid())
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
-            .arg(controller->assumeOnlineUntil.toString("HHmm"));
+            .arg(_controller->assumeOnlineUntil.toString("HHmm"));
     lblAtis->setText(atis);
     lblAtis->adjustSize(); // ensure auto-resize
 
-    gbAtis->setTitle(controller->label.endsWith("_ATIS")? "ATIS" : "Controller info");
+    gbAtis->setTitle(_controller->label.endsWith("_ATIS")? "ATIS" : "Controller info");
 
-    if(controller->isFriend())
+    if(_controller->isFriend())
         buttonAddFriend->setText("remove &friend");
     else
         buttonAddFriend->setText("add &friend");
 
     btnJoinChannel->setVisible(Settings::voiceType() != Settings::NONE);
-    btnJoinChannel->setEnabled(!controller->voiceLink().isEmpty());
+    btnJoinChannel->setEnabled(!_controller->voiceLink().isEmpty());
 
     // check if we know UserId
-    buttonAddFriend->setDisabled(controller->userId.isEmpty());
+    buttonAddFriend->setDisabled(_controller->userId.isEmpty());
 
     // check if we know position
-    buttonShowOnMap->setDisabled(qFuzzyIsNull(controller->lat) && qFuzzyIsNull(controller->lon));
+    buttonShowOnMap->setDisabled(qFuzzyIsNull(_controller->lat) && qFuzzyIsNull(_controller->lon));
 
     adjustSize();
 }
@@ -106,7 +106,7 @@ void ControllerDetails::on_buttonAddFriend_clicked() {
 }
 
 void ControllerDetails::on_btnJoinChannel_clicked() {
-    if(controller == 0)
+    if(_controller == 0)
         return;
     if(Settings::voiceType() == Settings::NONE)
         return;
@@ -127,18 +127,18 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
     QString program = "xdg-open";
 #endif
 
-    QString command = program + " " + controller->voiceLink();
+    QString command = program + " " + _controller->voiceLink();
     int ret = system(command.toAscii());
     qDebug() << "ControllerDetails::on_btnJoinChannel_clicked(): " << program << "returned" << ret;
 }
 
 void ControllerDetails::on_pbAirportDetails_clicked()
 {
-    if (controller->airport() != 0)
-        controller->airport()->showDetailsDialog();
+    if (_controller->airport() != 0)
+        _controller->airport()->showDetailsDialog();
 }
 
-void ControllerDetails::closeEvent(QCloseEvent *event){
+void ControllerDetails::closeEvent(QCloseEvent *event) {
     Settings::setControllerDetailsPos(pos());
     Settings::setControllerDetailsSize(size());
     Settings::setControllerDetailsGeometry(saveGeometry());

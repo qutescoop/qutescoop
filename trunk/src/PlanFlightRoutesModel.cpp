@@ -6,8 +6,8 @@
 
 #include "PlanFlightDialog.h"
 
-void PlanFlightRoutesModel::setClients(const QList<Route*>& newroutes) {
-    routes = newroutes;
+void PlanFlightRoutesModel::setClients(const QList<Route*>& routes) {
+    _routes = routes;
     reset();
 }
 
@@ -34,11 +34,11 @@ QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation ori
 }
 
 QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
-    if (!index.isValid() || index.row() >= routes.size())
+    if (!index.isValid() || index.row() >= _routes.size())
         return QVariant();
 
     if(role == Qt::DecorationRole) {
-        Route* r = routes[index.row()];
+        Route* r = _routes[index.row()];
         switch(index.column()) {
             case 0:
                 return QPixmap(
@@ -50,7 +50,7 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
                         .scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
     } else if(role == Qt::DisplayRole) {
-        Route* r = routes[index.row()];
+        Route* r = _routes[index.row()];
         switch(index.column()) {
             case 1: return r->provider;
             case 2: return QString("%1").arg(r->route);

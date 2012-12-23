@@ -5,10 +5,10 @@
 #include "SearchVisitor.h"
 
 SearchVisitor::SearchVisitor(const QString& searchStr) {
-        searchString = searchStr;
+        _searchString = searchStr;
 	QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
 	if(tokens.size() == 1) {
-		regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
+		_regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
 		return;
 	}
 	
@@ -16,29 +16,29 @@ SearchVisitor::SearchVisitor(const QString& searchStr) {
 	for(int i = 1; i < tokens.size(); i++)
 		regExpStr += "|" + tokens[i];
 	regExpStr += ".*)";
-	regex = QRegExp(regExpStr, Qt::CaseInsensitive);
+	_regex = QRegExp(regExpStr, Qt::CaseInsensitive);
 }
 
 void SearchVisitor::visit(MapObject* object) {
-	if(!object->matches(regex))
+	if(!object->matches(_regex))
 		return;
 
 	Pilot *p = dynamic_cast<Pilot*>(object);
 	if(p != 0) {
-		pilots[p->label] = p;
+		_pilots[p->label] = p;
                 return;
 	}
 
 	Controller *c = dynamic_cast<Controller*>(object);
 	if(c != 0) {
 		if(c->isObserver())
-			observers[c->label] = c;
+			_observers[c->label] = c;
 		else
-			controllers[c->label] = c;
+			_controllers[c->label] = c;
 		return;
 	}
 	
-	others[object->label] = object;
+	_others[object->label] = object;
 }
 
 void SearchVisitor::checkAirlines()
@@ -46,12 +46,12 @@ void SearchVisitor::checkAirlines()
     QHashIterator<QString, QString> i(AirlineCodes);
      while (i.hasNext()) {
          i.next();
-         if (i.key().contains(regex)){
-             otherStrings[i.key()] = i.value();
+         if (i.key().contains(_regex)) {
+             _otherStrings[i.key()] = i.value();
          }
 
-         if(i.value().contains(regex)){
-             otherStrings[i.key()] = i.value();
+         if(i.value().contains(_regex)) {
+             _otherStrings[i.key()] = i.value();
          }
 
      }
@@ -61,39 +61,39 @@ QList<MapObject*> SearchVisitor::result() const {
 	QList<MapObject*> result;
 
         //airlines
-        QList<QString> labels = otherStrings.keys();
+        QList<QString> labels = _otherStrings.keys();
         qSort(labels);
-        for(int i = 0; i < labels.size(); i++){
+        for(int i = 0; i < labels.size(); i++) {
             MapObject *object = new MapObject();
             object->label = labels[i];
             object->label.append("  ");
-            object->label.append(otherStrings[labels[i]]);
+            object->label.append(_otherStrings[labels[i]]);
             result.append(object);
         }
 
 	// airports
-        labels = others.keys();
+        labels = _others.keys();
 	qSort(labels);
 	for(int i = 0; i < labels.size(); i++)
-                result.append(others[labels[i]]);
+                result.append(_others[labels[i]]);
 	
 	// controllers
-	labels = controllers.keys();
+	labels = _controllers.keys();
 	qSort(labels);
 	for(int i = 0; i < labels.size(); i++)
-		result.append(controllers[labels[i]]);
+		result.append(_controllers[labels[i]]);
 	
 	// pilots
-	labels = pilots.keys();
+	labels = _pilots.keys();
 	qSort(labels);
 	for(int i = 0; i < labels.size(); i++)
-		result.append(pilots[labels[i]]);
+		result.append(_pilots[labels[i]]);
 	
 	// observers
-	labels = observers.keys();
+	labels = _observers.keys();
 	qSort(labels);
 	for(int i = 0; i < labels.size(); i++)
-		result.append(observers[labels[i]]);
+		result.append(_observers[labels[i]]);
 	
 	return result;
 }

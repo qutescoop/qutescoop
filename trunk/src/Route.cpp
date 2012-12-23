@@ -12,19 +12,19 @@ Route::~Route() {
 
 void Route::calculateWaypointsAndDistance() {
     Airport* depAirport;
-    if(NavData::getInstance()->airports.contains(dep))
-        depAirport = NavData::getInstance()->airports[dep];
+    if(NavData::instance()->airports.contains(dep))
+        depAirport = NavData::instance()->airports[dep];
     else
         return;
 
     Airport* destAirport;
-    if(NavData::getInstance()->airports.contains(dest))
-        destAirport = NavData::getInstance()->airports[dest];
+    if(NavData::instance()->airports.contains(dest))
+        destAirport = NavData::instance()->airports[dest];
     else
         return;
 
     QStringList list = route.split(' ', QString::SkipEmptyParts);
-    waypoints = Airac::getInstance()->resolveFlightplan(
+    waypoints = Airac::instance()->resolveFlightplan(
             list, depAirport->lat, depAirport->lon);
 
     Waypoint* depWp = new Waypoint(depAirport->label, depAirport->lat, depAirport->lon);

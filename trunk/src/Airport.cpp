@@ -10,22 +10,22 @@
 #include "Settings.h"
 
 Airport::Airport() {
-    appDisplayList = 0;
-    appBorderDisplayList = 0;
-    twrDisplayList = 0;
-    gndDisplayList = 0;
-    delDisplayList = 0;
+    _appDisplayList = 0;
+    _appBorderDisplayList = 0;
+    _twrDisplayList = 0;
+    _gndDisplayList = 0;
+    _delDisplayList = 0;
     showFlightLines = false;
 
     resetWhazzupStatus();
 }
 
 Airport::Airport(const QStringList& list) {
-    appDisplayList = 0;
-    appBorderDisplayList = 0;
-    twrDisplayList = 0;
-    gndDisplayList = 0;
-    delDisplayList = 0;
+    _appDisplayList = 0;
+    _appBorderDisplayList = 0;
+    _twrDisplayList = 0;
+    _gndDisplayList = 0;
+    _delDisplayList = 0;
     showFlightLines = false;
 
     resetWhazzupStatus();
@@ -42,11 +42,11 @@ Airport::Airport(const QStringList& list) {
 }
 
 Airport::~Airport() {
-    if(appDisplayList != 0) glDeleteLists(appDisplayList, 1);
-    if(appBorderDisplayList != 0) glDeleteLists(appBorderDisplayList, 1);
-    if(twrDisplayList != 0) glDeleteLists(twrDisplayList, 1);
-    if(gndDisplayList != 0) glDeleteLists(gndDisplayList, 1);
-    if(delDisplayList != 0) glDeleteLists(delDisplayList, 1);
+    if(_appDisplayList != 0) glDeleteLists(_appDisplayList, 1);
+    if(_appBorderDisplayList != 0) glDeleteLists(_appBorderDisplayList, 1);
+    if(_twrDisplayList != 0) glDeleteLists(_twrDisplayList, 1);
+    if(_gndDisplayList != 0) glDeleteLists(_gndDisplayList, 1);
+    if(_delDisplayList != 0) glDeleteLists(_delDisplayList, 1);
 }
 
 void Airport::resetWhazzupStatus() {
@@ -71,13 +71,13 @@ void Airport::addDeparture(Pilot* client) {
     active = true;
 }
 
-const GLuint& Airport::getAppBorderDisplayList() {
-    if(appBorderDisplayList != 0)
-        return appBorderDisplayList;
+const GLuint& Airport::appBorderDisplayList() {
+    if(_appBorderDisplayList != 0)
+        return _appBorderDisplayList;
 
     QColor borderLine = Settings::appBorderLineColor();
-    appBorderDisplayList = glGenLists(1);
-    glNewList(appBorderDisplayList, GL_COMPILE);
+    _appBorderDisplayList = glGenLists(1);
+    glNewList(_appBorderDisplayList, GL_COMPILE);
     glLineWidth(Settings::appBorderLineStrength());
     glBegin(GL_LINE_LOOP);
     glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
@@ -89,15 +89,15 @@ const GLuint& Airport::getAppBorderDisplayList() {
     }
     glEnd();
     glEndList();
-    return appBorderDisplayList;
+    return _appBorderDisplayList;
 }
 
-const GLuint& Airport::getAppDisplayList() {
-    if(appDisplayList != 0)
-        return appDisplayList;
+const GLuint& Airport::appDisplayList() {
+    if(_appDisplayList != 0)
+        return _appDisplayList;
 
-    appDisplayList = glGenLists(1);
-    glNewList(appDisplayList, GL_COMPILE);
+    _appDisplayList = glGenLists(1);
+    glNewList(_appDisplayList, GL_COMPILE);
 
     QColor colorMiddle = Settings::appCenterColor();
     QColor colorBorder = Settings::appMarginColor();
@@ -115,19 +115,19 @@ const GLuint& Airport::getAppDisplayList() {
     glEnd();
     glEndList();
 
-    return appDisplayList;
+    return _appDisplayList;
 }
 
-const GLuint& Airport::getTwrDisplayList() {
-    if(twrDisplayList != 0)
-        return twrDisplayList;
+const GLuint& Airport::twrDisplayList() {
+    if(_twrDisplayList != 0)
+        return _twrDisplayList;
 
     QColor colorMiddle = Settings::twrCenterColor();
     QColor colorBorder = Settings::twrMarginColor();
 
     // This draws a TWR controller 'small filled circle' at x, y coordinates
-    twrDisplayList = glGenLists(1);
-    glNewList(twrDisplayList, GL_COMPILE);
+    _twrDisplayList = glGenLists(1);
+    glNewList(_twrDisplayList, GL_COMPILE);
 
     GLdouble circle_distort = qCos(lat * Pi180);
 
@@ -148,15 +148,15 @@ const GLuint& Airport::getTwrDisplayList() {
     glEnd();
     glEndList();
 
-    return twrDisplayList;
+    return _twrDisplayList;
 }
 
-const GLuint& Airport::getGndDisplayList() {
-    if(gndDisplayList != 0)
-        return gndDisplayList;
+const GLuint& Airport::gndDisplayList() {
+    if(_gndDisplayList != 0)
+        return _gndDisplayList;
 
-    gndDisplayList = glGenLists(1);
-    glNewList(gndDisplayList, GL_COMPILE);
+    _gndDisplayList = glGenLists(1);
+    glNewList(_gndDisplayList, GL_COMPILE);
 
     GLdouble circle_distort = qCos(lat * Pi180);
     GLdouble s1 = circle_distort * 0.07;
@@ -199,19 +199,19 @@ const GLuint& Airport::getGndDisplayList() {
         glEnd();
     }
     glEndList();
-    return gndDisplayList;
+    return _gndDisplayList;
 }
 
-const GLuint& Airport::getDelDisplayList() {
-    if(delDisplayList != 0)
-        return delDisplayList;
+const GLuint& Airport::delDisplayList() {
+    if(_delDisplayList != 0)
+        return _delDisplayList;
 
     QColor color = Settings::gndFillColor();
     QColor borderLine = Settings::gndBorderLineColor();
 
     // This draws a DEL controller 'small filled circle' at x, y coordinates
-    delDisplayList = glGenLists(1);
-    glNewList(delDisplayList, GL_COMPILE);
+    _delDisplayList = glGenLists(1);
+    glNewList(_delDisplayList, GL_COMPILE);
 
     GLdouble circle_distort = qCos(lat * Pi180);
 
@@ -237,7 +237,7 @@ const GLuint& Airport::getDelDisplayList() {
     glEnd();
     glEndList();
 
-    return delDisplayList;
+    return _delDisplayList;
 }
 
 void Airport::addApproach(Controller* client) {
@@ -262,7 +262,7 @@ void Airport::addDelivery(Controller* client) {
 
 
 void Airport::showDetailsDialog() {
-    AirportDetails *infoDialog = AirportDetails::getInstance(true);
+    AirportDetails *infoDialog = AirportDetails::instance(true);
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -270,7 +270,7 @@ void Airport::showDetailsDialog() {
     infoDialog->setFocus();
 }
 
-QSet<Controller*> Airport::getAllControllers() const {
+QSet<Controller*> Airport::allControllers() const {
     return approaches + towers + grounds + deliveries;
 }
 

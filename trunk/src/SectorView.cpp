@@ -3,18 +3,18 @@
  **************************************************************************/
 #include "SectorView.h"
 
-Sectorview* instance = 0;
-Sectorview* Sectorview::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if (instance == 0 && createIfNoInstance)
-        instance = new Sectorview(parent);
-    return instance;
+Sectorview* sectorViewInstance = 0;
+Sectorview* Sectorview::instance(bool createIfNoInstance, QWidget *parent) {
+    if (sectorViewInstance == 0 && createIfNoInstance)
+        sectorViewInstance = new Sectorview(parent);
+    return sectorViewInstance;
 }
 
 Sectorview::Sectorview(QWidget *parent) :
     QDialog(parent)
 {
     setupUi(this);
-    sectorsHash = NavData::getInstance(true)->sectors;
+    sectorsHash = NavData::instance(true)->sectors;
     loadSectorList();
 }
 
@@ -24,7 +24,7 @@ Sectorview::~Sectorview() {
         listeView_sectors->removeItemWidget(item);
         delete item;
     }
-    MapScreen::getInstance(true)->glWidget->renderStaticSectors(false);
+    MapScreen::instance(true)->glWidget->renderStaticSectors(false);
 }
 
 void Sectorview::loadSectorList() {
@@ -51,7 +51,7 @@ void Sectorview::on_bt_apply_clicked() {
     QList<Sector*> renderSectors;
 
     for(int i = listeView_sectors->count()-1; i >= 0 ; i--) {
-        if(listeView_sectors->item(i)->checkState() == Qt::Checked){
+        if(listeView_sectors->item(i)->checkState() == Qt::Checked) {
             QString text = listeView_sectors->item(i)->text();
             CheckedSectorList.append(text.split("(").first());
         }
@@ -60,13 +60,13 @@ void Sectorview::on_bt_apply_clicked() {
     for(int i = CheckedSectorList.count()-1; i >=0 ; i--)
         renderSectors.append(sectorsHash[CheckedSectorList[i]]);
 
-    MapScreen::getInstance(true)->glWidget->renderStaticSectors(true);
-    MapScreen::getInstance(true)->glWidget->createStaticSectorLists(renderSectors);
-    MapScreen::getInstance(true)->glWidget->update();
+    MapScreen::instance(true)->glWidget->renderStaticSectors(true);
+    MapScreen::instance(true)->glWidget->createStaticSectorLists(renderSectors);
+    MapScreen::instance(true)->glWidget->update();
 
 }
 void Sectorview::on_bt_close_clicked() {
-    MapScreen::getInstance(true)->glWidget->renderStaticSectors(false);
+    MapScreen::instance(true)->glWidget->renderStaticSectors(false);
 }
 
 

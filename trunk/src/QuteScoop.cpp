@@ -23,8 +23,8 @@ void myMessageOutput(QtMsgType type, const char *msg) {
     QByteArray output = QByteArray::number(type).append(": ").append(msg);
 
     // LogBrowser output
-    if(LogBrowserDialog::getInstance(false) != 0)
-        LogBrowserDialog::getInstance(true)->outputMessage(output);
+    if(LogBrowserDialog::instance(false) != 0)
+        LogBrowserDialog::instance(true)->outputMessage(output);
 
     // log.txt output
     if (logFile->isWritable()) {
@@ -82,12 +82,17 @@ int main(int argc, char *argv[]) {
     qDebug() << "COMPILED WITHOUT DEBUG OUTPUT - no debug messages will be captured.";
 #endif
 
-    qDebug() << "platform info:\t" << platformOS();
+    qDebug() << "Platform info:\t" << platformOS();
     qDebug() << "RAM:\t" << memoryOverall() << "," << memoryFree() << "free";
-    qDebug() << "compiler:\t" << compiler();
+    qDebug() << "Compiler:\t" << compiler();
+
+    // image format plugins
+    app.addLibraryPath(QString("%1/imageformats").arg(app.applicationDirPath()));
+    qDebug() << "Library paths:" << app.libraryPaths();
+    qDebug() << "Supported image formats:" << QImageReader::supportedImageFormats();
 
     cacheLogByteArray.append(
-             "message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n");
+             "Debug log message levels: 0 - DEBUG, 1 - WARNING, 2 - CRITICAL/SYSTEM, 3 - FATAL\n");
 
     // directories
     Settings::calculateApplicationDataDirectory();
@@ -101,21 +106,20 @@ int main(int argc, char *argv[]) {
     qDebug() << "Expecting application data directory at"
              << Settings::applicationDataDirectory() << "(gets calculated on each start)";
 
-//    QObject::connect(Whazzup::getInstance(), SIGNAL(statusDownloaded()),
-//            Whazzup::getInstance(), SLOT(download()));
+//    QObject::connect(Whazzup::instance(), SIGNAL(statusDownloaded()),
+//            Whazzup::instance(), SLOT(download()));
 
     if(Settings::downloadOnStartup())
-        Whazzup::getInstance()->download();
+        Whazzup::instance()->download();
 
     // show Launcher
-    Launcher launch;
-    launch.fireUp();
+    Launcher::instance(true)->fireUp();
 
     // start event loop
-    Window::getInstance(true)->show();
+    Window::instance(true)->show();
     int ret = app.exec();
 
-//    delete NetworkManager::getInstance(true);
+    delete Net::instance(true);
 
     // close log
     if (logFile->isOpen())

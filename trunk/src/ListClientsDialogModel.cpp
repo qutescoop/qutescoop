@@ -10,7 +10,7 @@
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
     qDebug() << "ListClientsDialogModel::setClients()";
     beginResetModel();
-    this->clients = clients;
+    this->_clients = clients;
     endResetModel();
     qDebug() << "ListClientsDialogModel::setClients() -- finished";
 }
@@ -40,7 +40,7 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
     //if(!index.isValid())
     //    return QVariant();
 
-    Client* c = clients.value(index.row(), 0);
+    Client* c = _clients.value(index.row(), 0);
     if (c == 0) return QVariant();
 
     if(role == Qt::FontRole) {
@@ -78,15 +78,15 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
 
 int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return clients.count();
+    return _clients.count();
 }
 
 int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return Whazzup::getInstance()->realWhazzupData().isIvao()? 6: 5;
+    return Whazzup::instance()->realWhazzupData().isIvao()? 6: 5;
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {
-    if (clients[index.row()] != 0)
-        clients[index.row()]->showDetailsDialog();
+    if (_clients[index.row()] != 0)
+        _clients[index.row()]->showDetailsDialog();
 }

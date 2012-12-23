@@ -27,9 +27,9 @@
 // singleton instance
 Window *windowInstance = 0;
 
-Window* Window::getInstance(bool createIfNoInstance) {
+Window* Window::instance(bool createIfNoInstance) {
     if(windowInstance == 0 && createIfNoInstance)
-        windowInstance = new Window;
+        windowInstance = new Window();
     return windowInstance;
 }
 
@@ -40,11 +40,11 @@ Window::Window(QWidget *parent) :
 
     setupUi(this);
     // restore saved states
-    if (!Settings::getSavedSize().isNull())     resize(Settings::getSavedSize());
-    if (!Settings::getSavedPosition().isNull()) move(Settings::getSavedPosition());
-    if (!Settings::getSavedGeometry().isNull()) restoreGeometry(Settings::getSavedGeometry());
-    if (!Settings::getSavedState().isNull())    restoreState(Settings::getSavedState());
-    if (Settings::getMaximized())               showMaximized();
+    if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
+    if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
+    if (!Settings::savedGeometry().isNull()) restoreGeometry(Settings::savedGeometry());
+    if (!Settings::savedState().isNull())    restoreState(Settings::savedState());
+    if (Settings::maximized())               showMaximized();
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
@@ -69,12 +69,12 @@ Window::Window(QWidget *parent) :
     connect(mapScreen, SIGNAL(toggleInactiveAirports()), actionShowInactiveAirports,SLOT(trigger()));
 
     // Status- & ProgressBar
-    progressBar = new QProgressBar(statusbar);
-    progressBar->setMaximumWidth(200);
-    progressBar->hide();
-    lblStatus = new QLabel(statusbar);
-    statusbar->addWidget(lblStatus, 5);
-    statusbar->addWidget(progressBar, 3);
+    _progressBar = new QProgressBar(statusbar);
+    _progressBar->setMaximumWidth(200);
+    _progressBar->hide();
+    _lblStatus = new QLabel(statusbar);
+    statusbar->addWidget(_lblStatus, 5);
+    statusbar->addWidget(_progressBar, 3);
     statusbar->addPermanentWidget(tbZoomIn, 0);
     statusbar->addPermanentWidget(tbZoomOut, 0);
 
@@ -86,25 +86,25 @@ Window::Window(QWidget *parent) :
     connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
     connect(actionSectorview, SIGNAL(triggered()), this, SLOT(openSectorView()));
 
-    Whazzup *whazzup = Whazzup::getInstance();
+    Whazzup *whazzup = Whazzup::instance();
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
-    //connect(actionDownload, SIGNAL(triggered()), glWidget, SLOT(updateGL()));
+    connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(downloadBookings()));
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
     connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
-    searchResult->setModel(&searchResultModel);
+    searchResult->setModel(&_modelSearchResult);
     connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)),
-            &searchResultModel, SLOT(modelDoubleClicked(const QModelIndex&)));
+            &_modelSearchResult, SLOT(modelDoubleClicked(const QModelIndex&)));
     connect(searchResult, SIGNAL(clicked(const QModelIndex&)),
-            &searchResultModel, SLOT(modelClicked(const QModelIndex&)));
+            &_modelSearchResult, SLOT(modelClicked(const QModelIndex&)));
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
-    metarSortModel = new QSortFilterProxyModel;
-    metarSortModel->setDynamicSortFilter(true);
-    metarSortModel->setSourceModel(&metarModel);
-    metarList->setModel(metarSortModel);
+    _sortmodelMetar = new QSortFilterProxyModel;
+    _sortmodelMetar->setDynamicSortFilter(true);
+    _sortmodelMetar->setSourceModel(&_metarModel);
+    metarList->setModel(_sortmodelMetar);
 
     connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)),
             this, SLOT(metarDoubleClicked(const QModelIndex&)));
@@ -114,10 +114,10 @@ Window::Window(QWidget *parent) :
             metarList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
-    friendsSortModel = new QSortFilterProxyModel;
-    friendsSortModel->setDynamicSortFilter(true);
-    friendsSortModel->setSourceModel(&friendsModel);
-    friendsList->setModel(friendsSortModel);
+    _sortmodelFriends = new QSortFilterProxyModel;
+    _sortmodelFriends->setDynamicSortFilter(true);
+    _sortmodelFriends->setSourceModel(&_modelFriends);
+    friendsList->setModel(_sortmodelFriends);
 
     connect(friendsList, SIGNAL(doubleClicked(const QModelIndex&)),
             this, SLOT(friendDoubleClicked(const QModelIndex&)));
@@ -127,9 +127,9 @@ Window::Window(QWidget *parent) :
             friendsList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
-    connect(&searchTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
-    connect(&metarTimer, SIGNAL(timeout()), this, SLOT(updateMetars()));
-    connect(&downloadWatchdog, SIGNAL(timeout()),
+    connect(&_timerSearch, SIGNAL(timeout()), this, SLOT(performSearch()));
+    connect(&_timerMetar, SIGNAL(timeout()), this, SLOT(updateMetars()));
+    connect(&_timerWhazzup, SIGNAL(timeout()),
             this, SLOT(downloadWatchdogTriggered()));
 
     actionDisplayAllSectors->setChecked(Settings::showAllSectors());
@@ -155,17 +155,17 @@ Window::Window(QWidget *parent) :
     pb_highlightFriends->setChecked(Settings::highlightFriends());
     actionHighlight_Friends->setChecked(Settings::highlightFriends());
 
-    versionChecker = 0;
-    versionBuffer = 0;
+    _versionChecker = 0;
+    _versionBuffer = 0;
     //if(Settings::checkForUpdates()) // disabled
     //    checkForUpdates();
 
     // Forecast / Predict settings
     framePredict->hide();
-    editPredictTimer.stop();
-    connect(&editPredictTimer, SIGNAL(timeout()), this, SLOT(performWarp()));
-    runPredictTimer.stop();
-    connect(&runPredictTimer, SIGNAL(timeout()), this, SLOT(runPredict()));
+    _timerEditPredict.stop();
+    connect(&_timerEditPredict, SIGNAL(timeout()), this, SLOT(performWarp()));
+    _timerRunPredict.stop();
+    connect(&_timerRunPredict, SIGNAL(timeout()), this, SLOT(runPredict()));
     widgetRunPredict->hide();
 
     QFont font = lblWarpInfo->font();
@@ -184,7 +184,7 @@ Window::Window(QWidget *parent) :
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
 
-    connect(&cloudTimer, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
+    connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
 
     if(Settings::showClouds())
         startCloudDownload();
@@ -197,8 +197,8 @@ Window::Window(QWidget *parent) :
 #endif
 
     qDebug() << "Window::Window() connecting me as GuiMessages listener";
-    GuiMessages::getInstance()->addProgressBar(progressBar, true);
-    GuiMessages::getInstance()->addStatusLabel(lblStatus, false);
+    GuiMessages::instance()->addProgressBar(_progressBar, true);
+    GuiMessages::instance()->addStatusLabel(_lblStatus, false);
     qDebug() << "Window::Window() --finished";
 }
 
@@ -224,12 +224,12 @@ void Window::about() {
 
 void Window::whazzupDownloaded(bool isNew) {
     qDebug() << "Window::whazzupDownloaded() isNew =" << isNew;
-    const WhazzupData &realdata = Whazzup::getInstance()->realWhazzupData();
-    const WhazzupData &data = Whazzup::getInstance()->whazzupData();
+    const WhazzupData &realdata = Whazzup::instance()->realWhazzupData();
+    const WhazzupData &data = Whazzup::instance()->whazzupData();
 
     QString msg = QString(tr("%1%2 - %3: %4 clients"))
                   .arg(Settings::downloadNetworkName())
-                  .arg(Whazzup::getInstance()->getPredictedTime().isValid()
+                  .arg(Whazzup::instance()->predictedTime().isValid()
                        ? " - <b>W A R P E D</b>  to"
                        : ""
                        )
@@ -254,55 +254,55 @@ void Window::whazzupDownloaded(bool isNew) {
                         );
     lblWarpInfo->setText(msg);
 
-    if (Whazzup::getInstance()->getPredictedTime().isValid()) {
+    if (Whazzup::instance()->predictedTime().isValid()) {
         framePredict->show();
-        dateTimePredict->setDateTime(Whazzup::getInstance()->getPredictedTime());
+        dateTimePredict->setDateTime(Whazzup::instance()->predictedTime());
         if(isNew) {
             // recalculate prediction on new data arrived
             if(data.predictionBasedOnTime != realdata.whazzupTime
                 || data.predictionBasedOnBookingsTime != realdata.bookingsTime)
-                Whazzup::getInstance()->setPredictedTime(dateTimePredict->dateTime());
+                Whazzup::instance()->setPredictedTime(dateTimePredict->dateTime());
         }
     }
 
     if(isNew) {
         mapScreen->glWidget->clientSelection->close();
-        mapScreen->glWidget->clientSelection->clearClients();
+        mapScreen->glWidget->clientSelection->clearObjects();
 
         performSearch();
 
-        if (AirportDetails::getInstance(false) != 0) {
-            if (AirportDetails::getInstance(true)->isVisible())
-                AirportDetails::getInstance(true)->refresh();
+        if (AirportDetails::instance(false) != 0) {
+            if (AirportDetails::instance(true)->isVisible())
+                AirportDetails::instance(true)->refresh();
             else // not visible -> delete it...
-                AirportDetails::getInstance(true)->destroyInstance();
+                AirportDetails::instance(true)->destroyInstance();
         }
-        if (PilotDetails::getInstance(false) != 0) {
-            if (PilotDetails::getInstance(true)->isVisible())
-                PilotDetails::getInstance(true)->refresh();
+        if (PilotDetails::instance(false) != 0) {
+            if (PilotDetails::instance(true)->isVisible())
+                PilotDetails::instance(true)->refresh();
             else // not visible -> delete it...
-                PilotDetails::getInstance(true)->destroyInstance();
+                PilotDetails::instance(true)->destroyInstance();
         }
-        if (ControllerDetails::getInstance(false) != 0) {
-            if (ControllerDetails::getInstance(true)->isVisible())
-                ControllerDetails::getInstance(true)->refresh();
+        if (ControllerDetails::instance(false) != 0) {
+            if (ControllerDetails::instance(true)->isVisible())
+                ControllerDetails::instance(true)->refresh();
             else // not visible -> delete it...
-                ControllerDetails::getInstance(true)->destroyInstance();
+                ControllerDetails::instance(true)->destroyInstance();
         }
 
-        if (ListClientsDialog::getInstance(false) != 0) {
-            if (ListClientsDialog::getInstance(true)->isVisible())
-                ListClientsDialog::getInstance(true)->refresh();
+        if (ListClientsDialog::instance(false) != 0) {
+            if (ListClientsDialog::instance(true)->isVisible())
+                ListClientsDialog::instance(true)->refresh();
             else // not visible -> delete it...
-                ListClientsDialog::getInstance(true)->destroyInstance();
+                ListClientsDialog::instance(true)->destroyInstance();
         }
 
         if(realdata.bookingsTime.isValid()) {
-            if (BookedAtcDialog::getInstance(false) != 0) {
-                if (BookedAtcDialog::getInstance(true)->isVisible())
-                    BookedAtcDialog::getInstance(true)->refresh();
+            if (BookedAtcDialog::instance(false) != 0) {
+                if (BookedAtcDialog::instance(true)->isVisible())
+                    BookedAtcDialog::instance(true)->refresh();
                 else // not visible -> delete it...
-                    BookedAtcDialog::getInstance(true)->destroyInstance();
+                    BookedAtcDialog::instance(true)->destroyInstance();
             }
         }
 
@@ -311,9 +311,9 @@ void Window::whazzupDownloaded(bool isNew) {
         if (Settings::shootScreenshots())
             shootScreenshot();
     }
-    downloadWatchdog.stop();
+    _timerWhazzup.stop();
     if(Settings::downloadPeriodically())
-        downloadWatchdog.start(Settings::downloadInterval() * 60 * 1000 * 4);
+        _timerWhazzup.start(Settings::downloadInterval() * 60 * 1000 * 4);
 
     qDebug() << "Window::whazzupDownloaded() -- finished";
 }
@@ -321,79 +321,79 @@ void Window::whazzupDownloaded(bool isNew) {
 void Window::refreshFriends() {
     // update friends list
     FriendsVisitor *visitor = new FriendsVisitor();
-    Whazzup::getInstance()->whazzupData().accept(visitor);
-    friendsModel.setData(visitor->result());
+    Whazzup::instance()->whazzupData().accept(visitor);
+    _modelFriends.setData(visitor->result());
     delete visitor;
     friendsList->reset();
 }
 
 void Window::openPreferences() {
-    //if (!Settings::preferencesDialogSize().isNull())     {PreferencesDialog::getInstance(true, this)->resize(Settings::preferencesDialogSize());}
-    if (!Settings::preferencesDialogPos().isNull()) PreferencesDialog::getInstance(true)->move(Settings::preferencesDialogPos());
-    if (!Settings::preferencesDialogGeometry().isNull()) PreferencesDialog::getInstance(true)->restoreGeometry(Settings::preferencesDialogGeometry());
+    //if (!Settings::preferencesDialogSize().isNull())     {PreferencesDialog::instance(true, this)->resize(Settings::preferencesDialogSize());}
+    if (!Settings::preferencesDialogPos().isNull()) PreferencesDialog::instance(true)->move(Settings::preferencesDialogPos());
+    if (!Settings::preferencesDialogGeometry().isNull()) PreferencesDialog::instance(true)->restoreGeometry(Settings::preferencesDialogGeometry());
 
-    PreferencesDialog::getInstance(true, this)->show();
-    PreferencesDialog::getInstance(true)->raise();
-    PreferencesDialog::getInstance(true)->activateWindow();
-    PreferencesDialog::getInstance(true)->setFocus();
+    PreferencesDialog::instance(true, this)->show();
+    PreferencesDialog::instance(true)->raise();
+    PreferencesDialog::instance(true)->activateWindow();
+    PreferencesDialog::instance(true)->setFocus();
 }
 
 void Window::openPlanFlight() {
-    PlanFlightDialog::getInstance(true, this)->show();
-    PlanFlightDialog::getInstance(true)->raise();
-    PlanFlightDialog::getInstance(true)->activateWindow();
-    PlanFlightDialog::getInstance(true)->setFocus();
+    PlanFlightDialog::instance(true, this)->show();
+    PlanFlightDialog::instance(true)->raise();
+    PlanFlightDialog::instance(true)->activateWindow();
+    PlanFlightDialog::instance(true)->setFocus();
 
-    //if (!Settings::planFlightDialogSize().isNull()) {PlanFlightDialog::getInstance(true)->resize(Settings::planFlightDialogSize());}
-    if (!Settings::planFlightDialogPos().isNull())  {PlanFlightDialog::getInstance(true)->move(Settings::planFlightDialogPos());}
-    if (!Settings::planFlightDialogGeometry().isNull())    {PlanFlightDialog::getInstance(true)->restoreGeometry(Settings::planFlightDialogGeometry());}
+    //if (!Settings::planFlightDialogSize().isNull()) {PlanFlightDialog::instance(true)->resize(Settings::planFlightDialogSize());}
+    if (!Settings::planFlightDialogPos().isNull())  {PlanFlightDialog::instance(true)->move(Settings::planFlightDialogPos());}
+    if (!Settings::planFlightDialogGeometry().isNull())    {PlanFlightDialog::instance(true)->restoreGeometry(Settings::planFlightDialogGeometry());}
 
 }
 
 void Window::openBookedAtc() {
-    BookedAtcDialog::getInstance(true, this)->show();
-    BookedAtcDialog::getInstance(true)->raise();
-    BookedAtcDialog::getInstance(true)->activateWindow();
-    BookedAtcDialog::getInstance(true)->setFocus();
+    BookedAtcDialog::instance(true, this)->show();
+    BookedAtcDialog::instance(true)->raise();
+    BookedAtcDialog::instance(true)->activateWindow();
+    BookedAtcDialog::instance(true)->setFocus();
 }
 
 void Window::openListClients()
 {
-    ListClientsDialog::getInstance(true, this)->show();
-    ListClientsDialog::getInstance(true)->raise();
-    ListClientsDialog::getInstance(true)->activateWindow();
-    //ListClientsDialog::getInstance(true)->setFocus();
+    ListClientsDialog::instance(true, this)->show();
+    ListClientsDialog::instance(true)->raise();
+    ListClientsDialog::instance(true)->activateWindow();
+    //ListClientsDialog::instance(true)->setFocus();
 }
 
 void Window::on_actionDebugLog_triggered()
 {
-    LogBrowserDialog::getInstance(true, this)->show();
-    LogBrowserDialog::getInstance(true)->raise();
-    LogBrowserDialog::getInstance(true)->activateWindow();
-    LogBrowserDialog::getInstance(true)->setFocus();
+    LogBrowserDialog::instance(true, this)->show();
+    LogBrowserDialog::instance(true)->raise();
+    LogBrowserDialog::instance(true)->activateWindow();
+    LogBrowserDialog::instance(true)->setFocus();
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
     if(text.length() < 2) {
-        searchTimer.stop();
-        searchResultModel.setData(QList<MapObject*>());
+        _timerSearch.stop();
+        _modelSearchResult.setData(QList<MapObject*>());
         searchResult->reset();
         return;
     }
 
-    searchTimer.start(400);
+    _timerSearch.start(400);
 }
 
 void Window::performSearch() {
     if(searchEdit->text().length() < 2)
         return;
 
-    searchTimer.stop();
+    _timerSearch.stop();
     SearchVisitor *visitor = new SearchVisitor(searchEdit->text());
-    NavData::getInstance()->accept(visitor);
-    Whazzup::getInstance()->whazzupData().accept(visitor);
+    NavData::instance()->accept(visitor);
+    Whazzup::instance()->whazzupData().accept(visitor);
 
-    searchResultModel.setData(visitor->result());
+    _modelSearchResult.setData(visitor->result());
     delete visitor;
 
     searchResult->reset();
@@ -411,14 +411,14 @@ void Window::closeEvent(QCloseEvent *event) {
 }
 
 void Window::on_actionHideAllWindows_triggered() {
-    if (PilotDetails::getInstance(false) != 0) PilotDetails::getInstance(true)->close();
-    if (ControllerDetails::getInstance(false) != 0) ControllerDetails::getInstance(true)->close();
-    if (AirportDetails::getInstance(false) != 0) AirportDetails::getInstance(true)->close();
-    if (PreferencesDialog::getInstance(false) != 0) PreferencesDialog::getInstance(true)->close();
-    if (PlanFlightDialog::getInstance(false) != 0) PlanFlightDialog::getInstance(true)->close();
-    if (BookedAtcDialog::getInstance(false) != 0) BookedAtcDialog::getInstance(true)->close();
-    if (ListClientsDialog::getInstance(false) != 0) ListClientsDialog::getInstance(true)->close();
-    if (LogBrowserDialog::getInstance(false) != 0) LogBrowserDialog::getInstance(true)->close();
+    if (PilotDetails::instance(false) != 0) PilotDetails::instance(true)->close();
+    if (ControllerDetails::instance(false) != 0) ControllerDetails::instance(true)->close();
+    if (AirportDetails::instance(false) != 0) AirportDetails::instance(true)->close();
+    if (PreferencesDialog::instance(false) != 0) PreferencesDialog::instance(true)->close();
+    if (PlanFlightDialog::instance(false) != 0) PlanFlightDialog::instance(true)->close();
+    if (BookedAtcDialog::instance(false) != 0) BookedAtcDialog::instance(true)->close();
+    if (ListClientsDialog::instance(false) != 0) ListClientsDialog::instance(true)->close();
+    if (LogBrowserDialog::instance(false) != 0) LogBrowserDialog::instance(true)->close();
 
     if(searchDock->isFloating())
         searchDock->hide();
@@ -434,43 +434,43 @@ void Window::on_actionHideAllWindows_triggered() {
 
 void Window::on_metarEdit_textChanged(const QString& text) {
     if(text.length() < 2) {
-        metarTimer.stop();
-        metarModel.setData(QList<Airport*>());
+        _timerMetar.stop();
+        _metarModel.setData(QList<Airport*>());
         metarList->reset();
         return;
     }
 
-    metarTimer.start(500);
+    _timerMetar.start(500);
 }
 
 void Window::on_btnRefreshMetar_clicked() {
-    metarModel.refresh();
+    _metarModel.refresh();
 }
 
 void Window::updateMetars() {
     if(metarEdit->text().length() < 2)
         return;
 
-    metarTimer.stop();
+    _timerMetar.stop();
     MetarSearchVisitor *visitor = new MetarSearchVisitor(metarEdit->text());
-    NavData::getInstance()->accept(visitor); // search airports only
+    NavData::instance()->accept(visitor); // search airports only
 
-    metarModel.setData(visitor->airports());
+    _metarModel.setData(visitor->airports());
     delete visitor;
 
     metarList->reset();
 }
 
 void Window::friendClicked(const QModelIndex& index) {
-    friendsModel.modelClicked(friendsSortModel->mapToSource(index));
+    _modelFriends.modelClicked(_sortmodelFriends->mapToSource(index));
 }
 
 void Window::friendDoubleClicked(const QModelIndex& index) {
-    friendsModel.modelDoubleClicked(friendsSortModel->mapToSource(index));
+    _modelFriends.modelDoubleClicked(_sortmodelFriends->mapToSource(index));
 }
 
 void Window::metarDoubleClicked(const QModelIndex& index) {
-    metarModel.modelClicked(metarSortModel->mapToSource(index));
+    _metarModel.modelClicked(_sortmodelMetar->mapToSource(index));
 }
 
 void Window::metarDockMoved(Qt::DockWidgetArea area) {
@@ -578,8 +578,8 @@ void Window::updateMetarDecoder(const QString& airport, const QString& decodedTe
 }
 
 void Window::downloadWatchdogTriggered() {
-    downloadWatchdog.stop();
-    Whazzup::getInstance()->setStatusLocation(Settings::statusLocation());
+    _timerWhazzup.stop();
+    Whazzup::instance()->setStatusLocation(Settings::statusLocation());
     GuiMessages::errorUserAttention("Failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.",
                                    "Whazzup-download failed.");
 }
@@ -589,38 +589,38 @@ void Window::setEnableBookedAtc(bool enable) {
 }
 
 void Window::performWarp(bool forceUseDownloaded) {
-    editPredictTimer.stop();
+    _timerEditPredict.stop();
 
     QDateTime warpToTime = dateTimePredict->dateTime();
     if(cbUseDownloaded->isChecked() || forceUseDownloaded) { // use downloaded Whazzups for (past) replay
         qDebug() << "Window::performWarp() Looking for downloaded Whazzups";
-        QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
         for (int i = downloaded.size() - 1; i > -1; i--) {
             if((downloaded[i].first <= warpToTime) || (i == 0)) {
                 // only if different
-                if (downloaded[i].first != Whazzup::getInstance()->realWhazzupData().whazzupTime) {
+                if (downloaded[i].first != Whazzup::instance()->realWhazzupData().whazzupTime) {
                     // disconnect to inhibit update because will be updated later
-                    disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-                    disconnect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+                    disconnect(Whazzup::instance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
+                    disconnect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
 
-                    Whazzup::getInstance()->fromFile(downloaded[i].second);
+                    Whazzup::instance()->fromFile(downloaded[i].second);
 
-                    connect(Whazzup::getInstance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-                    connect(Whazzup::getInstance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+                    connect(Whazzup::instance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
+                    connect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
                 }
                 break;
             }
         }
     }
-    Whazzup::getInstance()->setPredictedTime(warpToTime);
+    Whazzup::instance()->setPredictedTime(warpToTime);
 }
 
 void Window::on_cbUseDownloaded_toggled(bool checked) {
     qDebug() << "Window::cbUseDownloaded_toggled()" << checked;
     if(!checked) {
-        QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
         if(!downloaded.isEmpty())
-            Whazzup::getInstance()->fromFile(downloaded.last().second);
+            Whazzup::instance()->fromFile(downloaded.last().second);
         cbOnlyUseDownloaded->setChecked(false); // uncheck when not using downloaded at all
     }
     performWarp(true);
@@ -638,14 +638,14 @@ void Window::on_tbDisablePredict_clicked() {
 
 void Window::on_actionPredict_toggled(bool enabled) {
     if(enabled) {
-        dateTimePredict_old = QDateTime::currentDateTimeUtc()
+        _dateTimePredict_old = QDateTime::currentDateTimeUtc()
                 .addSecs(- QDateTime::currentDateTimeUtc().time().second()); // remove seconds
-        dateTimePredict->setDateTime(dateTimePredict_old);
+        dateTimePredict->setDateTime(_dateTimePredict_old);
         framePredict->show();
     } else {
         tbRunPredict->setChecked(false);
         cbUseDownloaded->setChecked(false);
-        Whazzup::getInstance()->setPredictedTime(QDateTime()); // remove time warp
+        Whazzup::instance()->setPredictedTime(QDateTime()); // remove time warp
         framePredict->hide();
         widgetRunPredict->hide();
     }
@@ -655,30 +655,30 @@ void Window::on_tbRunPredict_toggled(bool checked) {
     if(checked) {
         dateTimePredict->setEnabled(false);
         widgetRunPredict->show();
-        if(!Whazzup::getInstance()->getPredictedTime().isValid())
+        if(!Whazzup::instance()->predictedTime().isValid())
             performWarp();
-        runPredictTimer.start(1000);
+        _timerRunPredict.start(1000);
     } else {
-        runPredictTimer.stop();
+        _timerRunPredict.stop();
         widgetRunPredict->hide();
         dateTimePredict->setEnabled(true);
     }
 }
 
 void Window::runPredict() {
-    runPredictTimer.stop();
+    _timerRunPredict.stop();
     QDateTime to;
 
     if (dsRunPredictStep->value() == 0) // real time selected
         to = QDateTime::currentDateTimeUtc();
     else
-        to = Whazzup::getInstance()->getPredictedTime().addSecs(
+        to = Whazzup::instance()->predictedTime().addSecs(
                 static_cast<int>(dsRunPredictStep->value()*60));
 
     // when only using downloaded Whazzups, select the next available
     if(cbOnlyUseDownloaded->isChecked()) {
         qDebug() << "Window::runPredict() restricting Warp target to downloaded Whazzups";
-        QList<QPair<QDateTime, QString> > downloaded = Whazzup::getInstance()->getDownloadedWhazzups();
+        QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
         for (int i = 0; i < downloaded.size(); i++) {
             if((downloaded[i].first >= to) || (i == downloaded.size() - 1)) {
                 to = downloaded[i].first;
@@ -693,49 +693,49 @@ void Window::runPredict() {
     connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
 
     performWarp();
-    runPredictTimer.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
+    _timerRunPredict.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
 }
 
 void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
     // + only allow selecting downloaded Whazzups if respective option is selected
     disconnect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
-    editPredictTimer.stop();
+    _timerEditPredict.stop();
 
     // make year change if M 12+ or 0-
-    if ((dateTimePredict_old.date().month() == 12)
+    if ((_dateTimePredict_old.date().month() == 12)
         && (dateTime.date().month() == 1))
         dateTime = dateTime.addYears(1);
-    if ((dateTimePredict_old.date().month() == 1)
+    if ((_dateTimePredict_old.date().month() == 1)
         && (dateTime.date().month() == 12))
         dateTime = dateTime.addYears(-1);
 
     // make month change if d lastday+ or 0-
-    if ((dateTimePredict_old.date().day() == dateTimePredict_old.date().daysInMonth())
+    if ((_dateTimePredict_old.date().day() == _dateTimePredict_old.date().daysInMonth())
         && (dateTime.date().day() == 1)) {
         dateTime = dateTime.addMonths(1);
     }
-    if ((dateTimePredict_old.date().day() == 1)
+    if ((_dateTimePredict_old.date().day() == 1)
         && (dateTime.date().day() == dateTime.date().daysInMonth())) {
         dateTime = dateTime.addMonths(-1);
         dateTime = dateTime.addDays( // compensate for month lengths
                 dateTime.date().daysInMonth()
-                - dateTimePredict_old.date().daysInMonth());
+                - _dateTimePredict_old.date().daysInMonth());
     }
 
     // make day change if h 23+ or 00-
-    if ((dateTimePredict_old.time().hour() == 23)
+    if ((_dateTimePredict_old.time().hour() == 23)
         && (dateTime.time().hour() == 0))
         dateTime = dateTime.addDays(1);
-    if ((dateTimePredict_old.time().hour() == 0)
+    if ((_dateTimePredict_old.time().hour() == 0)
         && (dateTime.time().hour() == 23))
         dateTime = dateTime.addDays(-1);
 
     // make hour change if m 59+ or 0-
-    if ((dateTimePredict_old.time().minute() == 59)
+    if ((_dateTimePredict_old.time().minute() == 59)
         && (dateTime.time().minute() == 0))
         dateTime = dateTime.addSecs(60 * 60);
-    if ((dateTimePredict_old.time().minute() == 0)
+    if ((_dateTimePredict_old.time().minute() == 0)
         && (dateTime.time().minute() == 59))
         dateTime = dateTime.addSecs(-60 * 60);
 
@@ -744,8 +744,8 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
         qDebug() << "Window::on_dateTimePredict_dateTimeChanged()"
                  << "restricting Warp target to downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded =
-                Whazzup::getInstance()->getDownloadedWhazzups();
-        if (dateTime > dateTimePredict_old) { // selecting a later date
+                Whazzup::instance()->downloadedWhazzups();
+        if (dateTime > _dateTimePredict_old) { // selecting a later date
             for (int i = 0; i < downloaded.size(); i++) {
                 if((downloaded[i].first >= dateTime) || (i == downloaded.size() - 1)) {
                     dateTime = downloaded[i].first;
@@ -762,40 +762,40 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
         }
     }
 
-    dateTimePredict_old = dateTime;
+    _dateTimePredict_old = dateTime;
 
     if(dateTime.isValid() && (dateTime != dateTimePredict->dateTime()))
         dateTimePredict->setDateTime(dateTime);
 
     connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
-    editPredictTimer.start(1000);
+    _timerEditPredict.start(1000);
 }
 
-void Window::on_actionRecallMapPosition_triggered(){
+void Window::on_actionRecallMapPosition_triggered() {
     mapScreen->glWidget->restorePosition(1);
 }
 
-void Window::on_actionRecallMapPosition7_triggered(){
+void Window::on_actionRecallMapPosition7_triggered() {
     mapScreen->glWidget->restorePosition(7);
 }
 
-void Window::on_actionRecallMapPosition6_triggered(){
+void Window::on_actionRecallMapPosition6_triggered() {
     mapScreen->glWidget->restorePosition(6);
 }
 
-void Window::on_actionRecallMapPosition5_triggered(){
+void Window::on_actionRecallMapPosition5_triggered() {
     mapScreen->glWidget->restorePosition(5);
 }
 
-void Window::on_actionRecallMapPosition4_triggered(){
+void Window::on_actionRecallMapPosition4_triggered() {
     mapScreen->glWidget->restorePosition(4);
 }
 
-void Window::on_actionRecallMapPosition3_triggered(){
+void Window::on_actionRecallMapPosition3_triggered() {
     mapScreen->glWidget->restorePosition(3);
 }
 
-void Window::on_actionRecallMapPosition2_triggered(){
+void Window::on_actionRecallMapPosition2_triggered() {
     mapScreen->glWidget->restorePosition(2);
 }
 
@@ -803,61 +803,61 @@ void Window::on_actionRememberPosition_triggered() {
     mapScreen->glWidget->rememberPosition(1);
 }
 
-void Window::on_actionRememberMapPosition7_triggered(){
+void Window::on_actionRememberMapPosition7_triggered() {
     mapScreen->glWidget->rememberPosition(7);
 }
 
-void Window::on_actionRememberMapPosition6_triggered(){
+void Window::on_actionRememberMapPosition6_triggered() {
     mapScreen->glWidget->rememberPosition(6);
 }
 
-void Window::on_actionRememberMapPosition5_triggered(){
+void Window::on_actionRememberMapPosition5_triggered() {
     mapScreen->glWidget->rememberPosition(5);
 }
 
-void Window::on_actionRememberMapPosition4_triggered(){
+void Window::on_actionRememberMapPosition4_triggered() {
     mapScreen->glWidget->rememberPosition(4);
 }
 
-void Window::on_actionRememberMapPosition3_triggered(){
+void Window::on_actionRememberMapPosition3_triggered() {
     mapScreen->glWidget->rememberPosition(3);
 }
 
-void Window::on_actionRememberMapPosition2_triggered(){
+void Window::on_actionRememberMapPosition2_triggered() {
     mapScreen->glWidget->rememberPosition(2);
 }
 
-void Window::on_actionMoveLeft_triggered(){
+void Window::on_actionMoveLeft_triggered() {
     mapScreen->glWidget->scrollBy(-1, 0);
 }
 
-void Window::on_actionMoveRight_triggered(){
+void Window::on_actionMoveRight_triggered() {
     mapScreen->glWidget->scrollBy(1, 0);
 }
 
-void Window::on_actionMoveUp_triggered(){
+void Window::on_actionMoveUp_triggered() {
     mapScreen->glWidget->scrollBy(0, -1);
 }
 
-void Window::on_actionMoveDown_triggered(){
+void Window::on_actionMoveDown_triggered() {
     mapScreen->glWidget->scrollBy(0, 1);
 }
-void Window::on_tbZoomIn_clicked(){
+void Window::on_tbZoomIn_clicked() {
     mapScreen->glWidget->zoomIn(.6);
 }
-void Window::on_tbZoomOut_clicked(){
+void Window::on_tbZoomOut_clicked() {
     mapScreen->glWidget->zoomIn(-.6);
 }
 // we use this to catch right-clicks on the buttons
-void Window::on_tbZoomOut_customContextMenuRequested(QPoint pos){
+void Window::on_tbZoomOut_customContextMenuRequested(QPoint pos) {
     Q_UNUSED(pos);
     mapScreen->glWidget->zoomTo(2.);
 }
-void Window::on_tbZoomIn_customContextMenuRequested(QPoint pos){
+void Window::on_tbZoomIn_customContextMenuRequested(QPoint pos) {
     Q_UNUSED(pos);
     mapScreen->glWidget->zoomTo(2.);
 }
-void Window::on_actionZoomReset_triggered(){
+void Window::on_actionZoomReset_triggered() {
     mapScreen->glWidget->zoomTo(2.);
 }
 
@@ -865,7 +865,7 @@ void Window::shootScreenshot() {
     QString filename = Settings::applicationDataDirectory(
             QString("screenshots/%1_%2")
             .arg(Settings::downloadNetwork())
-            .arg(Whazzup::getInstance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
+            .arg(Whazzup::instance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
 
     if (Settings::screenshotMethod() == 0)
         QPixmap::grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
@@ -881,17 +881,17 @@ void Window::shootScreenshot() {
 
 void Window::on_actionShowRoutes_triggered(bool checked) {
     GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
-    foreach(Airport *a, NavData::getInstance()->airports.values()) // synonym to "toggle routes" on all airports
+    foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
         a->showFlightLines = checked;
     if (!checked) // when disabled, this shall clear all routes
-        foreach (Pilot *p, Whazzup::getInstance()->whazzupData().allPilots())
+        foreach (Pilot *p, Whazzup::instance()->whazzupData().allPilots())
             p->showDepDestLine = false;
 
     // adjust the "plot route" tick in dialogs
-    if (AirportDetails::getInstance(false) != 0)
-        AirportDetails::getInstance(true)->refresh();
-    if (PilotDetails::getInstance(false) != 0)
-        PilotDetails::getInstance(true)->refresh();
+    if (AirportDetails::instance(false) != 0)
+        AirportDetails::instance(true)->refresh();
+    if (PilotDetails::instance(false) != 0)
+        PilotDetails::instance(true)->refresh();
 
     // map update
     mapScreen->glWidget->createPilotsList();
@@ -920,9 +920,9 @@ void Window::allSectorsChanged(bool state) {
 
 void Window::startCloudDownload() {
     qDebug() << "Window::startCloudDownload -- prepare Download";
-    cloudTimer.stop();
+    _timerCloud.stop();
 
-    /*if(!Settings::downloadClouds()){
+    /*if(!Settings::downloadClouds()) {
         mapScreen->glWidget->cloudsAvaliable = false;
         return;
     }*/
@@ -940,7 +940,7 @@ void Window::startCloudDownload() {
             hiResMode = false;
             continue;
         }
-        if(line.startsWith("[4096px]")){
+        if(line.startsWith("[4096px]")) {
             hiResMode = true;
             continue;
         }
@@ -957,40 +957,40 @@ void Window::startCloudDownload() {
         if (!loResMirrors.isEmpty())
             url.setUrl(loResMirrors[qrand() % loResMirrors.size()]);
     }
-    if(cloudDownloader != 0) cloudDownloader = 0;
-    cloudDownloader = new QHttp(this);
+    if(_cloudDownloader != 0) _cloudDownloader = 0;
+    _cloudDownloader = new QHttp(this);
 
-    cloudDownloader->setHost(url.host());
-    connect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
+    _cloudDownloader->setHost(url.host());
+    connect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
 
-    cloudBuffer = new QBuffer;
-    cloudBuffer->open(QBuffer::ReadWrite);
+    _cloudBuffer = new QBuffer;
+    _cloudBuffer->open(QBuffer::ReadWrite);
 
     //cloudDownloader->abort();
-    cloudDownloader->get(url.path(), cloudBuffer);
+    _cloudDownloader->get(url.path(), _cloudBuffer);
 
     qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
 }
 
 void Window::cloudDownloadFinished(bool error) {
     qDebug() << "Window::cloudDownloadFinished -- download finished";
-    disconnect(cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
-    if(cloudBuffer == 0)
+    disconnect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
+    if(_cloudBuffer == 0)
         return;
 
     if(error) {
-        GuiMessages::criticalUserInteraction(cloudDownloader->errorString(), "cloudlayer download error:");
+        GuiMessages::criticalUserInteraction(_cloudDownloader->errorString(), "cloudlayer download error:");
         return;
     }
 
-    cloudBuffer->seek(0);
+    _cloudBuffer->seek(0);
     QImage cloudlayer;
-    cloudlayer.load(cloudBuffer, "JPG");
+    cloudlayer.load(_cloudBuffer, "JPG");
     cloudlayer.save(Settings::applicationDataDirectory("textures/clouds/clouds.jpg"), "JPG");
     qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:"
              << Settings::applicationDataDirectory("textures/clouds/");
 
-    cloudTimer.start(12600000); //start download in 3,5 h again
+    _timerCloud.start(12600000); //start download in 3,5 h again
     mapScreen->glWidget->useClouds();
 }
 
@@ -1007,10 +1007,10 @@ void Window::on_pb_highlightFriends_toggled(bool checked) {
 }
 
 void Window::openSectorView() {
-    Sectorview::getInstance(true, this)->show();
-    Sectorview::getInstance(true)->raise();
-    Sectorview::getInstance(true)->activateWindow();
-    Sectorview::getInstance(true)->setFocus();
+    Sectorview::instance(true, this)->show();
+    Sectorview::instance(true)->raise();
+    Sectorview::instance(true)->activateWindow();
+    Sectorview::instance(true)->setFocus();
 }
 
 void Window::on_actionChangelog_triggered() {

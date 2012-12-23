@@ -13,19 +13,19 @@
 #include "Ping.h"
 
 // singleton instance
-ListClientsDialog *listClientsDialog = 0;
-ListClientsDialog *ListClientsDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if(listClientsDialog == 0 && createIfNoInstance) {
-        if (parent == 0) parent = Window::getInstance(true);
-        listClientsDialog = new ListClientsDialog(parent);
+ListClientsDialog *listClientsDialogInstance = 0;
+ListClientsDialog *ListClientsDialog::instance(bool createIfNoInstance, QWidget *parent) {
+    if(listClientsDialogInstance == 0 && createIfNoInstance) {
+        if (parent == 0) parent = Window::instance(true);
+        listClientsDialogInstance = new ListClientsDialog(parent);
     }
-    return listClientsDialog;
+    return listClientsDialogInstance;
 }
 
 // destroys a singleton instance
 void ListClientsDialog::destroyInstance() {
-    delete listClientsDialog;
-    listClientsDialog = 0;
+    delete listClientsDialogInstance;
+    listClientsDialogInstance = 0;
 }
 
 ListClientsDialog::ListClientsDialog(QWidget *parent) :
@@ -36,12 +36,12 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     //    setWindowFlags(Qt::Tool);
 
     // clients
-    clientsModel = new ListClientsDialogModel;
-    clientsProxyModel = new QSortFilterProxyModel;
-    clientsProxyModel->setDynamicSortFilter(true);
-    clientsProxyModel->setSourceModel(clientsModel);
+    _clientsModel = new ListClientsDialogModel;
+    _clientsProxyModel = new QSortFilterProxyModel;
+    _clientsProxyModel->setDynamicSortFilter(true);
+    _clientsProxyModel->setSourceModel(_clientsModel);
     treeListClients->setUniformRowHeights(true);
-    treeListClients->setModel(clientsProxyModel);
+    treeListClients->setModel(_clientsProxyModel);
     treeListClients->sortByColumn(0, Qt::AscendingOrder);
 
     treeListClients->setColumnWidth(0, 100);
@@ -72,7 +72,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    connect(&editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
+    connect(&_editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
     QTimer::singleShot(100, this, SLOT(refresh())); // delayed insertion of clients to open the window now
 }
@@ -83,7 +83,7 @@ void ListClientsDialog::refresh() {
     if (!Settings::listClientsDialogGeometry().isNull()) restoreGeometry(Settings::listClientsDialogGeometry());
 
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
-    const WhazzupData &data = Whazzup::getInstance()->whazzupData();
+    const WhazzupData &data = Whazzup::instance()->whazzupData();
 
     // Clients
     QHash<QString, int> serversConnected;
@@ -103,7 +103,7 @@ void ListClientsDialog::refresh() {
                 voiceServerChannels[server] = voiceServerChannels.value(server, 0) + 1;
         }
     }
-    clientsModel->setClients(clients);
+    _clientsModel->setClients(clients);
 
     // Servers
     serversTable->clearContents();
@@ -212,11 +212,11 @@ void ListClientsDialog::refresh() {
 
 void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
     Q_UNUSED(searchStr);
-    editFilterTimer.start(1000);
+    _editFilterTimer.start(1000);
 }
 
 void ListClientsDialog::performSearch() {
-    editFilterTimer.stop();
+    _editFilterTimer.stop();
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
     qDebug() << "ListClientsDialog::performSearch()";
@@ -235,17 +235,17 @@ void ListClientsDialog::performSearch() {
         regex = QRegExp(regExpStr, Qt::CaseInsensitive);
     }
 
-    clientsProxyModel->setFilterRegExp(regex);
-    clientsProxyModel->setFilterKeyColumn(-1);
+    _clientsProxyModel->setFilterRegExp(regex);
+    _clientsProxyModel->setFilterKeyColumn(-1);
 
     // General
-    boxResults->setTitle(QString("Results (%1)").arg(clientsProxyModel->rowCount()));
+    boxResults->setTitle(QString("Results (%1)").arg(_clientsProxyModel->rowCount()));
     qApp->restoreOverrideCursor();
     qDebug() << "ListClientsDialog::performSearch() -- finished";
 }
 
 void ListClientsDialog::modelSelected(const QModelIndex& index) {
-    clientsModel->modelSelected(clientsProxyModel->mapToSource(index));
+    _clientsModel->modelSelected(_clientsProxyModel->mapToSource(index));
 }
 
 void ListClientsDialog::pingReceived(QString server, int ms) {
@@ -317,9 +317,9 @@ void ListClientsDialog::on_pbPingServers_clicked()
             serversTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
             serversTable->item(row, col)->setBackground(QBrush());
         }
-        pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
-        pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
-        pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        _pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        _pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
+        _pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
     }
     pingNextFromStack();
 }
@@ -332,18 +332,18 @@ void ListClientsDialog::on_pbPingVoiceServers_clicked()
             voiceServersTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
             voiceServersTable->item(row, col)->setBackground(QBrush());
         }
-        pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
-        pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
-        pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        _pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        _pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
+        _pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
     }
     pingNextFromStack();
 }
 
 void ListClientsDialog::pingNextFromStack() {
-    if (!pingStack.empty()) {
+    if (!_pingStack.empty()) {
         Ping *ping = new Ping();
         connect(ping, SIGNAL(havePing(QString,int)), SLOT(pingReceived(QString,int)));
-        ping->startPing(pingStack.pop());
+        ping->startPing(_pingStack.pop());
     }
 }
 
@@ -378,14 +378,14 @@ void ListClientsDialog::voiceServerClicked(int row, int col) {
     }
 }
 
-void ListClientsDialog::closeEvent(QCloseEvent *event){
+void ListClientsDialog::closeEvent(QCloseEvent *event) {
     Settings::setListClientsDialogPos(pos());
     Settings::setListClientsDialogSize(size());
     Settings::setListClientsDialogGeometry(saveGeometry());
     event->accept();
 }
 
-void ListClientsDialog::showEvent(QShowEvent *event){
+void ListClientsDialog::showEvent(QShowEvent *event) {
     editFilter->setFocus();
     event->accept();
 }

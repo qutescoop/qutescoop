@@ -10,15 +10,15 @@
 #include "helpers.h"
 #include "Settings.h"
 
-LogBrowserDialog *logbrowserDialogInstance = 0;
+LogBrowserDialog *logBrowserDialogInstance = 0;
 
-LogBrowserDialog *LogBrowserDialog::getInstance(bool createIfNoInstance, QWidget *parent) {
-    if(logbrowserDialogInstance == 0)
+LogBrowserDialog *LogBrowserDialog::instance(bool createIfNoInstance, QWidget *parent) {
+    if(logBrowserDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::getInstance(true);
-            logbrowserDialogInstance = new LogBrowserDialog(parent);
+            if (parent == 0) parent = Window::instance(true);
+            logBrowserDialogInstance = new LogBrowserDialog(parent);
         }
-    return logbrowserDialogInstance;
+    return logBrowserDialogInstance;
 }
 
 LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
@@ -33,10 +33,10 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
 
     layout->addWidget(new QLabel(QString("Debug messages are shown here while this dialog is open."), this));
 
-    browser = new QTextBrowser(this);
+    _browser = new QTextBrowser(this);
     // adding log.txt contents to the browser (log.txt contains all debug messages up to this time)
     QFile logFile(Settings::applicationDataDirectory("log.txt"));
-    browser->append(QString("<b><img src=\":/icons/images/log16.png\"/> reading %1:</b>")
+    _browser->append(QString("<b><img src=\":/icons/images/log16.png\"/> reading %1:</b>")
                     .arg(logFile.fileName()));
     if (logFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&logFile);
@@ -45,9 +45,9 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
         logFile.close();
     } else
         qWarning("Unable to read log file");
-    browser->append("<b><img src=\":/icons/images/refresh16.png\"/> Debug log receiving live debug messages:</b>");
+    _browser->append("<b><img src=\":/icons/images/refresh16.png\"/> Debug log receiving live debug messages:</b>");
 
-    layout->addWidget(browser);
+    layout->addWidget(_browser);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
     buttonLayout->setContentsMargins(0, 0, 0, 0);
@@ -55,20 +55,20 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
 
     buttonLayout->addStretch(10);
 
-    clearButton = new QPushButton(this);
-    clearButton->setText("Clear");
-    buttonLayout->addWidget(clearButton);
-    connect(clearButton, SIGNAL(clicked()), browser, SLOT(clear()));
+    _btnClear = new QPushButton(this);
+    _btnClear->setText("Clear");
+    buttonLayout->addWidget(_btnClear);
+    connect(_btnClear, SIGNAL(clicked()), _browser, SLOT(clear()));
 
-    saveButton = new QPushButton(this);
-    saveButton->setText("Save output");
-    buttonLayout->addWidget(saveButton);
-    connect(saveButton, SIGNAL(clicked()), this, SLOT(slotSave()));
+    _btnSave = new QPushButton(this);
+    _btnSave->setText("Save output");
+    buttonLayout->addWidget(_btnSave);
+    connect(_btnSave, SIGNAL(clicked()), this, SLOT(slotSave()));
 
-    copyButton = new QPushButton(this);
-    copyButton->setText("Copy to clipboard");
-    buttonLayout->addWidget(copyButton);
-    connect(copyButton, SIGNAL(clicked()), this, SLOT(slotCopy()));
+    _btnCopy = new QPushButton(this);
+    _btnCopy->setText("Copy to clipboard");
+    buttonLayout->addWidget(_btnCopy);
+    connect(_btnCopy, SIGNAL(clicked()), this, SLOT(slotCopy()));
 }
 
 
@@ -78,21 +78,21 @@ LogBrowserDialog::~LogBrowserDialog() {
 
 void LogBrowserDialog::outputMessage(const QString &msg) {
     if (msg.startsWith("0:"))
-        browser->append("<img src=\":/icons/images/info16.png\"/> " + msg);
+        _browser->append("<img src=\":/icons/images/info16.png\"/> " + msg);
     else if (msg.startsWith("1:"))
-        browser->append("<img src=\":/icons/images/warn16.png\"/> " + msg);
+        _browser->append("<img src=\":/icons/images/warn16.png\"/> " + msg);
     else if (msg.startsWith("2:"))
-        browser->append("<img src=\":/icons/images/error16.png\"/> " + msg);
+        _browser->append("<img src=\":/icons/images/error16.png\"/> " + msg);
     else if (msg.startsWith("3:"))
-        browser->append("<img src=\":/icons/images/fatal16.png\"/> " + msg);
+        _browser->append("<img src=\":/icons/images/fatal16.png\"/> " + msg);
     else
-        browser->append("<i>" + msg + "</i>");
-    browser->repaint();
+        _browser->append("<i>" + msg + "</i>");
+    _browser->repaint();
 }
 
 
 void LogBrowserDialog::slotCopy() {
-    QApplication::clipboard()->setText(browser->toPlainText());
+    QApplication::clipboard()->setText(_browser->toPlainText());
 }
 
 void LogBrowserDialog::slotSave() {
@@ -103,7 +103,7 @@ void LogBrowserDialog::slotSave() {
     QFile file(saveFileName);
     if(file.open(QIODevice::WriteOnly)) {
         QTextStream stream(&file);
-        stream << browser->toPlainText();
+        stream << _browser->toPlainText();
         file.close();
     } else
         GuiMessages::criticalUserInteraction(QString("File '%1' cannot be written. The log could not be saved!")

@@ -9,14 +9,14 @@
 
 class MetarSearchVisitor : public SearchVisitor
 {
-public:
-	MetarSearchVisitor(const QString& search): SearchVisitor(search) {};
-	virtual void visit(MapObject *object);
-	virtual QList<MapObject*> result();
-	QList<Airport*> airports();
-	
-private:
-	QHash<QString, Airport*> airportMap;
+    public:
+        MetarSearchVisitor(const QString& search): SearchVisitor(search) {}
+        virtual void visit(MapObject *object);
+        virtual QList<MapObject*> result();
+        QList<Airport*> airports();
+
+    private:
+        QHash<QString, Airport*> _airportMap;
 };
 
 #endif /*METARSEARCHVISITOR_H_*/

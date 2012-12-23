@@ -14,41 +14,41 @@ class Sector;
 
 class BookedController: public Client
 {
-public:
-	BookedController(const QStringList& stringList, const WhazzupData* whazzup);
+    public:
+        BookedController(const QStringList& stringList, const WhazzupData* whazzup);
 
-	bool isObserver() const { return facilityType == 0; }
-	bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations and staff (at least from VATSIM)
+        bool isObserver() const { return facilityType == 0; }
+        bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations and staff (at least from VATSIM)
 
-	virtual QString toolTip() const;
-	virtual QString mapLabel() const;
-	virtual QString rank() const;
-	virtual void showDetailsDialog() {} // not applicable
+        virtual QString toolTip() const;
+        virtual QString mapLabel() const;
+        virtual QString rank() const;
+        virtual void showDetailsDialog() {} // not applicable
 
-	QString facilityString() const;
-	QString getCenter(); // not const as we assign lat, lon
-	QString getApproach() const;
-	QString getTower() const;
-	QString getGround() const;
-	QString getDelivery() const;
+        QString facilityString() const;
+        QString getCenter(); // not const as we assign lat, lon
+        QString getApproach() const;
+        QString getTower() const;
+        QString getGround() const;
+        QString getDelivery() const;
 
-	QString frequency, atisMessage;
-	int facilityType, visualRange;
-	QDateTime timeLastAtisReceived;
+        QString frequency, atisMessage;
+        int facilityType, visualRange;
+        QDateTime timeLastAtisReceived;
 
-	QString voiceServer;
-	QString voiceLink() const { return QString(); }
+        QString voiceServer;
+        QString voiceLink() const { return QString(); }
 
-    // Booking values
-    QString countryCode, link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
-    int bookingType;
+        // Booking values
+        QString countryCode, link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
+        int bookingType;
 
-    QDateTime starts() const;
-    QDateTime ends() const;
+        QDateTime starts() const;
+        QDateTime ends() const;
 
-    Sector *sector;
+        Sector *sector;
 
-private:
+    private:
 };
 
 #endif /*BOOKEDCONTROLLER_H_*/

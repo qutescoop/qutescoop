@@ -18,8 +18,8 @@ ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):
 }
 
 void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {
-    clearClients();
-    displayClients = objects;
+    clearObjects();
+    _displayClients = objects;
     for(int i = 0; i < objects.size(); i++)
         addItem(objects[i]->toolTip());
     setCurrentRow(0);
@@ -29,13 +29,13 @@ void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {
     setFocus();
 }
 
-void ClientSelectionWidget::clearClients() {
+void ClientSelectionWidget::clearObjects() {
     clear();
-    displayClients.clear();
+    _displayClients.clear();
 }
 
 void ClientSelectionWidget::dialogForItem(QListWidgetItem *item) {
-    foreach(MapObject *m, displayClients) {
+    foreach(MapObject *m, _displayClients) {
         if(item->text() == m->toolTip()) {
             m->showDetailsDialog();
             close();

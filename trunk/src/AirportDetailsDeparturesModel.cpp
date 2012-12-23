@@ -5,7 +5,7 @@
 #include "AirportDetailsDeparturesModel.h"
 
 void AirportDetailsDeparturesModel::setClients(const QList<Pilot*>& pilots) {
-    this->pilots = pilots;
+    this->_pilots = pilots;
     reset();
 }
 
@@ -35,14 +35,14 @@ int AirportDetailsDeparturesModel::columnCount(const QModelIndex &parent) const 
 
 int AirportDetailsDeparturesModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return pilots.count();
+    return _pilots.count();
 }
 
 QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid() || index.row() >= pilots.size())
+    if(!index.isValid() || index.row() >= _pilots.size())
         return QVariant();
 
-    Pilot* p = pilots[index.row()];
+    Pilot* p = _pilots[index.row()];
 
     if(role == Qt::FontRole) {
         QFont result;
@@ -85,5 +85,5 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
 }
 
 void AirportDetailsDeparturesModel::modelSelected(const QModelIndex& index) const {
-    pilots[index.row()]->showDetailsDialog();
+    _pilots[index.row()]->showDetailsDialog();
 }

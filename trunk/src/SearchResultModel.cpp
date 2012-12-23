@@ -8,7 +8,7 @@
 
 int SearchResultModel::rowCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return content.count();
+    return _content.count();
 }
 
 int SearchResultModel::columnCount(const QModelIndex &parent) const {
@@ -17,11 +17,11 @@ int SearchResultModel::columnCount(const QModelIndex &parent) const {
 }
 
 QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid() || index.row() >= content.size())
+    if(!index.isValid() || index.row() >= _content.size())
 		return QVariant();
 
 	if(role == Qt::DisplayRole) {
-		MapObject* o = content[index.row()];
+		MapObject* o = _content[index.row()];
 		switch(index.column()) {
 			case 0: return o->toolTip(); break;
 		}
@@ -30,15 +30,15 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 	if(role == Qt::FontRole) {
 		QFont result;
 		//prefiled italic
-		if(dynamic_cast<Pilot*>(content[index.row()])) {
-			Pilot *p = dynamic_cast<Pilot*>(content[index.row()]);
+		if(dynamic_cast<Pilot*>(_content[index.row()])) {
+			Pilot *p = dynamic_cast<Pilot*>(_content[index.row()]);
 			if(p->flightStatus() == Pilot::PREFILED) {
 				result.setItalic(true);
 			}
 		}
 
 		//friends bold
-		Client *c = dynamic_cast<Client*>(content[index.row()]);
+		Client *c = dynamic_cast<Client*>(_content[index.row()]);
 		if(c != 0) {
 			if(c->isFriend()) {
 				result.setBold(true);
@@ -60,19 +60,19 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 	if (section != 0)
 		return QVariant();
 
-	if (content.isEmpty())
+	if (_content.isEmpty())
 		return QString("No Results");
-    return QString("%1 Result%2").arg(content.size()).arg(content.size() == 1? "": "s");
+    return QString("%1 Result%2").arg(_content.size()).arg(_content.size() == 1? "": "s");
 }
 
 void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center
-    if (content[index.row()]->lat != 0 || content[index.row()]->lon != 0) {
-        if (Window::getInstance(false) != 0)
-            Window::getInstance(true)->mapScreen->glWidget->setMapPosition(content[index.row()]->lat,
-                                                                content[index.row()]->lon, 0.1);
+    if (_content[index.row()]->lat != 0 || _content[index.row()]->lon != 0) {
+        if (Window::instance(false) != 0)
+            Window::instance(true)->mapScreen->glWidget->setMapPosition(_content[index.row()]->lat,
+                                                                _content[index.row()]->lon, 0.1);
     }
 }
 
 void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the detailsDialog
-    content[index.row()]->showDetailsDialog();
+    _content[index.row()]->showDetailsDialog();
 }

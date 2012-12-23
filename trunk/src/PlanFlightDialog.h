@@ -12,45 +12,45 @@
 #include "PlanFlightRoutesModel.h"
 
 class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    static PlanFlightDialog *getInstance(bool createIfNoInstance = true, QWidget *parent = 0);
-    void plotPlannedRoute() const;
-    Route* selectedRoute;
+    public:
+        static PlanFlightDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        void plotPlannedRoute() const;
+        Route* selectedRoute;
 
-signals:
-    void fpDownloaded();
+    signals:
+        void fpDownloaded();
 
-protected:
-    void closeEvent(QCloseEvent *event);
+    protected:
+        void closeEvent(QCloseEvent *event);
 
-private slots:
-    void on_bDestDetails_clicked();
-    void on_bDepDetails_clicked();
-    void on_pbVatsimPrefile_clicked();
-    void on_pbCopyToClipboard_clicked();
-    void on_cbPlot_toggled(bool checked);
-    void on_edDest_textChanged(QString str);
-    void on_edDep_textChanged(QString str);
-    void on_buttonRequest_clicked();
-    void vrouteDownloaded(bool error);
-    void vatrouteDownloaded(bool error);
-    void routeSelected(const QModelIndex& index);
+    private slots:
+        void on_bDestDetails_clicked();
+        void on_bDepDetails_clicked();
+        void on_pbVatsimPrefile_clicked();
+        void on_pbCopyToClipboard_clicked();
+        void on_cbPlot_toggled(bool checked);
+        void on_edDest_textChanged(QString str);
+        void on_edDep_textChanged(QString str);
+        void on_buttonRequest_clicked();
+        void vrouteDownloaded(bool error);
+        void vatrouteDownloaded(bool error);
+        void routeSelected(const QModelIndex& index);
 
-private:
-    PlanFlightDialog(QWidget *parent);
+    private:
+        PlanFlightDialog(QWidget *parent);
 
-    void requestGenerated();
-    void requestVroute();
-    void requestVatroute();
+        void requestGenerated();
+        void requestVroute();
+        void requestVatroute();
 
-    QHttp *vrouteDownloader, *vatrouteDownloader;
-    QBuffer *vrouteBuffer, *vatrouteBuffer;
-    QList<Route*> routes;
+        QHttp *_vrouteDownloader, *_vatrouteDownloader;
+        QBuffer *_vrouteBuffer, *_vatrouteBuffer;
+        QList<Route*> _routes;
 
-    PlanFlightRoutesModel routesModel;
-    QSortFilterProxyModel *routesSortModel;
+        PlanFlightRoutesModel _routesModel;
+        QSortFilterProxyModel *_routesSortModel;
 };
 
 #endif // PLANFLIGHTDIALOG_H

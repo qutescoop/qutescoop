@@ -10,22 +10,22 @@
 
 Client::Client(const QStringList& stringList, const WhazzupData* whazzup)
 {
-    label = getField(stringList, 0);
-    userId = getField(stringList, 1);
-    realName = getField(stringList, 2);
-    lat = getField(stringList, 5).toDouble();
-    lon = getField(stringList, 6).toDouble();
-    server = getField(stringList, 14);
-    protrevision = getField(stringList, 15).toInt();
-    rating = getField(stringList, 16).toInt();
-    timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddHHmmss");
+    label = field(stringList, 0);
+    userId = field(stringList, 1);
+    realName = field(stringList, 2);
+    lat = field(stringList, 5).toDouble();
+    lon = field(stringList, 6).toDouble();
+    server = field(stringList, 14);
+    protrevision = field(stringList, 15).toInt();
+    rating = field(stringList, 16).toInt();
+    timeConnected = QDateTime::fromString(field(stringList, 37), "yyyyMMddHHmmss");
     timeConnected.setTimeSpec(Qt::UTC);
 
     if(whazzup->isIvao()) {
-        clientSoftware = getField(stringList, 38); // IVAO only
-        clientVersion = getField(stringList, 39); // IVAO only
-        adminRating = getField(stringList, 40).toInt(); // IVAO only
-        rating = getField(stringList, 41).toInt(); // IVAO only
+        clientSoftware = field(stringList, 38); // IVAO only
+        clientVersion = field(stringList, 39); // IVAO only
+        adminRating = field(stringList, 40).toInt(); // IVAO only
+        rating = field(stringList, 41).toInt(); // IVAO only
     }
 
     if(whazzup->isVatsim())
@@ -45,7 +45,7 @@ Client::Client(const QStringList& stringList, const WhazzupData* whazzup)
     }
 }
 
-QString Client::getField(const QStringList& list, int index) const {
+QString Client::field(const QStringList& list, int index) const {
     if(index < 0 || index >= list.size())
         return QString();
 
@@ -56,7 +56,7 @@ QString Client::onlineTime() const {
     if (!timeConnected.isValid())
         return QString("not connected");
     return QDateTime::fromTime_t(               // this will get wrapped by 24h but that should not be a problem...
-            Whazzup::getInstance()->whazzupData().whazzupTime.toTime_t()
+            Whazzup::instance()->whazzupData().whazzupTime.toTime_t()
             - timeConnected.toTime_t()
             ).toUTC().toString("HH:mm");
 }
@@ -67,7 +67,7 @@ QString Client::displayName(bool withLink) const {
         result += " (" + rank() + ")";
 
     if(withLink && !userId.isEmpty()) {
-        QString link = Whazzup::getInstance()->getUserLink(userId);
+        QString link = Whazzup::instance()->userLink(userId);
         if(link.isEmpty())
             return result;
         result = QString("<a href='%1'>%2</a>").arg(link).arg(result);

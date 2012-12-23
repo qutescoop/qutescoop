@@ -16,21 +16,21 @@
 
 class SearchVisitor : public MapObjectVisitor
 {
-public:
-	SearchVisitor(const QString& search);
-	virtual void visit(MapObject *object);
+    public:
+        SearchVisitor(const QString& search);
+        virtual void visit(MapObject *object);
         virtual void checkAirlines(void);
-	virtual QList<MapObject*> result() const;
+        virtual QList<MapObject*> result() const;
         QHash<QString, QString> AirlineCodes;
-		
-protected:
-	QRegExp regex;
-	
-	QHash<QString, Pilot*> pilots;
-	QHash<QString, Controller*> controllers, observers;
-	QHash<QString, MapObject*> others;
-        QHash<QString, QString> otherStrings;
-        QString searchString;
+
+    protected:
+        QRegExp _regex;
+
+        QHash<QString, Pilot*> _pilots;
+        QHash<QString, Controller*> _controllers, _observers;
+        QHash<QString, MapObject*> _others;
+        QHash<QString, QString> _otherStrings;
+        QString _searchString;
 };
 
 #endif /*SEARCHVISITOR_H_*/

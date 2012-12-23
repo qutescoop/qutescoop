@@ -26,55 +26,55 @@ Airway::Airway(const QString& name, Type type, int base, int top) {
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	Segment newSegment(from, to);
 	// check if we already have this segment
-	for(int i = 0; i < segments.size(); i++) {
-		if(segments[i] == newSegment) {
+	for(int i = 0; i < _segments.size(); i++) {
+		if(_segments[i] == newSegment) {
 			return;
 		}
 	}
-	segments.append(newSegment);
+	_segments.append(newSegment);
 }
 
 Airway* Airway::createFromSegments() {
-	if(segments.isEmpty())
+	if(_segments.isEmpty())
 		return 0;
 
 	Airway* result = new Airway(name, type, base, top);
-	Segment seg = segments.first();
-	segments.removeFirst();
-	result->waypoints.append(seg.from);
-	result->waypoints.append(seg.to);
+	Segment seg = _segments.first();
+	_segments.removeFirst();
+	result->_waypoints.append(seg.from);
+	result->_waypoints.append(seg.to);
 
 	bool nothingRemoved = false;
-	while(!segments.isEmpty() && !nothingRemoved) {
+	while(!_segments.isEmpty() && !nothingRemoved) {
 		nothingRemoved = true;
 
-		for(int i = 0; i < segments.size() && nothingRemoved; i++) {
-			Segment s = segments[i];
-			Waypoint *p = result->waypoints.last();
+		for(int i = 0; i < _segments.size() && nothingRemoved; i++) {
+			Segment s = _segments[i];
+			Waypoint *p = result->_waypoints.last();
 
 			if(s.from == p) {
-				result->waypoints.append(s.to);
-				segments.removeAt(i);
+				result->_waypoints.append(s.to);
+				_segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 			if(s.to == p) {
-				result->waypoints.append(s.from);
-				segments.removeAt(i);
+				result->_waypoints.append(s.from);
+				_segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 
-			p = result->waypoints.first();
+			p = result->_waypoints.first();
 			if(s.from == p) {
-				result->waypoints.prepend(s.to);
-				segments.removeAt(i);
+				result->_waypoints.prepend(s.to);
+				_segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
 			if(s.to == p) {
-				result->waypoints.prepend(s.from);
-				segments.removeAt(i);
+				result->_waypoints.prepend(s.from);
+				_segments.removeAt(i);
 				nothingRemoved = false;
 				continue;
 			}
@@ -86,7 +86,7 @@ Airway* Airway::createFromSegments() {
 
 QList<Airway*> Airway::sort() {
 	QList<Airway*> result;
-	if(segments.isEmpty())
+	if(_segments.isEmpty())
 		return result;
 	Airway *awy = 0;
 	do {
@@ -97,17 +97,17 @@ QList<Airway*> Airway::sort() {
 	return result;
 }
 
-int Airway::getIndex(const QString& id) const {
-	for(int i = 0; i < waypoints.size(); i++)
-		if(waypoints[i]->label == id)
+int Airway::index(const QString& id) const {
+	for(int i = 0; i < _waypoints.size(); i++)
+		if(_waypoints[i]->label == id)
 			return i;
 	return -1;
 }
 
 QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) const {
 	QList<Waypoint*> result;
-	int startIndex = getIndex(startId);
-	int endIndex = getIndex(endId);
+	int startIndex = index(startId);
+	int endIndex = index(endId);
 
 	if(startIndex < 0 || endIndex < 0)
 		return result;
@@ -118,21 +118,21 @@ QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) co
 
 	for(int i = startIndex; i != endIndex; i += direction)
 		if(i != startIndex)  // don't append first waypoint in list
-			result.append(waypoints[i]);
-	result.append(waypoints[endIndex]);
+			result.append(_waypoints[i]);
+	result.append(_waypoints[endIndex]);
 	return result;
 }
 
-Waypoint* Airway::getClosestPointTo(double lat, double lon) const {
+Waypoint* Airway::closestPointTo(double lat, double lon) const {
 	Waypoint* result = 0;
 	double minDist = 9999.;
-	for(int i = 0; i < waypoints.size(); i++) {
-		double d = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
+	for(int i = 0; i < _waypoints.size(); i++) {
+		double d = NavData::distance(lat, lon, _waypoints[i]->lat, _waypoints[i]->lon);
 		if(qFuzzyIsNull(d))
-			return waypoints[i];
+			return _waypoints[i];
 		if(d < minDist) {
 			minDist = d;
-			result = waypoints[i];
+			result = _waypoints[i];
 		}
 	}
 	return result;

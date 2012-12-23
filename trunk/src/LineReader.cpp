@@ -6,7 +6,7 @@
 #include <QStringList>
 
 const QList<QPair<double, double> >& LineReader::readLine() {
-	currentLine.clear();
+	_currentLine.clear();
 	while(!atEnd()) {
 		QString line = nextLine();
 		if(line == "end" || line.isNull())
@@ -28,7 +28,7 @@ const QList<QPair<double, double> >& LineReader::readLine() {
 			continue;
 		}
 
-		currentLine.append(QPair<double, double>(lat, lon));
+		_currentLine.append(QPair<double, double>(lat, lon));
 	}
-	return currentLine;
+	return _currentLine;
 }

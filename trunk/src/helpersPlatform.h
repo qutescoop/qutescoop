@@ -244,19 +244,19 @@ QString memoryFree() {
     p.waitForFinished();
     return (QString("%1 MB").arg(p.readAllStandardOutput().trimmed().toLong() / 1024));
 #endif
-//#ifdef Q_WS_MAC
-//    QProcess p;
-//    p.start("sysctl", QStringList() << "kern.version" << "hw.physmem");
-//    p.waitForFinished();
-//    return p.readAllStandardOutput();
-//#endif
+    //#ifdef Q_WS_MAC
+    //    QProcess p;
+    //    p.start("sysctl", QStringList() << "kern.version" << "hw.physmem");
+    //    p.waitForFinished();
+    //    return p.readAllStandardOutput();
+    //#endif
 #ifdef Q_WS_WIN
     MEMORYSTATUSEX memory_status;
     ZeroMemory(&memory_status, sizeof(MEMORYSTATUSEX));
     memory_status.dwLength = sizeof(MEMORYSTATUSEX);
     if (GlobalMemoryStatusEx(&memory_status)) {
         return QString("%1 MB")
-            .arg(memory_status.ullAvailPhys / (1024 * 1024));
+                .arg(memory_status.ullAvailPhys / (1024 * 1024));
     }
 #endif
     return "unknown";
@@ -281,7 +281,7 @@ QString memoryOverall() {
     memory_status.dwLength = sizeof(MEMORYSTATUSEX);
     if (GlobalMemoryStatusEx(&memory_status)) {
         return QString("%1 MB")
-            .arg(memory_status.ullTotalPhys / (1024 * 1024));
+                .arg(memory_status.ullTotalPhys / (1024 * 1024));
     }
 #endif
     return "unknown";

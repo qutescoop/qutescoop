@@ -8,16 +8,16 @@
 
 class FileReader
 {
-public:
-	FileReader(const QString& filename);
-	virtual ~FileReader();
-	
-	bool atEnd() const;
-	QString nextLine() const;
-	
-private:
-	QFile *file;
-	QTextStream *stream;
+    public:
+        FileReader(const QString& filename);
+        virtual ~FileReader();
+
+        bool atEnd() const;
+        QString nextLine() const;
+
+    private:
+        QFile *_file;
+        QTextStream *_stream;
 };
 
 #endif /*FILEREADER_H_*/
