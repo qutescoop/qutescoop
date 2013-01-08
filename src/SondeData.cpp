@@ -71,7 +71,7 @@ void SondeData::decodeData() {
 
         //qDebug() << stationRawList;
 
-        int _mode; // 0 = TTAA; 1 = TTBB; 2 =  PPBB; 3 = UNKNOWN
+        int _mode = -1; // 0 = TTAA; 1 = TTBB; 2 =  PPBB; 3 = UNKNOWN
         if(stationRawList[0] == "TTAA") _mode = 0; // Temp + Wind
         if(stationRawList[0] == "TTBB") _mode = 1; // temp only
         if(stationRawList[0] == "PPBB") _mode = 2; // Wind
