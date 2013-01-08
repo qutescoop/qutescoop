@@ -7,37 +7,23 @@
 #include "NavData.h"
 #include "helpers.h"
 #include "Settings.h"
+#include "MapObject.h"
 
-class Station
-{
+class Station: public MapObject {
     public:
-        Station() {}
-        Station(int num, double _lat, double _lon, int _elev , QString _name = "");
+        Station(double lat, double lon, int elev = 0, QString icao = "", QString name = "");
 
-        void setName(QString s) { _name = s; }
-        QString name() const { return _name; }
+        void windArrow(int alt, bool secondary) const;
 
-        double lat() const { return _lat; }
-        double lon() const { return _lon; }
-        int elev() const { return _elev; }
+        virtual QString mapLabel() const;
 
-        void windArrow(int alt) const;
-
-        void addWind(int alt, int dir, int speed);
-        void addTemp(int alt, int temp);
-
-        QPair<int, int> wind(int alt) const;
-        QHash< int , QPair < int , int > > wind() const;
-
+        int elev;
+        QString icao;
+        QHash<int, QPair<quint16, quint16> > wind;  // < alt(feet) , < dir, speed >>
+        QHash<int, qint8> temp ;// <alt(feet), temp(degree C)>
+        QHash<int, double> spread ;// <alt(feet), spread(degree C)>
     private:
-        void renderWindStation(double deg, double knots) const;
-
-        QString _name;
-        int _number, _elev;
-        double _lat, _lon;
-
-        QHash< int, QPair < int, int > > _windData;  // < alt(feet) , < dir, speed >>
-        QHash< int, int> _tempData ;// <alt(feet), temp(degree C)>
+        void renderWindStation(double deg, double knots, bool secondary) const;
 };
 
 #endif // STATION_H

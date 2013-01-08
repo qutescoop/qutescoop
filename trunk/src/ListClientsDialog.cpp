@@ -16,7 +16,7 @@
 ListClientsDialog *listClientsDialogInstance = 0;
 ListClientsDialog *ListClientsDialog::instance(bool createIfNoInstance, QWidget *parent) {
     if(listClientsDialogInstance == 0 && createIfNoInstance) {
-        if (parent == 0) parent = Window::instance(true);
+        if (parent == 0) parent = Window::instance();
         listClientsDialogInstance = new ListClientsDialog(parent);
     }
     return listClientsDialogInstance;
@@ -29,8 +29,7 @@ void ListClientsDialog::destroyInstance() {
 }
 
 ListClientsDialog::ListClientsDialog(QWidget *parent) :
-    QDialog(parent)
-{
+        QDialog(parent) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
     //    setWindowFlags(Qt::Tool);
@@ -309,8 +308,7 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
     }
 }
 
-void ListClientsDialog::on_pbPingServers_clicked()
-{
+void ListClientsDialog::on_pbPingServers_clicked() {
     for (int row = 0; row < serversTable->rowCount(); row++) {
         // reset Ping columns
         for (int col = 2; col < 6; col++) {
@@ -324,8 +322,7 @@ void ListClientsDialog::on_pbPingServers_clicked()
     pingNextFromStack();
 }
 
-void ListClientsDialog::on_pbPingVoiceServers_clicked()
-{
+void ListClientsDialog::on_pbPingVoiceServers_clicked() {
     for (int row = 0; row < voiceServersTable->rowCount(); row++) {
         // reset Ping columns
         for (int col = 1; col < 5; col++) {

@@ -24,7 +24,7 @@ void myMessageOutput(QtMsgType type, const char *msg) {
 
     // LogBrowser output
     if(LogBrowserDialog::instance(false) != 0)
-        LogBrowserDialog::instance(true)->outputMessage(output);
+        LogBrowserDialog::instance()->on_message_new(output);
 
     // log.txt output
     if (logFile->isWritable()) {
@@ -109,17 +109,14 @@ int main(int argc, char *argv[]) {
 //    QObject::connect(Whazzup::instance(), SIGNAL(statusDownloaded()),
 //            Whazzup::instance(), SLOT(download()));
 
+    // show Launcher
+    Launcher::instance()->fireUp();
+
     if(Settings::downloadOnStartup())
         Whazzup::instance()->download();
 
-    // show Launcher
-    Launcher::instance(true)->fireUp();
-
     // start event loop
-    Window::instance(true)->show();
     int ret = app.exec();
-
-    delete Net::instance(true);
 
     // close log
     if (logFile->isOpen())

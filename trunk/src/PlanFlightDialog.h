@@ -34,8 +34,8 @@ class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
         void on_edDest_textChanged(QString str);
         void on_edDep_textChanged(QString str);
         void on_buttonRequest_clicked();
-        void vrouteDownloaded(bool error);
-        void vatrouteDownloaded(bool error);
+        void vrouteDownloaded();
+        void vatrouteDownloaded();
         void routeSelected(const QModelIndex& index);
 
     private:
@@ -45,8 +45,7 @@ class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
         void requestVroute();
         void requestVatroute();
 
-        QHttp *_vrouteDownloader, *_vatrouteDownloader;
-        QBuffer *_vrouteBuffer, *_vatrouteBuffer;
+        QNetworkReply *_replyVroute, *_replyVatroute;
         QList<Route*> _routes;
 
         PlanFlightRoutesModel _routesModel;

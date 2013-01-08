@@ -9,8 +9,7 @@
 #include "Settings.h"
 
 BookedController::BookedController(const QStringList& stringList, const WhazzupData* whazzup):
-    Client(stringList, whazzup)
-{
+        Client(stringList, whazzup) {
     sector = 0;
 
     // extra booking values

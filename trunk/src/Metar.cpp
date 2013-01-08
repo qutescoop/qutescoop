@@ -9,8 +9,7 @@
 
 #include <QRegExp>
 
-Metar::Metar(const QString& encStr)
-{
+Metar::Metar(const QString& encStr) {
     if(!encStr.isEmpty()) {
         encoded = encStr;
         downloaded = QDateTime::currentDateTime();

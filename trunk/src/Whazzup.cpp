@@ -18,8 +18,7 @@ Whazzup* Whazzup::instance() {
 }
 
 Whazzup::Whazzup():
-    _replyStatus(0), _replyWhazzup(0), _replyBookings(0)
-{
+        _replyStatus(0), _replyWhazzup(0), _replyBookings(0) {
     // init random seed to switch between URLs
     srand(QDateTime::currentDateTime().toTime_t());
 
@@ -41,7 +40,7 @@ Whazzup::~Whazzup() {
 
 void Whazzup::setStatusLocation(const QString& statusLocation) {
     qDebug() << "Downloading network status from\t" << statusLocation;
-    GuiMessages::message("Getting network status...");
+    GuiMessages::progress("statusdownload", "Getting network status...");
 
     _replyStatus = Net::g(QNetworkRequest(statusLocation));
     connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
@@ -63,12 +62,11 @@ void Whazzup::processStatus() {
         return;
     }
 
-    if(_replyStatus->error() != QNetworkReply::NoError) {
+    if(_replyStatus->error() != QNetworkReply::NoError)
         GuiMessages::warning(_replyStatus->errorString());
-    }
-    if(_replyStatus->bytesAvailable() == 0) {
+
+    if(_replyStatus->bytesAvailable() == 0)
         GuiMessages::warning("Statusfile is empty");
-    }
 
     _urls.clear();
     _gzurls.clear();
@@ -117,6 +115,7 @@ void Whazzup::processStatus() {
 
     _lastDownloadTime = QTime();
 
+    GuiMessages::remove("statusdownload");
     qDebug() << "Whazzup::statusDownloaded() Got" << _urls.size() << "Whazzup URLs";
 
     if(_urls.size() == 0)
@@ -187,7 +186,7 @@ void Whazzup::processWhazzup() {
         _downloadTimer->start(30 * 1000); // try again in 30s
         return;
     }
-    GuiMessages::status("Processing Whazzup", "whazzupProcess");
+    GuiMessages::progress("whazzupProcess", "Processing Whazzup...");
 
     QByteArray *bytes = new QByteArray(_replyWhazzup->readAll());
     WhazzupData newWhazzupData(bytes, WhazzupData::WHAZZUP);
@@ -279,7 +278,7 @@ void Whazzup::processBookings() {
     if(Settings::downloadBookings() && Settings::bookingsPeriodically())
         _bookingsTimer->start(Settings::bookingsInterval() * 60 * 1000);
 
-    GuiMessages::status("Processing Bookings", "bookingsProcess");
+    GuiMessages::progress("bookingsProcess", "Processing Bookings...");
 
     QByteArray *bytes = new QByteArray(_replyBookings->readAll());
     WhazzupData newBookingsData(bytes, WhazzupData::ATCBOOKINGS);
@@ -304,6 +303,9 @@ void Whazzup::processBookings() {
                 qWarning() << "Whazzup::processBookings: Could not write Bookings to disk"
                            << out.fileName();
 
+            // from now on we want to redownload when the user triggers a network update
+            connect(Window::instance()->actionDownload, SIGNAL(triggered()),
+                    this, SLOT(downloadBookings()));
             emit newData(true);
         } else
             GuiMessages::message(QString("We already have bookings with that timestamp: %1")
@@ -329,7 +331,7 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
     if(this->_predictedTime != predictedTime) {
         qDebug() << "Whazzup::setPredictedTime() predictedTime=" << predictedTime
                  << "data.whazzupTime=" << _data.whazzupTime;
-        GuiMessages::status("Calculating Warp...", "warpProcess");
+        GuiMessages::progress("warpProcess", "Calculating Warp...");
         this->_predictedTime = predictedTime;
         if (Settings::downloadBookings() && !_data.bookingsTime.isValid())
             emit needBookings();

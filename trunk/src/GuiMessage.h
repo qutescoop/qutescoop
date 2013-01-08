@@ -26,7 +26,9 @@ class GuiMessages : public QObject {
         // shown if no other messages available
         static void status (const QString &msg, const QString &id = "");
         // just draw attention, no disturbance of the program flow
-        static void informationUserAttention(const QString &msg, const QString &id = "");
+        static void infoUserAttention(const QString &msg, const QString &id = "");
+        // informational, user-confirmation required
+        static void infoUserInteraction(const QString &msg, const QString &titleAndId = "");
         // just draw attention, no disturbance of the program flow
         static void errorUserAttention      (const QString &msg, const QString &id = "");
         // user-confirmation required
@@ -54,6 +56,7 @@ class GuiMessages : public QObject {
             public:
                 enum Type { // type corresponding to priority
                     All = 101, Uninitialized = 100, Persistent = 10, Temporary = 9, ProgressBar = 7,
+                    InformationUserInteraction = 6,
                     InformationUserAttention = 5, Warning = 4, ErrorUserAttention = 3,
                     CriticalUserInteraction = 1, FatalUserInteraction = 0
                 };

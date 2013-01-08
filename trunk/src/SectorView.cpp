@@ -11,10 +11,9 @@ Sectorview* Sectorview::instance(bool createIfNoInstance, QWidget *parent) {
 }
 
 Sectorview::Sectorview(QWidget *parent) :
-    QDialog(parent)
-{
+        QDialog(parent) {
     setupUi(this);
-    sectorsHash = NavData::instance(true)->sectors;
+    sectorsHash = NavData::instance()->sectors;
     loadSectorList();
 }
 
@@ -24,7 +23,7 @@ Sectorview::~Sectorview() {
         listeView_sectors->removeItemWidget(item);
         delete item;
     }
-    MapScreen::instance(true)->glWidget->renderStaticSectors(false);
+    MapScreen::instance()->glWidget->renderStaticSectors(false);
 }
 
 void Sectorview::loadSectorList() {
@@ -60,13 +59,13 @@ void Sectorview::on_bt_apply_clicked() {
     for(int i = CheckedSectorList.count()-1; i >=0 ; i--)
         renderSectors.append(sectorsHash[CheckedSectorList[i]]);
 
-    MapScreen::instance(true)->glWidget->renderStaticSectors(true);
-    MapScreen::instance(true)->glWidget->createStaticSectorLists(renderSectors);
-    MapScreen::instance(true)->glWidget->update();
+    MapScreen::instance()->glWidget->renderStaticSectors(true);
+    MapScreen::instance()->glWidget->createStaticSectorLists(renderSectors);
+    MapScreen::instance()->glWidget->update();
 
 }
 void Sectorview::on_bt_close_clicked() {
-    MapScreen::instance(true)->glWidget->renderStaticSectors(false);
+    MapScreen::instance()->glWidget->renderStaticSectors(false);
 }
 
 

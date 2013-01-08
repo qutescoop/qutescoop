@@ -8,8 +8,7 @@
 #include "Settings.h"
 
 
-Client::Client(const QStringList& stringList, const WhazzupData* whazzup)
-{
+Client::Client(const QStringList& stringList, const WhazzupData* whazzup) {
     label = field(stringList, 0);
     userId = field(stringList, 1);
     realName = field(stringList, 2);

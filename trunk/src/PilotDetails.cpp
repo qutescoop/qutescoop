@@ -12,7 +12,7 @@ PilotDetails *pilotDetails = 0;
 PilotDetails* PilotDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(pilotDetails == 0) {
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             pilotDetails = new PilotDetails(parent);
         }
     }
@@ -27,9 +27,8 @@ void PilotDetails::destroyInstance() {
 
 
 PilotDetails::PilotDetails(QWidget *parent):
-    ClientDetails(parent),
-    _pilot(0)
-{
+        ClientDetails(parent),
+        _pilot(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
@@ -93,11 +92,11 @@ void PilotDetails::refresh(Pilot *pilot) {
 
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));
-    lblFuel->setText(QTime(_pilot->planHrsFuel, _pilot->planMinFuel).toString("H:mm"));
+    lblFuel->setText(QTime(_pilot->planFuel_hrs, _pilot->planFuel_mins).toString("H:mm"));
     lblRoute->setText(_pilot->planRoute);
     lblPlanTas->setText(QString("N%1").arg(_pilot->planTasInt()));
     lblPlanFl->setText(QString("F%1").arg(_pilot->defuckPlanAlt(_pilot->planAlt)/100));
-    lblPlanEte->setText(QString("%1").arg(QTime(_pilot->planHrsEnroute, _pilot->planMinEnroute).toString("H:mm")));
+    lblPlanEte->setText(QString("%1").arg(QTime(_pilot->planEnroute_hrs, _pilot->planEnroute_mins).toString("H:mm")));
     lblRemarks->setText(_pilot->planRemarks);
 
     // check if we know userId
@@ -157,8 +156,8 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
     if (_pilot->showDepDestLine != checked) {
         _pilot->showDepDestLine = checked;
         if (Window::instance(false) != 0) {
-            Window::instance(true)->mapScreen->glWidget->createPilotsList();
-            Window::instance(true)->mapScreen->glWidget->updateGL();
+            Window::instance()->mapScreen->glWidget->createPilotsList();
+            Window::instance()->mapScreen->glWidget->updateGL();
         }
         refresh();
     }

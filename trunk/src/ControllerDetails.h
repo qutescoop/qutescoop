@@ -13,24 +13,18 @@
 #include "Controller.h"
 #include "Settings.h"
 
-class ControllerDetails: public ClientDetails, private Ui::ControllerDetails
-{
+class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
         Q_OBJECT
-
     public:
         static ControllerDetails* instance(bool createIfNoInstance = true, QWidget *parent = 0);
         void destroyInstance();
         void refresh(Controller* _controller = 0);
-
     protected:
         void closeEvent(QCloseEvent *event);
-
     private slots:
         void on_buttonAddFriend_clicked();
         void on_btnJoinChannel_clicked();
-
         void on_pbAirportDetails_clicked();
-
     private:
         ControllerDetails(QWidget *parent);
         Controller* _controller;

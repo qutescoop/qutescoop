@@ -15,7 +15,7 @@ AirportDetails *airportDetails = 0;
 AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(airportDetails == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             airportDetails = new AirportDetails(parent);
         }
     return airportDetails;
@@ -28,9 +28,8 @@ void AirportDetails::destroyInstance() {
 }
 
 AirportDetails::AirportDetails(QWidget *parent):
-    ClientDetails(parent),
-    _airport(0)
-{
+        ClientDetails(parent),
+        _airport(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
@@ -187,11 +186,11 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
     if(_airport->showFlightLines != checked) {
         _airport->showFlightLines = checked;
         if (Window::instance(false) != 0) {
-            Window::instance(true)->mapScreen->glWidget->createPilotsList();
-            Window::instance(true)->mapScreen->glWidget->updateGL();;
+            Window::instance()->mapScreen->glWidget->createPilotsList();
+            Window::instance()->mapScreen->glWidget->updateGL();;
         }
         if (PilotDetails::instance(false) != 0)
-            PilotDetails::instance(true)->refresh();
+            PilotDetails::instance()->refresh();
     }
 }
 

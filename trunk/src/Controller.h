@@ -13,8 +13,7 @@
 
 class Airport;
 
-class Controller: public Client
-{
+class Controller: public Client {
     public:
         Controller(const QStringList& stringList, const WhazzupData* whazzup);
 

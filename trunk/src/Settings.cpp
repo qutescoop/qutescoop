@@ -91,13 +91,13 @@ void Settings::calculateApplicationDataDirectory() {
     // last ressort: looking for readable subdirs
     for (int i = 0; i < dirs.size(); i++) {
         if (dirCapabilities[i].testFlag(QIODevice::ReadOnly)) { // we found the data at least readonly
-            QString warningStr(QString(
+            const QString warningStr(QString(
                     "The directories '%1' where found at '%2' but are readonly. This means that neither automatic sectorfile-download "
                     "nor saving logs, screenshots or downloaded Whazzups will work.\n"
                     "Preferrably, data should be at '%3' and this location should be writable.")
-                                 .arg(subdirs.join("', '"))
-                                 .arg(dirs[i])
-                                 .arg(dirs.first()));
+                    .arg(subdirs.join("', '"))
+                    .arg(dirs[i])
+                    .arg(dirs.first()));
             qWarning() << warningStr;
             QMessageBox::warning(0, "Warning", warningStr);
 
@@ -109,12 +109,14 @@ void Settings::calculateApplicationDataDirectory() {
                         "Do you want QuteScoop to install its data files there [recommended]?")
                                      .arg(dirs.first()));
                 qDebug() << questionStr;
-                if (QMessageBox::question(0, "Install data files?", questionStr, QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)
-                    == QMessageBox::Yes) {
+                if (QMessageBox::question(0,
+                        "Install data files?", questionStr,
+                        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)
+                        == QMessageBox::Yes) {
                     QString copyErrors;
                     for (int j = 0; j < subdirs.size(); j++) {
-                        QString sourceDir = QString("%1/%2").arg(dirs[i], subdirs[j]);
-                        QString destDir = QString("%1/%2").arg(dirs.first(), subdirs[j]);
+                        const QString sourceDir = QString("%1/%2").arg(dirs[i], subdirs[j]);
+                        const QString destDir = QString("%1/%2").arg(dirs.first(), subdirs[j]);
 
                         // subdirectory exists or could be created
                         if (QDir(destDir).exists()
@@ -124,8 +126,8 @@ void Settings::calculateApplicationDataDirectory() {
                             QMessageBox::information(0, "Copying", QString("Now copying files\n'%1'\n to directory '%2'")
                                                      .arg(fileNames.join("',\n'"), destDir));
                             foreach(const QString &fileName, fileNames) {
-                                QString sourceFilePath = QString("%1/%2").arg(sourceDir, fileName);
-                                QString destFilePath = QString("%1/%2").arg(destDir, fileName);
+                                const QString sourceFilePath = QString("%1/%2").arg(sourceDir, fileName);
+                                const QString destFilePath = QString("%1/%2").arg(destDir, fileName);
                                 if (QFile::exists(destFilePath)) // remove if file is already existing
                                     if (!QFile::remove(destFilePath))
                                         QMessageBox::critical(0, "Error", QString(
@@ -145,17 +147,19 @@ void Settings::calculateApplicationDataDirectory() {
                     }
                     if (copyErrors.isEmpty()) {
                         QMessageBox::information(0, "Success",
-                                                 QString("Data files installed. QuteScoop will now use '%1' as data directory.")
+                                                 QString("Data files installed. "
+                                                 "QuteScoop will now use '%1' as data directory.")
                                                  .arg(dirs.first()));
                         qDebug() << "Datafiles installed to" << dirs.first();
                         instance()->setValue("general/calculatedApplicationDataDirectory", dirs.first());
                         return;
                     } else { // errors during the copy operations
-                        QMessageBox::critical(0, "Error", QString("The following errors occurred during copy:\n %1\n"
-                                                                  "When in doubt if important files where left out, "
-                                                                  "delete the new data directory and let "
-                                                                  "QuteScoop copy the files again.")
-                                              .arg(copyErrors));
+                        QMessageBox::critical(0, "Error",
+                                QString("The following errors occurred during copy:\n %1\n"
+                                        "When in doubt if important files where left out, "
+                                        "delete the new data directory and let "
+                                        "QuteScoop copy the files again.")
+                                .arg(copyErrors));
                     }
                 }
             }
@@ -164,13 +168,14 @@ void Settings::calculateApplicationDataDirectory() {
         }
     }
 
-    QString criticalStr = QString("No complete data directory, neither read- nor writable, was found. QuteScoop "
-                                  "might be behaving unexpectedly.\n"
-                                  "Preferrably, '%1' should have the subdirectories '%2' and "
-                                  "these locations should be writable.\n"
-                                  "QuteScoop will look for the data files in the following locations, too:\n"
-                                  "'%3'")
-           .arg(dirs.first(), subdirs.join("', '"), QStringList(dirs.mid(1, -1)).join("',\n'"));
+    const QString criticalStr = QString("No complete data directory, "
+            "neither read- nor writable, was found. QuteScoop "
+            "might be behaving unexpectedly.\n"
+            "Preferrably, '%1' should have the subdirectories '%2' and "
+            "these locations should be writable.\n"
+            "QuteScoop will look for the data files in the following locations, too:\n"
+            "'%3'")
+            .arg(dirs.first(), subdirs.join("', '"), QStringList(dirs.mid(1, -1)).join("',\n'"));
     QMessageBox::critical(0, "Critical", criticalStr);
     qCritical() << criticalStr;
     instance()->setValue("general/calculatedApplicationDataDirectory", QCoreApplication::applicationDirPath());
@@ -463,33 +468,41 @@ void Settings::setShowAllSectors(bool value) {
     instance()->setValue("display/showALLSectors", value);
 }
 
-bool Settings::showWind() {
-    return instance()->value("display/showUpperWind", false).toBool();
+bool Settings::showSonde() {
+    return instance()->value("display/showSonde", false).toBool();
 }
-void Settings::setShowWind(bool value) {
-    instance()->setValue("display/showUpperWind", value);
+void Settings::setShowSonde(bool value) {
+    instance()->setValue("display/showSonde", value);
 }
 
-int Settings::windAlt() {
-    return instance()->value("display/upperWindAlt", 10000).toInt();
+int Settings::sondeAlt_1k() {
+    return instance()->value("display/sondeAlt_1k", 20).toInt();
 }
-void Settings::setWindAlt(int value) {
-    instance()->setValue("display/upperWindAlt", value);
+void Settings::setSondeAlt_1k(int value) {
+    instance()->setValue("display/sondeAlt_1k", value);
 }
 
 QColor Settings::windColor() {
-    return instance()->value("display/upperWindColor", QColor::fromRgb(136, 255, 134)).value<QColor>();
+    return instance()->value("display/windColor", QColor::fromRgb(136, 255, 134)).value<QColor>();
 }
 void Settings::setWindColor(const QColor &value) {
-    instance()->setValue("display/upperWindColor", value);
+    instance()->setValue("display/windColor", value);
 }
 
-int Settings::windSize() {
-    return instance()->value("display/upperWindSize", 30).toInt();
+int Settings::windArrowSize() {
+    return instance()->value("display/windArrowSize", 30).toInt();
 }
 
-void Settings::setWindSize(int value) {
-    instance()->setValue("display/upperWindSize", value);
+void Settings::setWindArrowSize(int value) {
+    instance()->setValue("display/windArrowSize", value);
+}
+
+int Settings::sondeAltSecondarySpan_1k() {
+    return instance()->value("display/sondeAltSecondarySpan_1k", 2).toInt();
+}
+
+void Settings::setSondeAltSecondarySpan_1k(int value) {
+    instance()->setValue("display/sondeAltSecondarySpan_1k", value);
 }
 
 bool Settings::showRouteFix() {
@@ -924,6 +937,16 @@ void Settings::setPilotFont(const QFont& font) {
     instance()->setValue("pilotDisplay/font", font);
 }
 
+QFont Settings::sondeFont() {
+    QFont defaultFont;
+    defaultFont.setPixelSize(9);
+    return instance()->value("sondeDisplay/font", defaultFont).value<QFont>();
+}
+
+void Settings::setSondeFont(const QFont& font) {
+    instance()->setValue("sondeDisplay/font", font);
+}
+
 QColor Settings::pilotDotColor() {
     return instance()->value("pilotDisplay/dotColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
 }
@@ -1050,20 +1073,33 @@ void Settings::setDestLineStrength(double value) {
     instance()->setValue("pilotDisplay/destLineStrength", value);
 }
 
-void Settings::rememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom, int nr) {
-    *xrot = instance()->value("defaultMapPosition/xrot" + QString("%1").arg(nr), *xrot).toDouble();
+void Settings::rememberedMapPosition(double *xrot, double *yrot,
+                                     double *zrot, double *zoom, int nr) {
+    *xrot = instance()->value(
+                "defaultMapPosition/xrot" + QString("%1").arg(nr), -90.).toDouble();
     // ignore yRot: no Earth tilting
-    //*yrot = getSettings()->value("defaultMapPosition/yrot" + QString("%1").arg(nr), *yrot).toDouble();
     Q_UNUSED(yrot);
-    *zrot = instance()->value("defaultMapPosition/zrot" + QString("%1").arg(nr), *zrot).toDouble();
-    *zoom = instance()->value("defaultMapPosition/zoom" + QString("%1").arg(nr), *zoom).toDouble();
+    *zrot = instance()->value(
+                "defaultMapPosition/zrot" + QString("%1").arg(nr), 0.).toDouble();
+    *zoom = instance()->value(
+                "defaultMapPosition/zoom" + QString("%1").arg(nr), 2.).toDouble();
 }
-
-void Settings::setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom, int nr) {
-    instance()->setValue("defaultMapPosition/xrot" + QString("%1").arg(nr), xrot);
-    instance()->setValue("defaultMapPosition/yrot" + QString("%1").arg(nr), yrot);
-    instance()->setValue("defaultMapPosition/zrot" + QString("%1").arg(nr), zrot);
-    instance()->setValue("defaultMapPosition/zoom" + QString("%1").arg(nr), zoom);
+void Settings::setRememberedMapPosition(double xrot, double yrot, double zrot,
+                                        double zoom, int nr) {
+    instance()->setValue(
+                "defaultMapPosition/xrot" + QString("%1").arg(nr), xrot);
+    instance()->setValue(
+                "defaultMapPosition/yrot" + QString("%1").arg(nr), yrot);
+    instance()->setValue(
+                "defaultMapPosition/zrot" + QString("%1").arg(nr), zrot);
+    instance()->setValue(
+                "defaultMapPosition/zoom" + QString("%1").arg(nr), zoom);
+}
+bool Settings::rememberMapPositionOnClose() {
+    return instance()->value("defaultMapPosition/rememberMapPositionOnClose", true).toBool();
+}
+void Settings::setRememberMapPositionOnClose(bool val) {
+    instance()->setValue("defaultMapPosition/rememberMapPositionOnClose", val);
 }
 
 void Settings::saveState(const QByteArray& state) {
@@ -1076,6 +1112,16 @@ QByteArray Settings::savedState() {
 
 void Settings::saveMaximized(const bool val) {
     instance()->setValue("mainWindowState/maximized", val);
+}
+
+QString Settings::remoteDataRepository() {
+    return instance()->value("general/remoteDataRepository",
+                             "http://svn.code.sf.net/p/qutescoop/code/trunk/data/%1")
+            .toString();
+}
+
+void Settings::setRemoteDataRepository(QString value) {
+    instance()->setValue("general/remoteDataRepository", value);
 }
 
 bool Settings::maximized() {
@@ -1477,4 +1523,12 @@ void Settings::setSimpleLabels(bool value) {
 
 bool Settings::simpleLabels() {
     return instance()->value("gl/simpleLabels", false).toBool();
+}
+
+QString Settings::sondeUrl() {
+    return instance()->value("datasources/sondeUrl",
+                             "http://fsrealwx.rs-transline.de/upperair.txt").toString();
+}
+void Settings::setSondeUrl(QString val) {
+    instance()->setValue("datasources/sondeUrl", val);
 }

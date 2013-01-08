@@ -9,25 +9,16 @@
 #include "AirportDetails.h"
 #include "Settings.h"
 
-Airport::Airport() {
-    _appDisplayList = 0;
-    _appBorderDisplayList = 0;
-    _twrDisplayList = 0;
-    _gndDisplayList = 0;
-    _delDisplayList = 0;
-    showFlightLines = false;
-
+Airport::Airport() :
+        showFlightLines(false),
+        _appDisplayList(0), _appBorderDisplayList(0),
+        _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 }
-
-Airport::Airport(const QStringList& list) {
-    _appDisplayList = 0;
-    _appBorderDisplayList = 0;
-    _twrDisplayList = 0;
-    _gndDisplayList = 0;
-    _delDisplayList = 0;
-    showFlightLines = false;
-
+Airport::Airport(const QStringList& list) :
+        showFlightLines(false),
+        _appDisplayList(0), _appBorderDisplayList(0),
+        _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 
     if(list.size() != 6)
@@ -262,7 +253,7 @@ void Airport::addDelivery(Controller* client) {
 
 
 void Airport::showDetailsDialog() {
-    AirportDetails *infoDialog = AirportDetails::instance(true);
+    AirportDetails *infoDialog = AirportDetails::instance();
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();

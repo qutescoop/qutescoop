@@ -42,15 +42,16 @@ class NavData: public QObject {
 
         void updateData(const WhazzupData& whazzupData);
         void accept(SearchVisitor* visitor);
-
+    public slots:
+        void load();
+    signals:
+        void loaded();
     private:
         NavData();
-
         void loadAirports(const QString& filename);
         void loadSectors();
         void loadCountryCodes(const QString& filename);
         void loadAirlineCodes(const QString& filename);
-
         QHash<QString, QString> _airlineCodes;
 };
 

@@ -13,8 +13,7 @@
 
 class Airport;
 
-class Pilot: public Client
-{
+class Pilot: public Client {
     public:
         enum FlightStatus {
             BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING,
@@ -59,12 +58,12 @@ class Pilot: public Client
         planAltAirport, planRevision, planFlighttype, planDeptime,
         transponder, planRemarks, planRoute, planActtime, airline,
         planAltAirport2, planTypeOfFlight, // IVAO only
-        qnhInHg, qnhMb, // VATSIM only
+        qnh_inHg, qnh_mb, // VATSIM only
         routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
         routeWaypointsPlanRouteCache;
         QDate dayOfFlight;
-        int altitude, groundspeed, planHrsEnroute, planMinEnroute,
-        planHrsFuel, planMinFuel,
+        int altitude, groundspeed, planEnroute_hrs, planEnroute_mins,
+        planFuel_hrs, planFuel_mins,
         pob; // IVAO only
         double trueHeading;
         bool onGround, // IVAO only

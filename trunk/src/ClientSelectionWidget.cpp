@@ -5,8 +5,7 @@
 #include "ClientSelectionWidget.h"
 
 ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):
-    QListWidget(parent)
-{
+        QListWidget(parent) {
     setWindowFlags(Qt::FramelessWindowHint);
     setFocusPolicy(Qt::StrongFocus);
     setFrameStyle(QFrame::NoFrame);

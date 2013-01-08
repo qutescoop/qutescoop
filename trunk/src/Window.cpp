@@ -39,12 +39,6 @@ Window::Window(QWidget *parent) :
         QSettings().clear();
 
     setupUi(this);
-    // restore saved states
-    if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
-    if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
-    if (!Settings::savedGeometry().isNull()) restoreGeometry(Settings::savedGeometry());
-    if (!Settings::savedState().isNull())    restoreState(Settings::savedState());
-    if (Settings::maximized())               showMaximized();
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
@@ -56,8 +50,6 @@ Window::Window(QWidget *parent) :
         qDebug() << "Window::Window() applying styleSheet:" << Settings::stylesheet();
         setStyleSheet(Settings::stylesheet());
     }
-
-
 
     //The map
     mapScreen = new MapScreen(this);
@@ -88,7 +80,6 @@ Window::Window(QWidget *parent) :
 
     Whazzup *whazzup = Whazzup::instance();
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
-    connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(downloadBookings()));
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
     connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
@@ -155,11 +146,6 @@ Window::Window(QWidget *parent) :
     pb_highlightFriends->setChecked(Settings::highlightFriends());
     actionHighlight_Friends->setChecked(Settings::highlightFriends());
 
-    _versionChecker = 0;
-    _versionBuffer = 0;
-    //if(Settings::checkForUpdates()) // disabled
-    //    checkForUpdates();
-
     // Forecast / Predict settings
     framePredict->hide();
     _timerEditPredict.stop();
@@ -188,7 +174,6 @@ Window::Window(QWidget *parent) :
 
     if(Settings::showClouds())
         startCloudDownload();
-
 
     //LogBrowser
 #ifdef QT_NO_DEBUG_OUTPUT
@@ -272,37 +257,37 @@ void Window::whazzupDownloaded(bool isNew) {
         performSearch();
 
         if (AirportDetails::instance(false) != 0) {
-            if (AirportDetails::instance(true)->isVisible())
-                AirportDetails::instance(true)->refresh();
+            if (AirportDetails::instance()->isVisible())
+                AirportDetails::instance()->refresh();
             else // not visible -> delete it...
-                AirportDetails::instance(true)->destroyInstance();
+                AirportDetails::instance()->destroyInstance();
         }
         if (PilotDetails::instance(false) != 0) {
-            if (PilotDetails::instance(true)->isVisible())
-                PilotDetails::instance(true)->refresh();
+            if (PilotDetails::instance()->isVisible())
+                PilotDetails::instance()->refresh();
             else // not visible -> delete it...
-                PilotDetails::instance(true)->destroyInstance();
+                PilotDetails::instance()->destroyInstance();
         }
         if (ControllerDetails::instance(false) != 0) {
-            if (ControllerDetails::instance(true)->isVisible())
-                ControllerDetails::instance(true)->refresh();
+            if (ControllerDetails::instance()->isVisible())
+                ControllerDetails::instance()->refresh();
             else // not visible -> delete it...
-                ControllerDetails::instance(true)->destroyInstance();
+                ControllerDetails::instance()->destroyInstance();
         }
 
         if (ListClientsDialog::instance(false) != 0) {
-            if (ListClientsDialog::instance(true)->isVisible())
-                ListClientsDialog::instance(true)->refresh();
+            if (ListClientsDialog::instance()->isVisible())
+                ListClientsDialog::instance()->refresh();
             else // not visible -> delete it...
-                ListClientsDialog::instance(true)->destroyInstance();
+                ListClientsDialog::instance()->destroyInstance();
         }
 
         if(realdata.bookingsTime.isValid()) {
             if (BookedAtcDialog::instance(false) != 0) {
-                if (BookedAtcDialog::instance(true)->isVisible())
-                    BookedAtcDialog::instance(true)->refresh();
+                if (BookedAtcDialog::instance()->isVisible())
+                    BookedAtcDialog::instance()->refresh();
                 else // not visible -> delete it...
-                    BookedAtcDialog::instance(true)->destroyInstance();
+                    BookedAtcDialog::instance()->destroyInstance();
             }
         }
 
@@ -318,6 +303,18 @@ void Window::whazzupDownloaded(bool isNew) {
     qDebug() << "Window::whazzupDownloaded() -- finished";
 }
 
+/**
+ restore saved states
+ **/
+void Window::restore() {
+    if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
+    if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
+    if (!Settings::savedGeometry().isNull()) restoreGeometry(Settings::savedGeometry());
+    if (!Settings::savedState().isNull())    restoreState(Settings::savedState());
+    if (Settings::maximized())               showMaximized();
+    show();
+}
+
 void Window::refreshFriends() {
     // update friends list
     FriendsVisitor *visitor = new FriendsVisitor();
@@ -328,49 +325,53 @@ void Window::refreshFriends() {
 }
 
 void Window::openPreferences() {
-    //if (!Settings::preferencesDialogSize().isNull())     {PreferencesDialog::instance(true, this)->resize(Settings::preferencesDialogSize());}
-    if (!Settings::preferencesDialogPos().isNull()) PreferencesDialog::instance(true)->move(Settings::preferencesDialogPos());
-    if (!Settings::preferencesDialogGeometry().isNull()) PreferencesDialog::instance(true)->restoreGeometry(Settings::preferencesDialogGeometry());
+    PreferencesDialog::instance(true, this);
+//    if (!Settings::preferencesDialogSize().isNull())
+//        PreferencesDialog::instance()->resize(Settings::preferencesDialogSize());
+    if (!Settings::preferencesDialogPos().isNull())
+        PreferencesDialog::instance()->move(Settings::preferencesDialogPos());
+    if (!Settings::preferencesDialogGeometry().isNull())
+        PreferencesDialog::instance()->restoreGeometry(Settings::preferencesDialogGeometry());
 
-    PreferencesDialog::instance(true, this)->show();
-    PreferencesDialog::instance(true)->raise();
-    PreferencesDialog::instance(true)->activateWindow();
-    PreferencesDialog::instance(true)->setFocus();
+    PreferencesDialog::instance()->show();
+    PreferencesDialog::instance()->raise();
+    PreferencesDialog::instance()->activateWindow();
+    PreferencesDialog::instance()->setFocus();
 }
 
 void Window::openPlanFlight() {
     PlanFlightDialog::instance(true, this)->show();
-    PlanFlightDialog::instance(true)->raise();
-    PlanFlightDialog::instance(true)->activateWindow();
-    PlanFlightDialog::instance(true)->setFocus();
+    PlanFlightDialog::instance()->raise();
+    PlanFlightDialog::instance()->activateWindow();
+    PlanFlightDialog::instance()->setFocus();
 
-    //if (!Settings::planFlightDialogSize().isNull()) {PlanFlightDialog::instance(true)->resize(Settings::planFlightDialogSize());}
-    if (!Settings::planFlightDialogPos().isNull())  {PlanFlightDialog::instance(true)->move(Settings::planFlightDialogPos());}
-    if (!Settings::planFlightDialogGeometry().isNull())    {PlanFlightDialog::instance(true)->restoreGeometry(Settings::planFlightDialogGeometry());}
-
+//    if (!Settings::planFlightDialogSize().isNull())
+//        PlanFlightDialog::instance()->resize(Settings::planFlightDialogSize());
+    if (!Settings::planFlightDialogPos().isNull())
+        PlanFlightDialog::instance()->move(Settings::planFlightDialogPos());
+    if (!Settings::planFlightDialogGeometry().isNull())
+        PlanFlightDialog::instance()->restoreGeometry(Settings::planFlightDialogGeometry());
 }
 
 void Window::openBookedAtc() {
     BookedAtcDialog::instance(true, this)->show();
-    BookedAtcDialog::instance(true)->raise();
-    BookedAtcDialog::instance(true)->activateWindow();
-    BookedAtcDialog::instance(true)->setFocus();
+    BookedAtcDialog::instance()->raise();
+    BookedAtcDialog::instance()->activateWindow();
+    BookedAtcDialog::instance()->setFocus();
 }
 
-void Window::openListClients()
-{
+void Window::openListClients() {
     ListClientsDialog::instance(true, this)->show();
-    ListClientsDialog::instance(true)->raise();
-    ListClientsDialog::instance(true)->activateWindow();
-    //ListClientsDialog::instance(true)->setFocus();
+    ListClientsDialog::instance()->raise();
+    ListClientsDialog::instance()->activateWindow();
+    //ListClientsDialog::instance()->setFocus();
 }
 
-void Window::on_actionDebugLog_triggered()
-{
+void Window::on_actionDebugLog_triggered() {
     LogBrowserDialog::instance(true, this)->show();
-    LogBrowserDialog::instance(true)->raise();
-    LogBrowserDialog::instance(true)->activateWindow();
-    LogBrowserDialog::instance(true)->setFocus();
+    LogBrowserDialog::instance()->raise();
+    LogBrowserDialog::instance()->activateWindow();
+    LogBrowserDialog::instance()->setFocus();
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
@@ -406,19 +407,20 @@ void Window::closeEvent(QCloseEvent *event) {
     Settings::savePosition(pos());
     Settings::saveMaximized(isMaximized());
     on_actionHideAllWindows_triggered();
-    mapScreen->glWidget->savePosition();
+    if (Settings::rememberMapPositionOnClose())
+        mapScreen->glWidget->rememberPosition(9);
     event->accept();
 }
 
 void Window::on_actionHideAllWindows_triggered() {
-    if (PilotDetails::instance(false) != 0) PilotDetails::instance(true)->close();
-    if (ControllerDetails::instance(false) != 0) ControllerDetails::instance(true)->close();
-    if (AirportDetails::instance(false) != 0) AirportDetails::instance(true)->close();
-    if (PreferencesDialog::instance(false) != 0) PreferencesDialog::instance(true)->close();
-    if (PlanFlightDialog::instance(false) != 0) PlanFlightDialog::instance(true)->close();
-    if (BookedAtcDialog::instance(false) != 0) BookedAtcDialog::instance(true)->close();
-    if (ListClientsDialog::instance(false) != 0) ListClientsDialog::instance(true)->close();
-    if (LogBrowserDialog::instance(false) != 0) LogBrowserDialog::instance(true)->close();
+    if (PilotDetails::instance(false) != 0) PilotDetails::instance()->close();
+    if (ControllerDetails::instance(false) != 0) ControllerDetails::instance()->close();
+    if (AirportDetails::instance(false) != 0) AirportDetails::instance()->close();
+    if (PreferencesDialog::instance(false) != 0) PreferencesDialog::instance()->close();
+    if (PlanFlightDialog::instance(false) != 0) PlanFlightDialog::instance()->close();
+    if (BookedAtcDialog::instance(false) != 0) BookedAtcDialog::instance()->close();
+    if (ListClientsDialog::instance(false) != 0) ListClientsDialog::instance()->close();
+    if (LogBrowserDialog::instance(false) != 0) LogBrowserDialog::instance()->close();
 
     if(searchDock->isFloating())
         searchDock->hide();
@@ -439,7 +441,6 @@ void Window::on_metarEdit_textChanged(const QString& text) {
         metarList->reset();
         return;
     }
-
     _timerMetar.start(500);
 }
 
@@ -504,67 +505,6 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
     default: {}
     }
 }
-
-//void Window::checkForUpdates() {
-//    versionChecker = new QHttp(this);
-//    connect(versionChecker, SIGNAL(done(bool)), this, SLOT(versionDownloaded(bool)));
-
-//    QString downloadUrl = "http://svn.code.sf.net/p/qutescoop/code/trunk/version.txt";
-
-//    if(Settings::sendVersionInformation()) {
-//        // append platform, version and preferred network information to the download link
-//        QString urlArgs = QString("?%1&%2&").arg(VERSION_NUMBER).arg(Settings::downloadNetwork());
-//        #ifdef Q_WS_WIN
-//            urlArgs += "w";
-//        #endif
-//        #ifdef Q_WS_MAC
-//            urlArgs += "m";
-//        #endif
-//        #ifdef Q_WS_X11
-//            urlArgs += "l";
-//        #endif
-//        downloadUrl += urlArgs;
-//    }
-
-//    qDebug() << "Checking for new version on" << downloadUrl;
-//    QUrl url(downloadUrl);
-//    versionChecker->setHost(url.host(), url.port() != -1 ? url.port() : 80);
-//    Settings::applyProxySetting(versionChecker);
-
-//    if (!url.userName().isEmpty())
-//        versionChecker->setUser(url.userName(), url.password());
-
-//    QString querystr = url.path() + "?" + url.encodedQuery();
-//    versionBuffer = new QBuffer;
-//    versionBuffer->open(QBuffer::ReadWrite);
-//    versionChecker->get(querystr, versionBuffer);
-//}
-
-//void Window::versionDownloaded(bool error) {
-//    if(!error) {
-//        // compare downloaded version with my own
-//        versionBuffer->seek(0);
-//        if(versionBuffer->canReadLine()) {
-//            QString newVersion = QString(versionBuffer->readLine()).trimmed();
-//            QString myVersion = VERSION_NUMBER;
-
-//            // if downloaded is greater, see if we told about new version
-//            if(myVersion < newVersion) {
-//                if(newVersion != Settings::updateVersionNumber()) {
-//                    // tell user that there is a newer version
-//                    QMessageBox::information(this, tr("New Version Available"),
-//                            QString("A new version of QuteScoop is available! Visit the ")
-//                            + "<a href='http://sourceforge.net/projects/qutescoop'>sourceforge.net/projects/qutescoop</a> for more information.<br><br>"
-//                            + "You are using: " + VERSION_NUMBER + "<br>"
-//                            + "New version is: " + newVersion);
-
-//                    // remember that we told about new version
-//                    Settings::setUpdateVersionNumber(newVersion);
-//                }
-//            }
-//        }
-//    }
-//}
 
 void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
     qDebug() << "Window::updateMetarDecoder()";
@@ -771,7 +711,11 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     _timerEditPredict.start(1000);
 }
 
-void Window::on_actionRecallMapPosition_triggered() {
+void Window::on_actionRecallMapPosition9_triggered() {
+    mapScreen->glWidget->restorePosition(9);
+}
+
+void Window::on_actionRecallMapPosition1_triggered() {
     mapScreen->glWidget->restorePosition(1);
 }
 
@@ -799,7 +743,27 @@ void Window::on_actionRecallMapPosition2_triggered() {
     mapScreen->glWidget->restorePosition(2);
 }
 
-void Window::on_actionRememberPosition_triggered() {
+void Window::on_actionRememberMapPosition9_triggered() {
+    if (Settings::rememberMapPositionOnClose()) {
+        if (QMessageBox::question(this, "Startup position will be overridden on close",
+                              "You have just set the the startup map position. "
+                              "Anyhow this will be overridden on close because "
+                              "you have set 'remember startup map position on close' "
+                              "in preferences.\n\n"
+                              "Do you want to disable 'remember startup map position "
+                              "on close' now?",
+                              QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)
+                == QMessageBox::Yes) {
+            Settings::setRememberMapPositionOnClose(false);
+            if (PreferencesDialog::instance(false) != 0)
+                    PreferencesDialog::instance()->
+                            cbRememberMapPositionOnClose->setChecked(false);
+        }
+    }
+    mapScreen->glWidget->rememberPosition(9);
+}
+
+void Window::on_actionRememberMapPosition1_triggered() {
     mapScreen->glWidget->rememberPosition(1);
 }
 
@@ -889,9 +853,9 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
 
     // adjust the "plot route" tick in dialogs
     if (AirportDetails::instance(false) != 0)
-        AirportDetails::instance(true)->refresh();
+        AirportDetails::instance()->refresh();
     if (PilotDetails::instance(false) != 0)
-        PilotDetails::instance(true)->refresh();
+        PilotDetails::instance()->refresh();
 
     // map update
     mapScreen->glWidget->createPilotsList();
@@ -911,7 +875,7 @@ void Window::allSectorsChanged(bool state) {
         actionDisplayAllSectors->setChecked( state);
     }
 
-    mapScreen->toggleSectorChanged(state);
+    mapScreen->on_sectorsAll_changed(state);
 
     Settings::setShowAllSectors(state);
     mapScreen->glWidget->displayAllSectors(state);
@@ -1008,9 +972,9 @@ void Window::on_pb_highlightFriends_toggled(bool checked) {
 
 void Window::openSectorView() {
     Sectorview::instance(true, this)->show();
-    Sectorview::instance(true)->raise();
-    Sectorview::instance(true)->activateWindow();
-    Sectorview::instance(true)->setFocus();
+    Sectorview::instance()->raise();
+    Sectorview::instance()->activateWindow();
+    Sectorview::instance()->setFocus();
 }
 
 void Window::on_actionChangelog_triggered() {

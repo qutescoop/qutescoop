@@ -19,13 +19,11 @@
 #include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
 #include "Airac.h"
-#include "WindData.h"
+#include "SondeData.h"
 
 
-class GLWidget : public QGLWidget
-{
+class GLWidget : public QGLWidget {
         Q_OBJECT
-
     public:
         GLWidget(QGLFormat format, QWidget *parent = 0);
         ~GLWidget();
@@ -33,7 +31,6 @@ class GLWidget : public QGLWidget
         QPair<double, double> currentPosition() const;
         ClientSelectionWidget *clientSelection;
         void savePosition();
-
     public slots:
         virtual void initializeGL();
         void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
@@ -45,7 +42,7 @@ class GLWidget : public QGLWidget
         void zoomTo(double _zoom);
 
         // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
-        QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
+        QList<MapObject *> objectsAt(int x, int y, double radius = 0) const;
 
         void rememberPosition(int nr);
         void restorePosition(int nr);
@@ -63,11 +60,9 @@ class GLWidget : public QGLWidget
 
         void destroyFriendHightlighter();
         void renderStaticSectors(bool value) { _renderStaticSectors = value; }
-
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
         void newPosition();
-
     protected:
         virtual void paintGL();
         virtual void resizeGL(int width, int height);
@@ -77,7 +72,6 @@ class GLWidget : public QGLWidget
         void mouseMoveEvent(QMouseEvent *event);
         void wheelEvent(QWheelEvent* event);
         bool event(QEvent *event);
-
     private:
         void resetZoom();
         void handleRotation(QMouseEvent *event);
@@ -91,23 +85,22 @@ class GLWidget : public QGLWidget
         const QPair<double, double> sunZenith(const QDateTime &dt) const;
 
         void renderLabels();
-        void renderLabels(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
-        void renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
-        void renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font, double zoomTreshold, QColor color);
-
-        //experimantal
-        //void createWindList();
-        //void renderWindStation(double lat, double lon ,double knots  ,double deg);
+        void renderLabels(const QList<MapObject*>& objects, const QFont& font,
+                          const double zoomTreshold, QColor color, QColor bgColor = QColor());
+        void renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font,
+                                const double zoomTreshold, QColor color, QColor bgColor = QColor());
+        void renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font,
+                                 const double zoomTreshold, QColor color, QColor bgColor = QColor());
 
         void parseEarthClouds();
         void createLights();
 
         void createFriendHighlighter();
 
-
         class FontRectangle {
             public:
-                FontRectangle(QRectF rectangle, MapObject *mapObject): rect(rectangle), object(mapObject) {}
+                FontRectangle(QRectF rectangle, MapObject *mapObject):
+                    rect(rectangle), object(mapObject) {}
                 QRectF rect;
                 MapObject *object;
         };
@@ -124,10 +117,10 @@ class GLWidget : public QGLWidget
         _pilotsList, _activeAirportsList, _inactiveAirportsList,
         _fixesList, _usedWaypointsList, _plannedRouteList,
         _sectorPolygonsList, _sectorPolygonBorderLinesList, _appBorderLinesList, _congestionsList,
-        _windList, _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList;
-        //GLuint airportControllersList,
+        _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList;
         QSet<Controller*> _sectorsToDraw;
-        double _pilotLabelZoomTreshold, _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
+        double _sondeLabelZoomTreshold, _pilotLabelZoomTreshold,
+                _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
         _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
         _xRot, _yRot, _zRot, _zoom, _aspectRatio;
         QTimer *_highlighter;

@@ -8,8 +8,7 @@
 #include <QList>
 #include "MapObject.h"
 
-class MapObjectVisitor
-{
+class MapObjectVisitor {
     public:
         virtual ~MapObjectVisitor() {}
 

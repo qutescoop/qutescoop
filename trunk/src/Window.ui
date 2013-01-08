@@ -455,29 +455,29 @@ Whazzups (replay)</string>
      <property name="title">
       <string>Remember</string>
      </property>
-     <addaction name="actionRemember_2"/>
      <addaction name="separator"/>
-     <addaction name="actionRememberPosition"/>
+     <addaction name="actionRememberMapPosition1"/>
      <addaction name="actionRememberMapPosition2"/>
      <addaction name="actionRememberMapPosition3"/>
      <addaction name="actionRememberMapPosition4"/>
      <addaction name="actionRememberMapPosition5"/>
      <addaction name="actionRememberMapPosition6"/>
      <addaction name="actionRememberMapPosition7"/>
+     <addaction name="actionRememberMapPosition9"/>
     </widget>
     <widget class="QMenu" name="menuRecall">
      <property name="title">
       <string>Recall</string>
      </property>
-     <addaction name="actionRecall_2"/>
      <addaction name="separator"/>
-     <addaction name="actionRecallMapPosition"/>
+     <addaction name="actionRecallMapPosition1"/>
      <addaction name="actionRecallMapPosition2"/>
      <addaction name="actionRecallMapPosition3"/>
      <addaction name="actionRecallMapPosition4"/>
      <addaction name="actionRecallMapPosition5"/>
      <addaction name="actionRecallMapPosition6"/>
      <addaction name="actionRecallMapPosition7"/>
+     <addaction name="actionRecallMapPosition9"/>
     </widget>
     <addaction name="actionZoomIn"/>
     <addaction name="actionZoomOut"/>
@@ -692,6 +692,8 @@ p, li { white-space: pre-wrap; }
 &lt;table border=&quot;0&quot; style=&quot;-qt-table-type: root; margin-top:4px; margin-bottom:4px; margin-left:4px; margin-right:4px;&quot;&gt;
 &lt;tr&gt;
 &lt;td style=&quot;border: none;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
@@ -916,9 +918,9 @@ p, li { white-space: pre-wrap; }
     <string>Ctrl+-</string>
    </property>
   </action>
-  <action name="actionRememberPosition">
+  <action name="actionRememberMapPosition1">
    <property name="text">
-    <string>Default map position</string>
+    <string>Map position 1</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+1</string>
@@ -1013,9 +1015,12 @@ p, li { white-space: pre-wrap; }
     <string>F8</string>
    </property>
   </action>
-  <action name="actionRecallMapPosition">
+  <action name="actionRecallMapPosition1">
    <property name="text">
-    <string>Default map position</string>
+    <string>Map position 1</string>
+   </property>
+   <property name="toolTip">
+    <string>Map position 1</string>
    </property>
    <property name="shortcut">
     <string>Alt+1</string>
@@ -1091,22 +1096,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+7</string>
-   </property>
-  </action>
-  <action name="actionRecall_2">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Recall</string>
-   </property>
-  </action>
-  <action name="actionRemember_2">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="text">
-    <string>Remember</string>
    </property>
   </action>
   <action name="actionRecallMapPosition5">
@@ -1275,6 +1264,22 @@ p, li { white-space: pre-wrap; }
   <action name="actionChangelog">
    <property name="text">
     <string>&amp;Changelog</string>
+   </property>
+  </action>
+  <action name="actionRememberMapPosition9">
+   <property name="text">
+    <string>Startup map position</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+9</string>
+   </property>
+  </action>
+  <action name="actionRecallMapPosition9">
+   <property name="text">
+    <string>Startup map position</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+9</string>
    </property>
   </action>
  </widget>

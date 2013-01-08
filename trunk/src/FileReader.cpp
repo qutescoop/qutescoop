@@ -4,8 +4,7 @@
 
 #include "FileReader.h"
 
-FileReader::FileReader(const QString& filename)
-{
+FileReader::FileReader(const QString& filename) {
 	_stream = 0;
 	_file = new QFile(filename);
 	if(!_file->open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -16,8 +15,7 @@ FileReader::FileReader(const QString& filename)
 	_stream = new QTextStream(_file);
 }
 
-FileReader::~FileReader()
-{
+FileReader::~FileReader() {
 	if(_file != 0)
 		delete _file;
 	if(_stream != 0)

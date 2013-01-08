@@ -11,8 +11,7 @@
 #include "MapObjectVisitor.h"
 #include "MapObject.h"
 
-class FriendsVisitor : public MapObjectVisitor
-{
+class FriendsVisitor : public MapObjectVisitor {
     public:
         FriendsVisitor();
         virtual void visit(MapObject *object);

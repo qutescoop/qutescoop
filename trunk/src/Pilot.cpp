@@ -10,10 +10,9 @@
 #include "Settings.h"
 
 Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
-    Client(stringList, whazzup),
-    onGround(false),
-    showDepDestLine(false)
-{
+        Client(stringList, whazzup),
+        onGround(false),
+        showDepDestLine(false) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
     altitude = field(stringList, 7).toInt(); // we could do some barometric calculations here (only for VATSIM needed)
@@ -36,12 +35,12 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 
     QString tmpStr = field(stringList, 24);
     if(tmpStr.isNull())
-        planHrsEnroute = -1;
+        planEnroute_hrs = -1;
     else
-        planHrsEnroute = tmpStr.toInt();
-    planMinEnroute = field(stringList, 25).toInt();
-    planHrsFuel = field(stringList, 26).toInt();
-    planMinFuel = field(stringList, 27).toInt();
+        planEnroute_hrs = tmpStr.toInt();
+    planEnroute_mins = field(stringList, 25).toInt();
+    planFuel_hrs = field(stringList, 26).toInt();
+    planFuel_mins = field(stringList, 27).toInt();
     planAltAirport = field(stringList, 28);
     planRemarks = field(stringList, 29);
     planRoute = field(stringList, 30);
@@ -58,8 +57,8 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 
     if(whazzup->isVatsim()) {
         trueHeading = field(stringList, 38).toInt();
-        qnhInHg = field(stringList, 39); // VATSIM only
-        qnhMb = field(stringList, 40); // VATSIM only
+        qnh_inHg = field(stringList, 39); // VATSIM only
+        qnh_mb = field(stringList, 40); // VATSIM only
     }
     // day of flight
     if(!QTime::fromString(planDeptime, "HHmm").isValid()) // no Plan ETA given: maybe some more magic needed here
@@ -79,7 +78,7 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
 
 void Pilot::showDetailsDialog() {
     //qDebug() << "Pilot::showDetailsDialog()";
-    PilotDetails *infoDialog = PilotDetails::instance(true);
+    PilotDetails *infoDialog = PilotDetails::instance();
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -92,26 +91,25 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     Airport *dst = destAirport();
 
     // flying?
-    bool flying = true;
-    if(groundspeed < 50 && altitude < 9000) flying = false;
-    if(onGround) flying = false;
+    const bool flying = groundspeed > 50 || altitude > 9000
+                        || (network == IVAO && !onGround);
 
-    if ( dep == NULL || dst == NULL ) {
-        if(flying) {
-            return EN_ROUTE;}
-        else{
-            return BUSH;}
+    if (dep == 0 || dst == 0) {
+        if(flying)
+            return EN_ROUTE;
+        else
+            return BUSH;
     }
 
-    double totalDist = NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
-    double distDone = NavData::distance(lat, lon, dep->lat, dep->lon);
-    double distRemaining = totalDist - distDone;
+    const double totalDist = NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
+    const double distDone = NavData::distance(lat, lon, dep->lat, dep->lon);
+    const double distRemaining = totalDist - distDone;
 
     // arriving?
-    bool arriving = distRemaining < 50;
+    const bool arriving = distRemaining < 50;
 
     // departing?
-    bool departing = distDone < 50;
+    const bool departing = distDone < 50;
 
 
     // BOARDING: !flying, speed = 0, departing
@@ -123,23 +121,23 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     // BLOCKED: !flying, speed = 0, arriving
     // PREFILED: !flying, lat=0, lon=0
 
-    if(!flying && groundspeed == 0 && departing) {
-        return BOARDING;}
-    if(!flying && groundspeed > 0 && departing) {
-        return GROUND_DEP;}
-    if(flying && arriving) {
-        return ARRIVING;} // put before departing; on small hops tend to show "arriving", not departing
-    if(flying && departing) {
-        return DEPARTING;}
-    if(flying && !departing && !arriving) {
-        return EN_ROUTE;}
-    if(!flying && groundspeed > 0 && arriving) {
-        return GROUND_ARR;}
-    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) { // must be before BLOCKED
-        return PREFILED;}
-    if(!flying && groundspeed == 0 && arriving) {
-        return BLOCKED;}
-    return CRASHED;
+    if(!flying && groundspeed == 0 && departing)
+        return BOARDING;
+    if(!flying && groundspeed > 0 && departing)
+        return GROUND_DEP;
+    if(flying && arriving)
+        return ARRIVING; // put before departing; on small hops tend to show "arriving", not departing
+    if(flying && departing)
+        return DEPARTING;
+    if(flying && !departing && !arriving)
+        return EN_ROUTE;
+    if(!flying && groundspeed > 0 && arriving)
+        return GROUND_ARR;
+    if(!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) // must be before BLOCKED
+        return PREFILED;
+    if(!flying && groundspeed == 0 && arriving)
+        return BLOCKED;
+    return CRASHED; // should never happen
 }
 
 QString Pilot::flightStatusString() const {
@@ -196,18 +194,18 @@ QString Pilot::flightStatusString() const {
 
 QString Pilot::flightStatusShortString() const {
     switch(flightStatus()) {
-        case BOARDING: return QString("Boarding");
-        case GROUND_DEP: return QString("Taxi to runway");
-        case DEPARTING: return QString("Departing");
-        case ARRIVING: return QString("Arriving");
-        case GROUND_ARR: return QString("Taxi to gate");
-        case BLOCKED: return QString("Blocked at gate");
-        case CRASHED: return QString("Crashed");
-        case BUSH: return QString("Bush pilot");
-        case EN_ROUTE: return QString("En Route");
-        case PREFILED: return QString("Prefiled");
+        case BOARDING: return "boarding";
+        case GROUND_DEP: return QString("taxiing out");
+        case DEPARTING: return QString("departing");
+        case ARRIVING: return QString("arriving");
+        case GROUND_ARR: return QString("taxiing in");
+        case BLOCKED: return QString("blocked");
+        case CRASHED: return QString("crashed");
+        case BUSH: return QString("bush pilot");
+        case EN_ROUTE: return QString("en route");
+        case PREFILED: return QString("prefiled");
+        default: return QString("unknown");
     }
-    return QString("Unknown");
 }
 
 QString Pilot::planFlighttypeString() const {
@@ -365,9 +363,9 @@ QTime Pilot::eet() const { // Estimated Enroute Time remaining
 }
 
 QDateTime Pilot::etaPlan() const { // Estimated Time of Arrival as flightplanned
-    if(planHrsEnroute < 0)
+    if(planEnroute_hrs < 0)
         return QDateTime();
-    return etd().addSecs(planHrsEnroute * 3600 + planMinEnroute * 60);
+    return etd().addSecs(planEnroute_hrs * 3600 + planEnroute_mins * 60);
 }
 
 QString Pilot::delayStr() const { // delay
@@ -511,7 +509,7 @@ QList<Waypoint*> Pilot::routeWaypointsWithDepDest() {
 }
 
 void Pilot::checkStatus() {
-    this->drawLabel = flightStatus() == Pilot::DEPARTING
+    drawLabel = flightStatus() == Pilot::DEPARTING
             || flightStatus() == Pilot::EN_ROUTE
             || flightStatus() == Pilot::ARRIVING
             || flightStatus() == Pilot::CRASHED

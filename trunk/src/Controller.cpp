@@ -15,8 +15,7 @@
 
 Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
         Client(stringList, whazzup),
-        sector(0)
-{
+        sector(0) {
     frequency = field(stringList, 4);
     facilityType = field(stringList, 18).toInt();
     if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
@@ -179,7 +178,7 @@ Airport *Controller::airport() const {
 }
 
 void Controller::showDetailsDialog() {
-    ControllerDetails *infoDialog = ControllerDetails::instance(true);
+    ControllerDetails *infoDialog = ControllerDetails::instance();
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();

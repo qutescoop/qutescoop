@@ -4,11 +4,44 @@ help, project status and planned features.
 Find known bugs or report bugs to our bug tracker:
   [http://sourceforge.net/p/qutescoop/tickets]
 
-TODO (this is why this is beta):
-  * any class itself should be responsible for its needed data. Moved the
-    check methods inside the using classes (were mostly in Launcher.cpp).
+Version 2.1.12beta
+ added:
+  * some more settings values (no UI), can't remember all. One was
+    'datasources/sondeUrl' for sonding data (alt:temp/dewpoint/wind) -
+    just in case you want to use other data than provided by FSrealWX -
+    thanks Silvio by the way!)
+  * show air temperature and spread (= temp - dew point) from sonde
+    data
+  * text shadows in some places on the map
+  * for developpers: JobList allows for consecutive execution of
+    several jobs (used in Launcher)
+ fixed:
+  * when closing, remembered map position 1 was overwritten. This was
+    counter-intuitive because one could save map position 1 via the menu
+    or CTRL+1. It is now saved in position 9. There is an option
+    'remember position on close' in preferences. User is directed to
+    preferences when he is about to save on this position.
+  * removed some references to Nokia. Qt is now maintained by Digia.
+  * sanitized sonde station names
+ changed:
+  * removed labels for aircraft on the ground (declutter map)
+  * removed some unnecessary sonde stations
+  * wind arrows not belonging to the currently selected altitude are
+    rendered darker. (configurable via Preferences->Weather, span
+    of shown adjacent altitudes is new, too)
+  * wind arrows have adjustable size (Preferences->Weather)
+  * GUI stays responsive during sonde data decoding
+  * for developpers: any class itself should be responsible for its needed
+    network data. See SondeData.h for an example.
     This allows more flexible use of functionality in other places
-  * needs thorough testing
+  * for developpers: switched all network requests away from QHttp (which
+    is obsolete) to new QNetworkRequest network infrastructure (Exceptions:
+    MetarModel and *_cloudDownloader which will both be reworked soon).
+  * for developpers: more code style refactoring (see 2.1.11beta). Some
+    'const' added for locally used, never changed variables (I believe
+    it is better although the compiler might just do that itself...
+    I don't know... const-correctness is an acknowledged art in
+    C++, though ;) (google it ;) ) )
 
 Version 2.1.11beta
  fixed:
@@ -22,14 +55,14 @@ Version 2.1.11beta
   * graphic filters for .gif/.ico/.jpeg/.mng/.svg/.tga/.tiff images are now
     properly included. This means from now on you will be able to use textures
     and cloud imagery in these formats without having to install the whole
-    Qt library.
+    Qt library. See 'Supported image formats' in the debug log.
     (fixes https://sourceforge.net/p/qutescoop/tickets/11/)
     For developpers: they are in the imageformats/ subdirectory after a 'make
     install'. It should become a subdirectory of the QuteScoop executable
     after deployment.
   * time-selection fields for bookings still had an unpredicted behaviour
     (fixes https://sourceforge.net/p/qutescoop/tickets/5/)
-  * Whazzups and bookings were not saved to disc
+  * Whazzups and bookings were not saved to disk
  added:
   * show great-circle-distance and true course while dragging a selection
     rectangle on the globe
@@ -40,12 +73,16 @@ Version 2.1.11beta
   * bigger wind arrows
   * for developpers: code style refactoring, in line with the (in my opinion)
     good advises for the Qt library itself:
-    * all variables are lower camelCase
+    * all variables and methods are lower camelCase
     * all classes and source-filenames are upper CamelCase
     * all private variables prefixed with _
     * getter()-methods leave out 'get', e.g. status() instead of getStatus()
     * no newline before { : looks more compact
     * class declarations (.h): indent after public:, protected:,...
+    * continuing statements over several lines are indented by 2 tabs
+    * slots are named 'on_objectCamelCase_eventCamelCase()'
+  * for developpers: use Net::g() to download stuff through the new network
+    infrastructure
 
 
 Version 2.1.10

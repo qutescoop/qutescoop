@@ -13,7 +13,7 @@ ControllerDetails *controllerDetails = 0;
 ControllerDetails* ControllerDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(controllerDetails == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             controllerDetails = new ControllerDetails(parent);
         }
     return controllerDetails;
@@ -26,9 +26,8 @@ void ControllerDetails::destroyInstance() {
 }
 
 ControllerDetails::ControllerDetails(QWidget *parent):
-    ClientDetails(parent),
-    _controller(0)
-{
+        ClientDetails(parent),
+        _controller(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
@@ -132,8 +131,7 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
     qDebug() << "ControllerDetails::on_btnJoinChannel_clicked(): " << program << "returned" << ret;
 }
 
-void ControllerDetails::on_pbAirportDetails_clicked()
-{
+void ControllerDetails::on_pbAirportDetails_clicked() {
     if (_controller->airport() != 0)
         _controller->airport()->showDetailsDialog();
 }

@@ -7,87 +7,75 @@
 #include "Settings.h"
 
 
-class OnScreenLabel : public QLabel
-{
+class OnScreenLabel : public QLabel {
         Q_OBJECT
     public:
         OnScreenLabel(QWidget *parent = 0);
         int typ;                            //Typ   0:Default   1:Pilot  2:Controller 3:NavData 4:Weather
-
     signals:
         void entered(int t);
         void left(int t);
-
     protected:
         void enterEvent(QEvent *);
         void leaveEvent(QEvent *);
 };
 
-class OnScreenWidget : public QWidget
-{
+class OnScreenWidget : public QWidget {
         Q_OBJECT
     public:
         OnScreenWidget(QWidget *parent = 0);
         int typ;                            //Typ   0:Default   1:Pilot  2:Controller 3:NavData 4:Weather
-
     signals:
         void entered(int t);
         void left(int t);
-
     protected:
         void enterEvent(QEvent *);
         void leaveEvent(QEvent *);
 };
 
-class MapScreen : public QWidget
-{
+class MapScreen : public QWidget {
         Q_OBJECT
 
     public:
         MapScreen(QWidget *parent = 0);
         GLWidget *glWidget;
-        static MapScreen* instance(bool createIfNotExists);
-
+        static MapScreen* instance(bool createIfNoInstance = true);
     protected:
         void resizeEvent(QResizeEvent *event);
-
     signals:
         void toggleRoutes();
         void toggleSectors(bool);
         void toggleRouteWaypoints();
         void toggleInactiveAirports();
-
     public slots:
-        void LabelEntered(int typ);
-        void LabelLeft(int typ);
+        void on_label_entered(int typ);
+        void on_label_left(int typ);
 
-        void WidgetEntered(int typ);
-        void WidgetLeft(int typ);
+        void on_widget_entered(int typ);
+        void on_widget_left(int typ);
 
         //Pilots
-        void P_toggleRoutesClicked();
-        void P_togglePilotLabelsClicked();
+        void on_pbRoutes_clicked();
+        void on_pbPilotLabels_clicked();
 
         //Controller
-        void C_toggleCTRClicked();
-        void C_toggleAPPClicked();
-        void C_toggleTWRClicked();
-        void C_toggleGNDClicked();
+        void on_pbCtr_clicked();
+        void on_pbApp_clicked();
+        void on_pbTwr_clicked();
+        void on_pbGnd_clicked();
 
         //NavData
-        void N_toggleSectorClicked();
-        void toggleSectorChanged( bool );
-        void N_toggleRouteFixClicked();
-        void N_toggleInactiveClicked();
+        void on_pbSectorsAll_clicked();
+        void on_sectorsAll_changed(bool);
+        void on_pbRouteWaypoints_clicked();
+        void on_pbInactiveAirports_clicked();
 
         //Weather
-        void W_toggleWindClicked();
-        void W_minusClicked();
-        void W_plusClicked();
-        void W_sliderChanged();
-        void W_toggleCloudsClicked();
-
-
+        void on_pbWind_clicked();
+        void on_pbWindAltDec_clicked();
+        void on_pbWindAltInc_clicked();
+        void on_slider_clicked();
+        void on_pbClouds_clicked();
     private:
         void createPilotWidget();
         void createControllerWidget();
