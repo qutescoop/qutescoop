@@ -11,8 +11,7 @@
 #define MAX_METARS 60
 
 MetarModel::MetarModel(QObject *parent):
-    QAbstractListModel(parent)
-{
+        QAbstractListModel(parent) {
     connect(&_downloader, SIGNAL(requestFinished(int, bool)), this, SLOT(downloaded(int, bool)));
 }
 
@@ -113,6 +112,7 @@ void MetarModel::downloadMetarFor(Airport* airport) {
     dq.airport = airport;
     dq.buffer = new QBuffer;
     dq.buffer->open(QBuffer::ReadWrite);
+    qDebug() << "MetarModel::downloadMetarFor()" << url;
     int requestId = _downloader.get(querystr, dq.buffer);
     _downloadQueue[requestId] = dq;
 }
@@ -121,7 +121,7 @@ void MetarModel::modelClicked(const QModelIndex& index) {
     Airport *a = _metarList[index.row()];
     if(a != 0)
         if (Window::instance(false) != 0)
-            Window::instance(true)->updateMetarDecoder(a->label,
+            Window::instance()->updateMetarDecoder(a->label,
                                                           a->metar.encoded + "<hr>" + a->metar.decodedHtml());
 }
 
@@ -152,7 +152,7 @@ void MetarModel::gotMetarFor(Airport* airport) {
     if(_airportList.contains(airport)) {
         if(!_metarList.contains(airport))
             _metarList.append(airport);
-        qDebug() << "got metar for" << airport->label << ":" << airport->metar.encoded;
+        qDebug() << "MetarModel::gotMetarFor()" << airport->label << ":" << airport->metar.encoded;
         reset();
         emit gotMetar(airport->label);
     }

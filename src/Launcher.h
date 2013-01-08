@@ -1,3 +1,7 @@
+/**************************************************************************
+ This file is part of QuteScoop. See README for license
+ **************************************************************************/
+
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 
@@ -10,64 +14,34 @@
 #include "Settings.h"
 #include "GuiMessage.h"
 
-class Launcher : public QWidget
-{
+class Launcher : public QWidget {
         Q_OBJECT
-
     public:
-        static Launcher* instance(bool createIfNoInstance = false);
+        static Launcher* instance(bool createIfNoInstance = true);
         void fireUp();
-
     public slots:
-        void loadWindow();
-
-        // Wind
-        void startWindDownload();
-
+        void checkData();
     protected:
         void mouseMoveEvent(QMouseEvent *);
         void mousePressEvent(QMouseEvent *);
         void keyReleaseEvent(QKeyEvent *event);
-
     signals:
-        void navdataUpdated();
-
+        void dataChecked();
     private slots:
-        // NavdataUpdate update
-        void dataVersionsDownloaded(bool error);
-        void dataFilesRequestFinished(int id, bool error);
-        void dataFilesDownloaded(bool error);
-        void windProgress(int prog, int total);
+        void dataVersionsDownloaded();
+        void dataFileDownloaded();
         void loadNavdata();
-
-        //Wind
-        void startWindDecoding(bool error);
-
     private:
         Launcher(QWidget *parent = 0);
         ~Launcher();
-
-        //Startupimage
-        QPixmap map;
+        QPixmap _map;
         QLabel *_image, *_text;
         QProgressBar *_progress;
         //required to move the widget
         QPoint _dragPosition;
-
-        //For NavDataUpdate
-        void checkForDataUpdates();
-        QHttp *_dataVersionsAndFilesDownloader;
-        QBuffer *_dataVersionsBuffer;
-        QList<QFile*> _dataFilesToDownload;
-
-        // Wind
-        QHttp *_windDataDownloader;
-        QBuffer *_windDataBuffer;
-
-
-        bool _navReady, _windowReady, _windReady;
-        QTimer _finalTimer, _windowTimer;
-
+        QNetworkReply *_replyDataVersionsAndFiles;
+        QList<QString> _dataFilesToDownload;
+        QHash<QString, int> _localDataVersionsList, _serverDataVersionsList;
 };
 
 #endif // LAUNCHER_H

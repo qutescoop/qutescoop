@@ -16,17 +16,15 @@ PlanFlightDialog *planFlightDialogInstance = 0;
 PlanFlightDialog *PlanFlightDialog::instance(bool createIfNoInstance, QWidget *parent) {
     if(planFlightDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             planFlightDialogInstance = new PlanFlightDialog(parent);
         }
     return planFlightDialogInstance;
 }
 
 PlanFlightDialog::PlanFlightDialog(QWidget *parent):
-    QDialog(parent),
-    selectedRoute(0),
-    _vrouteBuffer(0), _vatrouteBuffer(0)
-{
+        QDialog(parent),
+        selectedRoute(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
@@ -109,44 +107,46 @@ void PlanFlightDialog::requestVroute() {
     QUrl url("http://data.vroute.net/internal/query.php");
     url.addQueryItem(QString("auth_code"), authCode);
     if(!edCycle->text().trimmed().isEmpty())
-        url.addQueryItem(QString("cycle"), edCycle->text().trimmed()); // defaults to the last freely available
+            url.addQueryItem(
+                        QString("cycle"),
+                        edCycle->text().trimmed()
+            ); // defaults to the last freely available
     url.addQueryItem(QString("type"), QString("query"));
     url.addQueryItem(QString("level"),QString("0")); // details level, so far only 0 supported
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("arr"), edDest->text().trimmed());
 
-    _vrouteDownloader = new QHttp(url.host(), url.port() != -1? url.port(): 80);
-    connect(_vrouteDownloader, SIGNAL(done(bool)), this, SLOT(vrouteDownloaded(bool)));
-    Settings::applyProxySetting(_vrouteDownloader);
 
-    if(_vrouteBuffer != 0) delete _vrouteBuffer;
-    _vrouteBuffer = new QBuffer;
-    _vrouteBuffer->open(QBuffer::ReadWrite);
+    _replyVroute = Net::g(QNetworkRequest(url));
+    connect(_replyVroute, SIGNAL(finished()), this, SLOT(vrouteDownloaded()));
 
-    _vrouteDownloader->get(url.toEncoded(), _vrouteBuffer);
     lblVrouteStatus->setText(QString("request sent..."));
 }
 
-void PlanFlightDialog::vrouteDownloaded(bool error) {
-    if(_vrouteBuffer == 0) {
-        lblVatrouteStatus->setText(QString("nothing returned"));
+void PlanFlightDialog::vrouteDownloaded() {
+    qDebug() << "PlanFlightDialog::vrouteDownloaded()";
+    disconnect(_replyVroute, SIGNAL(finished()), this, SLOT(vrouteDownloaded()));
+    _replyVroute->deleteLater();
+
+    if(_replyVroute->error() != QNetworkReply::NoError) {
+        lblVrouteStatus->setText(QString("error: %1")
+                              .arg(_replyVroute->errorString()));
         return;
     }
 
-    if(error) {
-        lblVrouteStatus->setText(QString("error: %1")
-                              .arg(_vrouteDownloader->errorString()));
-        return;
-    }
+    if(_replyVroute->bytesAvailable() == 0)
+        lblVrouteStatus->setText(QString("nothing returned"));
+
 
     QList<Route*> newroutes;
     QString msg;
 
     QDomDocument domdoc = QDomDocument();
-    _vrouteBuffer->seek(0);
-    if (!domdoc.setContent(_vrouteBuffer)) return;
+    if (!domdoc.setContent(_replyVroute->readAll()))
+        return;
     QDomElement root = domdoc.documentElement();
-    if (root.nodeName() != "flightplans") return;
+    if (root.nodeName() != "flightplans")
+        return;
     QDomElement e = root.firstChildElement();
     while (!e.isNull()) {
         if (e.nodeName() == "result") {
@@ -162,7 +162,8 @@ void PlanFlightDialog::vrouteDownloaded(bool error) {
                 else if (e.firstChildElement("result_code").text() == "403")
                     msg = (QString("unauthorized / maximum queries reached"));
                 else if (e.firstChildElement("result_code").text() == "404")
-                    msg = (QString("flightplan not found / server error")); // should not be signaled for non-privileged queries (signals a server error)
+                    msg = (QString("flightplan not found / server error")); // should not be..
+                                // ..signaled for non-privileged queries (signals a server error)
                 else if (e.firstChildElement("result_code").text() == "405")
                     msg = (QString("method not allowed"));
                 else if (e.firstChildElement("result_code").text() == "500")
@@ -207,10 +208,6 @@ void PlanFlightDialog::vrouteDownloaded(bool error) {
                          .arg(edDep->text())
                          .arg(edDest->text())
                          .arg(_routes.size()));
-
-    delete _vrouteBuffer;
-    _vrouteBuffer = 0;
-    delete _vrouteDownloader;
 }
 
 void PlanFlightDialog::requestVatroute() {
@@ -222,36 +219,31 @@ void PlanFlightDialog::requestVatroute() {
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("dest"), edDest->text().trimmed());
 
-    _vatrouteDownloader = new QHttp(url.host(), url.port() != -1 ? url.port() : 80);
-    connect(_vatrouteDownloader, SIGNAL(done(bool)), this, SLOT(vatrouteDownloaded(bool)));
-    Settings::applyProxySetting(_vatrouteDownloader);
-
-    if(_vatrouteBuffer == 0) delete _vatrouteBuffer;
-    _vatrouteBuffer = new QBuffer;
-    _vatrouteBuffer->open(QBuffer::ReadWrite);
-
-    _vatrouteDownloader->get(url.toEncoded(), _vatrouteBuffer);
+    _replyVatroute = Net::g(QNetworkRequest(url));
+    connect(_replyVatroute, SIGNAL(finished()), this, SLOT(vatrouteDownloaded()));
     lblVatrouteStatus->setText(QString("request sent..."));
 }
 
-void PlanFlightDialog::vatrouteDownloaded(bool error) {
-    if(_vatrouteBuffer == 0) {
-        lblVatrouteStatus->setText(QString("nothing returned"));
+void PlanFlightDialog::vatrouteDownloaded() {
+    qDebug() << "PlanFlightDialog::vatrouteDownloaded()";
+    disconnect(_replyVatroute, SIGNAL(finished()), this, SLOT(vatrouteDownloaded()));
+    _replyVatroute->deleteLater();
+
+    if(_replyVatroute->error() != QNetworkReply::NoError) {
+        lblVatrouteStatus->setText(QString("error: %1")
+                              .arg(_replyVatroute->errorString()));
         return;
     }
 
-    if(error) {
-        lblVatrouteStatus->setText(QString("error: %1")
-                              .arg(_vatrouteDownloader->errorString()));
-        return;
-    }
+    if(_replyVatroute->bytesAvailable() == 0)
+        lblVatrouteStatus->setText(QString("nothing returned"));
 
     QList<Route*> newRoutes;
 
     QRegExp rxRoutes("(?:<tr[^>]*>.*){23}.*(<tr.*>.*<\\/tr>.*)<\\/table>");
     rxRoutes.setMinimal(true);
 
-    if (rxRoutes.indexIn(_vatrouteBuffer->data()) != -1) {
+    if (rxRoutes.indexIn(_replyVatroute->readAll()) != -1) {
         QRegExp rx("\\s*<tr[^<]*<td[^<]*(?:<.><\\/.>)?FL(\\d{3})-FL(\\d{3})(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<\\/tr>");
         QString rStr = rxRoutes.cap(1);
 
@@ -284,10 +276,6 @@ void PlanFlightDialog::vatrouteDownloaded(bool error) {
                          .arg(edDep->text())
                          .arg(edDest->text())
                          .arg(_routes.size()));
-
-    delete _vatrouteBuffer;
-    _vatrouteBuffer = 0;
-    delete _vatrouteDownloader;
 }
 
 void PlanFlightDialog::on_edDep_textChanged(QString str) {
@@ -347,8 +335,8 @@ void PlanFlightDialog::plotPlannedRoute() const {
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
     if (Window::instance(false) != 0) {
-        Window::instance(true)->mapScreen->glWidget->createPilotsList();
-        Window::instance(true)->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->createPilotsList();
+        Window::instance()->mapScreen->glWidget->updateGL();
     }
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);

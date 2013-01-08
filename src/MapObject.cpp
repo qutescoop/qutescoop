@@ -4,16 +4,16 @@
 
 #include "MapObject.h"
 
-MapObject::MapObject() {
-    drawLabel = true;
+MapObject::MapObject() :
+    QObject(),
+    drawLabel(true) {
 }
 
 MapObject::~MapObject() {
 }
 
 MapObject::MapObject(const MapObject& obj):
-	QObject()
-{
+        QObject() {
 	if(this == &obj)
 		return;
 

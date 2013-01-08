@@ -15,7 +15,7 @@ BookedAtcDialog *bookedAtcDialogInstance = 0;
 BookedAtcDialog *BookedAtcDialog::instance(bool createIfNoInstance, QWidget *parent) {
     if(bookedAtcDialogInstance == 0) {
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             bookedAtcDialogInstance = new BookedAtcDialog(parent);
         }
     }
@@ -30,8 +30,7 @@ void BookedAtcDialog::destroyInstance() {
 
 
 BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
-    QDialog(parent)
-{
+        QDialog(parent) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
@@ -197,8 +196,8 @@ void BookedAtcDialog::modelSelected(const QModelIndex& index) {
 
 void BookedAtcDialog::on_tbPredict_clicked() {
     close();
-    Window::instance(true)->actionPredict->setChecked(true);
-    Window::instance(true)->dateTimePredict->setDateTime(
+    Window::instance()->actionPredict->setChecked(true);
+    Window::instance()->dateTimePredict->setDateTime(
                 dateTimeFilter->dateTime());
 }
 

@@ -8,8 +8,7 @@
 #include <QStringList>
 #include "MapObject.h"
 
-class Waypoint: public MapObject
-{
+class Waypoint: public MapObject {
     public:
         Waypoint() {}
         Waypoint(const QStringList& stringList);

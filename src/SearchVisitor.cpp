@@ -41,8 +41,7 @@ void SearchVisitor::visit(MapObject* object) {
 	_others[object->label] = object;
 }
 
-void SearchVisitor::checkAirlines()
-{ 
+void SearchVisitor::checkAirlines() {
     QHashIterator<QString, QString> i(AirlineCodes);
      while (i.hasNext()) {
          i.next();

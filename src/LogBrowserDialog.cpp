@@ -15,7 +15,7 @@ LogBrowserDialog *logBrowserDialogInstance = 0;
 LogBrowserDialog *LogBrowserDialog::instance(bool createIfNoInstance, QWidget *parent) {
     if(logBrowserDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             logBrowserDialogInstance = new LogBrowserDialog(parent);
         }
     return logBrowserDialogInstance;
@@ -41,7 +41,7 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
     if (logFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         QTextStream in(&logFile);
         while (!in.atEnd())
-            outputMessage(in.readLine());
+            on_message_new(in.readLine());
         logFile.close();
     } else
         qWarning("Unable to read log file");
@@ -63,12 +63,12 @@ LogBrowserDialog::LogBrowserDialog(QWidget *parent) : QDialog(parent) {
     _btnSave = new QPushButton(this);
     _btnSave->setText("Save output");
     buttonLayout->addWidget(_btnSave);
-    connect(_btnSave, SIGNAL(clicked()), this, SLOT(slotSave()));
+    connect(_btnSave, SIGNAL(clicked()), this, SLOT(on_btnSave_clicked()));
 
     _btnCopy = new QPushButton(this);
     _btnCopy->setText("Copy to clipboard");
     buttonLayout->addWidget(_btnCopy);
-    connect(_btnCopy, SIGNAL(clicked()), this, SLOT(slotCopy()));
+    connect(_btnCopy, SIGNAL(clicked()), this, SLOT(on_btnCopy_clicked()));
 }
 
 
@@ -76,7 +76,7 @@ LogBrowserDialog::~LogBrowserDialog() {
 }
 
 
-void LogBrowserDialog::outputMessage(const QString &msg) {
+void LogBrowserDialog::on_message_new(const QString &msg) {
     if (msg.startsWith("0:"))
         _browser->append("<img src=\":/icons/images/info16.png\"/> " + msg);
     else if (msg.startsWith("1:"))
@@ -91,11 +91,11 @@ void LogBrowserDialog::outputMessage(const QString &msg) {
 }
 
 
-void LogBrowserDialog::slotCopy() {
+void LogBrowserDialog::on_btnCopy_clicked() {
     QApplication::clipboard()->setText(_browser->toPlainText());
 }
 
-void LogBrowserDialog::slotSave() {
+void LogBrowserDialog::on_btnSave_clicked() {
     QString saveFileName = QFileDialog::getSaveFileName(this, "Save Log Output",
                 "log.txt", "Text Files (*.txt);;All Files (*)");
     if(saveFileName.isEmpty())

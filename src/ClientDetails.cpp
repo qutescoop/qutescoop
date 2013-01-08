@@ -9,8 +9,7 @@
 #include "Window.h"
 
 ClientDetails::ClientDetails(QWidget *parent):
-        QDialog(parent)
-{
+        QDialog(parent) {
     setModal(false);
 }
 
@@ -29,7 +28,7 @@ void ClientDetails::setMapObject(MapObject *object) {
 
 void ClientDetails::showOnMap() const {
     if ((!qFuzzyIsNull(_lat) || !qFuzzyIsNull(_lon)) && Window::instance(false) != 0)
-        Window::instance(true)->mapScreen->glWidget->setMapPosition(_lat, _lon, 0.1);
+        Window::instance()->mapScreen->glWidget->setMapPosition(_lat, _lon, 0.1);
 }
 
 void ClientDetails::friendClicked() const {
@@ -39,6 +38,6 @@ void ClientDetails::friendClicked() const {
         else // new friend
             Settings::addFriend(userId);
         if (Window::instance(false) != 0)
-            Window::instance(true)->refreshFriends();
+            Window::instance()->refreshFriends();
     }
 }

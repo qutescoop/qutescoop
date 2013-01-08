@@ -12,8 +12,7 @@
 class WhazzupData;
 class Sector;
 
-class BookedController: public Client
-{
+class BookedController: public Client {
     public:
         BookedController(const QStringList& stringList, const WhazzupData* whazzup);
 

@@ -14,8 +14,7 @@
 
 class Pilot;
 
-class Airport: public MapObject
-{
+class Airport: public MapObject {
     public:
         Airport();
         Airport(const QStringList &list);

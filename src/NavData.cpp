@@ -20,6 +20,16 @@ NavData *NavData::instance(bool createIfNoInstance) {
 }
 
 NavData::NavData() {
+}
+
+NavData::~NavData() {
+    foreach(const Airport *a, airports)
+        delete a;
+    foreach(const Sector *s, sectors)
+        delete s;
+}
+
+void NavData::load() {
     loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
@@ -32,12 +42,7 @@ NavData::NavData() {
                     << Settings::applicationDataDirectory("data/airlines.dat");
         loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));
     }
-}
-NavData::~NavData() {
-    foreach(const Airport *a, airports)
-        delete a;
-    foreach(const Sector *s, sectors)
-        delete s;
+    emit loaded();
 }
 
 void NavData::loadAirports(const QString& filename) {

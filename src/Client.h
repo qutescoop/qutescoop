@@ -11,8 +11,7 @@
 #include "WhazzupData.h"
 #include "ClientDetails.h"
 
-class Client: public MapObject
-{
+class Client: public MapObject {
     public:
         enum Network { IVAO, VATSIM, OTHER };
 

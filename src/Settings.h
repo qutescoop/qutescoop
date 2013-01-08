@@ -17,34 +17,28 @@ class Settings {
         static QIODevice::OpenMode testDirectory(QString& dir); // NotOpen / ReadOnly / ReadWrite
         static void calculateApplicationDataDirectory();
         static QString applicationDataDirectory(const QString& composeFilePath = QString());
-        //
+
+        // saved settings
         static void saveState(const QByteArray& state);
         static QByteArray savedState();
-
         static void saveGeometry(const QByteArray& state);
         static QByteArray savedGeometry();
-
         static void saveSize(const QSize& size);
         static QSize savedSize();
-
         static void savePosition(const QPoint& pos);
         static QPoint savedPosition();
 
         static bool shootScreenshots();
         static void setShootScreenshots(bool value);
-
         static int screenshotMethod();
         static void setScreenshotMethod(int value);
-
         static QString screenshotFormat();
         static void setScreenshotFormat(const QString &value);
 
         static int downloadInterval();
         static void setDownloadInterval(int value);
-
         static bool downloadOnStartup();
         static void setDownloadOnStartup(bool value);
-
         static bool downloadPeriodically();
         static void setDownloadPeriodically(bool value);
 
@@ -54,84 +48,61 @@ class Settings {
         static int downloadNetwork();
         static void setDownloadNetwork(int i);
         static QString downloadNetworkName();
-
         static QString userDownloadLocation();
         static void setUserDownloadLocation(const QString& location);
-
         static QString statusLocation();
         static void setStatusLocation(const QString& location);
-
         static QString bookingsLocation();
         static void setBookingsLocation(const QString& value);
-
         static bool downloadBookings();
         static void setDownloadBookings(bool value);
-
         static bool bookingsPeriodically();
         static void setBookingsPeriodically(bool value);
-
         static int bookingsInterval();
         static void setBookingsInterval(int value);
 
         static bool useProxy();
         static void setUseProxy(bool value);
-
         static QString proxyServer();
         static void setProxyServer(const QString& server);
-
         static int proxyPort();
         static void setProxyPort(int value);
-
         static QString proxyUser();
         static void setProxyUser(QString user);
-
         static QString proxyPassword();
         static void setProxyPassword(QString password);
-
         static void applyProxySetting(QHttp *http);
 
-        // Airport traffic settings --------------------------------
         static bool filterTraffic();
         static void setFilterTraffic(bool v);
-
         static int filterDistance();
         static void setFilterDistance(int v);
-
         static double filterArriving();
         static void setFilterArriving(double v);
 
-        // Airport congestion
         static bool showAirportCongestion();
         static void setAirportCongestion(bool v);
-
         static int airportCongestionMinimum();
         static void setAirportCongestionMinimum(int v);
-
         static QColor airportCongestionBorderLineColor();
         static void setAirportCongestionBorderLineColor(const QColor& color);
-
         static double airportCongestionBorderLineStrength();
         static void setAirportCongestionBorderLineStrength(double value);
-        // -----
 
         static int timelineSeconds();
         static void setTimelineSeconds(int value);
 
         static bool displaySmoothLines();
         static void setDisplaySmoothLines(bool value);
-
         static bool displaySmoothDots();
         static void setDisplaySmoothDots(bool value);
 
         static QString navdataDirectory();
         static void setNavdataDirectory(const QString& directory);
-
         static bool useNavdata();
         static void setUseNavdata(bool value);
-
         static bool useESAirlines();
         static void setUseESAirlnies(bool value);
-
         static QString ESAirlinesDirectory();
         static void setESAirlinesDirectory(QString directory);
 
@@ -141,57 +112,38 @@ class Settings {
         static int metarDownloadInterval();
         static void setMetarDownloadInterval(int minutes);
 
-        //Display settings
         static bool showCTR();
         static void setShowCTR(bool value);
-
         static bool showAPP();
         static void setShowAPP(bool value);
-
         static bool showTWR();
         static void setShowTWR(bool value);
-
         static bool showGND();
         static void setShowGND(bool value);
-
         static bool showAllSectors();
         static void setShowAllSectors(bool value);
-
-        static bool showWind();
-        static void setShowWind(bool value);
-
-        static int windAlt();
-        static void setWindAlt(int value);
-
+        static bool showSonde();
+        static void setShowSonde(bool value);
+        static int sondeAlt_1k();
+        static void setSondeAlt_1k(int value);
         static QColor windColor();
         static void setWindColor(const QColor& value);
-
-        static int windSize();
-        static void setWindSize(int value);
-
+        static int windArrowSize();
+        static void setWindArrowSize(int value);
         static bool showRouteFix();
         static void setShowRouteFix(bool value);
-
         static bool showPilotsLabels();
         static void setShowPilotsLabels(bool value);
-
         static bool showClouds();
         static void setShowClouds(bool value);
-
         static bool highlightFriends();
         static void setHighlightFriends(bool value);
-
-
-        // OpenGL settings
         static bool glStippleLines();
         static void setGlStippleLines(bool value);
-
         static bool glBlending();
         static void setGlBlending(bool value);
-
         static bool glLighting();
         static void setEnableLighting(bool value);
-
         static int glLights();
         static void setGlLights(int value);
 
@@ -216,11 +168,9 @@ class Settings {
         static double earthShininess();
         static void setEarthShininess(double strength);
 
-        // Stylesheet
         static QString stylesheet();
         static void setStylesheet(const QString& value);
 
-        // Earth and Space settings ----------------------------
         static int earthGridEach();
         static void setEarthGridEach(int value);
 
@@ -248,7 +198,6 @@ class Settings {
         static double countryLineStrength();
         static void setCountryLineStrength(double strength);
 
-        // FIR settings ----------------------------------
         static QColor firBorderLineColor();
         static void setFirBorderLineColor(const QColor& color);
 
@@ -264,7 +213,6 @@ class Settings {
         static QFont firFont();
         static void setFirFont(const QFont& font);
 
-        // Airport Settings ----------------------------------
         static QColor airportFontColor();
         static void setAirportFontColor(const QColor& color);
 
@@ -319,7 +267,6 @@ class Settings {
         static QColor gndFillColor();
         static void setGndFillColor(const QColor& color);
 
-        // Aircraft Settings -----------------------------------
         static QColor pilotFontColor();
         static void setPilotFontColor(const QColor& color);
 
@@ -380,7 +327,6 @@ class Settings {
         static bool useHighlightAnimation();
         static void setUseHighlightAnimation(bool value);
 
-        // -- General
         static bool checkForUpdates();
         static void setCheckForUpdates(bool value);
 
@@ -392,6 +338,8 @@ class Settings {
 
         static void rememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom, int nr);
         static void setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom, int nr);
+        static bool rememberMapPositionOnClose();
+        static void setRememberMapPositionOnClose(bool val);
 
         static int maxLabels();
         static void setMaxLabels(int maxLabels);
@@ -428,7 +376,6 @@ class Settings {
         static bool useHightResClouds();
         static void setUseHightResClouds(const bool value);
 
-        // zooming
         static int wheelMax();
         static void setWheelMax(const int value);
 
@@ -438,7 +385,6 @@ class Settings {
         static bool useSelectionRectangle();
         static void setUseSelctionRectangle(const bool value);
 
-        // -- windowmanagment
         static QSize preferencesDialogSize();
         static void setPreferencesDialogSize(const QSize& value);
 
@@ -511,7 +457,16 @@ class Settings {
         static bool maximized();
         static void saveMaximized(const bool val);
 
-    private:
+        static QString remoteDataRepository();
+        static void setRemoteDataRepository(QString value);
+
+        static void setSondeAltSecondarySpan_1k(int value);
+        static int sondeAltSecondarySpan_1k();
+        static QString sondeUrl();
+        static void setSondeUrl(QString val);
+        static void setSondeFont(const QFont &font);
+        static QFont sondeFont();
+private:
         static QSettings *instance();
 };
 

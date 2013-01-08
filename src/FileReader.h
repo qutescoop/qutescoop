@@ -6,15 +6,13 @@
 
 #include "_pch.h"
 
-class FileReader
-{
+class FileReader {
     public:
         FileReader(const QString& filename);
         virtual ~FileReader();
 
         bool atEnd() const;
         QString nextLine() const;
-
     private:
         QFile *_file;
         QTextStream *_stream;

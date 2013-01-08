@@ -28,18 +28,18 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         _pilotsList(0), _activeAirportsList(0), _inactiveAirportsList(0), _fixesList(0),
         _usedWaypointsList(0), _sectorPolygonsList(0), _sectorPolygonBorderLinesList(0),
         _appBorderLinesList(0),
-        _congestionsList(0),_windList(0),
+        _congestionsList(0),
+        _sondeLabelZoomTreshold(3.),
         _pilotLabelZoomTreshold(.9),
         _activeAirportLabelZoomTreshold(1.2), _inactiveAirportLabelZoomTreshold(.15),
         _controllerLabelZoomTreshold(2.), _allWaypointsLabelZoomTreshold(.1),
         _usedWaypointsLabelZoomThreshold(1.2),
         _xRot(0), _yRot(0), _zRot(0), _zoom(2), _aspectRatio(1),
-        _highlighter(0)
-{
+        _highlighter(0) {
     setAutoFillBackground(false);
     setMouseTracking(true);
-    // call default (=1) map position
-    Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, 1);
+    // call default (=9) map position
+    Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, 9);
     _xRot = modPositive(_xRot, 360.);
     _yRot = modPositive(_yRot, 360.);
     _zRot = modPositive(_zRot, 360.);
@@ -57,7 +57,7 @@ GLWidget::~GLWidget() {
     glDeleteLists(_usedWaypointsList, 1); glDeleteLists(_pilotsList, 1);
     glDeleteLists(_activeAirportsList, 1); glDeleteLists(_inactiveAirportsList, 1);
     glDeleteLists(_congestionsList, 1);
-    glDeleteLists(_appBorderLinesList, 1); glDeleteLists(_windList, 1);
+    glDeleteLists(_appBorderLinesList, 1);
     glDeleteLists(_sectorPolygonsList, 1); glDeleteLists(_sectorPolygonBorderLinesList, 1);
 
     if (_earthTex != 0)
@@ -188,11 +188,12 @@ bool GLWidget::isPointVisible(double lat, double lon, int *px, int *py) const {
 }
 
 void GLWidget::rememberPosition(int nr) {
-    GuiMessages::message(QString("Remembered position %1").arg(nr));
+    GuiMessages::message(QString("Remembered map position %1").arg(nr));
     Settings::setRememberedMapPosition(_xRot, _yRot, _zRot, _zoom, nr);
 }
 
 void GLWidget::restorePosition(int nr) {
+    GuiMessages::message(QString("Recalled map position %1").arg(nr));
     Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, nr);
     _xRot = modPositive(_xRot, 360.);
     _zRot = modPositive(_zRot, 360.);
@@ -296,7 +297,7 @@ void GLWidget::createPilotsList() {
 
     // planned route from Flightplan Dialog (does not really belong to pilots lists, but is convenient here)
     if(PlanFlightDialog::instance(false) != 0)
-        PlanFlightDialog::instance(true)->plotPlannedRoute();
+        PlanFlightDialog::instance()->plotPlannedRoute();
 
     glEndList();
 
@@ -968,12 +969,16 @@ void GLWidget::paintGL() {
         }
     }
 
-    //render Wind
-    if(Settings::showWind()) {
-        //Display alt +/- 1000ft
-        glCallList(WindData::instance()->windArrows((Settings::windAlt()-1)));
-        glCallList(WindData::instance()->windArrows(Settings::windAlt()));
-        glCallList(WindData::instance()->windArrows((Settings::windAlt()+1)));
+    // render Wind
+    if(Settings::showSonde()) {
+        // show wind arrows of altitudes near the selected one
+        for(quint8 span = 1; span <= Settings::sondeAltSecondarySpan_1k(); span++) {
+            glCallList(SondeData::instance()->
+                       windArrows(Settings::sondeAlt_1k() - span, true));
+            glCallList(SondeData::instance()->
+                       windArrows(Settings::sondeAlt_1k() + span, true));
+        }
+        glCallList(SondeData::instance()->windArrows(Settings::sondeAlt_1k()));
     }
 
     // render labels
@@ -1138,9 +1143,9 @@ void GLWidget::rightClick(const QPoint& pos) {
                              "routeToggleAirport");
         airport->showFlightLines = !airport->showFlightLines;
         if (AirportDetails::instance(false) != 0)
-            AirportDetails::instance(true)->refresh();
+            AirportDetails::instance()->refresh();
         if (PilotDetails::instance(false) != 0) // can have an effect on the state of
-            PilotDetails::instance(true)->refresh(); // ...PilotDetails::cbPlotRoutes
+            PilotDetails::instance()->refresh(); // ...PilotDetails::cbPlotRoutes
         createPilotsList();
         updateGL();
         return;
@@ -1152,7 +1157,7 @@ void GLWidget::rightClick(const QPoint& pos) {
                              "routeTogglePilot");
         pilot->showDepDestLine = !pilot->showDepDestLine;
         if (PilotDetails::instance(false) != 0)
-            PilotDetails::instance(true)->refresh();
+            PilotDetails::instance()->refresh();
         createPilotsList();
         updateGL();
         return;
@@ -1231,7 +1236,8 @@ void GLWidget::renderLabels() {
 
     // FIR labels
     QList<MapObject*> objects;
-    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) // draw all CTR+FSS labels, also if sector unknown
+    // draw all CTR+FSS labels, also if sector unknown
+    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers)
         if (!c->getCenter().isNull())
             objects.append(c);
     renderLabels(objects, Settings::firFont(), _controllerLabelZoomTreshold,
@@ -1245,22 +1251,24 @@ void GLWidget::renderLabels() {
 
     // planned route waypoint labels from Flightplan Dialog
     if(PlanFlightDialog::instance(false) != 0) {
-        if(PlanFlightDialog::instance(true)->cbPlot->isChecked() &&
-                PlanFlightDialog::instance(true)->selectedRoute != 0) {
+        if(PlanFlightDialog::instance()->cbPlot->isChecked() &&
+                PlanFlightDialog::instance()->selectedRoute != 0) {
             objects.clear();
-            for (int i=1; i < PlanFlightDialog::instance(true)->
+            for (int i=1; i < PlanFlightDialog::instance()->
                        selectedRoute->waypoints.size() - 1; i++)
-                objects.append(PlanFlightDialog::instance(true)->
+                objects.append(PlanFlightDialog::instance()->
                                selectedRoute->waypoints[i]);
-            renderLabels(objects, Settings::waypointsFont(), _usedWaypointsLabelZoomThreshold,
+            renderLabels(objects, Settings::waypointsFont(),
+                         _usedWaypointsLabelZoomThreshold,
                          Settings::waypointsFontColor());
         }
     }
 
     // airport labels
     objects.clear();
-    QList<Airport*> airportList = NavData::instance()->activeAirports.values(); //ordered by congestion ascending,
-                                                                        //big airport's labels will always be drawn first
+    // ordered by congestion ascending,
+    // big airport's labels will always be drawn first
+    QList<Airport*> airportList = NavData::instance()->activeAirports.values();
     for(int i = airportList.size() - 1; i > -1; i--) { // from up to down
         //if(airportList[i] == 0) continue; // if we look carefully, we should be able to get rid of this
         if(airportList[i]->active)
@@ -1270,18 +1278,31 @@ void GLWidget::renderLabels() {
                  Settings::airportFontColor());
 
     // pilot labels
-    objects.clear();
     QList<Pilot*> pilots = Whazzup::instance()->whazzupData().pilots.values();
-    for(int i = 0; i < pilots.size(); i++)
-        objects.append(pilots[i]);
     if(Settings::showPilotsLabels()) {
+        objects.clear();
+        for(int i = 0; i < pilots.size(); i++)
+            if (pilots[i]->flightStatus() == Pilot::DEPARTING || Pilot::EN_ROUTE
+                    || Pilot::ARRIVING)
+                objects.append(pilots[i]);
         renderLabels(objects, Settings::pilotFont(), _pilotLabelZoomTreshold,
                  Settings::pilotFontColor());
     }
 
+    // temperatures and spreads
+    if (Settings::showSonde()) {
+        objects.clear();
+        foreach(Station *s, SondeData::instance()->stationList)
+                if (!s->mapLabel().isEmpty())
+                        objects.append(s);
+        renderLabels(objects, Settings::sondeFont(), _sondeLabelZoomTreshold,
+                     Settings::windColor().lighter(), Settings::windColor().darker(300));
+    }
+
     // waypoints used in shown routes
-    QSet<MapObject*> waypointObjects; // using a QSet 'cause it takes care of unique values
     if (Settings::showUsedWaypoints()) {
+        // using a QSet 'cause it takes care of unique values
+        QSet<MapObject*> waypointObjects;
         foreach(Pilot *p, pilots) {
             if (p->showDepLine() || p->showDestLine()) {
                 QList<Waypoint*> waypoints = p->routeWaypoints();
@@ -1322,22 +1343,28 @@ void GLWidget::renderLabels() {
 */
 }
 
-void GLWidget::renderLabels(const QList<MapObject*>& objects, const QFont& font,
-                            double zoomTreshold, QColor color) {
+void GLWidget::renderLabels(const QList<MapObject *> &objects, const QFont& font,
+                            const double zoomTreshold, QColor color, QColor bgColor) {
     if (Settings::simpleLabels()) // cheap function
-        renderLabelsSimple(objects, font, zoomTreshold, color);
+        renderLabelsSimple(objects, font, zoomTreshold, color, bgColor);
     else // expensive function
-        renderLabelsComplex(objects, font, zoomTreshold, color);
+        renderLabelsComplex(objects, font, zoomTreshold, color, bgColor);
 }
 
 /**
- this one checks if labels overlap etc. - the transformation lat/lon -> x,y is very expensive
+ this one checks if labels overlap etc. - the transformation lat/lon -> x/y is very expensive
 */
-void GLWidget::renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font,
-                            double zoomTreshold, QColor color) {
+void GLWidget::renderLabelsComplex(const QList<MapObject *> &objects, const QFont& font,
+                            const double zoomTreshold, QColor color, QColor bgColor) {
     if(_zoom > zoomTreshold || color.alpha() == 0)
         return; // don't draw if too far away or color-alpha == 0
+
+    // fade out
     color.setAlphaF(qMax(0., qMin(1., (zoomTreshold - _zoom) / zoomTreshold * 1.5))); // fade out
+
+    // fade out: shadow
+    if (bgColor.isValid())
+        bgColor.setAlphaF(qMax(0., qMin(1., (zoomTreshold - _zoom) / zoomTreshold * 1.5))); // fade out
 
     QFontMetricsF fontMetrics(font, this);
     foreach(MapObject *o, objects) {
@@ -1364,13 +1391,21 @@ void GLWidget::renderLabelsComplex(const QList<MapObject*>& objects, const QFont
             rects << rect.translated(-rect.width() / 1.5, -rect.height() / 1.5);
 
             FontRectangle *drawnFontRect = 0;
+            qglColor(color);
             foreach(const QRectF &r, rects) {
                 if(shouldDrawLabel(r)) {
                     drawnFontRect = new FontRectangle(r, o);
-                    qglColor(color);
+                    // shadow: changing colors is expensive, could be made better
+                    if (bgColor.isValid()) {
+                        qglColor(bgColor);
+                        renderText(r.left() + 1, (r.top() + r.height()) + 1, text, font);
+                        qglColor(color);
+                    }
 
                     // yes, this is slow and it is known: ..
                     // https://bugreports.qt-project.org/browse/QTBUG-844
+                    // this is why we have the 'simple labels' option =>
+                    // renderLabelsSimple()
                     renderText(r.left(), (r.top() + r.height()), text, font);
                     _fontRectangles.insert(drawnFontRect);
                     _allFontRectangles.insert(drawnFontRect);
@@ -1387,12 +1422,19 @@ void GLWidget::renderLabelsComplex(const QList<MapObject*>& objects, const QFont
   this one uses 3D-coordinates to paint and does not check overlap
   which results in tremendously improved framerates
 */
-void GLWidget::renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font,
-                            double zoomTreshold, QColor color) {
+void GLWidget::renderLabelsSimple(const QList<MapObject *> &objects, const QFont& font,
+                            const double zoomTreshold, QColor color, QColor bgColor) {
     if (_zoom > zoomTreshold || color.alpha() == 0)
         return; // don't draw if too far away or color-alpha == 0
+
+    // fade out
     color.setAlphaF(qMax(0., qMin(1., (zoomTreshold - _zoom) / zoomTreshold * 1.5))); // fade out
 
+    // fade out: shadow
+    if (bgColor.isValid())
+        bgColor.setAlphaF(qMax(0., qMin(1., (zoomTreshold - _zoom) / zoomTreshold * 1.5))); // fade out
+
+    qglColor(color);
     foreach(MapObject *o, objects) {
         if (_fontRectangles.size() >= Settings::maxLabels())
             break;
@@ -1401,7 +1443,16 @@ void GLWidget::renderLabelsSimple(const QList<MapObject*>& objects, const QFont&
         _fontRectangles.insert(new FontRectangle(QRectF(), 0)); // we use..
                         // this bogus value to stay compatible..
                         // with maxLabels-checking
-        qglColor(color);
+        // shadow: changing colors is expensive, could be made better
+        if (bgColor.isValid()) {
+            qglColor(bgColor);
+            renderText(SXhigh(o->lat - .08 * _zoom, o->lon + .08 * _zoom),
+                       SYhigh(o->lat - .08 * _zoom, o->lon + .08 * _zoom),
+                       SZhigh(o->lat - .08 * _zoom, o->lon + .08 * _zoom),
+                       o->mapLabel(), font);
+            qglColor(color);
+        }
+        // fast text rendering in the 3D space
         renderText(SXhigh(o->lat, o->lon), SYhigh(o->lat, o->lon), SZhigh(o->lat, o->lon),
                    o->mapLabel(), font);
     }
@@ -1621,11 +1672,6 @@ void GLWidget::showInactiveAirports(bool value) {
     newWhazzupData(true);
 }
 
-void GLWidget::savePosition()
-{
-    Settings::setRememberedMapPosition(_xRot, _yRot, _zRot, _zoom, 1);
-}
-
 void GLWidget::createFriendHighlighter() {
     _highlighter = new QTimer(this);
     _highlighter->setInterval(100);
@@ -1651,7 +1697,10 @@ void GLWidget::useClouds() {
 }
 
 void GLWidget::parseEarthClouds() {
-    qDebug() << "GLWidget::parseEarthClouds -- start parsing";
+    qDebug() << "GLWidget::parseEarthClouds()";
+    // how hourglass during CPU-intensive operation
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+    GuiMessages::progress("textures", "Preparing textures...");
 
     QImage earthTexIm, cloudsIm;
 
@@ -1660,57 +1709,65 @@ void GLWidget::parseEarthClouds() {
             Settings::applicationDataDirectory("textures/clouds/clouds.jpg");
     QFileInfo cloudsTexFI(cloudsTexFile);
     if(Settings::showClouds() && cloudsTexFI.exists()) {
-        qDebug() << "GLWidget::parseEarthClouds -- loading cloud texture";
+        qDebug() << "GLWidget::parseEarthClouds() loading cloud texture";
+        GuiMessages::progress("textures", "Preparing textures: loading clouds...");
         cloudsIm = QImage(cloudsTexFile);
     }
 
     if(Settings::glTextures()) {
         QString earthTexFile = Settings::applicationDataDirectory(
                     QString("textures/%1").arg(Settings::glTextureEarth()));
-        qDebug() << "GLWidget::parseEarthClouds -- loading earth texture";
+        qDebug() << "GLWidget::parseEarthClouds() loading earth texture";
+        GuiMessages::progress("textures", "Preparing textures: loading earth...");
         earthTexIm.load(earthTexFile);
     } else {
-        qDebug() << "GLWidget::parseEarthClouds -- finishing using clouds";
+        qDebug() << "GLWidget::parseEarthClouds() finishing using clouds";
         _completedEarthIm = cloudsIm;
     }
 
     if((!Settings::showClouds() || cloudsIm.isNull()) && Settings::glTextures()) {
-        qDebug() << "GLWidget::parseEarthClouds -- finishing using earthTex"
+        qDebug() << "GLWidget::parseEarthClouds() finishing using earthTex"
                  << "(clouds deactivated or cloudsIm.isNull())";
         _completedEarthIm = earthTexIm;
     }
 
     if(!cloudsIm.isNull() && !earthTexIm.isNull() && Settings::showClouds()) {
-        qDebug() << "GLWidget::parseEarthClouds -- getting cloud image dimensions";
         //transform so same size, take the bigger image
-        int width = cloudsIm.width();
-        int height = cloudsIm.height();
+//        int width = cloudsIm.width();
+//        int height = cloudsIm.height();
 
-        if(earthTexIm.width() > width) {
-            qDebug() << "GLWidget::parseEarthClouds -- upscaling cloud image horizontally";
-            cloudsIm = cloudsIm.scaledToWidth(earthTexIm.width(), Qt::SmoothTransformation);
-            width = earthTexIm.width();
-        } else {
-            qDebug() << "GLWidget::parseEarthClouds -- downscaling cloud image horizontally";
-            earthTexIm = earthTexIm.scaledToWidth(width, Qt::SmoothTransformation);
-        }
+        // this always scales clouds to earth texture size
+        GuiMessages::progress("textures", "Preparing textures: scaling clouds...");
+        qDebug() << "GLWidget::parseEarthClouds() scaling cloud image from"
+                 << cloudsIm.size() << "to" << earthTexIm.size();
+        cloudsIm = cloudsIm.scaled(earthTexIm.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+//        if(earthTexIm.width() > width) {
+//            qDebug() << "GLWidget::parseEarthClouds upscaling cloud image horizontally";
+//            cloudsIm = cloudsIm.scaledToWidth(earthTexIm.width(), Qt::SmoothTransformation);
+//            width = earthTexIm.width();
+//        } else {
+//            qDebug() << "GLWidget::parseEarthClouds downscaling cloud image horizontally";
+//            earthTexIm = earthTexIm.scaledToWidth(width, Qt::SmoothTransformation);
+//        }
 
-        if(earthTexIm.height() > height) {
-            qDebug() << "GLWidget::parseEarthClouds -- upscaling cloud image vertically";
-            cloudsIm = cloudsIm.scaledToHeight(earthTexIm.height(),
-                                               Qt::SmoothTransformation);
-            height = earthTexIm.height();
-        } else {
-            qDebug() << "GLWidget::parseEarthClouds -- downscaling cloud image vertically";
-            earthTexIm = earthTexIm.scaledToHeight(height, Qt::SmoothTransformation);
-        }
+//        if(earthTexIm.height() > height) {
+//            qDebug() << "GLWidget::parseEarthClouds upscaling cloud image vertically";
+//            cloudsIm = cloudsIm.scaledToHeight(earthTexIm.height(),
+//                                               Qt::SmoothTransformation);
+//            height = earthTexIm.height();
+//        } else {
+//            qDebug() << "GLWidget::parseEarthClouds downscaling cloud image vertically";
+//            earthTexIm = earthTexIm.scaledToHeight(height, Qt::SmoothTransformation);
+//        }
 
         _completedEarthIm = earthTexIm;
-        qDebug() << "GLWidget::parseEarthClouds -- converting image to ARGB32";
+        GuiMessages::progress("textures", "Preparing textures: converting texture...");
+        qDebug() << "GLWidget::parseEarthClouds() converting image to ARGB32";
         _completedEarthIm =
                 _completedEarthIm.convertToFormat(QImage::Format_ARGB32);
 
-        qDebug() << "GLWidget::parseEarthClouds -- combining earth+clouds";
+        qDebug() << "GLWidget::parseEarthClouds() combining earth+clouds";
+        GuiMessages::progress("textures", "Preparing textures: combining textures...");
         QPainter painter(&_completedEarthIm);
         painter.setCompositionMode(QPainter::CompositionMode_Screen);
                 // more modes available:
@@ -1739,6 +1796,7 @@ void GLWidget::parseEarthClouds() {
         qDebug() << "Binding parsed texture as" << _completedEarthIm.width()
                  << "x" << _completedEarthIm.height() << "px texture";
         qDebug() << "Generating texture coordinates";
+        GuiMessages::progress("textures", "Preparing textures: preparing texture coordinates...");
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
@@ -1750,7 +1808,10 @@ void GLWidget::parseEarthClouds() {
                            .arg((int) glError, 4, 16, QChar('0'));
         gluQuadricTexture(_earthQuad, GL_TRUE); // prepare texture coordinates
     }
+    qDebug() << "GLWidget::parseEarthClouds() finished";
     update();
+    qApp->restoreOverrideCursor();
+    GuiMessages::remove("textures");
 }
 
 void GLWidget::createLights() {

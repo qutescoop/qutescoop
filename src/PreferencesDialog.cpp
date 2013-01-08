@@ -3,8 +3,8 @@
  **************************************************************************/
 
 #include "PreferencesDialog.h"
-
 #include "Settings.h"
+#include "SondeData.h"
 #include "Window.h"
 
 PreferencesDialog *preferencesDialogInstance = 0;
@@ -12,7 +12,7 @@ PreferencesDialog *PreferencesDialog::instance(bool createIfNoInstance,
                                                   QWidget *parent) {
     if(preferencesDialogInstance == 0)
         if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance(true);
+            if (parent == 0) parent = Window::instance();
             preferencesDialogInstance = new PreferencesDialog(parent);
         }
     return preferencesDialogInstance;
@@ -24,9 +24,8 @@ void PreferencesDialog::destroyInstance() {
 }
 
 PreferencesDialog::PreferencesDialog(QWidget *parent):
-    QDialog(parent),
-    _settingsLoaded(false)
-{
+        QDialog(parent),
+        _settingsLoaded(false) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
@@ -86,8 +85,8 @@ void PreferencesDialog::loadSettings() {
     editESAirlines->setText(Settings::ESAirlinesDirectory());
     editESAirlines->setEnabled(Settings::useESAirlines());
 
-
     // Display
+    cbRememberMapPositionOnClose->setChecked(Settings::rememberMapPositionOnClose());
     cbReadSupFile->setChecked(Settings::useSupFile());
     spinBoxTimeline->setValue(Settings::timelineSeconds());
 
@@ -177,6 +176,8 @@ void PreferencesDialog::loadSettings() {
     color = Settings::windColor();
     pbUpperWindColor->setText(color.name());
     pbUpperWindColor->setPalette(QPalette(color));
+    sbWindSize->setValue(Settings::windArrowSize());
+    sbWindSecondarySpan->setValue(Settings::sondeAltSecondarySpan_1k());
 
     // airport traffic settings
     cbFilterTraffic->setChecked(Settings::filterTraffic());
@@ -1213,8 +1214,8 @@ void PreferencesDialog::on_glLightsSpread_valueChanged(int value) {
 
 void PreferencesDialog::on_pbReinitOpenGl_clicked() {
     if (Window::instance(false) != 0) {
-        Window::instance(true)->mapScreen->glWidget->initializeGL();
-        Window::instance(true)->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->initializeGL();
+        Window::instance()->mapScreen->glWidget->updateGL();
     }
 }
 
@@ -1226,18 +1227,18 @@ void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value) {
 
 void PreferencesDialog::on_applyAirports_clicked() {
     if (Window::instance(false) != 0) {
-        Window::instance(true)->mapScreen->glWidget->createAirportsList();
-        Window::instance(true)->mapScreen->glWidget->createControllersLists();
-        Window::instance(true)->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->createAirportsList();
+        Window::instance()->mapScreen->glWidget->createControllersLists();
+        Window::instance()->mapScreen->glWidget->updateGL();
     }
 
 }
 
 void PreferencesDialog::on_applyPilots_clicked() {
     if (Window::instance(false) != 0) {
-        Window::instance(true)->mapScreen->glWidget->createPilotsList();
-        Window::instance(true)->mapScreen->glWidget->createControllersLists();
-        Window::instance(true)->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->createPilotsList();
+        Window::instance()->mapScreen->glWidget->createControllersLists();
+        Window::instance()->mapScreen->glWidget->updateGL();
     }
 }
 
@@ -1285,22 +1286,26 @@ void PreferencesDialog::on_pbUpperWindColor_clicked() {
         pbUpperWindColor->setText(color.name());
         pbUpperWindColor->setPalette(QPalette(color));
         Settings::setWindColor(color);
+        if (SondeData::instance(false) != 0) {
+            SondeData::instance()->invalidateWindLists();
+            if (Window::instance(false) != 0)
+                Window::instance()->mapScreen->glWidget->update();
+        }
     }
-    WindData::instance()->refreshLists();
 }
 
 void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state) {
     if (!_settingsLoaded)
         return;
     Settings::setDownloadClouds(state == Qt::Checked);
-    Window::instance(true)->startCloudDownload();
+    Window::instance()->startCloudDownload();
 }
 
 void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state) {
     if (!_settingsLoaded)
         return;
     Settings::setUseHightResClouds(state == Qt::Checked);
-    Window::instance(true)->startCloudDownload();
+    Window::instance()->startCloudDownload();
 }
 
 void PreferencesDialog::closeEvent(QCloseEvent *event) {
@@ -1357,4 +1362,29 @@ void PreferencesDialog::on_cbSimpleLabels_toggled(bool checked) {
     if (!_settingsLoaded)
         return;
     Settings::setSimpleLabels(checked);
+}
+
+void PreferencesDialog::on_cbRememberMapPositionOnClose_toggled(bool checked) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setRememberMapPositionOnClose(checked);
+}
+
+void PreferencesDialog::on_sbWindSize_valueChanged(int factor) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setWindArrowSize(factor);
+    if (SondeData::instance(false) != 0) {
+        SondeData::instance()->invalidateWindLists();
+        if (Window::instance(false) != 0)
+            Window::instance()->mapScreen->glWidget->update();
+    }
+}
+
+void PreferencesDialog::on_sbWindSecondarySpan_valueChanged(int value) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setSondeAltSecondarySpan_1k(value);
+    if (Window::instance(false) != 0)
+        Window::instance()->mapScreen->glWidget->update();
 }

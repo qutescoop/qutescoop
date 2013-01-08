@@ -7,8 +7,7 @@
 
 #include "SearchVisitor.h"
 
-class MetarSearchVisitor : public SearchVisitor
-{
+class MetarSearchVisitor : public SearchVisitor {
     public:
         MetarSearchVisitor(const QString& search): SearchVisitor(search) {}
         virtual void visit(MapObject *object);

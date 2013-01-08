@@ -1042,6 +1042,46 @@ p, li { white-space: pre-wrap; }
              </widget>
             </item>
             <item>
+             <widget class="QLabel" name="label_43">
+              <property name="text">
+               <string>size factor</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sbWindSize">
+              <property name="prefix">
+               <string>× </string>
+              </property>
+              <property name="minimum">
+               <number>5</number>
+              </property>
+              <property name="maximum">
+               <number>99999</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_48">
+              <property name="text">
+               <string>show adjacent altitudes</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sbWindSecondarySpan">
+              <property name="specialValueText">
+               <string>n/a</string>
+              </property>
+              <property name="suffix">
+               <string>000ft</string>
+              </property>
+              <property name="prefix">
+               <string>+/- </string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <spacer name="horizontalSpacer_21">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -1079,6 +1119,13 @@ p, li { white-space: pre-wrap; }
        <string>Display (general)</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_12">
+       <item>
+        <widget class="QCheckBox" name="cbRememberMapPositionOnClose">
+         <property name="text">
+          <string>&amp;remember startup map position on close</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QGroupBox" name="groupOpenGL">
          <property name="title">
@@ -3185,7 +3232,7 @@ airports with at least</string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'UnDotum'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;More &lt;/span&gt;&lt;a href=&quot;http://doc.qt.nokia.com/latest/stylesheet.html&quot;&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline; color:#0000ff;&quot;&gt;information on Qt stylesheets&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;. Let us know if you have a cool one for QuteScoop ;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;More &lt;/span&gt;&lt;a href=&quot;http://doc.qt.digia.com/qt/stylesheet.html&quot;&gt;&lt;span style=&quot; font-style:italic; text-decoration: underline; color:#0000ff;&quot;&gt;information on Qt stylesheets&lt;/span&gt;&lt;/a&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-style:italic;&quot;&gt;. Let us know if you have a cool one for QuteScoop ;)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="wordWrap">
             <bool>true</bool>

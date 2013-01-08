@@ -2041,7 +2041,6 @@
 134770        PRIZREN             YG 4213N 02044E 0403   
 134810 LYPR   PRISTINA            YG 4239N 02109E 0576   
 134890        VRANJE              YG 4233N 02155E 0434   
-134900        RESERVED FOR NAVY   ** 0000  00000 
 134910        SKOPJE              YG 4231N 02217E 1176   
 134930        KRIVA PALANKA       YG 4212N 02220E 0696   
 135620        ULCINJ              YG 4155N 01913E 0029   
@@ -2559,7 +2558,6 @@
 167580        RETHYMNON           GR 3521N 02431E 0007   
 167590        TYMBAKION           GR 3500N 02445E 0007   
 167650 LGKP   KARPATHOS           GR 3531N 02715E 0006   
-169990        UNKNOWN TEST STN    GR 0000  00000 
 170220 LTAS   ZONGULDAK           TU 4127N 03148E 0136   
 170240        INEBOLU             TU 4159N 03347E 0064   
 170260        SINOP (CAPE)        TU 4202N 03510E 0032   
@@ -13112,78 +13110,6 @@
 992970 DB297  ENVIRONM BOUY 46039 US 4812N 12324W 0003   
 992980 DB298  ENVIRONM BUOY 44140 CN 4242N 05036W 0003   
 992990 DB299  ENVIRONM BUOY 45010 US 4300N 08748W 0003   
-993004        SHIP BLOCK 00       ** 
-993014        SHIP BLOCK 01       ** 
-993024        SHIP BLOCK 02       ** 
-993034        SHIP BLOCK 03       ** 
-993044        SHIP BLOCK 04       ** 
-993054        SHIP BLOCK 05       ** 
-993064        SHIP BLOCK 06       ** 
-993074        SHIP BLOCK 07       ** 
-993084        SHIP BLOCK 08       ** 
-993094        SHIP BLOCK 09       ** 
-993104        SHIP BLOCK 10       ** 
-993114        SHIP BLOCK 11       ** 
-993124        SHIP BLOCK 12       ** 
-993134        SHIP BLOCK 13       ** 
-993144        SHIP BLOCK 14       ** 
-993154        SHIP BLOCK 15       ** 
-993164        SHIP BLOCK 16       ** 
-993174        SHIP BLOCK 17       ** 
-993184        SHIP BLOCK 18       ** 
-993194        SHIP BLOCK 19       ** 
-993204        SHIP BLOCK 20       ** 
-993214        SHIP BLOCK 21       ** 
-993224        SHIP BLOCK 22       ** 
-993234        SHIP BLOCK 23       ** 
-993244        SHIP BLOCK 24       ** 
-993254        SHIP BLOCK 25       ** 
-993264        SHIP BLOCK 26       ** 
-993274        SHIP BLOCK 27       ** 
-993284        SHIP BLOCK 28       ** 
-993294        SHIP BLOCK 29       ** 
-993304        SHIP BLOCK 30       ** 
-993314        SHIP BLOCK 31       ** 
-993324        SHIP BLOCK 32       ** 
-993334        SHIP BLOCK 33       ** 
-993344        SHIP BLOCK 34       ** 
-993354        SHIP BLOCK 35       ** 
-993364        SHIP BLOCK 36       ** 
-993374        SHIP BLOCK 37       ** 
-993384        SHIP BLOCK 38       ** 
-993394        SHIP BLOCK 39       ** 
-993404        SHIP BLOCK 40       ** 
-993414        SHIP BLOCK 41       ** 
-993424        SHIP BLOCK 42       ** 
-993434        SHIP BLOCK 43       ** 
-993444        SHIP BLOCK 44       ** 
-993454        SHIP BLOCK 45       ** 
-993464        SHIP BLOCK 46       ** 
-993474        SHIP BLOCK 47       ** 
-993484        SHIP BLOCK 48       ** 
-993494        SHIP BLOCK 49       ** 
-993504        SHIP BLOCK 50       ** 
-993514        SHIP BLOCK 51       ** 
-993524        SHIP BLOCK 52       ** 
-993534        SHIP BLOCK 53       ** 
-993544        SHIP BLOCK 54       ** 
-993554        SHIP BLOCK 55       ** 
-993564        SHIP BLOCK 56       ** 
-993574        SHIP BLOCK 57       ** 
-993584        SHIP BLOCK 58       ** 
-993594        SHIP BLOCK 59       ** 
-993604        SHIP BLOCK 60       ** 
-993614        SHIP BLOCK 61       ** 
-993624        SHIP BLOCK 62       ** 
-993634        SHIP BLOCK 63       ** 
-993644        SHIP BLOCK 64       ** 
-993654        SHIP BLOCK 65       ** 
-993664        SHIP BLOCK 66       ** 
-993674        SHIP BLOCK 67       ** 
-993684        SHIP BLOCK 68       ** 
-993694        SHIP BLOCK 69       ** 
-993704        SHIP BLOCK 70       ** 
-993714        SHIP BLOCK 71       ** 
 994010 BURL1  SOUTHWEST PASS      LA 2854N 08926W 0000   
 994020 CHLV2  CHESAPEAKE (LS)     VA 3655N 07543W 0000   
 994030 DSLN7  DIAMOND SHOALS (LS) NC 3509N 07518W 0000   

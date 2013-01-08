@@ -1,16 +1,14 @@
 #include "MapScreen.h"
-#include "Launcher.h"
 
 static MapScreen *mapScreenInstance = 0;
-MapScreen* MapScreen::instance(bool createIfNotExists = true) {
-    if(mapScreenInstance == 0 && createIfNotExists)
+MapScreen* MapScreen::instance(bool createIfNoInstance) {
+    if(mapScreenInstance == 0 && createIfNoInstance)
         mapScreenInstance = new MapScreen;
     return mapScreenInstance;
 }
 
 MapScreen::MapScreen(QWidget *parent) :
-    QWidget(parent)
-{
+        QWidget(parent) {
     setMouseTracking(true);
     _xDistance = 0;
 
@@ -45,8 +43,8 @@ MapScreen::MapScreen(QWidget *parent) :
 
     _oslPilots = new OnScreenLabel(this);
     _oslPilots->typ = 1;
-    connect(_oslPilots, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
-    connect(_oslPilots, SIGNAL(left(int)), this,  SLOT(LabelLeft(int)));        // causes strange flickering on linux
+    connect(_oslPilots, SIGNAL(entered(int)), this, SLOT(on_label_entered(int)));
+    connect(_oslPilots, SIGNAL(left(int)), this,  SLOT(on_label_left(int)));        // causes strange flickering on linux
     _oslPilots->setText(tr("Pilots"));
     _oslPilots->setFont(QFont("Arial", 16, QFont::Bold));
     _oslPilots->setAutoFillBackground(true);
@@ -56,7 +54,7 @@ MapScreen::MapScreen(QWidget *parent) :
 
     _oslController = new OnScreenLabel(this);
     _oslController->typ = 2;
-    connect(_oslController, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    connect(_oslController, SIGNAL(entered(int)), this, SLOT(on_label_entered(int)));
     //connect(L_Controller, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));     // see L_Pilots
     _oslController->setText(tr("Controller"));
     _oslController->setFont(QFont("Arial", 16, QFont::Bold));
@@ -68,7 +66,7 @@ MapScreen::MapScreen(QWidget *parent) :
 
     _oslNavData = new OnScreenLabel(this);
     _oslNavData->typ = 3;
-    connect(_oslNavData, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    connect(_oslNavData, SIGNAL(entered(int)), this, SLOT(on_label_entered(int)));
     //connect(L_NavData, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));        // see L_Pilots
     _oslNavData->setText(tr("NavData"));
     _oslNavData->setFont(QFont("Arial", 16, QFont::Bold));
@@ -80,7 +78,7 @@ MapScreen::MapScreen(QWidget *parent) :
 
     _oslWeather = new OnScreenLabel(this);
     _oslWeather->typ = 4;
-    connect(_oslWeather, SIGNAL(entered(int)), this, SLOT(LabelEntered(int)));
+    connect(_oslWeather, SIGNAL(entered(int)), this, SLOT(on_label_entered(int)));
     //connect(L_Weather, SIGNAL(left(int)), this, SLOT(LabelLeft(int)));       // see L_Pilots
     _oslWeather->setText(tr("Weather"));
     _oslWeather->setFont(QFont("Arial", 16, QFont::Bold));
@@ -91,23 +89,23 @@ MapScreen::MapScreen(QWidget *parent) :
 
     _oswPilots = new OnScreenWidget(this);
     _oswPilots->typ = 1;
-    connect(_oswPilots, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(_oswPilots, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    connect(_oswPilots, SIGNAL(entered(int)), this, SLOT(on_widget_entered(int)));
+    connect(_oswPilots, SIGNAL(left(int)), this, SLOT(on_widget_left(int)));
 
     _oswController = new OnScreenWidget(this);
     _oswController->typ = 2;
-    connect(_oswController, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(_oswController, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    connect(_oswController, SIGNAL(entered(int)), this, SLOT(on_widget_entered(int)));
+    connect(_oswController, SIGNAL(left(int)), this, SLOT(on_widget_left(int)));
 
     _oswNavData = new OnScreenWidget(this);
     _oswNavData->typ = 3;
-    connect(_oswNavData, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(_oswNavData, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    connect(_oswNavData, SIGNAL(entered(int)), this, SLOT(on_widget_entered(int)));
+    connect(_oswNavData, SIGNAL(left(int)), this, SLOT(on_widget_left(int)));
 
     _oswWeather = new OnScreenWidget(this);
     _oswWeather->typ = 4;
-    connect(_oswWeather, SIGNAL(entered(int)), this, SLOT(WidgetEntered(int)));
-    connect(_oswWeather, SIGNAL(left(int)), this, SLOT(WidgetLeft(int)));
+    connect(_oswWeather, SIGNAL(entered(int)), this, SLOT(on_widget_entered(int)));
+    connect(_oswWeather, SIGNAL(left(int)), this, SLOT(on_widget_left(int)));
 
     createPilotWidget();
     _oswPilots->move(0,_oslPilots->height()-5);
@@ -128,9 +126,7 @@ MapScreen::MapScreen(QWidget *parent) :
 // Creating the widgets
 ////////////////////////////
 
-void MapScreen::createPilotWidget()
-{
-
+void MapScreen::createPilotWidget() {
     _oswPilots->setMouseTracking(true);
     _oswPilots->setAutoFillBackground(true);
     //W_Pilots->setContentsMargins(3, L_Pilots->height(), 3, 3);
@@ -140,7 +136,7 @@ void MapScreen::createPilotWidget()
     _pbRoutes = new QPushButton();
     _pbRoutes->setText(tr("all routes"));
     _pbRoutes->setCheckable(true);
-    connect(_pbRoutes, SIGNAL(clicked()), this, SLOT(P_toggleRoutesClicked()));
+    connect(_pbRoutes, SIGNAL(clicked()), this, SLOT(on_pbRoutes_clicked()));
     _hblP.addWidget(_pbRoutes);
 
     //Show pilots labels button
@@ -148,7 +144,7 @@ void MapScreen::createPilotWidget()
     _pbPilotLabels->setText(tr("pilot labels"));
     _pbPilotLabels->setCheckable(true);
     _pbPilotLabels->setChecked(Settings::showPilotsLabels());
-    connect(_pbPilotLabels, SIGNAL(clicked()), this, SLOT(P_togglePilotLabelsClicked()));
+    connect(_pbPilotLabels, SIGNAL(clicked()), this, SLOT(on_pbPilotLabels_clicked()));
     _hblP.addWidget(_pbPilotLabels);
 
 
@@ -156,9 +152,7 @@ void MapScreen::createPilotWidget()
     _oswPilots->lower();
 }
 
-void MapScreen::createControllerWidget()
-{
-
+void MapScreen::createControllerWidget() {
     _oswController->setMouseTracking(true);
     _oswController->setAutoFillBackground(true);
     //W_Controller->setContentsMargins(3, L_Pilots->height(), 3, 3);
@@ -170,28 +164,28 @@ void MapScreen::createControllerWidget()
     _pbCtr->setText(tr("CTR/FSS"));
     _pbCtr->setCheckable(true);
     _pbCtr->setChecked(Settings::showCTR());
-    connect(_pbCtr, SIGNAL(clicked()), this, SLOT(C_toggleCTRClicked()));
+    connect(_pbCtr, SIGNAL(clicked()), this, SLOT(on_pbCtr_clicked()));
     _hblC.addWidget(_pbCtr);
 
     _pbApp = new QPushButton();
     _pbApp->setText(tr("APP"));
     _pbApp->setCheckable(true);
     _pbApp->setChecked(Settings::showAPP());
-    connect(_pbApp, SIGNAL(clicked()), this, SLOT(C_toggleAPPClicked()));
+    connect(_pbApp, SIGNAL(clicked()), this, SLOT(on_pbApp_clicked()));
     _hblC.addWidget(_pbApp);
 
     _pbTwr = new QPushButton();
     _pbTwr->setText(tr("TWR"));
     _pbTwr->setCheckable(true);
     _pbTwr->setChecked(Settings::showTWR());
-    connect(_pbTwr, SIGNAL(clicked()), this, SLOT(C_toggleTWRClicked()));
+    connect(_pbTwr, SIGNAL(clicked()), this, SLOT(on_pbTwr_clicked()));
     _hblC.addWidget(_pbTwr);
 
     _pbGnd = new QPushButton();
     _pbGnd->setText(tr("GND"));
     _pbGnd->setCheckable(true);
     _pbGnd->setChecked(Settings::showGND());
-    connect(_pbGnd, SIGNAL(clicked()), this, SLOT(C_toggleGNDClicked()));
+    connect(_pbGnd, SIGNAL(clicked()), this, SLOT(on_pbGnd_clicked()));
     _hblC.addWidget(_pbGnd);
 
 
@@ -199,9 +193,7 @@ void MapScreen::createControllerWidget()
     _oswController->lower();
 }
 
-void MapScreen::createNavDataWidget()
-{
-
+void MapScreen::createNavDataWidget() {
     _oswNavData->setMouseTracking(true);
     _oswNavData->setAutoFillBackground(true);
     _oswNavData->setMinimumWidth(_xDistance+_oslWeather->width());
@@ -211,21 +203,21 @@ void MapScreen::createNavDataWidget()
     _pbSectorsAll->setText(tr("all sectors"));
     _pbSectorsAll->setCheckable(true);
     _pbSectorsAll->setChecked(Settings::showAllSectors());
-    connect(_pbSectorsAll, SIGNAL(clicked()), this, SLOT(N_toggleSectorClicked()));
+    connect(_pbSectorsAll, SIGNAL(clicked()), this, SLOT(on_pbSectorsAll_clicked()));
     _hblN.addWidget(_pbSectorsAll);
 
     _pbRouteWaypoints = new QPushButton();
     _pbRouteWaypoints->setText(tr("route waypoints"));
     _pbRouteWaypoints->setCheckable(true);
     _pbRouteWaypoints->setChecked(Settings::showRouteFix());
-    connect(_pbRouteWaypoints, SIGNAL(clicked()), this, SLOT(N_toggleRouteFixClicked()));
+    connect(_pbRouteWaypoints, SIGNAL(clicked()), this, SLOT(on_pbRouteWaypoints_clicked()));
     _hblN.addWidget(_pbRouteWaypoints);
 
     _pbInactiveAirports = new QPushButton();
     _pbInactiveAirports->setText(tr("inactive airports"));
     _pbInactiveAirports->setCheckable(true);
     _pbInactiveAirports->setChecked(Settings::showInactiveAirports());
-    connect(_pbInactiveAirports, SIGNAL(clicked()), this, SLOT(N_toggleInactiveClicked()));
+    connect(_pbInactiveAirports, SIGNAL(clicked()), this, SLOT(on_pbInactiveAirports_clicked()));
     _hblN.addWidget(_pbInactiveAirports);
 
 
@@ -243,10 +235,10 @@ void MapScreen::createWindWidget() {
 
     // On/Off buttons for wind and clouds
     _pbWind = new QPushButton();
-    _pbWind->setText(tr("upperwind"));
+    _pbWind->setText(tr("wind / temp / spread"));
     _pbWind->setCheckable(true);
-    _pbWind->setChecked(Settings::showWind());
-    connect(_pbWind, SIGNAL(clicked()), this, SLOT(W_toggleWindClicked()));
+    _pbWind->setChecked(Settings::showSonde());
+    connect(_pbWind, SIGNAL(clicked()), this, SLOT(on_pbWind_clicked()));
     _hblW.addWidget(_pbWind);
 
     _pbClouds = new QPushButton;
@@ -254,30 +246,30 @@ void MapScreen::createWindWidget() {
     _pbClouds->setCheckable(true);
     _pbClouds->setChecked(Settings::showClouds());
     //if(!Settings::downloadClouds()) W_toggleClouds->setEnabled(false);
-    connect(_pbClouds, SIGNAL(clicked()), this, SLOT(W_toggleCloudsClicked()));
+    connect(_pbClouds, SIGNAL(clicked()), this, SLOT(on_pbClouds_clicked()));
     _hblW.addWidget(_pbClouds);
 
 
     //upperwind settings
     _pbWindAltDec = new QPushButton();
     _pbWindAltDec->setText(tr("-"));
-    connect(_pbWindAltDec, SIGNAL(clicked()), this, SLOT(W_minusClicked()));
+    connect(_pbWindAltDec, SIGNAL(clicked()), this, SLOT(on_pbWindAltDec_clicked()));
     _hblW1.addWidget(_pbWindAltDec);
 
     _slider = new QSlider();
     _slider->setRange(0, 40);
     _slider->setOrientation(Qt::Horizontal);
-    _slider->setValue(Settings::windAlt());
-    connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(W_sliderChanged()));
+    _slider->setValue(Settings::sondeAlt_1k());
+    connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(on_slider_clicked()));
     _hblW1.addWidget(_slider);
 
     _pbWindAltInc = new QPushButton();
     _pbWindAltInc->setText(tr("+"));
-    connect(_pbWindAltInc, SIGNAL(clicked()), this, SLOT(W_plusClicked()));
+    connect(_pbWindAltInc, SIGNAL(clicked()), this, SLOT(on_pbWindAltInc_clicked()));
     _hblW1.addWidget(_pbWindAltInc);
 
     _lblWindAlt = new QLabel();
-    _lblWindAlt->setText(QString("%1ft").arg((Settings::windAlt()*1000)));
+    _lblWindAlt->setText(QString("%1ft").arg((Settings::sondeAlt_1k()*1000)));
     _hblW1.addWidget(_lblWindAlt);
 
     _vblW.addLayout(&_hblW);
@@ -297,8 +289,7 @@ void MapScreen::resizeEvent(QResizeEvent *event) {
 // Mouse moved slots
 ////////////////////////////
 
-void MapScreen::LabelEntered(int typ)
-{
+void MapScreen::on_label_entered(int typ) {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(true);
     switch(typ) {
@@ -377,8 +368,7 @@ void MapScreen::LabelEntered(int typ)
     }
 }
 
-void MapScreen::LabelLeft(int typ)
-{
+void MapScreen::on_label_left(int typ) {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(false);
     switch(typ) {
@@ -409,8 +399,7 @@ void MapScreen::LabelLeft(int typ)
     }
 }
 
-void MapScreen::WidgetEntered(int typ)
-{
+void MapScreen::on_widget_entered(int typ) {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(true);
     switch(typ) {
@@ -488,8 +477,7 @@ void MapScreen::WidgetEntered(int typ)
     }
 }
 
-void MapScreen::WidgetLeft(int typ)
-{
+void MapScreen::on_widget_left(int typ) {
     QFont f = QFont("Arial", 16, QFont::Bold);
     f.setUnderline(false);
     switch(typ) {
@@ -543,14 +531,11 @@ void MapScreen::WidgetLeft(int typ)
 // Pilots funktions
 ////////////////////////////
 
-void MapScreen::P_toggleRoutesClicked()
-{
+void MapScreen::on_pbRoutes_clicked() {
     emit toggleRoutes();
-
 }
 
-void MapScreen::P_togglePilotLabelsClicked()
-{
+void MapScreen::on_pbPilotLabels_clicked() {
     Settings::setShowPilotsLabels(_pbPilotLabels->isChecked());
     glWidget->updateGL();
 }
@@ -559,26 +544,22 @@ void MapScreen::P_togglePilotLabelsClicked()
 // Controller funktions
 ////////////////////////////
 
-void MapScreen::C_toggleCTRClicked()
-{
+void MapScreen::on_pbCtr_clicked() {
     Settings::setShowCTR(_pbCtr->isChecked());
     glWidget->updateGL();
 }
 
-void MapScreen::C_toggleAPPClicked()
-{
+void MapScreen::on_pbApp_clicked() {
     Settings::setShowAPP(_pbApp->isChecked());
     glWidget->updateGL();
 }
 
-void MapScreen::C_toggleTWRClicked()
-{
+void MapScreen::on_pbTwr_clicked() {
     Settings::setShowTWR(_pbTwr->isChecked());
     glWidget->updateGL();
 }
 
-void MapScreen::C_toggleGNDClicked()
-{
+void MapScreen::on_pbGnd_clicked() {
     Settings::setShowGND(_pbGnd->isChecked());
     glWidget->updateGL();
 }
@@ -588,27 +569,24 @@ void MapScreen::C_toggleGNDClicked()
 // NavData funktions
 ////////////////////////////
 
-void MapScreen::N_toggleSectorClicked()
-{
+void MapScreen::on_pbSectorsAll_clicked() {
     //Settings::setShowAllSectors(N_sectorsAll->isChecked());
     emit toggleSectors(_pbSectorsAll->isChecked());
 }
 
-void MapScreen::toggleSectorChanged(bool state)
-{
+void MapScreen::on_sectorsAll_changed(bool state) {
     if(_pbSectorsAll->isChecked() != state)
     {
         _pbSectorsAll->setChecked(state);
     }
 }
 
-void MapScreen::N_toggleRouteFixClicked()
-{
+void MapScreen::on_pbRouteWaypoints_clicked() {
     Settings::setShowRouteFix(_pbRouteWaypoints->isChecked());
     emit toggleRouteWaypoints();
 }
 
-void MapScreen::N_toggleInactiveClicked() {
+void MapScreen::on_pbInactiveAirports_clicked() {
     Settings::setShowInactiveAirports(_pbInactiveAirports->isChecked());
     emit toggleInactiveAirports();
 }
@@ -617,15 +595,18 @@ void MapScreen::N_toggleInactiveClicked() {
 // Weather funktions
 ////////////////////////////
 
-void MapScreen::W_toggleWindClicked() {
-    Settings::setShowWind(!Settings::showWind());
-    if (WindData::instance()->status() == -1) // not yet downloaded
-        Launcher::instance(true)->startWindDownload();
-    glWidget->update();
+void MapScreen::on_pbWind_clicked() {
+    Settings::setShowSonde(!Settings::showSonde());
+
+    // TODO: implement and emit here a needSondeData() signal,
+    // similar to BookedAtcDialog and needBookings()
+    if (!SondeData::instance()->downloaded())
+        SondeData::instance()->load();
+    else
+        glWidget->update();
 }
 
-void MapScreen::W_minusClicked()
-{
+void MapScreen::on_pbWindAltDec_clicked() {
     int value = _slider->value();
     if(value == 0) return;
 
@@ -633,8 +614,7 @@ void MapScreen::W_minusClicked()
     _slider->setValue(value);
 }
 
-void MapScreen::W_plusClicked()
-{
+void MapScreen::on_pbWindAltInc_clicked() {
     int value = _slider->value();
     if(value == 40) return;
 
@@ -642,15 +622,13 @@ void MapScreen::W_plusClicked()
     _slider->setValue(value);
 }
 
-void MapScreen::W_sliderChanged()
-{
-    Settings::setWindAlt(_slider->value());
+void MapScreen::on_slider_clicked() {
+    Settings::setSondeAlt_1k(_slider->value());
     _lblWindAlt->setText(QString("%1ft").arg((_slider->value()*1000)));
     glWidget->update();
 }
 
-void MapScreen::W_toggleCloudsClicked()
-{
+void MapScreen::on_pbClouds_clicked() {
     if(!Settings::showClouds()) {
         Settings::setShowClouds(true);
         glWidget->useClouds();
@@ -667,34 +645,28 @@ void MapScreen::W_toggleCloudsClicked()
 ///////////////////////////
 
 OnScreenLabel::OnScreenLabel(QWidget *parent) :
-        QLabel(parent)
-{
+        QLabel(parent) {
     typ = 0;
 }
 
-void OnScreenLabel::enterEvent(QEvent *)
-{
+void OnScreenLabel::enterEvent(QEvent *) {
     emit entered(typ);
 }
 
-void OnScreenLabel::leaveEvent(QEvent *)
-{
+void OnScreenLabel::leaveEvent(QEvent *) {
     emit left(typ);
 }
 
 OnScreenWidget::OnScreenWidget(QWidget *parent) :
-        QWidget(parent)
-{
+        QWidget(parent) {
     typ = 0;
 }
 
-void OnScreenWidget::enterEvent(QEvent *)
-{
+void OnScreenWidget::enterEvent(QEvent *) {
     emit entered(typ);
 }
 
-void OnScreenWidget::leaveEvent(QEvent *)
-{
+void OnScreenWidget::leaveEvent(QEvent *) {
     emit left(typ);
 }
 

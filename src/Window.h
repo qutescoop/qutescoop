@@ -17,7 +17,7 @@
 class Window : public QMainWindow, public Ui::Window {
         Q_OBJECT
     public:
-        static Window* instance(bool createIfNoInstance = false);
+        static Window* instance(bool createIfNoInstance = true);
         void setEnableBookedAtc(bool enable);
         void shootScreenshot();
         MapScreen *mapScreen;
@@ -29,6 +29,7 @@ class Window : public QMainWindow, public Ui::Window {
         void on_actionShowRoutes_triggered(bool checked);
         void startCloudDownload();
         void whazzupDownloaded(bool isNew = true);
+        void restore();
 
     private slots:
         void on_actionShowWaypoints_triggered(bool checked);
@@ -47,15 +48,16 @@ class Window : public QMainWindow, public Ui::Window {
         void on_actionMoveRight_triggered();
         void on_actionMoveLeft_triggered();
 
-        void on_actionRememberPosition_triggered();
+        void on_actionRememberMapPosition9_triggered();
+        void on_actionRememberMapPosition1_triggered();
         void on_actionRememberMapPosition2_triggered();
         void on_actionRememberMapPosition3_triggered();
         void on_actionRememberMapPosition4_triggered();
         void on_actionRememberMapPosition5_triggered();
         void on_actionRememberMapPosition6_triggered();
         void on_actionRememberMapPosition7_triggered();
-
-        void on_actionRecallMapPosition_triggered();
+        void on_actionRecallMapPosition9_triggered();
+        void on_actionRecallMapPosition1_triggered();
         void on_actionRecallMapPosition2_triggered();
         void on_actionRecallMapPosition3_triggered();
         void on_actionRecallMapPosition4_triggered();
@@ -107,10 +109,8 @@ class Window : public QMainWindow, public Ui::Window {
         void cloudDownloadFinished(bool error);
 
         void on_actionChangelog_triggered();
-
     protected:
         virtual void closeEvent(QCloseEvent *event);
-
     private:
         // singleton
         Window(QWidget *parent = 0);
@@ -123,8 +123,8 @@ class Window : public QMainWindow, public Ui::Window {
         _timerWhazzup, _timerCloud;
         QSortFilterProxyModel *_sortmodelMetar, *_sortmodelFriends;
         MetarModel _metarModel;
-        QHttp *_versionChecker, *_cloudDownloader;
-        QBuffer *_versionBuffer, *_cloudBuffer;
+        QHttp *_cloudDownloader;
+        QBuffer *_cloudBuffer;
         QDateTime _dateTimePredict_old;
         QLabel *_lblStatus;
         QProgressBar *_progressBar;

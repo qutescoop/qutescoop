@@ -8,6 +8,7 @@
 #include "Waypoint.h"
 #include "NavData.h"
 #include "Settings.h"
+#include "GuiMessage.h"
 
 Airac *airacInstance = 0;
 Airac *Airac::instance(bool createIfNoInstance) {
@@ -18,37 +19,44 @@ Airac *Airac::instance(bool createIfNoInstance) {
 }
 
 Airac::Airac() {
-    load(Settings::navdataDirectory());
 }
 
-void Airac::load(const QString& directory) {
+Airac::~Airac() {
+    foreach (const QSet<Waypoint*> &wl, waypoints.values())
+        foreach(Waypoint *w, wl)
+            delete w;
+    foreach (const QSet<NavAid*> &nl, navaids.values())
+        foreach(NavAid *n , nl)
+            delete n;
+    foreach (const QList<Airway*> &al, airways.values())
+        foreach(Airway *a , al)
+            delete a;
+}
+
+void Airac::load() {
+    qDebug() << "Airac::load()" << Settings::navdataDirectory();
+    GuiMessages::status("Loading navigation database...", "airacload");
     if (Settings::useNavdata()) {
-        readFixes(directory);
-        readNavaids(directory);
-        readAirways(directory);
+        readWaypoints(Settings::navdataDirectory());
+        readNavaids(Settings::navdataDirectory());
+        readAirways(Settings::navdataDirectory());
     }
 
     allPoints.clear();
-    allPoints.reserve(waypoints.size() +navaids.size());
-    foreach( const QSet<Waypoint*> &wl, waypoints.values())
+    allPoints.reserve(waypoints.size() + navaids.size());
+    foreach (const QSet<Waypoint*> &wl, waypoints.values())
         foreach(Waypoint *w, wl)
             allPoints.insert(w);
-    foreach( const QSet<NavAid*> &nl, navaids.values())
+    foreach (const QSet<NavAid*> &nl, navaids.values())
         foreach(NavAid *n , nl)
             allPoints.insert(n);
-    /*
-    mapObjects.clear();
-    mapObjects.reserve(waypoints.size() + navaids.size());
-    foreach (const QSet<Waypoint*> &wl, waypoints.values())
-        foreach (Waypoint *w, wl)
-            mapObjects.insert(w);
-    foreach (const QSet<NavAid*> &nl, navaids.values())
-        foreach (NavAid *n, nl)
-            mapObjects.insert(n);
-    */
+
+    GuiMessages::remove("airacload");
+    emit loaded();
+    qDebug() << "Airac::load() -- finished";
 }
 
-void Airac::readFixes(const QString& directory) {
+void Airac::readWaypoints(const QString& directory) {
     waypoints.clear();
     FileReader fr(directory + "/default data/earth_fix.dat");
     while(!fr.atEnd()) {
@@ -310,6 +318,18 @@ void Airac::addAirwaySegment(Waypoint *from, Waypoint *to, Airway::Type type, in
     awy->addSegment(from, to);
 }
 
+/**
+* Returns a list of waypoints for the given planned route, starting at lat/lon.
+* Airways along the route will be replaced by the appropriate fixes along that
+* airway. lat/lon is being used as a hint and should be the position of the
+* departure airport.
+*
+* Input format can be:
+* 1. FIX - FIX - FIX
+* 2. FIX - Airway - FIX - Airway - FIX
+*
+* Unknown fixes and/or airways will be ignored.
+**/
 QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon) const {
     //qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;

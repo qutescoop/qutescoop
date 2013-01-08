@@ -9,10 +9,8 @@
 
 #include "ClientDetails.h"
 
-class MapObject: public QObject
-{
+class MapObject: public QObject {
         Q_OBJECT
-
     public:
         MapObject();
         MapObject(const MapObject& obj);
