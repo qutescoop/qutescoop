@@ -42,6 +42,8 @@ Version 2.1.12beta
     it is better although the compiler might just do that itself...
     I don't know... const-correctness is an acknowledged art in
     C++, though ;) (google it ;) ) )
+ known bugs:
+  * On Screen Menu not showing on Mac OSX
 
 Version 2.1.11beta
  fixed:
