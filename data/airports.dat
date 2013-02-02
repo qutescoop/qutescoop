@@ -1725,6 +1725,7 @@ LHEM:Esztergom:Esztergom:HU:47.762:18.734
 LHER:Eger:Eger:HU:47.905:20.409
 LHF1:Fehergyarmat:Fehergyarmat:HU:47.983:22.483
 LHFM:Fertoszentmiklos:Fertoszentmiklos:HU:47.584:16.845
+LHFS:Farkashegy:Farkashegy:HU:47.487:18.915
 LHGD:Godollo:Godollo:HU:47.574:19.333
 LHGR:Gyuro:Gyuro:HU:47.391:18.757
 LHGY:Pipishegy:Gyongyos:HU:47.813:19.977
@@ -3672,7 +3673,6 @@ FAIW:Ingwelala:Ingwelala:ZA:-24.167:31.383
 FAJC:Jackalberry:Jackalberry:ZA:-24.507:31.137
 FAJK:Jan Kemp Dorp:Jan Kemp Dorp:ZA:-27.917:24.85
 FAJP:Joubertina:Joubertina:ZA:-33.834:23.833
-FAJS:Johannesburg:Johannesburg:ZA:-26.134:28.242
 FAJV:Jansenville:Jansenville:ZA:-32.951:24.85
 FAKA:Kagga Kamma:Kagga Kamma:ZA:-32.737:19.547
 FAKB:Kosi Bay:Kosi Bay:ZA:-26.984:32.75
@@ -3699,6 +3699,7 @@ FALA:Lanseria:Lanseria:ZA:-25.94:27.924
 FALB:Lamberts Bay:Lamberts Bay:ZA:-32.101:18.333
 FALC:Lime Acres:Lime Acres:ZA:-28.359:23.441
 FALD:Londolozi:Londolozi:ZA:-24.816:31.505
+FALE:Durban:King Shaka:ZA:-29.617:31.108
 FALF:Loeriesfontein:Loeriesfontein:ZA:-30.917:19.433
 FALI:Lichtenberg:Lichtenberg:ZA:-26.167:26.183
 FALK:Lusikisiki:Lusikisiki:ZA:-31.367:29.583
@@ -3746,7 +3747,7 @@ FAOF:Olifantshoek:Olifantshoek:ZA:-27.95:22.733
 FAOH:Oudtshoorn:Oudtshoorn:ZA:-33.601:22.183
 FAOI:Orient:Orient:ZA:-26.04:27.594
 FAOL:Othawa:Othawa:ZA:-24.75:31.416
-FAOR:Olifants River Bridge:Olifants River Bridge:ZA:-24.267:29.8
+FAOR:Johannesburg:Johannesburg:ZA:-26.134:28.242
 FAPA:Port Alfred:Port Alfred:ZA:-33.584:26.883
 FAPC:Paulpietersburg Mondi:Paulpietersburg Mondi:ZA:-27.436:30.808
 FAPD:Pofadder:Pofadder:ZA:-29.142:19.413
@@ -4896,6 +4897,7 @@ VOAR:Arkonam:Arkonam:IN:13.067:79.683
 VOAT:Aggati:Agatti:IN:10.824:72.176
 VOBG:Hindustan:Bangalore:IN:12.95:77.668
 VOBI:Bellary:Bellary:IN:15.15:76.85
+VOBL:Bengaluru:Bangalore:IN:13.2:77.71
 VOBZ:Vijayawada:Vijayawada:IN:16.53:80.797
 VOCB:Coimbatore:Coimbatore:IN:11.031:77.044
 VOCC:Cochin:Cochin:IN:9.946:76.272
