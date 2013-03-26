@@ -218,7 +218,7 @@ const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const
 // Methods preparing displayLists
 //
 void GLWidget::createPilotsList() {
-    qDebug() << "GLWidget::createPilotsList() ";
+    qDebug() << "GLWidget::createPilotsList()";
     makeCurrent();
 
     if(_pilotsList == 0)
@@ -468,6 +468,8 @@ void GLWidget::createStaticLists() {
     // earth
     qDebug() << "GLWidget::createStaticLists() earth";
     _earthQuad = gluNewQuadric();
+    qDebug() << "Generating quadric texture coordinates";
+    gluQuadricTexture(_earthQuad, GL_TRUE); // prepare texture coordinates
     gluQuadricDrawStyle(_earthQuad, GLU_FILL); // FILL, LINE, SILHOUETTE or POINT
     gluQuadricNormals(_earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     gluQuadricOrientation(_earthQuad, GLU_OUTSIDE); // GLU_INSIDE
@@ -509,8 +511,8 @@ void GLWidget::createStaticLists() {
     _earthList = glGenLists(1);
     glNewList(_earthList, GL_COMPILE);
     qglColor(Settings::globeColor());
-    gluSphere(_earthQuad, 1, qRound(360 / Settings::glCirclePointEach()), // draw a globe with radius, slicesX, stacksZ
-              qRound(180 / Settings::glCirclePointEach()));
+    gluSphere(_earthQuad, 1, qRound(360 / Settings::glCirclePointEach()), // draw a globe with..
+              qRound(180 / Settings::glCirclePointEach())); // ..radius, slicesX, stacksZ
     // drawing the sphere by hand and setting TexCoords for Multitexturing (if we need it once):
 //    glBegin(GL_TRIANGLE_STRIP);
 //    for(double lat = -90; lat <= 90 - Settings::glCirclePointEach(); lat += Settings::glCirclePointEach()) {
@@ -1114,6 +1116,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void GLWidget::rightClick(const QPoint& pos) {
+    qDebug() << "GLWidget::rightClick()";
     QList<MapObject*> objects = objectsAt(pos.x(), pos.y());
     int countRelevant = 0;
     Pilot *pilot = 0;
@@ -1129,15 +1132,11 @@ void GLWidget::rightClick(const QPoint& pos) {
             break; // priorise airports
         }
     }
-    if(countRelevant == 0) {
+    if (countRelevant == 0) {
         GuiMessages::message("no object under cursor");
-        return;
-    }
-    if(countRelevant > 1) {
+    } else if (countRelevant > 1) {
         GuiMessages::message("too many objects under cursor");
-        return; // ambiguous search result
-    }
-    if(airport != 0) {
+    } else if (airport != 0) {
         GuiMessages::message(QString("toggled routes for %1 [%2]").arg(airport->label).
                              arg(airport->showFlightLines? "off": "on"),
                              "routeToggleAirport");
@@ -1148,9 +1147,7 @@ void GLWidget::rightClick(const QPoint& pos) {
             PilotDetails::instance()->refresh(); // ...PilotDetails::cbPlotRoutes
         createPilotsList();
         updateGL();
-        return;
-    }
-    if(pilot != 0) {
+    } else if (pilot != 0) {
         // display flight path for pilot
         GuiMessages::message(QString("toggled route for %1 [%2]").arg(pilot->label).
                              arg(pilot->showDepDestLine? "off": "on"),
@@ -1160,8 +1157,8 @@ void GLWidget::rightClick(const QPoint& pos) {
             PilotDetails::instance()->refresh();
         createPilotsList();
         updateGL();
-        return;
     }
+    qDebug() << "GLWidget::rightClick() -- finished";
 }
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
@@ -1558,6 +1555,12 @@ void GLWidget::drawSelectionRectangle() {
             glBegin(GL_LINE_LOOP);
             NavData::plotPointsOnEarth(points);
             glEnd();
+            // draw great circle course line
+            glLineWidth(2.);
+            glColor4f(0., 1., 1., .2);
+            glBegin(GL_LINE_STRIP);
+            NavData::plotPointsOnEarth(QList<QPair<double, double> >() << points[0] << points[2]);
+            glEnd();
 
             // information labels
             const QFont font = QFont(); //Settings::firFont();
@@ -1800,13 +1803,14 @@ void GLWidget::parseEarthClouds() {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
+        qDebug() << "Emptying error buffer";
         glGetError(); // empty the error buffer
+        qDebug() << "Binding texture";
         _earthTex = bindTexture(_completedEarthIm, GL_TEXTURE_2D, GL_RGBA,
                                QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
         if (GLenum glError = glGetError())
             qCritical() << QString("OpenGL returned an error (0x%1)")
                            .arg((int) glError, 4, 16, QChar('0'));
-        gluQuadricTexture(_earthQuad, GL_TRUE); // prepare texture coordinates
     }
     qDebug() << "GLWidget::parseEarthClouds() finished";
     update();

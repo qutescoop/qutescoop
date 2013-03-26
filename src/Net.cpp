@@ -2,11 +2,11 @@
 
 
 //Single instance
-Net *networkManagerInstance = 0;
+Net *netInstance = 0;
 Net *Net::instance(bool createIfNoInstance) {
-    if((networkManagerInstance == 0) && createIfNoInstance)
-            networkManagerInstance = new Net();
-    return networkManagerInstance;
+    if((netInstance == 0) && createIfNoInstance)
+            netInstance = new Net();
+    return netInstance;
 }
 
 Net::Net() : QNetworkAccessManager() {
@@ -19,6 +19,10 @@ Net::Net() : QNetworkAccessManager() {
 
 QNetworkReply *Net::h(const QNetworkRequest &request) {
     return Net::instance()->head(request);
+}
+
+QNetworkReply *Net::g(const QUrl &url) {
+    return Net::instance()->get(QNetworkRequest(url));
 }
 
 QNetworkReply *Net::g(const QNetworkRequest &request) {

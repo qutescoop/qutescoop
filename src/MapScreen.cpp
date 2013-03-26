@@ -117,9 +117,7 @@ MapScreen::MapScreen(QWidget *parent) :
     _oswWeather->move(0, _oslPilots->height()-5);
 
 
-
     qDebug() << "MapScreen::MapScreen() created";
-
 }
 
 ////////////////////////////

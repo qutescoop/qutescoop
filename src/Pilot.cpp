@@ -15,7 +15,8 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
         showDepDestLine(false) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
-    altitude = field(stringList, 7).toInt(); // we could do some barometric calculations here (only for VATSIM needed)
+    altitude = field(stringList, 7).toInt(); // we could do some barometric
+                                    // calculations here (only for VATSIM needed)
     groundspeed = field(stringList, 8).toInt();
     planAircraft = field(stringList, 9);
     planTAS = field(stringList, 10);
@@ -44,7 +45,6 @@ Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
     planAltAirport = field(stringList, 28);
     planRemarks = field(stringList, 29);
     planRoute = field(stringList, 30);
-
 
     if(whazzup->isIvao()) {
         planAltAirport2 = field(stringList, 42); // IVAO only

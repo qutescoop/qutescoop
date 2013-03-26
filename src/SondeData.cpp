@@ -22,7 +22,7 @@ void SondeData::decodeData() {
     qDebug() << "WindData::decodeData()";
     // showing an hourglass cursor during long operations
     GuiMessages::progress("decodesonde",
-                          "Decoding sonde (wind/temperature/dewpoint) data: loading stations...");
+                          "Decoding sonde (wind/temperature/dewpoint) data: processing stations...");
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if(stationList.isEmpty()) { // Load station data from file
@@ -290,13 +290,13 @@ void SondeData::load() {
     if(_replySondeData != 0) _replySondeData = 0;
 
     QUrl url(Settings::sondeUrl());
-    _replySondeData = Net::g(QNetworkRequest(url));
+    _replySondeData = Net::g(url);
     connect(_replySondeData, SIGNAL(downloadProgress(qint64,qint64)),
             this, SLOT(sondeDataProgress(qint64,qint64)));
     connect(_replySondeData, SIGNAL(finished()) , this , SLOT(processSondeData()));
 
     GuiMessages::progress("loadsonde",
-                          QString("Downloading wind data from %1...").arg(url.toString()));
+                          QString("Downloading sonde data from %1...").arg(url.toString()));
     qDebug() << "downloadSondeData()" << url;
 }
 
@@ -310,7 +310,7 @@ void SondeData::processSondeData() {
     GuiMessages::remove("loadsonde");
     if(_replySondeData->error() != QNetworkReply::NoError) {
         GuiMessages::criticalUserInteraction(_replySondeData->errorString(),
-                                             "WindData download");
+                                             "Sonde data download");
         return;
     }
     setRawData(_replySondeData->readAll());

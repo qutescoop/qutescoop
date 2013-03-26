@@ -5,6 +5,7 @@
 #include "Launcher.h"
 #include "SondeData.h"
 #include "JobList.h"
+#include "Platform.h"
 
 // singleton instance
 Launcher *launcherInstance = 0;
@@ -16,11 +17,15 @@ Launcher* Launcher::instance(bool createIfNoInstance) {
 }
 
 Launcher::Launcher(QWidget *parent) :
-        QWidget(parent, Qt::FramelessWindowHint | Qt::WindowSystemMenuHint) {
+        QWidget(parent,
+                Qt::FramelessWindowHint | Qt::WindowSystemMenuHint) {
+    setWindowOpacity(.0); // we want to fade it in
+
     _map = QPixmap(":/startup/logo").scaled(600, 600);
-    /*qDebug() << "isNull:" << map.isNull();
-    qDebug() << "hasAlphaChannel:" << map.hasAlphaChannel();
-    qDebug() << "w:" << map.width() << " h:" << map.height();*/
+    resize(_map.width(), _map.height());
+    move(qApp->desktop()->availableGeometry().center()
+         - rect().center());
+    setMask(_map.mask());
 
     _image = new QLabel(this);
     _text = new QLabel(this);
@@ -29,7 +34,6 @@ Launcher::Launcher(QWidget *parent) :
     _image->setPixmap(_map);
     _image->resize(_map.width(), _map.height());
 
-    resize(_map.width(), _map.height());
 
     _text->setText("Launcher started");
     _text->setStyleSheet(
@@ -44,22 +48,17 @@ Launcher::Launcher(QWidget *parent) :
     //qDebug() << "text frames w:" << text->frameSize() << " text h:" << text->height();
     _text->move((_map.width() / 2) - 220, (_map.height() / 3) * 2 + 30);
 
+    _progress->hide();
     _progress->resize(300, _progress->height());
     _progress->move((_map.width() / 2) - 150,
                    (_map.height() / 3) * 2 + 30 + _text->height());
 
     GuiMessages::instance()->addStatusLabel(_text, true);
-    GuiMessages::instance()->addProgressBar(_progress, false); // non-autohide
+    GuiMessages::instance()->addProgressBar(_progress, true); // non-autohide
 
     _image->lower();
     _text->raise();
     _progress->raise();
-
-    setMask(_map.mask());
-    //qDebug() << "Widget w:" << this->width() << " Widget h:" << this->height();
-
-    move(qApp->desktop()->availableGeometry().center()
-         - rect().center());
 }
 
 Launcher::~Launcher() {
@@ -70,12 +69,6 @@ Launcher::~Launcher() {
 ///////////////////////////
 // Events
 ///////////////////////////
-void Launcher::keyReleaseEvent(QKeyEvent *event) {
-    if(event->key() == Qt::Key_Escape) {
-        event->accept();
-        qApp->quit();
-    }
-}
 
 void Launcher::mousePressEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
@@ -99,43 +92,103 @@ void Launcher::fireUp() {
     qDebug() << "Launcher::fireUp()";
     show();
 
+    // reporting usage
+    QUrl usageUrl("http://qutescoop.sourceforge.net/usage.php");
+    usageUrl.addQueryItem("id", Platform::id());
+    usageUrl.addQueryItem("version", Version::str());
+    usageUrl.addQueryItem("platform", Platform::platformOS());
+    usageUrl.addQueryItem("compiler", Platform::compiler());
+    usageUrl.addQueryItem("ram", Platform::memoryOverall());
+    usageUrl.addQueryItem("rmk", QString("statusLocation:%1").arg(Settings::statusLocation()));
+    Net::g(usageUrl);
+
+
     JobList *jobs = new JobList(this);
 
+    // fade in launcher
+    QPropertyAnimation *fadeInLauncher =
+            new QPropertyAnimation(this, "windowOpacity", this);
+    fadeInLauncher->setDuration(1000);
+    fadeInLauncher->setEndValue(1.);
+    fadeInLauncher->setEasingCurve(QEasingCurve::InOutExpo);
+
+    jobs->append(JobList::Job(
+            fadeInLauncher,
+            SLOT(start()), SIGNAL(finished())
+    ));
+
+    // check for datafile updates
     if (Settings::checkForUpdates()) {
         jobs->append(JobList::Job(
                 Launcher::instance(),
-                SLOT(checkData()),
-                SIGNAL(dataChecked())
+                SLOT(checkData()), SIGNAL(dataChecked())
         ));
     }
 
+    // load airports
     jobs->append(JobList::Job(
             NavData::instance(),
-            SLOT(load()),
-            SIGNAL(loaded())
+            SLOT(load()), SIGNAL(loaded())
     ));
 
+    // load Airac
     if (Settings::useNavdata()) {
         jobs->append(JobList::Job(
             Airac::instance(),
-            SLOT(load()),
-            SIGNAL(loaded())
+            SLOT(load()), SIGNAL(loaded())
         ));
     }
 
-//    if (Settings::showWind()) {
-//        jobs->append(JobList::Job(
-//                SondeData::instance(),
-//                SLOT(load()),
-//                SIGNAL(loaded())
-//        ));
-//    }
+    // set up main window
+    jobs->append(JobList::Job(
+            Window::instance(),
+            SLOT(restore()),
+            SIGNAL(restored())
+    ));
 
-    connect(jobs, SIGNAL(finished()), SLOT(close()));
-    Window::instance()->connect(jobs, SIGNAL(finished()), SLOT(restore()));
+    QPropertyAnimation *fadeOut = new QPropertyAnimation(this, "windowOpacity");
+    fadeOut->setDuration(1000);
+    fadeOut->setEndValue(0.);
+    fadeOut->setEasingCurve(QEasingCurve::InOutExpo);
+    connect(fadeOut, SIGNAL(finished()), SLOT(deleteLater()));
+    QPropertyAnimation *fadeIn = new QPropertyAnimation(Window::instance(), "windowOpacity");
+    fadeIn->setDuration(1000);
+    fadeIn->setEndValue(1.);
+    fadeIn->setEasingCurve(QEasingCurve::InOutExpo);
+
+    QParallelAnimationGroup *animParallel = new QParallelAnimationGroup();
+    animParallel->addAnimation(fadeOut);
+    animParallel->addAnimation(fadeIn);
+    jobs->append(JobList::Job(
+            animParallel,
+            SLOT(start()), SIGNAL(finished())
+    ));
+
+    if (Settings::downloadOnStartup()) {
+        jobs->append(JobList::Job(
+                Whazzup::instance(),
+                SLOT(download()),
+                SIGNAL(whazzupDownloaded())
+        ));
+    }
+
+    if (Settings::showSonde()) {
+        jobs->append(JobList::Job(
+                SondeData::instance(),
+                SLOT(load()),
+                SIGNAL(loaded())
+        ));
+    }
+
+    if (Settings::downloadClouds()) {
+        jobs->append(JobList::Job(
+                Window::instance(),
+                SLOT(downloadCloud()),
+                SIGNAL(cloudDownloaded())
+        ));
+    }
+
     jobs->start();
-    if (Settings::showSonde())
-        SondeData::instance()->load();
     qDebug() << "Launcher::fireUp() finished";
 }
 
@@ -147,7 +200,7 @@ void Launcher::checkData() {
     GuiMessages::status("Checking for QuteScoop data file updates...", "checknavdata");
     QUrl url(Settings::remoteDataRepository().arg("dataversions.txt"));
     qDebug() << "checkForDataUpdates()" << url.toString();
-    _replyDataVersionsAndFiles = Net::g(QNetworkRequest(url));
+    _replyDataVersionsAndFiles = Net::g(url);
 
     connect(_replyDataVersionsAndFiles, SIGNAL(finished()),
             SLOT(dataVersionsDownloaded()));
@@ -188,7 +241,7 @@ void Launcher::dataVersionsDownloaded() {
             continue;
         _localDataVersionsList[splitLine.first()] = splitLine.last().toInt();
     }
-    qDebug() << "dataVersionsDownloaded() local:" << _localDataVersionsList;
+    qDebug() << "dataVersionsDownloaded() local: " << _localDataVersionsList;
     localVersionsFile.close();
 
     //collecting files to update
@@ -208,7 +261,7 @@ void Launcher::dataVersionsDownloaded() {
         QUrl url(Settings::remoteDataRepository()
              .arg(_dataFilesToDownload.first()));
         qDebug() << "dataVersionsDownloaded() Downloading datafile" << url.toString();
-        _replyDataVersionsAndFiles = Net::g(QNetworkRequest(url));
+        _replyDataVersionsAndFiles = Net::g(url);
         connect(_replyDataVersionsAndFiles, SIGNAL(finished()),
                 this, SLOT(dataFileDownloaded()));
     } else {
@@ -264,7 +317,7 @@ void Launcher::dataFileDownloaded() {
         QUrl url(Settings::remoteDataRepository()
              .arg(_dataFilesToDownload.first()));
         qDebug() << "dataVersionsDownloaded() Downloading datafile" << url.toString();
-        _replyDataVersionsAndFiles = Net::g(QNetworkRequest(url));
+        _replyDataVersionsAndFiles = Net::g(url);
         connect(_replyDataVersionsAndFiles, SIGNAL(finished()),
                 this, SLOT(dataFileDownloaded()));
     } else {

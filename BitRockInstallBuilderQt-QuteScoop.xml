@@ -60,6 +60,9 @@
                         <distributionFile>
                             <origin>DIST-unix32/QuteScoop.sh</origin>
                         </distributionFile>
+                        <distributionDirectory>
+                            <origin>DIST-unix32/imageformats</origin>
+                        </distributionDirectory>
                     </distributionFileList>
                 </folder>
                 <folder>
@@ -101,23 +104,9 @@
                         <distributionFile>
                             <origin>DIST-win32/README.html</origin>
                         </distributionFile>
-                    </distributionFileList>
-                </folder>
-                <folder>
-                    <description>Program Files</description>
-                    <destination>${installdir}</destination>
-                    <name>programfilesosx</name>
-                    <platforms>osx</platforms>
-                    <distributionFileList>
-                        <distributionFile>
-                            <origin>DIST-macx32/CHANGELOG</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>DIST-macx32/COPYING</origin>
-                        </distributionFile>
-                        <distributionFile>
-                            <origin>DIST-macx32/README.html</origin>
-                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>DIST-win32/imageformats</origin>
+                        </distributionDirectory>
                     </distributionFileList>
                 </folder>
                 <folder>
@@ -138,9 +127,6 @@
                         <distributionDirectory>
                             <origin>DIST-win32/textures</origin>
                         </distributionDirectory>
-                        <distributionDirectory>
-                            <origin>DIST-win32/imageformats</origin>
-                        </distributionDirectory>
                     </distributionFileList>
                 </folder>
                 <folder>
@@ -160,32 +146,6 @@
                         </distributionDirectory>
                         <distributionDirectory>
                             <origin>DIST-unix32/textures</origin>
-                        </distributionDirectory>
-                        <distributionDirectory>
-                            <origin>DIST-unix32/imageformats</origin>
-                        </distributionDirectory>
-                    </distributionFileList>
-                </folder>
-                <folder>
-                    <description>userData</description>
-                    <destination>${user_home_directory}/Library/Application Support/QuteScoop/QuteScoop</destination>
-                    <name>userDataMac</name>
-                    <platforms>osx</platforms>
-                    <distributionFileList>
-                        <distributionDirectory>
-                            <origin>DIST-macx32/data</origin>
-                        </distributionDirectory>
-                        <distributionDirectory>
-                            <origin>DIST-macx32/downloaded</origin>
-                        </distributionDirectory>
-                        <distributionDirectory>
-                            <origin>DIST-macx32/screenshots</origin>
-                        </distributionDirectory>
-                        <distributionDirectory>
-                            <origin>DIST-macx32/textures</origin>
-                        </distributionDirectory>
-                        <distributionDirectory>
-                            <origin>DIST-macx32/imageformats</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>

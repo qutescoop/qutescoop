@@ -117,14 +117,17 @@ QString Controller::getApproach() const {
         return QString();
     QStringList list = label.split('_');
     if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-
         // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
         if(list.first() == "EDBB")
             return "EDDI"; // map EDBB -> EDDI
-        if(list.first() == "NY")
+        else if(list.first() == "NY")
             return "KLGA"; // map NY -> KLGA
+        else if(list.first() == "MSK")
+            return "UUWW"; // map MSK -> UUWW
+
+        // VATSIMmers don't think ICAO codes are cool
+        if(list.first().length() == 3)
+            return "K" + list.first();
         return list.first();
     }
     return QString();

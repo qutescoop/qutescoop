@@ -107,14 +107,15 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                 if(list.size() < 4)
                     continue;
 
-                if(list[3] == "PILOT") {
+                if (list[3] == "PILOT") {
                     if (type == WHAZZUP) {
                         Pilot *p = new Pilot(list, this);
                         pilots[p->label] = p;
-                        if(friends.contains(p->userId)) friendsLatLon.append(QPair< double, double>(p->lat, p->lon));
+                        if (friends.contains(p->userId))
+                            friendsLatLon.append(QPair<double, double>(p->lat, p->lon));
                     }
                 }
-                else if(list[3] == "ATC") {
+                else if (list[3] == "ATC") {
                     if (type == WHAZZUP) {
                         while (list.size() > 42 && _whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
                             list[35] = list[35] + ":" + list[36];
@@ -122,7 +123,8 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                         }
                         Controller *c = new Controller(list, this);
                         controllers[c->label] = c;
-                        if(friends.contains(c->userId)) friendsLatLon.append(QPair< double,double>(c->lat,c->lon));
+                        if (friends.contains(c->userId))
+                            friendsLatLon.append(QPair<double,double>(c->lat,c->lon));
                     } else if (type == ATCBOOKINGS) {
                         BookedController *bc = new BookedController(list, this);
                         bookedControllers.append(bc);
@@ -211,7 +213,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
 
     // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked
     foreach(const Controller *c, data.controllers) {
-        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers: 10 min
+        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60); // standard for online controllers: 4 min
         if(c->assumeOnlineUntil.isValid())
             if(predictionBasedOnTime.secsTo(c->assumeOnlineUntil) >= 0) // use only if we catched him before his stated leave-time.
                 showUntil = c->assumeOnlineUntil;
@@ -243,9 +245,10 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             continue; // not on the map on the selected time
         }
         if (p->flightStatus() == Pilot::PREFILED) {
-            if(p->depAirport() == 0 || p->destAirport() == 0) {// if we dont know where a prefiled comes from, no magic available
+            // if we dont know where a prefiled comes from, no magic available
+            if(p->depAirport() == 0 || p->destAirport() == 0)
                 continue;
-            }
+
             startTime = p->etd();
             startLat = p->depAirport()->lat;
             startLon = p->depAirport()->lon;
@@ -267,8 +270,11 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             altitude = p->defuckPlanAlt(p->planAlt);
 
         // position
-        double fraction = (double) startTime.secsTo(predictTime) / startTime.secsTo(endTime);
-        QPair<double, double> pos = NavData::greatCircleFraction(startLat, startLon, endLat, endLon, fraction);
+        double fraction = (double) startTime.secsTo(predictTime)
+                          / startTime.secsTo(endTime);
+        QPair<double, double> pos = NavData::greatCircleFraction(
+                                        startLat, startLon,
+                                        endLat, endLon, fraction);
 
         double dist = NavData::distance(startLat, startLon, endLat, endLon);
         double enrouteHrs = ((double) startTime.secsTo(endTime)) / 3600.0;
@@ -463,8 +469,7 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
 QSet<Controller*> WhazzupData::activeSectors() const {
     qDebug() << "WhazzupData::activeSectors()";
     QSet<Controller*> result;
-    QList<Controller*> controllerList = controllers.values();
-    foreach(Controller *c, controllerList)
+    foreach(Controller *c, controllers.values())
         if (c->sector != 0)
             result.insert(c);
 

@@ -147,6 +147,7 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 }
 
 void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
+    qDebug() << "PilotDetails::on_cbPlotRoute_clicked()" << checked;
     bool plottedAirports = false; // plotted?
     if (_pilot->depAirport() != 0)
         plottedAirports |= _pilot->depAirport()->showFlightLines;
@@ -161,6 +162,7 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
         }
         refresh();
     }
+    qDebug() << "PilotDetails::on_cbPlotRoute_clicked() -- finished";
 }
 
 void PilotDetails::closeEvent(QCloseEvent *event) {

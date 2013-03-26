@@ -35,7 +35,7 @@ class WhazzupData {
         QList<Pilot*> allPilots() const { return bookedPilots.values() + pilots.values(); }
         QList<BookedController*> bookedControllers;
 
-        QList< QPair< double, double> > friendsLatLon;
+        QList<QPair<double, double> > friendsLatLon;
 
         Pilot* findPilot(const QString& callsign) const {
             if(pilots[callsign] != 0)

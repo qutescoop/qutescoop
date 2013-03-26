@@ -20,7 +20,7 @@ Whazzup* Whazzup::instance() {
 Whazzup::Whazzup():
         _replyStatus(0), _replyWhazzup(0), _replyBookings(0) {
     // init random seed to switch between URLs
-    srand(QDateTime::currentDateTime().toTime_t());
+    qsrand(QDateTime::currentDateTime().toTime_t());
 
     _downloadTimer = new QTimer(this);
     _bookingsTimer = new QTimer(this);
@@ -42,7 +42,7 @@ void Whazzup::setStatusLocation(const QString& statusLocation) {
     qDebug() << "Downloading network status from\t" << statusLocation;
     GuiMessages::progress("statusdownload", "Getting network status...");
 
-    _replyStatus = Net::g(QNetworkRequest(statusLocation));
+    _replyStatus = Net::g(statusLocation);
     connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
 }
 
@@ -57,7 +57,7 @@ void Whazzup::processStatus() {
     if(!urlRedirect.isEmpty() && urlRedirect != _replyStatus->url()) {
         qDebug() << "Whazzup::processStatus() redirected to" << urlRedirect;
         // send new request
-        _replyStatus = Net::g(QNetworkRequest(urlRedirect));
+        _replyStatus = Net::g(urlRedirect);
         connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
         return;
     }
@@ -96,8 +96,9 @@ void Whazzup::processStatus() {
             _gzurls.append(list[1]);
         else if("moveto0" == list[0]) // this URL is obsolete. Try that one instead.
             // do something with it?
-            qDebug() << "status.txt suggested to use" << list[0] <<
-                    "!!! We do not handle that automatically, please update the status-URL by hand.";
+            qDebug() << "status.txt suggested to use" << list[1]
+                     << "!!! We do not handle that automatically,"
+                     << "please update the status-URL by hand.";
         else if("metar0" == list[0])
             _metarUrl = list[1];
         else if("taf0" == list[0])
@@ -128,7 +129,7 @@ void Whazzup::fromFile(QString filename) {
     qDebug() << "Whazzup::fromFile()" << filename;
     GuiMessages::progress("whazzupDownload", "Loading Whazzup from file...");
 
-    _replyWhazzup = Net::g(QNetworkRequest(QUrl::fromLocalFile(filename)));
+    _replyWhazzup = Net::g(QUrl::fromLocalFile(filename));
     connect(_replyWhazzup, SIGNAL(finished()), SLOT(processWhazzup()));
 }
 
@@ -154,7 +155,7 @@ void Whazzup::download() {
     GuiMessages::progress("whazzupDownload", QString("Updating whazzup from %1...").
                          arg(url.toString(QUrl::RemoveUserInfo)));
 
-    _replyWhazzup = Net::g(QNetworkRequest(url));
+    _replyWhazzup = Net::g(url);
     connect(_replyWhazzup, SIGNAL(finished()), SLOT(processWhazzup()));
     connect(_replyWhazzup, SIGNAL(downloadProgress(qint64,qint64)),
             SLOT(whazzupProgress(qint64,qint64)));
@@ -166,6 +167,7 @@ void Whazzup::whazzupProgress(qint64 prog, qint64 tot) {
 
 void Whazzup::processWhazzup() {
     GuiMessages::remove("whazzupDownload");
+    emit whazzupDownloaded();
     disconnect(_replyWhazzup, SIGNAL(finished()), this, SLOT(processWhazzup()));
     disconnect(_replyWhazzup, SIGNAL(downloadProgress(qint64,qint64)),
             this, SLOT(whazzupProgress(qint64,qint64)));
@@ -192,7 +194,7 @@ void Whazzup::processWhazzup() {
     WhazzupData newWhazzupData(bytes, WhazzupData::WHAZZUP);
 
     if(!newWhazzupData.isNull()) {
-        if(!_predictedTime.isValid() &&
+        if(!predictedTime.isValid() &&
                 newWhazzupData.whazzupTime.secsTo(QDateTime::currentDateTimeUtc()) > 60 * 30)
             GuiMessages::warning("Whazzup data more than 30 minutes old.");
 
@@ -245,7 +247,7 @@ void Whazzup::downloadBookings() {
                               QString("Updating ATC Bookings from %1...")
                           .arg(url.toString(QUrl::RemoveUserInfo)));
 
-    _replyBookings = Net::g(QNetworkRequest(url));
+    _replyBookings = Net::g(url);
     connect(_replyBookings, SIGNAL(finished()), SLOT(processBookings()));
     connect(_replyBookings, SIGNAL(downloadProgress(qint64,qint64)),
             SLOT(bookingsProgress(qint64,qint64)));
@@ -256,10 +258,12 @@ void Whazzup::bookingsProgress(qint64 prog, qint64 tot) {
 }
 
 void Whazzup::processBookings() {
+    qDebug() << "Whazzup::processBookings()";
     GuiMessages::remove("bookingsDownload");
     disconnect(_replyBookings, SIGNAL(finished()), this, SLOT(processBookings()));
     disconnect(_replyBookings, SIGNAL(downloadProgress(qint64,qint64)),
             this, SLOT(bookingsProgress(qint64,qint64)));
+    qDebug() << "Whazzup::processBookings() deleting buffer";
     _replyBookings->deleteLater();
     if(_replyBookings == 0) {
         GuiMessages::criticalUserInteraction("Buffer unavailable.",
@@ -282,13 +286,15 @@ void Whazzup::processBookings() {
 
     QByteArray *bytes = new QByteArray(_replyBookings->readAll());
     WhazzupData newBookingsData(bytes, WhazzupData::ATCBOOKINGS);
-    if(!newBookingsData.isNull()) {
-        if(newBookingsData.bookingsTime.secsTo(QDateTime::currentDateTimeUtc()) > 60 * 60 * 3)
+    if (!newBookingsData.isNull()) {
+        qDebug() << "Whazzup::processBookings() step 2";
+        if (newBookingsData.bookingsTime.secsTo(QDateTime::currentDateTimeUtc()) > 60 * 60 * 3)
             GuiMessages::warning("Bookings data more than 3 hours old.");
 
-        if(newBookingsData.bookingsTime != _data.bookingsTime) {
+        if (newBookingsData.bookingsTime != _data.bookingsTime) {
+            qDebug() << "Whazzup::processBookings() will call updateFrom()";
             _data.updateFrom(newBookingsData);
-            qDebug() << "Whazzup::bookingsDownloaded() Bookings updated from timestamp"
+            qDebug() << "Whazzup::processBookings() Bookings updated from timestamp"
                      << _data.bookingsTime;
 
             QFile out(Settings::applicationDataDirectory(
@@ -312,6 +318,7 @@ void Whazzup::processBookings() {
                                .arg(_data.bookingsTime.toString("ddd MM/dd HHmm'z'")));
     }
     GuiMessages::remove("bookingsProcess");
+    qDebug() << "Whazzup::processBookings() -- finished";
 }
 
 
@@ -328,11 +335,11 @@ QString Whazzup::atisLink(const QString& id) const {
 }
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
-    if(this->_predictedTime != predictedTime) {
+    if(this->predictedTime != predictedTime) {
         qDebug() << "Whazzup::setPredictedTime() predictedTime=" << predictedTime
                  << "data.whazzupTime=" << _data.whazzupTime;
         GuiMessages::progress("warpProcess", "Calculating Warp...");
-        this->_predictedTime = predictedTime;
+        this->predictedTime = predictedTime;
         if (Settings::downloadBookings() && !_data.bookingsTime.isValid())
             emit needBookings();
         if(predictedTime == _data.whazzupTime) {

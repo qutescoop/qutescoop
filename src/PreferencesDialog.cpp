@@ -1235,11 +1235,13 @@ void PreferencesDialog::on_applyAirports_clicked() {
 }
 
 void PreferencesDialog::on_applyPilots_clicked() {
+    qDebug() << "PreferencesDialog::on_applyPilots_clicked()";
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->createPilotsList();
         Window::instance()->mapScreen->glWidget->createControllersLists();
         Window::instance()->mapScreen->glWidget->updateGL();
     }
+    qDebug() << "PreferencesDialog::on_applyPilots_clicked() -- finished";
 }
 
 void PreferencesDialog::on_glStippleLines_toggled(bool checked) {
@@ -1298,14 +1300,14 @@ void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state) {
     if (!_settingsLoaded)
         return;
     Settings::setDownloadClouds(state == Qt::Checked);
-    Window::instance()->startCloudDownload();
+    Window::instance()->downloadCloud();
 }
 
 void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state) {
     if (!_settingsLoaded)
         return;
     Settings::setUseHightResClouds(state == Qt::Checked);
-    Window::instance()->startCloudDownload();
+    Window::instance()->downloadCloud();
 }
 
 void PreferencesDialog::closeEvent(QCloseEvent *event) {

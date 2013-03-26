@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -235,7 +235,8 @@ Kranebitten</string>
             </property>
             <property name="text">
              <string>show 
-&amp;OBS</string>
+&amp;non-
+ATC</string>
             </property>
            </widget>
           </item>
@@ -391,7 +392,9 @@ Kranebitten</string>
   <tabstop>treeArrivals</tabstop>
   <tabstop>buttonShowOnMap</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="Resources.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>buttonShowOnMap</sender>

@@ -3,7 +3,7 @@
 # #####################################################################
 
 # QuteScoop version
-VERSION = "2.1.12beta" # should not include spaces
+VERSION = "2.2-dev" # should not include spaces
 VER_STR = '\\"$${VERSION}\\"'
 DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
                                             # string through qmake -> console ->
@@ -277,10 +277,10 @@ HEADERS += src/_pch.h \
     src/Station.h \
     src/Launcher.h \
     src/SectorView.h \
-    src/helpersPlatform.h \
     src/Net.h \
     src/SondeData.h \
-    src/JobList.h
+    src/JobList.h \
+    src/Platform.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -335,7 +335,8 @@ SOURCES += src/WhazzupData.cpp \
     src/SectorView.cpp \
     src/Net.cpp \
     src/SondeData.cpp \
-    src/JobList.cpp
+    src/JobList.cpp \
+    src/Platform.cpp
 RESOURCES += src/Resources.qrc
 OTHER_FILES += CHANGELOG \
     README.html \
