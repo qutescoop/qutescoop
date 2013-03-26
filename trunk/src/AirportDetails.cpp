@@ -148,20 +148,14 @@ void AirportDetails::refresh(Airport* newAirport) {
             atcContent.insert(atis);
     }
 
-    // observers
+    // non-ATC
     if(cbObservers->isChecked()) {
         foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {
-            if(c->isObserver())
+            //if(c->isObserver()) // don't need this anymore - we want them all
                 if(NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
                     atcContent.insert(c);
         }
     }
-    /*
-    // booked ATC
-    QList<BookedController*> bookedcontrollers = airport->getBookedControllers();
-    for (int i = 0; i < bookedcontrollers.size(); i++)
-        controllers.append(dynamic_cast <Controller*> (bookedcontrollers[i]));
-    */
 
     _atcModel.setClients(atcContent.values());
     _atcSortModel->invalidate();
@@ -183,6 +177,7 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 }
 
 void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
+    qDebug() << "AirportDetails::on_cbPlotRoutes_toggled()" << checked;
     if(_airport->showFlightLines != checked) {
         _airport->showFlightLines = checked;
         if (Window::instance(false) != 0) {
@@ -192,6 +187,7 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();
     }
+    qDebug() << "AirportDetails::on_cbPlotRoutes_toggled() -- finished";
 }
 
 void AirportDetails::on_cbObservers_toggled(bool checked) {
@@ -237,7 +233,7 @@ QSet<Controller*> AirportDetails::checkSectors() const {
                 x2 = c->sector->points.value(ii).first;
             }
 
-            /* First check if the ray is possible to cross the line */
+            /* First check if the ray is able to cross the line */
             if(_airport->lat > x1 && _airport->lat <= x2 && (
                     _airport->lon < c->sector->points.value(ii).second
                     || _airport->lon <= c->sector->points.value((ii + 1) % 8).second)) {
@@ -256,7 +252,7 @@ QSet<Controller*> AirportDetails::checkSectors() const {
                 double m = c->sector->points.value(ii).second
                            - k * c->sector->points.value(ii).first;
 
-                /* Find if the ray crosses the line */
+                /* Check if the ray crosses the line */
                 double y2 = k * _airport->lat + m;
                 if(_airport->lon <= y2)
                     crossings++;

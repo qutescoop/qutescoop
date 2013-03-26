@@ -85,8 +85,13 @@ void GuiMessages::removeStatusLabel(QLabel *label) {
     _labels.remove(label);
 }
 void GuiMessages::labelDestroyed(QObject *obj) {
-    //qDebug() << "GuiMessages::labelDestroyed() received SIGNAL";
-    _labels.remove(dynamic_cast<QLabel*>(obj));
+    if (static_cast<QLabel*>(obj) != 0) {
+        if (_labels.remove(static_cast<QLabel*>(obj)) == 0)
+            qWarning() << "GuiMessages::labelDestroyed() object not found";
+        else
+            qDebug() << "GuiMessages::labelDestroyed() removed object";
+    } else
+        qWarning() << "GuiMessages::labelDestroyed() invalid object cast";
 }
 
 void GuiMessages::addProgressBar(QProgressBar *progressBar, bool hideIfNothingToDisplay) {
@@ -103,29 +108,37 @@ void GuiMessages::removeProgressBar(QProgressBar *progressBar) {
     _bars.remove(progressBar);
 }
 void GuiMessages::progressBarDestroyed(QObject *obj) {
-    //qDebug() << "GuiMessages::progressBarDestroyed() received SIGNAL";
-    _bars.remove(dynamic_cast<QProgressBar*>(obj));
+    qDebug() << obj;
+    if (static_cast<QProgressBar*>(obj) != 0) {
+        if (_bars.remove(static_cast<QProgressBar*>(obj)) == 0)
+            qWarning() << "GuiMessages::progressBarDestroyed() object not found";
+        else
+            qDebug() << "GuiMessages::progressBarDestroyed() removed object";
+    } else
+        qWarning() << "GuiMessages::progressBarDestroyed() invalid object cast";
 }
 
 ///////////////////////////////////////////////////////////////////////////
 // INTERNALLY USED CLASS AND METHODS (called by static methods)
-void GuiMessages::updateMessage(GuiMessage *guiMessage, bool callUpdate) {
+void GuiMessages::updateMessage(GuiMessage *gm, bool callUpdate) {
     //qDebug() << "GuiMessages::updateMessage()" << guiMessage;
-    GuiMessage *existing = messageById(guiMessage->id, guiMessage->type);
+    GuiMessage *existing = messageById(gm->id, gm->type);
     if (existing != 0) {
-        if (!guiMessage->msg.isEmpty())
-            existing->msg             = guiMessage->msg;
-        if (guiMessage->progressValue != -1)
-            existing->progressValue   = guiMessage->progressValue;
-        if (guiMessage->progressMaximum != -1)
-            existing->progressMaximum = guiMessage->progressMaximum;
-        if (guiMessage->showMs != -1)
-            existing->showMs          = guiMessage->showMs;
-        if (guiMessage->shownSince.isValid())
-            existing->shownSince      = guiMessage->shownSince;
+        if (!gm->msg.isEmpty())
+            existing->msg             = gm->msg;
+        if (gm->progressValue != -1)
+            existing->progressValue   = gm->progressValue;
+        if (gm->progressMaximum != -1)
+            existing->progressMaximum = gm->progressMaximum;
+        if (gm->showMs != -1)
+            existing->showMs          = gm->showMs;
+        if (gm->shownSince.isValid())
+            existing->shownSince      = gm->shownSince;
         //qDebug() << " updated existing message:" << existing;
-    } else
-        _messages.insert(guiMessage->type, guiMessage);
+    } else {
+        qDebug() << "GuiMessage()::updateMessage() new" << gm;
+        _messages.insert(gm->type, gm);
+    }
     if (callUpdate)
         update();
 }
@@ -138,6 +151,8 @@ void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
                     setStatusMessage(new GuiMessage());
                 if (_currentProgressMessage == gm)
                     setProgress(new GuiMessage());
+                qDebug() << "GuiMessage()::removeMessageById() removed"
+                         << gm;
                 _messages.remove(key, gm);
             }
         }

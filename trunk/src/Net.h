@@ -12,6 +12,7 @@ class Net : public QNetworkAccessManager {
 
         // convenience functions: Net::g() vs. Net::instance()->get()
         static QNetworkReply *h(const QNetworkRequest &request);
+        static QNetworkReply *g(const QUrl &url);
         static QNetworkReply *g(const QNetworkRequest &request);
         static QNetworkReply *p(const QNetworkRequest &request, QIODevice *data);
         static QNetworkReply *p(const QNetworkRequest &request, const QByteArray &data);

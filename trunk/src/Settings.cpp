@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include "Settings.h"
+#include "GuiMessage.h"
 
 #include "Whazzup.h"
 #include "Window.h"
@@ -31,9 +32,10 @@ void Settings::importFromFile(QString fileName) {
     delete settings_file;
 }
 
-
-// returns NotOpen / ReadOnly / ReadWrite
-QIODevice::OpenMode Settings::testDirectory(QString &dir) {
+/**
+    @returns NotOpen / ReadOnly / ReadWrite / ReadOnly|ReadWrite
+**/
+QIODevice::OpenMode Settings::dirCapabilities(QString &dir) {
     QIODevice::OpenMode capabilities = QIODevice::NotOpen;
     if (QDir(dir).exists()) {
         QFile testFile(dir + "/test");
@@ -44,7 +46,7 @@ QIODevice::OpenMode Settings::testDirectory(QString &dir) {
         } else
             capabilities |= QIODevice::ReadOnly;
     }
-    //qDebug() << "Settings::testDirectory()" << dir << capabilities;
+    qDebug() << "Settings::dirCapabilities()" << dir << "=" << capabilities;
     return capabilities;
 }
 
@@ -64,42 +66,40 @@ void Settings::calculateApplicationDataDirectory() {
     dirs << QCoreApplication::applicationDirPath();
 
     QStringList subdirs; // needed subDirs
-    subdirs << "data" << "downloaded" << "screenshots" << "textures"; // 'texture' does not have to be writeable
+    subdirs << "data" << "downloaded" << "screenshots" << "textures";
 
-    QList< QIODevice::OpenMode> dirCapabilities;
+    qDebug() << "Settings::calculateApplicationsDirectory(): checking" << dirs
+             << "and their sub-directories" << subdirs << "for existence and writability."
+             << "Taking the first writable location as 'application data directory'.";
+
+    QList< QIODevice::OpenMode> __dirCapabilities;
     for (int i = 0; i < dirs.size(); i++) {
-        dirCapabilities << QIODevice::ReadWrite; // init, might be diminished by the AND-combine
+        __dirCapabilities << QIODevice::ReadWrite; // init, might be diminished by the AND-combine
         // looking for capabilities of the subdirs
         for (int j = 0; j < subdirs.size(); j++) {
             QString dir = QString("%1/%2").arg(dirs[i], subdirs[j]);
-            dirCapabilities[i] &= testDirectory(dir); // AND-combine: returns lowest capability
+            __dirCapabilities[i] &= dirCapabilities(dir); // AND-combine: returns lowest capability
         }
-        //qDebug() << "Settings::calculateApplicationsDirectory():" << dirs[i] << "has capabilities:" << dirCapabilities[i];
-        if (i == 0) { // preferred location writeable - no further need to look
-            if (dirCapabilities[0].testFlag(QIODevice::ReadWrite)) {
-                instance()->setValue("general/calculatedApplicationDataDirectory", dirs[0]);
-                return;
-            }
-        } else { // another location is writeable - also OK.
-            if (dirCapabilities[i].testFlag(QIODevice::ReadWrite)) {
-                instance()->setValue("general/calculatedApplicationDataDirectory", dirs[i]);
-                return;
-            }
+        // qDebug() << "Settings::calculateApplicationsDirectory():" << dirs[i] << "has capabilities:" << dirCapabilities[i];
+        // location is writeable - we are finished
+        if (__dirCapabilities[i].testFlag(QIODevice::ReadWrite)) {
+            instance()->setValue("general/calculatedApplicationDataDirectory", dirs[i]);
+            return;
         }
     }
 
     // last ressort: looking for readable subdirs
     for (int i = 0; i < dirs.size(); i++) {
-        if (dirCapabilities[i].testFlag(QIODevice::ReadOnly)) { // we found the data at least readonly
+        if (__dirCapabilities[i].testFlag(QIODevice::ReadOnly)) { // we found the data at least readonly
             const QString warningStr(QString(
-                    "The directories '%1' where found at '%2' but are readonly. This means that neither automatic sectorfile-download "
+                    "The directories '%1' were found at '%2' but are readonly. This means that neither automatic datafile-updates "
                     "nor saving logs, screenshots or downloaded Whazzups will work.\n"
                     "Preferrably, data should be at '%3' and this location should be writable.")
                     .arg(subdirs.join("', '"))
                     .arg(dirs[i])
                     .arg(dirs.first()));
             qWarning() << warningStr;
-            QMessageBox::warning(0, "Warning", warningStr);
+            GuiMessages::criticalUserInteraction(warningStr, "Warning");
 
             // data found in other location than the preferred one and
             // preferred location creatable or already existing: Copy data directories/files there?
@@ -154,12 +154,14 @@ void Settings::calculateApplicationDataDirectory() {
                         instance()->setValue("general/calculatedApplicationDataDirectory", dirs.first());
                         return;
                     } else { // errors during the copy operations
-                        QMessageBox::critical(0, "Error",
+                        GuiMessages::criticalUserInteraction(
                                 QString("The following errors occurred during copy:\n %1\n"
                                         "When in doubt if important files where left out, "
                                         "delete the new data directory and let "
                                         "QuteScoop copy the files again.")
-                                .arg(copyErrors));
+                                        .arg(copyErrors),
+                                "Error"
+                        );
                     }
                 }
             }
@@ -182,6 +184,14 @@ void Settings::calculateApplicationDataDirectory() {
     return;
 }
 
+
+/**
+  The so-called 'application data directory', a writable location that includes some pre-installed
+  data directories. Our Wiki includes some paragraphs about it: https://sourceforge.net/p/qutescoop/wiki/Help/
+  @see calculateApplicationDataDirectory()
+  @param composeFilePath path/file, e.g. "textures/clouds/clouds.jpg" (/ is multi-platform, also on Win)
+  @returns fully qualified path to the 'application data directory'.
+**/
 QString Settings::applicationDataDirectory(const QString &composeFilePath) {
     return QString("%1/%2")
             .arg(instance()->value("general/calculatedApplicationDataDirectory", QVariant()).toString())
@@ -567,7 +577,7 @@ void Settings::setDisplaySmoothDots(bool value) {
 }
 
 int Settings::maxLabels() {
-    return instance()->value("gl/maxLabels", 150).toInt();
+    return instance()->value("gl/maxLabels", 9999).toInt();
 }
 
 void Settings::setMaxLabels(int maxLabels) {

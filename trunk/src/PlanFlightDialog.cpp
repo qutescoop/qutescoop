@@ -117,7 +117,7 @@ void PlanFlightDialog::requestVroute() {
     url.addQueryItem(QString("arr"), edDest->text().trimmed());
 
 
-    _replyVroute = Net::g(QNetworkRequest(url));
+    _replyVroute = Net::g(url);
     connect(_replyVroute, SIGNAL(finished()), this, SLOT(vrouteDownloaded()));
 
     lblVrouteStatus->setText(QString("request sent..."));
@@ -219,7 +219,7 @@ void PlanFlightDialog::requestVatroute() {
     url.addQueryItem(QString("dep"), edDep->text().trimmed());
     url.addQueryItem(QString("dest"), edDest->text().trimmed());
 
-    _replyVatroute = Net::g(QNetworkRequest(url));
+    _replyVatroute = Net::g(url);
     connect(_replyVatroute, SIGNAL(finished()), this, SLOT(vatrouteDownloaded()));
     lblVatrouteStatus->setText(QString("request sent..."));
 }
@@ -334,12 +334,14 @@ void PlanFlightDialog::plotPlannedRoute() const {
 }
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
+    qDebug() << "PlanFlightDialog::on_cbPlot_toggled()" << checked;
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->createPilotsList();
         Window::instance()->mapScreen->glWidget->updateGL();
     }
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);
+    qDebug() << "PlanFlightDialog::on_cbPlot_toggled() -- finished";
 }
 
 void PlanFlightDialog::on_pbCopyToClipboard_clicked() {

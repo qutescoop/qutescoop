@@ -24,7 +24,6 @@ class Launcher : public QWidget {
     protected:
         void mouseMoveEvent(QMouseEvent *);
         void mousePressEvent(QMouseEvent *);
-        void keyReleaseEvent(QKeyEvent *event);
     signals:
         void dataChecked();
     private slots:

@@ -38,16 +38,15 @@ Window::Window(QWidget *parent) :
     if(Settings::resetOnNextStart())
         QSettings().clear();
 
+    GuiMessages::progress("mainwindow", "Setting up main window...");
     setupUi(this);
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
     setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
 
-    //QSettings* settings = new QSettings();
-
     // apply styleSheet
     if (!Settings::stylesheet().isEmpty()) {
-        qDebug() << "Window::Window() applying styleSheet:" << Settings::stylesheet();
+        qDebug() << "Window::() applying styleSheet:" << Settings::stylesheet();
         setStyleSheet(Settings::stylesheet());
     }
 
@@ -83,7 +82,7 @@ Window::Window(QWidget *parent) :
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
     connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-    connect(whazzup, SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+    connect(whazzup, SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
 
     searchResult->setModel(&_modelSearchResult);
     connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)),
@@ -169,25 +168,38 @@ Window::Window(QWidget *parent) :
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
-
-    connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(startCloudDownload()));
-
-    if(Settings::showClouds())
-        startCloudDownload();
+    connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(downloadCloud()));
 
     //LogBrowser
 #ifdef QT_NO_DEBUG_OUTPUT
     menuView->removeAction(actionDebugLog);
-    qDebug() << "Window::Window() Debug Log Browser deactivated due to QT_NO_DEBUG_OUTPUT";
+    qDebug() << "Window::() Debug Log Browser deactivated due to QT_NO_DEBUG_OUTPUT";
 #endif
 
-    qDebug() << "Window::Window() connecting me as GuiMessages listener";
+    qDebug() << "Window::() connecting me as GuiMessages listener";
     GuiMessages::instance()->addProgressBar(_progressBar, true);
     GuiMessages::instance()->addStatusLabel(_lblStatus, false);
-    qDebug() << "Window::Window() --finished";
+
+    GuiMessages::remove("mainwindow");
+    qDebug() << "Window::() --finished";
 }
 
 Window::~Window() {
+}
+
+void Window::restore() {
+    qDebug() << "Window::restore() restoring window state, geometry and position";
+    // set window to transparent so we can fade it in...
+    setWindowOpacity(.01);
+
+    if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
+    if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
+    if (!Settings::savedGeometry().isNull()) restoreGeometry(Settings::savedGeometry());
+    if (!Settings::savedState().isNull())    restoreState(Settings::savedState());
+    if (Settings::maximized())               showMaximized();
+    else                                     show();
+
+    emit restored();
 }
 
 void Window::toggleFullscreen() {
@@ -207,14 +219,14 @@ void Window::about() {
     file.close();
 }
 
-void Window::whazzupDownloaded(bool isNew) {
+void Window::processWhazzup(bool isNew) {
     qDebug() << "Window::whazzupDownloaded() isNew =" << isNew;
     const WhazzupData &realdata = Whazzup::instance()->realWhazzupData();
     const WhazzupData &data = Whazzup::instance()->whazzupData();
 
     QString msg = QString(tr("%1%2 - %3: %4 clients"))
                   .arg(Settings::downloadNetworkName())
-                  .arg(Whazzup::instance()->predictedTime().isValid()
+                  .arg(Whazzup::instance()->predictedTime.isValid()
                        ? " - <b>W A R P E D</b>  to"
                        : ""
                        )
@@ -239,9 +251,9 @@ void Window::whazzupDownloaded(bool isNew) {
                         );
     lblWarpInfo->setText(msg);
 
-    if (Whazzup::instance()->predictedTime().isValid()) {
+    if (Whazzup::instance()->predictedTime.isValid()) {
         framePredict->show();
-        dateTimePredict->setDateTime(Whazzup::instance()->predictedTime());
+        dateTimePredict->setDateTime(Whazzup::instance()->predictedTime);
         if(isNew) {
             // recalculate prediction on new data arrived
             if(data.predictionBasedOnTime != realdata.whazzupTime
@@ -301,18 +313,6 @@ void Window::whazzupDownloaded(bool isNew) {
         _timerWhazzup.start(Settings::downloadInterval() * 60 * 1000 * 4);
 
     qDebug() << "Window::whazzupDownloaded() -- finished";
-}
-
-/**
- restore saved states
- **/
-void Window::restore() {
-    if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
-    if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
-    if (!Settings::savedGeometry().isNull()) restoreGeometry(Settings::savedGeometry());
-    if (!Settings::savedState().isNull())    restoreState(Settings::savedState());
-    if (Settings::maximized())               showMaximized();
-    show();
 }
 
 void Window::refreshFriends() {
@@ -401,14 +401,15 @@ void Window::performSearch() {
 }
 
 void Window::closeEvent(QCloseEvent *event) {
+    // save window statii
     Settings::saveState(saveState());
     Settings::saveGeometry(saveGeometry()); // added this 'cause maximized wasn't saved
     Settings::saveSize(size()); // readded as Mac OS had problems with geometry only
     Settings::savePosition(pos());
     Settings::saveMaximized(isMaximized());
-    on_actionHideAllWindows_triggered();
     if (Settings::rememberMapPositionOnClose())
         mapScreen->glWidget->rememberPosition(9);
+
     event->accept();
 }
 
@@ -520,8 +521,10 @@ void Window::updateMetarDecoder(const QString& airport, const QString& decodedTe
 void Window::downloadWatchdogTriggered() {
     _timerWhazzup.stop();
     Whazzup::instance()->setStatusLocation(Settings::statusLocation());
-    GuiMessages::errorUserAttention("Failed to download network data for a while. Maybe a Whazzup location went offline. I try to get the Network Status again.",
-                                   "Whazzup-download failed.");
+    GuiMessages::errorUserAttention("Failed to download network data for a while. "
+                                    "Maybe a Whazzup location went offline. "
+                                    "I try to get the Network Status again.",
+                                    "Whazzup-download failed.");
 }
 
 void Window::setEnableBookedAtc(bool enable) {
@@ -541,12 +544,12 @@ void Window::performWarp(bool forceUseDownloaded) {
                 if (downloaded[i].first != Whazzup::instance()->realWhazzupData().whazzupTime) {
                     // disconnect to inhibit update because will be updated later
                     disconnect(Whazzup::instance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-                    disconnect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+                    disconnect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
 
                     Whazzup::instance()->fromFile(downloaded[i].second);
 
                     connect(Whazzup::instance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-                    connect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(whazzupDownloaded(bool)));
+                    connect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
                 }
                 break;
             }
@@ -595,7 +598,7 @@ void Window::on_tbRunPredict_toggled(bool checked) {
     if(checked) {
         dateTimePredict->setEnabled(false);
         widgetRunPredict->show();
-        if(!Whazzup::instance()->predictedTime().isValid())
+        if(!Whazzup::instance()->predictedTime.isValid())
             performWarp();
         _timerRunPredict.start(1000);
     } else {
@@ -612,7 +615,7 @@ void Window::runPredict() {
     if (dsRunPredictStep->value() == 0) // real time selected
         to = QDateTime::currentDateTimeUtc();
     else
-        to = Whazzup::instance()->predictedTime().addSecs(
+        to = Whazzup::instance()->predictedTime.addSecs(
                 static_cast<int>(dsRunPredictStep->value()*60));
 
     // when only using downloaded Whazzups, select the next available
@@ -746,7 +749,7 @@ void Window::on_actionRecallMapPosition2_triggered() {
 void Window::on_actionRememberMapPosition9_triggered() {
     if (Settings::rememberMapPositionOnClose()) {
         if (QMessageBox::question(this, "Startup position will be overridden on close",
-                              "You have just set the the startup map position. "
+                              "You have just set the startup map position. "
                               "Anyhow this will be overridden on close because "
                               "you have set 'remember startup map position on close' "
                               "in preferences.\n\n"
@@ -844,6 +847,7 @@ void Window::shootScreenshot() {
 }
 
 void Window::on_actionShowRoutes_triggered(bool checked) {
+    qDebug() << "Window::on_actionShowRoutes_triggered()" << checked;
     GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
     foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
         a->showFlightLines = checked;
@@ -861,6 +865,7 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
     mapScreen->glWidget->createPilotsList();
     mapScreen->glWidget->updateGL();
     //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
+    qDebug() << "Window::on_actionShowRoutes_triggered() -- finished";
 }
 
 void Window::on_actionShowWaypoints_triggered(bool checked) {
@@ -882,7 +887,7 @@ void Window::allSectorsChanged(bool state) {
 
 }
 
-void Window::startCloudDownload() {
+void Window::downloadCloud() {
     qDebug() << "Window::startCloudDownload -- prepare Download";
     _timerCloud.stop();
 
@@ -925,7 +930,7 @@ void Window::startCloudDownload() {
     _cloudDownloader = new QHttp(this);
 
     _cloudDownloader->setHost(url.host());
-    connect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
+    connect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloaded(bool)));
 
     _cloudBuffer = new QBuffer;
     _cloudBuffer->open(QBuffer::ReadWrite);
@@ -936,9 +941,10 @@ void Window::startCloudDownload() {
     qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
 }
 
-void Window::cloudDownloadFinished(bool error) {
+void Window::cloudDownloaded(bool error) {
     qDebug() << "Window::cloudDownloadFinished -- download finished";
-    disconnect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloadFinished(bool)));
+    emit cloudDownloaded();
+    disconnect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloaded(bool)));
     if(_cloudBuffer == 0)
         return;
 

@@ -66,11 +66,11 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
 }
 
 void SearchResultModel::modelDoubleClicked(const QModelIndex& index) { // double-click to center
-    if (_content[index.row()]->lat != 0 || _content[index.row()]->lon != 0) {
-        if (Window::instance(false) != 0)
+    if ((_content[index.row()]->lat != 0 || _content[index.row()]->lon != 0)
+        && (Window::instance(false) != 0))
             Window::instance()->mapScreen->glWidget->setMapPosition(_content[index.row()]->lat,
-                                                                _content[index.row()]->lon, 0.1);
-    }
+                                                                _content[index.row()]->lon, .3);
+
 }
 
 void SearchResultModel::modelClicked(const QModelIndex& index) { // one click to bring up the detailsDialog

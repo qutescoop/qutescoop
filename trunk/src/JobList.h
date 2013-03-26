@@ -7,6 +7,10 @@
 
 #include <QObject>
 
+/**
+  A list of jobs, connected through SIGNALs and SLOTs. Will emit finished()
+  when all jobs were executed
+**/
 class JobList : public QObject {
         Q_OBJECT
     public:

@@ -53,7 +53,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
 
     // servers
     QStringList serverHeaders;
-    serverHeaders << "ident" << "URL" << "ping" << "ping" << "ping" << QString::fromUtf8("Ø ping")
+    serverHeaders << "ident" << "URL" << "ping[ms]" << "ping[ms]" << "ping[ms]" << QString::fromUtf8("Ø ping[ms]")
                   << "connected\nclients" << "location" << "description";
     serversTable->setColumnCount(serverHeaders.size());
     serversTable->setHorizontalHeaderLabels(serverHeaders);
@@ -61,8 +61,8 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
 
     // voiceServers
     QStringList voiceServerHeaders;
-    voiceServerHeaders << "URL" << "ping" << "ping" << "ping" << QString::fromUtf8("Ø ping")
-                       << "connected\ncontrollers" << "location" << "description";
+    voiceServerHeaders << "URL" << "ping[ms]" << "ping[ms]" << "ping[ms]" << QString::fromUtf8("Ø ping[ms]")
+                       << "voice\nchannels" << "location" << "description";
     voiceServersTable->setColumnCount(voiceServerHeaders.size());
     voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
 
