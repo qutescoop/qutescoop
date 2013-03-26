@@ -2353,7 +2353,8 @@ UIIO:Ust'Ordynskij:Ust'Ordynskij:RU:52.817:104.766
 UIKK:Kirensk:Kirensk:RU:58.8:112.167
 UIUH:Horinsk:Horinsk:RU:52.167:109.783
 UIUU:Mukhino:Ulan-Ude:RU:51.81:107.444
-UKBB:Borispol:Kiev:UA:50.345:30.895
+UKBB:Borispol:Kiev (old):UA:50.345:30.895
+UKBV:Kiev (fake for APP):Kiev:UA:50.340:30.890
 UKCC:Donetsk:Donetsk:UA:48.074:37.74
 UKCW:Luhansk:Luhansk:UA:48.417:39.374
 UKDD:Dnepropetrovsk:Dnipropetrovsk:UA:48.357:35.1
@@ -2374,6 +2375,7 @@ UKOO:Odessa:Odessa:UA:46.427:30.676
 UKWW:Vinnitsa:Vinnitsa:UA:49.234:28.598
 ULAA:Talagi:Arkhangelsk:RU:64.6:40.717
 ULLI:Pulkovo:St Petersburg:RU:59.8:30.262
+ULLL:Petersburg (virtual for APP):St Petersburg:RU:59.81:30.255
 ULMM:Murmansk:Murmansk:RU:68.782:32.751
 ULOL:Velikie Luki:Velikie Luki:RU:56.983:31.15
 ULOO:Pskov:Pskov:RU:57.784:28.396
@@ -2422,7 +2424,7 @@ USPP:Perm:Perm:RU:57.914:56.021
 USRK:Kogalym:Kogalym:RU:62.19:74.534
 USRR:Surgut:Surgut:RU:61.344:73.402
 USSS:Yekaterinburg:Yekaterinburg:RU:56.741:60.804
-USTR:Tyumen:Tyumen:RU:57.19:65.324
+USTR:Tyumen:Tyumen:RU:56.5:67:814
 USUU:Kurgan:Kurgan:RU:55.475:65.415
 UTAA:Ashkhabad:Ashgabat:TM:37.987:58.361
 UTAK:Turkmenbashi:Turkmenbashi:TM:40.063:53.007
