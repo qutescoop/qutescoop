@@ -1,4 +1,5 @@
-Notes on Dolomynum data files
+Notes on QuteScoop data files. Some originate from Dolomynum and share the same 
+data format.
 
 These data files can be freely edited and distributed, but please avoid
 copyright violations. It is recommended to use only public domain data for
