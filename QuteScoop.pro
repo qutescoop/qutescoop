@@ -44,7 +44,7 @@ macx: {
     contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "macx64"
     else:PLATFORM = "macx32"
 }
-unix: {
+!macx:unix: {
     # QMAKE_TARGET.arch is only available on Windows?!
     linux-g++:QMAKE_TARGET.arch = $$QMAKE_HOST.arch
     # allow for 32bit cross-compiling on 64bit with g++ (_HOST and _TARGET different)
