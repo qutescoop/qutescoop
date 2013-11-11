@@ -113,8 +113,14 @@ LFRR:Brest:FR:46.7:-4.2:1780
 LFBB_N:Bordeaux:FR:45.9:0.55:1781
 LFBB_S:Bordeaux:FR:44:1.3:1782
 LFBB:Bordeaux:FR:44.7:0.6:1783
-LGGG:Athinai:GR:37.1:22.3:168
-LGMD:Makedonia:GR:39.6:24.4:169
+LGGG:Athinai Control:GR:36.27:23.20:6001
+LGGG_E:Athinai Control East:GR:36.00:26.10:6003
+LGGG_W:Athinai Control West:GR:37.60:20.70:6004
+LGMD:Makedonia Control:GR:39.60:23.70:6002
+LGMD_E:Makedonia Control:GR:39.50:24.65:6005
+LGMD_W:Makedonia Control:GR:39.70:22.45:6006
+LGGG_M:Athinai Military Radar:GR:37.50:22.70:6007
+LGGG_O:Athinai Makedonia Control MERGED:GR:37.35:22.70:6008
 LHCC:Budapest:HU:47.2:19.5:170
 LIBB:Brindisi:IT:40.1:16.8:172
 LIBB_N:Brindisi:IT:40.1:16.8:173
@@ -558,11 +564,6 @@ EGTL_OC:London:GB:51.1:-1:5533
 EGTT_26:London:GB:51.64:-0.01:5534
 EGTT_35:London:GB:51.3:-5.36:5535
 EGTT_28:London:GB:52.4:-1.6:5536
-LGGG_E:Athinai:GR:36.09:25.9:5582
-LGGG_W:Athinai:GR:37.87:21.33:5583
-LGMD_E:Makedonia:GR:40.23:24.68:5584
-LGMD_W:Makedonia:GR:40.08:22.85:5585
-LGGG_O:Athinai:GR:37.54:24.42:5587
 NWWN:Noumea:NC:-19.5:165.2:5724
 UESU:Zyryanka:RU:66:150.5:5931
 YSSY:Sydney:AU:-33.2:150.7:5880

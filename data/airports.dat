@@ -1649,66 +1649,67 @@ LFXU:Les Mureaux:Paris:FR:48.998:1.943
 LFYD:Damblain:Damblain:FR:48.085:5.665
 LFYG:Niergnies:Cambrai:FR:50.142:3.264
 LFYR:Pruniers:Romorantin:FR:47.321:1.688
-LGAD:Andravida:Andravida:GR:37.921:21.292
-LGAG:Agrinion:Agrinion:GR:38.602:21.351
-LGAL:Dimokritos:Alexandroupolis:GR:40.856:25.956
-LGAT:Athens:Athens:GR:37.898:23.729
-LGAV:Eleftherios Venizelos:Athens:GR:37.936:23.944
-LGAX:Alexandria:Alexandria:GR:40.651:22.489
-LGBL:Nea Anchialos:Nea Anghialos:GR:39.22:22.794
-LGED:Edessa-Arnissa:Edessa-Arnissa:GR:40.853:21.828
-LGEL:Elefsis:Elefsis:GR:38.064:23.556
-LGEP:Epitalion:Epitalion:GR:37.616:21.5
-LGFL:Florina:Florina:GR:40.805:21.435
-LGHI:Chios:Chios:GR:38.343:26.14
-LGIK:Ikaria:Ikaria:GR:37.683:26.347
-LGIO:Ioannina:Ioannina:GR:39.696:20.822
-LGIR:Nikos Kazantzakis:Iraklion:GR:35.34:25.18
-LGKA:Aristotelis:Kastoria:GR:40.446:21.282
-LGKC:Kithira:Kithira:GR:36.274:23.017
-LGKF:Kefalinia:Kefallinia:GR:38.12:20.5
-LGKJ:Kastelorizo:Kastelorizo:GR:36.13:29.568
-LGKL:Kalamata:Kalamata:GR:37.068:22.026
-LGKM:Amygdaleon:Kavala:GR:40.973:24.341
-LGKO:Kos:Kos:GR:36.793:27.092
-LGKP:Karpathos:Karpathos:GR:35.421:27.146
-LGKR:Ioannis Kapodistrias:Kerkira:GR:39.602:19.912
-LGKS:Kasos:Kasos:GR:35.421:26.91
-LGKV:Megas Alexandros:Kavala:GR:40.913:24.619
-LGKZ:Kozani:Kozani:GR:40.286:21.841
-LGLE:Leros:Leros:GR:37.185:26.8
-LGLM:Limnos:Limnos:GR:39.917:25.236
-LGLR:Larisa:Larisa:GR:39.65:22.465
-LGMG:Megara:Megara:GR:37.981:23.365
-LGMK:Mikonos:Mikonos:GR:37.435:25.348
-LGML:Milos:Milos:GR:36.699:24.477
-LGMR:Marathon:Marathon:GR:38.146:24.014
-LGMT:Mitilini:Mitilini:GR:39.057:26.598
-LGNX:Naxos:Naxos:GR:37.085:25.371
-LGPA:Paros:Paros:GR:37.016:25.129
-LGPL:Astypalaia:Astypalaia:GR:36.58:26.376
-LGPZ:Aktio:Preveza:GR:38.925:20.765
-LGRD:Maritsa:Rodos:GR:36.383:28.109
-LGRP:Diagoras:Rhodos:GR:36.405:28.086
-LGRX:Araxos:Araxos:GR:38.151:21.428
-LGSA:Souda:Chania:GR:35.532:24.15
-LGSD:Sedes:Sedes:GR:40.536:23.035
-LGSK:Skiathos:Skiathos:GR:39.177:23.504
-LGSM:Samos:Samos:GR:37.69:26.912
-LGSO:Syros:Syros:GR:37.423:24.951
-LGSP:Sparti:Sparti:GR:36.974:22.526
-LGSR:Santorini:Santorini:GR:36.4:25.479
-LGST:Sitia:Sitia:GR:35.216:26.101
-LGSV:Stefanovikion:Stefanovikion:GR:39.48:22.767
-LGSY:Skiros:Skiros:GR:38.968:24.487
-LGTG:Tanagra:Tanagra:GR:38.34:23.565
-LGTL:Kasteli:Kasteli:GR:35.192:25.327
-LGTP:Tripolis:Tripolis:GR:37.53:22.404
-LGTS:Makedonia:Thessaloniki:GR:40.52:22.971
-LGTT:Tatoi:Dekelia:GR:38.109:23.784
-LGVO:Volos:Volos:GR:39.383:22.917
-LGZA:Zakinthos:Zakinthos:GR:37.751:20.884
-BAJA:Baja:Baja:HU:46.148:19.043
+LGAD:Andravida AB:Andravida:GR:37.5513:21.1733
+LGAG:Agrinion:Agrinion:GR:602:21.3512
+LGAL:Dimokritos:Alexandroupolis:GR:40.8558:25.9562
+LGAV:Eleftherios Venizelos:Athens:GR:37.9363:23.9444
+LGAX:Alexandria AB:Alexandria:GR:40.6511:22.4887
+LGBL:Almiros AB:Nea Anchialos:GR:39.21.9619:22.79.4339
+LGED:Edessa-Arnissa:Edessa-Arnissa:GR:40.8533:21.8283
+LGEL:Elefsis AB:Elefsis:GR:38.0638:23.556
+LGEP:Epitalion:Epitalion:GR:37.6163:21.4997
+LGFL:Florina:Florina:GR:40.8049:21.4349
+LGHI:Omiros:Chios:GR:38.3431:26.1405
+LGHL:Porto Heli:Porto Heli:GR:37.1759:23.0857
+LGIK:Ikaros:Ikaria:GR:37.6833:26.3474
+LGIO:King Pyros:Ioannina:GR:39.6963:20.8225
+LGIR:Nikos Kazantzakis:Iraklion:GR:35.3397:25.1802
+LGKA:Aristotelis:Kastoria:GR:40.4462:21.2821
+LGKC:Kithira:Kithira:GR:36.2742:23.0169
+LGKF:Kefallinia:Kefallinia:GR:38.12:20.5004
+LGKJ:Kastelorizo:Kastelorizo:GR:36.1302:29.5684
+LGKL:Kalamata AB:Kalamata:GR:37.0683:22.0256
+LGKM:Amigdaleon AB:Amigdaleon:GR:40.9727:24.3414
+LGKN:Kotroni AB:Kotroni:GR:38.0813:23.5722
+LGKO:Ippokratis:Kos:GR:36.7933:27.0916
+LGKP:Karpathos:Karpathos:GR:35.4214:27.146
+LGKR:Ioannis Kapodistrias:Kerkira:GR:39.6019:19.9116
+LGKS:Kasos:Kasos:GR:35.4213:26.91
+LGKV:Megas Alexandros:Kavala:GR:40.9133:24.6192
+LGKY:Kalymnos:Kalymnos:GR:36.9633:26.9406
+LGKZ:Filippos:Kozani:GR:40.2861:21.8408
+LGLE:Leros:Leros:GR:37.1849:26.8002
+LGLM:Ifaistos:Limnos:GR:39.917:25.2363
+LGLR:Larisa AB:Larisa:GR:39.6502:22.4654
+LGMG:Megara AB:Megara:GR:37.9811:23.3654
+LGMK:Mikonos:Mikonos:GR:37.4351:25.3481
+LGML:Milos:Milos:GR:36.6987:24.4766
+LGMR:Marathon:Marathon:GR:38.1463:24.0144
+LGMT:Odysseas Elytis:Mitilini:GR:39.0566:26.5983
+LGNX:Naxos:Naxos:GR:37.0848:25.3706
+LGPA:Paros:Paros:GR:37.0161:25.1289
+LGPL:Astypalaia:Astypalaia:GR:36.5798:26.3758
+LGPZ:Aktion AB:Preveza:GR:38.9254:20.7653
+LGRD:Maritsa AB:Rhodos:GR:36.383:28.1088
+LGRP:Diagoras:Rhodos:GR:36.4054:28.0861
+LGRX:Araxos AB:Araxos:GR:38.1513:21.4276
+LGSA:Ioannis Daskalogiannis AB:Chania:GR:35.5317:24.1496
+LGSD:Sedes AB:Sedes:GR:40.5359:23.035
+LGSK:Alexandros Papadiamandis:Skiathos:GR:39.1771:23.5036
+LGSM:Aristarchos Of Samos:Samos:GR:37.6899:26.9116
+LGSO:Dimitrios Vikelas:Syros:GR:37.4227:24.9509
+LGSP:Sparti AB:Sparti:GR:36.9738:22.5262
+LGSR:Santorini:Santorini:GR:36.4003:25.4787
+LGST:Sitia:Sitia:GR:35.2161:26.1013
+LGSV:Stefanovikion AB:Stefanovikion:GR:39.4799:22.7672
+LGSY:Skiros AB:Skiros:GR:38.9675:24.4872
+LGTG:Tanagra AB:Tanagra:GR:38.3398:23.5649
+LGTL:Kasteli AB:Kasteli:GR:35.192:25.327
+LGTP:Tripolis AB:Tripolis:GR:37.5305:22.4036
+LGTS:Makedonia:Thessaloniki:GR:40.5197:22.9709
+LGTT:Dekelia:Dekelia:GR:38.1089:23.7838
+LGVO:Volos:Volos:GR:39.3833:22.9166
+LGZA:Dionysios Solomos:Zakinthos:GR:37.7508:20.8842
 LH0A:Kunmadaras:Kunmadaras:HU:47.386:20.783
 LHB3:Bony:Gyorszentivan:HU:47.667:17.785
 LHB4:Papkutapuszta:Papkutapuszta:HU:46.876:18.038
