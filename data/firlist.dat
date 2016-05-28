@@ -83,7 +83,7 @@ ESUN:Sweden:SE:65.1:16.4:148
 ESMM:Sweden:SE:57.4:15:149
 LATI:Tirana:AL:41.1:20.1:152
 LAAA:Tirana:AL:41.1:20.1:152
-LBSR:Sofia:BG:42.8:26.4:6750
+LBSR:Sofia:BG:42.8:26.4:6760
 LBSR_W:Sofia:BG:42.8:24.4:153
 LBSR_E:Sofia:BG:43.1:28.1:154
 LBWR:Varna:BG:43.1:28.1:154
@@ -162,10 +162,11 @@ AYPY:Port Moresby:PG:-6.4:150.4:197
 BGGL:Sondrestrom:GL:71.2:-43.9:198
 BIRD:Reykjavik:IS:66.9:-15.5:199
 CZEG:Edmonton:CA:69.5:-99.4:200
-CZUL:Montreal:CA:54.6:-68.5:201
+MTL:Montreal:CA:54.6:-68.5:201
+MTL_MO:Montreal:CA:54.6:-68.5:201
 CZWG:Winnipeg:CA:56:-95:202
 CZVR:Vancouver:CA:52.6:-125.6:203
-CZYZ:Toronto:CA:47.5:-81.6:204
+TOR:Toronto:CA:47.5:-81.6:204
 CZQX_O:Gander Oceanic:CA:54.7:-47.7:205
 CZQX_OC:Gander Oceanic:CA:54.7:-47.7:205
 CZQX:Gander:CA:51.3:-55.5:206
@@ -495,6 +496,7 @@ EURW:Eurocontrol West:FR:43:-4:522
 EURS:Eurocontrol South:IT:38:20:523
 EURE:Eurocontrol East:HU:46:23:524
 EURN:Eurocontrol North:SE:59:16:525
+EURI:Eurocontrol Islands:GB:57:-5:5537
 LIRR:Roma:IT:40.2:12.1:6730
 LIRR_SC:Roma:IT:40.2:12.1:6731
 LIRR_I:Roma:IT:40.2:12.1:6732
@@ -506,15 +508,16 @@ LIRR_NE:Roma:IT:42.6:12.6:6737
 LIRR_US:Roma:IT:41.5:14:6738
 LIRR_OV:Roma:IT:41.2:11.8:6739
 FAJO:Johannesburg Oceanic:ZA:-39:32.5:6740
-FACT:Cape Town:ZA:-32.3:23.5:6741
-FACT_E:Cape Town:ZA:-33.6:25.7:6742
-FACT_W:Cape Town:ZA:-34:17.7:6743
-FAJS_W:Johannesburg:ZA:-29:18:6744
-FAJS_E:Johannesburg:ZA:-30:29.5:6745
-FAJS:Johannesburg:ZA:-27.6:28:6746
-FAJS_N:Johannesburg:ZA:-24.3:28.6:6747
-FAJS_S:Johannesburg:ZA:-27.1:27.9:6748
-FAJS_C:Johannesburg:ZA:-30.2:23.4:6749
+FACA:Cape Town:ZA:-32.3:23.5:6741
+FACA_E:Cape Town:ZA:-33.6:25.7:6742
+FACA_W:Cape Town:ZA:-34:17.7:6743
+FAJA_W:Johannesburg:ZA:-29:18:6744
+FAJA_E:Johannesburg:ZA:-30:29.5:6745
+FAJA:Johannesburg:ZA:-27.6:28:6746
+FAJA_N:Johannesburg:ZA:-24.3:28.6:6747
+FAJA_S:Johannesburg:ZA:-27.1:27.9:6748
+FAJA_C:Johannesburg:ZA:-30.2:23.4:6749
+FASA:South Africa:ZA:-30.2:23.4:6750
 YBKE:Bourke:AU:-31.5:143:499
 ML-BKE:Bourke:AU:-31.5:143:499
 YKPL:Keppel:AU:-22:143:500
