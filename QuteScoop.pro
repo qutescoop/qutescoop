@@ -176,6 +176,9 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/4096px-color.png
     texturesFiles.files += ./textures/8192px-arctic-toposhaded.png
     texturesFiles.files += ./textures/8192px-topo.png
+    texturesFiles.files += ./textures/10800px.png
+    texturesFiles.files += ./textures/10800px-continents.png
+    texturesFiles.files += ./textures/10800px-lights.png
     cloudsFiles.path = $$DESTDIR/textures/clouds
     cloudsFiles.files += ./textures/clouds/_notes.txt
     !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}.")
