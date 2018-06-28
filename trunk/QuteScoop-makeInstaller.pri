@@ -15,7 +15,7 @@
 # Check out ./upload.sh if you want to upload files to Sourceforge using
 # the console (needs an SFTP-, e.g. rsync-client).
 
-BITROCK_BUILDER_PATH="/opt/installbuilder-7.2.2/bin/builder"
+BITROCK_BUILDER_PATH="/opt/installbuilder/bin/builder"
 BITROCK_PROJECT="BitRockInstallBuilderQt-QuteScoop.xml"
 
 installer_linux.target = installer-linux
