@@ -43,25 +43,25 @@
                     <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionFile>
-                            <origin>DIST-unix32/README.html</origin>
+                            <origin>DIST-unix64/README.html</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix32/CHANGELOG</origin>
+                            <origin>DIST-unix64/CHANGELOG</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix32/COPYING</origin>
+                            <origin>DIST-unix64/COPYING</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix32/QuteScoop</origin>
+                            <origin>DIST-unix64/QuteScoop</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix32/qutescoop.png</origin>
+                            <origin>DIST-unix64/qutescoop.png</origin>
                         </distributionFile>
                         <distributionFile>
-                            <origin>DIST-unix32/QuteScoop.sh</origin>
+                            <origin>DIST-unix64/QuteScoop.sh</origin>
                         </distributionFile>
                         <distributionDirectory>
-                            <origin>DIST-unix32/imageformats</origin>
+                            <origin>DIST-unix64/imageformats</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
@@ -136,16 +136,16 @@
                     <platforms>linux</platforms>
                     <distributionFileList>
                         <distributionDirectory>
-                            <origin>DIST-unix32/data</origin>
+                            <origin>DIST-unix64/data</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-unix32/downloaded</origin>
+                            <origin>DIST-unix64/downloaded</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-unix32/screenshots</origin>
+                            <origin>DIST-unix64/screenshots</origin>
                         </distributionDirectory>
                         <distributionDirectory>
-                            <origin>DIST-unix32/textures</origin>
+                            <origin>DIST-unix64/textures</origin>
                         </distributionDirectory>
                     </distributionFileList>
                 </folder>
