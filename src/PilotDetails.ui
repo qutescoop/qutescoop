@@ -73,7 +73,7 @@
            <string>ICAO aircraft type (link to ICAO type designators)</string>
           </property>
           <property name="text">
-           <string>&lt;a href=&quot;http://www.icao.int/anb/ais/8643/index.cfm&quot;&gt;type&lt;/a&gt;</string>
+           <string>&lt;a href=&quot;https://www.icao.int/publications/DOC8643/Pages/Search.aspx&quot;&gt;type&lt;/a&gt;</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
