@@ -14,7 +14,12 @@ Known problems:
    to EDDI, NY to KLGA and MSK to UUDD in order to at least show
    the positions in the right place.
 
-Version 2.2-dev
+Version 2.1.13.1beta
+ fixed:
+ * allow both whazzup version 8 and version 9 for VATSIM data
+
+
+Version 2.1.13beta
  added:
   * fade in and out launcher and main window
   * route and visibility range information in 'clients and servers' dialog
@@ -25,6 +30,8 @@ Version 2.2-dev
   * fixed a crash that happened due to multiple initialization of
     OpenGL quadric objects. Last debug log message was:
     'Generating texture coordinates'
+  * updated WhazzUp Version number for VATSIM and IVAO, to correctly display
+    pilot headings and controller ratings
 
 Version 2.1.12beta
  added:
