@@ -49,7 +49,7 @@ class WhazzupData {
         QDateTime updateEarliest, whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
 
         bool isIvao() const { return _whazzupVersion == 6; }
-        bool isVatsim() const { return _whazzupVersion == 9; }
+        bool isVatsim() const { return (_whazzupVersion == 8 || _whazzupVersion == 9); }
 
         void accept(MapObjectVisitor *visitor) const;
     private:
