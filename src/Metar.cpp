@@ -88,10 +88,12 @@ QString Metar::decodeWind(QStringList& tokens) const {
     }
 
     // 320V040
-    QString varying = tokens.first();
-    if(varying.contains(QRegExp("^[0-9]{3}V[0-9]{3}$"))) {
-        tokens.removeFirst();
-        result += "<br>Varying Between " + varying.left(3) + " And " + varying.right(3);
+    if (!tokens.isEmpty()) {
+        QString varying = tokens.first();
+        if(varying.contains(QRegExp("^[0-9]{3}V[0-9]{3}$"))) {
+            tokens.removeFirst();
+            result += "<br>Varying Between " + varying.left(3) + " And " + varying.right(3);
+        }
     }
 
     return result;
