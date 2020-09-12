@@ -6,14 +6,14 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
       - name: Install Qt 4.8
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v2.8.0
         with:
-          version: '4.8.7'
+          version: '5.15.1'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
