@@ -17,8 +17,8 @@ jobs:
           version: '5.15.1'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-      - run: SET
-      - run: dir
+      - run: dir D:\a\
+      - run: dir D:\a\qutescoop/Qt 5.15.1 windows desktop win64_msvc2019_64
       - run: where cl
       - run: qmake QuteScoop.pro
       - run: make 
