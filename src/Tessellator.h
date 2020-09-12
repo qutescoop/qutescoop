@@ -14,7 +14,7 @@
 // platform specific stuff. tessellator callback definitions are not the
 // same on all platforms
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #define CALLBACK_CAST (GLvoid (*)())
 #define CALLBACK_DECL GLvoid
 #endif
@@ -24,7 +24,7 @@
 #define CALLBACK_DECL GLvoid
 #endif
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
 #define CALLBACK_CAST (_GLUfuncptr)
 #define CALLBACK_DECL void CALLBACK
 #endif

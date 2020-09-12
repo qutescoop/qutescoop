@@ -116,10 +116,10 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
         return;
     }
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     QString program = "start";
 #endif
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     QString program = "open";
 #endif
 #ifdef Q_OS_LINUX

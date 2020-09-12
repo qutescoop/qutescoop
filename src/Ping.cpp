@@ -20,13 +20,13 @@ void Ping::startPing(QString server) {
     _pingProcess = new QProcess(this);
     connect(_pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     QString pingCmd = QString("ping -n 1 %1").arg(server);
 #endif
 #ifdef Q_OS_LINUX
     QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
     qDebug() << "Ping::startPing() executing" << pingCmd;
