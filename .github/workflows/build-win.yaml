@@ -15,10 +15,10 @@ jobs:
         uses: jurplel/install-qt-action@v2.8.0
         with:
           version: '5.15.1'
+          arch: 'win64_mingw81'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-      - run: dir D:\a\
-      - run: dir D:\a\qutescoop/Qt 5.15.1 windows desktop win64_msvc2019_64
+      - run: dir D:\a\qutescoop
       - run: where cl
       - run: qmake QuteScoop.pro
       - run: make 
