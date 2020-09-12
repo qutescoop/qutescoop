@@ -19,7 +19,7 @@ jobs:
         with:
           version: '5.15.1'
       - run: qmake QuteScoop-unix.pro
-      - run: make
+      - run: make -j$(nproc)
       - run: make install
 #      - name: Setup tmate session
 #        uses: mxschmitt/action-tmate@v3
