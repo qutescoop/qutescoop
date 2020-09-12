@@ -12,7 +12,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Install GLU
-        run: apt-get install libmesa-dev
+        run: sudo apt-get install libmesa-dev
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
