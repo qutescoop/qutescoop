@@ -7,8 +7,9 @@
 #include "PlanFlightDialog.h"
 
 void PlanFlightRoutesModel::setClients(const QList<Route*>& routes) {
+    beginResetModel();
     _routes = routes;
-    reset();
+    endResetModel();
 }
 
 QVariant PlanFlightRoutesModel::headerData(int section, enum Qt::Orientation orientation, int role) const {

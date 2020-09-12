@@ -50,8 +50,8 @@ QString Platform::platformOS() {
                 .arg(QSysInfo::MacintoshVersion);
     }
 #endif
-#ifdef Q_WS_X11
-    os += "[WS_X11]";
+#ifdef Q_OS_LINUX
+    os += "[OS_LINUX]";
 #endif
 #ifdef Q_WS_QWS
     os += "[WS_QWS (embedded Linux)]";
@@ -237,7 +237,7 @@ QString Platform::compiler() {
 }
 
 QString Platform::memoryFree() {
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     QProcess p;
     p.start("awk", QStringList() << "/MemFree/ { print $2 }" << "/proc/meminfo");
     p.waitForFinished();
@@ -262,7 +262,7 @@ QString Platform::memoryFree() {
 }
 
 QString Platform::memoryOverall() {
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     QProcess p;
     p.start("awk", QStringList() << "/MemTotal/ { print $2 }" << "/proc/meminfo");
     p.waitForFinished();

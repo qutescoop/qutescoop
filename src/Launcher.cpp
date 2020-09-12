@@ -94,12 +94,14 @@ void Launcher::fireUp() {
 
     // reporting usage
     QUrl usageUrl("http://qutescoop.sourceforge.net/usage.php");
-    usageUrl.addQueryItem("id", Platform::id());
-    usageUrl.addQueryItem("version", Version::str());
-    usageUrl.addQueryItem("platform", Platform::platformOS());
-    usageUrl.addQueryItem("compiler", Platform::compiler());
-    usageUrl.addQueryItem("ram", Platform::memoryOverall());
-    usageUrl.addQueryItem("rmk", QString("statusLocation:%1").arg(Settings::statusLocation()));
+    QUrlQuery urlQuery(usageUrl);
+    urlQuery.addQueryItem("id", Platform::id());
+    urlQuery.addQueryItem("version", Version::str());
+    urlQuery.addQueryItem("platform", Platform::platformOS());
+    urlQuery.addQueryItem("compiler", Platform::compiler());
+    urlQuery.addQueryItem("ram", Platform::memoryOverall());
+    urlQuery.addQueryItem("rmk", QString("statusLocation:%1").arg(Settings::statusLocation()));
+    usageUrl.setQuery(urlQuery);
     Net::g(usageUrl);
 
 
@@ -330,7 +332,7 @@ void Launcher::dataFileDownloaded() {
         if (localDataVersionsFile.open(QIODevice::WriteOnly)) {
             foreach(const QString fn, _localDataVersionsList.keys()) {
                 localDataVersionsFile.write(QString("%1%%%2\n")
-                                            .arg(fn).arg(_localDataVersionsList[fn]).toAscii());
+                                            .arg(fn).arg(_localDataVersionsList[fn]).toLatin1());
             }
             localDataVersionsFile.close();
         } else

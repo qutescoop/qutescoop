@@ -34,9 +34,9 @@ class Version {
 const double Pi180 = M_PI / 180.;
 
 /* 3D-calculations */
-#define SX(lat, lon)  qCos((lat) * Pi180) * qSin((lon) * Pi180)
-#define SY(lat, lon) -qCos((lat) * Pi180) * qCos((lon) * Pi180)
-#define SZ(lat, lon) -qSin((lat) * Pi180)
+#define SX(lat, lon) (GLfloat) qCos((lat) * Pi180) * (GLfloat) qSin((lon) * Pi180)
+#define SY(lat, lon) (GLfloat) -qCos((lat) * Pi180) * (GLfloat) qCos((lon) * Pi180)
+#define SZ(lat, lon) (GLfloat) -qSin((lat) * Pi180)
 #define VERTEX(lat, lon) glVertex3f(SX(lat, lon), SY(lat, lon), SZ(lat, lon))
 // higher VERTEX: 30km AGL (used for polygons to prevent intersecting with the globe)
 #define SXhigh(lat, lon) SX(lat, lon) * 1.005

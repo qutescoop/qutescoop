@@ -122,12 +122,12 @@ void ControllerDetails::on_btnJoinChannel_clicked() {
 #ifdef Q_WS_MAC
     QString program = "open";
 #endif
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     QString program = "xdg-open";
 #endif
 
     QString command = program + " " + _controller->voiceLink();
-    int ret = system(command.toAscii());
+    int ret = system(command.toLatin1());
     qDebug() << "ControllerDetails::on_btnJoinChannel_clicked(): " << program << "returned" << ret;
 }
 

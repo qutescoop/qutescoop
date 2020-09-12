@@ -5,8 +5,9 @@
 #include "AirportDetailsDeparturesModel.h"
 
 void AirportDetailsDeparturesModel::setClients(const QList<Pilot*>& pilots) {
+    beginResetModel();
     this->_pilots = pilots;
-    reset();
+    endResetModel();
 }
 
 QVariant AirportDetailsDeparturesModel::headerData(int section, enum Qt::Orientation orientation, int role) const {

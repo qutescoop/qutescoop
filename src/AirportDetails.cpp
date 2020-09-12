@@ -42,7 +42,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     _atcSortModel->setSourceModel(&_atcModel);
     treeAtc->setModel(_atcSortModel);
     treeAtc->sortByColumn(0, Qt::AscendingOrder);
-    treeAtc->header()->setResizeMode(QHeaderView::Interactive);
+    treeAtc->header()->setSectionResizeMode(QHeaderView::Interactive);
 
     connect(treeAtc->header(), SIGNAL(sectionClicked(int)),
             treeAtc, SLOT(sortByColumn(int)));
@@ -55,7 +55,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     _arrivalsSortModel->setSourceModel(&_arrivalsModel);
     treeArrivals->setModel(_arrivalsSortModel);
     treeArrivals->sortByColumn(9, Qt::AscendingOrder);
-    treeArrivals->header()->setResizeMode(QHeaderView::Interactive);
+    treeArrivals->header()->setSectionResizeMode(QHeaderView::Interactive);
 
     connect(treeArrivals->header(), SIGNAL(sectionClicked(int)),
             treeArrivals, SLOT(sortByColumn(int)));
@@ -68,7 +68,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     _departuresSortModel->setSourceModel(&_departuresModel);
     treeDepartures->setModel(_departuresSortModel);
     treeDepartures->sortByColumn(8, Qt::AscendingOrder);
-    treeDepartures->header()->setResizeMode(QHeaderView::Interactive);
+    treeDepartures->header()->setSectionResizeMode(QHeaderView::Interactive);
 
     connect(treeDepartures->header(), SIGNAL(sectionClicked(int)),
             treeDepartures, SLOT(sortByColumn(int)));

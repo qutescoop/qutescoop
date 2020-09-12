@@ -23,7 +23,7 @@ void Ping::startPing(QString server) {
 #ifdef Q_WS_WIN
     QString pingCmd = QString("ping -n 1 %1").arg(server);
 #endif
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     QString pingCmd = QString("ping -c1 %1").arg(server);
 #endif
 #ifdef Q_WS_MAC

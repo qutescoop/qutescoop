@@ -62,7 +62,7 @@ void Settings::calculateApplicationDataDirectory() {
     // 3a) if 'dirs.first()' is writeable: copy data there
     // 4) if all that fails: fall back to executable-directory
     QStringList dirs; // possible locations, 1st preferred
-    dirs << QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+    dirs << QStandardPaths::standardLocations(QStandardPaths::AppDataLocation);
     dirs << QCoreApplication::applicationDirPath();
 
     QStringList subdirs; // needed subDirs
@@ -381,19 +381,6 @@ QString Settings::proxyPassword() {
 
 void Settings::setProxyPassword(QString password) {
     instance()->setValue("proxy/password", password);
-}
-
-void Settings::applyProxySetting(QHttp *http) {
-    if(!useProxy() || http == 0)
-        return;
-
-    QString user = Settings::proxyUser();
-    QString pass = Settings::proxyPassword();
-    if(user.isEmpty()) user = QString();
-    if(pass.isEmpty()) pass = QString();
-
-    if(!proxyServer().isEmpty())
-        http->setProxy(proxyServer(), proxyPort(), user, pass);
 }
 
 QString Settings::navdataDirectory() {

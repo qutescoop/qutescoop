@@ -14,9 +14,9 @@
 /* logging */
 QFile *logFile = new QFile();
 QByteArray cacheLogByteArray;
-void myMessageOutput(QtMsgType type, const char *msg) {
+void myMessageOutput(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
     // uninstall this routine for "normal" debug output
-    qInstallMsgHandler(0);
+    qInstallMessageHandler(0);
 
     QByteArray output = QByteArray::number(type).append(": ").append(msg);
 
@@ -36,28 +36,27 @@ void myMessageOutput(QtMsgType type, const char *msg) {
     // "normal" debug output
     switch (type) {
     case QtDebugMsg:
+    case QtInfoMsg:
         qDebug() << msg;
         break;
     case QtWarningMsg:
-        qWarning() << msg;
+        qWarning() << msg << context.file << context.function << context.line;
         break;
     case QtCriticalMsg:
-        qCritical() << msg;
-        break;
     case QtFatalMsg:
-        qFatal("%s", msg);
+        qCritical() << msg << context.file << context.function << context.line;
         break;
     }
-    qInstallMsgHandler(myMessageOutput);
+    qInstallMessageHandler(myMessageOutput);
 }
 
 /* main */
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv); // before QT_REQUIRE_VERSION to prevent creating duplicate..
-    QT_REQUIRE_VERSION(argc, argv, "4.7.0"); // ..application objects
+    QT_REQUIRE_VERSION(argc, argv, "5.10.0"); // ..application objects
     // catch all messages
     qRegisterMetaType<QtMsgType>("QtMsgType");
-    qInstallMsgHandler(myMessageOutput);
+    qInstallMessageHandler(myMessageOutput);
 
     // some app init
     app.setOrganizationName("QuteScoop");
