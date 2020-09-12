@@ -11,8 +11,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - run: sudo DEBIAN_FRONTEND=noninteractive apt-get update
       - name: Install GLU
-        run: sudo apt-get update && sudo apt-get install libglu1-mesa-dev
+        run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libglu1-mesa-dev
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
@@ -20,5 +21,10 @@ jobs:
       - run: qmake QuteScoop-unix.pro
       - run: make
       - run: make install
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: Build ${{ github.ref }} (${{ github.sha }})
+          path: ./DIST-unix64
