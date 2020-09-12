@@ -18,8 +18,8 @@ jobs:
       - run: qmake QuteScoop.pro
       - run: make 
       - run: make install
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
