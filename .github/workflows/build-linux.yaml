@@ -13,5 +13,7 @@ jobs:
           fetch-depth: 0
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
+        with:
+          version: '4.8.7'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
