@@ -92,19 +92,6 @@ void Launcher::fireUp() {
     qDebug() << "Launcher::fireUp()";
     show();
 
-    // reporting usage
-    QUrl usageUrl("http://qutescoop.sourceforge.net/usage.php");
-    QUrlQuery urlQuery(usageUrl);
-    urlQuery.addQueryItem("id", Platform::id());
-    urlQuery.addQueryItem("version", Version::str());
-    urlQuery.addQueryItem("platform", Platform::platformOS());
-    urlQuery.addQueryItem("compiler", Platform::compiler());
-    urlQuery.addQueryItem("ram", Platform::memoryOverall());
-    urlQuery.addQueryItem("rmk", QString("statusLocation:%1").arg(Settings::statusLocation()));
-    usageUrl.setQuery(urlQuery);
-    Net::g(usageUrl);
-
-
     JobList *jobs = new JobList(this);
 
     // fade in launcher
