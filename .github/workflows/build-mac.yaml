@@ -1,4 +1,4 @@
-name: Build Linux
+name: Build Windows
 
 on:
   push:
@@ -6,25 +6,22 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: macos-10.15
     steps:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: sudo DEBIAN_FRONTEND=noninteractive apt-get update
-      - name: Install GLU
-        run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libglu1-mesa-dev
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
           version: '5.15.1'
       - run: qmake QuteScoop.pro
-      - run: make -j$(nproc)
+      - run: make 
       - run: make install
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
           name: Build ${{ github.sha }}
-          path: ./DIST-unix64
+          path: ./DIST-macx64
