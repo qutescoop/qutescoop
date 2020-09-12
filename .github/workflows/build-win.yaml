@@ -17,11 +17,15 @@ jobs:
           version: '5.15.1'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+      - run: dir
+      - run: dir C:\
+      - run: dir C:\Qt
+      - run: where cl
       - run: qmake QuteScoop.pro
       - run: make 
       - run: make install
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: Build ${{ github.sha }}
+          name: QuteScoop-Win-${{ github.sha }}.zip
           path: ./DIST-win64

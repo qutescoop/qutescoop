@@ -26,5 +26,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: Build ${{ github.sha }}
+          name: QuoteScoop-Linux-${{ github.sha }}.zip
           path: ./DIST-unix64

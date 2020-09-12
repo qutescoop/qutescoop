@@ -23,5 +23,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: Build ${{ github.sha }}
+          name: QuteScoop-Mac-{{ github.sha }}.zip
           path: ./DIST-macx64
