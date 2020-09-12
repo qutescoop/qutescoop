@@ -18,7 +18,7 @@ jobs:
         uses: jurplel/install-qt-action@v2.8.0
         with:
           version: '5.15.1'
-      - run: qmake QuteScoop-unix.pro
+      - run: qmake QuteScoop.pro
       - run: make -j$(nproc)
       - run: make install
 #      - name: Setup tmate session
