@@ -17,6 +17,7 @@ jobs:
           version: '5.15.1'
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
+      - run: set
       - run: dir
       - run: dir C:\
       - run: dir C:\Qt
