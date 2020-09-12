@@ -836,13 +836,13 @@ void Window::shootScreenshot() {
 
     if (Settings::screenshotMethod() == 0)
         QPixmap::grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                                    Settings::screenshotFormat().toAscii());
+                                                    Settings::screenshotFormat().toLatin1());
     else if (Settings::screenshotMethod() == 1)
         mapScreen->glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                      Settings::screenshotFormat().toAscii(), true);
+                                      Settings::screenshotFormat().toLatin1(), true);
     else if (Settings::screenshotMethod() == 2)
         mapScreen->glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                             Settings::screenshotFormat().toAscii());
+                                             Settings::screenshotFormat().toLatin1());
     qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
 
@@ -926,36 +926,26 @@ void Window::downloadCloud() {
         if (!loResMirrors.isEmpty())
             url.setUrl(loResMirrors[qrand() % loResMirrors.size()]);
     }
-    if(_cloudDownloader != 0) _cloudDownloader = 0;
-    _cloudDownloader = new QHttp(this);
-
-    _cloudDownloader->setHost(url.host());
-    connect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloaded(bool)));
-
-    _cloudBuffer = new QBuffer;
-    _cloudBuffer->open(QBuffer::ReadWrite);
-
-    //cloudDownloader->abort();
-    _cloudDownloader->get(url.path(), _cloudBuffer);
+    if(_cloudDownloadReply != 0) _cloudDownloadReply = 0;
+    _cloudDownloadReply = Net::g(url);
+    connect(_cloudDownloadReply, SIGNAL(finished()), this, SLOT(cloudDownloadFinished()));
 
     qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
 }
 
-void Window::cloudDownloaded(bool error) {
-    qDebug() << "Window::cloudDownloadFinished -- download finished";
+void Window::cloudDownloadFinished() {
+    qDebug() << "Window::cloudDownloadFinished";
     emit cloudDownloaded();
-    disconnect(_cloudDownloader, SIGNAL(done(bool)), this, SLOT(cloudDownloaded(bool)));
-    if(_cloudBuffer == 0)
-        return;
+    disconnect(_cloudDownloadReply, SIGNAL(finished()), this, SLOT(downloaded()));
+    _cloudDownloadReply->deleteLater();
 
-    if(error) {
-        GuiMessages::criticalUserInteraction(_cloudDownloader->errorString(), "cloudlayer download error:");
+    if(_cloudDownloadReply->error() != QNetworkReply::NoError) {
+        GuiMessages::criticalUserInteraction(_cloudDownloadReply->errorString(), "cloudlayer download error:");
         return;
     }
 
-    _cloudBuffer->seek(0);
     QImage cloudlayer;
-    cloudlayer.load(_cloudBuffer, "JPG");
+    cloudlayer.load(_cloudDownloadReply->readAll(), "JPG");
     cloudlayer.save(Settings::applicationDataDirectory("textures/clouds/clouds.jpg"), "JPG");
     qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:"
              << Settings::applicationDataDirectory("textures/clouds/");

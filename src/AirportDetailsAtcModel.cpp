@@ -5,8 +5,9 @@
 #include "AirportDetailsAtcModel.h"
 
 void AirportDetailsAtcModel::setClients(const QList<Controller*>& controllers) {
+    beginResetModel();
     this->_controllers = controllers;
-    reset();
+    endResetModel();
 }
 
 QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation orientation, int role) const {

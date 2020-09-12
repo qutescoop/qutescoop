@@ -92,7 +92,7 @@ class Window : public QMainWindow, public Ui::Window {
         void friendDoubleClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();
         void allSectorsChanged(bool);
-        void cloudDownloaded(bool error);
+        void cloudDownloadFinished();
         void on_actionChangelog_triggered();
     protected:
         virtual void closeEvent(QCloseEvent *event);
@@ -107,8 +107,7 @@ class Window : public QMainWindow, public Ui::Window {
         _timerWhazzup, _timerCloud;
         QSortFilterProxyModel *_sortmodelMetar, *_sortmodelFriends;
         MetarModel _metarModel;
-        QHttp *_cloudDownloader;
-        QBuffer *_cloudBuffer;
+        QNetworkReply *_cloudDownloadReply;
         QDateTime _dateTimePredict_old;
         QLabel *_lblStatus;
         QProgressBar *_progressBar;

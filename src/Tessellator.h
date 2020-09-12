@@ -11,31 +11,30 @@
 #else
 #include <GL/glu.h>
 #endif
-
 // platform specific stuff. tessellator callback definitions are not the
 // same on all platforms
 
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
 #define CALLBACK_CAST (GLvoid (*)())
 #define CALLBACK_DECL GLvoid
 #endif
 
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
 #define CALLBACK_CAST (void (*)())
 #define CALLBACK_DECL GLvoid
 #endif
 
-#ifdef Q_WS_WIN
-#define CALLBACK_CAST (_GLUfuncptr)
+#ifdef Q_OS_WIN
+#define CALLBACK_CAST (GLvoid (*) ()))
 #define CALLBACK_DECL void CALLBACK
 #endif
-
+#include <QPair>
 class Tessellator {
     public:
         Tessellator();
         ~Tessellator();
 
-        void tessellate(const QList<QPair<double, double> > &points);
+        void tessellate(const QList<QPair<double, double> >& points);
 
     private:
         GLUtesselator *_tess;

@@ -511,8 +511,8 @@ void GLWidget::createStaticLists() {
     _earthList = glGenLists(1);
     glNewList(_earthList, GL_COMPILE);
     qglColor(Settings::globeColor());
-    gluSphere(_earthQuad, 1, qRound(360 / Settings::glCirclePointEach()), // draw a globe with..
-              qRound(180 / Settings::glCirclePointEach())); // ..radius, slicesX, stacksZ
+    gluSphere(_earthQuad, 1, qRound(360. / Settings::glCirclePointEach()), // draw a globe with..
+              qRound(180. / Settings::glCirclePointEach())); // ..radius, slicesX, stacksZ
     // drawing the sphere by hand and setting TexCoords for Multitexturing (if we need it once):
 //    glBegin(GL_TRIANGLE_STRIP);
 //    for(double lat = -90; lat <= 90 - Settings::glCirclePointEach(); lat += Settings::glCirclePointEach()) {
@@ -728,10 +728,10 @@ void GLWidget::initializeGL() {
         glEnable(GL_FOG); // fog - fading Earth's borders
         glFogi(GL_FOG_MODE, GL_LINEAR); // GL_EXP2, GL_EXP, GL_LINEAR
         GLfloat fogColor[] = {
-            Settings::backgroundColor().redF(),
-            Settings::backgroundColor().greenF(),
-            Settings::backgroundColor().blueF(),
-            Settings::backgroundColor().alphaF()
+            (GLfloat) Settings::backgroundColor().redF(),
+            (GLfloat) Settings::backgroundColor().greenF(),
+            (GLfloat) Settings::backgroundColor().blueF(),
+            (GLfloat) Settings::backgroundColor().alphaF()
         };
         glFogfv(GL_FOG_COLOR, fogColor);
         glFogf(GL_FOG_DENSITY, 1.);
@@ -771,13 +771,13 @@ void GLWidget::initializeGL() {
         //const GLfloat earthAmbient[]  = {0, 0, 0, 1};
         const GLfloat earthDiffuse[]  = {1, 1, 1, 1};
         const GLfloat earthSpecular[] = {
-            Settings::specularColor().redF(),
-            Settings::specularColor().greenF(),
-            Settings::specularColor().blueF(),
-            Settings::specularColor().alphaF()
+            (GLfloat) Settings::specularColor().redF(),
+            (GLfloat) Settings::specularColor().greenF(),
+            (GLfloat) Settings::specularColor().blueF(),
+            (GLfloat) Settings::specularColor().alphaF()
         };
         const GLfloat earthEmission[] = {0, 0, 0, 1};
-        const GLfloat earthShininess[] = {Settings::earthShininess()};
+        const GLfloat earthShininess[] = {(GLfloat) Settings::earthShininess()};
         //glMaterialfv(GL_FRONT, GL_AMBIENT, earthAmbient); // GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR,
         glMaterialfv(GL_FRONT, GL_DIFFUSE, earthDiffuse); // ...GL_EMISSION, GL_SHININESS, GL_AMBIENT_AND_DIFFUSE,
         glMaterialfv(GL_FRONT, GL_SPECULAR, earthSpecular); // ...GL_COLOR_INDEXES
@@ -794,8 +794,12 @@ void GLWidget::initializeGL() {
                                                                Settings::glLightsSpread() / 180. *
                                                                 (Settings::glLights() - 1))); // ...and increase again
                                                                                             // by their distribution
-        const GLfloat sunDiffuse[] = {adjustSunDiffuse.redF(), adjustSunDiffuse.greenF(),
-                                      adjustSunDiffuse.blueF(), adjustSunDiffuse.alphaF()};
+        const GLfloat sunDiffuse[] = {
+            (GLfloat) adjustSunDiffuse.redF(),
+            (GLfloat) adjustSunDiffuse.greenF(),
+            (GLfloat) adjustSunDiffuse.blueF(),
+            (GLfloat) adjustSunDiffuse.alphaF()
+        };
         //const GLfloat sunSpecular[] = {1, 1, 1, 1}; // we drive this via material values
         for (int light = 0; light < 8; light++) {
             if (light < Settings::glLights()) {
@@ -1822,11 +1826,13 @@ void GLWidget::createLights() {
     //const GLfloat earthAmbient[]  = {0, 0, 0, 1};
     const GLfloat earthDiffuse[]  = {1, 1, 1, 1};
     const GLfloat earthSpecular[] = {
-        Settings::specularColor().redF(), Settings::specularColor().greenF(),
-        Settings::specularColor().blueF(), Settings::specularColor().alphaF()
+        (GLfloat) Settings::specularColor().redF(),
+        (GLfloat) Settings::specularColor().greenF(),
+        (GLfloat) Settings::specularColor().blueF(),
+        (GLfloat) Settings::specularColor().alphaF()
     };
     const GLfloat earthEmission[] = {0, 0, 0, 1};
-    const GLfloat earthShininess[] = {Settings::earthShininess()};
+    const GLfloat earthShininess[] = {(GLfloat) Settings::earthShininess()};
     //glMaterialfv(GL_FRONT, GL_AMBIENT, earthAmbient); // GL_AMBIENT, GL_DIFFUSE, GL_SPECULAR,
     glMaterialfv(GL_FRONT, GL_DIFFUSE, earthDiffuse); // ...GL_EMISSION, GL_SHININESS, GL_AMBIENT_AND_DIFFUSE,
     glMaterialfv(GL_FRONT, GL_SPECULAR, earthSpecular); // ...GL_COLOR_INDEXES
@@ -1840,8 +1846,12 @@ void GLWidget::createLights() {
     if (Settings::glLights() > 1)
         adjustSunDiffuse = adjustSunDiffuse.darker(100. * (Settings::glLights() - // reduce light intensity by number of lights...
                                                            Settings::glLightsSpread() / 180. * (Settings::glLights() - 1))); // ...and increase again by their distribution
-    const GLfloat sunDiffuse[] = {adjustSunDiffuse.redF(), adjustSunDiffuse.greenF(),
-                                  adjustSunDiffuse.blueF(), adjustSunDiffuse.alphaF()};
+    const GLfloat sunDiffuse[] = {
+        (GLfloat) adjustSunDiffuse.redF(),
+        (GLfloat) adjustSunDiffuse.greenF(),
+        (GLfloat) adjustSunDiffuse.blueF(),
+        (GLfloat) adjustSunDiffuse.alphaF()
+    };
     //const GLfloat sunSpecular[] = {1, 1, 1, 1}; // we drive this via material values
     for (int light = 0; light < 8; light++) {
         if (light < Settings::glLights()) {

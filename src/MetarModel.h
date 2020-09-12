@@ -32,7 +32,7 @@ class MetarModel: public QAbstractListModel {
         void refresh();
 
     private slots:
-        void downloaded(int id, bool error);
+        void downloaded();
         void gotMetarFor(Airport *airport);
 
     private:
@@ -49,7 +49,7 @@ class MetarModel: public QAbstractListModel {
         QList<Airport*> _airportList;
         QList<Airport*> _metarList;
 
-        QHttp _downloader;
+        QNetworkReply *_metarReply;
 };
 
 #endif /*METARMODEL_H_*/

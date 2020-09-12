@@ -12,7 +12,7 @@
 QString Platform::platformOS() {
     QString os;
 
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     os += "[WS_WIN]";
     switch (QSysInfo::WindowsVersion) {
     case QSysInfo::WV_32s:      os += "[WV_32s]";      break;
@@ -32,7 +32,7 @@ QString Platform::platformOS() {
                 .arg(QSysInfo::WindowsVersion);
     }
 #endif
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     os += "[WS_MAC]";
     switch (QSysInfo::MacintoshVersion) {
     case QSysInfo::MV_9:        os += "[MV_9]";       break;
@@ -50,16 +50,16 @@ QString Platform::platformOS() {
                 .arg(QSysInfo::MacintoshVersion);
     }
 #endif
-#ifdef Q_WS_X11
-    os += "[WS_X11]";
+#ifdef Q_OS_LINUX
+    os += "[OS_LINUX]";
 #endif
-#ifdef Q_WS_QWS
+#ifdef Q_OS_QWS
     os += "[WS_QWS (embedded Linux)]";
 #endif
-#ifdef Q_WS_QPA
+#ifdef Q_OS_QPA
     os += "[WS_QPA (embedded Linux lite)]";
 #endif
-#ifdef Q_WS_S60
+#ifdef Q_OS_S60
     os += "[WS_S60]";
 #endif
 
@@ -237,19 +237,19 @@ QString Platform::compiler() {
 }
 
 QString Platform::memoryFree() {
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     QProcess p;
     p.start("awk", QStringList() << "/MemFree/ { print $2 }" << "/proc/meminfo");
     p.waitForFinished();
     return (QString("%1 MB").arg(p.readAllStandardOutput().trimmed().toLong() / 1024));
 #endif
-    //#ifdef Q_WS_MAC
+    //#ifdef Q_OS_MAC
     //    QProcess p;
     //    p.start("sysctl", QStringList() << "kern.version" << "hw.physmem");
     //    p.waitForFinished();
     //    return p.readAllStandardOutput();
     //#endif
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     MEMORYSTATUSEX memory_status;
     ZeroMemory(&memory_status, sizeof(MEMORYSTATUSEX));
     memory_status.dwLength = sizeof(MEMORYSTATUSEX);
@@ -262,19 +262,19 @@ QString Platform::memoryFree() {
 }
 
 QString Platform::memoryOverall() {
-#ifdef Q_WS_X11
+#ifdef Q_OS_LINUX
     QProcess p;
     p.start("awk", QStringList() << "/MemTotal/ { print $2 }" << "/proc/meminfo");
     p.waitForFinished();
     return (QString("%1 MB").arg(p.readAllStandardOutput().trimmed().toLong() / 1024));
 #endif
-#ifdef Q_WS_MAC
+#ifdef Q_OS_MAC
     QProcess p;
     p.start("sysctl", QStringList() << "kern.version" << "hw.physmem");
     p.waitForFinished();
     return p.readAllStandardOutput();
 #endif
-#ifdef Q_WS_WIN
+#ifdef Q_OS_WIN
     MEMORYSTATUSEX memory_status;
     ZeroMemory(&memory_status, sizeof(MEMORYSTATUSEX));
     memory_status.dwLength = sizeof(MEMORYSTATUSEX);

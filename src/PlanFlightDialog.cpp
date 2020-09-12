@@ -37,7 +37,7 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     _routesSortModel->setSourceModel(&_routesModel);
 
     treeRoutes->setModel(_routesSortModel);
-    treeRoutes->header()->setResizeMode(QHeaderView::Interactive);
+    treeRoutes->header()->setSectionResizeMode(QHeaderView::Interactive);
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
     connect(treeRoutes, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
@@ -105,16 +105,18 @@ void PlanFlightDialog::requestVroute() {
         return;
     }
     QUrl url("http://data.vroute.net/internal/query.php");
-    url.addQueryItem(QString("auth_code"), authCode);
+    QUrlQuery urlQuery(url);
+    urlQuery.addQueryItem(QString("auth_code"), authCode);
     if(!edCycle->text().trimmed().isEmpty())
-            url.addQueryItem(
+            urlQuery.addQueryItem(
                         QString("cycle"),
                         edCycle->text().trimmed()
             ); // defaults to the last freely available
-    url.addQueryItem(QString("type"), QString("query"));
-    url.addQueryItem(QString("level"),QString("0")); // details level, so far only 0 supported
-    url.addQueryItem(QString("dep"), edDep->text().trimmed());
-    url.addQueryItem(QString("arr"), edDest->text().trimmed());
+    urlQuery.addQueryItem(QString("type"), QString("query"));
+    urlQuery.addQueryItem(QString("level"),QString("0")); // details level, so far only 0 supported
+    urlQuery.addQueryItem(QString("dep"), edDep->text().trimmed());
+    urlQuery.addQueryItem(QString("arr"), edDest->text().trimmed());
+    url.setQuery(urlQuery);
 
 
     _replyVroute = Net::g(url);
@@ -216,8 +218,10 @@ void PlanFlightDialog::requestVatroute() {
 //    url.addQueryItem(QString("dest"), edDest->text().trimmed());
 
     QUrl url("http://www.vatroute.net/web_showfp.php");
-    url.addQueryItem(QString("dep"), edDep->text().trimmed());
-    url.addQueryItem(QString("dest"), edDest->text().trimmed());
+    QUrlQuery urlQuery(url);
+    urlQuery.addQueryItem(QString("dep"), edDep->text().trimmed());
+    urlQuery.addQueryItem(QString("dest"), edDest->text().trimmed());
+    url.setQuery(urlQuery);
 
     _replyVatroute = Net::g(url);
     connect(_replyVatroute, SIGNAL(finished()), this, SLOT(vatrouteDownloaded()));

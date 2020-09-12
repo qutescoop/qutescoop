@@ -12,7 +12,6 @@
 
 MetarModel::MetarModel(QObject *parent):
         QAbstractListModel(parent) {
-    connect(&_downloader, SIGNAL(requestFinished(int, bool)), this, SLOT(downloaded(int, bool)));
 }
 
 int MetarModel::rowCount(const QModelIndex &parent) const {
@@ -78,11 +77,9 @@ void MetarModel::setData(const QList<Airport*>& airports)  {
 
 void MetarModel::refresh() {
     abortAll();
-    Settings::applyProxySetting(&_downloader);
 
     if(_airportList.size() > MAX_METARS) {
         // avoid hammering the server with gazillions of metar requests
-        reset();
         return;
     }
 
@@ -93,7 +90,6 @@ void MetarModel::refresh() {
             downloadMetarFor(_airportList[i]);
         }
     }
-    reset();
 }
 
 void MetarModel::downloadMetarFor(Airport* airport) {
@@ -103,18 +99,14 @@ void MetarModel::downloadMetarFor(Airport* airport) {
 
     QUrl url(location);
 
-    _downloader.setHost(url.host(), url.port() != -1 ? url.port() : 80);
-    if (!url.userName().isEmpty())
-        _downloader.setUser(url.userName(), url.password());
-    QString querystr = url.path() + "?" + url.encodedQuery();
-
     DownloadQueue dq;
     dq.airport = airport;
     dq.buffer = new QBuffer;
     dq.buffer->open(QBuffer::ReadWrite);
     qDebug() << "MetarModel::downloadMetarFor()" << url;
-    int requestId = _downloader.get(querystr, dq.buffer);
-    _downloadQueue[requestId] = dq;
+
+    _metarReply = Net::g(url);
+    connect(_metarReply, SIGNAL(finished()), this, SLOT(downloaded()));
 }
 
 void MetarModel::modelClicked(const QModelIndex& index) {
@@ -126,34 +118,34 @@ void MetarModel::modelClicked(const QModelIndex& index) {
 }
 
 void MetarModel::abortAll() {
-    _downloader.abort();
+    _metarReply->abort();
 }
 
-void MetarModel::downloaded(int id, bool error) {
-    if(!_downloadQueue.contains(id))
+void MetarModel::downloaded() {
+    qDebug() << "MetarModel::downloaded()";
+    disconnect(_metarReply, SIGNAL(finished()), this, SLOT(downloaded()));
+    _metarReply->deleteLater();
+
+    if(_metarReply->error() != QNetworkReply::NoError) {
         return;
-
-    DownloadQueue dq = _downloadQueue[id];
-    _downloadQueue.remove(id);
-
-    if(!error) {
-        dq.buffer->seek(0);
-        QString line = QString(dq.buffer->readLine()).trimmed();
-        if(!line.isEmpty())
-            dq.airport->metar = Metar(line);
-        if(!dq.airport->metar.isNull() && dq.airport->metar.isValid())
-            gotMetarFor(dq.airport);
     }
 
-    delete dq.buffer;
+    QString line = _metarReply->readAll().trimmed();
+
+    // TODO
+//    if(!line.isEmpty())
+//        dq.airport->metar = Metar(line);
+//    if(!dq.airport->metar.isNull() && dq.airport->metar.isValid())
+//        gotMetarFor(dq.airport);
 }
 
 void MetarModel::gotMetarFor(Airport* airport) {
     if(_airportList.contains(airport)) {
+        beginResetModel();
         if(!_metarList.contains(airport))
             _metarList.append(airport);
         qDebug() << "MetarModel::gotMetarFor()" << airport->label << ":" << airport->metar.encoded;
-        reset();
         emit gotMetar(airport->label);
+        endResetModel();
     }
 }

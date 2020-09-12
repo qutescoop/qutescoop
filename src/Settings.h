@@ -16,7 +16,7 @@ class Settings {
         // data directory
         static QIODevice::OpenMode dirCapabilities(QString& dir); // NotOpen / ReadOnly / ReadWrite
         static void calculateApplicationDataDirectory();
-        static QString applicationDataDirectory(const QString& composeFilePath = QString());
+        static QString applicationDataDirectory(const QString& composeFilePath = QString(""));
 
         // saved settings
         static void saveState(const QByteArray& state);
@@ -71,7 +71,6 @@ class Settings {
         static void setProxyUser(QString user);
         static QString proxyPassword();
         static void setProxyPassword(QString password);
-        static void applyProxySetting(QHttp *http);
 
         static bool filterTraffic();
         static void setFilterTraffic(bool v);

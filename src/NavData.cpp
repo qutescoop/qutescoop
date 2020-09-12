@@ -67,7 +67,7 @@ void NavData::loadCountryCodes(const QString& filename) {
         if (line.isNull())
             return;
         QStringList list = line.split(':');
-        if(!list.size() == 2)
+        if(!(list.size() == 2))
             continue;
         countryCodes[list.first()] = list.last();
     }

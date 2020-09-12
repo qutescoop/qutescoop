@@ -1,0 +1,5 @@
+/DIST-*
+/temp
+/.qmake*
+/Makefile
+/*.pro.user
