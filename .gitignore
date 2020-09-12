@@ -1,3 +1,5 @@
+/DIST-*
+
 # C++ objects and libs
 *.slo
 *.lo
