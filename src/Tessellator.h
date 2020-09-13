@@ -25,7 +25,7 @@
 #endif
 
 #ifdef Q_OS_WIN
-#define CALLBACK_CAST (GLvoid (*) ()))
+#define CALLBACK_CAST (GLvoid (*) ())
 #define CALLBACK_DECL void CALLBACK
 #endif
 #include <QPair>
