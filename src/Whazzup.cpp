@@ -142,7 +142,7 @@ void Whazzup::download() {
     _downloadTimer->stop();
     QTime now = QTime::currentTime();
 
-    if(_lastDownloadTime.secsTo(now) < 30) {
+    if(!_lastDownloadTime.isNull() && _lastDownloadTime.secsTo(now) < 30) {
         GuiMessages::message(QString("Whazzup checked %1s (less than 30s) ago. Download scheduled.")
                             .arg(_lastDownloadTime.secsTo(now)));
         _downloadTimer->start((30 - _lastDownloadTime.secsTo(now)) * 1000);
