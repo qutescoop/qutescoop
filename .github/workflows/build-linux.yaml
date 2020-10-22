@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
       - name: Get tag/branch
         id: tag
-        run: echo ::set-output namei=TAG::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
       - run: sudo DEBIAN_FRONTEND=noninteractive apt-get update
       - name: Install GLU
         run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libglu1-mesa-dev

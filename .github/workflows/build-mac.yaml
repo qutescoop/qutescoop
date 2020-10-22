@@ -13,7 +13,7 @@ jobs:
           fetch-depth: 0
       - name: Get tag/branch
         id: tag
-        run: echo ::set-output namei=TAG::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=TAG::${GITHUB_REF/refs\/tags\//}
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
