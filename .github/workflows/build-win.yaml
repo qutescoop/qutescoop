@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: QuteScoop-Win-${{ github.sha }}.zip
-          path: ./DIST-win64
+          path: ./DIST-win32
