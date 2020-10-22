@@ -208,6 +208,7 @@ macx {
 }
 win32 {
     RC_FILE = src/windowsicon.rc
+    LIBS += -lOpengl32
     LIBS += -lglu32
 }
 # OSX also considered as unix, therefore condition added to check
