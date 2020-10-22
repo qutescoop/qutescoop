@@ -262,10 +262,15 @@ QString Pilot::aircraftType() const {
     if(network == IVAO && acftSegments.size() >= 2)
         return acftSegments[1];
 
+    // VATSIM can be a real PITA, really
     if(network == VATSIM) {
-        // VATSIM can be a real PITA.
-        if(acftSegments.size() == 2 && acftSegments[0].length() > 2)
+        // FAA-style without WTC prefix (e.g. "B737/G")
+        if(acftSegments.size() == 2 && acftSegments[0].length() >= 2)
             return acftSegments[0];
+        // ICAO-style (e.g. "A320/M-SDE2E3FGHIJ1RWXY/LB2")
+        if(acftSegments.size() == 3 && acftSegments[0].length() >= 2)
+            return acftSegments[0];
+        // FAA-style with ("H/B763/L") or without equipment suffix ("H/B763")
         else if(acftSegments.size() >= 2)
             return acftSegments[1];
     }
