@@ -21,6 +21,8 @@ CVS_REVISION = $$replace(CVS_REVISION, " ", "")
 DEFINES += CVS_REVISION=\"$$CVS_REVISION\" # complex escaping to preserve
                                                  # string through qmake -> console ->
                                                  # compiler
+# fixes version incompatibilities
+QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 
 TEMPLATE = app
 CONFIG *= qt
