@@ -11,6 +11,9 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Get tag/branch
+        id: tag
+        run: echo ::set-output namei=TAG::${GITHUB_REF/refs\/tags\//}
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
@@ -23,5 +26,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: QuteScoop-Mac-${{ github.sha }}.zip
+          name: QuteScoop-Mac-${{ steps.tag.outputs.TAG }}-${{ github.sha }}.zip
           path: ./DIST-macx64
