@@ -187,7 +187,30 @@ void Settings::calculateApplicationDataDirectory() {
 
 /**
   The so-called 'application data directory', a writable location that includes some pre-installed
-  data directories. Our Wiki includes some paragraphs about it: https://sourceforge.net/p/qutescoop/wiki/Help/
+  data directories. 
+  
+  We know 3 locations:
+  1) application directory: holds unchangeable program data that does not need to have write-permissions 
+  by the user - this is where the QuteScoop(.exe) binary and some other unchangeable files reside.
+  Typical locations are:
+  * Linux: $HOME/QuteScoop
+  * Windows XP: C:\Programs\QuteScoop
+  * Windows 7: C:\Programs (x86)\QuteScoop
+  2) application data directory: user-writable location (holds textures, auto-updateable sector, continent, 
+  airline... data, saved VATSIM-status, user-changeable textures, cloud layer download, ...). - See Debug 
+  Log where your user data is stored.
+  Typical locations are:
+  * Linux: ~/.local/share/data/QuteScoop/QuteScoop
+  * Windows XP: C:\Documents and Settings\USERNAME\Local Settings\Application Data\QuteScoop\QuteScoop/
+  * Win7: C:\Users\USERNAME\AppData\local\QuteScoop\QuteScoop
+  * Mac OSX: /Users/USERNAME/Library/Application Support/QuteScoop/QuteScoop
+  3) settings location: All preferences, window locations,... - uses the platform's recommended way to save 
+  settings. See Debug Log where your settings are stored.
+  Typical locations are:
+  * Linux: $HOME/.config/QuteScoop/QuteScoop.conf
+  * Windows: in the registry (run regedit.exe to edit): \HKEY_CURRENT_USER\Software\QuteScoop\QuteScoop
+  * Mac OSX: $HOME/Library/Preferences/org.QuteScoop.QuteScoop.plist
+
   @see calculateApplicationDataDirectory()
   @param composeFilePath path/file, e.g. "textures/clouds/clouds.jpg" (/ is multi-platform, also on Win)
   @returns fully qualified path to the 'application data directory'.
@@ -1113,7 +1136,7 @@ void Settings::saveMaximized(const bool val) {
 
 QString Settings::remoteDataRepository() {
     return instance()->value("general/remoteDataRepository",
-                             "http://svn.code.sf.net/p/qutescoop/code/trunk/data/%1")
+                             "https://raw.githubusercontent.com/qutescoop/qutescoop/master/data/%1")
             .toString();
 }
 

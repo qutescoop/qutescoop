@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 
     // some app init
     app.setOrganizationName("QuteScoop");
-    app.setOrganizationDomain("qutescoop.sourceforge.net");
+    app.setOrganizationDomain("qutescoop.github.io");
     app.setApplicationName("QuteScoop");
     app.setApplicationVersion(Version::str());
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
