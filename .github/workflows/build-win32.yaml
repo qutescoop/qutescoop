@@ -34,7 +34,7 @@ jobs:
       - run: echo "::add-path::C:\msys64\mingw32\bin"
       - run: env
         shell: bash
-        #      - run: 'find /c/msys* -iname "cl*"'
+      - run: 'find /c/ -name "cl.exe"'
         #shell: bash
         #- run: 'find /d/a/qutescoop/Qt/5.15.1/'
         #shell: bash
