@@ -28,7 +28,7 @@ jobs:
         with:
           version: '5.12.8'
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
-      - run: qmake QuteScoop.pro
+      - run: qmake -config release QuteScoop.pro
       - run: make 
       - run: make install
 #      - name: Setup tmate session
