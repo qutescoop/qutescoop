@@ -33,7 +33,7 @@ jobs:
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: env
         shell: bash
-      - run: 'find /a/qutescoop/Qt/5.15.1/'
+      - run: 'find /d/a/qutescoop/Qt/5.15.1/'
         shell: bash
       - run: 'WHERE /R D:\a\ cl*.exe'
         shell: cmd
