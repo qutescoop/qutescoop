@@ -31,15 +31,15 @@ jobs:
           arch: win32_msvc2019
           modules: qtwebglplugin
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
-          #      - run: echo "::add-path::C:\msys64\mingw64\bin"
+      - run: echo "::add-path::C:\msys64\mingw32\bin"
       - run: env
         shell: bash
-      - run: 'find /c/msys* -iname "cl*"'
-        shell: bash
-      - run: 'find /d/a/qutescoop/Qt/5.15.1/'
-        shell: bash
-      - run: 'WHERE /R D:\a\ cl*.exe'
-        shell: cmd
+        #      - run: 'find /c/msys* -iname "cl*"'
+        #shell: bash
+        #- run: 'find /d/a/qutescoop/Qt/5.15.1/'
+        #shell: bash
+        #- run: 'WHERE /R D:\a\ cl*.exe'
+        #shell: cmd
       - run: qmake -config release QuteScoop.pro
       - run: make 
       - run: make install
