@@ -31,8 +31,14 @@ jobs:
           arch: win64_mingw81
           modules: qtwebglplugin
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
+      - run: 'dir D:\a\qutescoop\Qt\5.15.1\bin\'
       - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\'
       - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\bin\'
+      - run: env
+        shell: bash
+      - run: 'echo %PATH%'
+        shell: cmd
+      - run: '$env:PATH'
       - run: qmake QuteScoop.pro
       - run: make 
       - run: make install
