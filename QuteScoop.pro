@@ -8,19 +8,7 @@ VER_STR = '\\"$${VERSION}\\"'
 DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
                                             # string through qmake -> console ->
                                             # compiler
-# Subversion revision
-CVS_REVISION = '\\"$Revision$\\"' # Gets set automatically on commit of THIS file.
-                                  # This is just the revision of THIS file, not the whole working copy.
-                                  # Well, better than nothing. No working copy revision information is
-                                  # available cross-platform :(
 
-CVS_REVISION = $$replace(CVS_REVISION, "\\$", "") # strip away any special characters...
-CVS_REVISION = $$replace(CVS_REVISION, "Revision:", "Rev")   # as these tend to give compiler errors
-CVS_REVISION = $$replace(CVS_REVISION, " ", "")
-
-DEFINES += CVS_REVISION=\"$$CVS_REVISION\" # complex escaping to preserve
-                                                 # string through qmake -> console ->
-                                                 # compiler
 # fixes version incompatibilities
 QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 

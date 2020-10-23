@@ -21,11 +21,11 @@ class Version {
     public:
         /* something like "QuteScoop 2.1.8 - Revision 212" */
         static QString str() {
-            // VERSION_NUMBER and CVS_REVISION are defined in the qmake QuteScoop.pro file
+            // VERSION_NUMBER is defined in the qmake QuteScoop.pro file
 #ifdef QT_DEBUG
-            return QString("QuteScoop %1 - %2 [DEBUG]").arg(VERSION_NUMBER).arg(CVS_REVISION);
+            return QString("QuteScoop %1 [DEBUG]").arg(VERSION_NUMBER);
 #else
-            return QString("QuteScoop %1 - %2").arg(VERSION_NUMBER).arg(CVS_REVISION);
+            return QString("QuteScoop %1").arg(VERSION_NUMBER);
 #endif
         }
 };
