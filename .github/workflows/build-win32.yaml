@@ -33,6 +33,10 @@ jobs:
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: env
         shell: bash
+      - run: 'ls -l $Qt5_Dir'
+        shell: bash
+      - run: 'WHERE /R D:\a\qutescoop\Qt\5.15.1 cl*.exe'
+        shell: cmd
       - run: qmake -config release QuteScoop.pro
       - run: make 
       - run: make install
