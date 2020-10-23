@@ -31,7 +31,8 @@ jobs:
           arch: win64_mingw81
           modules: qtwebglplugin
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
-      - run: 'where /R D:\a\qutescoop\Qt\ qtenv*.*'
+      - run: 'where /R D:\a\qutescoop\Qt qtenv*.*'
+        shell: cmd
       - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\'
       - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\bin\'
       - run: env
