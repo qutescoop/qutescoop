@@ -92,14 +92,14 @@ QString NavAid::typeStr(Type type) {
 QString NavAid::toolTip() const {
 	QString ret = Waypoint::toolTip();
     if (_type == NDB)
-		ret.append(QString(" %1 kHz").arg(_freq));
+        ret.append(QString(" %1 kHz").arg(_freq));
     else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS)
-		ret.append(QString(" %1 MHz").arg(_freq / 100., 0, 'f', 2));
-	else if (_freq != 0)
-		ret.append(QString(" %1?").arg(_freq));
+        ret.append(QString(" %1 MHz").arg(_freq / 100., 0, 'f', 2));
+    else if (_freq != 0)
+        ret.append(QString(" %1?").arg(_freq));
     if ((_type == ILS_LOC || _type == LOC) && _hdg != 0)
-		ret.append(QString(" %1").arg((double) _hdg, 0, 'f', 0));
+        ret.append(QString(" %1").arg((double) _hdg, 0, 'f', 0));
     if (!NavAid::typeStr(_type).isEmpty())
         ret.append(QString(" [%1]").arg(NavAid::typeStr(_type)));
-	return ret;
+    return ret;
 }
