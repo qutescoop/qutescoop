@@ -30,7 +30,7 @@ jobs:
           version: 5.12.9
           arch: win32_mingw53
           modules: qtwebglplugin
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          #          cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: qmake QuteScoop.pro
       - run: make 
       - run: make install
