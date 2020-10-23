@@ -40,5 +40,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: QuoteScoop-Linux-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
+          name: QuteScoop-Linux-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
           path: ./DIST-unix64
