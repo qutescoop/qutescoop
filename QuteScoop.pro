@@ -323,5 +323,3 @@ UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
 
-# include 'make installer-*' targets which build installers for Linux & Win
-include("QuteScoop-makeInstaller.pri")
