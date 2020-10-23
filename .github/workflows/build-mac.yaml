@@ -29,5 +29,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: QuteScoop-Mac-${{ steps.tag.outputs.SOURCE_TAG }}-${{ steps.tag.outputs.SOURCE_BRANCH }}-${{ github.sha }}.zip
+          name: QuteScoop-Mac-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
           path: ./DIST-macx64
