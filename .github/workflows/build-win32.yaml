@@ -1,0 +1,44 @@
+name: Build Windows (32bit)
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Get tag/branch
+        id: tag
+        run: |
+          echo ::set-output name=SOURCE_NAME::${GITHUB_REF#refs/*/}
+          echo ::set-output name=SOURCE_BRANCH::${GITHUB_REF#refs/heads/}
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+        shell: bash
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-5151-mingw53-QtCache
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2.8.0
+        with:
+          version: 5.15.1
+          arch: win32_mingw53
+          modules: qtwebglplugin
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+      - run: env
+        shell: bash
+      - run: qmake QuteScoop.pro
+      - run: make 
+      - run: make install
+      - run: windeployqt DIST-win32
+      - name: Upload
+        uses: actions/upload-artifact@v1
+        with:
+          name: QuteScoop-Win-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
+          path: ./DIST-win32
