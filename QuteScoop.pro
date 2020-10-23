@@ -94,48 +94,7 @@ CONFIG(release,release|debug) {
     DESTDIR = ./DIST-$${PLATFORM}
     
     # Add a "make install" target for deploying Qt/compiler/QuteScoop files.
-    # Qt library files
-    myQtLib.path = $$DESTDIR
-    win32 {
-        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtCore4.dll
-        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtGui4.dll
-        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtNetwork4.dll
-        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtXml4.dll
-        myQtLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}QtOpenGL4.dll
-    }
-    unix {
-        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtCore.so.4
-        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtGui.so.4
-        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtNetwork.so.4
-        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtXml.so.4
-        myQtLib.files += $$[QT_INSTALL_LIBS]$${DIR_SEPARATOR}libQtOpenGL.so.4
-    }
 
-    # Image plugins: http://doc.qt.digia.com/qt/deployment-plugins.html
-    imageLib.path = $$DESTDIR/imageformats
-    IMAGEPLUGINS = qgif qico qjpeg qmng qsvg qtga qtiff
-    unix {
-        IMAGEPLUGINSDIR = $$[QT_INSTALL_PLUGINS]$${DIR_SEPARATOR}imageformats$${DIR_SEPARATOR}
-        for(plugin, IMAGEPLUGINS) {
-            imageLib.files += $${IMAGEPLUGINSDIR}lib$${plugin}.so
-        }
-    } else:win32 {
-        IMAGEPLUGINSDIR = $$[QT_INSTALL_PLUGINS]$${DIR_SEPARATOR}imageformats$${DIR_SEPARATOR}
-        for(plugin, IMAGEPLUGINS) {
-            imageLib.files += $${IMAGEPLUGINSDIR}$${plugin}4.dll
-        }
-    }
-    !build_pass:message("Qt library files added to 'install': $${myQtLib.files} $${imageLib.files}")
-
-    # Compiler libraries
-    myCompilerLib.path = $$DESTDIR
-    win32-g++ { # For MingW
-        myCompilerLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}mingwm10.dll
-        myCompilerLib.files += $$[QT_INSTALL_BINS]$${DIR_SEPARATOR}libgcc_s_dw2-1.dll
-        !build_pass:message("MingW compiler libraries added to 'install': $${myCompilerLib.files}")
-    }
-    else:!build_pass:message("No compiler libraries added to 'install'")
-    
     # QuteScoop additional files
     rootFiles.path = $$DESTDIR
     rootFiles.files += ./README.html \
@@ -193,10 +152,7 @@ CONFIG(release,release|debug) {
         downloadedFiles \
         screenshotsFiles \
         texturesFiles \
-        cloudsFiles \
-        imageLib \
-        myQtLib \
-        myCompilerLib
+        cloudsFiles 
 }
 
 # Notice: 32bit support dropped for OSX, all versions past 10.5 are able to execute 64bit-binaries
