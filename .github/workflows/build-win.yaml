@@ -11,8 +11,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\'
-      - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\bin\'
       - name: Get tag/branch
         id: tag
         run: |
@@ -33,6 +31,8 @@ jobs:
           arch: win64_mingw81
           modules: qtwebglplugin
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
+      - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\'
+      - run: 'dir D:\a\qutescoop\Qt\5.15.1\mingw81_64\bin\'
       - run: qmake QuteScoop.pro
       - run: make 
       - run: make install
