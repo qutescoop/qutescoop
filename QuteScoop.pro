@@ -20,10 +20,6 @@ CONFIG *= qt
 CONFIG *= warn_on
 TARGET = QuteScoop
 
-# Let's make sure we do not mix up 32 and 64bit binaries. Provide
-# 32bit installers or clearly mark them as 64bit to avaoid confusion.
-# Hint: Setting up a virtual machine (e.g. in VirtualBox) is from my
-# experience much easier than cross-compiling 32bit from a 64bit host.
 win32: {
     contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "win64"
     else:PLATFORM = "win32"
