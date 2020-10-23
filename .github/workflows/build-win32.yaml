@@ -40,5 +40,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
-          name: QuteScoop-Win-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
+          name: QuteScoop-Win32-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
           path: ./DIST-win32
