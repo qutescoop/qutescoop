@@ -34,7 +34,7 @@ jobs:
       - run: qmake QuteScoop.pro
       - run: make 
       - run: make install
-      - run: %QTDIR%/bin/qtenv2.bat
+      - run: '%QTDIR%/bin/qtenv2.bat'
       - run: windeployqt DIST-win32
       - name: Upload
         uses: actions/upload-artifact@v1
