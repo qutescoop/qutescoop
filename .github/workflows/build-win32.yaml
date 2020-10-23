@@ -35,7 +35,7 @@ jobs:
       - run: env
         shell: bash
       - run: 'find /c/ -name "cl.exe"'
-        #shell: bash
+        shell: bash
         #- run: 'find /d/a/qutescoop/Qt/5.15.1/'
         #shell: bash
         #- run: 'WHERE /R D:\a\ cl*.exe'
