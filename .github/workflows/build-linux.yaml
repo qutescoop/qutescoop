@@ -20,10 +20,17 @@ jobs:
       - run: sudo DEBIAN_FRONTEND=noninteractive apt-get update
       - name: Install GLU
         run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libglu1-mesa-dev
+      - name: Cache Qt
+        id: cache-qt
+        uses: actions/cache@v1
+        with:
+          path: ../Qt
+          key: ${{ runner.os }}-QtCache
       - name: Install Qt
         uses: jurplel/install-qt-action@v2.8.0
         with:
           version: '5.12.8'
+          cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: qmake QuteScoop.pro
       - run: make -j$(nproc)
       - run: make install
