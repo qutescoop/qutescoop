@@ -119,7 +119,7 @@ QString Controller::getApproach() const {
     if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
         // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
         if(list.first() == "EDBB")
-            return "EDDI"; // map EDBB -> EDDI
+            return "EDDB"; // map EDBB -> EDDB (no other active airfields covered by this sector)
         else if(list.first() == "NY")
             return "KLGA"; // map NY -> KLGA
         else if(list.first() == "MSK")
