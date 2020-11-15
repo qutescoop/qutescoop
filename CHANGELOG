@@ -10,9 +10,9 @@ Installer moves imageformats/ to application data directory
 
 Known problems:
  * Some APP (or TWR) stations are covering multiple airfields. We are 
-   currently not able to reflect this correctly. But we map EDBB_APP
-   to EDDI, NY to KLGA and MSK to UUDD in order to at least show
-   the positions in the right place.
+   currently not able to reflect this correctly. But we map NY to KLGA
+   and MSK to UUDD in order to at least show the positions in the right
+   place.
 
 Version 2.1.13.1beta
  fixed:
