@@ -9,57 +9,57 @@
 #include "helpers.h"
 #include "Settings.h"
 
-Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
-        Client(stringList, whazzup),
+#include <QJsonObject>
+
+Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
+        Client(json, whazzup),
         onGround(false),
         showDepDestLine(false) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
-    altitude = field(stringList, 7).toInt(); // we could do some barometric
-                                    // calculations here (only for VATSIM needed)
-    groundspeed = field(stringList, 8).toInt();
-    planAircraft = field(stringList, 9);
-    planTAS = field(stringList, 10);
-    planDep = field(stringList, 11);
-    planAlt = field(stringList, 12);
-    planDest = field(stringList, 13);
+    QJsonObject flightPlan = json["flight_plan"].toObject();
 
-    QString airlineCode = field(stringList,0);
+    altitude = json["altitude"].toInt(); // we could do some barometric
+                                    // calculations here (only for VATSIM needed)
+    groundspeed = json["groundspeed"].toInt();
+    // The JSON data provides 3 different aircraft data
+    // 1: The full ICAO Data, this is too long to display
+    // 2: The FAA Data, this is what was displayed previously
+    // 3: The short Data, consisting only of the aircraft code
+    planAircraft = flightPlan["aircraft_faa"].toString();
+    planTAS = flightPlan["cruise_tas"].toString();
+    planDep = flightPlan["departure"].toString();
+    planAlt = flightPlan["altitude"].toString();
+    planDest = flightPlan["arrival"].toString();
+
+    QString airlineCode = json["callsign"].toString();
     airlineCode.resize(3);
     airline = NavData::instance()->airline(airlineCode);
 
-    transponder = field(stringList, 17);
-    planRevision = field(stringList, 20);
-    planFlighttype = field(stringList, 21);
-    planDeptime = field(stringList, 22);
-    planActtime = field(stringList, 23);
+    transponder = json["transponder"].toString();
+    planRevision = QString::number(flightPlan["revision_id"].toInt());
+    planFlighttype = flightPlan["flight_rules"].toString();
+    planDeptime = flightPlan["deptime"].toString();
+    planActtime = flightPlan["deptime"].toString(); // The new data doesn't provide the actual departure
 
-    QString tmpStr = field(stringList, 24);
+    QString timeEnroute = flightPlan["enroute_time"].toString();
+    QString timeFuel = flightPlan["fuel_time"].toString();
+
+    QString tmpStr = timeEnroute.left(2);
     if(tmpStr.isNull())
         planEnroute_hrs = -1;
     else
         planEnroute_hrs = tmpStr.toInt();
-    planEnroute_mins = field(stringList, 25).toInt();
-    planFuel_hrs = field(stringList, 26).toInt();
-    planFuel_mins = field(stringList, 27).toInt();
-    planAltAirport = field(stringList, 28);
-    planRemarks = field(stringList, 29);
-    planRoute = field(stringList, 30);
+    planEnroute_mins = timeEnroute.right(2).toInt();
+    planFuel_hrs = timeFuel.left(2).toInt();
+    planFuel_mins = timeFuel.right(2).toInt();
+    planAltAirport = flightPlan["alternate"].toString();
+    planRemarks = flightPlan["remarks"].toString();
+    planRoute = flightPlan["route"].toString();
 
-    if(whazzup->isIvao()) {
-        planAltAirport2 = field(stringList, 42); // IVAO only
-        planTypeOfFlight = field(stringList, 43); // IVAO only
-        pob = field(stringList, 44).toInt(); // IVAO only
-
-        trueHeading = field(stringList, 45).toInt();
-        onGround = field(stringList, 46).toInt() == 1; // IVAO only
-    }
-
-    if(whazzup->isVatsim()) {
-        trueHeading = field(stringList, 38).toInt();
-        qnh_inHg = field(stringList, 39); // VATSIM only
-        qnh_mb = field(stringList, 40); // VATSIM only
-    }
+    trueHeading = json["heading"].toInt();
+    qnh_inHg = QString::number(json["qnh_i_hg"].toDouble()); // VATSIM only
+    qnh_mb = QString::number(json["qnh_mb"].toInt()); // VATSIM only
     // day of flight
     if(!QTime::fromString(planDeptime, "HHmm").isValid()) // no Plan ETA given: maybe some more magic needed here
         dayOfFlight = whazzupTime.date();

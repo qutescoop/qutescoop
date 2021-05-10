@@ -8,9 +8,11 @@
 #include "NavData.h"
 #include "Settings.h"
 
-BookedController::BookedController(const QStringList& stringList, const WhazzupData* whazzup):
-        Client(stringList, whazzup) {
-    sector = 0;
+#include <QJsonObject>
+
+BookedController::BookedController(const QJsonObject& json, const WhazzupData* whazzup):
+        Client(json, whazzup) {
+    /*sector = 0;
 
     // extra booking values
     bookingType = field(stringList, 4).toInt();
@@ -99,7 +101,7 @@ BookedController::BookedController(const QStringList& stringList, const WhazzupD
     atisMessage = "";
     timeLastAtisReceived = QDateTime();
     voiceServer = "";
-    server = "";
+    server = "";*/
 }
 
 QString BookedController::facilityString() const {

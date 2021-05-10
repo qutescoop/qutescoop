@@ -11,6 +11,8 @@
 #include "Client.h"
 #include "Waypoint.h"
 
+#include <QJsonDocument>
+
 class Airport;
 
 class Pilot: public Client {
@@ -20,7 +22,7 @@ class Pilot: public Client {
             GROUND_ARR, BLOCKED, CRASHED, BUSH, PREFILED
         };
 
-        Pilot(const QStringList& stringList, const WhazzupData* whazzup);
+        Pilot(const QJsonObject& json, const WhazzupData* whazzup);
 
         virtual QString toolTip() const;
         virtual QString rank() const;

@@ -11,11 +11,13 @@
 #include "Sector.h"
 #include "Airport.h"
 
+#include <QJsonObject>
+
 class Airport;
 
 class Controller: public Client {
     public:
-        Controller(const QStringList& stringList, const WhazzupData* whazzup);
+        Controller(const QJsonObject& json, const WhazzupData* whazzup);
 
         virtual void showDetailsDialog();
 

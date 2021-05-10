@@ -8,35 +8,18 @@
 #include "Settings.h"
 
 
-Client::Client(const QStringList& stringList, const WhazzupData* whazzup) {
-    label = field(stringList, 0);
-    userId = field(stringList, 1);
-    realName = field(stringList, 2);
-    lat = field(stringList, 5).toDouble();
-    lon = field(stringList, 6).toDouble();
-    server = field(stringList, 14);
-    protrevision = field(stringList, 15).toInt();
-    rating = field(stringList, 16).toInt();
-    timeConnected = QDateTime::fromString(field(stringList, 37), "yyyyMMddHHmmss");
-    timeConnected.setTimeSpec(Qt::UTC);
+Client::Client(const QJsonObject& json, const WhazzupData* whazzup) {
+    label = json["callsign"].toString();
+    userId = QString::number(json["cid"].toInt());
+    realName = json["name"].toString();
+    lat = json["latitude"].toDouble();
+    lon = json["longitude"].toDouble();
+    server = json["server"].toString();
+    protrevision = 0; // Not included in the JSON data
+    rating = json["rating"].toInt();
+    timeConnected = QDateTime::fromString(json["logon_time"].toString(), Qt::ISODate);
 
-    if(whazzup->isIvao()) {
-        clientSoftware = field(stringList, 38); // IVAO only
-        clientVersion = field(stringList, 39); // IVAO only
-        adminRating = field(stringList, 40).toInt(); // IVAO only
-        rating = field(stringList, 41).toInt(); // IVAO only
-    }
-
-    if(whazzup->isVatsim())
-        network = VATSIM;
-    else if(whazzup->isIvao())
-        network = IVAO;
-    else
-        network = OTHER;
-
-    // un-fuck user names. people enter all kind of stuff here
-    realName.remove(QRegExp("[_\\-\\d\\.\\,\\;\\:\\#\\+\\(\\)]"));
-    realName = realName.trimmed();
+    network = VATSIM;
 
     if(realName.contains(QRegExp("\\b[A-Z]{4}$"))) {
         homeBase = realName.right(4);
