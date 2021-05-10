@@ -82,6 +82,15 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                     friendsLatLon.append(QPair<double, double>(c->lat, c->lon));
             }
         }
+
+        if(json.contains("prefiles") && json["prefiles"].isArray()) {
+            QJsonArray prefilesArray = json["prefiles"].toArray();
+            for(int i = 0; i < prefilesArray.size(); ++i) {
+                QJsonObject prefileObject = prefilesArray[i].toObject();
+                Pilot *p = new Pilot(prefileObject, this);
+                bookedPilots[p->label] = p;
+            }
+        }
     } else {
         // Try again in 15 seconds
         updateEarliest = QDateTime::currentDateTime().addSecs(15);
