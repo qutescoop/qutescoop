@@ -3,3 +3,5 @@
 /.qmake*
 /Makefile
 /*.pro.user
+/QuteScoop
+/log.txt
