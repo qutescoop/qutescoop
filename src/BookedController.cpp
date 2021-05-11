@@ -12,17 +12,17 @@
 
 BookedController::BookedController(const QJsonObject& json, const WhazzupData* whazzup):
         Client(json, whazzup) {
-    /*sector = 0;
+    sector = 0;
 
     // extra booking values
-    bookingType = field(stringList, 4).toInt();
-    timeTo = field(stringList, 14);
-    date = field(stringList, 16);
+    bookingType = json["bookingType"].toInt();
+    timeTo = json["timeTo"].toString();
+    date = json["date"].toString();
     //always some miracle "1" here: getField(stringList, 19); ??
-    link = field(stringList, 35);
+    link = json["link"].toString();
     if(!link.isEmpty() && !link.contains("http://"))
         link = QString("http://%1").arg(link);
-    timeFrom = field(stringList, 37);
+    timeFrom = json["timeFrom"].toString();
 
     // default
     countryCode = "";
@@ -101,7 +101,7 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     atisMessage = "";
     timeLastAtisReceived = QDateTime();
     voiceServer = "";
-    server = "";*/
+    server = "";
 }
 
 QString BookedController::facilityString() const {

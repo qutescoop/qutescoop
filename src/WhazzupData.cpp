@@ -30,7 +30,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
     QStringList friends = Settings::friends();
     int reloadInMin = Settings::downloadInterval();
     QJsonDocument data = QJsonDocument::fromJson(*bytes);
-    if(!data.isNull()) {
+    if(!data.isNull() && type == WHAZZUP) {
         QJsonObject json = data.object();
         if(json.contains("general") && json["general"].isObject()) {
             QJsonObject generalObject = json["general"].toObject();
@@ -89,6 +89,67 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                 QJsonObject prefileObject = prefilesArray[i].toObject();
                 Pilot *p = new Pilot(prefileObject, this);
                 bookedPilots[p->label] = p;
+            }
+        }
+    } else if(type == ATCBOOKINGS) {
+        // ATC Bookings are still in the old format, however we only need the CLIENTS and GENERAL sections
+        enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS};
+        ParserState state = STATE_NONE;
+        foreach(QString line, bytes->split('\n')) {
+            line = line.trimmed();
+            if(line.isEmpty())
+                continue;
+            
+            if(line.startsWith(';'))
+                continue;
+            
+            if(line.startsWith("!")) {
+                if(line.startsWith("!CLIENTS"))
+                    state = STATE_CLIENTS;
+                else if(line.startsWith("!GENERAL"))
+                    state = STATE_GENERAL;
+                else
+                    state = STATE_NONE;
+                
+                continue;
+            }
+            
+            switch(state) {
+                case STATE_CLIENTS: {
+                    QStringList list = line.split(':');
+
+                    if(list.size() < 38)
+                        continue;
+
+                    if(list[3] != "ATC")
+                        continue;
+                    // Create a JSON Object containing the required fields
+                    QJsonObject controllerObject;
+                    controllerObject["callsign"] = list[0];
+                    controllerObject["cid"] = list[1].toInt();
+                    controllerObject["name"] = list[2];
+
+                    // Bookings only:
+                    controllerObject["bookingType"] = list[4].toInt();
+                    controllerObject["timeTo"] = list[14];
+                    controllerObject["date"] = list[16];
+                    controllerObject["link"] = list[35];
+                    controllerObject["timeFrom"] = list[37];
+
+                    BookedController *bc = new BookedController(controllerObject, this);
+                    bookedControllers.append(bc);
+                }
+                    break;
+                case STATE_GENERAL: {
+                    QStringList list = line.split("=");
+                    if(list.size() != 2)
+                        continue;
+                    if(line.startsWith("UPDATE")) {
+                        bookingsTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
+                        bookingsTime.setTimeSpec(Qt::UTC);
+                    }
+                }
+                    break;
             }
         }
     } else {
