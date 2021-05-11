@@ -45,8 +45,8 @@ void PreferencesDialog::loadSettings() {
     cbDownloadPeriodically->setChecked(Settings::downloadPeriodically());
     cbNetwork->setCurrentIndex(Settings::downloadNetwork());
     editUserDefinedLocation->setText(Settings::userDownloadLocation());
-    editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
-    lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
+    editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 1);
+    lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 1);
     cbSaveWhazzupData->setChecked(Settings::saveWhazzupData());
 
     // screenshots
