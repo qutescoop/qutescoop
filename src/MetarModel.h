@@ -32,24 +32,18 @@ class MetarModel: public QAbstractListModel {
         void refresh();
 
     private slots:
-        void downloaded();
+        void metarReplyFinished();
         void gotMetarFor(Airport *airport);
 
     private:
-        class DownloadQueue {
-            public:
-                Airport *airport;
-                QBuffer *buffer;
-        };
-        QHash<int, DownloadQueue> _downloadQueue;
+        QHash<QUrl, Airport*> _downloadQueue;
+        QNetworkReply *_metarReply;
 
-        void abortAll();
+        void downloadNextFromQueue();
         void downloadMetarFor(Airport* airport);
 
         QList<Airport*> _airportList;
         QList<Airport*> _metarList;
-
-        QNetworkReply *_metarReply;
 };
 
 #endif /*METARMODEL_H_*/

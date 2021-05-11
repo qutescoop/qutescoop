@@ -11,7 +11,8 @@
 #define MAX_METARS 60
 
 MetarModel::MetarModel(QObject *parent):
-        QAbstractListModel(parent) {
+        QAbstractListModel(parent),
+        _metarReply(0) {
 }
 
 int MetarModel::rowCount(const QModelIndex &parent) const {
@@ -48,19 +49,25 @@ QVariant MetarModel::headerData(int section, Qt::Orientation orientation, int ro
     if (role != Qt::DisplayRole)
         return QVariant();
 
-    if (orientation == Qt::Vertical)
+    if (orientation != Qt::Horizontal)
         return QVariant();
 
     if (section != 0)
         return QVariant();
 
+    QString ret;
+
     if (_metarList.isEmpty())
-        return QString("No Metars");
+        ret.append("No Metars");
+    else if (_metarList.size() == 1)
+        ret.append("1 Metar");
+    else
+        ret.append(QString("%1 Metars").arg(_metarList.size()));
 
-    if (_metarList.size() == 1)
-        return QString("1 Metar");
+    if (_metarReply != 0 && _metarReply->isRunning())
+        ret.append(" …");
 
-    return QString("%1 Metars").arg(_metarList.size());
+    return ret;
 }
 
 void MetarModel::setData(const QList<Airport*>& airports)  {
@@ -75,9 +82,18 @@ void MetarModel::setData(const QList<Airport*>& airports)  {
     refresh();
 }
 
-void MetarModel::refresh() {
-    abortAll();
+void MetarModel::modelClicked(const QModelIndex& index) {
+    Airport *a = _metarList[index.row()];
+    if(a != 0 && Window::instance(false) != 0) {
+        Window::instance()->updateMetarDecoder(
+            a->label,
+            a->metar.encoded + "<hr>" + a->metar.decodedHtml()
+        );
+    }
+}
 
+void MetarModel::refresh() {
+    _downloadQueue.clear();
     if(_airportList.size() > MAX_METARS) {
         // avoid hammering the server with gazillions of metar requests
         return;
@@ -99,44 +115,47 @@ void MetarModel::downloadMetarFor(Airport* airport) {
 
     QUrl url(location);
 
-    DownloadQueue dq;
-    dq.airport = airport;
-    dq.buffer = new QBuffer;
-    dq.buffer->open(QBuffer::ReadWrite);
-    qDebug() << "MetarModel::downloadMetarFor()" << url;
+    qDebug() << "MetarModel::downloadMetarFor()" << airport->label << url;
 
-    _metarReply = Net::g(url);
-    connect(_metarReply, SIGNAL(finished()), this, SLOT(downloaded()));
+    _downloadQueue.insert(url, airport);
+    downloadNextFromQueue();
+    headerDataChanged(Qt::Horizontal, 0, 0);
 }
 
-void MetarModel::modelClicked(const QModelIndex& index) {
-    Airport *a = _metarList[index.row()];
-    if(a != 0)
-        if (Window::instance(false) != 0)
-            Window::instance()->updateMetarDecoder(a->label,
-                                                          a->metar.encoded + "<hr>" + a->metar.decodedHtml());
-}
+void MetarModel::downloadNextFromQueue()
+{
+    qDebug() << "MetarModel::downloadNextFromQueue() queue.count=" << _downloadQueue.count();
 
-void MetarModel::abortAll() {
-    _metarReply->abort();
-}
-
-void MetarModel::downloaded() {
-    qDebug() << "MetarModel::downloaded()";
-    disconnect(_metarReply, SIGNAL(finished()), this, SLOT(downloaded()));
-    _metarReply->deleteLater();
-
-    if(_metarReply->error() != QNetworkReply::NoError) {
+    if (_downloadQueue.isEmpty())
         return;
+
+    if (_metarReply != 0 && !_metarReply->isFinished()) {
+        qDebug() << "MetarModel::downloadNextFromQueue() _metarReply still running";
+        return; // we will be called via downloaded() later
     }
 
-    QString line = _metarReply->readAll().trimmed();
+    _metarReply = Net::g(_downloadQueue.keys().first());
+    connect(_metarReply, SIGNAL(finished()), this, SLOT(metarReplyFinished()));
+}
 
-    // TODO
-//    if(!line.isEmpty())
-//        dq.airport->metar = Metar(line);
-//    if(!dq.airport->metar.isNull() && dq.airport->metar.isValid())
-//        gotMetarFor(dq.airport);
+void MetarModel::metarReplyFinished() {
+    qDebug() << "MetarModel::downloaded()" << _metarReply->url();
+    disconnect(_metarReply, SIGNAL(finished()), this, SLOT(metarReplyFinished()));
+
+    if(_metarReply->error() == QNetworkReply::NoError) {
+        QString line = _metarReply->readAll().trimmed();
+
+        Airport* airport = _downloadQueue.take(_metarReply->url());
+        if (airport != 0) {
+            if(!line.isEmpty())
+                airport->metar = Metar(line);
+            if(!airport->metar.isNull() && airport->metar.isValid())
+                gotMetarFor(airport);
+
+            headerDataChanged(Qt::Horizontal, 0, 0);
+        }
+    }
+    downloadNextFromQueue();
 }
 
 void MetarModel::gotMetarFor(Airport* airport) {
