@@ -432,8 +432,8 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
         break;
     }
 
-    editUserDefinedLocation->setEnabled(index == 2);
-    lbluserDefinedLocation->setEnabled(index == 2);
+    editUserDefinedLocation->setEnabled(index == 1);
+    lbluserDefinedLocation->setEnabled(index == 1);
 }
 
 void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
