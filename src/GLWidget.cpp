@@ -1283,8 +1283,9 @@ void GLWidget::renderLabels() {
     if(Settings::showPilotsLabels()) {
         objects.clear();
         for(int i = 0; i < pilots.size(); i++)
-            if (pilots[i]->flightStatus() == Pilot::DEPARTING || Pilot::EN_ROUTE
-                    || Pilot::ARRIVING)
+            if (pilots[i]->flightStatus() == Pilot::DEPARTING
+                    || pilots[i]->flightStatus() == Pilot::EN_ROUTE
+                    || pilots[i]->flightStatus() == Pilot::ARRIVING)
                 objects.append(pilots[i]);
         renderLabels(objects, Settings::pilotFont(), _pilotLabelZoomTreshold,
                  Settings::pilotFontColor());
