@@ -68,3 +68,17 @@ GLuint Sector::glBorderLine() {
     }
     return _borderline;
 }
+
+QPair<double, double> Sector::getCenter() {
+    QPair<double, double> runningTotal;
+    runningTotal.first = 0;
+    runningTotal.second = 0;
+    foreach(const DoublePair p, points) {
+        runningTotal.first += p.first;
+        runningTotal.second += p.second;
+    }
+    runningTotal.first /= points.size();
+    runningTotal.second /= points.size();
+
+    return runningTotal;
+}

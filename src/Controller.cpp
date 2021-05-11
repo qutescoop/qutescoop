@@ -70,8 +70,13 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
             } else
                 icao = icao.left(p);
         }
-        if(NavData::instance()->sectors.contains(icao) && !icao.isEmpty())
+        if(NavData::instance()->sectors.contains(icao) && !icao.isEmpty()) {
             this->sector = NavData::instance()->sectors[icao];
+            // The new VATSIM Data format doesn't provide data on controller position, so we'll need to average out the positions in the sector
+            QPair<double, double> center = this->sector->getCenter();
+            this->lat = center.first;
+            this->lon = center.second;
+        }
     }
 }
 

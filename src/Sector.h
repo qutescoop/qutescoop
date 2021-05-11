@@ -26,6 +26,8 @@ class Sector {
 
         GLuint glPolygon();
         GLuint glBorderLine();
+
+        QPair<double, double> getCenter();
     private:
         GLuint _polygon, _borderline;
 };
