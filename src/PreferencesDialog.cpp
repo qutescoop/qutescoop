@@ -422,15 +422,11 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
     Settings::setDownloadNetwork(index);
 
     switch(index) {
-    case 0: // IVAO
-        Settings::setStatusLocation("http://www.ivao.aero/whazzup/status.txt");
-        gbDownloadBookings->setChecked(false);
-        break;
-    case 1: // VATSIM
+    case 0: // VATSIM
         Settings::setStatusLocation("http://status.vatsim.net/");
         gbDownloadBookings->setChecked(true);
         break;
-    case 2: // user defined
+    case 1: // user defined
         Settings::setStatusLocation(editUserDefinedLocation->text());
         gbDownloadBookings->setChecked(false);
         break;

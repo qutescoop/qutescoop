@@ -59,17 +59,14 @@ class Pilot: public Client {
         QString planAircraft, planTAS, planDep, planAlt, planDest,
         planAltAirport, planRevision, planFlighttype, planDeptime,
         transponder, planRemarks, planRoute, planActtime, airline,
-        planAltAirport2, planTypeOfFlight, // IVAO only
         qnh_inHg, qnh_mb, // VATSIM only
         routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
         routeWaypointsPlanRouteCache;
         QDate dayOfFlight;
         int altitude, groundspeed, planEnroute_hrs, planEnroute_mins,
-        planFuel_hrs, planFuel_mins,
-        pob; // IVAO only
+        planFuel_hrs, planFuel_mins;
         double trueHeading;
-        bool onGround, // IVAO only
-        showDepDestLine;
+        bool showDepDestLine;
         QDateTime whazzupTime; // need some local reference to that
         QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
     private:

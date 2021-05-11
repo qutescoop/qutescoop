@@ -13,11 +13,12 @@
 
 Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
         Client(json, whazzup),
-        onGround(false),
         showDepDestLine(false) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
     QJsonObject flightPlan = json["flight_plan"].toObject();
+
+    rating = json["pilot_rating"].toInt(); // Use the correct rating
 
     altitude = json["altitude"].toInt(); // we could do some barometric
                                     // calculations here (only for VATSIM needed)
@@ -91,8 +92,7 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     Airport *dst = destAirport();
 
     // flying?
-    const bool flying = groundspeed > 50 || altitude > 9000
-                        || (network == IVAO && !onGround);
+    const bool flying = groundspeed > 50 || altitude > 9000;
 
     if (dep == 0 || dst == 0) {
         if(flying)
@@ -229,51 +229,32 @@ QString Pilot::toolTip() const {
 }
 
 QString Pilot::rank() const {
-    if(network == IVAO) {
-        switch(rating) {
-            case 2: return "FS1"; //Basic Flight Student
-            case 3: return "FS2"; //Flight Student
-            case 4: return "FS3"; //Advanced Flight Student
-            case 5: return "PP"; //Private Pilot
-            case 6: return "SPP"; //Senior Private Pilot
-            case 7: return "CP"; //Commercial Pilot
-            case 8: return "ATP"; //Airline Transport Pilot (currently not available)
-            case 9: return "SFI"; //Senior Flight Instructor
-            case 10: return "CFI"; //Chief Flight Instructor
-            default: return QString("? (%1)").arg(rating);
-        }
-    } /*else if(network == VATSIM) {
-        switch(rating) { // experimental, I do not know which ratings really get reported yet
-            case 1: return "P0"; // Unrated Pilot
-            case 2: return "P1"; // Pilot
-            case 3: return "P2"; // VFR Pilot
-            case 4: return "P3"; // IFR Pilot
-            case 5: return "P4"; // Command Pilot
-            case 6: return "P5"; // Master Pilot
-            default: return QString("? (%1)").arg(rating);
-        }
-    }*/
+    switch(rating) {
+        // The JSON Data actually contains a mapping of IDs onto names
+        // In the future this should probably use that source instead of having this hardcoded
+        case 0: return "NEW";
+        case 1: return "PPL";
+        case 3: return "IR";
+        case 7: return "CMEL";
+        case 15: return "ATPL";
+        default: return QString("? (%1)").arg(rating);
+    }
     return QString();
 }
 
 QString Pilot::aircraftType() const {
     QStringList acftSegments = planAircraft.split("/");
 
-    if(network == IVAO && acftSegments.size() >= 2)
-        return acftSegments[1];
-
     // VATSIM can be a real PITA, really
-    if(network == VATSIM) {
-        // FAA-style without WTC prefix (e.g. "B737/G")
-        if(acftSegments.size() == 2 && acftSegments[0].length() >= 2)
-            return acftSegments[0];
-        // ICAO-style (e.g. "A320/M-SDE2E3FGHIJ1RWXY/LB2")
-        if(acftSegments.size() == 3 && acftSegments[0].length() >= 2)
-            return acftSegments[0];
-        // FAA-style with ("H/B763/L") or without equipment suffix ("H/B763")
-        else if(acftSegments.size() >= 2)
-            return acftSegments[1];
-    }
+    // FAA-style without WTC prefix (e.g. "B737/G")
+    if(acftSegments.size() == 2 && acftSegments[0].length() >= 2)
+        return acftSegments[0];
+    // ICAO-style (e.g. "A320/M-SDE2E3FGHIJ1RWXY/LB2")
+    if(acftSegments.size() == 3 && acftSegments[0].length() >= 2)
+        return acftSegments[0];
+    // FAA-style with ("H/B763/L") or without equipment suffix ("H/B763")
+    else if(acftSegments.size() >= 2)
+        return acftSegments[1];
 
     return planAircraft;
 }

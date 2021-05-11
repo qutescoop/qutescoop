@@ -59,8 +59,6 @@ QString Client::displayName(bool withLink) const {
 }
 
 QString Client::clientInformation() const {
-    if(!clientSoftware.isEmpty())
-        return clientSoftware + " " + clientVersion;
     return QString();
 }
 

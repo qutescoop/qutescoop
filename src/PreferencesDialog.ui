@@ -63,11 +63,6 @@
                </property>
                <item>
                 <property name="text">
-                 <string>IVAO</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
                  <string>VATSIM</string>
                 </property>
                </item>
