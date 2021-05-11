@@ -68,3 +68,32 @@ GLuint Sector::glBorderLine() {
     }
     return _borderline;
 }
+
+QPair<double, double> Sector::getCenter() const {
+    // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+
+    double A = 0;
+    QPair<double, double> runningTotal;
+    runningTotal.first = 0;
+    runningTotal.second = 0;
+    const int count = points.size();
+    for(int i = 0; i < points.size(); ++i) {
+        A += (points[i].first * points[(i + 1) % count].second
+             - points[(i + 1) % count].first * points[i].second);
+
+        double multiplyBy = points[i].first * points[(i + 1) % count].second
+                            - (points[(i + 1) % count].first * points[i].second);
+
+        runningTotal.first += (points[i].first + points[(i + 1) % count].first)
+                            * multiplyBy;
+        
+        runningTotal.second += (points[i].second + points[(i + 1) % count].second)
+                            * multiplyBy;
+    }
+    A /= 2;
+
+    runningTotal.first /= 6 * A;
+    runningTotal.second /= 6 * A;
+
+    return runningTotal;
+}

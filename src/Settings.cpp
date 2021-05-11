@@ -318,9 +318,8 @@ void Settings::setDownloadNetwork(int i) {
 
 QString Settings::downloadNetworkName() {
     switch(downloadNetwork()) {
-    case 0: return "IVAO"; break;
-    case 1: return "VATSIM"; break;
-    case 2: return "User Network"; break;
+    case 0: return "VATSIM"; break;
+    case 1: return "User Network"; break;
     }
     return "Unknown";
 }

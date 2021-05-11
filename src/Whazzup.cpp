@@ -90,7 +90,7 @@ void Whazzup::processStatus() {
 
         if(list.size() != 2) continue;
 
-        if("url0" == list[0])
+        if("json3" == list[0])
             _urls.append(list[1]);
         else if("gzurl0" == list[0])
             _gzurls.append(list[1]);

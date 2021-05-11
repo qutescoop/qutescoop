@@ -9,57 +9,58 @@
 #include "helpers.h"
 #include "Settings.h"
 
-Pilot::Pilot(const QStringList& stringList, const WhazzupData* whazzup):
-        Client(stringList, whazzup),
-        onGround(false),
+#include <QJsonObject>
+
+Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
+        Client(json, whazzup),
         showDepDestLine(false) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
-    altitude = field(stringList, 7).toInt(); // we could do some barometric
-                                    // calculations here (only for VATSIM needed)
-    groundspeed = field(stringList, 8).toInt();
-    planAircraft = field(stringList, 9);
-    planTAS = field(stringList, 10);
-    planDep = field(stringList, 11);
-    planAlt = field(stringList, 12);
-    planDest = field(stringList, 13);
+    QJsonObject flightPlan = json["flight_plan"].toObject();
 
-    QString airlineCode = field(stringList,0);
+    rating = json["pilot_rating"].toInt(); // Use the correct rating
+
+    altitude = json["altitude"].toInt(); // we could do some barometric
+                                    // calculations here (only for VATSIM needed)
+    groundspeed = json["groundspeed"].toInt();
+    // The JSON data provides 3 different aircraft data
+    // 1: The full ICAO Data, this is too long to display
+    // 2: The FAA Data, this is what was displayed previously
+    // 3: The short Data, consisting only of the aircraft code
+    planAircraft = flightPlan["aircraft_faa"].toString();
+    planTAS = flightPlan["cruise_tas"].toString();
+    planDep = flightPlan["departure"].toString();
+    planAlt = flightPlan["altitude"].toString();
+    planDest = flightPlan["arrival"].toString();
+
+    QString airlineCode = json["callsign"].toString();
     airlineCode.resize(3);
     airline = NavData::instance()->airline(airlineCode);
 
-    transponder = field(stringList, 17);
-    planRevision = field(stringList, 20);
-    planFlighttype = field(stringList, 21);
-    planDeptime = field(stringList, 22);
-    planActtime = field(stringList, 23);
+    transponder = json["transponder"].toString();
+    planRevision = QString::number(flightPlan["revision_id"].toInt());
+    planFlighttype = flightPlan["flight_rules"].toString();
+    planDeptime = flightPlan["deptime"].toString();
+    planActtime = flightPlan["deptime"].toString(); // The new data doesn't provide the actual departure
 
-    QString tmpStr = field(stringList, 24);
+    QString timeEnroute = flightPlan["enroute_time"].toString();
+    QString timeFuel = flightPlan["fuel_time"].toString();
+
+    QString tmpStr = timeEnroute.left(2);
     if(tmpStr.isNull())
         planEnroute_hrs = -1;
     else
         planEnroute_hrs = tmpStr.toInt();
-    planEnroute_mins = field(stringList, 25).toInt();
-    planFuel_hrs = field(stringList, 26).toInt();
-    planFuel_mins = field(stringList, 27).toInt();
-    planAltAirport = field(stringList, 28);
-    planRemarks = field(stringList, 29);
-    planRoute = field(stringList, 30);
+    planEnroute_mins = timeEnroute.right(2).toInt();
+    planFuel_hrs = timeFuel.left(2).toInt();
+    planFuel_mins = timeFuel.right(2).toInt();
+    planAltAirport = flightPlan["alternate"].toString();
+    planRemarks = flightPlan["remarks"].toString();
+    planRoute = flightPlan["route"].toString();
 
-    if(whazzup->isIvao()) {
-        planAltAirport2 = field(stringList, 42); // IVAO only
-        planTypeOfFlight = field(stringList, 43); // IVAO only
-        pob = field(stringList, 44).toInt(); // IVAO only
-
-        trueHeading = field(stringList, 45).toInt();
-        onGround = field(stringList, 46).toInt() == 1; // IVAO only
-    }
-
-    if(whazzup->isVatsim()) {
-        trueHeading = field(stringList, 38).toInt();
-        qnh_inHg = field(stringList, 39); // VATSIM only
-        qnh_mb = field(stringList, 40); // VATSIM only
-    }
+    trueHeading = json["heading"].toInt();
+    qnh_inHg = QString::number(json["qnh_i_hg"].toDouble()); // VATSIM only
+    qnh_mb = QString::number(json["qnh_mb"].toInt()); // VATSIM only
     // day of flight
     if(!QTime::fromString(planDeptime, "HHmm").isValid()) // no Plan ETA given: maybe some more magic needed here
         dayOfFlight = whazzupTime.date();
@@ -91,8 +92,7 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     Airport *dst = destAirport();
 
     // flying?
-    const bool flying = groundspeed > 50 || altitude > 9000
-                        || (network == IVAO && !onGround);
+    const bool flying = groundspeed > 50 || altitude > 9000;
 
     if (dep == 0 || dst == 0) {
         if(flying)
@@ -229,51 +229,32 @@ QString Pilot::toolTip() const {
 }
 
 QString Pilot::rank() const {
-    if(network == IVAO) {
-        switch(rating) {
-            case 2: return "FS1"; //Basic Flight Student
-            case 3: return "FS2"; //Flight Student
-            case 4: return "FS3"; //Advanced Flight Student
-            case 5: return "PP"; //Private Pilot
-            case 6: return "SPP"; //Senior Private Pilot
-            case 7: return "CP"; //Commercial Pilot
-            case 8: return "ATP"; //Airline Transport Pilot (currently not available)
-            case 9: return "SFI"; //Senior Flight Instructor
-            case 10: return "CFI"; //Chief Flight Instructor
-            default: return QString("? (%1)").arg(rating);
-        }
-    } /*else if(network == VATSIM) {
-        switch(rating) { // experimental, I do not know which ratings really get reported yet
-            case 1: return "P0"; // Unrated Pilot
-            case 2: return "P1"; // Pilot
-            case 3: return "P2"; // VFR Pilot
-            case 4: return "P3"; // IFR Pilot
-            case 5: return "P4"; // Command Pilot
-            case 6: return "P5"; // Master Pilot
-            default: return QString("? (%1)").arg(rating);
-        }
-    }*/
+    switch(rating) {
+        // The JSON Data actually contains a mapping of IDs onto names
+        // In the future this should probably use that source instead of having this hardcoded
+        case 0: return "NEW";
+        case 1: return "PPL";
+        case 3: return "IR";
+        case 7: return "CMEL";
+        case 15: return "ATPL";
+        default: return QString("? (%1)").arg(rating);
+    }
     return QString();
 }
 
 QString Pilot::aircraftType() const {
     QStringList acftSegments = planAircraft.split("/");
 
-    if(network == IVAO && acftSegments.size() >= 2)
-        return acftSegments[1];
-
     // VATSIM can be a real PITA, really
-    if(network == VATSIM) {
-        // FAA-style without WTC prefix (e.g. "B737/G")
-        if(acftSegments.size() == 2 && acftSegments[0].length() >= 2)
-            return acftSegments[0];
-        // ICAO-style (e.g. "A320/M-SDE2E3FGHIJ1RWXY/LB2")
-        if(acftSegments.size() == 3 && acftSegments[0].length() >= 2)
-            return acftSegments[0];
-        // FAA-style with ("H/B763/L") or without equipment suffix ("H/B763")
-        else if(acftSegments.size() >= 2)
-            return acftSegments[1];
-    }
+    // FAA-style without WTC prefix (e.g. "B737/G")
+    if(acftSegments.size() == 2 && acftSegments[0].length() >= 2)
+        return acftSegments[0];
+    // ICAO-style (e.g. "A320/M-SDE2E3FGHIJ1RWXY/LB2")
+    if(acftSegments.size() == 3 && acftSegments[0].length() >= 2)
+        return acftSegments[0];
+    // FAA-style with ("H/B763/L") or without equipment suffix ("H/B763")
+    else if(acftSegments.size() >= 2)
+        return acftSegments[1];
 
     return planAircraft;
 }

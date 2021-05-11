@@ -9,12 +9,14 @@
 #include "WhazzupData.h"
 #include "ClientDetails.h"
 
+#include <QJsonObject>
+
 class WhazzupData;
 class Sector;
 
 class BookedController: public Client {
     public:
-        BookedController(const QStringList& stringList, const WhazzupData* whazzup);
+        BookedController(const QJsonObject& json, const WhazzupData* whazzup);
 
         bool isObserver() const { return facilityType == 0; }
         bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations and staff (at least from VATSIM)

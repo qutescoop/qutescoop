@@ -11,11 +11,13 @@
 #include "WhazzupData.h"
 #include "ClientDetails.h"
 
+#include <QJsonDocument>
+
 class Client: public MapObject {
     public:
-        enum Network { IVAO, VATSIM, OTHER };
+        enum Network { VATSIM, OTHER };
 
-        Client(const QStringList& stringList, const WhazzupData *whazzup);
+        Client(const QJsonObject& json, const WhazzupData *whazzup);
 
         virtual QString toolTip() const;
 
@@ -34,7 +36,6 @@ class Client: public MapObject {
         QDateTime timeConnected;
 
         int adminRating, rating;
-        QString clientSoftware, clientVersion; // IVAO only
 
         Network network;
 

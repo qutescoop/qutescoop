@@ -34,7 +34,6 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
         case 7: return QString("Pilot:\nroute DEST");
         case 8: return QString("Pilot:\nflight type");
         case 9: return QString("Pilot:\nroute dist [NM]");
-        case 10: return QString("Admin Rating"); //IVAO only
     }
 
     return QVariant();
@@ -106,7 +105,7 @@ int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
 
 int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return Whazzup::instance()->realWhazzupData().isIvao()? 11: 10;
+    return 10;
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {

@@ -45,8 +45,8 @@ void PreferencesDialog::loadSettings() {
     cbDownloadPeriodically->setChecked(Settings::downloadPeriodically());
     cbNetwork->setCurrentIndex(Settings::downloadNetwork());
     editUserDefinedLocation->setText(Settings::userDownloadLocation());
-    editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
-    lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 2);
+    editUserDefinedLocation->setEnabled(Settings::downloadNetwork() == 1);
+    lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 1);
     cbSaveWhazzupData->setChecked(Settings::saveWhazzupData());
 
     // screenshots
@@ -422,22 +422,18 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
     Settings::setDownloadNetwork(index);
 
     switch(index) {
-    case 0: // IVAO
-        Settings::setStatusLocation("http://www.ivao.aero/whazzup/status.txt");
-        gbDownloadBookings->setChecked(false);
-        break;
-    case 1: // VATSIM
+    case 0: // VATSIM
         Settings::setStatusLocation("http://status.vatsim.net/");
         gbDownloadBookings->setChecked(true);
         break;
-    case 2: // user defined
+    case 1: // user defined
         Settings::setStatusLocation(editUserDefinedLocation->text());
         gbDownloadBookings->setChecked(false);
         break;
     }
 
-    editUserDefinedLocation->setEnabled(index == 2);
-    lbluserDefinedLocation->setEnabled(index == 2);
+    editUserDefinedLocation->setEnabled(index == 1);
+    lbluserDefinedLocation->setEnabled(index == 1);
 }
 
 void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {

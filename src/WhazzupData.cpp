@@ -12,6 +12,8 @@
 #include "Settings.h"
 #include "helpers.h"
 
+#include <QJsonDocument>
+
 WhazzupData::WhazzupData():
         servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
@@ -27,124 +29,133 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
     _dataType = type;
     QStringList friends = Settings::friends();
     int reloadInMin = Settings::downloadInterval();
-    enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS, STATE_SERVERS, STATE_VOICESERVERS, STATE_PREFILE};
-    ParserState state = STATE_NONE;
-    foreach(QString line, bytes->split('\n')) {
-        // keep GUI responsive - leads to hangups?
-        qApp->processEvents();
-
-        line = line.trimmed();
-        if(line.isEmpty())
-            continue;
-
-        if(line.startsWith(';'))  // comments
-            continue;
-
-        if(line.startsWith('!')) {
-            if(line.startsWith("!CLIENTS"))
-                state = STATE_CLIENTS;
-            else if(line.startsWith("!GENERAL"))
-                state = STATE_GENERAL;
-            else if(line.startsWith("!SERVERS"))
-                state = STATE_SERVERS;
-            else if(line.startsWith("!VOICE SERVERS"))
-                state = STATE_VOICESERVERS;
-            else if(line.startsWith("!PREFILE"))
-                state = STATE_PREFILE;
-            else
-                state = STATE_NONE;
-
-            continue;
+    QJsonDocument data = QJsonDocument::fromJson(*bytes);
+    if(!data.isNull() && type == WHAZZUP) {
+        QJsonObject json = data.object();
+        if(json.contains("general") && json["general"].isObject()) {
+            QJsonObject generalObject = json["general"].toObject();
+            if(generalObject.contains("update_timestamp") && generalObject["update_timestamp"].isString()) {
+                whazzupTime = QDateTime::fromString(generalObject["update_timestamp"].toString(), Qt::ISODate);
+            }
+        }
+        if(!whazzupTime.isValid()) {
+            // Assume it's the current time
+            whazzupTime = QDateTime::currentDateTime();
+        }
+        if(json.contains("servers") && json["servers"].isArray()) {
+            QJsonArray serversArray = json["servers"].toArray();
+            for(int i = 0; i < serversArray.size(); ++i)  {
+                QJsonObject serverObject = serversArray[i].toObject();
+                if(serverObject.contains("ident") && serverObject["ident"].isString()
+                && serverObject.contains("hostname_or_ip") && serverObject["hostname_or_ip"].isString()
+                && serverObject.contains("location") && serverObject["location"].isString()
+                && serverObject.contains("name") && serverObject["name"].isString()
+                && serverObject.contains("clients_connection_allowed") && serverObject["clients_connection_allowed"].isDouble()) {
+                    QStringList server;
+                    server.append(serverObject["ident"].toString());
+                    server.append(serverObject["hostname_or_ip"].toString());
+                    server.append(serverObject["location"].toString());
+                    server.append(serverObject["name"].toString());
+                    server.append(serverObject["clients_connection_allowed"].toString());
+                    servers += server;
+                }
+            }
+        }
+        if(json.contains("pilots") && json["pilots"].isArray()) {
+            QJsonArray pilotsArray = json["pilots"].toArray();
+            for(int i = 0; i < pilotsArray.size(); ++i) {
+                QJsonObject pilotObject = pilotsArray[i].toObject();
+                Pilot *p = new Pilot(pilotObject, this);
+                pilots[p->label] = p;
+                if(friends.contains(p->userId))
+                    friendsLatLon.append(QPair<double, double>(p->lat, p->lon));
+            }
+        }
+        
+        if(json.contains("controllers") && json["controllers"].isArray()) {
+            QJsonArray controllersArray = json["controllers"].toArray();
+            for(int i = 0; i < controllersArray.size(); ++i) {
+                QJsonObject controllerObject = controllersArray[i].toObject();
+                Controller *c = new Controller(controllerObject, this);
+                controllers[c->label] = c;
+                if(friends.contains(c->userId))
+                    friendsLatLon.append(QPair<double, double>(c->lat, c->lon));
+            }
         }
 
-        switch(state) {
-            case STATE_NONE:
-            case STATE_SERVERS: {
-                QStringList list = line.split(':');
-                if(list.size() < 5)
-                    continue;
-                servers += list;
-                //; !SERVERS section -         ident:hostname_or_IP:location:name:clients_connection_allowed:
-                //EUROPE-C2:88.198.19.202:Europe:Center Europe Server Two:1:
+        if(json.contains("prefiles") && json["prefiles"].isArray()) {
+            QJsonArray prefilesArray = json["prefiles"].toArray();
+            for(int i = 0; i < prefilesArray.size(); ++i) {
+                QJsonObject prefileObject = prefilesArray[i].toObject();
+                Pilot *p = new Pilot(prefileObject, this);
+                bookedPilots[p->label] = p;
             }
-                break;
-            case STATE_VOICESERVERS: {
-                QStringList list = line.split(':');
-                if(list.size() < 5)
-                    continue;
-                voiceServers += list;
-                //; !VOICE SERVERS section -   hostname_or_IP:location:name:clients_connection_allowed:type_of_voice_server:
-                //voice2.vacc-sag.org:Nurnberg:Europe-CW:1:R:
+        }
+    } else if(type == ATCBOOKINGS) {
+        // ATC Bookings are still in the old format, however we only need the CLIENTS and GENERAL sections
+        enum ParserState {STATE_NONE, STATE_GENERAL, STATE_CLIENTS};
+        ParserState state = STATE_NONE;
+        foreach(QString line, bytes->split('\n')) {
+            line = line.trimmed();
+            if(line.isEmpty())
+                continue;
+            
+            if(line.startsWith(';'))
+                continue;
+            
+            if(line.startsWith("!")) {
+                if(line.startsWith("!CLIENTS"))
+                    state = STATE_CLIENTS;
+                else if(line.startsWith("!GENERAL"))
+                    state = STATE_GENERAL;
+                else
+                    state = STATE_NONE;
+                
+                continue;
             }
-                break;
-            case STATE_GENERAL: {
-                QStringList list = line.split('=');
-                if(list.size() != 2)
-                    continue;
-                if(line.startsWith("CONNECTED CLIENTS")) {
-                    //connectedClients = list[1].trimmed().toInt(); // we do not trust the server any more. Take clients() instead.
-                } else if(line.startsWith("CONNECTED SERVERS")) {
-                    //connectedServers = list[1].trimmed().toInt(); // not important. Take serverList.size() instead
-                } else if(line.startsWith("BOOKING")) {
-                    // always "1" for bookings, but we select already by the whazzup location
-                } else if(line.startsWith("UPDATE")) {
-                    if(type == WHAZZUP) {
-                        whazzupTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
-                        whazzupTime.setTimeSpec(Qt::UTC);
-                    } else if(type == ATCBOOKINGS) {
+            
+            switch(state) {
+                case STATE_CLIENTS: {
+                    QStringList list = line.split(':');
+
+                    if(list.size() < 38)
+                        continue;
+
+                    if(list[3] != "ATC")
+                        continue;
+                    // Create a JSON Object containing the required fields
+                    QJsonObject controllerObject;
+                    controllerObject["callsign"] = list[0];
+                    controllerObject["cid"] = list[1].toInt();
+                    controllerObject["name"] = list[2];
+
+                    // Bookings only:
+                    controllerObject["bookingType"] = list[4].toInt();
+                    controllerObject["timeTo"] = list[14];
+                    controllerObject["date"] = list[16];
+                    controllerObject["link"] = list[35];
+                    controllerObject["timeFrom"] = list[37];
+
+                    BookedController *bc = new BookedController(controllerObject, this);
+                    bookedControllers.append(bc);
+                }
+                    break;
+                case STATE_GENERAL: {
+                    QStringList list = line.split("=");
+                    if(list.size() != 2)
+                        continue;
+                    if(line.startsWith("UPDATE")) {
                         bookingsTime = QDateTime::fromString(list[1].trimmed(), "yyyyMMddHHmmss");
                         bookingsTime.setTimeSpec(Qt::UTC);
                     }
-                } else if(line.startsWith("RELOAD")) {
-                    reloadInMin = list[1].trimmed().toInt();
-                } else if(line.startsWith("VERSION")) {
-                    _whazzupVersion = list[1].trimmed().toInt();
                 }
+                    break;
             }
-                break;
-            case STATE_CLIENTS: {
-                QStringList list = line.split(':');
-                if(list.size() < 4)
-                    continue;
-
-                if (list[3] == "PILOT") {
-                    if (type == WHAZZUP) {
-                        Pilot *p = new Pilot(list, this);
-                        pilots[p->label] = p;
-                        if (friends.contains(p->userId))
-                            friendsLatLon.append(QPair<double, double>(p->lat, p->lon));
-                    }
-                }
-                else if (list[3] == "ATC") {
-                    if (type == WHAZZUP) {
-                        while (list.size() > 42 && _whazzupVersion == 8) { // fix ":" in Controller Infos... - should be done by the server I think :(
-                            list[35] = list[35] + ":" + list[36];
-                            list.removeAt(36);
-                        }
-                        Controller *c = new Controller(list, this);
-                        controllers[c->label] = c;
-                        if (friends.contains(c->userId))
-                            friendsLatLon.append(QPair<double,double>(c->lat,c->lon));
-                    } else if (type == ATCBOOKINGS) {
-                        BookedController *bc = new BookedController(list, this);
-                        bookedControllers.append(bc);
-                        //if(friends.contains(bc->userId)) bookedFriendControllers.append( bc);
-                    }
-                }
-            }
-                break;
-            case STATE_PREFILE: {
-                if (type == WHAZZUP) {
-                    QStringList list = line.split(':');
-                    Pilot *p = new Pilot(list, this);
-                    bookedPilots[p->label] = p;
-                    //if(friends.contains(p->userId)) prefiledFriendPilots.append( p);
-                }
-            }
-                break;
         }
+    } else {
+        // Try again in 15 seconds
+        updateEarliest = QDateTime::currentDateTime().addSecs(15);
     }
-
     // set the earliest time the server will have new data
     if (whazzupTime.isValid() && reloadInMin > 0)
         updateEarliest = whazzupTime.addSecs(reloadInMin * 60).toUTC();
@@ -171,34 +182,27 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
     foreach(const BookedController* bc, data.bookedControllers) {
         //if (bc == 0) continue;
         if (bc->starts() <= predictTime && bc->ends() >= predictTime) { // only ones booked for the selected time
-            QStringList sl;
-            for(int h=0; h < 40; h++)
-                sl.append(QString()); // build a QStringList with enough items
+            QJsonObject controllerObject;
 
-            //userId = getField(stringList, 1);
-            sl[0]= bc->label;
-            sl[2] = bc->realName;
-            sl[18] = QString("%1").arg(bc->facilityType);
-
-            //lat = getField(stringList, 5).toDouble();
-            //lon = getField(stringList, 6).toDouble();
-            sl[5] = QString("%1").arg(bc->lat);
-            sl[6] = QString("%1").arg(bc->lon);
+            controllerObject["callsign"] = bc->label;
+            controllerObject["name"] = bc->realName;
+            controllerObject["facility"] = bc->facilityType;
 
             //atisMessage = getField(stringList, 35);
-            sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
-                    .arg(bc->starts().toString("HHmm'z'"))
-                    .arg(bc->ends().toString("HHmm'z'"))
-                    .arg(bc->bookingInfoStr);
+            QJsonArray atisLines;
+            atisLines.append(QString("BOOKED from %1, online until %2").arg(bc->starts().toString("HHmm'z'")
+                                                                .arg(bc->ends().toString("HHmm'z'"))));
+            atisLines.append(bc->bookingInfoStr);
+            controllerObject["text_atis"] = atisLines;
 
             //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddHHmmss");
-            sl[37] = bc->timeConnected.toString("yyyyMMddHHmmss");
+            controllerObject["logon_time"] = bc->timeConnected.toString(Qt::ISODate);
 
             //server = getField(stringList, 14);
-            sl[14] = "BOOKED SESSION";
+            controllerObject["server"] = "BOOKED SESSION";
 
             //visualRange = getField(stringList, 19).toInt();
-            sl[19] = QString("%1").arg(bc->visualRange);
+            controllerObject["visual_range"] = bc->visualRange;
 
             // not applicable:
             //frequency = getField(stringList, 4);
@@ -207,7 +211,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             //protrevision = getField(stringList, 15).toInt();
             //rating = getField(stringList, 16).toInt();
 
-            controllers[bc->label] = new Controller(sl, this);
+            controllers[bc->label] = new Controller(controllerObject, this);
         }
     }
 

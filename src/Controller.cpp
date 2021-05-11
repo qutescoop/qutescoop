@@ -12,34 +12,24 @@
 #include "Settings.h"
 #include "helpers.h"
 
+#include <QJsonObject>
 
-Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup):
-        Client(stringList, whazzup),
+Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
+        Client(json, whazzup),
         sector(0) {
-    frequency = field(stringList, 4);
-    facilityType = field(stringList, 18).toInt();
+
+    frequency = json["frequency"].toString();
+    facilityType = json["facility"].toInt();
     if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
 
-    visualRange = field(stringList, 19).toInt();
-    atisMessage = field(stringList, 35);
-    timeLastAtisReceived = QDateTime::fromString(field(stringList, 36), "yyyyMMddHHmmss");
-
-    QStringList atisLines = atisMessage.split(QString::fromUtf8("^§")); // needed due to source encoded in UTF8 -
-                                                                        // found after some headache...
-
-    if(network== Client::IVAO) {
-        voiceChannel = atisLines.first();
-        atisLines.removeFirst();
-    }
-
+    visualRange = json["visual_range"].toInt();
+    timeLastAtisReceived = QDateTime::fromString(json["last_updated"].toString(), Qt::ISODate);
 
     atisMessage = "";
-    while (!atisLines.isEmpty()) {
-        QString line = atisLines.takeFirst();
-        if (line.startsWith("$ "))
-            voiceChannel = line.mid(2);
-        else
-            atisMessage += line + "<br>";
+    if(json.contains("text_atis") && json["text_atis"].isArray()) {
+        QJsonArray atis = json["text_atis"].toArray();
+        for(int i = 0; i < atis.size(); ++i)
+            atisMessage += atis[i].toString() + " <br>";
     }
 
     // do some magic for Controller Info like "online until"...
@@ -80,8 +70,13 @@ Controller::Controller(const QStringList& stringList, const WhazzupData* whazzup
             } else
                 icao = icao.left(p);
         }
-        if(NavData::instance()->sectors.contains(icao) && !icao.isEmpty())
+        if(NavData::instance()->sectors.contains(icao) && !icao.isEmpty()) {
             this->sector = NavData::instance()->sectors[icao];
+            // The new VATSIM Data format doesn't provide data on controller position, so we'll need to average out the positions in the sector
+            QPair<double, double> center = this->sector->getCenter();
+            this->lat = center.first;
+            this->lon = center.second;
+        }
     }
 }
 
