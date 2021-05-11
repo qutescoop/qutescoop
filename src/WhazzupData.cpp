@@ -150,6 +150,8 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                     }
                 }
                     break;
+                case STATE_NONE:
+                    break;
             }
         }
     } else {
