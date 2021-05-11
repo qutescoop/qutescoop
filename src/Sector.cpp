@@ -69,7 +69,7 @@ GLuint Sector::glBorderLine() {
     return _borderline;
 }
 
-QPair<double, double> Sector::getCenter() {
+QPair<double, double> Sector::getCenter() const {
     // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 
     double A = 0;
