@@ -169,7 +169,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
         updateEarliest(QDateTime()), whazzupTime(QDateTime()),
         bookingsTime(QDateTime()), predictionBasedOnTime(QDateTime()),
         predictionBasedOnBookingsTime(QDateTime()), _whazzupVersion(0) {
-    /*qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
 
     _whazzupVersion = data._whazzupVersion;
@@ -182,34 +182,27 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
     foreach(const BookedController* bc, data.bookedControllers) {
         //if (bc == 0) continue;
         if (bc->starts() <= predictTime && bc->ends() >= predictTime) { // only ones booked for the selected time
-            QStringList sl;
-            for(int h=0; h < 40; h++)
-                sl.append(QString()); // build a QStringList with enough items
+            QJsonObject controllerObject;
 
-            //userId = getField(stringList, 1);
-            sl[0]= bc->label;
-            sl[2] = bc->realName;
-            sl[18] = QString("%1").arg(bc->facilityType);
-
-            //lat = getField(stringList, 5).toDouble();
-            //lon = getField(stringList, 6).toDouble();
-            sl[5] = QString("%1").arg(bc->lat);
-            sl[6] = QString("%1").arg(bc->lon);
+            controllerObject["callsign"] = bc->label;
+            controllerObject["name"] = bc->realName;
+            controllerObject["facility"] = bc->facilityType;
 
             //atisMessage = getField(stringList, 35);
-            sl[35] = QString::fromUtf8("^§BOOKED from %1, online until %2^§%3") // dont't change this String, it is needed for correctly assigning onlineUntil
-                    .arg(bc->starts().toString("HHmm'z'"))
-                    .arg(bc->ends().toString("HHmm'z'"))
-                    .arg(bc->bookingInfoStr);
+            QJsonArray atisLines;
+            atisLines.append(QString("BOOKED from %1, online until %2").arg(bc->starts().toString("HHmm'z'")
+                                                                .arg(bc->ends().toString("HHmm'z'"))));
+            atisLines.append(bc->bookingInfoStr);
+            controllerObject["text_atis"] = atisLines;
 
             //timeConnected = QDateTime::fromString(getField(stringList, 37), "yyyyMMddHHmmss");
-            sl[37] = bc->timeConnected.toString("yyyyMMddHHmmss");
+            controllerObject["logon_time"] = bc->timeConnected.toString(Qt::ISODate);
 
             //server = getField(stringList, 14);
-            sl[14] = "BOOKED SESSION";
+            controllerObject["server"] = "BOOKED SESSION";
 
             //visualRange = getField(stringList, 19).toInt();
-            sl[19] = QString("%1").arg(bc->visualRange);
+            controllerObject["visual_range"] = bc->visualRange;
 
             // not applicable:
             //frequency = getField(stringList, 4);
@@ -218,7 +211,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             //protrevision = getField(stringList, 15).toInt();
             //rating = getField(stringList, 16).toInt();
 
-            controllers[bc->label] = new Controller(sl, this);
+            controllers[bc->label] = new Controller(controllerObject, this);
         }
     }
 
@@ -305,7 +298,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
         pilots[np->label] = np;
     }
     qApp->restoreOverrideCursor();
-    qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";*/
+    qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";
 }
 
 WhazzupData::WhazzupData(const WhazzupData &data) {
