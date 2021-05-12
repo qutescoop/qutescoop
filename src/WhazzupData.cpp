@@ -83,6 +83,15 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
             }
         }
 
+        if(json.contains("atis") && json["atis"].isArray()) {
+            QJsonArray atisArray = json["atis"].toArray();
+            for(int i = 0; i < atisArray.size(); ++i) {
+                QJsonObject atisObject = atisArray[i].toObject();
+                Controller *c = new Controller(atisObject, this);
+                controllers[c->label] = c;
+            }
+        }
+
         if(json.contains("prefiles") && json["prefiles"].isArray()) {
             QJsonArray prefilesArray = json["prefiles"].toArray();
             for(int i = 0; i < prefilesArray.size(); ++i) {
