@@ -45,15 +45,17 @@ jobs:
 #        uses: mxschmitt/action-tmate@v3
       - run: chmod +x ./DIST-unix64/QuteScoop ./DIST-unix64/QuteScoop.sh
       - run: ldd ./DIST-unix64/QuteScoop
-      - run: ldd ./DIST-unix64/QuteScoop | grep "=> /" | awk '{print $3}' | grep -E 'libQt|libgcc|libstdc|libicu|libGL|libxcb|libX' | xargs -I '{}' cp -v '{}' ./DIST-unix64/
-      - run: cp "$Qt5_Dir"/lib/libQt5DBus.so.5 "$Qt5_Dir"/lib/libQt5XcbQpa.so.5 ./DIST-unix64/
-      - run: |
-          mkdir ./DIST-unix64/platforms \
-             && cp "$QT_PLUGIN_PATH"/platforms/libqxcb*.so* \
-                ./DIST-unix64/platforms/
+      - run: mkdir ./DIST-unix64/lib
+      - run: ldd ./DIST-unix64/QuteScoop | grep "=> /" | awk '{print $3}' | grep -E 'libQt|libgcc|libstdc|libicu|libGL|libxcb|libX' | xargs -I '{}' cp -v '{}' ./DIST-unix64/lib/
+      - run: cp "$Qt5_Dir"/lib/libQt5DBus.so.5 "$Qt5_Dir"/lib/libQt5XcbQpa.so.5 ./DIST-unix64/lib/
+      - run: mkdir ./DIST-unix64/platforms
+      - run: ls "$QT_PLUGIN_PATH"/platforms/libqxcb*.so*
+      - run: ls ./DIST-unix64/platforms
+      - run: cp "$QT_PLUGIN_PATH"/platforms/libqxcb*.so* ./DIST-unix64/platforms
+      - run: cp -ar "$QT_PLUGIN_PATH"/xcbglintegrations ./DIST-unix64/
       # https://github.com/actions/upload-artifact#maintaining-file-permissions-and-case-sensitive-files
       - name: 'Tar files'
-        run: tar -cvf QuteScoop-Linux-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.tar ./DIST-unix64
+        run: tar --directory=./DIST-unix64 -cvf QuteScoop-Linux-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.tar ./
       - name: Upload
         uses: actions/upload-artifact@v1
         with:
