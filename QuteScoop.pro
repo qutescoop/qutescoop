@@ -150,7 +150,7 @@ win32 {
     RC_FILE = src/windowsicon.rc
     LIBS += -lOpengl32
     LIBS += -lglu32
-    QMAKE_LFLAGS += "-static-libstdc++ -static-libgcc"
+    QMAKE_LFLAGS += "-static-libstdc++ -static-libgcc -static"
 }
 # OSX also considered as unix, therefore condition added to check
 # if the platform is a "real" Unix
