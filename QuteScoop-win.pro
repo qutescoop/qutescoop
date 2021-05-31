@@ -7,4 +7,6 @@
 # each other thus invalidating all project settings.
 # This files does not have any functionality in its own.
 
+QMAKE_CXXFLAGS += "-static"
+
 include("QuteScoop.pro")
