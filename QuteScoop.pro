@@ -151,6 +151,7 @@ win32 {
     LIBS += -lOpengl32
     LIBS += -lglu32
     QMAKE_LFLAGS += "-static -static-libstdc++ -static-libgcc"
+    CONFIG += static
 }
 # OSX also considered as unix, therefore condition added to check
 # if the platform is a "real" Unix
