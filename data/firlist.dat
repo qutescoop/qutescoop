@@ -130,7 +130,7 @@ EDYY_S:Maastricht SOL:NL:51.7:9.4:1020
 EETT:Tallinn:EE:58.7:24.4:118
 EFIN:Helsinki:FI:61.8:25.3:119
 EGGX:Shanwick Oceanic:GB:53:-25:914
-NAT_FSS:Gander+Shanwick combined:CA:55:-30:915
+NAT:Gander+Shanwick combined:CA:55:-30:915
 EGTT:London ACC(Central):GB:52.8:-2:900
 LON:London ACC(Central):GB:52.5:-2:900
 EGTT-C:London ACC(Central):GB:52.4:0.5:901
@@ -453,7 +453,7 @@ RKRR_S:Incheon:KR:33.11:125.44:3102
 RKDA:Daegu:KR:36.43:129.51:3103
 RKDA_E:Daegu:KR:37.31:130.23:3104
 RKDA_C:Daegu:KR:35.32:128.43:3105
-RPHI:Manila:PH:12.2:123.5:312
+MNL:Manila:PH:12.2:123.5:312
 RU-CEN:Central Asia:RU:46.25:66.47:838
 RU-ERC:Dal Control:RU:63.41:145.33:835
 RU-ESC:Baikal Center:RU:59.58:94.7:831
@@ -461,6 +461,10 @@ RU-NWC:NW Control:RU:71.31:46.23:833
 RU-SC:Caucasus:RU:44:45:839
 RU-WRC:Moscow Radar:RU:51.23:40.20:837
 RU-WSC:Zapsib Control:RU:61.17:71.45:832
+SAM-N:SAM Control North:CO:7:-74:3200
+SAM-E:SAM Control East:BR:-12:-50:3201
+SAM-S:SAM Control South:AR:-36:-60:3202
+SAM-W:SAM Control West:CL:-36:-81:3203
 SACF:Cordoba:AR:-27.88:-64.93:3130
 SACU:Cordoba TMA:AR:-31.50:-64.20:3131
 SAEF:Ezeiza:AR:-42:-49:3140
@@ -617,6 +621,7 @@ VECC_R:Calcutta:IN:22.20:82.33:4208
 VECF:Calcutta:IN:20.10:89.40:4209
 VECX:Calcutta:IN:16.58:88.50:4210
 VEGF:Guwahati:IN:26.46:92.13:4211
+VGFR:Dhaka:BD:24.00:90.00:450
 VIDF:Delhi:IN:30.26:76.56:4212
 VIDP:Delhi:IN:27.57:76.34:4213
 VOBL:Bengaluru:IN:14.39:77.33:4214
