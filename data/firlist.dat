@@ -191,6 +191,8 @@ ESOS:Sweden:SE:62.1:16.7:148
 EURE:Eurocontrol East:HU:46:23:524
 EURI:Eurocontrol Islands:GB:57:-5:5537
 EURM:Maastricht:NL:50.50:9.64:521
+EURM_W:Maastricht West:NL:51.50:6.50:5211
+EURM_E:Maastricht East:NL:50:13.50:5212
 EURN:Eurocontrol North:SE:59:16:525
 EURS:Eurocontrol South:IT:38:20:523
 EURW:Eurocontrol West:FR:43:-4:522
@@ -462,9 +464,13 @@ RU-SC:Caucasus:RU:44:45:839
 RU-WRC:Moscow Radar:RU:51.23:40.20:837
 RU-WSC:Zapsib Control:RU:61.17:71.45:832
 SAM-N:SAM Control North:CO:7:-74:3200
+SAM_N:SAM Control North:CO:7:-74:3200
 SAM-E:SAM Control East:BR:-12:-50:3201
+SAM_E:SAM Control East:BR:-12:-50:3201
 SAM-S:SAM Control South:AR:-36:-60:3202
+SAM_S:SAM Control South:AR:-36:-60:3202
 SAM-W:SAM Control West:CL:-36:-81:3203
+SAM_W:SAM Control West:CL:-36:-81:3203
 SACF:Cordoba:AR:-27.88:-64.93:3130
 SACU:Cordoba TMA:AR:-31.50:-64.20:3131
 SAEF:Ezeiza:AR:-42:-49:3140
