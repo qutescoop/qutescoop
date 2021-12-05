@@ -423,8 +423,6 @@ Whazzups (replay)</string>
     <addaction name="actionShowFriendsDock"/>
     <addaction name="actionHideAllWindows"/>
     <addaction name="separator"/>
-    <addaction name="actionDebugLog"/>
-    <addaction name="separator"/>
     <addaction name="actionToggleFullscreen"/>
     <addaction name="separator"/>
     <addaction name="actionHighlight_Friends"/>
@@ -1176,18 +1174,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="shortcut">
     <string>Ctrl+F5</string>
-   </property>
-  </action>
-  <action name="actionDebugLog">
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/icons/images/log16.png</normaloff>:/icons/images/log16.png</iconset>
-   </property>
-   <property name="text">
-    <string>Debug &amp;log...</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+F1</string>
    </property>
   </action>
   <action name="actionShowRoutes">

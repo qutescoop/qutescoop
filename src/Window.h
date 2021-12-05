@@ -34,7 +34,6 @@ class Window : public QMainWindow, public Ui::Window {
         void cloudDownloaded();
     private slots:
         void on_actionShowWaypoints_triggered(bool checked);
-        void on_actionDebugLog_triggered();
         void on_actionHighlight_Friends_triggered(bool checked);
         void on_pb_highlightFriends_toggled(bool checked);
         void on_actionZoomReset_triggered();

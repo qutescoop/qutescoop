@@ -218,7 +218,6 @@ HEADERS += src/_pch.h \
     src/ListClientsDialogModel.h \
     src/ListClientsDialog.h \
     src/Ping.h \
-    src/LogBrowserDialog.h \
     src/GuiMessage.h \
     src/Station.h \
     src/Launcher.h \
@@ -274,7 +273,6 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsDialogModel.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
-    src/LogBrowserDialog.cpp \
     src/GuiMessage.cpp \
     src/Station.cpp \
     src/Launcher.cpp \

@@ -9,7 +9,6 @@
 #include "PilotDetails.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
-#include "LogBrowserDialog.h"
 #include "PreferencesDialog.h"
 #include "PlanFlightDialog.h"
 #include "BookedAtcDialog.h"
@@ -169,12 +168,6 @@ Window::Window(QWidget *parent) :
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
     connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(downloadCloud()));
-
-    //LogBrowser
-#ifdef QT_NO_DEBUG_OUTPUT
-    menuView->removeAction(actionDebugLog);
-    qDebug() << "Window::() Debug Log Browser deactivated due to QT_NO_DEBUG_OUTPUT";
-#endif
 
     qDebug() << "Window::() connecting me as GuiMessages listener";
     GuiMessages::instance()->addProgressBar(_progressBar, true);
@@ -367,13 +360,6 @@ void Window::openListClients() {
     //ListClientsDialog::instance()->setFocus();
 }
 
-void Window::on_actionDebugLog_triggered() {
-    LogBrowserDialog::instance(true, this)->show();
-    LogBrowserDialog::instance()->raise();
-    LogBrowserDialog::instance()->activateWindow();
-    LogBrowserDialog::instance()->setFocus();
-}
-
 void Window::on_searchEdit_textChanged(const QString& text) {
     if(text.length() < 2) {
         _timerSearch.stop();
@@ -421,7 +407,6 @@ void Window::on_actionHideAllWindows_triggered() {
     if (PlanFlightDialog::instance(false) != 0) PlanFlightDialog::instance()->close();
     if (BookedAtcDialog::instance(false) != 0) BookedAtcDialog::instance()->close();
     if (ListClientsDialog::instance(false) != 0) ListClientsDialog::instance()->close();
-    if (LogBrowserDialog::instance(false) != 0) LogBrowserDialog::instance()->close();
 
     if(searchDock->isFloating())
         searchDock->hide();
