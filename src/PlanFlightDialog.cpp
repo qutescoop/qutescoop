@@ -58,14 +58,12 @@ void PlanFlightDialog::on_buttonRequest_clicked() { // get routes from selected 
                          .arg(_routes.size()));
     lblGeneratedStatus->setText(QString());
     lblVrouteStatus->setText(QString());
-    lblVatrouteStatus->setText(QString());
 
     edDep->setText(edDep->text().toUpper());
     edDest->setText(edDest->text().toUpper());
 
     if (cbGenerated->isChecked()) requestGenerated();
     if (cbVroute->isChecked()) requestVroute();
-    if (cbVatroute->isChecked()) requestVatroute();
 }
 
 void PlanFlightDialog::requestGenerated() {
@@ -203,76 +201,6 @@ void PlanFlightDialog::vrouteDownloaded() {
     lblVrouteStatus->setText(msg);
 
     _routes += newroutes;
-    _routesModel.setClients(_routes);
-    _routesSortModel->invalidate();
-    treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);
-    gbResults->setTitle(QString("Results [%1-%2] (%3)")
-                         .arg(edDep->text())
-                         .arg(edDest->text())
-                         .arg(_routes.size()));
-}
-
-void PlanFlightDialog::requestVatroute() {
-//    QUrl url("http://www.michael-nagler.de/getvatroute.php"); // kindly providing an interface with parsed results
-//    url.addQueryItem(QString("dep"), edDep->text().trimmed());
-//    url.addQueryItem(QString("dest"), edDest->text().trimmed());
-
-    QUrl url("http://www.vatroute.net/web_showfp.php");
-    QUrlQuery urlQuery(url);
-    urlQuery.addQueryItem(QString("dep"), edDep->text().trimmed());
-    urlQuery.addQueryItem(QString("dest"), edDest->text().trimmed());
-    url.setQuery(urlQuery);
-
-    _replyVatroute = Net::g(url);
-    connect(_replyVatroute, SIGNAL(finished()), this, SLOT(vatrouteDownloaded()));
-    lblVatrouteStatus->setText(QString("request sent..."));
-}
-
-void PlanFlightDialog::vatrouteDownloaded() {
-    qDebug() << "PlanFlightDialog::vatrouteDownloaded()";
-    disconnect(_replyVatroute, SIGNAL(finished()), this, SLOT(vatrouteDownloaded()));
-    _replyVatroute->deleteLater();
-
-    if(_replyVatroute->error() != QNetworkReply::NoError) {
-        lblVatrouteStatus->setText(QString("error: %1")
-                              .arg(_replyVatroute->errorString()));
-        return;
-    }
-
-    if(_replyVatroute->bytesAvailable() == 0)
-        lblVatrouteStatus->setText(QString("nothing returned"));
-
-    QList<Route*> newRoutes;
-
-    QRegExp rxRoutes("(?:<tr[^>]*>.*){23}.*(<tr.*>.*<\\/tr>.*)<\\/table>");
-    rxRoutes.setMinimal(true);
-
-    if (rxRoutes.indexIn(_replyVatroute->readAll()) != -1) {
-        QRegExp rx("\\s*<tr[^<]*<td[^<]*(?:<.><\\/.>)?FL(\\d{3})-FL(\\d{3})(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*>(?:<.><\\/.>)?([^<]*)(?:<.><\\/.>)?<\\/td[^<]*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<td[^<]*<a[^<]*<img[^<]*<\\/a><\\/td>\\s*<\\/tr>");
-        QString rStr = rxRoutes.cap(1);
-
-        int pos = 0;
-        while ((pos = rx.indexIn(rStr, pos)) != -1) {
-            Route *r = new Route();
-            r->provider = QString("VATroute");
-            r->dep = edDep->text();
-            r->dest = edDest->text();
-            r->minFl = rx.cap(1);
-            r->maxFl = rx.cap(2);
-            r->route = rx.cap(3).toUpper();
-            r->comments = rx.cap(4);
-
-            r->calculateWaypointsAndDistance();
-            newRoutes.append(r);
-
-            pos += rx.matchedLength();
-        }
-    }
-
-    lblVatrouteStatus->setText(QString("%1 route%2").arg(newRoutes.size()).
-                               arg(newRoutes.size() == 1 ? "": "s"));
-
-    _routes += newRoutes;
     _routesModel.setClients(_routes);
     _routesSortModel->invalidate();
     treeRoutes->header()->resizeSections(QHeaderView::ResizeToContents);

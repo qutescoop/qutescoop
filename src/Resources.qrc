@@ -31,7 +31,6 @@
     </qresource>
     <qresource prefix="/routeproviders">
         <file>images/vroute.png</file>
-        <file>images/vatroute.png</file>
     </qresource>
     <qresource prefix="/startup">
         <file alias="splash">images/splash.png</file>

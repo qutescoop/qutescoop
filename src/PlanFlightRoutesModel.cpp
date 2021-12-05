@@ -45,9 +45,8 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
                 return QPixmap(
                             r->provider == "user"
                             ? ":/icons/qutescoop.png"
-                            : r->provider == "vroute"? ":/routeproviders/images/vroute.png"
-                                                     : ":/routeproviders/images/vatroute.png"
-                                                       )
+                            : ":/routeproviders/images/vroute.png"
+                        )
                         .scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
     } else if(role == Qt::DisplayRole) {
