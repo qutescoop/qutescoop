@@ -92,7 +92,6 @@ class Window : public QMainWindow, public Ui::Window {
         void downloadWatchdogTriggered();
         void allSectorsChanged(bool);
         void cloudDownloadFinished();
-        void on_actionChangelog_triggered();
     protected:
         virtual void closeEvent(QCloseEvent *event);
     private:

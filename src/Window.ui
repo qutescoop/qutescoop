@@ -403,7 +403,6 @@ Whazzups (replay)</string>
      <string>&amp;QuteScoop</string>
     </property>
     <addaction name="actionAbout"/>
-    <addaction name="actionChangelog"/>
     <addaction name="separator"/>
     <addaction name="actionPreferences"/>
     <addaction name="separator"/>
@@ -1245,11 +1244,6 @@ p, li { white-space: pre-wrap; }
    </property>
    <property name="text">
     <string>S&amp;ectorview</string>
-   </property>
-  </action>
-  <action name="actionChangelog">
-   <property name="text">
-    <string>&amp;Changelog</string>
    </property>
   </action>
   <action name="actionRememberMapPosition9">

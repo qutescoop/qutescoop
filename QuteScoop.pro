@@ -82,8 +82,7 @@ CONFIG(release,release|debug) {
     # QuteScoop additional files
     rootFiles.path = $$DESTDIR
     rootFiles.files += ./README.html \
-        ./COPYING \
-        ./CHANGELOG
+        ./COPYING
 
     unix:rootFiles.files += ./QuteScoop.sh \
         ./QuteScoop.desktop \
@@ -282,8 +281,7 @@ SOURCES += src/WhazzupData.cpp \
     src/JobList.cpp \
     src/Platform.cpp
 RESOURCES += src/Resources.qrc
-OTHER_FILES += CHANGELOG \
-    README.html \
+OTHER_FILES += README.html \
     data/_notes.txt \
     data/dataversions.txt \
     data/station.dat \

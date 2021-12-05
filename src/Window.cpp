@@ -957,31 +957,3 @@ void Window::openSectorView() {
     Sectorview::instance()->activateWindow();
     Sectorview::instance()->setFocus();
 }
-
-void Window::on_actionChangelog_triggered() {
-    QFile file(qApp->applicationDirPath() + "/CHANGELOG");
-    if (file.open(QIODevice::ReadOnly)) {
-        QDialog *dlg = new QDialog(this);
-        QTextEdit *lbl = new QTextEdit(dlg);
-        QDialogButtonBox *btns = new QDialogButtonBox(
-                    QDialogButtonBox::Ok,
-                    Qt::Horizontal,
-                    dlg
-        );
-
-        dlg->connect(btns, SIGNAL(accepted()), SLOT(close()));
-        lbl->setReadOnly(true);
-        lbl->setText(file.readAll());
-
-        dlg->setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
-        dlg->setWindowTitle("Changelog");
-
-        dlg->setLayout(new QVBoxLayout);
-        dlg->layout()->addWidget(lbl);
-        dlg->layout()->addWidget(btns);
-
-        dlg->setModal(true);
-        dlg->showMaximized();
-    }
-    file.close();
-}
