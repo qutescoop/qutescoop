@@ -77,7 +77,9 @@ bool Client::matches(const QRegExp& regex) const {
 
 QString Client::toolTip() const {
     QString result = label + " (" + realName;
-    if(!rank().isEmpty()) result += ", " + rank();
+    if(!rank().isEmpty()) {
+        result += ", " + rank();
+    }
     result += ")";
     return result;
 }

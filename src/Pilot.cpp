@@ -232,7 +232,7 @@ QString Pilot::rank() const {
     switch(rating) {
         // The JSON Data actually contains a mapping of IDs onto names
         // In the future this should probably use that source instead of having this hardcoded
-        case 0: return "NEW";
+        case 0: return ""; // ignore the ubiquitous "NEW" rank
         case 1: return "PPL";
         case 3: return "IR";
         case 7: return "CMEL";
