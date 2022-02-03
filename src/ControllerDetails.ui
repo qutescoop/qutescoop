@@ -18,7 +18,7 @@
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <layout class="QVBoxLayout" stretch="0,1,0">
-   <property name="margin">
+   <property name="margin" stdset="0">
     <number>6</number>
    </property>
    <item>
@@ -27,7 +27,7 @@
       <string>Controller</string>
      </property>
      <layout class="QVBoxLayout">
-      <property name="margin">
+      <property name="margin" stdset="0">
        <number>6</number>
       </property>
       <item>
@@ -46,31 +46,7 @@ On IVANIT for 01:23, IvAc 1.2.3</string>
         <item>
          <widget class="QLabel" name="lblStationInformatoin">
           <property name="text">
-           <string>APP on frequency 123.45
-Voice: de.ts.ivao.aero/LOVV_CTR</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnJoinChannel">
-          <property name="text">
-           <string>join channel</string>
-          </property>
-          <property name="flat">
-           <bool>false</bool>
+           <string>APP on frequency 123.45</string>
           </property>
          </widget>
         </item>
@@ -80,7 +56,6 @@ Voice: de.ts.ivao.aero/LOVV_CTR</string>
        <widget class="QPushButton" name="pbAirportDetails">
         <property name="font">
          <font>
-          <weight>75</weight>
           <bold>true</bold>
          </font>
         </property>
@@ -98,7 +73,7 @@ Voice: de.ts.ivao.aero/LOVV_CTR</string>
       <string>ATIS</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
-      <property name="margin">
+      <property name="margin" stdset="0">
        <number>6</number>
       </property>
       <item>

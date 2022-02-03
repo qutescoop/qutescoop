@@ -24,7 +24,7 @@
    <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tabNetwork">
       <attribute name="title">
@@ -402,7 +402,7 @@ on program &amp;start</string>
              </size>
             </property>
             <property name="inputMask">
-             <string>00000; </string>
+             <string>00000</string>
             </property>
             <property name="text">
              <string>8080</string>
@@ -485,7 +485,7 @@ on program &amp;start</string>
          <layout class="QVBoxLayout">
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_11">
-            <property name="margin">
+            <property name="margin" stdset="0">
              <number>10</number>
             </property>
             <item>
@@ -547,167 +547,6 @@ Check our site fom time to time to stay up-to-date.</string>
        <string>Special</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QGroupBox" name="groupBoxVoice">
-         <property name="title">
-          <string>Voice Settings</string>
-         </property>
-         <layout class="QGridLayout" name="_2">
-          <item row="0" column="0" colspan="3">
-           <layout class="QHBoxLayout" name="_3">
-            <item>
-             <widget class="QRadioButton" name="rbNone">
-              <property name="text">
-               <string>none</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbTeamSpeak">
-              <property name="text">
-               <string>TeamSpeak</string>
-              </property>
-              <property name="checked">
-               <bool>false</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QRadioButton" name="rbVRC">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="toolTip">
-               <string>VATSIM voice not possible due to licensing problems.</string>
-              </property>
-              <property name="text">
-               <string>VVL</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_44">
-            <property name="text">
-             <string>display name</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="buddy">
-             <cstring>editVoiceCallsign</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QLineEdit" name="editVoiceCallsign">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QLabel" name="label_45">
-            <property name="text">
-             <string>username</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="buddy">
-             <cstring>editVoiceUser</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="1">
-           <widget class="QLineEdit" name="editVoiceUser">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="0">
-           <widget class="QLabel" name="label_46">
-            <property name="text">
-             <string>password</string>
-            </property>
-            <property name="alignment">
-             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-            </property>
-            <property name="buddy">
-             <cstring>editVoicePassword</cstring>
-            </property>
-           </widget>
-          </item>
-          <item row="3" column="1">
-           <widget class="QLineEdit" name="editVoicePassword">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="echoMode">
-             <enum>QLineEdit::Password</enum>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="2">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="1" column="2">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item row="3" column="2">
-           <spacer>
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-         </layout>
-        </widget>
-       </item>
        <item>
         <widget class="QGroupBox" name="groupBoxDatabase">
          <property name="title">
@@ -1438,7 +1277,6 @@ so we just count every single label painted. (Renders directly in the 3D-space r
                 <widget class="QCheckBox" name="glTextures">
                  <property name="font">
                   <font>
-                   <weight>75</weight>
                    <bold>true</bold>
                   </font>
                  </property>
@@ -2812,7 +2650,6 @@ airports with at least</string>
            <widget class="QLabel" name="label_35">
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -3339,12 +3176,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>editProxyPassword</tabstop>
   <tabstop>cbCheckForUpdates</tabstop>
   <tabstop>buttonBox</tabstop>
-  <tabstop>rbNone</tabstop>
-  <tabstop>rbTeamSpeak</tabstop>
-  <tabstop>rbVRC</tabstop>
-  <tabstop>editVoiceCallsign</tabstop>
-  <tabstop>editVoiceUser</tabstop>
-  <tabstop>editVoicePassword</tabstop>
   <tabstop>cbUseNavDatabase</tabstop>
   <tabstop>browseNavdirButton</tabstop>
   <tabstop>editNavdir</tabstop>
@@ -3490,54 +3321,6 @@ p, li { white-space: pre-wrap; }
    </hints>
   </connection>
   <connection>
-   <sender>rbNone</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editVoiceCallsign</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>204</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbNone</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editVoiceUser</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>139</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbNone</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editVoicePassword</receiver>
-   <slot>setDisabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>72</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>166</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
    <sender>cbUseNavDatabase</sender>
    <signal>toggled(bool)</signal>
    <receiver>cbShowFixes</receiver>
@@ -3678,54 +3461,6 @@ p, li { white-space: pre-wrap; }
     <hint type="destinationlabel">
      <x>796</x>
      <y>418</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbTeamSpeak</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editVoiceCallsign</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>164</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>204</x>
-     <y>110</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbTeamSpeak</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editVoiceUser</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>164</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>139</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>rbTeamSpeak</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>editVoicePassword</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>164</x>
-     <y>84</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>424</x>
-     <y>166</y>
     </hint>
    </hints>
   </connection>

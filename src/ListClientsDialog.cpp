@@ -57,14 +57,6 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
                   << "connected\nclients" << "location" << "description";
     serversTable->setColumnCount(serverHeaders.size());
     serversTable->setHorizontalHeaderLabels(serverHeaders);
-    connect(voiceServersTable, SIGNAL(cellClicked(int, int)), this, SLOT(voiceServerClicked(int, int)));
-
-    // voiceServers
-    QStringList voiceServerHeaders;
-    voiceServerHeaders << "URL" << "ping[ms]" << "ping[ms]" << "ping[ms]" << QString::fromUtf8("Ø ping[ms]")
-                       << "voice\nchannels" << "location" << "description";
-    voiceServersTable->setColumnCount(voiceServerHeaders.size());
-    voiceServersTable->setHorizontalHeaderLabels(voiceServerHeaders);
 
     // General
     QFont font = lblStatusInfo->font();
@@ -89,17 +81,14 @@ void ListClientsDialog::refresh() {
     QList<Client*> clients;
     foreach(Pilot *p, data.pilots) {
         clients << dynamic_cast<Client*> (p);
-        if (p != 0)
+        if (p != 0) {
             serversConnected[p->server] = serversConnected.value(p->server, 0) + 1; // count clients
+        }
     }
-    QHash<QString, int> voiceServerChannels;
     foreach(Controller *c, data.controllers) {
         clients << dynamic_cast<Client*> (c);
         if (c != 0) {
             serversConnected[c->server] = serversConnected.value(c->server, 0) + 1; // count clients
-            QString server = c->voiceChannel.section("/", 0, 0).toLower();
-            if (!server.isEmpty())
-                voiceServerChannels[server] = voiceServerChannels.value(server, 0) + 1;
         }
     }
     _clientsModel->setClients(clients);
@@ -135,57 +124,6 @@ void ListClientsDialog::refresh() {
     }
     serversTable->resizeColumnsToContents();
 
-    // VoiceServers
-    voiceServersTable->clearContents();
-    voiceServersTable->setRowCount(data.voiceServers.size());
-    for (int row = 0; row < data.voiceServers.size(); row++) {
-        for (int col=0; col < voiceServersTable->columnCount(); col++) {
-            switch(col) {
-                case 0: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][0]));
-                    break; // hostname_or_IP
-                case 5: voiceServersTable->setItem(row, col, new QTableWidgetItem(QString::number(
-                                                                                      voiceServerChannels[data.voiceServers[row][0].toLower()])));
-                    break; // channels
-                case 6: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][1]));
-                    break; // location
-                case 7: voiceServersTable->setItem(row, col, new QTableWidgetItem(data.voiceServers[row][2]));
-                    break; // name
-                default: voiceServersTable->setItem(row, col, new QTableWidgetItem());
-            }
-        }
-        voiceServerChannels.remove(data.voiceServers[row][0]); // we remove all we have displayed
-        // styles
-        QFont font; font.setBold(true);
-        voiceServersTable->item(row, 4)->setData(Qt::FontRole, font);
-        voiceServersTable->item(row, 1)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 2)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 3)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 4)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 5)->setTextAlignment(Qt::AlignCenter);
-    }
-    foreach(const QString server, voiceServerChannels.keys()) { // remaining voice servers not included in Whazzup
-        voiceServersTable->setRowCount(voiceServersTable->rowCount() + 1);
-        int row = voiceServersTable->rowCount() - 1;
-        voiceServersTable->setItem(row, 0, new QTableWidgetItem(server));
-        voiceServersTable->setItem(row, 1, new QTableWidgetItem());
-        voiceServersTable->setItem(row, 2, new QTableWidgetItem());
-        voiceServersTable->setItem(row, 3, new QTableWidgetItem());
-        voiceServersTable->setItem(row, 4, new QTableWidgetItem());
-        voiceServersTable->setItem(row, 5, new QTableWidgetItem(QString::number(
-                                                                    voiceServerChannels[server])));
-        voiceServersTable->setItem(row, 6, new QTableWidgetItem(
-                                       "(not advertised in Whazzup)"));
-        // styles
-        voiceServersTable->item(row, 1)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 2)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 3)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 4)->setTextAlignment(Qt::AlignCenter);
-        voiceServersTable->item(row, 5)->setTextAlignment(Qt::AlignCenter);
-        QFont font; font.setItalic(true);
-        voiceServersTable->item(row, 6)->setData(Qt::FontRole, font);
-    }
-    voiceServersTable->resizeColumnsToContents();
-
     // Status
     QString msg = QString("Whazzup %1 updated")
             .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
@@ -201,9 +139,6 @@ void ListClientsDialog::refresh() {
 
     toolBox->setItemText(1, QString("&Servers (%1)").arg(data.servers.size()));
     toolBox->setItemEnabled(1, data.servers.size() > 0);
-
-    toolBox->setItemText(2, QString("&Voice Servers (%1)").arg(data.voiceServers.size()));
-    toolBox->setItemEnabled(2, data.voiceServers.size() > 0);
 
     performSearch();
     qApp->restoreOverrideCursor();
@@ -276,36 +211,6 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
             }
         }
     }
-
-    // voiceServers
-    for (int row = 0; row < voiceServersTable->rowCount(); row++) {
-        if (voiceServersTable->item(row, 0)->data(Qt::DisplayRole) == QVariant(server)) {
-            for (int col = 1; col < 4; col++) {
-                if (voiceServersTable->item(row, col)->data(Qt::DisplayRole).isNull()) { // has no data
-                    voiceServersTable->item(row, col)->setBackground(QBrush(mapPingToColor(ms)));
-                    voiceServersTable->item(row, col)->setData(Qt::DisplayRole, (ms == -1? QVariant("n/a"): QVariant(ms)));
-
-                    pingNextFromStack();
-
-                    int addForAverage = 0;
-                    for (int pingCol = 1; pingCol <= col; pingCol++) {
-                        if(voiceServersTable->item(row, pingCol)->data(Qt::DisplayRole).toInt() == 0) {
-                            voiceServersTable->item(row, 4)->setBackground(QBrush(mapPingToColor(-1)));
-                            voiceServersTable->item(row, 4)->setData(Qt::DisplayRole, QVariant("n/a"));
-                            break;
-                        } else {
-                            addForAverage += voiceServersTable->item(row, pingCol)->data(Qt::DisplayRole).toInt();
-                        }
-                        int average = addForAverage / pingCol;
-
-                        voiceServersTable->item(row, 4)->setBackground(QBrush(mapPingToColor(average)));
-                        voiceServersTable->item(row, 4)->setData(Qt::DisplayRole, QString("%1").arg(average));
-                    }
-                    break;
-                }
-            }
-        }
-    }
 }
 
 void ListClientsDialog::on_pbPingServers_clicked() {
@@ -318,20 +223,6 @@ void ListClientsDialog::on_pbPingServers_clicked() {
         _pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
         _pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
         _pingStack.prepend(serversTable->item(row, 1)->data(Qt::DisplayRole).toString());
-    }
-    pingNextFromStack();
-}
-
-void ListClientsDialog::on_pbPingVoiceServers_clicked() {
-    for (int row = 0; row < voiceServersTable->rowCount(); row++) {
-        // reset Ping columns
-        for (int col = 1; col < 5; col++) {
-            voiceServersTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
-            voiceServersTable->item(row, col)->setBackground(QBrush());
-        }
-        _pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
-        _pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
-        _pingStack.prepend(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString());
     }
     pingNextFromStack();
 }
@@ -353,26 +244,6 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 
     int red = qMin(230, qMax(0, (ms - BEST) * 255 / (WORST - BEST)));
     return QColor(red, 230 - red, 0, 70);
-}
-
-void ListClientsDialog::voiceServerClicked(int row, int col) {
-    Q_UNUSED(col);
-    QUrl url = QUrl(
-                QString("http://%1:18009/?opts=-R-D")
-                .arg(voiceServersTable->item(row, 0)->data(Qt::DisplayRole).toString())
-                , QUrl::TolerantMode);
-    if(QMessageBox::question(this,
-                             tr("Question"),
-                             tr("Open %1 in your browser?")
-                             .arg(url.toString()),
-                             QMessageBox::Yes | QMessageBox::No
-                             ) == QMessageBox::Yes) {
-        if (url.isValid()) {
-            if(!QDesktopServices::openUrl(url))
-                QMessageBox::critical(this, tr("Error"), tr("Could not invoke browser"));
-        } else
-            QMessageBox::critical(this, tr("Error"), tr("URL %1 is invalid").arg(url.toString()));
-    }
 }
 
 void ListClientsDialog::closeEvent(QCloseEvent *event) {

@@ -248,15 +248,3 @@ bool Controller::matches(const QRegExp& regex) const {
         if (sector->name.contains(regex)) return true;
     return MapObject::matches(regex);
 }
-
-QString Controller::voiceLink() const {
-    if (Settings::voiceType() == Settings::TEAMSPEAK) {
-        QStringList serverChannel = voiceChannel.split("/");
-        return QString("teamspeak://%1?nickname=%2?loginname=%3?password=%4?channel=%5")
-            .arg(serverChannel.first())
-            .arg(Settings::voiceCallsign())
-            .arg(Settings::voiceUser()).arg(Settings::voicePassword())
-            .arg(serverChannel.last());
-    } else
-        return QString();
-}

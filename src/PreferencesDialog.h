@@ -132,12 +132,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_waypointsFontColor_clicked();
         void on_waypointsDotColor_clicked();
         void on_waypointsDotSize_valueChanged(double );
-        void on_rbNone_clicked(bool value);
-        void on_rbTeamSpeak_clicked(bool value);
-        void on_rbVRC_clicked(bool value);
-        void on_editVoiceCallsign_editingFinished();
-        void on_editVoiceUser_editingFinished();
-        void on_editVoicePassword_editingFinished();
         void on_cbCheckForUpdates_stateChanged(int state);
         void on_cbSendVersionInfo_stateChanged(int state);
         void on_cbDownloadClouds_stateChanged(int state);

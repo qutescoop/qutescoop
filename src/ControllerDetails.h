@@ -23,7 +23,6 @@ class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
         void closeEvent(QCloseEvent *event);
     private slots:
         void on_buttonAddFriend_clicked();
-        void on_btnJoinChannel_clicked();
         void on_pbAirportDetails_clicked();
     private:
         ControllerDetails(QWidget *parent);

@@ -40,8 +40,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>732</width>
-        <height>418</height>
+        <width>730</width>
+        <height>450</height>
        </rect>
       </property>
       <attribute name="label">
@@ -61,7 +61,6 @@
           <widget class="QLabel" name="label">
            <property name="font">
             <font>
-             <weight>75</weight>
              <bold>true</bold>
             </font>
            </property>
@@ -135,8 +134,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>125</width>
-        <height>131</height>
+        <width>730</width>
+        <height>450</height>
        </rect>
       </property>
       <attribute name="label">
@@ -174,83 +173,6 @@
         <widget class="QTableWidget" name="serversTable">
          <property name="toolTip">
           <string>Lists all servers that have been announced in Whazzup</string>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <property name="selectionMode">
-          <enum>QAbstractItemView::SingleSelection</enum>
-         </property>
-         <property name="selectionBehavior">
-          <enum>QAbstractItemView::SelectRows</enum>
-         </property>
-         <property name="verticalScrollMode">
-          <enum>QAbstractItemView::ScrollPerPixel</enum>
-         </property>
-         <property name="horizontalScrollMode">
-          <enum>QAbstractItemView::ScrollPerPixel</enum>
-         </property>
-         <property name="showGrid">
-          <bool>false</bool>
-         </property>
-         <property name="sortingEnabled">
-          <bool>false</bool>
-         </property>
-         <property name="cornerButtonEnabled">
-          <bool>false</bool>
-         </property>
-         <attribute name="verticalHeaderVisible">
-          <bool>false</bool>
-         </attribute>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-     <widget class="QWidget" name="pageVoiceServers">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>125</width>
-        <height>131</height>
-       </rect>
-      </property>
-      <attribute name="label">
-       <string>&amp;Voice servers</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QPushButton" name="pbPingVoiceServers">
-           <property name="toolTip">
-            <string>Find the &quot;ping&quot; to the server, that is the time (in milliseconds) a packet needs to travel between you and the server. This is also called &quot;network lag&quot;</string>
-           </property>
-           <property name="text">
-            <string>&amp;ping servers</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <widget class="QTableWidget" name="voiceServersTable">
-         <property name="toolTip">
-          <string>Lists all Voice Servers that have been announced in Whazzup.
-Note: Voice Servers are not choosable for you as a pilot. ATC selects the server and you will join on his/her server.</string>
          </property>
          <property name="editTriggers">
           <set>QAbstractItemView::NoEditTriggers</set>

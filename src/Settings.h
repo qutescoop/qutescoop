@@ -353,19 +353,6 @@ class Settings {
         static bool resetOnNextStart();
         static void setResetOnNextStart(bool value);
 
-        enum VoiceType { NONE, TEAMSPEAK, VRC };
-        static VoiceType voiceType();
-        static void setVoiceType(VoiceType type);
-
-        static QString voiceCallsign();
-        static void setVoiceCallsign(const QString& value);
-
-        static QString voiceUser();
-        static void setVoiceUser(const QString& value);
-
-        static QString voicePassword();
-        static void setVoicePassword(const QString& value);
-
         static bool saveWhazzupData();
         static void setSaveWhazzupData(const bool value);
 

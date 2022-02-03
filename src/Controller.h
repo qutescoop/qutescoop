@@ -42,9 +42,6 @@ class Controller: public Client {
         int facilityType, visualRange;
         QDateTime timeLastAtisReceived, assumeOnlineUntil;
 
-        QString voiceChannel;
-        QString voiceLink() const;
-
         Sector *sector;
 
     private:

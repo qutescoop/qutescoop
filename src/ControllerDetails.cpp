@@ -64,10 +64,9 @@ void ControllerDetails::refresh(Controller *newController) {
     lblControllerInfo->setText(controllerInfo);
 
     QString stationInfo = _controller->facilityString();
-    if(!_controller->isObserver() && !_controller->frequency.length() == 0)
-        stationInfo += QString(" on frequency %1<br>Voice: %2")
-                .arg(_controller->frequency)
-                .arg(_controller->voiceChannel);
+    if(!_controller->isObserver() && _controller->frequency.length() != 0)
+        stationInfo += QString(" on frequency %1")
+                .arg(_controller->frequency);
     lblStationInformatoin->setText(stationInfo);
 
     pbAirportDetails->setVisible(_controller->airport() != 0);
@@ -87,9 +86,6 @@ void ControllerDetails::refresh(Controller *newController) {
     else
         buttonAddFriend->setText("add &friend");
 
-    btnJoinChannel->setVisible(Settings::voiceType() != Settings::NONE);
-    btnJoinChannel->setEnabled(!_controller->voiceLink().isEmpty());
-
     // check if we know UserId
     buttonAddFriend->setDisabled(_controller->userId.isEmpty());
 
@@ -102,33 +98,6 @@ void ControllerDetails::refresh(Controller *newController) {
 void ControllerDetails::on_buttonAddFriend_clicked() {
     friendClicked();
     refresh();
-}
-
-void ControllerDetails::on_btnJoinChannel_clicked() {
-    if(_controller == 0)
-        return;
-    if(Settings::voiceType() == Settings::NONE)
-        return;
-
-    if(Settings::voiceUser().isEmpty()) {
-        QMessageBox::information(this, tr("Voice settings"),
-                "You have to enter your network user ID and password in the preferences before you can join a TeamSpeak channel.");
-        return;
-    }
-
-#ifdef Q_OS_WIN
-    QString program = "start";
-#endif
-#ifdef Q_OS_MAC
-    QString program = "open";
-#endif
-#ifdef Q_OS_LINUX
-    QString program = "xdg-open";
-#endif
-
-    QString command = program + " " + _controller->voiceLink();
-    int ret = system(command.toLatin1());
-    qDebug() << "ControllerDetails::on_btnJoinChannel_clicked(): " << program << "returned" << ret;
 }
 
 void ControllerDetails::on_pbAirportDetails_clicked() {

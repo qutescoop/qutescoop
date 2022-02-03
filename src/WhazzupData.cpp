@@ -15,13 +15,13 @@
 #include "helpers.h"
 
 WhazzupData::WhazzupData():
-        servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
+        servers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
         _whazzupVersion(0), _dataType(UNIFIED)  {
 }
 
 WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
-        servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
+        servers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()),
         bookingsTime(QDateTime()), _whazzupVersion(0) {
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
@@ -176,7 +176,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
 
 //faking WhazzupData based on valid data and a predictTime
 WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
-        servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
+        servers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()),
         bookingsTime(QDateTime()), predictionBasedOnTime(QDateTime()),
         predictionBasedOnBookingsTime(QDateTime()), _whazzupVersion(0) {
@@ -347,7 +347,6 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
     if (data._dataType == WHAZZUP || data._dataType == UNIFIED) {
         if(_dataType == ATCBOOKINGS) _dataType = UNIFIED;
         servers = data.servers;
-        voiceServers = data.voiceServers;
         whazzupTime = data.whazzupTime;
         predictionBasedOnTime = data.predictionBasedOnTime;
         updateEarliest = data.updateEarliest;
@@ -465,7 +464,6 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
         updateControllersFrom(data);
 
         servers = data.servers;
-        voiceServers = data.voiceServers;
         _whazzupVersion = data._whazzupVersion;
         whazzupTime = data.whazzupTime;
         updateEarliest = data.updateEarliest;

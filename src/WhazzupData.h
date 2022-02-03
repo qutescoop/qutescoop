@@ -45,7 +45,7 @@ class WhazzupData {
                 return bookedPilots.value(callsign);
         }
 
-        QList<QStringList> servers, voiceServers;
+        QList<QStringList> servers;
 
         QDateTime updateEarliest, whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
 

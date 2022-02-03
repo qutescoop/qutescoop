@@ -280,17 +280,6 @@ void PreferencesDialog::loadSettings() {
     waypointsFontColor->setPalette(QPalette(color));
     waypointsFont->setFont(Settings::waypointsFont());
 
-    // voice
-    editVoiceCallsign->setText(Settings::voiceCallsign());
-    editVoiceUser->setText(Settings::voiceUser());
-    editVoicePassword->setText(Settings::voicePassword());
-    rbNone->setChecked(Settings::voiceType() == Settings::NONE);
-    rbTeamSpeak->setChecked(Settings::voiceType() == Settings::TEAMSPEAK);
-    rbVRC->setChecked(Settings::voiceType() == Settings::VRC);
-    editVoiceCallsign->setEnabled(Settings::voiceType() == Settings::TEAMSPEAK);
-    editVoicePassword->setEnabled(Settings::voiceType() == Settings::TEAMSPEAK);
-    editVoiceUser->setEnabled(Settings::voiceType() == Settings::TEAMSPEAK);
-
     // updates + feedback
     cbCheckForUpdates->setChecked(Settings::checkForUpdates());
     cbSendVersionInfo->setChecked(Settings::sendVersionInformation());
@@ -900,42 +889,6 @@ void PreferencesDialog::on_buttonResetPilot_clicked() {
     settings.remove("");
     settings.endGroup();
     loadSettings();
-}
-
-void PreferencesDialog::on_editVoiceCallsign_editingFinished() {
-    if (!_settingsLoaded)
-        return;
-    Settings::setVoiceCallsign(editVoiceCallsign->text());
-}
-
-void PreferencesDialog::on_editVoiceUser_editingFinished() {
-    if (!_settingsLoaded)
-        return;
-    Settings::setVoiceUser(editVoiceUser->text());
-}
-
-void PreferencesDialog::on_editVoicePassword_editingFinished() {
-    if (!_settingsLoaded)
-        return;
-    Settings::setVoicePassword(editVoicePassword->text());
-}
-
-void PreferencesDialog::on_rbNone_clicked(bool value) {
-    if(value) {
-        Settings::setVoiceType(Settings::NONE);
-    }
-}
-
-void PreferencesDialog::on_rbTeamSpeak_clicked(bool value) {
-    if(value) {
-        Settings::setVoiceType(Settings::TEAMSPEAK);
-    }
-}
-
-void PreferencesDialog::on_rbVRC_clicked(bool value) {
-    if(value) {
-        Settings::setVoiceType(Settings::VRC);
-    }
 }
 
 void PreferencesDialog::on_cbShowFixes_toggled(bool checked) {

@@ -1043,38 +1043,6 @@ void Settings::setResetOnNextStart(bool value) {
     instance()->setValue("general/resetConfiguration", value);
 }
 
-Settings::VoiceType Settings::voiceType() {
-    return (VoiceType) instance()->value("voice/type", NONE).toInt();
-}
-
-void Settings::setVoiceType(Settings::VoiceType type) {
-    instance()->setValue("voice/type", (int)type);
-}
-
-QString Settings::voiceCallsign() {
-    return instance()->value("voice/callsign").toString();
-}
-
-void Settings::setVoiceCallsign(const QString& value) {
-    instance()->setValue("voice/callsign", value);
-}
-
-QString Settings::voiceUser() {
-    return instance()->value("voice/user").toString();
-}
-
-void Settings::setVoiceUser(const QString& value) {
-    instance()->setValue("voice/user", value);
-}
-
-QString Settings::voicePassword() {
-    return instance()->value("voice/password").toString();
-}
-
-void Settings::setVoicePassword(const QString& value) {
-    instance()->setValue("voice/password", value);
-}
-
 // Airport traffic
 bool Settings::filterTraffic() {
     return instance()->value("airportTraffic/filterTraffic", true).toBool();

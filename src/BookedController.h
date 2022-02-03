@@ -37,9 +37,6 @@ class BookedController: public Client {
         int facilityType, visualRange;
         QDateTime timeLastAtisReceived;
 
-        QString voiceServer;
-        QString voiceLink() const { return QString(); }
-
         // Booking values
         QString countryCode, link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
         int bookingType;

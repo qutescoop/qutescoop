@@ -100,7 +100,6 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     frequency = "";
     atisMessage = "";
     timeLastAtisReceived = QDateTime();
-    voiceServer = "";
     server = "";
 }
 

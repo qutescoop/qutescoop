@@ -27,11 +27,9 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
         void showEvent(QShowEvent *event);
 
     private slots:
-        void on_pbPingVoiceServers_clicked();
         void on_pbPingServers_clicked();
         void modelSelected(const QModelIndex& index);
         void on_editFilter_textChanged(QString str);
-        void voiceServerClicked(int row, int col);
 
     private:
         ListClientsDialog(QWidget *parent);
