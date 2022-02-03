@@ -100,10 +100,6 @@ class Settings {
         static void setNavdataDirectory(const QString& directory);
         static bool useNavdata();
         static void setUseNavdata(bool value);
-        static bool useESAirlines();
-        static void setUseESAirlnies(bool value);
-        static QString ESAirlinesDirectory();
-        static void setESAirlinesDirectory(QString directory);
 
         static bool showAllWaypoints();
         static void setShowAllWaypoints(bool value);

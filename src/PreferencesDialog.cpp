@@ -81,9 +81,6 @@ void PreferencesDialog::loadSettings() {
     browseNavdirButton->setEnabled(Settings::useNavdata());
     cbUseNavDatabase->setChecked(Settings::useNavdata());
     cbShowFixes->setChecked(Settings::showAllWaypoints());
-    cbUseESAirlines->setChecked(Settings::useESAirlines());
-    editESAirlines->setText(Settings::ESAirlinesDirectory());
-    editESAirlines->setEnabled(Settings::useESAirlines());
 
     // Display
     cbRememberMapPositionOnClose->setChecked(Settings::rememberMapPositionOnClose());
@@ -1264,26 +1261,6 @@ void PreferencesDialog::closeEvent(QCloseEvent *event) {
     Settings::setPreferencesDialogPos(pos());
     Settings::setPreferencesDialogGeometry(saveGeometry());
     event->accept();
-}
-
-void PreferencesDialog::on_cbUseESAirlines_stateChanged(int state) {
-    if (!_settingsLoaded)
-        return;
-    Settings::setUseESAirlnies(state == Qt::Checked);
-}
-
-void PreferencesDialog::on_bt_browseESAirlines_clicked() {
-    QString path = QFileDialog::getOpenFileName(this,
-                                                tr("Open ICAO_Airlines.txt"),
-                                                QDir::homePath(),"EuroScope airlines (ICAO_Airlines.txt)");
-    Settings::setESAirlinesDirectory(path);
-    editESAirlines->setText(Settings::ESAirlinesDirectory());
-}
-
-void PreferencesDialog::on_editESAirlines_editingFinished() {
-    if (!_settingsLoaded)
-        return;
-    Settings::setESAirlinesDirectory(editESAirlines->text());
 }
 
 void PreferencesDialog::on_sb_highlightFriendsLineWidth_valueChanged(double value) {

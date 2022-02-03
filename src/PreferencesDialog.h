@@ -77,9 +77,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_editNavdir_editingFinished();
         void on_browseNavdirButton_clicked();
         void on_cbUseNavDatabase_stateChanged(int state);
-        void on_cbUseESAirlines_stateChanged(int state);
-        void on_bt_browseESAirlines_clicked();
-        void on_editESAirlines_editingFinished();
         void on_buttonResetEarthSpace_clicked();
         void on_pbBackgroundColor_clicked();
         void on_pbGlobeColor_clicked();

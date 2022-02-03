@@ -245,20 +245,6 @@ void Settings::setUseNavdata(bool value) {
     instance()->setValue("database/use", value);
 }
 
-bool Settings::useESAirlines() {
-    return instance()->value("database/useESAirlines", false).toBool();
-}
-void Settings::setUseESAirlnies(bool value) {
-    instance()->setValue("database/useESAirlines", value);
-}
-
-QString Settings::ESAirlinesDirectory() {
-    return instance()->value("database/ESAirlinesDirectory").toString();
-}
-void Settings::setESAirlinesDirectory(QString directory) {
-    instance()->setValue("database/ESAirlinesDirectory", directory);
-}
-
 bool Settings::showAllWaypoints() {
     return instance()->value("database/showAllWaypoints", false).toBool();
 }

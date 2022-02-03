@@ -58,7 +58,7 @@ void Airac::load() {
 
 void Airac::readWaypoints(const QString& directory) {
     waypoints.clear();
-    FileReader fr(directory + "/default data/earth_fix.dat");
+    FileReader fr(directory + "/earth_fix.dat");
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
@@ -70,13 +70,13 @@ void Airac::readWaypoints(const QString& directory) {
 
         waypoints[wp->label].insert(wp);
     }
-    qDebug() << "Read fixes from\t" << (directory + "/default data/earth_fix.dat")
+    qDebug() << "Read fixes from\t" << (directory + "/earth_fix.dat")
              << "-" << waypoints.size() << "imported";
 }
 
 void Airac::readNavaids(const QString& directory) {
     navaids.clear();
-    FileReader fr(directory + "/default data/earth_nav.dat");
+    FileReader fr(directory + "/earth_nav.dat");
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
@@ -88,7 +88,7 @@ void Airac::readNavaids(const QString& directory) {
 
         navaids[nav->label].insert(nav);
     }
-    qDebug() << "Read navaids from\t" << (directory + "/default data/earth_nav.dat")
+    qDebug() << "Read navaids from\t" << (directory + "/earth_nav.dat")
             << "-" << navaids.size() << "imported";
 }
 
@@ -96,7 +96,7 @@ void Airac::readAirways(const QString& directory) {
     bool ok;
     int segments = 0;
 
-    FileReader fr(directory + "/default data/earth_awy.dat");
+    FileReader fr(directory + "/earth_awy.dat");
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
@@ -185,7 +185,7 @@ void Airac::readAirways(const QString& directory) {
         list = sorted;
     }
 
-    qDebug() << "Read airways from\t" << (directory + "/default data/earth_awy.dat")
+    qDebug() << "Read airways from\t" << (directory + "/earth_awy.dat")
             << "-" << airways.size() << "airways," << segments << "segments imported and sorted";
 }
 

@@ -33,15 +33,7 @@ void NavData::load() {
     loadAirports(Settings::dataDirectory("data/airports.dat"));
     loadSectors();
     loadCountryCodes(Settings::dataDirectory("data/countrycodes.dat"));
-    if(Settings::useESAirlines()) {
-        qDebug() << "NavData::NavData() loading airline codes from"
-                    << Settings::ESAirlinesDirectory();
-        loadAirlineCodes(Settings::ESAirlinesDirectory());
-    } else {
-        qDebug() << "NavData::NavData() loading airline codes from"
-                    << Settings::dataDirectory("data/airlines.dat");
-        loadAirlineCodes(Settings::dataDirectory("data/airlines.dat"));
-    }
+    loadAirlineCodes(Settings::dataDirectory("data/airlines.dat"));
     emit loaded();
 }
 
@@ -78,6 +70,7 @@ void NavData::loadSectors() {
 }
 
 void NavData::loadAirlineCodes(const QString &filename) {
+    qDebug() << "loading airline codes from" << filename;
     _airlineCodes.clear();
     if(filename.isEmpty()) {
         qWarning() << "NavData::loadAirlineCodes() -- bad filename";
