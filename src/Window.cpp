@@ -865,11 +865,8 @@ void Window::allSectorsChanged(bool state) {
         actionDisplayAllSectors->setChecked( state);
     }
 
-    mapScreen->on_sectorsAll_changed(state);
-
     Settings::setShowAllSectors(state);
     mapScreen->glWidget->displayAllSectors(state);
-
 }
 
 void Window::downloadCloud() {
