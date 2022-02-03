@@ -30,17 +30,17 @@ NavData::~NavData() {
 }
 
 void NavData::load() {
-    loadAirports(Settings::applicationDataDirectory("data/airports.dat"));
+    loadAirports(Settings::dataDirectory("data/airports.dat"));
     loadSectors();
-    loadCountryCodes(Settings::applicationDataDirectory("data/countrycodes.dat"));
+    loadCountryCodes(Settings::dataDirectory("data/countrycodes.dat"));
     if(Settings::useESAirlines()) {
         qDebug() << "NavData::NavData() loading airline codes from"
                     << Settings::ESAirlinesDirectory();
         loadAirlineCodes(Settings::ESAirlinesDirectory());
     } else {
         qDebug() << "NavData::NavData() loading airline codes from"
-                    << Settings::applicationDataDirectory("data/airlines.dat");
-        loadAirlineCodes(Settings::applicationDataDirectory("data/airlines.dat"));
+                    << Settings::dataDirectory("data/airlines.dat");
+        loadAirlineCodes(Settings::dataDirectory("data/airlines.dat"));
     }
     emit loaded();
 }

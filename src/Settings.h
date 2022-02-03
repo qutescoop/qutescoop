@@ -16,9 +16,7 @@ class Settings {
         static void importFromFile(QString fileName);
 
         // data directory
-        static QIODevice::OpenMode dirCapabilities(QString& dir); // NotOpen / ReadOnly / ReadWrite
-        static void calculateApplicationDataDirectory();
-        static QString applicationDataDirectory(const QString& composeFilePath = QString(""));
+        static QString dataDirectory(const QString& composeFilePath = QString(""));
 
         // saved settings
         static void saveState(const QByteArray& state);

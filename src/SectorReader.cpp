@@ -13,13 +13,13 @@ void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
 
     loadSectorlist(sectors);
 
-    loadSectordisplay(sectors, Settings::applicationDataDirectory("data/firdisplay.dat"));
+    loadSectordisplay(sectors, Settings::dataDirectory("data/firdisplay.dat"));
     if(Settings::useSupFile())
-        loadSectordisplay(sectors, Settings::applicationDataDirectory("data/firdisplay.sup"));
+        loadSectordisplay(sectors, Settings::dataDirectory("data/firdisplay.sup"));
 }
 
 void SectorReader::loadSectorlist(QHash<QString, Sector*>& sectors) {
-    FileReader *fileReader = new FileReader(Settings::applicationDataDirectory("data/firlist.dat"));
+    FileReader *fileReader = new FileReader(Settings::dataDirectory("data/firlist.dat"));
 
     QString line = fileReader->nextLine();
     while(!line.isNull()) {

@@ -71,8 +71,8 @@ void PreferencesDialog::loadSettings() {
     editProxyPassword->setText(Settings::proxyPassword());
 
     // directories
-    lblScreenshotsDirectory->setText(Settings::applicationDataDirectory("screenshots/"));
-    lblDownloadedDirectory->setText(Settings::applicationDataDirectory("downloaded/"));
+    lblScreenshotsDirectory->setText(Settings::dataDirectory("screenshots/"));
+    lblDownloadedDirectory->setText(Settings::dataDirectory("downloaded/"));
 
 
     // XPlane-Navdata
@@ -94,20 +94,20 @@ void PreferencesDialog::loadSettings() {
     glTextures->setChecked(Settings::glTextures());
 
     // textures
-    QDir texDir = QDir(Settings::applicationDataDirectory("textures/"));
+    QDir texDir = QDir(Settings::dataDirectory("textures/"));
     QStringList nameFilters;
     foreach(const QByteArray fmt, QImageReader::supportedImageFormats())
         nameFilters.append("*." + fmt);
     texDir.setNameFilters(nameFilters);
     qDebug() << "Supported texture formats:"
             << QImageReader::supportedImageFormats() << ". See"
-            << Settings::applicationDataDirectory("textures/+notes.txt")
+            << Settings::dataDirectory("textures/+notes.txt")
             << "for more information.";
     glTextureEarth->setToolTip(
             QString("Shows all textures from\n%1\n in the supported formats"
                     "(View/Debug log shows them).\n"
                     "See +notes.txt in the texture directory for more information.").
-            arg(Settings::applicationDataDirectory("textures")));
+            arg(Settings::dataDirectory("textures")));
     glTextureEarth->addItems(texDir.entryList()); // first without icons, use lazy-load
     QTimer::singleShot(1000, this, SLOT(lazyloadTextureIcons()));
 
@@ -321,9 +321,9 @@ void PreferencesDialog::lazyloadTextureIcons() {
     for (int i=0; i < glTextureEarth->count(); i++) {
         if (glTextureEarth->itemIcon(i).isNull()) {
             qDebug() << "PreferencesDialog::lazyloadTextureIcons()" <<
-                    Settings::applicationDataDirectory(
+                    Settings::dataDirectory(
                             QString("textures/%1").arg(glTextureEarth->itemText(i)));
-            QPixmap *pm = new QPixmap(Settings::applicationDataDirectory(
+            QPixmap *pm = new QPixmap(Settings::dataDirectory(
                     QString("textures/%1").arg(glTextureEarth->itemText(i))));
             QIcon icon = QIcon( // smooth transform uses ~2x the CPU..
                     pm->scaled(128, 64, Qt::KeepAspectRatio, // ..cycles compared to..

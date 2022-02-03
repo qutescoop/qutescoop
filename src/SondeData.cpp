@@ -26,7 +26,7 @@ void SondeData::decodeData() {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if(stationList.isEmpty()) { // Load station data from file
-        FileReader file(Settings::applicationDataDirectory("data/station.dat"));
+        FileReader file(Settings::dataDirectory("data/station.dat"));
         while(!file.atEnd()) {
 //            qApp->processEvents();
             QString rawLine =  file.nextLine();

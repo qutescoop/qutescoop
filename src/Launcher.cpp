@@ -217,7 +217,7 @@ void Launcher::dataVersionsDownloaded() {
     }
     qDebug() << "dataVersionsDownloaded() server:" << _serverDataVersionsList;
 
-    QFile localVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
+    QFile localVersionsFile(Settings::dataDirectory("data/dataversions.txt"));
     if (!localVersionsFile.open(QIODevice::ReadOnly | QIODevice::Text))  {
         GuiMessages::criticalUserInteraction(QString("Could not read %1.\nThus we are updating all datafiles.")
                        .arg(localVersionsFile.fileName()),
@@ -275,7 +275,7 @@ void Launcher::dataFileDownloaded() {
                     "New datafiles");
         } else {
             // saving file
-            QFile f(Settings::applicationDataDirectory("data/%1")
+            QFile f(Settings::dataDirectory("data/%1")
                     .arg(_dataFilesToDownload.first()));
             qDebug() << "dataFileDownloaded() writing" << f.fileName();
             if (f.open(QIODevice::WriteOnly)) {
@@ -315,7 +315,7 @@ void Launcher::dataFileDownloaded() {
                     "These changes will take effect on the next start of QuteScoop.",
                     "New datafiles");
         // updating local dataversions.txt
-        QFile localDataVersionsFile(Settings::applicationDataDirectory("data/dataversions.txt"));
+        QFile localDataVersionsFile(Settings::dataDirectory("data/dataversions.txt"));
         if (localDataVersionsFile.open(QIODevice::WriteOnly)) {
             foreach(const QString fn, _localDataVersionsList.keys()) {
                 localDataVersionsFile.write(QString("%1%%%2\n")

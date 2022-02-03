@@ -44,13 +44,10 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
     //QLocale::setDefault(QLocale::C); // bullet-proof string->float conversions
 
-    // directories
-    Settings::calculateApplicationDataDirectory();
-
     // Open log.txt
-    QTextStream(stdout) << "Log output can be found in " << Settings::applicationDataDirectory("log.txt") << Qt::endl;
+    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << Qt::endl;
     QTextStream(stdout) << "Using settings from " << Settings::fileName() << Qt::endl;
-    m_logFile.reset(new QFile(Settings::applicationDataDirectory("log.txt")));
+    m_logFile.reset(new QFile(Settings::dataDirectory("log.txt")));
     m_logFile.data()->open(QFile::WriteOnly | QFile::Text);
 
     // catch all messages
@@ -68,8 +65,9 @@ int main(int argc, char *argv[]) {
     qDebug() << "Library paths:" << app.libraryPaths();
     qDebug() << "Supported image formats:" << QImageReader::supportedImageFormats();
 
-    qDebug() << "Expecting application data directory at"
-             << Settings::applicationDataDirectory();
+    // directory
+    qDebug() << "Expecting application data in"
+             << Settings::dataDirectory();
 
     // show Launcher
     Launcher::instance()->fireUp();

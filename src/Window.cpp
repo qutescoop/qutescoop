@@ -814,7 +814,7 @@ void Window::on_actionZoomReset_triggered() {
 }
 
 void Window::shootScreenshot() {
-    QString filename = Settings::applicationDataDirectory(
+    QString filename = Settings::dataDirectory(
             QString("screenshots/%1_%2")
             .arg(Settings::downloadNetwork())
             .arg(Whazzup::instance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
@@ -878,7 +878,7 @@ void Window::downloadCloud() {
         return;
     }*/
 
-    FileReader file(Settings::applicationDataDirectory("data/cloudmirrors.dat"));
+    FileReader file(Settings::dataDirectory("data/cloudmirrors.dat"));
 
     bool hiResMode = false;
     QList<QString> loResMirrors;
@@ -928,9 +928,9 @@ void Window::cloudDownloadFinished() {
 
     QImage cloudlayer;
     cloudlayer.load(_cloudDownloadReply->readAll(), "JPG");
-    cloudlayer.save(Settings::applicationDataDirectory("textures/clouds/clouds.jpg"), "JPG");
+    cloudlayer.save(Settings::dataDirectory("textures/clouds/clouds.jpg"), "JPG");
     qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:"
-             << Settings::applicationDataDirectory("textures/clouds/");
+             << Settings::dataDirectory("textures/clouds/");
 
     _timerCloud.start(12600000); //start download in 3,5 h again
     mapScreen->glWidget->useClouds();

@@ -565,7 +565,7 @@ void GLWidget::createStaticLists() {
     if (Settings::coastLineStrength() > 0.0) {
         qglColor(Settings::coastLineColor());
         glLineWidth(Settings::coastLineStrength());
-        LineReader lineReader(Settings::applicationDataDirectory("data/coastline.dat"));
+        LineReader lineReader(Settings::dataDirectory("data/coastline.dat"));
         QList<QPair<double, double> > line = lineReader.readLine();
         while (!line.isEmpty()) {
             glBegin(GL_LINE_STRIP);
@@ -584,7 +584,7 @@ void GLWidget::createStaticLists() {
     if (Settings::countryLineStrength() > 0.0) {
         qglColor(Settings::countryLineColor());
         glLineWidth(Settings::countryLineStrength());
-        LineReader countries = LineReader(Settings::applicationDataDirectory("data/countries.dat"));
+        LineReader countries = LineReader(Settings::dataDirectory("data/countries.dat"));
         QList<QPair<double, double> > line = countries.readLine();
         glBegin(GL_LINE);
         while (!line.isEmpty()) {
@@ -1714,7 +1714,7 @@ void GLWidget::parseEarthClouds() {
 
     //Check if clouds available
     QString cloudsTexFile =
-            Settings::applicationDataDirectory("textures/clouds/clouds.jpg");
+            Settings::dataDirectory("textures/clouds/clouds.jpg");
     QFileInfo cloudsTexFI(cloudsTexFile);
     if(Settings::showClouds() && cloudsTexFI.exists()) {
         qDebug() << "GLWidget::parseEarthClouds() loading cloud texture";
@@ -1723,7 +1723,7 @@ void GLWidget::parseEarthClouds() {
     }
 
     if(Settings::glTextures()) {
-        QString earthTexFile = Settings::applicationDataDirectory(
+        QString earthTexFile = Settings::dataDirectory(
                     QString("textures/%1").arg(Settings::glTextureEarth()));
         qDebug() << "GLWidget::parseEarthClouds() loading earth texture";
         GuiMessages::progress("textures", "Preparing textures: loading earth...");
@@ -1792,7 +1792,7 @@ void GLWidget::parseEarthClouds() {
 
     if (_completedEarthIm.isNull())
         qWarning() << "Unable to load texture file: "
-                   << Settings::applicationDataDirectory(
+                   << Settings::dataDirectory(
                           QString("textures/%1").arg(Settings::glTextureEarth()));
     else {
         GLint max_texture_size;  glGetIntegerv(GL_MAX_TEXTURE_SIZE,  &max_texture_size);

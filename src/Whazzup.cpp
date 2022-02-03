@@ -205,7 +205,7 @@ void Whazzup::processWhazzup() {
 
             if(Settings::saveWhazzupData()) {
                 // write out Whazzup to a file
-                QFile out(Settings::applicationDataDirectory(
+                QFile out(Settings::dataDirectory(
                           QString("downloaded/%1_%2.whazzup")
                           .arg(Settings::downloadNetwork())
                           .arg(_data.whazzupTime.toString("yyyyMMdd-HHmmss"))));
@@ -297,7 +297,7 @@ void Whazzup::processBookings() {
             qDebug() << "Whazzup::processBookings() Bookings updated from timestamp"
                      << _data.bookingsTime;
 
-            QFile out(Settings::applicationDataDirectory(
+            QFile out(Settings::dataDirectory(
                     QString("downloaded/%1_%2.bookings")
                     .arg(Settings::downloadNetwork())
                     .arg(_data.bookingsTime.toString("yyyyMMdd-HHmmss"))));
@@ -355,7 +355,7 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
 
 QList <QPair <QDateTime, QString> > Whazzup::downloadedWhazzups() const {
     // Process directory
-    QStringList list = QDir(Settings::applicationDataDirectory("downloaded/")).entryList(
+    QStringList list = QDir(Settings::dataDirectory("downloaded/")).entryList(
             QStringList(QString("%1_*.whazzup").arg(Settings::downloadNetwork())),
             QDir::Files | QDir::Readable); // getting all *.whazzup
     list.sort();
@@ -368,7 +368,7 @@ QList <QPair <QDateTime, QString> > Whazzup::downloadedWhazzups() const {
             dt.setTimeSpec(Qt::UTC);
             returnList.append(QPair<QDateTime, QString>(
                     dt,
-                    Settings::applicationDataDirectory(QString("downloaded/%1").
+                    Settings::dataDirectory(QString("downloaded/%1").
                                                        arg(filename))
             ));
         }
