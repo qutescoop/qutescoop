@@ -38,6 +38,7 @@ MapScreen::MapScreen(QWidget *parent) :
 
     qDebug() << "MapScreen::MapScreen() creating GLWidget";
     glWidget = new GLWidget(fmt, this);
+    glWidget->showMaximized();
     qDebug() << "MapScreen::MapScreen() creating GLWidget --finished";
 
 
