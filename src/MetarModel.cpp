@@ -109,7 +109,7 @@ void MetarModel::refresh() {
 }
 
 void MetarModel::downloadMetarFor(Airport* airport) {
-    QString location = Whazzup::instance()->atisLink(airport->label);
+    QString location = Whazzup::instance()->metarUrl(airport->label);
     if(location.isEmpty())
         return;
 

@@ -20,15 +20,16 @@ void Ping::startPing(QString server) {
     _pingProcess = new QProcess(this);
     connect(_pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
 
+    QStringList pingArgs;
 #ifdef Q_OS_WIN
-    QString pingCmd = QString("ping -n 1 %1").arg(server);
+    pingArgs << "-n 1" << server;
 #endif
 #ifdef Q_OS_LINUX
-    QString pingCmd = QString("ping -c1 %1").arg(server);
+    pingArgs << "-c1" << server;
 #endif
 #ifdef Q_OS_MAC
-    QString pingCmd = QString("ping -c1 %1").arg(server);
+    pingArgs << "-c1" << server;
 #endif
-    qDebug() << "Ping::startPing() executing" << pingCmd;
-    _pingProcess->start(pingCmd);
+    qDebug() << "Ping::startPing() executing" << "ping" << pingArgs;
+    _pingProcess->start("ping", pingArgs);
 }

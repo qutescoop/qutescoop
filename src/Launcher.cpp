@@ -23,7 +23,7 @@ Launcher::Launcher(QWidget *parent) :
 
     _map = QPixmap(":/startup/logo").scaled(600, 600);
     resize(_map.width(), _map.height());
-    move(qApp->desktop()->availableGeometry().center()
+    move(qApp->screens().first()->availableGeometry().center()
          - rect().center());
     setMask(_map.mask());
 
@@ -156,7 +156,7 @@ void Launcher::fireUp() {
     if (Settings::downloadOnStartup()) {
         jobs->append(JobList::Job(
                 Whazzup::instance(),
-                SLOT(download()),
+                SLOT(downloadJson3()),
                 SIGNAL(whazzupDownloaded())
         ));
     }

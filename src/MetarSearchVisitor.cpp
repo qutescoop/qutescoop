@@ -15,7 +15,7 @@ QList<Airport*> MetarSearchVisitor::airports() {
 	QList<Airport*> res;
 	
 	QList<QString> labels = _airportMap.keys();
-	qSort(labels);	
+    labels.sort();
 	for(int i = 0; i < labels.size(); i++)
 		res.append(_airportMap[labels[i]]);
 	

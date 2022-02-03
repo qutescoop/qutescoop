@@ -363,8 +363,7 @@ QString Pilot::delayStr() const { // delay
         return QString("n/a");
     calcSecs = (secs < 0? -secs: secs);
     return QString("%1%2")
-            .arg(secs < 0? "-": "")
-            .arg(QTime((calcSecs / 3600) % 24, (calcSecs / 60) % 60).toString("H:mm"));
+            .arg(secs < 0? "-": "", QTime((calcSecs / 3600) % 24, (calcSecs / 60) % 60).toString("H:mm"));
 }
 
 int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from various flightplan strings
@@ -372,13 +371,13 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
     if(altStr.length() < 4 && altStr.toInt() != 0) // 280: naive mode
         return altStr.toInt() * 100;
     if(altStr.left(2) == "FL") // FL280: bastard mode
-        return altStr.mid(2).toInt() * 100;
-    if(altStr.left(1) == "F") // F280
-        return altStr.mid(1).toInt() * 100;
-    if(altStr.left(1) == "A" && altStr.length() <= 4) // A45
-        return altStr.mid(1).toInt() * 100;
-    if(altStr.left(1) == "A" && altStr.length() > 4) // A4500: idiot mode...
-        return altStr.mid(1).toInt();
+        return altStr.midRef(2).toInt() * 100;
+    if(altStr.at(0) == "F") // F280
+        return altStr.midRef(1).toInt() * 100;
+    if(altStr.at(0) == "A" && altStr.length() <= 4) // A45
+        return altStr.midRef(1).toInt() * 100;
+    if(altStr.at(0) == "A" && altStr.length() > 4) // A4500: idiot mode...
+        return altStr.midRef(1).toInt();
     return altStr.toInt();
 }
 
@@ -388,7 +387,7 @@ QStringList Pilot::waypoints() const {
                         "\\b(?:[MNAFSMK]\\d{3,4}){2,}\\b|"
                         "\\b\\d{2}\\D?\\b|"
                         "DCT"),
-                QString::SkipEmptyParts); // split and throw away DCT + /N450F230 etc.
+                Qt::SkipEmptyParts); // split and throw away DCT + /N450F230 etc.
 }
 
 QPair<double, double> Pilot::positionInFuture(int seconds) const {

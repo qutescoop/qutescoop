@@ -77,7 +77,7 @@ Window::Window(QWidget *parent) :
     connect(actionSectorview, SIGNAL(triggered()), this, SLOT(openSectorView()));
 
     Whazzup *whazzup = Whazzup::instance();
-    connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(download()));
+    connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(downloadJson3()));
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
     connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
@@ -820,7 +820,7 @@ void Window::shootScreenshot() {
             .arg(Whazzup::instance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
 
     if (Settings::screenshotMethod() == 0)
-        QPixmap::grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+        qApp->screens().first()->grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                                     Settings::screenshotFormat().toLatin1());
     else if (Settings::screenshotMethod() == 1)
         mapScreen->glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
@@ -836,9 +836,10 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
     GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
     foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
         a->showFlightLines = checked;
-    if (!checked) // when disabled, this shall clear all routes
+    if (!checked) { // when disabled, this shall clear all routes
         foreach (Pilot *p, Whazzup::instance()->whazzupData().allPilots())
             p->showDepDestLine = false;
+    }
 
     // adjust the "plot route" tick in dialogs
     if (AirportDetails::instance(false) != 0)
@@ -903,10 +904,10 @@ void Window::downloadCloud() {
     QUrl url;
     if(Settings::useHightResClouds()) {
         if (!hiResMirrors.isEmpty())
-            url.setUrl(hiResMirrors[qrand() % hiResMirrors.size()]);
+            url.setUrl(hiResMirrors[QRandomGenerator::global()->bounded(hiResMirrors.size() - 1)]);
     } else {
         if (!loResMirrors.isEmpty())
-            url.setUrl(loResMirrors[qrand() % loResMirrors.size()]);
+            url.setUrl(loResMirrors[QRandomGenerator::global()->bounded(loResMirrors.size() - 1)]);
     }
     if(_cloudDownloadReply != 0) _cloudDownloadReply = 0;
     _cloudDownloadReply = Net::g(url);

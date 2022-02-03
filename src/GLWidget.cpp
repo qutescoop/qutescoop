@@ -1190,9 +1190,9 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
 void GLWidget::wheelEvent(QWheelEvent* event) {
     QToolTip::hideText();
     //if(event->orientation() == Qt::Vertical) {
-    if (qAbs(event->delta()) > Settings::wheelMax()) // always recalibrate if bigger values are found
-        Settings::setWheelMax(qAbs(event->delta()));
-    zoomIn((double) event->delta() / Settings::wheelMax());
+    if (qAbs(event->angleDelta().y()) > Settings::wheelMax()) // always recalibrate if bigger values are found
+        Settings::setWheelMax(qAbs(event->angleDelta().y()));
+    zoomIn((double) event->angleDelta().y() / Settings::wheelMax());
 }
 
 bool GLWidget::event(QEvent *event) {
@@ -1317,7 +1317,7 @@ void GLWidget::renderLabels() {
                         waypointObjects.insert(waypoints[i]);
             }
         }
-        renderLabels(waypointObjects.toList(),
+        renderLabels(waypointObjects.values(),
                      Settings::waypointsFont(), _usedWaypointsLabelZoomThreshold,
                      Settings::waypointsFontColor());
     }

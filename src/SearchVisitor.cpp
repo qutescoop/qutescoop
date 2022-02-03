@@ -6,7 +6,7 @@
 
 SearchVisitor::SearchVisitor(const QString& searchStr) {
         _searchString = searchStr;
-	QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
+    QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
 	if(tokens.size() == 1) {
 		_regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
 		return;
@@ -59,38 +59,38 @@ void SearchVisitor::checkAirlines() {
 QList<MapObject*> SearchVisitor::result() const {
 	QList<MapObject*> result;
 
-        //airlines
-        QList<QString> labels = _otherStrings.keys();
-        qSort(labels);
-        for(int i = 0; i < labels.size(); i++) {
-            MapObject *object = new MapObject();
-            object->label = labels[i];
-            object->label.append("  ");
-            object->label.append(_otherStrings[labels[i]]);
-            result.append(object);
-        }
+    //airlines
+    QList<QString> labels = _otherStrings.keys();
+    labels.sort();
+    for(int i = 0; i < labels.size(); i++) {
+        MapObject *object = new MapObject();
+        object->label = labels[i];
+        object->label.append("  ");
+        object->label.append(_otherStrings[labels[i]]);
+        result.append(object);
+    }
 
 	// airports
-        labels = _others.keys();
-	qSort(labels);
-	for(int i = 0; i < labels.size(); i++)
+    labels = _others.keys();
+    labels.sort();
+    for(int i = 0; i < labels.size(); i++)
                 result.append(_others[labels[i]]);
 	
 	// controllers
 	labels = _controllers.keys();
-	qSort(labels);
+    labels.sort();
 	for(int i = 0; i < labels.size(); i++)
 		result.append(_controllers[labels[i]]);
 	
 	// pilots
 	labels = _pilots.keys();
-	qSort(labels);
+    labels.sort();
 	for(int i = 0; i < labels.size(); i++)
 		result.append(_pilots[labels[i]]);
 	
 	// observers
 	labels = _observers.keys();
-	qSort(labels);
+    labels.sort();
 	for(int i = 0; i < labels.size(); i++)
 		result.append(_observers[labels[i]]);
 	

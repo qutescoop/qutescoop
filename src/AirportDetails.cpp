@@ -118,12 +118,12 @@ void AirportDetails::refresh(Airport* newAirport) {
                         .arg(utcDev));
 
     // arrivals
-    _arrivalsModel.setClients(_airport->arrivals.toList());
+    _arrivalsModel.setClients(_airport->arrivals.values());
     _arrivalsSortModel->invalidate();
     treeArrivals->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // departures
-    _departuresModel.setClients(_airport->departures.toList());
+    _departuresModel.setClients(_airport->departures.values());
     _departuresSortModel->invalidate();
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 

@@ -2,6 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
+#include "_pch.h"
+
 #include "WhazzupData.h"
 
 #include "Sector.h"
@@ -11,8 +13,6 @@
 #include "NavData.h"
 #include "Settings.h"
 #include "helpers.h"
-
-#include <QJsonDocument>
 
 WhazzupData::WhazzupData():
         servers(QList<QStringList>()), voiceServers(QList<QStringList>()),
@@ -380,7 +380,7 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
 void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updatePilotsFrom()";
     foreach(const QString s, pilots.keys()) { // remove pilots that are no longer there
-        if(!data.pilots.contains(s)) {
+                if(!data.pilots.contains(s)) {
             foreach(const Pilot *p, pilots.values(s)) // there might be several...
                 delete p;
             pilots.remove(s);

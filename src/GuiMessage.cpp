@@ -88,8 +88,8 @@ void GuiMessages::labelDestroyed(QObject *obj) {
     if (static_cast<QLabel*>(obj) != 0) {
         if (_labels.remove(static_cast<QLabel*>(obj)) == 0)
             qWarning() << "GuiMessages::labelDestroyed() object not found";
-        else
-            qDebug() << "GuiMessages::labelDestroyed() removed object";
+        // else
+        //    qDebug() << "GuiMessages::labelDestroyed() removed object";
     } else
         qWarning() << "GuiMessages::labelDestroyed() invalid object cast";
 }
@@ -108,12 +108,12 @@ void GuiMessages::removeProgressBar(QProgressBar *progressBar) {
     _bars.remove(progressBar);
 }
 void GuiMessages::progressBarDestroyed(QObject *obj) {
-    qDebug() << obj;
+    // qDebug() << obj;
     if (static_cast<QProgressBar*>(obj) != 0) {
         if (_bars.remove(static_cast<QProgressBar*>(obj)) == 0)
             qWarning() << "GuiMessages::progressBarDestroyed() object not found";
-        else
-            qDebug() << "GuiMessages::progressBarDestroyed() removed object";
+        // else
+        //    qDebug() << "GuiMessages::progressBarDestroyed() removed object";
     } else
         qWarning() << "GuiMessages::progressBarDestroyed() invalid object cast";
 }
@@ -134,16 +134,16 @@ void GuiMessages::updateMessage(GuiMessage *gm, bool callUpdate) {
             existing->showMs          = gm->showMs;
         if (gm->shownSince.isValid())
             existing->shownSince      = gm->shownSince;
-        //qDebug() << " updated existing message:" << existing;
+        // qDebug() << " updated existing message:" << existing;
     } else {
-        qDebug() << "GuiMessage()::updateMessage() new" << gm;
+        // qDebug() << "GuiMessage()::updateMessage() new" << gm;
         _messages.insert(gm->type, gm);
     }
     if (callUpdate)
         update();
 }
 void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
-    //qDebug() << "GuiMessages::removeMessage() id=" << id;
+    // qDebug() << "GuiMessages::removeMessage() id=" << id;
     foreach(int key, _messages.keys()) {
         foreach(GuiMessage *gm, _messages.values(key)) {
             if (gm->id == id) {
@@ -151,8 +151,8 @@ void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
                     setStatusMessage(new GuiMessage());
                 if (_currentProgressMessage == gm)
                     setProgress(new GuiMessage());
-                qDebug() << "GuiMessage()::removeMessageById() removed"
-                         << gm;
+                // qDebug() << "GuiMessage()::removeMessageById() removed"
+                //         << gm;
                 _messages.remove(key, gm);
             }
         }
@@ -272,7 +272,7 @@ GuiMessages::GuiMessage *GuiMessages::messageById(const QString &id, const GuiMe
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-// GuiMessages::GuiMessage QDebug compatibility
+// GuiMessages::GuiMessage qDebug() compatibility
 QDebug operator<<(QDebug dbg, const GuiMessages::GuiMessage *gm) {
     dbg.nospace() << "id: " << gm->id << ", msg: " << gm->msg
                   << ", type " << gm->type << ", val: " << gm->progressValue

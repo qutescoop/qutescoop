@@ -506,7 +506,7 @@ void PreferencesDialog::on_editNavdir_editingFinished() {
 void PreferencesDialog::on_browseNavdirButton_clicked() {
     QFileDialog* dialog = new QFileDialog(this, "Select Database Directory",
             Settings::navdataDirectory());
-    dialog->setFileMode(QFileDialog::DirectoryOnly);
+    dialog->setOption(QFileDialog::ShowDirsOnly);
     int result = dialog->exec();
     if(result == QDialog::Rejected) {
         delete dialog;

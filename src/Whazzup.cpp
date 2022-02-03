@@ -19,12 +19,9 @@ Whazzup* Whazzup::instance() {
 
 Whazzup::Whazzup():
         _replyStatus(0), _replyWhazzup(0), _replyBookings(0) {
-    // init random seed to switch between URLs
-    qsrand(QDateTime::currentDateTime().toTime_t());
-
     _downloadTimer = new QTimer(this);
     _bookingsTimer = new QTimer(this);
-    connect(_downloadTimer, SIGNAL(timeout()), SLOT(download()));
+    connect(_downloadTimer, SIGNAL(timeout()), SLOT(downloadJson3()));
     connect(_bookingsTimer, SIGNAL(timeout()), SLOT(downloadBookings()));
 
     connect(this, SIGNAL(needBookings()), SLOT(downloadBookings()));
@@ -68,13 +65,10 @@ void Whazzup::processStatus() {
     if(_replyStatus->bytesAvailable() == 0)
         GuiMessages::warning("Statusfile is empty");
 
-    _urls.clear();
-    _gzurls.clear();
-    _metarUrl = "";
-    _tafUrl = "";
-    _shorttafUrl = "";
-    _atisLink = "";
-    _userLink = "";
+    _json3Urls.clear();
+    _metar0Url = "";
+    _url1Url = "";
+    _user0Url = "";
 
     while(_replyStatus->canReadLine()) {
         QString line = QString(_replyStatus->readLine()).trimmed();
@@ -82,47 +76,44 @@ void Whazzup::processStatus() {
             continue;
 
         QStringList list = line.split('=');
+        if(list.size() < 2) continue;
 
-        if("msg0" == list[0]) {
-            _message = line.right(line.length() - QString("msg0=").length());
-            continue;
+        QString key = list[0];
+        QString value = list.mid(1).join('='); // everything right of the first =
+
+        if("msg0" == key) { // message to be displayed at application startup
+            _msg0 = value;
+        } else if("json3" == key) { // JSON Data Version 3
+            _json3Urls.append(value);
+        } else if("metar0" == key) { // URL where to retrieve metar. Invoke it passing a parameter like for example: http://metar.vatsim.net/metar.php?id=KBOS
+            _metar0Url = value;
+        } else if("url1" == key) { // URLs where servers list data files are available. Please choose one randomly every time
+            _url1Url = value;
+        } else if("user0" == key) { // URL where to retrieve statistics web pages
+            _user0Url = value;
+        } else if("moveto0" == key) { // URL where to retrieve a more updated status.txt file that overrides this one
+            _replyStatus = Net::g(value);
+            connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
+            return;
         }
-
-        if(list.size() != 2) continue;
-
-        if("json3" == list[0])
-            _urls.append(list[1]);
-        else if("gzurl0" == list[0])
-            _gzurls.append(list[1]);
-        else if("moveto0" == list[0]) // this URL is obsolete. Try that one instead.
-            // do something with it?
-            qDebug() << "status.txt suggested to use" << list[1]
-                     << "!!! We do not handle that automatically,"
-                     << "please update the status-URL by hand.";
-        else if("metar0" == list[0])
-            _metarUrl = list[1];
-        else if("taf0" == list[0])
-            _tafUrl = list[1];
-        else if("shorttaf0" == list[0])
-            _shorttafUrl = list[1];
-        else if("user0" == list[0])
-            _userLink = list[1];
-        else if("atis0" == list[0])
-            _atisLink = list[1];
     }
 
-    if(!_message.isEmpty())
-        GuiMessages::warning(_message);
+    if(!_msg0.isEmpty())
+        GuiMessages::warning(_msg0);
 
     _lastDownloadTime = QTime();
 
     GuiMessages::remove("statusdownload");
-    qDebug() << "Whazzup::statusDownloaded() Got" << _urls.size() << "Whazzup URLs";
+    qDebug() << "Whazzup::statusDownloaded() msg0:" << _msg0;
+    qDebug() << "Whazzup::statusDownloaded() json3:" << _json3Urls;
+    qDebug() << "Whazzup::statusDownloaded() metar0:" << _metar0Url;
+    qDebug() << "Whazzup::statusDownloaded() url1:" << _url1Url;
+    qDebug() << "Whazzup::statusDownloaded() user0:" << _user0Url;
 
-    if(_urls.size() == 0)
+    if(_json3Urls.size() == 0)
         GuiMessages::warning("No Whazzup-URLs found. Try again later.");
     else
-        download();
+        downloadJson3();
 }
 
 void Whazzup::fromFile(QString filename) {
@@ -133,8 +124,8 @@ void Whazzup::fromFile(QString filename) {
     connect(_replyWhazzup, SIGNAL(finished()), SLOT(processWhazzup()));
 }
 
-void Whazzup::download() {
-    if(_urls.size() == 0) {
+void Whazzup::downloadJson3() {
+    if(_json3Urls.size() == 0) {
         setStatusLocation(Settings::statusLocation());
         return;
     }
@@ -150,7 +141,7 @@ void Whazzup::download() {
     }
     _lastDownloadTime = now;
 
-    QUrl url(_urls[qrand() % _urls.size()]);
+    QUrl url(_json3Urls[QRandomGenerator::global()->bounded(_json3Urls.size() - 1)]);
 
     GuiMessages::progress("whazzupDownload", QString("Updating whazzup from %1...").
                          arg(url.toString(QUrl::RemoveUserInfo)));
@@ -322,16 +313,16 @@ void Whazzup::processBookings() {
 }
 
 
-QString Whazzup::userLink(const QString& id) const {
-    if(_userLink.isEmpty())
+QString Whazzup::userUrl(const QString& id) const {
+    if(_user0Url.isEmpty())
         return QString();
-    return _userLink + "?id=" + id;
+    return _user0Url + "?id=" + id;
 }
 
-QString Whazzup::atisLink(const QString& id) const {
-    if(_metarUrl.isEmpty())
+QString Whazzup::metarUrl(const QString& id) const {
+    if(_metar0Url.isEmpty())
         return QString();
-    return _metarUrl + "?id=" + id;
+    return _metar0Url + "?id=" + id;
 }
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {

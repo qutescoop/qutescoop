@@ -220,7 +220,7 @@ void ListClientsDialog::performSearch() {
 
     qDebug() << "ListClientsDialog::performSearch()";
     QRegExp regex;
-    QStringList tokens = editFilter->text().trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), QString::SkipEmptyParts);
+    QStringList tokens = editFilter->text().trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
     if(tokens.size() == 1) {
         regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
     } else if(tokens.size() == 0) {

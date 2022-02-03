@@ -64,7 +64,7 @@ void Airac::readWaypoints(const QString& directory) {
         if(line.isEmpty())
             continue;
 
-        Waypoint *wp = new Waypoint(line.split(' ', QString::SkipEmptyParts));
+        Waypoint *wp = new Waypoint(line.split(' ', Qt::SkipEmptyParts));
         if (wp == 0 || wp->isNull())
             continue;
 
@@ -82,7 +82,7 @@ void Airac::readNavaids(const QString& directory) {
         if(line.isEmpty())
             continue;
 
-        NavAid *nav = new NavAid(line.split(' ', QString::SkipEmptyParts));
+        NavAid *nav = new NavAid(line.split(' ', Qt::SkipEmptyParts));
         if (nav == 0 || nav->isNull())
             continue;
 
@@ -102,7 +102,7 @@ void Airac::readAirways(const QString& directory) {
         if(line.isEmpty())
             continue;
 
-        QStringList list = line.split(' ', QString::SkipEmptyParts);
+        QStringList list = line.split(' ', Qt::SkipEmptyParts);
         if(list.size() < 10 || list.size() > 20)
             continue;
 
@@ -167,9 +167,9 @@ void Airac::readAirways(const QString& directory) {
                     glue += " ";
                 glue += list[i];
             }
-            names = glue.split('-', QString::SkipEmptyParts);
+            names = glue.split('-', Qt::SkipEmptyParts);
         } else
-            names = list[9].split('-', QString::SkipEmptyParts);
+            names = list[9].split('-', Qt::SkipEmptyParts);
 
         for(int i = 0; i < names.size(); i++) {
             addAirwaySegment(start, end, type, base, top, names[i]);

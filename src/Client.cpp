@@ -9,6 +9,7 @@
 
 
 Client::Client(const QJsonObject& json, const WhazzupData* whazzup) {
+    Q_UNUSED(whazzup);
     label = json["callsign"].toString();
     userId = QString::number(json["cid"].toInt());
     realName = json["name"].toString();
@@ -49,7 +50,7 @@ QString Client::displayName(bool withLink) const {
         result += " (" + rank() + ")";
 
     if(withLink && !userId.isEmpty()) {
-        QString link = Whazzup::instance()->userLink(userId);
+        QString link = Whazzup::instance()->userUrl(userId);
         if(link.isEmpty())
             return result;
         result = QString("<a href='%1'>%2</a>").arg(link).arg(result);
