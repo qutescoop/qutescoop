@@ -23,22 +23,39 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ../Qt
-          key: ${{ runner.os }}-5151-mingw81-QtCache
+          key: ${{ runner.os }}-5152-win64_msvc2019_64-QtCache
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2.9.0
+        uses: jurplel/install-qt-action@v2
         with:
-          version: 5.15.1
-          arch: win64_mingw81
+          version: 5.15.2
+          arch: win64_msvc2019_64
           modules: qtwebglplugin
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: env
         shell: bash
-      - run: qmake -config release QuteScoop.pro
-      - run: make 
-      - run: make install
-      - run: windeployqt DIST-win32
-      - name: Upload
-        uses: actions/upload-artifact@v1
+      - name: qmake
+        run: |
+          call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          ${{ env.Qt5_DIR }}\bin\qmake.exe -config release QuteScoop.pro
+        shell: cmd
+      - name: Upload Makefile
+        uses: actions/upload-artifact@v2
         with:
-          name: QuteScoop-Win-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}.zip
-          path: ./DIST-win32
+          name: QuteScoop-Win-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}-Makefile
+          path: ./Makefile*
+      - name: nmake install
+        run: |
+          call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          nmake.exe install
+        shell: cmd
+      - name: windeployqt
+        working-directory: DIST-win64
+        run: |
+          call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+          ${{ env.Qt5_DIR }}/bin/windeployqt.exe .
+        shell: cmd
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: QuteScoop-Win-${{ steps.tag.outputs.SOURCE_NAME }}-${{ github.sha }}
+          path: ./DIST-win64
