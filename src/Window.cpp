@@ -904,10 +904,10 @@ void Window::downloadCloud() {
     QUrl url;
     if(Settings::useHightResClouds()) {
         if (!hiResMirrors.isEmpty())
-            url.setUrl(hiResMirrors[QRandomGenerator::global()->bounded(hiResMirrors.size() - 1)]);
+            url.setUrl(hiResMirrors[QRandomGenerator::global()->bounded(quint32(hiResMirrors.size() - 1))]);
     } else {
         if (!loResMirrors.isEmpty())
-            url.setUrl(loResMirrors[QRandomGenerator::global()->bounded(loResMirrors.size() - 1)]);
+            url.setUrl(loResMirrors[QRandomGenerator::global()->bounded(quint32(loResMirrors.size() - 1))]);
     }
     if(_cloudDownloadReply != 0) _cloudDownloadReply = 0;
     _cloudDownloadReply = Net::g(url);

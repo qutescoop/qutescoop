@@ -141,7 +141,7 @@ void Whazzup::downloadJson3() {
     }
     _lastDownloadTime = now;
 
-    QUrl url(_json3Urls[QRandomGenerator::global()->bounded(_json3Urls.size() - 1)]);
+    QUrl url(_json3Urls[QRandomGenerator::global()->bounded(quint32(_json3Urls.size() - 1))]);
 
     GuiMessages::progress("whazzupDownload", QString("Updating whazzup from %1...").
                          arg(url.toString(QUrl::RemoveUserInfo)));
