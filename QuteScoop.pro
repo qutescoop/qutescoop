@@ -88,6 +88,10 @@ CONFIG(release,release|debug) {
         ./QuteScoop.desktop \
         ./src/qutescoop.png \
         ./picsToMovie.sh
+
+    win64:rootFiles.files += ./lib/win64/libssl-1_1-x64.dll \
+        ./lib/win64/libcrypto-1_1-x64.dll
+
     dataFiles.path = $$DESTDIR/data
     dataFiles.files += ./data/_notes.txt
     dataFiles.files += ./data/airports.dat
