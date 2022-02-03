@@ -298,3 +298,13 @@ QString Platform::id() {
     return QString();
 }
 
+QString Platform::compileMode()
+{
+#ifdef QT_NO_DEBUG
+    return "release";
+#endif
+#ifdef QT_DEBUG
+    return "debug";
+#endif
+}
+

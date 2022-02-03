@@ -14,6 +14,7 @@ class Platform {
         static QString memoryFree();
         static QString memoryOverall();
         static QString id();
+        static QString compileMode();
 };
 
 #endif // PLATFORM_H

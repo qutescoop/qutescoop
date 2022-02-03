@@ -12,12 +12,17 @@ QSettings *settingsInstance = 0;
 QSettings* Settings::instance() {
     if(settingsInstance == 0) {
         settingsInstance = new QSettings();
-        qDebug() << "Expecting settings at" << settingsInstance->fileName();
+        // qDebug() << "Expecting settings at" << settingsInstance->fileName();
     }
     return settingsInstance;
 }
 
 // .ini File Functions
+QString Settings::fileName()
+{
+    return instance()->fileName();
+}
+
 void Settings::exportToFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
     for (int i = 0; i < instance()->allKeys().length(); i++)
@@ -46,7 +51,7 @@ QIODevice::OpenMode Settings::dirCapabilities(QString &dir) {
         } else
             capabilities |= QIODevice::ReadOnly;
     }
-    qDebug() << "Settings::dirCapabilities()" << dir << "=" << capabilities;
+    // qDebug() << "Settings::dirCapabilities()" << dir << "=" << capabilities;
     return capabilities;
 }
 
@@ -68,9 +73,9 @@ void Settings::calculateApplicationDataDirectory() {
     QStringList subdirs; // needed subDirs
     subdirs << "data" << "downloaded" << "screenshots" << "textures";
 
-    qDebug() << "Settings::calculateApplicationsDirectory(): checking" << dirs
-             << "and their sub-directories" << subdirs << "for existence and writability."
-             << "Taking the first writable location as 'application data directory'.";
+    //    qDebug() << "Settings::calculateApplicationsDirectory(): checking" << dirs
+    //             << "and their sub-directories" << subdirs << "for existence and writability."
+    //             << "Taking the first writable location as 'application data directory'.";
 
     QList< QIODevice::OpenMode> __dirCapabilities;
     for (int i = 0; i < dirs.size(); i++) {

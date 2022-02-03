@@ -9,6 +9,8 @@
 
 class Settings {
     public:
+        static QString fileName();
+
         // export/import
         static void exportToFile(QString fileName);
         static void importFromFile(QString fileName);
