@@ -2,14 +2,18 @@
 # This file is part of QuteScoop. See README for license
 # #####################################################################
 
-# QuteScoop version
-VERSION = "2.3" # should not include spaces
-VER_STR = '\\"$${VERSION}\\"'
-DEFINES += VERSION_NUMBER=\"$$VER_STR\" # complex escaping to preserve
-                                            # string through qmake -> console ->
-                                            # compiler
+# versiony things
+GIT_HASH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --short HEAD)\\\""
+DEFINES += GIT_HASH=$$GIT_HASH
 
-# fixes version incompatibilities
+GIT_BRANCH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --abbrev-ref HEAD)\\\""
+DEFINES += GIT_BRANCH=$$GIT_BRANCH
+
+## this produces v2.3.0 / v2.3.0-6-g29966c2 / v2.3.0-6-g29966c2-dirty
+GIT_DESCRIBE="\\\"$$system(git describe --tags --dirty)\\\""
+DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
+
+# maybe fixes version incompatibilities, gets ignored by clang
 QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 
 TEMPLATE = app

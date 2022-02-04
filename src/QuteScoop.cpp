@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     app.setOrganizationName("QuteScoop");
     app.setOrganizationDomain("qutescoop.github.io");
     app.setApplicationName("QuteScoop");
-    app.setApplicationVersion(Version::str());
+    app.setApplicationVersion(Platform::version());
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
     //QLocale::setDefault(QLocale::C); // bullet-proof string->float conversions
 
@@ -54,7 +54,7 @@ int main(int argc, char *argv[]) {
     qInstallMessageHandler(messageHandler);
 
     // some initial debug logging
-    qDebug() << Version::str();
+    qDebug() << Platform::version();
 
     qDebug() << QString("Compiled with Qt %1 [%4, Qt mode: %2], running with Qt %3 on %5.").arg(
                     QT_VERSION_STR, Platform::compileMode(), qVersion(), Platform::compiler(), Platform::platformOS()

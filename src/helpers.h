@@ -17,19 +17,6 @@ static double inline modPositive(double x, double y) {
     return x - y * floor(x/y);
 }
 
-class Version {
-    public:
-        /* something like "QuteScoop 2.1.8 - Revision 212" */
-        static QString str() {
-            // VERSION_NUMBER is defined in the qmake QuteScoop.pro file
-#ifdef QT_DEBUG
-            return QString("QuteScoop %1 [DEBUG]").arg(VERSION_NUMBER);
-#else
-            return QString("QuteScoop %1").arg(VERSION_NUMBER);
-#endif
-        }
-};
-
 /* mathematical constants */
 const double Pi180 = M_PI / 180.;
 

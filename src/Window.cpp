@@ -22,6 +22,7 @@
 #include "helpers.h"
 #include "GuiMessage.h"
 #include "SectorView.h"
+#include "Platform.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -41,7 +42,7 @@ Window::Window(QWidget *parent) :
     setupUi(this);
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
-    setWindowTitle(QString("QuteScoop %1").arg(VERSION_NUMBER));
+    setWindowTitle(QString("QuteScoop %1").arg(Platform::version()));
 
     // apply styleSheet
     if (!Settings::stylesheet().isEmpty()) {
