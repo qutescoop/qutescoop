@@ -24,9 +24,9 @@ jobs:
           path: ../Qt
           key: ${{ runner.os }}-QtCache
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2.9.0
+        uses: jurplel/install-qt-action@v2
         with:
-          version: '5.12.8'
+          version: '5.15.2'
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: qmake -config release QuteScoop.pro
       - run: make 
