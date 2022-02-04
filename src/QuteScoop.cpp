@@ -9,7 +9,6 @@
 #include "Platform.h"
 #include "Settings.h"
 #include "Launcher.h"
-#include <stdio.h>
 
 /* logging */
 QScopedPointer<QFile>   m_logFile;
@@ -26,7 +25,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext& context, const QSt
     case QtCriticalMsg: out << " [CRT] "; break;
     case QtFatalMsg:    out << " [FTL] "; break;
     }
-    out << msg << Qt::endl;
+    out << msg << '\n';
     out.flush();
 }
 
@@ -45,8 +44,8 @@ int main(int argc, char *argv[]) {
     //QLocale::setDefault(QLocale::C); // bullet-proof string->float conversions
 
     // Open log.txt
-    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << Qt::endl;
-    QTextStream(stdout) << "Using settings from " << Settings::fileName() << Qt::endl;
+    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << '\n';
+    QTextStream(stdout) << "Using settings from " << Settings::fileName() << '\n';
     m_logFile.reset(new QFile(Settings::dataDirectory("log.txt")));
     m_logFile.data()->open(QFile::WriteOnly | QFile::Text);
 
