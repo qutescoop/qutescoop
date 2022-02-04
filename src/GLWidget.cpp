@@ -22,7 +22,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         QGLWidget(fmt, parent),
         _mapMoving(false), _mapZooming(false), _mapRectSelecting(false),
         _lightsGenerated(false),
-        _allSectorsDisplayed(false),
         _earthTex(0),
         _earthList(0), _coastlinesList(0), _countriesList(0), _gridlinesList(0),
         _pilotsList(0), _activeAirportsList(0), _inactiveAirportsList(0), _fixesList(0),
@@ -38,6 +37,9 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         _highlighter(0) {
     setAutoFillBackground(false);
     setMouseTracking(true);
+
+    _allSectorsDisplayed = Settings::showAllSectors();
+
     // call default (=9) map position
     Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, 9);
     _xRot = modPositive(_xRot, 360.);
@@ -424,26 +426,28 @@ void GLWidget::createControllersLists() {
     if(_sectorPolygonBorderLinesList == 0)
         _sectorPolygonBorderLinesList = glGenLists(1);
 
-    if(!_allSectorsDisplayed && Settings::firBorderLineStrength() > 0.) {
-        // first, make sure all lists are there
-        foreach(const Controller *c, _sectorsToDraw) {
-            if(c->sector != 0)
-                c->sector->glBorderLine();
+    if(Settings::firBorderLineStrength() > 0.) {
+        if(!_allSectorsDisplayed) {
+            // first, make sure all lists are there
+            foreach(const Controller *c, _sectorsToDraw) {
+                if(c->sector != 0)
+                    c->sector->glBorderLine();
+            }
+            glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
+            foreach(const Controller *c, _sectorsToDraw) {
+                if(c->sector != 0)
+                    glCallList(c->sector->glBorderLine());
+            }
+            glEndList();
+        } else if(_allSectorsDisplayed) {
+            // display ALL fir borders
+            foreach(Sector *s, NavData::instance()->sectors.values())
+                s->glBorderLine();
+            glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
+            foreach(Sector *s, NavData::instance()->sectors.values())
+                glCallList(s->glBorderLine());
+            glEndList();
         }
-        glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
-        foreach(const Controller *c, _sectorsToDraw) {
-            if(c->sector != 0)
-                glCallList(c->sector->glBorderLine());
-        }
-        glEndList();
-    } else if(_allSectorsDisplayed && Settings::firBorderLineStrength() > 0.) {
-        // display ALL fir borders
-        foreach(Sector *s, NavData::instance()->sectors.values())
-            s->glBorderLine();
-        glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
-        foreach(Sector *s, NavData::instance()->sectors.values())
-            glCallList(s->glBorderLine());
-        glEndList();
     }
 
     // APP border lines
