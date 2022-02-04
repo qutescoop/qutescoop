@@ -5,3 +5,9 @@
 /*.pro.user
 /QuteScoop
 /log.txt
+/screenshots/
+!/screenshots/_notes.txt
+/downloaded/
+!/downloaded/_notes.txt
+/textures/
+!/textures/_notes.txt
