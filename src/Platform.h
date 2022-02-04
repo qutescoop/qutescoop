@@ -11,9 +11,6 @@ class Platform {
     public:
         static QString platformOS();
         static QString compiler();
-        static QString memoryFree();
-        static QString memoryOverall();
-        static QString id();
         static QString compileMode();
         static QString version();
 };

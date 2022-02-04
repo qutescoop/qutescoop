@@ -236,68 +236,6 @@ QString Platform::compiler() {
 #endif
 }
 
-QString Platform::memoryFree() {
-#ifdef Q_OS_LINUX
-    QProcess p;
-    p.start("awk", QStringList() << "/MemFree/ { print $2 }" << "/proc/meminfo");
-    p.waitForFinished();
-    return (QString("%1 MB").arg(p.readAllStandardOutput().trimmed().toLong() / 1024));
-#endif
-    //#ifdef Q_OS_MAC
-    //    QProcess p;
-    //    p.start("sysctl", QStringList() << "kern.version" << "hw.physmem");
-    //    p.waitForFinished();
-    //    return p.readAllStandardOutput();
-    //#endif
-#ifdef Q_OS_WIN
-    MEMORYSTATUSEX memory_status;
-    ZeroMemory(&memory_status, sizeof(MEMORYSTATUSEX));
-    memory_status.dwLength = sizeof(MEMORYSTATUSEX);
-    if (GlobalMemoryStatusEx(&memory_status)) {
-        return QString("%1 MB")
-                .arg(memory_status.ullAvailPhys / (1024 * 1024));
-    }
-#endif
-    return "unknown";
-}
-
-QString Platform::memoryOverall() {
-#ifdef Q_OS_LINUX
-    QProcess p;
-    p.start("awk", QStringList() << "/MemTotal/ { print $2 }" << "/proc/meminfo");
-    p.waitForFinished();
-    return (QString("%1 MB").arg(p.readAllStandardOutput().trimmed().toLong() / 1024));
-#endif
-#ifdef Q_OS_MAC
-    QProcess p;
-    p.start("sysctl", QStringList() << "kern.version" << "hw.physmem");
-    p.waitForFinished();
-    return p.readAllStandardOutput();
-#endif
-#ifdef Q_OS_WIN
-    MEMORYSTATUSEX memory_status;
-    ZeroMemory(&memory_status, sizeof(MEMORYSTATUSEX));
-    memory_status.dwLength = sizeof(MEMORYSTATUSEX);
-    if (GlobalMemoryStatusEx(&memory_status)) {
-        return QString("%1 MB")
-                .arg(memory_status.ullTotalPhys / (1024 * 1024));
-    }
-#endif
-    return "unknown";
-}
-
-/**
-  returns a machine id based on the first real network interface's Mac address
-**/
-QString Platform::id() {
-    const QList<QNetworkInterface> &ifs = QNetworkInterface::allInterfaces();
-    for (int i = 0; i < ifs.size(); i++) {
-        if (!(ifs[i].flags() & QNetworkInterface::IsLoopBack))
-            return ifs[i].hardwareAddress().replace(":", "").toLower();
-    }
-    return QString();
-}
-
 QString Platform::compileMode()
 {
 #ifdef QT_NO_DEBUG
