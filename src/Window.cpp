@@ -902,7 +902,7 @@ void Window::downloadCloud() {
     }
 
     QUrl url;
-    if(Settings::useHightResClouds()) {
+    if(Settings::useHighResClouds()) {
         if (!hiResMirrors.isEmpty())
             url.setUrl(hiResMirrors[QRandomGenerator::global()->bounded(quint32(hiResMirrors.size() - 1))]);
     } else {

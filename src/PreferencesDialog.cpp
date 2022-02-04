@@ -283,7 +283,7 @@ void PreferencesDialog::loadSettings() {
 
     cbDownloadClouds->setChecked(Settings::downloadClouds());
     if(Settings::downloadClouds())cbUseHighResClouds->setEnabled(true);
-    cbUseHighResClouds->setChecked(Settings::useHightResClouds());
+    cbUseHighResClouds->setChecked(Settings::useHighResClouds());
 
     // zooming
     sbZoomFactor->setValue(Settings::zoomFactor());
@@ -1252,7 +1252,7 @@ void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state) {
 void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state) {
     if (!_settingsLoaded)
         return;
-    Settings::setUseHightResClouds(state == Qt::Checked);
+    Settings::setUseHighResClouds(state == Qt::Checked);
     Window::instance()->downloadCloud();
 }
 

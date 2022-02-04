@@ -943,15 +943,13 @@ void Settings::saveMaximized(const bool val) {
     instance()->setValue("mainWindowState/maximized", val);
 }
 
+// URL for data update checks; not in preferences
 QString Settings::remoteDataRepository() {
-    return instance()->value("general/remoteDataRepository",
+    return instance()->value("data/remoteDataRepository",
                              "https://raw.githubusercontent.com/qutescoop/qutescoop/master/data/%1")
             .toString();
 }
 
-void Settings::setRemoteDataRepository(QString value) {
-    instance()->setValue("general/remoteDataRepository", value);
-}
 
 bool Settings::maximized() {
     return instance()->value("mainWindowState/maximized", true).toBool();
@@ -1022,11 +1020,11 @@ void Settings::removeFriend(const QString& friendId) {
 }
 
 bool Settings::resetOnNextStart() {
-    return instance()->value("general/resetConfiguration", false).toBool();
+    return instance()->value("main/resetConfiguration", false).toBool();
 }
 
 void Settings::setResetOnNextStart(bool value) {
-    instance()->setValue("general/resetConfiguration", value);
+    instance()->setValue("main/resetConfiguration", value);
 }
 
 // Airport traffic
@@ -1114,26 +1112,26 @@ void Settings::setUseSelctionRectangle(bool value) {
 // General
 
 bool Settings::saveWhazzupData() {
-    return instance()->value("general/saveWhazzupData", false).toBool();
+    return instance()->value("download/saveWhazzupData", true).toBool();
 }
 void Settings::setSaveWhazzupData(bool value) {
-    instance()->setValue("general/saveWhazzupData" , value);
+    instance()->setValue("download/saveWhazzupData" , value);
 }
 
 bool Settings::downloadClouds() {
-    return instance()->value("general/downloadClouds", false).toBool();
+    return instance()->value("clouds/downloadClouds", false).toBool();
 }
 
 void Settings::setDownloadClouds(const bool value) {
-    instance()->setValue("general/downloadClouds", value);
+    instance()->setValue("clouds/downloadClouds", value);
 }
 
-bool Settings::useHightResClouds() {
-    return instance()->value("general/useHightResClouds", false).toBool();
+bool Settings::useHighResClouds() {
+    return instance()->value("clouds/useHighResClouds", false).toBool();
 }
 
-void Settings::setUseHightResClouds(const bool value) {
-    instance()->setValue("general/useHightResClouds", value);
+void Settings::setUseHighResClouds(const bool value) {
+    instance()->setValue("clouds/useHighResClouds", value);
 }
 
 
@@ -1142,27 +1140,27 @@ void Settings::setUseHightResClouds(const bool value) {
 /////////////////////////////////////
 
 QSize Settings::preferencesDialogSize() {
-    return instance()->value("windowmanagment/preferncesSize", QSize()).toSize();
+    return instance()->value("windowmanagment/preferencesSize", QSize()).toSize();
 }
 
 void Settings::setPreferencesDialogSize(const QSize &value) {
-    instance()->setValue("windowmanagment/preferncesSize", value);
+    instance()->setValue("windowmanagment/preferencesSize", value);
 }
 
 QPoint Settings::preferencesDialogPos() {
-    return instance()->value("windowmanagment/preferncesPos", QPoint()).toPoint();
+    return instance()->value("windowmanagment/preferencesPos", QPoint()).toPoint();
 }
 
 void Settings::setPreferencesDialogPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/preferncesPos", value);
+    instance()->setValue("windowmanagment/preferencesPos", value);
 }
 
 QByteArray Settings::preferencesDialogGeometry() {
-    return instance()->value("windowmanagment/preferncesGeo", QByteArray()).toByteArray();
+    return instance()->value("windowmanagment/preferencesGeo", QByteArray()).toByteArray();
 }
 
 void Settings::setPreferencesDialogGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/preferncesGeo", value);
+    instance()->setValue("windowmanagment/preferencesGeo", value);
 }
 
 

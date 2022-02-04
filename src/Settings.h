@@ -355,8 +355,8 @@ class Settings {
         static bool downloadClouds();
         static void setDownloadClouds(const bool value);
 
-        static bool useHightResClouds();
-        static void setUseHightResClouds(const bool value);
+        static bool useHighResClouds();
+        static void setUseHighResClouds(const bool value);
 
         static int wheelMax();
         static void setWheelMax(const int value);
@@ -440,7 +440,6 @@ class Settings {
         static void saveMaximized(const bool val);
 
         static QString remoteDataRepository();
-        static void setRemoteDataRepository(QString value);
 
         static void setSondeAltSecondarySpan_1k(int value);
         static int sondeAltSecondarySpan_1k();
