@@ -53,9 +53,9 @@ int main(int argc, char *argv[]) {
     qInstallMessageHandler(messageHandler);
 
     // some initial debug logging
-    qDebug() << Platform::version();
+    qDebug().noquote() << "QuteScoop" << Platform::version();
 
-    qDebug() << QString("Compiled with Qt %1 [%4, Qt mode: %2], running with Qt %3 on %5.").arg(
+    qDebug().noquote() << QString("Compiled with Qt %1 [%4, mode: %2], running with Qt %3 on %5.").arg(
                     QT_VERSION_STR, Platform::compileMode(), qVersion(), Platform::compiler(), Platform::platformOS()
                 );
 
