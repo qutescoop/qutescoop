@@ -30,6 +30,8 @@ jobs:
           version: '5.15.2'
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: env
+      - name: ldd (glibc) --version
+        run: ldd --version
       - run: qmake -config release QuteScoop.pro
       - name: Upload Makefile
         if: failure()
