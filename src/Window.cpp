@@ -85,8 +85,6 @@ Window::Window(QWidget *parent) :
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
 
     searchResult->setModel(&_modelSearchResult);
-    connect(searchResult, SIGNAL(doubleClicked(const QModelIndex&)),
-            &_modelSearchResult, SLOT(modelDoubleClicked(const QModelIndex&)));
     connect(searchResult, SIGNAL(clicked(const QModelIndex&)),
             &_modelSearchResult, SLOT(modelClicked(const QModelIndex&)));
     searchResult->sortByColumn(0, Qt::AscendingOrder);
@@ -96,10 +94,8 @@ Window::Window(QWidget *parent) :
     _sortmodelMetar->setSourceModel(&_metarModel);
     metarList->setModel(_sortmodelMetar);
 
-    connect(metarList, SIGNAL(doubleClicked(const QModelIndex&)),
-            this, SLOT(metarDoubleClicked(const QModelIndex&)));
     connect(metarList, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(metarDoubleClicked(const QModelIndex&)));
+            this, SLOT(metarClicked(const QModelIndex&)));
     connect(metarList->header(), SIGNAL(sectionClicked(int)),
             metarList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
@@ -109,8 +105,6 @@ Window::Window(QWidget *parent) :
     _sortmodelFriends->setSourceModel(&_modelFriends);
     friendsList->setModel(_sortmodelFriends);
 
-    connect(friendsList, SIGNAL(doubleClicked(const QModelIndex&)),
-            this, SLOT(friendDoubleClicked(const QModelIndex&)));
     connect(friendsList, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(friendClicked(const QModelIndex&)));
     connect(friendsList->header(), SIGNAL(sectionClicked(int)),
@@ -479,11 +473,7 @@ void Window::friendClicked(const QModelIndex& index) {
     _modelFriends.modelClicked(_sortmodelFriends->mapToSource(index));
 }
 
-void Window::friendDoubleClicked(const QModelIndex& index) {
-    _modelFriends.modelDoubleClicked(_sortmodelFriends->mapToSource(index));
-}
-
-void Window::metarDoubleClicked(const QModelIndex& index) {
+void Window::metarClicked(const QModelIndex& index) {
     _metarModel.modelClicked(_sortmodelMetar->mapToSource(index));
 }
 

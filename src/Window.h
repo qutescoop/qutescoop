@@ -82,13 +82,12 @@ class Window : public QMainWindow, public Ui::Window {
         void on_btnRefreshMetar_clicked();
         void performSearch();
         void updateMetars();
-        void metarDoubleClicked(const QModelIndex& index);
+        void metarClicked(const QModelIndex& index);
         void metarDockMoved(Qt::DockWidgetArea area);
         void searchDockMoved(Qt::DockWidgetArea area);
         void metarDecoderDockMoved(Qt::DockWidgetArea area);
         void friendsDockMoved(Qt::DockWidgetArea area);
         void friendClicked(const QModelIndex& index);
-        void friendDoubleClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();
         void allSectorsChanged(bool);
         void cloudDownloadFinished();

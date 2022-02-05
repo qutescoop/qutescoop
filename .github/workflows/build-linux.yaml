@@ -54,7 +54,6 @@ jobs:
       # https://github.com/actions/upload-artifact#maintaining-file-permissions-and-case-sensitive-files
       - name: 'Tar files'
         run: tar --directory=./DIST-unix64 -cvf QuteScoop-Linux-${{ steps.version.outputs.describe }}.tar ./
-
       - name: Upload
         uses: actions/upload-artifact@v2
         with:

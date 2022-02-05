@@ -23,7 +23,6 @@ class SearchResultModel: public QAbstractListModel {
                                     int role = Qt::DisplayRole) const;
     public slots:
         void setData(const QList<MapObject*>& searchResult) { beginResetModel(); _content = searchResult; endResetModel(); }
-        void modelDoubleClicked(const QModelIndex& index);
         void modelClicked(const QModelIndex& index);
 
     private:
