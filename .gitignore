@@ -1,11 +1,19 @@
-/DIST-*
+# IDEs
+/.idea/
+/*.pro.user
+
+# build
 /temp
 /.qmake*
 /Makefile
-/*.pro.user
-/QuteScoop
+
+# runtime (when built in-tree)
 /log.txt
 /screenshots/
 !/screenshots/_notes.txt
 /downloaded/
 !/downloaded/_notes.txt
+
+# build artifacts
+/QuteScoop
+/DIST-*/
