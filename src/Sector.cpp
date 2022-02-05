@@ -76,23 +76,37 @@ QPair<double, double> Sector::getCenter() const {
     runningTotal.first = 0;
     runningTotal.second = 0;
     const int count = points.size();
-    for(int i = 0; i < points.size(); ++i) {
-        A += (points[i].first * points[(i + 1) % count].second
-             - points[(i + 1) % count].first * points[i].second);
+    QList<QPair<double, double>> pointsNorm;
+    pointsNorm.append(points[0]);
+    for(int i = 1; i < count; ++i) {
+        QPair<double, double> pointNorm = points[i];
+        const double diff = pointsNorm[i - 1].second - pointNorm.second;
+        // Check wether we need to shift this point
+        if(std::abs(diff) > 180) {
+            pointNorm.second = pointNorm.second + ((diff > 0) - (diff < 0)) * 360;
+        }
+        pointsNorm.append(pointNorm);
+    }
 
-        double multiplyBy = points[i].first * points[(i + 1) % count].second
-                            - (points[(i + 1) % count].first * points[i].second);
+    for(int i = 0; i < count; ++i) {
+        A += (pointsNorm[i].first * pointsNorm[(i + 1) % count].second
+             - pointsNorm[(i + 1) % count].first * pointsNorm[i].second);
 
-        runningTotal.first += (points[i].first + points[(i + 1) % count].first)
+        double multiplyBy = pointsNorm[i].first * pointsNorm[(i + 1) % count].second
+                            - (pointsNorm[(i + 1) % count].first * pointsNorm[i].second);
+
+        runningTotal.first += (pointsNorm[i].first + pointsNorm[(i + 1) % count].first)
                             * multiplyBy;
         
-        runningTotal.second += (points[i].second + points[(i + 1) % count].second)
+        runningTotal.second += (pointsNorm[i].second + pointsNorm[(i + 1) % count].second)
                             * multiplyBy;
     }
     A /= 2;
 
     runningTotal.first /= 6 * A;
     runningTotal.second /= 6 * A;
+
+    runningTotal.second = std::fmod(runningTotal.second + 180, 360) - 180;
 
     return runningTotal;
 }

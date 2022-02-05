@@ -1269,9 +1269,13 @@ void GLWidget::renderLabels() {
                  Settings::firFontColor());
     if(_allSectorsDisplayed) {
         qglColor(Settings::firFontColor());
-        foreach (const Sector *sector, NavData::instance()->sectors)
-            renderText(SX(sector->lat, sector->lon), SY(sector->lat, sector->lon),
-                       SZ(sector->lat, sector->lon), sector->icao, Settings::firFont());
+        foreach (const Sector *sector, NavData::instance()->sectors) {
+            QPair<double, double> center = sector->getCenter();
+            double lat = center.first;
+            double lon = center.second;
+            renderText(SX(lat, lon), SY(lat, lon),
+                       SZ(lat, lon), sector->icao, Settings::firFont());
+        }
     }
 
     // planned route waypoint labels from Flightplan Dialog
