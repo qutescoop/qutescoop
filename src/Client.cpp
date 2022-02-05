@@ -20,8 +20,6 @@ Client::Client(const QJsonObject& json, const WhazzupData* whazzup) {
     rating = json["rating"].toInt();
     timeConnected = QDateTime::fromString(json["logon_time"].toString(), Qt::ISODate);
 
-    network = VATSIM;
-
     if(realName.contains(QRegExp("\\b[A-Z]{4}$"))) {
         homeBase = realName.right(4);
         realName = realName.left(realName.length() - 4).trimmed();

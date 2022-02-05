@@ -194,8 +194,7 @@ QString BookedController::getDelivery() const {
 }
 
 QString BookedController::rank() const {
-    if(network == VATSIM) {
-        switch(rating) {
+    switch(rating) {
         case 0: return QString();
         case 1: return QString("OBS");
         case 2: return QString("S1");
@@ -210,22 +209,6 @@ QString BookedController::rank() const {
         case 11: return QString("SUP");
         case 12: return QString("ADM");
         default: return QString("unknown:%1").arg(rating);
-        }
-    } else {
-        switch(rating) {
-        case 0: return QString();
-        case 1: return QString("OBS");
-        case 2: return QString("S1");
-        case 3: return QString("S2");
-        case 4: return QString("S3");
-        case 5: return QString("C1");
-        case 6: return QString("C2");
-        case 7: return QString("C3");
-        case 8: return QString("I1");
-        case 9: return QString("I2");
-        case 10: return QString("I3");
-        default: return QString("unknown:%1").arg(rating);
-        }
     }
 }
 

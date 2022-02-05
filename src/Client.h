@@ -15,8 +15,6 @@
 
 class Client: public MapObject {
     public:
-        enum Network { VATSIM, OTHER };
-
         Client(const QJsonObject& json, const WhazzupData *whazzup);
 
         virtual QString toolTip() const;
@@ -36,9 +34,6 @@ class Client: public MapObject {
         QDateTime timeConnected;
 
         int adminRating, rating;
-
-        Network network;
-
     protected:
         QString field(const QStringList& list, int index) const;
 };

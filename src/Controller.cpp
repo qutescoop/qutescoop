@@ -84,7 +84,7 @@ QString Controller::facilityString() const {
     switch(facilityType) {
     case 0: return "OBS";
     case 1: return "Staff";
-    case 2: return  network == VATSIM? "DEL": "ATIS";
+    case 2: return "DEL";
     case 3: return "GND";
     case 4: return "TWR";
     case 5: return "APP";
@@ -185,8 +185,7 @@ void Controller::showDetailsDialog() {
 }
 
 QString Controller::rank() const {
-    if(network == VATSIM) {
-        switch(rating) {
+    switch(rating) {
         case 0: return QString();
         case 1: return QString("OBS");
         case 2: return QString("S1");
@@ -201,22 +200,6 @@ QString Controller::rank() const {
         case 11: return QString("SUP");
         case 12: return QString("ADM");
         default: return QString("unknown:%1").arg(rating);
-        }
-    } else {
-        switch(rating) {
-        case 0: return QString();
-        case 1: return QString("OBS");
-        case 2: return QString("AS1"); //ATC Applicant
-        case 3: return QString("AS2"); //ATC Trainee
-        case 4: return QString("AS3"); //Advanced ATC Trainee
-        case 5: return QString("ADC"); //Aerodrome Controller
-        case 6: return QString("APC"); //Approach Controller
-        case 7: return QString("ACC"); //Center Controller
-        case 8: return QString("SEC"); //Senior Controller (not available)
-        case 9: return QString("SAI"); //Senior ATC Instructor
-        case 10: return QString("CAI"); //Chief ATC Instructor
-        default: return QString("unknown:%1").arg(rating);
-        }
     }
 }
 
