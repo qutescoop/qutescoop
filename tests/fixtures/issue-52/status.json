@@ -1,7 +1,7 @@
 {
   "data": {
     "v3": [
-      "https://github.com/qutescoop/qutescoop/blob/master/tests/fixtures/issue-52/vatsim-data.json"
+      "https://raw.githubusercontent.com/qutescoop/qutescoop/master/tests/fixtures/issue-52/vatsim-data.json"
     ],
     "transceivers": [
       "https://data.vatsim.net/v3/transceivers-data.json"
