@@ -6,6 +6,9 @@
 #define HELPERS_H_
 
 #include "_pch.h"
+#include <iostream>
+
+using namespace std;
 
 // typedefs: needed to get the QPair template running inside foreach's
 typedef QPair<double, double> DoublePair;
@@ -34,5 +37,11 @@ const double Pi180 = M_PI / 180.;
 /* units */
 #define Nm2Deg(miles) (miles / 60.0)
 
+/**
+ * I haven't found that in Qt
+ */
+static inline QTextStream out() {
+    return QTextStream(stdout);
+}
 
 #endif /*HELPERS_H_*/
