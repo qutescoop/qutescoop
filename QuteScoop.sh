@@ -1,14 +1,9 @@
 #!/bin/sh
-appname=`basename $0 | sed s,\.sh$,,`
+# Dist packages include all libs from the build environment in ./lib.
+# If your OS libs are new enough or if you compiled yourself this is not needed.
 
-dirname=`dirname $0`
-tmp="${dirname#?}"
+dir="$(dirname "$0")"
+app="$dir/$(basename "$0" .sh)"
+lib="$dir/lib"
 
-if [ "${dirname%$tmp}" != "/" ]; then
-	dirname=$PWD/$dirname
-fi
-LD_LIBRARY_PATH=$dirname
-export LD_LIBRARY_PATH
-$dirname/$appname $*
-
-# http://doc.qt.nokia.com/latest/deployment-x11.html#linking-the-application-to-qt-as-a-shared-library
+LD_LIBRARY_PATH="$lib" "$app" "$@"
