@@ -34,8 +34,6 @@ class Client: public MapObject {
         QDateTime timeConnected;
 
         int adminRating, rating;
-    protected:
-        QString field(const QStringList& list, int index) const;
 };
 
 #endif /*CLIENT_H_*/

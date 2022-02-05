@@ -26,13 +26,6 @@ Client::Client(const QJsonObject& json, const WhazzupData* whazzup) {
     }
 }
 
-QString Client::field(const QStringList& list, int index) const {
-    if(index < 0 || index >= list.size())
-        return QString();
-
-    return list[index];
-}
-
 QString Client::onlineTime() const {
     if (!timeConnected.isValid())
         return QString("not connected");
