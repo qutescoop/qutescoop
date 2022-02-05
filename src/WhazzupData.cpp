@@ -398,10 +398,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
             data.pilots[s]->routeWaypointsPlanRouteCache = pilots[s]->routeWaypointsPlanRouteCache;
             data.pilots[s]->checkStatus();
 
-            if ((pilots[s]->lat != 0 || pilots[s]->lon != 0) &&
-                (pilots[s]->lat != data.pilots[s]->lat ||
-                 pilots[s]->lon != data.pilots[s]->lon))
-                *pilots[s] = *data.pilots[s];
+            *pilots[s] = *data.pilots[s];
         }
     }
 
