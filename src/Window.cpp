@@ -207,10 +207,36 @@ void Window::toggleFullscreen() {
 }
 
 void Window::about() {
-    QFile file(qApp->applicationDirPath() + "/README.html");
-    if (file.open(QIODevice::ReadOnly))
-        QMessageBox::about(this, tr("About QuteScoop"), file.readAll());
-    file.close();
+    QMessageBox::about(
+        this,
+        tr("About QuteScoop"),
+        tr(
+R"html(
+<h3>QuteScoop</h3>
+
+<p>
+    QuteScoop is free software.
+    Find downloads, get help and join the discussion here:
+    <a href="https://github.com/qutescoop/qutescoop">QuteScoop on Github</a>.
+</p>
+
+<h3>License</h3>
+<p>
+    QuteScoop is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+</p>
+
+<p>
+    QuteScoop is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+</p>
+)html"
+        )
+    );
 }
 
 void Window::processWhazzup(bool isNew) {

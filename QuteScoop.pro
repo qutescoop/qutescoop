@@ -1,7 +1,3 @@
-# #####################################################################
-# This file is part of QuteScoop. See README for license
-# #####################################################################
-
 # versiony things
 GIT_HASH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --short HEAD)\\\""
 DEFINES += GIT_HASH=$$GIT_HASH
@@ -85,7 +81,7 @@ CONFIG(release,release|debug) {
 
     # QuteScoop additional files
     rootFiles.path = $$DESTDIR
-    rootFiles.files += ./README.html \
+    rootFiles.files += ./README.md \
         ./COPYING
 
     unix:rootFiles.files += ./QuteScoop.sh \
@@ -289,7 +285,7 @@ SOURCES += src/WhazzupData.cpp \
     src/JobList.cpp \
     src/Platform.cpp
 RESOURCES += src/Resources.qrc
-OTHER_FILES += README.html \
+OTHER_FILES += README.md \
     data/_notes.txt \
     data/dataversions.txt \
     data/station.dat \
