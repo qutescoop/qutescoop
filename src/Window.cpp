@@ -23,6 +23,7 @@
 #include "GuiMessage.h"
 #include "SectorView.h"
 #include "Platform.h"
+#include "MetarDelegate.h"
 
 // singleton instance
 Window *windowInstance = 0;
@@ -104,7 +105,12 @@ Window::Window(QWidget *parent) :
     _sortmodelMetar = new QSortFilterProxyModel;
     _sortmodelMetar->setDynamicSortFilter(true);
     _sortmodelMetar->setSourceModel(&_metarModel);
+
     metarList->setModel(_sortmodelMetar);
+    MetarDelegate *metarDelegate = new MetarDelegate();
+    metarDelegate->setParent(metarList);
+    metarList->setItemDelegate(metarDelegate);
+    //metarList->setWordWrap(true); // some say this causes sizeHint() to be called on resize, but it does not
 
     connect(metarList, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(metarClicked(const QModelIndex&)));

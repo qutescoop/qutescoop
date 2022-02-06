@@ -199,6 +199,7 @@ HEADERS += src/_pch.h \
     src/Net.h \
     src/SondeData.h \
     src/JobList.h \
+    src/MetarDelegate.h \
     src/Platform.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
@@ -254,6 +255,7 @@ SOURCES += src/WhazzupData.cpp \
     src/Net.cpp \
     src/SondeData.cpp \
     src/JobList.cpp \
+    src/MetarDelegate.cpp \
     src/Platform.cpp
 RESOURCES += src/Resources.qrc
 
