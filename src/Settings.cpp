@@ -17,7 +17,7 @@ QSettings* Settings::instance() {
 }
 
 /**
- * outputs path to .ini or Windows registry path (\HKEY_CURRENT_USER\Software\QuteScoop\QuteScoop)
+ * path to .ini or Windows registry path (\HKEY_CURRENT_USER\Software\QuteScoop\QuteScoop)
  */
 QString Settings::fileName()
 {
@@ -26,15 +26,18 @@ QString Settings::fileName()
 
 void Settings::exportToFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
-    for (int i = 0; i < instance()->allKeys().length(); i++)
-        settings_file->setValue(instance()->allKeys()[i], instance()->value(instance()->allKeys()[i]));
+    QStringList settings_keys = instance()->allKeys();
+    foreach (const QString &key, instance()->allKeys()) {
+        settings_file->setValue(key, instance()->value(key));
+    }
     delete settings_file;
 }
 
 void Settings::importFromFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
-    for (int i = 0; i < settings_file->allKeys().length(); i++)
-        instance()->setValue(settings_file->allKeys()[i], settings_file->value(settings_file->allKeys()[i]));
+    foreach (const QString &key, settings_file->allKeys()) {
+        instance()->setValue(key, settings_file->value(key));
+    }
     delete settings_file;
 }
 
