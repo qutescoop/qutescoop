@@ -553,8 +553,8 @@ Whazzups (replay)</string>
        <property name="rootIsDecorated">
         <bool>false</bool>
        </property>
-       <property name="sortingEnabled">
-        <bool>false</bool>
+       <property name="uniformRowHeights">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -621,8 +621,8 @@ Whazzups (replay)</string>
        <property name="rootIsDecorated">
         <bool>false</bool>
        </property>
-       <property name="sortingEnabled">
-        <bool>false</bool>
+       <property name="uniformRowHeights">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -697,9 +697,6 @@ Whazzups (replay)</string>
        </property>
        <property name="uniformRowHeights">
         <bool>true</bool>
-       </property>
-       <property name="itemsExpandable">
-        <bool>false</bool>
        </property>
       </widget>
      </item>

@@ -50,7 +50,7 @@ Window::Window(QWidget *parent) :
         setStyleSheet(Settings::stylesheet());
     }
 
-    //The map
+    // map (GLWidget)
     mapScreen = new MapScreen(this);
     centralwidget->layout()->addWidget(mapScreen);
 
@@ -69,6 +69,7 @@ Window::Window(QWidget *parent) :
     statusbar->addPermanentWidget(tbZoomIn, 0);
     statusbar->addPermanentWidget(tbZoomOut, 0);
 
+    // actions
     connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
     connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
     connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
@@ -76,6 +77,15 @@ Window::Window(QWidget *parent) :
     connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
     connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
     connect(actionSectorview, SIGNAL(triggered()), this, SLOT(openSectorView()));
+    actionDisplayAllSectors->setChecked(Settings::showAllSectors());
+    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), this, SLOT(allSectorsChanged(bool)));
+    actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
+    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)),
+            mapScreen->glWidget, SLOT(showInactiveAirports(bool)));
+    pb_highlightFriends->setChecked(Settings::highlightFriends());
+    actionHighlight_Friends->setChecked(Settings::highlightFriends());
+    setEnableBookedAtc(Settings::downloadBookings());
+    actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
     Whazzup *whazzup = Whazzup::instance();
     connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(downloadJson3()));
@@ -84,11 +94,13 @@ Window::Window(QWidget *parent) :
     connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
     connect(whazzup, SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
 
+    // search result widget
     searchResult->setModel(&_modelSearchResult);
     connect(searchResult, SIGNAL(clicked(const QModelIndex&)),
             &_modelSearchResult, SLOT(modelClicked(const QModelIndex&)));
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
+    // METAR widget
     _sortmodelMetar = new QSortFilterProxyModel;
     _sortmodelMetar->setDynamicSortFilter(true);
     _sortmodelMetar->setSourceModel(&_metarModel);
@@ -100,6 +112,7 @@ Window::Window(QWidget *parent) :
             metarList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
+    // friends widget
     _sortmodelFriends = new QSortFilterProxyModel;
     _sortmodelFriends->setDynamicSortFilter(true);
     _sortmodelFriends->setSourceModel(&_modelFriends);
@@ -109,22 +122,20 @@ Window::Window(QWidget *parent) :
             this, SLOT(friendClicked(const QModelIndex&)));
     connect(friendsList->header(), SIGNAL(sectionClicked(int)),
             friendsList, SLOT(sortByColumn(int)));
-    metarList->sortByColumn(0, Qt::AscendingOrder);
+    friendsList->sortByColumn(0, Qt::AscendingOrder);
 
+    // debounce input timers
     connect(&_timerSearch, SIGNAL(timeout()), this, SLOT(performSearch()));
     connect(&_timerMetar, SIGNAL(timeout()), this, SLOT(updateMetars()));
+
+    // Whazzup download timer
     connect(&_timerWhazzup, SIGNAL(timeout()),
             this, SLOT(downloadWatchdogTriggered()));
 
-    actionDisplayAllSectors->setChecked(Settings::showAllSectors());
-    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), this, SLOT(allSectorsChanged(bool)));
-            //mapScreen->glWidget, SLOT(displayAllSectors(bool)));
+    // Cloud download timer
+    connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(downloadCloud()));
 
-
-    actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
-    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)),
-            mapScreen->glWidget, SLOT(showInactiveAirports(bool)));
-
+    // dock layout
     connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
     connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
@@ -132,12 +143,8 @@ Window::Window(QWidget *parent) :
     connect(metarDecoderDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(metarDecoderDockMoved(Qt::DockWidgetArea)));
     metarDecoderDock->hide();
-
     connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
-
-    pb_highlightFriends->setChecked(Settings::highlightFriends());
-    actionHighlight_Friends->setChecked(Settings::highlightFriends());
 
     // Forecast / Predict settings
     framePredict->hide();
@@ -159,12 +166,7 @@ Window::Window(QWidget *parent) :
     font.setPointSize(cbOnlyUseDownloaded->fontInfo().pointSize() - 1);
     cbOnlyUseDownloaded->setFont(font); //make it a bit smaller than standard text
 
-    setEnableBookedAtc(Settings::downloadBookings());
-    actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
-
-    connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(downloadCloud()));
-
-    qDebug() << "Window::() connecting me as GuiMessages listener";
+    // GuiMessages
     GuiMessages::instance()->addProgressBar(_progressBar, true);
     GuiMessages::instance()->addStatusLabel(_lblStatus, false);
 
