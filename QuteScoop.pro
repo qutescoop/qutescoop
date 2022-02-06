@@ -15,8 +15,6 @@ QMAKE_CXXFLAGS += "-fno-sized-deallocation"
 TEMPLATE = app
 CONFIG *= qt
 
-# CONFIG *= debug
-# CONFIG *= release
 CONFIG *= warn_on
 TARGET = QuteScoop
 
@@ -25,36 +23,17 @@ win32: {
     else:PLATFORM = "win32"
 }
 macx: {
-    # QMAKE_TARGET.arch is only available on Windows?!
-    QMAKE_TARGET.arch = $$QMAKE_HOST.arch
-    contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "macx64"
-    else:PLATFORM = "macx32"
+    PLATFORM = "macx64"
 }
+# linux
 !macx:unix: {
-    # QMAKE_TARGET.arch is only available on Windows?!
-    linux-g++:QMAKE_TARGET.arch = $$QMAKE_HOST.arch
-    # allow for 32bit cross-compiling on 64bit with g++ (_HOST and _TARGET different)
-    linux-g++-32:QMAKE_TARGET.arch = x86
-    linux-g++-64:QMAKE_TARGET.arch = x86_64
-
-    contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "unix64"
-    else:PLATFORM = "unix32"
+    PLATFORM = "unix64"
 }
 
-# Qt libraries
-# finding Qt's paths:
-#message(Qt version: $$[QT_VERSION])
-#message(Qt is installed in $$[QT_INSTALL_PREFIX])
-#message(Documentation: $$[QT_INSTALL_DOCS])
-#message(Header files: $$[QT_INSTALL_HEADERS])
-message(Qt Libraries: $$[QT_INSTALL_LIBS])
-message(Qt Binary files (executables): $$[QT_INSTALL_BINS])
-message(Qt Plugins: $$[QT_INSTALL_PLUGINS])
-#message(Data files: $$[QT_INSTALL_DATA])
-#message(Translation files: $$[QT_INSTALL_TRANSLATIONS])
-#message(Settings: $$[QT_INSTALL_SETTINGS])
-#message(Examples: $$[QT_INSTALL_EXAMPLES])
-#message(Demonstrations: $$[QT_INSTALL_DEMOS])
+# Qt paths
+message(Qt lib: $$[QT_INSTALL_LIBS])
+message(Qt bin: $$[QT_INSTALL_BINS])
+message(Qt plugins: $$[QT_INSTALL_PLUGINS])
 
 QT *= core gui network opengl xml
 # in debug mode, we output to current directory
@@ -62,13 +41,6 @@ CONFIG(debug,release|debug) {
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
     DESTDIR = ./
-    
-    # If precompiled headers are not possible, qmake should deactivate it.
-    # If compiling/linking problems arise, this should be deactivated.
-    # uncomment to activate:
-    #CONFIG += precompile_header
-    PRECOMPILED_HEADER = src/_pch.h
-    precompile_header:!isEmpty(PRECOMPILED_HEADER):!build_pass:message("Using precompiled headers.")
 }
 
 # in release mode, we include a 'make install' target and output to ./DIST-$PLATFORM
@@ -79,7 +51,6 @@ CONFIG(release,release|debug) {
     
     # Add a "make install" target for deploying Qt/compiler/QuteScoop files.
 
-    # QuteScoop additional files
     rootFiles.path = $$DESTDIR
     rootFiles.files += ./README.md \
         ./COPYING
@@ -129,8 +100,7 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/10800px-lights.png
     cloudsFiles.path = $$DESTDIR/textures/clouds
     cloudsFiles.files += ./textures/clouds/_notes.txt
-    !build_pass:message("QuteScoop files added to 'install': $${rootFiles.files} $${dataFiles.files} $${downloadedFiles.files} $${texturesFiles.files} $${screenShotFiles.files}.")
-    !build_pass:message("Run 'make install' to copy them to the correct locations")
+    !build_pass:message("Run 'make install' to copy non-code files")
     
     # Adds an "install" target for make, executed by "make install"
     # (Can be added to QtCreator project also as build step)
@@ -283,39 +253,16 @@ SOURCES += src/WhazzupData.cpp \
     src/Net.cpp \
     src/SondeData.cpp \
     src/JobList.cpp \
+    src/MetarDelegate.cpp \
     src/Platform.cpp
 RESOURCES += src/Resources.qrc
-OTHER_FILES += README.md \
-    data/_notes.txt \
-    data/dataversions.txt \
-    data/station.dat \
-    data/firlist.dat \
-    data/firdisplay.dat \
-    data/firdisplay.sup \
-    data/countrycodes.dat \
-    data/countries.dat \
-    data/coastline.dat \
-    data/cloudmirrors.dat \
-    data/airports.dat \
-    data/airlines.dat \
-    QuteScoop-upload.pri \
-    downloaded/_notes.txt \
-    screenshots/_notes.txt \
-    textures/_notes.txt \
-    textures/clouds/_notes.txt
-macx:OTHER_FILES += \
-    macbundle.sh
-unix:OTHER_FILES += \
-    QuteScoop.sh \
-    QuteScoop.desktop \
-    picsToMovie.sh
 
 # Report DESTDIR to user
 !build_pass:message("Compiled $$TARGET will be put to $$DESTDIR")
 
 # temp files
-MOC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-UI_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-OBJECTS_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
-RCC_DIR = ./temp/$${PLATFORM}-$${DEBUGRELEASE}
+MOC_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
+UI_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
+OBJECTS_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
+RCC_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
 
