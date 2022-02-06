@@ -244,9 +244,10 @@ void Launcher::dataVersionsDownloaded() {
 
     if (!_dataFilesToDownload.isEmpty()) {
         GuiMessages::infoUserAttention(
-                "New sector-/ airport- or geography-files are available.\
-                They will be downloaded now.",
-                "New datafiles");
+            "New sector data is available.\n"
+            "It will be downloaded now.",
+            "New datafiles"
+        );
         QUrl url(Settings::remoteDataRepository()
              .arg(_dataFilesToDownload.first()));
         qDebug() << "dataVersionsDownloaded() Downloading datafile" << url.toString();
