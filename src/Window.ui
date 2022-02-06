@@ -618,9 +618,6 @@ Whazzups (replay)</string>
      </item>
      <item>
       <widget class="QTreeView" name="metarList">
-       <property name="textElideMode">
-        <enum>Qt::ElideNone</enum>
-       </property>
        <property name="rootIsDecorated">
         <bool>false</bool>
        </property>
