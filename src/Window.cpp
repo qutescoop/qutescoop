@@ -114,8 +114,6 @@ Window::Window(QWidget *parent) :
 
     connect(metarList, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(metarClicked(const QModelIndex&)));
-    connect(metarList->header(), SIGNAL(sectionClicked(int)),
-            metarList, SLOT(sortByColumn(int)));
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
     // friends widget
