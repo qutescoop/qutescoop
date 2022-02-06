@@ -22,7 +22,7 @@ class SearchResultModel: public QAbstractListModel {
         virtual QVariant headerData(int section, Qt::Orientation orientation,
                                     int role = Qt::DisplayRole) const;
     public slots:
-        void setData(const QList<MapObject*>& searchResult) { beginResetModel(); _content = searchResult; endResetModel(); }
+        void setSearchResults(const QList<MapObject*>& searchResult) { beginResetModel(); _content = searchResult; endResetModel(); }
         void modelClicked(const QModelIndex& index);
 
     private:

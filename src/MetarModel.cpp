@@ -70,7 +70,7 @@ QVariant MetarModel::headerData(int section, Qt::Orientation orientation, int ro
     return ret;
 }
 
-void MetarModel::setData(const QList<Airport*>& airports)  {
+void MetarModel::setAirports(const QList<Airport*>& airports)  {
     _airportList = airports;
     _metarList = airports;
 

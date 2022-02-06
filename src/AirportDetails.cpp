@@ -205,7 +205,7 @@ void AirportDetails::on_pbMetar_clicked() {
     QList<Airport*> airports;
     if (_airport != 0) {
         airports += _airport;
-        _metarModel->setData(airports);
+        _metarModel->setAirports(airports);
         if(_metarModel->rowCount() == 1) // means that the METAR is readily downloaded
             _metarModel->modelClicked(_metarModel->index(0));
         else

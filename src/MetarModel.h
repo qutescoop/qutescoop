@@ -27,7 +27,7 @@ class MetarModel: public QAbstractListModel {
         void gotMetar(QString icao);
 
     public slots:
-        void setData(const QList<Airport*>& airports);
+        void setAirports(const QList<Airport*>& airports);
         void modelClicked(const QModelIndex& index);
         void refresh();
 

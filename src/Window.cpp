@@ -333,7 +333,7 @@ void Window::refreshFriends() {
     // update friends list
     FriendsVisitor *visitor = new FriendsVisitor();
     Whazzup::instance()->whazzupData().accept(visitor);
-    _modelFriends.setData(visitor->result());
+    _modelFriends.setSearchResults(visitor->result());
     delete visitor;
     friendsList->reset();
 }
@@ -384,7 +384,7 @@ void Window::openListClients() {
 void Window::on_searchEdit_textChanged(const QString& text) {
     if(text.length() < 2) {
         _timerSearch.stop();
-        _modelSearchResult.setData(QList<MapObject*>());
+        _modelSearchResult.setSearchResults(QList<MapObject*>());
         searchResult->reset();
         return;
     }
@@ -401,7 +401,7 @@ void Window::performSearch() {
     NavData::instance()->accept(visitor);
     Whazzup::instance()->whazzupData().accept(visitor);
 
-    _modelSearchResult.setData(visitor->result());
+    _modelSearchResult.setSearchResults(visitor->result());
     delete visitor;
 
     searchResult->reset();
@@ -444,7 +444,7 @@ void Window::on_actionHideAllWindows_triggered() {
 void Window::on_metarEdit_textChanged(const QString& text) {
     if(text.length() < 2) {
         _timerMetar.stop();
-        _metarModel.setData(QList<Airport*>());
+        _metarModel.setAirports(QList<Airport*>());
         metarList->reset();
         return;
     }
@@ -463,7 +463,7 @@ void Window::updateMetars() {
     MetarSearchVisitor *visitor = new MetarSearchVisitor(metarEdit->text());
     NavData::instance()->accept(visitor); // search airports only
 
-    _metarModel.setData(visitor->airports());
+    _metarModel.setAirports(visitor->airports());
     delete visitor;
 
     metarList->reset();
