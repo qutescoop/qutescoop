@@ -390,7 +390,7 @@ void Window::openListClients() {
 }
 
 void Window::on_searchEdit_textChanged(const QString& text) {
-    if(text.length() < 2) {
+    if(text.length() < 1) {
         _timerSearch.stop();
         _modelSearchResult.setSearchResults(QList<MapObject*>());
         searchResult->reset();
@@ -401,7 +401,7 @@ void Window::on_searchEdit_textChanged(const QString& text) {
 }
 
 void Window::performSearch() {
-    if(searchEdit->text().length() < 2)
+    if(searchEdit->text().length() < 1)
         return;
 
     _timerSearch.stop();
@@ -450,7 +450,7 @@ void Window::on_actionHideAllWindows_triggered() {
 }
 
 void Window::on_metarEdit_textChanged(const QString& text) {
-    if(text.length() < 2) {
+    if(text.length() < 1) {
         _timerMetar.stop();
         _metarModel.setAirports(QList<Airport*>());
         metarList->reset();
@@ -464,7 +464,7 @@ void Window::on_btnRefreshMetar_clicked() {
 }
 
 void Window::updateMetars() {
-    if(metarEdit->text().length() < 2)
+    if(metarEdit->text().length() < 1)
         return;
 
     _timerMetar.stop();
