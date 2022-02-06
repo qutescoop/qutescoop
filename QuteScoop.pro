@@ -127,6 +127,7 @@ win32 {
 # OSX also considered as unix, therefore condition added to check
 # if the platform is a "real" Unix
 !macx:unix {
+    ICON = src/images/qs-logo.png
     LIBS += -lGLU
 }
 
