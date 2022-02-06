@@ -6,7 +6,7 @@ GIT_BRANCH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --abbrev-ref HE
 DEFINES += GIT_BRANCH=$$GIT_BRANCH
 
 ## this produces v2.3.0 / v2.3.0-6-g29966c2 / v2.3.0-6-g29966c2-dirty
-GIT_DESCRIBE="\\\"$$system(git describe --tags --dirty)\\\""
+GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --dirty)\\\""
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
 
 # maybe fixes version incompatibilities, gets ignored by clang
@@ -198,6 +198,7 @@ HEADERS += src/_pch.h \
     src/Net.h \
     src/SondeData.h \
     src/JobList.h \
+    src/MetarDelegate.h \
     src/Platform.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
@@ -261,8 +262,8 @@ RESOURCES += src/Resources.qrc
 !build_pass:message("Compiled $$TARGET will be put to $$DESTDIR")
 
 # temp files
-MOC_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
-UI_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
-OBJECTS_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
-RCC_DIR = ./tmp/$${PLATFORM}-$${DEBUGRELEASE}
+MOC_DIR = ./.cache/$${PLATFORM}-$${DEBUGRELEASE}
+UI_DIR = ./.cache/$${PLATFORM}-$${DEBUGRELEASE}
+OBJECTS_DIR = ./.cache/$${PLATFORM}-$${DEBUGRELEASE}
+RCC_DIR = ./.cache/$${PLATFORM}-$${DEBUGRELEASE}
 

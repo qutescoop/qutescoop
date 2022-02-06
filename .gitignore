@@ -3,9 +3,11 @@
 /*.pro.user
 
 # build
-/temp
+/.cache
 /.qmake*
 /Makefile
+# (legacy)
+/temp
 
 # runtime (when built in-tree)
 /log.txt
