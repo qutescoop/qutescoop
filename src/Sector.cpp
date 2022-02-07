@@ -77,6 +77,10 @@ QPair<double, double> Sector::getCenter() const {
     runningTotal.second = 0;
     const int count = points.size();
     QList<QPair<double, double>> pointsNorm;
+    if(count == 0) {
+        qDebug() << "Sector::getCenter() Sector " << name << "(" << icao << ") doesn't contain any points";
+        return runningTotal;
+    }
     pointsNorm.append(points[0]);
     for(int i = 1; i < count; ++i) {
         QPair<double, double> pointNorm = points[i];
