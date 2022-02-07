@@ -35,12 +35,6 @@ jobs:
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           ${{ env.Qt5_DIR }}\bin\qmake.exe -config release QuteScoop.pro
         shell: cmd
-      - name: Upload Makefile
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: "Debug: Win-${{ steps.version.outputs.describe }}-Makefile"
-          path: ./Makefile*
       - name: nmake install
         run: |
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
@@ -52,6 +46,12 @@ jobs:
           call "%programfiles(x86)%\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
           ${{ env.Qt5_DIR }}/bin/windeployqt.exe .
         shell: cmd
+      - name: Upload Makefile
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: "Debug: Win-${{ steps.version.outputs.describe }}-Makefile"
+          path: ./Makefile*
       - name: Upload
         uses: actions/upload-artifact@v2
         with:

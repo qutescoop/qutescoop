@@ -27,16 +27,16 @@ jobs:
           version: '5.15.2'
           cached: ${{ steps.cache-qt.outputs.cache-hit }}
       - run: qmake -config release QuteScoop.pro
+      - run: make 
+      - run: make install
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
       - name: Upload Makefile
         if: failure()
         uses: actions/upload-artifact@v2
         with:
           name: "Debug: Mac-${{ steps.version.outputs.describe }}-Makefile"
           path: ./Makefile*
-      - run: make 
-      - run: make install
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v3
       - name: Upload
         uses: actions/upload-artifact@v2
         with:

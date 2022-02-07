@@ -33,12 +33,6 @@ jobs:
       - name: ldd (glibc) --version
         run: ldd --version
       - run: qmake -config release QuteScoop.pro
-      - name: Upload Makefile
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: "Debug: Linux-${{ steps.version.outputs.describe }}-Makefile"
-          path: ./Makefile*
       - run: make -j$(nproc)
       - run: make install
       - run: chmod +x ./DIST-unix64/QuteScoop ./DIST-unix64/QuteScoop.sh
@@ -54,6 +48,12 @@ jobs:
       # https://github.com/actions/upload-artifact#maintaining-file-permissions-and-case-sensitive-files
       - name: 'Tar files'
         run: tar --directory=./DIST-unix64 -cvf QuteScoop-Linux-${{ steps.version.outputs.describe }}.tar ./
+      - name: Upload Makefile
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: "Debug: Linux-${{ steps.version.outputs.describe }}-Makefile"
+          path: ./Makefile*
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
