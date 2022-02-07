@@ -390,14 +390,14 @@ ATC</string>
  </widget>
  <tabstops>
   <tabstop>treeArrivals</tabstop>
-  <tabstop>buttonShowOnMap</tabstop>
+  <tabstop>btnShowOnMap</tabstop>
  </tabstops>
  <resources>
   <include location="Resources.qrc"/>
  </resources>
  <connections>
   <connection>
-   <sender>buttonShowOnMap</sender>
+   <sender>btnShowOnMap</sender>
    <signal>clicked()</signal>
    <receiver>AirportDetails</receiver>
    <slot>close()</slot>

@@ -28,7 +28,7 @@ void ClientDetails::setMapObject(MapObject *object) {
 
 void ClientDetails::showOnMap() const {
     if ((!qFuzzyIsNull(_lat) || !qFuzzyIsNull(_lon)) && Window::instance(false) != 0)
-        Window::instance()->mapScreen->glWidget->setMapPosition(_lat, _lon, .3);
+        Window::instance()->mapScreen->glWidget->setMapPosition(_lat, _lon, .06);
 }
 
 void ClientDetails::friendClicked() const {

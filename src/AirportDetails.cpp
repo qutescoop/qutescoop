@@ -30,9 +30,9 @@ AirportDetails::AirportDetails(QWidget *parent):
         _airport(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-//    setWindowFlags(Qt::Tool);
+    //    setWindowFlags(Qt::Tool);
 
-    connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
+    connect(btnShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
 
     // ATC list
     _atcSortModel = new QSortFilterProxyModel;
