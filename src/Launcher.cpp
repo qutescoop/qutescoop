@@ -19,8 +19,6 @@ Launcher* Launcher::instance(bool createIfNoInstance) {
 Launcher::Launcher(QWidget *parent) :
         QWidget(parent,
                 Qt::FramelessWindowHint | Qt::WindowSystemMenuHint) {
-    setWindowOpacity(.0); // we want to fade it in
-
     _map = QPixmap(":/startup/logo").scaled(600, 600);
     resize(_map.width(), _map.height());
     move(qApp->screens().first()->availableGeometry().center()

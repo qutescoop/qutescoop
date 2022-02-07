@@ -180,8 +180,6 @@ Window::~Window() {
 
 void Window::restore() {
     qDebug() << "Window::restore() restoring window state, geometry and position";
-    // set window to transparent so we can fade it in...
-    //setWindowOpacity(.01);
 
     if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
     if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
