@@ -42,6 +42,16 @@ QVariant MetarModel::data(const QModelIndex &index, int role) const {
         }
     }
 
+    if(role == Qt::ToolTipRole) {
+        if(_airportList.size() > MAX_METARS)
+            return QString("Too many airports match your search (%1)").arg(_airportList.size());
+
+        Airport* a = _metarList[index.row()];
+        switch(index.column()) {
+        case 0: return a->metar.decodedHtml(); break;
+        }
+    }
+
     return QVariant();
 }
 
