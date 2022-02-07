@@ -23,7 +23,6 @@ class Window : public QMainWindow, public Ui::Window {
         MapScreen *mapScreen;
         //GLWidget *glWidget;
     public slots:
-        void updateMetarDecoder(const QString& airport, const QString& decodedText);
         void refreshFriends();
         void on_actionShowRoutes_triggered(bool checked);
         void downloadCloud();
@@ -85,7 +84,6 @@ class Window : public QMainWindow, public Ui::Window {
         void metarClicked(const QModelIndex& index);
         void metarDockMoved(Qt::DockWidgetArea area);
         void searchDockMoved(Qt::DockWidgetArea area);
-        void metarDecoderDockMoved(Qt::DockWidgetArea area);
         void friendsDockMoved(Qt::DockWidgetArea area);
         void friendClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();

@@ -144,9 +144,6 @@ Window::Window(QWidget *parent) :
             this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
     connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
-    connect(metarDecoderDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
-            this, SLOT(metarDecoderDockMoved(Qt::DockWidgetArea)));
-    metarDecoderDock->hide();
     connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
             this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
 
@@ -439,8 +436,6 @@ void Window::on_actionHideAllWindows_triggered() {
         searchDock->hide();
     if(metarDock->isFloating())
         metarDock->hide();
-    if(metarDecoderDock->isFloating())
-        metarDecoderDock->hide();
     if(friendsDock->isFloating())
         friendsDock->hide();
 
@@ -491,10 +486,6 @@ void Window::searchDockMoved(Qt::DockWidgetArea area) {
     updateTitlebarAfterMove(area, searchDock);
 }
 
-void Window::metarDecoderDockMoved(Qt::DockWidgetArea area) {
-    updateTitlebarAfterMove(area, metarDecoderDock);
-}
-
 void Window::friendsDockMoved(Qt::DockWidgetArea area) {
     updateTitlebarAfterMove(area, friendsDock);
 }
@@ -513,17 +504,6 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock)
         break;
     default: {}
     }
-}
-
-void Window::updateMetarDecoder(const QString& airport, const QString& decodedText) {
-    qDebug() << "Window::updateMetarDecoder()";
-    metarDecoderDock->setWindowTitle("METAR for " + airport);
-    metarText->setText(decodedText);
-    metarDecoderDock->show();
-    metarDecoderDock->raise();
-    metarDecoderDock->activateWindow(); // ?? it gets on top only after the second click from AirportDialog...
-    metarDecoderDock->setFocus(); // Don't understand how I can bring this nasty on top of all other. A simple click on the titlebar and it is done.
-    qDebug() << "Window::updateMetarDecoder() -- finished";
 }
 
 void Window::downloadWatchdogTriggered() {
