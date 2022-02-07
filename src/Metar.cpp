@@ -32,17 +32,13 @@ bool Metar::needsRefresh() const {
     return isNull() || downloaded.secsTo(QDateTime::currentDateTime()) > Settings::metarDownloadInterval() * 60;
 }
 
-/***********************************************************
- * WARNING - CODE BELOW WILL MAKE YOUR EYES BLEED
- **********************************************************/
-
 QString Metar::decodeDate(QStringList& tokens) const {
     QString date = tokens.first();
     tokens.removeFirst();
     QString result;
 
     // 012020Z
-    int day = date.left(2).toInt();
+    int day = date.leftRef(2).toInt();
     if(day == 1) result += "1st";
     else if(day == 2) result += "2nd";
     else result += QString("%1th").arg(day);
@@ -230,7 +226,7 @@ QString Metar::decodeClouds(QStringList& tokens) const {
     SIG("OVC", "Overcast");
 
     if(sig.contains(QRegExp("^[0-9]{3}"))) {
-        int feet = sig.left(3).toInt();
+        int feet = sig.leftRef(3).toInt();
         result += QString("%1").arg(feet) + "00ft";
         sig.remove(0, 3);
     }
@@ -252,7 +248,7 @@ QString Metar::decodeTemp(QStringList& tokens) const {
 
     SIG("M", "Minus");
 
-    int i = sig.left(2).toInt();
+    int i = sig.leftRef(2).toInt();
     result += QString("%1").arg(i);
     sig.remove(0, 3);
     result += ", Dew Point ";

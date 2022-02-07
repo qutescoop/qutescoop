@@ -10,7 +10,6 @@
 #include "PilotDetails.h"
 #include "Settings.h"
 
-// singleton instance
 AirportDetails *airportDetails = 0;
 AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(airportDetails == 0)
@@ -21,7 +20,6 @@ AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *paren
     return airportDetails;
 }
 
-// destroys a singleton instance
 void AirportDetails::destroyInstance() {
     delete airportDetails;
     airportDetails = 0;
@@ -46,8 +44,8 @@ AirportDetails::AirportDetails(QWidget *parent):
 
     connect(treeAtc->header(), SIGNAL(sectionClicked(int)),
             treeAtc, SLOT(sortByColumn(int)));
-    connect(treeAtc, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(atcSelected(const QModelIndex&)));
+    connect(treeAtc, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(atcSelected(QModelIndex)));
 
     // arrivals
     _arrivalsSortModel = new QSortFilterProxyModel;
@@ -59,8 +57,8 @@ AirportDetails::AirportDetails(QWidget *parent):
 
     connect(treeArrivals->header(), SIGNAL(sectionClicked(int)),
             treeArrivals, SLOT(sortByColumn(int)));
-    connect(treeArrivals, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(arrivalSelected(const QModelIndex&)));
+    connect(treeArrivals, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(arrivalSelected(QModelIndex)));
 
     // departures
     _departuresSortModel = new QSortFilterProxyModel;
@@ -72,8 +70,8 @@ AirportDetails::AirportDetails(QWidget *parent):
 
     connect(treeDepartures->header(), SIGNAL(sectionClicked(int)),
             treeDepartures, SLOT(sortByColumn(int)));
-    connect(treeDepartures, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(departureSelected(const QModelIndex&)));
+    connect(treeDepartures, SIGNAL(clicked(QModelIndex)),
+            this, SLOT(departureSelected(QModelIndex)));
 
     _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
@@ -99,10 +97,10 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     setWindowTitle(_airport->toolTip());
 
-    lblName->setText(QString("%1\n%2").arg(_airport->city).arg(_airport->name));
+    // info panel
+    lblName->setText(QString("%1\n%2").arg(_airport->city, _airport->name));
     lblCountry->setText(QString("%1 (%2)")
-                        .arg(_airport->countryCode)
-                        .arg(NavData::instance()->countryCodes[_airport->countryCode]));
+                        .arg(_airport->countryCode, NavData::instance()->countryCodes[_airport->countryCode]));
     lblLocation->setText(QString("%1%2 %3%4").
                          arg(_airport->lat > 0? "N": "S").
                          arg(qAbs(_airport->lat), 6, 'f', 3, '0').
@@ -113,8 +111,7 @@ void AirportDetails::refresh(Airport* newAirport) {
     QString lt = Whazzup::instance()->whazzupData().whazzupTime.
                  addSecs(utcDev * 3600).time().toString("HH:mm");
     lblTime->setText(QString("%1 loc, UTC %2%3")
-                        .arg(lt)
-                        .arg(utcDev < 0 ? "": "+") // just a plus sign
+                        .arg(lt, utcDev < 0 ? "": "+") // just a plus sign
                         .arg(utcDev));
 
     // arrivals
@@ -177,7 +174,6 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 }
 
 void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
-    qDebug() << "AirportDetails::on_cbPlotRoutes_toggled()" << checked;
     if(_airport->showFlightLines != checked) {
         _airport->showFlightLines = checked;
         if (Window::instance(false) != 0) {
@@ -187,16 +183,13 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();
     }
-    qDebug() << "AirportDetails::on_cbPlotRoutes_toggled() -- finished";
 }
 
-void AirportDetails::on_cbObservers_toggled(bool checked) {
-    Q_UNUSED(checked);
+void AirportDetails::on_cbObservers_toggled(bool) {
     refresh();
 }
 
-void AirportDetails::on_cbAtis_toggled(bool checked) {
-    Q_UNUSED(checked);
+void AirportDetails::on_cbAtis_toggled(bool) {
     refresh();
 }
 

@@ -8,8 +8,7 @@
 #include "Settings.h"
 
 
-Client::Client(const QJsonObject& json, const WhazzupData* whazzup) {
-    Q_UNUSED(whazzup);
+Client::Client(const QJsonObject& json, const WhazzupData*) {
     label = json["callsign"].toString();
     userId = QString::number(json["cid"].toInt());
     realName = json["name"].toString();
@@ -29,7 +28,7 @@ Client::Client(const QJsonObject& json, const WhazzupData* whazzup) {
 QString Client::onlineTime() const {
     if (!timeConnected.isValid())
         return QString("not connected");
-    return QDateTime::fromTime_t(               // this will get wrapped by 24h but that should not be a problem...
+    return QDateTime::fromTime_t( // this will get wrapped by 24h but that should not be a problem...
             Whazzup::instance()->whazzupData().whazzupTime.toTime_t()
             - timeConnected.toTime_t()
             ).toUTC().toString("HH:mm");
@@ -44,7 +43,7 @@ QString Client::displayName(bool withLink) const {
         QString link = Whazzup::instance()->userUrl(userId);
         if(link.isEmpty())
             return result;
-        result = QString("<a href='%1'>%2</a>").arg(link).arg(result);
+        result = QString("<a href='%1'>%2</a>").arg(link, result);
     }
 
     return result;
