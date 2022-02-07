@@ -581,7 +581,7 @@ Whazzups (replay)</string>
       <number>4</number>
      </property>
      <item>
-      <layout class="QHBoxLayout" name="_2">
+      <layout class="QHBoxLayout" name="metarHorizontalLayout" stretch="0,1,0">
        <property name="spacing">
         <number>4</number>
        </property>
@@ -589,7 +589,20 @@ Whazzups (replay)</string>
         <number>4</number>
        </property>
        <item>
+        <widget class="QLabel" name="label_2">
+         <property name="text">
+          <string>Search:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QLineEdit" name="metarEdit">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <horstretch>1</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="toolTip">
           <string>Wildcards (*, ?) and &quot;Regular Expressions&quot; allowed</string>
          </property>
@@ -600,14 +613,17 @@ Whazzups (replay)</string>
        </item>
        <item>
         <widget class="QPushButton" name="btnRefreshMetar">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="toolTip">
           <string>Refresh already downloaded METARs.</string>
          </property>
          <property name="text">
           <string>refresh</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
          </property>
          <property name="checked">
           <bool>false</bool>
@@ -638,25 +654,39 @@ Whazzups (replay)</string>
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_4">
-    <layout class="QVBoxLayout" name="_4">
-     <property name="margin" stdset="0">
-      <number>4</number>
-     </property>
+    <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QPushButton" name="pb_highlightFriends">
-       <property name="toolTip">
-        <string>draws a circle around friends on the map</string>
-       </property>
-       <property name="text">
-        <string>highlight</string>
-       </property>
-       <property name="checkable">
-        <bool>true</bool>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pb_highlightFriends">
+         <property name="toolTip">
+          <string>draws a circle around friends on the map</string>
+         </property>
+         <property name="text">
+          <string>highlight</string>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="QTreeView" name="friendsList">
@@ -1149,7 +1179,6 @@ Whazzups (replay)</string>
   <tabstop>btnRefreshMetar</tabstop>
   <tabstop>metarList</tabstop>
   <tabstop>metarText</tabstop>
-  <tabstop>friendsList</tabstop>
   <tabstop>cbUseDownloaded</tabstop>
   <tabstop>tbRunPredict</tabstop>
   <tabstop>tbDisablePredict</tabstop>
