@@ -257,7 +257,7 @@ void Settings::setShowAllWaypoints(bool value) {
 }
 
 int Settings::metarDownloadInterval() {
-    return instance()->value("display/metarInterval", 10).toInt();
+    return instance()->value("display/metarInterval", 1).toInt();
 }
 
 void Settings::setMetarDownloadInterval(int minutes) {

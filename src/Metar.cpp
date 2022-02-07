@@ -9,11 +9,11 @@
 
 #include <QRegExp>
 
-Metar::Metar(const QString& encStr) {
-    if(!encStr.isEmpty()) {
-        encoded = encStr;
-        downloaded = QDateTime::currentDateTime();
-    }
+Metar::Metar(const QString& encStr, const QString& airportLabel):
+    encoded(encStr),
+    airportLabel(airportLabel),
+    downloaded(QDateTime::currentDateTime())
+{
 }
 
 bool Metar::isNull() const {
@@ -29,7 +29,10 @@ bool Metar::doesNotExist() const {
 }
 
 bool Metar::needsRefresh() const {
-    return isNull() || downloaded.secsTo(QDateTime::currentDateTime()) > Settings::metarDownloadInterval() * 60;
+    const int ageSec = downloaded.secsTo(QDateTime::currentDateTime());
+    const bool ret = isNull() || ageSec > Settings::metarDownloadInterval() * 60;
+    qDebug() << "Metar::needsRefresh()" << airportLabel << QString("age: %1").arg(ageSec) << "=>" << ret;
+    return ret;
 }
 
 QString Metar::decodeDate(QStringList& tokens) const {

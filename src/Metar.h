@@ -10,14 +10,14 @@
 
 class Metar {
     public:
-        Metar(const QString& encodedString = QString());
+        Metar(const QString& encodedString = QString(), const QString& airportLabel = QString());
 
         bool isNull() const;
         bool isValid() const;
         bool doesNotExist() const;
         bool needsRefresh() const;
 
-        QString encoded;
+        QString encoded, airportLabel;
         QDateTime downloaded;
         QString decodedHtml() const;
 

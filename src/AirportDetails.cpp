@@ -113,6 +113,9 @@ void AirportDetails::refresh(Airport* newAirport) {
     lblTime->setText(QString("%1 loc, UTC %2%3")
                         .arg(lt, utcDev < 0 ? "": "+") // just a plus sign
                         .arg(utcDev));
+    // fetch METAR
+    connect(_metarModel, SIGNAL(gotMetar(QString, QString)), this, SLOT(onGotMetar(QString, QString)));
+    on_pbMetar_clicked();
 
     // arrivals
     _arrivalsModel.setClients(_airport->arrivals.values());
@@ -194,15 +197,20 @@ void AirportDetails::on_cbAtis_toggled(bool) {
 }
 
 void AirportDetails::on_pbMetar_clicked() {
-    disconnect(_metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
+    qDebug() << "AirportDetails::on_pbMetar_clicked";
+    lblMetar->setText("…");
     QList<Airport*> airports;
     if (_airport != 0) {
         airports += _airport;
         _metarModel->setAirports(airports);
-        if(_metarModel->rowCount() == 1) // means that the METAR is readily downloaded
-            _metarModel->modelClicked(_metarModel->index(0));
-        else
-            connect(_metarModel, SIGNAL(gotMetar(QString)), this, SLOT(on_pbMetar_clicked()));
+    }
+}
+
+void AirportDetails::onGotMetar(const QString &airportLabel, const QString &encoded)
+{
+    qDebug() << "AirportDetails::onGotMetar" << airportLabel << encoded;
+    if (_airport->label == airportLabel) {
+        lblMetar->setText(encoded);
     }
 }
 

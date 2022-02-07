@@ -68,11 +68,11 @@ QVariant MetarModel::headerData(int section, Qt::Orientation orientation, int ro
     QString ret;
 
     if (_metarList.isEmpty())
-        ret.append("No Metars");
+        ret.append("No METARs");
     else if (_metarList.size() == 1)
-        ret.append("1 Metar");
+        ret.append("1 METAR");
     else
-        ret.append(QString("%1 Metars").arg(_metarList.size()));
+        ret.append(QString("%1 METARs").arg(_metarList.size()));
 
     if (_metarReply != 0 && _metarReply->isRunning())
         ret.append(" …");
@@ -95,10 +95,7 @@ void MetarModel::setAirports(const QList<Airport*>& airports)  {
 void MetarModel::modelClicked(const QModelIndex& index) {
     Airport *a = _metarList[index.row()];
     if(a != 0 && Window::instance(false) != 0) {
-        Window::instance()->updateMetarDecoder(
-            a->label,
-            a->metar.encoded + "<hr>" + a->metar.decodedHtml()
-        );
+        a->showDetailsDialog();
     }
 }
 
@@ -109,11 +106,13 @@ void MetarModel::refresh() {
         return;
     }
 
-    for(int i = 0; i < _airportList.size(); i++) {
-        if(_airportList[i] == 0) continue;
+    foreach(Airport *airport, _airportList) {
+        if(airport == 0) continue;
 
-        if(!_airportList[i]->metar.doesNotExist() && _airportList[i]->metar.needsRefresh()) {
-            downloadMetarFor(_airportList[i]);
+        if(!airport->metar.doesNotExist() && airport->metar.needsRefresh()) {
+            downloadMetarFor(airport);
+        } else {
+            emit gotMetar(airport->label, airport->metar.encoded);
         }
     }
 }
@@ -129,7 +128,7 @@ void MetarModel::downloadMetarFor(Airport* airport) {
 
     _downloadQueue.insert(url, airport);
     downloadNextFromQueue();
-    headerDataChanged(Qt::Horizontal, 0, 0);
+    emit headerDataChanged(Qt::Horizontal, 0, 0);
 }
 
 void MetarModel::downloadNextFromQueue()
@@ -158,11 +157,11 @@ void MetarModel::metarReplyFinished() {
         Airport* airport = _downloadQueue.take(_metarReply->url());
         if (airport != 0) {
             if(!line.isEmpty())
-                airport->metar = Metar(line);
+                airport->metar = Metar(line, airport->label);
             if(!airport->metar.isNull() && airport->metar.isValid())
                 gotMetarFor(airport);
 
-            headerDataChanged(Qt::Horizontal, 0, 0);
+            emit headerDataChanged(Qt::Horizontal, 0, 0);
         }
     }
     downloadNextFromQueue();
@@ -174,7 +173,7 @@ void MetarModel::gotMetarFor(Airport* airport) {
         if(!_metarList.contains(airport))
             _metarList.append(airport);
         qDebug() << "MetarModel::gotMetarFor()" << airport->label << ":" << airport->metar.encoded;
-        emit gotMetar(airport->label);
+        emit gotMetar(airport->label, airport->metar.encoded);
         endResetModel();
     }
 }

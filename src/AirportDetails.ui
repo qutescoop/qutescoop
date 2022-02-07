@@ -24,20 +24,20 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QGroupBox" name="groupBox_4">
+      <widget class="QGroupBox" name="groupBoxInfo">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="title">
         <string>Airport information</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
-       <layout class="QGridLayout">
-        <property name="leftMargin">
-         <number>6</number>
-        </property>
-        <property name="rightMargin">
-         <number>6</number>
-        </property>
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
         <item row="0" column="0">
          <widget class="QLabel" name="label_4">
           <property name="autoFillBackground">
@@ -55,7 +55,6 @@
          <widget class="QLabel" name="lblName">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -79,7 +78,6 @@ Kranebitten</string>
          <widget class="QLabel" name="lblCountry">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -102,7 +100,6 @@ Kranebitten</string>
          <widget class="QLabel" name="lblLocation">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -128,7 +125,6 @@ Kranebitten</string>
          <widget class="QLabel" name="lblTime">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -141,6 +137,74 @@ Kranebitten</string>
          </widget>
         </item>
         <item row="4" column="0">
+         <widget class="QWidget" name="verticalWidgetMetar" native="true">
+          <layout class="QVBoxLayout" name="verticalLayoutMetar">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>METAR</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QToolButton" name="pbMetar">
+               <property name="text">
+                <string>refresh</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLabel" name="lblMetar">
+          <property name="text">
+           <string>LOWI 062220Z 27016G28KT 240V350 9999 SHRA FEW008 BKN020TCU BKN030 05/03 Q1004</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -160,12 +224,15 @@ Kranebitten</string>
       <widget class="QGroupBox" name="groupBoxAtc">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
-         <horstretch>0</horstretch>
+         <horstretch>2</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
        <property name="title">
         <string>ATC</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
        <layout class="QGridLayout" name="gridLayoutATC">
         <item row="0" column="0">
@@ -256,7 +323,7 @@ ATC</string>
       <string>Arrivals (10 filtered, 12 total)</string>
      </property>
      <layout class="QVBoxLayout">
-      <property name="margin">
+      <property name="margin" stdset="0">
        <number>3</number>
       </property>
       <item>
@@ -302,7 +369,7 @@ ATC</string>
       <string>Departures (2 filtered, 8 total)</string>
      </property>
      <layout class="QVBoxLayout">
-      <property name="margin">
+      <property name="margin" stdset="0">
        <number>3</number>
       </property>
       <item>
@@ -342,7 +409,7 @@ ATC</string>
    <item>
     <layout class="QHBoxLayout" name="_4">
      <item>
-      <widget class="QPushButton" name="buttonShowOnMap">
+      <widget class="QPushButton" name="btnShowOnMap">
        <property name="toolTip">
         <string>move to and zoom in on this airport</string>
        </property>
@@ -354,16 +421,6 @@ ATC</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="pbMetar">
-       <property name="toolTip">
-        <string>will be displayed in METAR decoder dock</string>
-       </property>
-       <property name="text">
-        <string>get M&amp;ETAR</string>
        </property>
       </widget>
      </item>
@@ -403,8 +460,8 @@ ATC</string>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>105</x>
-     <y>581</y>
+     <x>98</x>
+     <y>512</y>
     </hint>
     <hint type="destinationlabel">
      <x>361</x>
@@ -419,8 +476,8 @@ ATC</string>
    <slot>close()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>776</x>
-     <y>565</y>
+     <x>902</x>
+     <y>513</y>
     </hint>
     <hint type="destinationlabel">
      <x>742</x>
