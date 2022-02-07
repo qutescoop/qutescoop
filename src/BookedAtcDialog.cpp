@@ -57,14 +57,15 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
     connect(this, SIGNAL(needBookings()), Whazzup::instance(), SLOT(downloadBookings()));
-    refresh();
-}
 
-void BookedAtcDialog::refresh() {
     if (!Settings::bookAtcDialogSize().isNull()) resize(Settings::bookAtcDialogSize());
     if (!Settings::bookAtcDialogPos().isNull()) move(Settings::bookAtcDialogPos());
     if (!Settings::bookAtcDialogGeometry().isNull()) restoreGeometry(Settings::bookAtcDialogGeometry());
 
+    refresh();
+}
+
+void BookedAtcDialog::refresh() {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
     if(Settings::downloadBookings() &&

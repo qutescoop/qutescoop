@@ -33,13 +33,13 @@ ControllerDetails::ControllerDetails(QWidget *parent):
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-}
 
-void ControllerDetails::refresh(Controller *newController) {
     if (!Settings::controllerDetailsSize().isNull()) resize(Settings::controllerDetailsSize());
     if (!Settings::controllerDetailsPos().isNull()) move(Settings::controllerDetailsPos());
     if (!Settings::controllerDetailsGeometry().isNull()) restoreGeometry(Settings::controllerDetailsGeometry());
+}
 
+void ControllerDetails::refresh(Controller *newController) {
     if(newController != 0)
         _controller = newController;
     else

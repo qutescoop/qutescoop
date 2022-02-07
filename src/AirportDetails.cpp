@@ -75,14 +75,14 @@ AirportDetails::AirportDetails(QWidget *parent):
 
     _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
-    refresh();
-}
-
-void AirportDetails::refresh(Airport* newAirport) {
     if (!Settings::airportDetailsSize().isNull()) resize(Settings::airportDetailsSize());
     if (!Settings::airportDetailsPos().isNull()) move(Settings::airportDetailsPos());
     if (!Settings::airportDetailsGeometry().isNull()) restoreGeometry(Settings::airportDetailsGeometry());
 
+    refresh();
+}
+
+void AirportDetails::refresh(Airport* newAirport) {
     if(newAirport != 0) {
         if(newAirport != _airport) {
             // scroll Boxes to top on new Data

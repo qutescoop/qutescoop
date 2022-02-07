@@ -34,13 +34,13 @@ PilotDetails::PilotDetails(QWidget *parent):
 //    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
-}
 
-void PilotDetails::refresh(Pilot *pilot) {
     if (!Settings::pilotDetailsSize().isNull()) resize(Settings::pilotDetailsSize());
     if (!Settings::pilotDetailsPos().isNull()) move(Settings::pilotDetailsPos());
     if (!Settings::pilotDetailsGeometry().isNull()) restoreGeometry(Settings::pilotDetailsGeometry());
+}
 
+void PilotDetails::refresh(Pilot *pilot) {
     if(pilot != 0)
         _pilot = pilot;
     else

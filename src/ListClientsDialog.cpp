@@ -66,13 +66,13 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     connect(&_editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
 
     QTimer::singleShot(100, this, SLOT(refresh())); // delayed insertion of clients to open the window now
-}
 
-void ListClientsDialog::refresh() {
     if (!Settings::listClientsDialogSize().isNull()) resize(Settings::listClientsDialogSize());
     if (!Settings::listClientsDialogPos().isNull()) move(Settings::listClientsDialogPos());
     if (!Settings::listClientsDialogGeometry().isNull()) restoreGeometry(Settings::listClientsDialogGeometry());
+}
 
+void ListClientsDialog::refresh() {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     const WhazzupData &data = Whazzup::instance()->whazzupData();
 
