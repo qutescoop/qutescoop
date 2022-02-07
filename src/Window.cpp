@@ -370,6 +370,9 @@ void Window::openPlanFlight() {
 
 void Window::openBookedAtc() {
     BookedAtcDialog::instance(true, this)->show();
+    if (actionPredict->isChecked()) {
+        BookedAtcDialog::instance()->setDateTime(dateTimePredict->dateTime().toUTC());
+    }
     BookedAtcDialog::instance()->raise();
     BookedAtcDialog::instance()->activateWindow();
     BookedAtcDialog::instance()->setFocus();

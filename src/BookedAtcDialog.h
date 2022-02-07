@@ -18,7 +18,7 @@ class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
         static BookedAtcDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
         void destroyInstance();
         void refresh();
-
+        void setDateTime(const QDateTime &dateTime);
 
     signals:
         void needBookings();

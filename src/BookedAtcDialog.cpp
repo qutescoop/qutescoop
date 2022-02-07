@@ -90,6 +90,11 @@ void BookedAtcDialog::refresh() {
     qDebug() << "BookedAtcDialog/refresh() -- finished";
 }
 
+void BookedAtcDialog::setDateTime(const QDateTime &dateTime)
+{
+    dateTimeFilter->setDateTime(dateTime);
+}
+
 void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
     disconnect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
