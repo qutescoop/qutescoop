@@ -1,0 +1,184 @@
+{
+  "general": {
+    "version": 3,
+    "reload": 1,
+    "update": "20220205101727",
+    "update_timestamp": "2022-02-05T10:17:27.6572764Z",
+    "connected_clients": 918,
+    "unique_users": 877
+  },
+  "pilots": [
+  ],
+  "controllers": [
+    {
+      "cid": 1234567,
+      "name": "Controller 1",
+      "callsign": "LPPO_CTR",
+      "frequency": "123.456",
+      "facility": 6,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Santa Maria Radar"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+    {
+      "cid": 1234567,
+      "name": "Controller 2",
+      "callsign": "LPPO_FSS",
+      "frequency": "123.456",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Santa Maria Radio"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    }
+  ],
+  "servers": [
+  ],
+  "prefiles": [
+  ],
+  "facilities": [
+    {
+      "id": 0,
+      "short": "OBS",
+      "long": "Observer"
+    },
+    {
+      "id": 1,
+      "short": "FSS",
+      "long": "Flight Service Station"
+    },
+    {
+      "id": 2,
+      "short": "DEL",
+      "long": "Clearance Delivery"
+    },
+    {
+      "id": 3,
+      "short": "GND",
+      "long": "Ground"
+    },
+    {
+      "id": 4,
+      "short": "TWR",
+      "long": "Tower"
+    },
+    {
+      "id": 5,
+      "short": "APP",
+      "long": "Approach/Departure"
+    },
+    {
+      "id": 6,
+      "short": "CTR",
+      "long": "Enroute"
+    }
+  ],
+  "ratings": [
+    {
+      "id": -1,
+      "short": "INAC",
+      "long": "Inactive"
+    },
+    {
+      "id": 0,
+      "short": "SUS",
+      "long": "Suspended"
+    },
+    {
+      "id": 1,
+      "short": "OBS",
+      "long": "Observer"
+    },
+    {
+      "id": 2,
+      "short": "S1",
+      "long": "Tower Trainee"
+    },
+    {
+      "id": 3,
+      "short": "S2",
+      "long": "Tower Controller"
+    },
+    {
+      "id": 4,
+      "short": "S3",
+      "long": "Senior Student"
+    },
+    {
+      "id": 5,
+      "short": "C1",
+      "long": "Enroute Controller"
+    },
+    {
+      "id": 6,
+      "short": "C2",
+      "long": "Controller 2 (not in use)"
+    },
+    {
+      "id": 7,
+      "short": "C3",
+      "long": "Senior Controller"
+    },
+    {
+      "id": 8,
+      "short": "I1",
+      "long": "Instructor"
+    },
+    {
+      "id": 9,
+      "short": "I2",
+      "long": "Instructor 2 (not in use)"
+    },
+    {
+      "id": 10,
+      "short": "I3",
+      "long": "Senior Instructor"
+    },
+    {
+      "id": 11,
+      "short": "SUP",
+      "long": "Supervisor"
+    },
+    {
+      "id": 12,
+      "short": "ADM",
+      "long": "Administrator"
+    }
+  ],
+  "pilot_ratings": [
+    {
+      "id": 0,
+      "short_name": "NEW",
+      "long_name": "Basic Member"
+    },
+    {
+      "id": 1,
+      "short_name": "PPL",
+      "long_name": "Private Pilot License"
+    },
+    {
+      "id": 3,
+      "short_name": "IR",
+      "long_name": "Instrument Rating"
+    },
+    {
+      "id": 7,
+      "short_name": "CMEL",
+      "long_name": "Commercial Multi-Engine License"
+    },
+    {
+      "id": 15,
+      "short_name": "ATPL",
+      "long_name": "Airline Transport Pilot License"
+    }
+  ]
+}
