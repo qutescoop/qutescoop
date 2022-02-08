@@ -20,21 +20,19 @@ QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orie
         switch(section) {
             case 0: return QString("Callsign");
             case 1: return QString("Facility");
-            case 2: return QString("Country");
-            case 3: return QString("Name");
-            case 4: return QString("Date");
-            case 5: return QString("From");
-            case 6: return QString("Until");
-            case 7: return QString("Info");
-            case 8: return QString("Link");
+            case 2: return QString("Name");
+            case 3: return QString("Date");
+            case 4: return QString("From");
+            case 5: return QString("Until");
+            case 6: return QString("Info");
+            case 7: return QString("Link");
         }
     }
     return QVariant();
 }
 
-int BookedAtcDialogModel::columnCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
-    return 9;
+int BookedAtcDialogModel::columnCount(const QModelIndex&) const {
+    return 8;
 }
 
 QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
@@ -46,21 +44,20 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
         switch(index.column()) {
             case 0: return c->label;
             case 1: return c->facilityString();
-            case 2: return c->countryCode;
-            case 3: return c->realName;
-            case 4: return c->starts().toString("MM/dd (ddd)");
-            case 5: return c->starts().time().toString("HHmm'z'");
-            case 6: return c->ends().time().toString("HHmm'z'");
-            case 7: return c->bookingInfoStr;
-            case 8: return c->link;
+            case 2: return c->realName;
+            case 3: return c->starts().toString("MM/dd (ddd)");
+            case 4: return c->starts().time().toString("HHmm'z'");
+            case 5: return c->ends().time().toString("HHmm'z'");
+            case 6: return c->bookingInfoStr;
+            case 7: return c->link;
         }
     } else if(role == Qt::EditRole) { // we are faking "EditRole" to access raw data
         BookedController* c = _controllers[index.row()];
         switch(index.column()) {
-            case 5: return c->starts(); break;
-            case 6: return c->ends(); break;
-            case 7: return c->bookingInfoStr; break;
-            case 8: return c->link; break;
+            case 4: return c->starts(); break;
+            case 5: return c->ends(); break;
+            case 6: return c->bookingInfoStr; break;
+            case 7: return c->link; break;
         }
     }
 

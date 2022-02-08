@@ -25,7 +25,6 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     timeFrom = json["timeFrom"].toString();
 
     // default
-    countryCode = "";
     lat = 0.0; lon = 0.0;
     visualRange = 0;
 
@@ -35,62 +34,51 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
         case 1:  bookingInfoStr = QString("Event"); break;
         case 10: bookingInfoStr = QString("Training"); break;
     }
-    if (label.right(5) == "_ATIS") facilityType = 2; // dont know who wants to book it, but well...
-
-    else if (label.right(4) == "_DEL") {
+    if (label.right(5) == "_ATIS") {
+        facilityType = 2; // dont know who wants to book it, but well...
+    } else if (label.right(4) == "_DEL") {
+        facilityType = 3;
         if (NavData::instance()->airports.contains(this->getDelivery())) {
-            countryCode = NavData::instance()->airports[this->getDelivery()]->countryCode;
             lat = NavData::instance()->airports[this->getDelivery()]->lat;
             lon = NavData::instance()->airports[this->getDelivery()]->lon;
             visualRange = 2;
         }
+    } else if (label.right(4) == "_GND") {
         facilityType = 3;
-    }
-    else if (label.right(4) == "_GND") {
         if (NavData::instance()->airports.contains(this->getGround())) {
-            countryCode = NavData::instance()->airports[this->getGround()]->countryCode;
             lat = NavData::instance()->airports[this->getGround()]->lat;
             lon = NavData::instance()->airports[this->getGround()]->lon;
             visualRange = 5;
         }
-        facilityType = 3;
-    }
-    else if (label.right(4) == "_TWR") {
+    } else if (label.right(4) == "_TWR") {
         facilityType = 4;
         if (NavData::instance()->airports.contains(this->getTower())) {
-            countryCode = NavData::instance()->airports[this->getTower()]->countryCode;
             lat = NavData::instance()->airports[this->getTower()]->lat;
             lon = NavData::instance()->airports[this->getTower()]->lon;
             visualRange = 15;
         }
-    }
-    else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
+    } else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
         facilityType = 5;
         if (NavData::instance()->airports.contains(this->getApproach())) {
-            countryCode = NavData::instance()->airports[this->getApproach()]->countryCode;
             lat = NavData::instance()->airports[this->getApproach()]->lat;
             lon = NavData::instance()->airports[this->getApproach()]->lon;
             visualRange = 35;
         }
-    }
-    else if (label.right(4) == "_CTR") {
+    } else if (label.right(4) == "_CTR") {
         facilityType = 6;
         QString ctr = this->getCenter();
         if (NavData::instance()->sectors.contains(ctr)) {
-            countryCode = NavData::instance()->sectors[ctr]->countryCode;
             lat = NavData::instance()->sectors[ctr]->lat;
             lon = NavData::instance()->sectors[ctr]->lon;
-            visualRange = 150; // NavData::instance()->sectors[ctr]->maxDistanceFromCenter();
+            visualRange = 150;
         }
-    }
-    else if (label.right(4) == "_FSS") {
+    } else if (label.right(4) == "_FSS") {
         facilityType = 7;
         QString ctr = this->getCenter();
         if (NavData::instance()->sectors.contains(ctr)) {
-            countryCode = NavData::instance()->sectors[ctr]->countryCode;
             lat = NavData::instance()->sectors[ctr]->lat;
             lon = NavData::instance()->sectors[ctr]->lon;
-            visualRange = 500; // NavData::instance()->sectors[ctr]->maxDistanceFromCenter();
+            visualRange = 500;
         }
     }
 

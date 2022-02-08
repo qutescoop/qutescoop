@@ -38,7 +38,7 @@ class BookedController: public Client {
         QDateTime timeLastAtisReceived;
 
         // Booking values
-        QString countryCode, link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
+        QString link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
         int bookingType;
 
         QDateTime starts() const;
