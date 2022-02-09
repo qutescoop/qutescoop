@@ -6,7 +6,9 @@ GIT_BRANCH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --abbrev-ref HE
 DEFINES += GIT_BRANCH=$$GIT_BRANCH
 
 ## this produces v2.3.0 / v2.3.0-6-g29966c2 / v2.3.0-6-g29966c2-dirty
-GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --dirty)\\\""
+## C/I sets these "long" versions as tags for pre-releases, so we exclude them here as bases
+GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclude '*-*-*' --dirty --always --debug)\\\""
+
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
 
 # maybe fixes version incompatibilities, gets ignored by clang
