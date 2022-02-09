@@ -20,10 +20,17 @@ QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation or
         case 4: return QString("Rank");
         case 5: return QString("Online");
         case 6: return QString("Until");
-        case 7: return QString("Server");
         }
     }
     return QVariant();
+}
+
+int AirportDetailsAtcModel::rowCount(const QModelIndex&) const {
+    return _controllers.count();
+}
+
+int AirportDetailsAtcModel::columnCount(const QModelIndex&) const {
+    return 7;
 }
 
 QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const {
@@ -47,7 +54,6 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
         case 4: return c->rank(); break;
         case 5: return c->onlineTime(); break;
         case 6: return c->assumeOnlineUntil.time().toString("HHmm'z'"); break;
-        case 7: return c->server; break;
         }
     }
 
