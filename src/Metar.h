@@ -19,7 +19,7 @@ class Metar {
 
         QString encoded, airportLabel;
         QDateTime downloaded;
-        QString decodedHtml() const;
+        QString humanHtml() const;
 
     private:
         QString decodeDate(QStringList& tokens) const;

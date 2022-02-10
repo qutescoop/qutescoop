@@ -48,7 +48,7 @@ QVariant MetarModel::data(const QModelIndex &index, int role) const {
 
         Airport* a = _metarList[index.row()];
         switch(index.column()) {
-        case 0: return a->metar.decodedHtml(); break;
+        case 0: return a->metar.humanHtml(); break;
         }
     }
 
@@ -112,7 +112,7 @@ void MetarModel::refresh() {
         if(!airport->metar.doesNotExist() && airport->metar.needsRefresh()) {
             downloadMetarFor(airport);
         } else {
-            emit gotMetar(airport->label, airport->metar.encoded);
+            emit gotMetar(airport->label, airport->metar.encoded, airport->metar.humanHtml());
         }
     }
 }
@@ -173,7 +173,7 @@ void MetarModel::gotMetarFor(Airport* airport) {
         if(!_metarList.contains(airport))
             _metarList.append(airport);
         qDebug() << "MetarModel::gotMetarFor()" << airport->label << ":" << airport->metar.encoded;
-        emit gotMetar(airport->label, airport->metar.encoded);
+        emit gotMetar(airport->label, airport->metar.encoded, airport->metar.humanHtml());
         endResetModel();
     }
 }

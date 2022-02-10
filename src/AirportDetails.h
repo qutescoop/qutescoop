@@ -30,7 +30,7 @@ class AirportDetails : public ClientDetails, private Ui::AirportDetails {
         void closeEvent(QCloseEvent *event);
 
     private slots:
-        void onGotMetar(const QString &airportLabel, const QString &encoded);
+        void onGotMetar(const QString &airportLabel, const QString &encoded, const QString &humanHtml);
         void on_pbMetar_clicked();
         void on_cbAtis_toggled(bool checked);
         void on_cbObservers_toggled(bool checked);

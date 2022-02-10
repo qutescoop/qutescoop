@@ -24,7 +24,7 @@ class MetarModel: public QAbstractListModel {
                                     int role = Qt::DisplayRole) const;
 
     signals:
-        void gotMetar(QString icao, QString encoded);
+        void gotMetar(const QString &icao, const QString &encoded, const QString &decoded);
 
     public slots:
         void setAirports(const QList<Airport*>& airports);

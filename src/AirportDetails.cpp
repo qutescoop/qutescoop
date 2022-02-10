@@ -73,8 +73,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     connect(treeDepartures, SIGNAL(clicked(QModelIndex)),
             this, SLOT(departureSelected(QModelIndex)));
 
+    // METAR
     _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
+    // Geometry
     if (!Settings::airportDetailsSize().isNull()) resize(Settings::airportDetailsSize());
     if (!Settings::airportDetailsPos().isNull()) move(Settings::airportDetailsPos());
     if (!Settings::airportDetailsGeometry().isNull()) restoreGeometry(Settings::airportDetailsGeometry());
@@ -114,7 +116,7 @@ void AirportDetails::refresh(Airport* newAirport) {
                         .arg(lt, utcDev < 0 ? "": "+") // just a plus sign
                         .arg(utcDev));
     // fetch METAR
-    connect(_metarModel, SIGNAL(gotMetar(QString, QString)), this, SLOT(onGotMetar(QString, QString)));
+    connect(_metarModel, &MetarModel::gotMetar, this, &AirportDetails::onGotMetar);
     on_pbMetar_clicked();
 
     // arrivals
@@ -206,11 +208,12 @@ void AirportDetails::on_pbMetar_clicked() {
     }
 }
 
-void AirportDetails::onGotMetar(const QString &airportLabel, const QString &encoded)
+void AirportDetails::onGotMetar(const QString &airportLabel, const QString &encoded, const QString &humanHtml)
 {
     qDebug() << "AirportDetails::onGotMetar" << airportLabel << encoded;
     if (_airport->label == airportLabel) {
         lblMetar->setText(encoded);
+        lblMetar->setToolTip(humanHtml);
     }
 }
 
