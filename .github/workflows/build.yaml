@@ -200,7 +200,7 @@ jobs:
       - build-win
       - build-mac
       - facts
-    # We are not be able to create a pre-release
+    # Without workarounds (cron) we are not able to do any changes to this repo in a PR context :(
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-20.04
     steps:
@@ -226,7 +226,8 @@ jobs:
           prerelease: ${{ github.ref_type != 'tag' }}
           tag: ${{ needs.facts.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      - uses: dev-drprasad/delete-tag-and-release@v0.2.0
+      - name: delete potential stray release
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
         if: failure()
         with:
           delete_release: true
