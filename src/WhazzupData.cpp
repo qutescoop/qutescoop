@@ -476,7 +476,7 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updateFrom() -- finished";
 }
 
-QSet<Controller*> WhazzupData::activeSectors() const {
+QSet<Controller*> WhazzupData::controllersWithSectors() const {
     qDebug() << "WhazzupData::activeSectors()";
     QSet<Controller*> result;
     foreach(Controller *c, controllers.values())

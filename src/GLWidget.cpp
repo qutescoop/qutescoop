@@ -1663,7 +1663,8 @@ void GLWidget::newWhazzupData(bool isNew) {
         // update airports
         NavData::instance()->updateData(Whazzup::instance()->whazzupData());
 
-        _sectorsToDraw = Whazzup::instance()->whazzupData().activeSectors();
+        _sectorsToDraw = Whazzup::instance()->whazzupData().controllersWithSectors();
+
         createPilotsList();
         createAirportsList();
         createControllersLists();

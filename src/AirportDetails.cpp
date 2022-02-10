@@ -220,7 +220,7 @@ void AirportDetails::onGotMetar(const QString &airportLabel, const QString &enco
 QSet<Controller*> AirportDetails::checkSectors() const {
     QSet<Controller*> result;
 
-    foreach(Controller *c, Whazzup::instance()->whazzupData().activeSectors()) {
+    foreach(Controller *c, Whazzup::instance()->whazzupData().controllersWithSectors()) {
         int crossings = 0;
         double x1, x2;
 

@@ -29,7 +29,7 @@ class WhazzupData {
         bool isNull() const { return (whazzupTime.isNull() && bookingsTime.isNull()); }
         void updateFrom(const WhazzupData &data);
 
-        QSet<Controller*> activeSectors() const;
+        QSet<Controller*> controllersWithSectors() const;
         QHash<QString, Pilot*> pilots, bookedPilots;
         QHash<QString, Controller*> controllers;
         QList<Pilot*> allPilots() const { return bookedPilots.values() + pilots.values(); }
