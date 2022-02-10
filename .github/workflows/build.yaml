@@ -203,6 +203,8 @@ jobs:
     # Without workarounds (cron) we are not able to do any changes to this repo in a PR context :(
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-20.04
+    outputs:
+      releaseUrl: ${{ steps.release.outpus.html_url }}
     steps:
       - name: inputs
         env:
@@ -215,7 +217,8 @@ jobs:
         with:
           path: release/
       - run: ls -lhR release/
-      - uses: ncipollo/release-action@v1
+      - id: release
+        uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
           artifactErrorsFailBuild: true
@@ -234,3 +237,4 @@ jobs:
           tag_name: ${{ needs.facts.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: "echo release URL: ${{ steps.release.outputs.html_url }}"
