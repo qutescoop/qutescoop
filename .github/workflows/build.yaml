@@ -215,16 +215,29 @@ jobs:
         with:
           path: release/
       - run: ls -lhR release/
-      - uses: ncipollo/release-action@v1
+      - name: draft release
+        uses: ncipollo/release-action@v1
         with:
-          allowUpdates: true
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
           commit: ${{ github.sha }}
-          draft: ${{ github.ref_type == 'tag' }}
+          draft: true
           generateReleaseNotes: true
           name: ${{ needs.facts.outputs.version }}
           prerelease: ${{ github.ref_type != 'tag' }}
+          tag: ${{ needs.facts.outputs.version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "publish release (if pre-release)"
+        # the "draft first" shall inhibit watcher emails until artifacts are uploaded
+        if: ${{ github.ref_type != 'tag' }}
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          commit: ${{ github.sha }}
+          draft: false
+          omitBodyDuringUpdate: true
+          omitNameDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           tag: ${{ needs.facts.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: delete potential stray release
