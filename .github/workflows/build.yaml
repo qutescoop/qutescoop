@@ -221,6 +221,7 @@ jobs:
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
           commit: ${{ github.sha }}
+          draft: ${{ github.ref_type == 'tag' }}
           generateReleaseNotes: true
           name: ${{ needs.facts.outputs.version }}
           prerelease: ${{ github.ref_type != 'tag' }}
