@@ -20,10 +20,16 @@
   <property name="sizeGripEnabled">
    <bool>true</bool>
   </property>
-  <layout class="QVBoxLayout" name="_2">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
+    <widget class="QSplitter" name="splitter_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
       <widget class="QGroupBox" name="groupBoxInfo">
        <property name="title">
         <string>Airport information</string>
@@ -31,7 +37,7 @@
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
-       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
         <item row="1" column="1">
          <widget class="QLabel" name="lblCountry">
           <property name="font">
@@ -44,31 +50,16 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="lblTime">
-          <property name="font">
-           <font>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="toolTip">
-           <string>local time simply estimated by longitude</string>
-          </property>
+        <item row="4" column="1">
+         <widget class="QLabel" name="lblCharts">
           <property name="text">
-           <string>09:13 loc, UTC +2</string>
+           <string>[chartfox.org/EKCH](https://chartfox.org/EKCH)</string>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="label_4">
-          <property name="autoFillBackground">
-           <bool>false</bool>
+          <property name="textFormat">
+           <enum>Qt::MarkdownText</enum>
           </property>
-          <property name="text">
-           <string>name</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <property name="openExternalLinks">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -88,16 +79,28 @@
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
-         <widget class="QLabel" name="lblCharts">
+        <item row="2" column="1">
+         <widget class="QLabel" name="lblTime">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="toolTip">
+           <string>local time simply estimated by longitude</string>
+          </property>
           <property name="text">
-           <string>[chartfox.org/EKCH](https://chartfox.org/EKCH)</string>
+           <string>09:13 loc, UTC +2</string>
           </property>
-          <property name="textFormat">
-           <enum>Qt::MarkdownText</enum>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="_lblCharts">
+          <property name="text">
+           <string>Charts</string>
           </property>
-          <property name="openExternalLinks">
-           <bool>true</bool>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -153,29 +156,6 @@
           </layout>
          </widget>
         </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="_lblCharts">
-          <property name="text">
-           <string>Charts</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="toolTip">
-           <string>local time simply estimated by longitude</string>
-          </property>
-          <property name="text">
-           <string>time (est.)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_5">
           <property name="text">
@@ -199,10 +179,47 @@ Kranebitten</string>
           </property>
          </widget>
         </item>
+        <item row="0" column="0">
+         <widget class="QLabel" name="label_4">
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="text">
+           <string>name</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="label_6">
+          <property name="toolTip">
+           <string>local time simply estimated by longitude</string>
+          </property>
+          <property name="text">
+           <string>time (est.)</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
        </layout>
       </widget>
-     </item>
-     <item>
       <widget class="QGroupBox" name="groupBoxAtc">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
@@ -279,99 +296,95 @@ ATC</string>
         </item>
        </layout>
       </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBoxArrivals">
-     <property name="toolTip">
-      <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
-     </property>
-     <property name="title">
-      <string>Arrivals (10 filtered, 12 total)</string>
-     </property>
-     <layout class="QVBoxLayout">
-      <property name="margin" stdset="0">
-       <number>3</number>
+     </widget>
+     <widget class="QGroupBox" name="groupBoxArrivals">
+      <property name="toolTip">
+       <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
       </property>
-      <item>
-       <widget class="QTreeView" name="treeArrivals">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>true</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <property name="uniformRowHeights">
-         <bool>true</bool>
-        </property>
-        <property name="itemsExpandable">
-         <bool>false</bool>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-        <property name="expandsOnDoubleClick">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="groupBoxDepartures">
-     <property name="toolTip">
-      <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
-     </property>
-     <property name="title">
-      <string>Departures (2 filtered, 8 total)</string>
-     </property>
-     <layout class="QVBoxLayout">
-      <property name="margin" stdset="0">
-       <number>3</number>
+      <property name="title">
+       <string>Arrivals (10 filtered, 12 total)</string>
       </property>
-      <item>
-       <widget class="QTreeView" name="treeDepartures">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="tabKeyNavigation">
-         <bool>true</bool>
-        </property>
-        <property name="showDropIndicator" stdset="0">
-         <bool>false</bool>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <property name="uniformRowHeights">
-         <bool>true</bool>
-        </property>
-        <property name="itemsExpandable">
-         <bool>false</bool>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="allColumnsShowFocus">
-         <bool>true</bool>
-        </property>
-        <property name="expandsOnDoubleClick">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-     </layout>
+      <layout class="QVBoxLayout">
+       <property name="margin" stdset="0">
+        <number>3</number>
+       </property>
+       <item>
+        <widget class="QTreeView" name="treeArrivals">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="tabKeyNavigation">
+          <bool>true</bool>
+         </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <property name="itemsExpandable">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+         <property name="expandsOnDoubleClick">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="groupBoxDepartures">
+      <property name="toolTip">
+       <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
+      </property>
+      <property name="title">
+       <string>Departures (2 filtered, 8 total)</string>
+      </property>
+      <layout class="QVBoxLayout">
+       <property name="margin" stdset="0">
+        <number>3</number>
+       </property>
+       <item>
+        <widget class="QTreeView" name="treeDepartures">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="tabKeyNavigation">
+          <bool>true</bool>
+         </property>
+         <property name="showDropIndicator" stdset="0">
+          <bool>false</bool>
+         </property>
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="uniformRowHeights">
+          <bool>true</bool>
+         </property>
+         <property name="itemsExpandable">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="allColumnsShowFocus">
+          <bool>true</bool>
+         </property>
+         <property name="expandsOnDoubleClick">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
