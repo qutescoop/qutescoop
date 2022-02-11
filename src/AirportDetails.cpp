@@ -103,11 +103,7 @@ void AirportDetails::refresh(Airport* newAirport) {
     lblName->setText(QString("%1\n%2").arg(_airport->city, _airport->name));
     lblCountry->setText(QString("%1 (%2)")
                         .arg(_airport->countryCode, NavData::instance()->countryCodes[_airport->countryCode]));
-    lblLocation->setText(QString("%1%2 %3%4").
-                         arg(_airport->lat > 0? "N": "S").
-                         arg(qAbs(_airport->lat), 6, 'f', 3, '0').
-                         arg(_airport->lon > 0? "E": "W").
-                         arg(qAbs(_airport->lon), 7, 'f', 3, '0'));
+    lblCharts->setText(QString("[chartfox.org/%1](https://chartfox.org/%1)").arg(_airport->label));
 
     int utcDev = (int) (_airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
     QString lt = Whazzup::instance()->whazzupData().whazzupTime.
@@ -144,18 +140,17 @@ void AirportDetails::refresh(Airport* newAirport) {
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
     // ATIS
-    if(cbAtis->isChecked()) {
-        Controller* atis = Whazzup::instance()->whazzupData().controllers[_airport->label + "_ATIS"];
-        if (atis != 0)
-            atcContent.insert(atis);
+    Controller* atis = Whazzup::instance()->whazzupData().controllers[_airport->label + "_ATIS"];
+    if (atis != 0) {
+        atcContent.insert(atis);
     }
 
     // non-ATC
-    if(cbObservers->isChecked()) {
+    if(cbOtherAtc->isChecked()) {
         foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {
-            //if(c->isObserver()) // don't need this anymore - we want them all
-                if(NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
-                    atcContent.insert(c);
+            // add those within visual range or max. 50 NM away
+            if(NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
+                atcContent.insert(c);
         }
     }
 
@@ -188,14 +183,6 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();
     }
-}
-
-void AirportDetails::on_cbObservers_toggled(bool) {
-    refresh();
-}
-
-void AirportDetails::on_cbAtis_toggled(bool) {
-    refresh();
 }
 
 void AirportDetails::on_pbMetar_clicked() {
@@ -274,3 +261,9 @@ void AirportDetails::closeEvent(QCloseEvent *event) {
    Settings::setAirportDetailsGeometry(saveGeometry());
    event->accept();
 }
+
+void AirportDetails::on_cbOtherAtc_toggled(bool)
+{
+    refresh();
+}
+
