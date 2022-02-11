@@ -235,9 +235,12 @@ void GLWidget::createPilotsList() {
         glPointSize(Settings::pilotDotSize());
         glBegin(GL_POINTS);
         qglColor(Settings::pilotDotColor());
-        foreach(const Pilot *p, pilots)
-            if (!qFuzzyIsNull(p->lat) || !qFuzzyIsNull(p->lon))
-                VERTEX(p->lat, p->lon);
+        foreach(const Pilot *p, pilots) {
+            if (qFuzzyIsNull(p->lat) && qFuzzyIsNull(p->lon))
+                continue;
+
+            VERTEX(p->lat, p->lon);
+        }
         glEnd();
     }
 
@@ -247,11 +250,15 @@ void GLWidget::createPilotsList() {
         glBegin(GL_LINES);
         qglColor(Settings::timeLineColor());
         foreach(const Pilot *p, pilots) {
-            if (p->groundspeed > 30 && (!qFuzzyIsNull(p->lat) || !qFuzzyIsNull(p->lon))) {
-                VERTEX(p->lat, p->lon);
-                QPair<double, double> pos = p->positionInFuture(Settings::timelineSeconds());
-                VERTEX(pos.first, pos.second);
-            }
+            if (p->groundspeed < 30)
+                continue;
+
+            if (qFuzzyIsNull(p->lat) && qFuzzyIsNull(p->lon))
+                continue;
+
+            VERTEX(p->lat, p->lon);
+            QPair<double, double> pos = p->positionInFuture(Settings::timelineSeconds());
+            VERTEX(pos.first, pos.second);
         }
         glEnd();
     }
@@ -259,41 +266,48 @@ void GLWidget::createPilotsList() {
 
     // flight paths, also for booked flights
     foreach(Pilot *p, Whazzup::instance()->whazzupData().allPilots()) {
-        if (p->showDepLine() || p->showDestLine()) {
-            QList<Waypoint*> waypoints = p->routeWaypointsWithDepDest();
-            int next = p->nextPointOnRoute(waypoints);
-            QList<DoublePair> points; // these are the points that really get drawn
-            if (p->showDepLine()) // Dep -> plane
-                for (int i = 0; i < next; i++)
-                    points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
-            if (!qFuzzyIsNull(p->lat) && !qFuzzyIsNull(p->lon)) { // plane ok: draw to plane and reset list for DestLine
-                points.append(DoublePair(p->lat, p->lon));
-                if (Settings::depLineDashed())
-                    glLineStipple(3, 0xAAAA);
-                qglColor(Settings::depLineColor());
-                glLineWidth(Settings::depLineStrength());
-                glBegin(GL_LINE_STRIP);
-                NavData::plotPointsOnEarth(points);
-                glEnd();
-                if(Settings::depLineDashed())
-                    glLineStipple(1, 0xFFFF);
+        if (qFuzzyIsNull(p->lat) && qFuzzyIsNull(p->lon))
+            continue;
 
-                points.clear();
-                points.append(DoublePair(p->lat, p->lon));
+        if (!p->showDepLine() && !p->showDestLine())
+            continue;
+
+        QList<Waypoint*> waypoints = p->routeWaypointsWithDepDest();
+        int next = p->nextPointOnRoute(waypoints);
+        QList<DoublePair> points; // these are the points that really get drawn
+        if (p->showDepLine()) { // Dep -> plane
+            for (int i = 0; i < next; i++) {
+                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
             }
-            if (p->showDestLine()) { // plane -> Dest
-                for (int i = next; i < waypoints.size(); i++)
-                    points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
-                if (Settings::destLineDashed())
-                    glLineStipple(3, 0xAAAA);
-                qglColor(Settings::destLineColor());
-                glLineWidth(Settings::destLineStrength());
-                glBegin(GL_LINE_STRIP);
-                NavData::plotPointsOnEarth(points);
-                glEnd();
-                if(Settings::destLineDashed())
-                    glLineStipple(1, 0xFFFF);
-            }
+        }
+
+        // plane ok: draw to plane and reset list for DestLine
+        points.append(DoublePair(p->lat, p->lon));
+        if (Settings::depLineDashed())
+            glLineStipple(3, 0xAAAA);
+        qglColor(Settings::depLineColor());
+        glLineWidth(Settings::depLineStrength());
+        glBegin(GL_LINE_STRIP);
+        NavData::plotPointsOnEarth(points);
+        glEnd();
+        if(Settings::depLineDashed())
+            glLineStipple(1, 0xFFFF);
+
+        points.clear();
+        points.append(DoublePair(p->lat, p->lon));
+
+        if (p->showDestLine()) { // plane -> Dest
+            for (int i = next; i < waypoints.size(); i++)
+                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
+            if (Settings::destLineDashed())
+                glLineStipple(3, 0xAAAA);
+            qglColor(Settings::destLineColor());
+            glLineWidth(Settings::destLineStrength());
+            glBegin(GL_LINE_STRIP);
+            NavData::plotPointsOnEarth(points);
+            glEnd();
+            if(Settings::destLineDashed())
+                glLineStipple(1, 0xFFFF);
         }
     }
 
@@ -965,14 +979,17 @@ void GLWidget::paintGL() {
             destroyFriendHightlighter();
         }
 
-        for(int ii = 0; ii < _friends.size(); ii++) {
+        foreach(const auto &_friend, _friends) {
+            if (qFuzzyIsNull(_friend.first) && qFuzzyIsNull(_friend.second))
+                continue;
+
             glBegin(GL_LINE_LOOP);
             glLineWidth(lineWidth);
             glColor4f(red, green, blue, alpha);
-            GLdouble circle_distort = qCos(_friends.value(ii).first * Pi180);
+            GLdouble circle_distort = qCos(_friend.first * Pi180);
             for(int i = 0; i <= 360; i += 20) {
-                double x = _friends.value(ii).first  + Nm2Deg((100-(range*20))) * circle_distort * qCos(i * Pi180);
-                double y = _friends.value(ii).second + Nm2Deg((100-(range*20))) * qSin(i * Pi180);
+                double x = _friend.first  + Nm2Deg((100-(range*20))) * circle_distort * qCos(i * Pi180);
+                double y = _friend.second + Nm2Deg((100-(range*20))) * qSin(i * Pi180);
                 VERTEX(x, y);
             }
             glEnd();
@@ -1106,9 +1123,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
             updateGL();
     } else if (_mouseDownPos == event->pos() && event->button() == Qt::LeftButton) {
         QList<MapObject*> objects;
-        foreach(MapObject* m, objectsAt(event->x(), event->y()))
-            if (dynamic_cast<Waypoint*>(m) == 0) // all but waypoints have a dialog
-                objects.append(m);
+        foreach(MapObject* m, objectsAt(event->x(), event->y())) {
+            if (dynamic_cast<Waypoint*>(m) != 0) // all but waypoints have a dialog
+                continue;
+
+            objects.append(m);
+        }
         if (objects.isEmpty()) {
             clientSelection->clearObjects();
             clientSelection->close();
@@ -1498,20 +1518,6 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
             }
         }
     }
-    QList<MapObject*> observers;
-    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {
-        double x = c->lat - lat;
-        double y = c->lon - lon;
-        if(x*x + y*y < radiusDegQuad) {
-            if(c->isObserver()) {
-                observers.removeAll(c);
-                observers.append(c);
-            } else {
-                result.removeAll(c);
-                result.append(c);
-            }
-        }
-    }
     foreach(Pilot *p, Whazzup::instance()->whazzupData().pilots.values()) {
         double x = p->lat - lat;
         double y = p->lon - lon;
@@ -1520,7 +1526,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
             result.append(p);
         }
     }
-    return result + observers;
+    return result;
 }
 
 /////////////////////////
