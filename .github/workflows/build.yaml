@@ -41,15 +41,19 @@ jobs:
             echo ::set-output name=version::$describe-pr$pr
           fi
           commitLog=$(git log "$(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)"..HEAD --format='%h - %s (%an)')
+          # Github multiline var workaround
+          commitLog="${commitLog//'%'/'%25'}"
+          commitLog="${commitLog//$'\n'/'%0A'}"
+          commitLog="${commitLog//$'\r'/'%0D'}"
           echo ::set-output name=commitLog::"$commitLog"
       - name: outputs
         run: |
-          echo describe=${{ steps.gather.outputs.describe }}
-          echo branch=${{ steps.gather.outputs.branch }}
-          echo branch2=${{ steps.gather.outputs.branch2 }}
-          echo pr=${{ steps.gather.outputs.pr }}
-          echo version=${{ steps.gather.outputs.version }}
-          echo commitLog=${{ steps.gather.outputs.commitLog }}
+          echo describe="${{ steps.gather.outputs.describe }}"
+          echo branch="${{ steps.gather.outputs.branch }}"
+          echo branch2="${{ steps.gather.outputs.branch2 }}"
+          echo pr="${{ steps.gather.outputs.pr }}"
+          echo version="${{ steps.gather.outputs.version }}"
+          echo commitLog="${{ steps.gather.outputs.commitLog }}"
 
   build-linux:
     needs: facts
@@ -224,6 +228,7 @@ jobs:
         with:
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
+          body: ${{ needs.facts.outputs.commitLog }}
           commit: ${{ github.sha }}
           draft: true
           generateReleaseNotes: true
