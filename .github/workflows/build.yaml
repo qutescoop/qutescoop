@@ -44,12 +44,12 @@ jobs:
           echo ::set-output name=commitLog::"$commitLog"
       - name: outputs
         run: |
-          echo describe=${{ steps.gather.outputs.describe }}
-          echo branch=${{ steps.gather.outputs.branch }}
-          echo branch2=${{ steps.gather.outputs.branch2 }}
-          echo pr=${{ steps.gather.outputs.pr }}
-          echo version=${{ steps.gather.outputs.version }}
-          echo commitLog=${{ steps.gather.outputs.commitLog }}
+          echo describe="${{ steps.gather.outputs.describe }}"
+          echo branch="${{ steps.gather.outputs.branch }}"
+          echo branch2="${{ steps.gather.outputs.branch2 }}"
+          echo pr="${{ steps.gather.outputs.pr }}"
+          echo version="${{ steps.gather.outputs.version }}"
+          echo commitLog="${{ steps.gather.outputs.commitLog }}"
 
   build-linux:
     needs: facts
