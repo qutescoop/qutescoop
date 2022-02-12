@@ -227,6 +227,7 @@ jobs:
         with:
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
+          body: ${{ needs.facts.outputs.commitLog }}
           commit: ${{ github.sha }}
           draft: true
           generateReleaseNotes: true
