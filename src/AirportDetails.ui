@@ -233,11 +233,20 @@ Kranebitten</string>
        <property name="title">
         <string>ATC</string>
        </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-       <layout class="QGridLayout" name="gridLayoutATC">
-        <item row="0" column="0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <property name="leftMargin">
+         <number>3</number>
+        </property>
+        <property name="topMargin">
+         <number>3</number>
+        </property>
+        <property name="rightMargin">
+         <number>3</number>
+        </property>
+        <property name="bottomMargin">
+         <number>3</number>
+        </property>
+        <item>
          <widget class="QTreeView" name="treeAtc">
           <property name="editTriggers">
            <set>QAbstractItemView::NoEditTriggers</set>
@@ -268,7 +277,7 @@ Kranebitten</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="2">
+        <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
            <spacer name="verticalSpacer_2">
