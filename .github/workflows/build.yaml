@@ -40,7 +40,7 @@ jobs:
           else
             echo ::set-output name=version::$describe-pr$pr
           fi
-          commitLog=$(git log $(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)..HEAD --format='%h - %s (%an)')
+          commitLog=$(git log "$(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)"..HEAD --format='%h - %s (%an)')
           echo ::set-output name=commitLog::"$commitLog"
       - name: outputs
         run: |
