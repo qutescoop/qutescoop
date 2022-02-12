@@ -1,4 +1,4 @@
-# QuteScoop ![QuteScoop logo](src/images/qs-logo.png)
+# QuteScoop <img scr="src/images/qs-logo.png" width=32 height=32>
 
 QuteScoop is a status indicator for the online flight simulation community VATSIM, compatible with Windows, Linux and MacOS.
 
