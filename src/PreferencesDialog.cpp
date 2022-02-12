@@ -84,7 +84,6 @@ void PreferencesDialog::loadSettings() {
 
     // Display
     cbRememberMapPositionOnClose->setChecked(Settings::rememberMapPositionOnClose());
-    cbReadSupFile->setChecked(Settings::useSupFile());
     spinBoxTimeline->setValue(Settings::timelineSeconds());
 
     // OpenGL
@@ -394,12 +393,6 @@ void PreferencesDialog::on_cbDownloadOnStartup_stateChanged(int state) {
     if (!_settingsLoaded)
         return;
     Settings::setDownloadOnStartup(state == Qt::Checked);
-}
-
-void PreferencesDialog::on_cbReadSupFile_stateChanged(int state) {
-    if (!_settingsLoaded)
-        return;
-    Settings::setUseSupFile(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {

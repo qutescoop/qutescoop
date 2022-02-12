@@ -42,9 +42,6 @@ class Settings {
         static bool downloadPeriodically();
         static void setDownloadPeriodically(bool value);
 
-        static bool useSupFile();
-        static void setUseSupFile(bool value);
-
         static int downloadNetwork();
         static void setDownloadNetwork(int i);
         static QString downloadNetworkName();
