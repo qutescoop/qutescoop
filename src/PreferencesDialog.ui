@@ -2195,7 +2195,7 @@ airports with at least</string>
        <item>
         <widget class="QGroupBox" name="groupBoxFirs">
          <property name="title">
-          <string>FIRs (CTR / FSS)</string>
+          <string>Sectors (CTR / FSS)</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
@@ -2334,16 +2334,6 @@ airports with at least</string>
              </widget>
             </item>
            </layout>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbReadSupFile">
-            <property name="toolTip">
-             <string>Extends firdisplay.dat.</string>
-            </property>
-            <property name="text">
-             <string>display FIR boundaries for VATSIM (use firdisplay.sup)</string>
-            </property>
-           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="buttonResetFir">
@@ -3165,7 +3155,6 @@ p, li { white-space: pre-wrap; }
   <tabstop>pbFirBorderLineColor</tabstop>
   <tabstop>sbFirBorderLineStrength</tabstop>
   <tabstop>pbFirFillColor</tabstop>
-  <tabstop>cbReadSupFile</tabstop>
   <tabstop>buttonResetFir</tabstop>
   <tabstop>pbPilotFontColor</tabstop>
   <tabstop>pbPilotFont</tabstop>

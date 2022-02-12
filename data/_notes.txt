@@ -98,7 +98,7 @@ Avoid having two shapes with the same Display List ID.
 
 ------
 
-FIRDISPLAY.SUP
+FIRDISPLAY.SUP (unused since QuteScoop v2.4.0)
 
 Any shapes present in this file will suppress those in firdisplay.dat. These
 are not overwritten each time when firdisplay.dat is updated, so it is

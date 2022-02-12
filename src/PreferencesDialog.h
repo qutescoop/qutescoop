@@ -71,7 +71,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_cbShowCongestion_clicked(bool checked);
         void on_cbLineSmoothing_stateChanged(int state);
         void on_cbDotSmoothing_stateChanged(int state);
-        void on_cbReadSupFile_stateChanged(int state);
         void on_sbMaxTextLabels_valueChanged(int value);
         void on_pbUpperWindColor_clicked();
         void on_editNavdir_editingFinished();

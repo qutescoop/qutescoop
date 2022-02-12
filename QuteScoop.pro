@@ -73,7 +73,6 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/countrycodes.dat
     dataFiles.files += ./data/dataversions.txt
     dataFiles.files += ./data/firdisplay.dat
-    dataFiles.files += ./data/firdisplay.sup
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat
