@@ -41,6 +41,9 @@ jobs:
             echo ::set-output name=version::$describe-pr$pr
           fi
           commitLog=$(git log "$(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)"..HEAD --format='%h - %s (%an)')
+          commitLog="${commitLog//'%'/'%25'}"
+          commitLog="${commitLog//$'\n'/'%0A'}"
+          commitLog="${commitLog//$'\r'/'%0D'}"
           echo ::set-output name=commitLog::"$commitLog"
       - name: outputs
         run: |
