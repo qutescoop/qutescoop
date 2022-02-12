@@ -12,6 +12,7 @@ jobs:
       branch2: ${{ steps.gather.outputs.branch2 }}
       pr: ${{ steps.gather.outputs.pr }}
       version: ${{ steps.gather.outputs.version }}
+      commitLog: ${{ steps.gather.outputs.commitLog }}
     runs-on: ubuntu-20.04
     steps:
       - name: inputs
@@ -39,6 +40,8 @@ jobs:
           else
             echo ::set-output name=version::$describe-pr$pr
           fi
+          commitLog=$(git log $(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)..HEAD --format='%h - %s (%an)')
+          echo ::set-output name=commitLog::"$commitLog"
       - name: outputs
         run: |
           echo describe=${{ steps.gather.outputs.describe }}
@@ -46,6 +49,7 @@ jobs:
           echo branch2=${{ steps.gather.outputs.branch2 }}
           echo pr=${{ steps.gather.outputs.pr }}
           echo version=${{ steps.gather.outputs.version }}
+          echo commitLog=${{ steps.gather.outputs.commitLog }}
 
   build-linux:
     needs: facts
