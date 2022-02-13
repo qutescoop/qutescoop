@@ -101,8 +101,7 @@ void PreferencesDialog::loadSettings() {
             << Settings::dataDirectory("textures/+notes.txt")
             << "for more information.";
     glTextureEarth->setToolTip(
-            QString("Shows all textures from\n%1\n in the supported formats"
-                    "(View/Debug log shows them).\n"
+            QString("Shows all textures from\n%1\n in the supported formats\n"
                     "See +notes.txt in the texture directory for more information.").
             arg(Settings::dataDirectory("textures")));
     glTextureEarth->addItems(texDir.entryList()); // first without icons, use lazy-load
