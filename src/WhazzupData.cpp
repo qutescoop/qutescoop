@@ -27,7 +27,6 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     _dataType = type;
-    QStringList friends = Settings::friends();
     int reloadInMin = Settings::downloadInterval();
     QJsonDocument data = QJsonDocument::fromJson(*bytes);
     if(!data.isNull() && type == WHAZZUP) {
@@ -67,8 +66,6 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                 QJsonObject pilotObject = pilotsArray[i].toObject();
                 Pilot *p = new Pilot(pilotObject, this);
                 pilots[p->label] = p;
-                if(friends.contains(p->userId))
-                    friendsLatLon.append(QPair<double, double>(p->lat, p->lon));
             }
         }
         
@@ -78,8 +75,6 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                 QJsonObject controllerObject = controllersArray[i].toObject();
                 Controller *c = new Controller(controllerObject, this);
                 controllers[c->label] = c;
-                if(friends.contains(c->userId))
-                    friendsLatLon.append(QPair<double, double>(c->lat, c->lon));
             }
         }
 
@@ -465,7 +460,6 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
         whazzupTime = data.whazzupTime;
         updateEarliest = data.updateEarliest;
         predictionBasedOnTime = data.predictionBasedOnTime;
-        friendsLatLon = data.friendsLatLon;
     }
     if (data._dataType == ATCBOOKINGS || data._dataType == UNIFIED) {
         if(_dataType == WHAZZUP) _dataType = UNIFIED;
@@ -483,7 +477,24 @@ QSet<Controller*> WhazzupData::controllersWithSectors() const {
         if (c->sector != 0)
             result.insert(c);
 
-    qDebug() << "WhazzupData::activeSectors() -- finished";
+    return result;
+}
+
+QList<QPair<double, double> > WhazzupData::friendsLatLon() const
+{
+    qDebug() << "WhazzupData::friendsLatLon()";
+    QStringList friends = Settings::friends();
+    QList<QPair<double, double> > result;
+    foreach(Controller *c, controllers.values()) {
+        if(friends.contains(c->userId))
+            result.append(QPair<double, double>(c->lat, c->lon));
+    }
+
+    foreach(Pilot *p, pilots.values()) {
+        if(friends.contains(p->userId))
+            result.append(QPair<double, double>(p->lat, p->lon));
+    }
+
     return result;
 }
 
