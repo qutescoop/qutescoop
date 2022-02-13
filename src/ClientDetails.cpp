@@ -33,11 +33,14 @@ void ClientDetails::showOnMap() const {
 
 void ClientDetails::friendClicked() const {
     if(!userId.isEmpty()) {
-        if(Settings::friends().contains(userId)) // was friend, remove
+        if(Settings::friends().contains(userId))
             Settings::removeFriend(userId);
-        else // new friend
+        else
             Settings::addFriend(userId);
-        if (Window::instance(false) != 0)
+
+        if (Window::instance(false) != 0) {
             Window::instance()->refreshFriends();
+            Window::instance()->mapScreen->glWidget->newWhazzupData(true);
+        }
     }
 }

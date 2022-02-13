@@ -1674,7 +1674,7 @@ void GLWidget::newWhazzupData(bool isNew) {
         createPilotsList();
         createAirportsList();
         createControllersLists();
-        _friends = Whazzup::instance()->whazzupData().friendsLatLon;
+        _friends = Whazzup::instance()->whazzupData().friendsLatLon();
 
         updateGL();
     }
