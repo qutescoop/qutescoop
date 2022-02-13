@@ -67,6 +67,10 @@ jobs:
 
           echo ::set-output name=tagBody::"$commitLog"
       - name: outputs
+        env: 
+          OUTPUTS: ${{ toJson(steps.gather.outputs) }}
+        run: echo "$OUTPUTS"
+      - name: outputs
         run: |
           echo isPreRelease="${{ steps.gather.outputs.isPreRelease }}"
           echo describe="${{ steps.gather.outputs.describe }}"
@@ -74,6 +78,8 @@ jobs:
           echo branch2="${{ steps.gather.outputs.branch2 }}"
           echo pr="${{ steps.gather.outputs.pr }}"
           echo version="${{ steps.gather.outputs.version }}"
+          echo lastRelease="${{ steps.gather.outputs.version }}"
+          echo lastPreRelease="${{ steps.gather.outputs.version }}"
           echo commitLog="${{ steps.gather.outputs.commitLog }}"
 
   build-linux:
