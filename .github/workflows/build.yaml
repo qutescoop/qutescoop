@@ -7,12 +7,16 @@ on:
 jobs:
   facts:
     outputs:
-      describe: ${{ steps.gather.outputs.describe }}
-      branch: ${{ steps.gather.outputs.branch }}
-      branch2: ${{ steps.gather.outputs.branch2 }}
-      pr: ${{ steps.gather.outputs.pr }}
+      isPreRelease: ${{ steps.gather.outputs.isPreRelease }}
+      #describe: ${{ steps.gather.outputs.describe }}
+      #branch: ${{ steps.gather.outputs.branch }}
+      #branch2: ${{ steps.gather.outputs.branch2 }}
+      #pr: ${{ steps.gather.outputs.pr }}
       version: ${{ steps.gather.outputs.version }}
-      commitLog: ${{ steps.gather.outputs.commitLog }}
+      #lastPreRelease: ${{ steps.gather.outputs.lastPreRelease }}
+      #lastRelease: ${{ steps.gather.outputs.lastRelease }}
+      #commitLog: ${{ steps.gather.outputs.commitLog }}
+      tagBody: ${{ steps.gather.outputs.tagBody }}
     runs-on: ubuntu-20.04
     steps:
       - name: inputs
@@ -27,33 +31,101 @@ jobs:
       - id: gather
         name: gather
         run: |
-          describe=$(git describe --tags --exclude '*-*-*' --dirty --always --debug)
+          # "true" / "false"
+          isPreRelease=${{ github.ref_type != 'tag' }}
+          echo ::set-output name=isPreRelease::$isPreRelease
+
+          describe="$(git describe --candidates=999 --tags --exclude '*-*-*' --dirty --always --debug)"
           echo ::set-output name=describe::$describe
-          branch=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
+
+          branch="${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}"
           echo ::set-output name=branch::$branch
-          branch2=$(git rev-parse --abbrev-ref HEAD)
+
+          branch2="$(git rev-parse --abbrev-ref HEAD)"
           echo ::set-output name=branch2::$branch2
+
           pr=${{ github.event.number }}
           echo ::set-output name=pr::$pr
-          if [ -z "$pr" ]; then
-            echo ::set-output name=version::$describe
-          else
-            echo ::set-output name=version::$describe-pr$pr
-          fi
-          commitLog=$(git log "$(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)"..HEAD --format='%h - %s (%an)')
+
+          [ -n "$pr" ] \
+            && version="$describe-pr$pr" \
+            || version="$describe"
+          echo ::set-output name=version::$version
+
+          lastPreRelease="$(git describe --candidates=999 --tags --abbrev=0 HEAD~1 || true)"
+          echo ::set-output name=lastPreRelease::$lastPreRelease
+
+          lastRelease="$(git describe --candidates=999 --tags --abbrev=0 --exclude '*-*-*' HEAD~1 || true)"
+          echo ::set-output name=lastRelease::$lastRelease
+
+          lastMinorRelease="$(git describe --candidates=999 --tags --abbrev=0 --exclude '*-*-*' --match '*.0' HEAD~1 || true)"
+          echo ::set-output name=lastMinorRelease::$lastMinorRelease
+
+          lastMajorRelease="$(git describe --candidates=999 --tags --abbrev=0 --exclude '*-*-*' --match '*.0.0' HEAD~1 || true)"
+          echo ::set-output name=lastMajorRelease::$lastMajorRelease
+
+          [ $isPreRelease == "true" ] \
+            && commitLogFrom="$lastPreRelease" \
+            || commitLogFrom="$lastRelease"
+          echo ::set-output name=commitLogFrom::$commitLogFrom
+
+          commitLog=""
+          for sha in $(git log "$commitLogFrom"..HEAD --format='%H'); do
+            echo "SHA $sha"
+            echo -n "rate limit remaining: "
+            curl --silent --header "Accept: application/vnd.github.v3+json" \
+              --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+              https://api.github.com/rate_limit | jq -r '.rate.remaining'
+
+            commitUrl=$(sed "s#{/sha}#/$sha#" <<< ${{ github.event.repository.commits_url }})
+            echo curl --silent --header 'Accept: application/vnd.github.v3+json' "$commitUrl"
+            jq="$(curl --silent --header 'Accept: application/vnd.github.v3+json' \
+              --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+              "$commitUrl")"
+
+            authorLogin=$(jq -r '.author.login' <<< "$jq")
+            echo "authorLogin=$authorLogin"
+            commitMessage=$(jq -r '.commit.message' <<< "$jq")
+            echo "commitMessage=$commitMessage"
+            thisCommit="${sha::7} @$authorLogin $commitMessage"
+            echo $thisCommit
+            commitLog="${commitLog}${thisCommit}"$'\n'
+          done
+          echo "::set-output name=commitLog::$commitLog"
+
+          echo "commitLog=${commitLog}"
+          tagBody="${commitLog}"
+
+          compareUrl="$(sed 's#/[^/]*$##' <<< ${{ github.event.compare }})"
+          echo "compareUrl=$compareUrl"
+
+          compareLastPreReleaseUrl="$compareUrl/$lastPreRelease...$version"
+          echo "compareLastPreReleaseUrl=$compareLastPreReleaseUrl"
+          echo "::set-output name=compareLastPreReleaseUrl::$compareLastPreReleaseUrl"
+
+          compareLastReleaseUrl="$compareUrl/$lastRelease...$version"
+          echo "compareLastReleaseUrl=$compareLastReleaseUrl"
+          echo "::set-output name=compareLastReleaseUrl::$compareLastReleaseUrl"
+
+          tagBody="${tagBody}**since last pre-release**: [\`$lastPreRelease...$version\`]($compareLastPreReleaseUrl)"$'\n'
+          echo "added compareLastPreReleaseUrl"
+          tagBody="${tagBody}**since last release**: [\`$lastRelease...$version\`]($compareLastReleaseUrl)"
+          echo "added compareLastReleaseUrl"
+
+          echo "$tagBody"
           # Github multiline var workaround
-          commitLog="${commitLog//'%'/'%25'}"
-          commitLog="${commitLog//$'\n'/'%0A'}"
-          commitLog="${commitLog//$'\r'/'%0D'}"
-          echo ::set-output name=commitLog::"$commitLog"
+          echo
+          echo "applying multiline var workaround"
+          tagBody="${tagBody//'%'/'%25'}"     # Multiline escape sequences for %
+          tagBody="${tagBody//$'\n'/'%0A'}"   # Multiline escape sequences for '\n'
+          tagBody="${tagBody//$'\r'/'%0D'}"   # Multiline escape sequences for '\r'
+          echo "$tagBody"
+
+          echo "::set-output name=tagBody::$tagBody"
       - name: outputs
-        run: |
-          echo describe="${{ steps.gather.outputs.describe }}"
-          echo branch="${{ steps.gather.outputs.branch }}"
-          echo branch2="${{ steps.gather.outputs.branch2 }}"
-          echo pr="${{ steps.gather.outputs.pr }}"
-          echo version="${{ steps.gather.outputs.version }}"
-          echo commitLog="${{ steps.gather.outputs.commitLog }}"
+        env: 
+          OUTPUTS: ${{ toJson(steps.gather.outputs) }}
+        run: echo "$OUTPUTS"
 
   build-linux:
     needs: facts
@@ -230,20 +302,23 @@ jobs:
         with:
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
-          body: ${{ needs.facts.outputs.commitLog }}
+          body: |
+            ${{ needs.facts.outputs.tagBody }}
           commit: ${{ github.sha }}
           draft: true
           generateReleaseNotes: true
           name: ${{ needs.facts.outputs.version }}
-          prerelease: ${{ github.ref_type != 'tag' }}
+          prerelease: ${{ needs.facts.outputs.isPreRelease }}
           tag: ${{ needs.facts.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: "publish release (if pre-release)"
-        # the "draft first" shall inhibit watcher emails until artifacts are uploaded
-        if: ${{ github.ref_type != 'tag' }}
+        # The "draft first" strategy shall inhibit watcher emails until all artifacts are uploaded.
+        # Releases stay draft only in order to be edited before publishing manually.
+        if: ${{ needs.facts.outputs.isPreRelease }}
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          body: another body from publish
           commit: ${{ github.sha }}
           draft: false
           omitBodyDuringUpdate: true
@@ -259,3 +334,5 @@ jobs:
           tag_name: ${{ needs.facts.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# vim: ts=2:
