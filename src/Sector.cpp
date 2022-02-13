@@ -68,6 +68,18 @@ GLuint Sector::glBorderLine() {
     return _borderline;
 }
 
+/* At 180 the longitude wraps around to -180
+ * Since this can cause problems in the computation this adjusts point B relative to point A
+ * such that the difference in longitude is less than 180
+ * That is: Instead of going from a longitude of 179 in point A to a longitude of -179 in point B by going westwards
+ * we set the longitude of point B to 181 to indicate that we're going east
+ */
+void adjustPoint(const QPair<double, double> &a, QPair<double, double> &b) {
+    const double diff = a.second - b.second;
+    if(std::abs(diff) > 180)
+        b.second += ((diff > 0) - (diff < 0)) * 360;
+}
+
 QPair<double, double> Sector::getCenter() const {
     // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 
@@ -76,33 +88,32 @@ QPair<double, double> Sector::getCenter() const {
     runningTotal.first = 0;
     runningTotal.second = 0;
     const int count = points.size();
-    QList<QPair<double, double>> pointsNorm;
+
     if(count == 0) {
         qDebug() << "Sector::getCenter() Sector " << name << "(" << icao << ") doesn't contain any points";
         return runningTotal;
     }
-    pointsNorm.append(points[0]);
-    for(int i = 1; i < count; ++i) {
-        QPair<double, double> pointNorm = points[i];
-        const double diff = pointsNorm[i - 1].second - pointNorm.second;
-        // Check wether we need to shift this point
-        if(std::abs(diff) > 180) {
-            pointNorm.second = pointNorm.second + ((diff > 0) - (diff < 0)) * 360;
-        }
-        pointsNorm.append(pointNorm);
-    }
+
+    QPair<double, double> previous = points[0];
 
     for(int i = 0; i < count; ++i) {
-        A += (pointsNorm[i].first * pointsNorm[(i + 1) % count].second
-             - pointsNorm[(i + 1) % count].first * pointsNorm[i].second);
+        QPair<double, double> current = points[i];
+        QPair<double, double> next = points[(i + 1)%count];
+        if(i > 0)
+            adjustPoint(previous, current);
+        adjustPoint(current, next);
+        previous = current;
 
-        double multiplyBy = pointsNorm[i].first * pointsNorm[(i + 1) % count].second
-                            - (pointsNorm[(i + 1) % count].first * pointsNorm[i].second);
+        A += (current.first * next.second
+             - next.first * current.second);
 
-        runningTotal.first += (pointsNorm[i].first + pointsNorm[(i + 1) % count].first)
+        double multiplyBy = current.first * next.second
+                            - (next.first * current.second);
+
+        runningTotal.first += (current.first + next.first)
                             * multiplyBy;
         
-        runningTotal.second += (pointsNorm[i].second + pointsNorm[(i + 1) % count].second)
+        runningTotal.second += (current.second + next.second)
                             * multiplyBy;
     }
     A /= 2;
