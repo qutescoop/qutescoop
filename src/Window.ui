@@ -671,18 +671,12 @@ Whazzups (replay)</string>
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pb_highlightFriends">
+        <widget class="QCheckBox" name="pb_highlightFriends">
          <property name="toolTip">
           <string>draws a circle around friends on the map</string>
          </property>
          <property name="text">
           <string>highlight</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
          </property>
         </widget>
        </item>
