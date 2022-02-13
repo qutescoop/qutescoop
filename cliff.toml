@@ -1,0 +1,62 @@
+# configuration file for git-cliff (0.1.0)
+
+[changelog]
+# changelog header
+header = """
+"""
+# template for the changelog body
+# https://tera.netlify.app/docs/#introduction
+body = """
+{% if version %}\
+## {{ version }}
+{% else %}\
+## [unreleased]
+{% endif %}\
+{% for group, commits in commits | group_by(attribute="group") %}
+### {{ group | upper_first }}\
+{% for commit in commits %}\n
+- {{ commit.id | truncate(length=7, end="") }} {{ commit.message | trim | upper_first | replace( from="\n", to="\n  ")  }}\
+{% endfor %}\n
+{% endfor %}
+"""
+# remove the leading and trailing whitespaces from the template
+trim = false
+# changelog footer
+footer = """
+"""
+
+[git]
+# parse the commits based on https://www.conventionalcommits.org
+conventional_commits = true
+# filter out the commits that are not conventional
+filter_unconventional = false
+# regex for parsing and grouping commits
+commit_parsers = [
+    { message = "^feat", group = "Features"},
+    { message = "^\\[FEATURE\\]", group = "Features"},
+    { message = "^fix", group = "Bug Fixes"},
+    { message = "^\\[BUGFIX\\]", group = "Bug Fixes"},
+    { message = "^doc", group = "Documentation"},
+    { message = "^\\[DOCS\\]", group = "Documentation"},
+    { message = "^perf", group = "Performance"},
+    { message = "^refactor", group = "Refactor"},
+    { message = "^style", group = "Styling"},
+    { message = "^test", group = "Testing"},
+    { message = "^chore\\(release\\): prepare for", skip = true},
+    { message = "^chore", group = "Miscellaneous Tasks"},
+    { message = "^\\[TASK\\]", group = "Miscellaneous Tasks"},
+    { body = ".*security", group = "Security"},
+    { message = ".*", group = "Other", default_scope = "other"},
+]
+# filter out the commits that are not matched by commit parsers
+filter_commits = false
+# glob pattern for matching git tags
+tag_pattern = "v[0-9]*"
+# regex for skipping tags
+#skip_tags = "-"
+# regex for ignoring tags
+ignore_tags = "-[0-9]"
+# sort the tags topologically
+topo_order = false
+# sort the commits inside sections by oldest/newest order
+sort_commits = "oldest"
