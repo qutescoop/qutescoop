@@ -443,6 +443,671 @@ Whazzups (replay)</string>
         </layout>
        </item>
        <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblWarpInfo_4">
+           <property name="text">
+            <string>waiting for data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_6">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_9">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbUseDownloaded_4">
+           <property name="toolTip">
+            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
+           </property>
+           <property name="text">
+            <string>use downloaded
+Whazzups (replay)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbOnlyUseDownloaded_4">
+           <property name="toolTip">
+            <string>will not jump to times where no downloaded Whazzup is available (disables any prediction - just the pure, real playback).</string>
+           </property>
+           <property name="text">
+            <string>only downloaded</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateTimeEdit" name="dateTimePredict_5">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat">
+            <string>ddd MM/dd yyyy HHmm'z'</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+           <property name="timeSpec">
+            <enum>Qt::UTC</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbRunPredict_4">
+           <property name="toolTip">
+            <string>Toggle Run: Makes time run from selected time.</string>
+           </property>
+           <property name="text">
+            <string>run</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_4">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbDisablePredict_4">
+           <property name="toolTip">
+            <string>Exit Time Warp. Return to reality.</string>
+           </property>
+           <property name="text">
+            <string>Unwarp</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_7">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblWarpInfo_5">
+           <property name="text">
+            <string>waiting for data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_7">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_10">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbUseDownloaded_5">
+           <property name="toolTip">
+            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
+           </property>
+           <property name="text">
+            <string>use downloaded
+Whazzups (replay)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbOnlyUseDownloaded_5">
+           <property name="toolTip">
+            <string>will not jump to times where no downloaded Whazzup is available (disables any prediction - just the pure, real playback).</string>
+           </property>
+           <property name="text">
+            <string>only downloaded</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateTimeEdit" name="dateTimePredict_6">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat">
+            <string>ddd MM/dd yyyy HHmm'z'</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+           <property name="timeSpec">
+            <enum>Qt::UTC</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbRunPredict_5">
+           <property name="toolTip">
+            <string>Toggle Run: Makes time run from selected time.</string>
+           </property>
+           <property name="text">
+            <string>run</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_5">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbDisablePredict_5">
+           <property name="toolTip">
+            <string>Exit Time Warp. Return to reality.</string>
+           </property>
+           <property name="text">
+            <string>Unwarp</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblWarpInfo_6">
+           <property name="text">
+            <string>waiting for data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_8">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_11">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbUseDownloaded_6">
+           <property name="toolTip">
+            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
+           </property>
+           <property name="text">
+            <string>use downloaded
+Whazzups (replay)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbOnlyUseDownloaded_6">
+           <property name="toolTip">
+            <string>will not jump to times where no downloaded Whazzup is available (disables any prediction - just the pure, real playback).</string>
+           </property>
+           <property name="text">
+            <string>only downloaded</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateTimeEdit" name="dateTimePredict_7">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat">
+            <string>ddd MM/dd yyyy HHmm'z'</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+           <property name="timeSpec">
+            <enum>Qt::UTC</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbRunPredict_6">
+           <property name="toolTip">
+            <string>Toggle Run: Makes time run from selected time.</string>
+           </property>
+           <property name="text">
+            <string>run</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_6">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbDisablePredict_6">
+           <property name="toolTip">
+            <string>Exit Time Warp. Return to reality.</string>
+           </property>
+           <property name="text">
+            <string>Unwarp</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblWarpInfo_7">
+           <property name="text">
+            <string>waiting for data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_9">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_12">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbUseDownloaded_7">
+           <property name="toolTip">
+            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
+           </property>
+           <property name="text">
+            <string>use downloaded
+Whazzups (replay)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbOnlyUseDownloaded_7">
+           <property name="toolTip">
+            <string>will not jump to times where no downloaded Whazzup is available (disables any prediction - just the pure, real playback).</string>
+           </property>
+           <property name="text">
+            <string>only downloaded</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateTimeEdit" name="dateTimePredict_8">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat">
+            <string>ddd MM/dd yyyy HHmm'z'</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+           <property name="timeSpec">
+            <enum>Qt::UTC</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbRunPredict_7">
+           <property name="toolTip">
+            <string>Toggle Run: Makes time run from selected time.</string>
+           </property>
+           <property name="text">
+            <string>run</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_7">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbDisablePredict_7">
+           <property name="toolTip">
+            <string>Exit Time Warp. Return to reality.</string>
+           </property>
+           <property name="text">
+            <string>Unwarp</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <property name="spacing">
+          <number>2</number>
+         </property>
+         <item>
+          <widget class="QLabel" name="lblWarpInfo_8">
+           <property name="text">
+            <string>waiting for data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_10">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_13">
+           <property name="font">
+            <font>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text">
+            <string>Time Warp: </string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbUseDownloaded_8">
+           <property name="toolTip">
+            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
+           </property>
+           <property name="text">
+            <string>use downloaded
+Whazzups (replay)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QCheckBox" name="cbOnlyUseDownloaded_8">
+           <property name="toolTip">
+            <string>will not jump to times where no downloaded Whazzup is available (disables any prediction - just the pure, real playback).</string>
+           </property>
+           <property name="text">
+            <string>only downloaded</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDateTimeEdit" name="dateTimePredict_9">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">* {
+  padding: 0 15px 0 0;
+}</string>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+           <property name="displayFormat">
+            <string>ddd MM/dd yyyy HHmm'z'</string>
+           </property>
+           <property name="calendarPopup">
+            <bool>true</bool>
+           </property>
+           <property name="timeSpec">
+            <enum>Qt::UTC</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbRunPredict_8">
+           <property name="toolTip">
+            <string>Toggle Run: Makes time run from selected time.</string>
+           </property>
+           <property name="text">
+            <string>run</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/step16.png</normaloff>:/icons/images/step16.png</iconset>
+           </property>
+           <property name="iconSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="Line" name="line_8">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="tbDisablePredict_8">
+           <property name="toolTip">
+            <string>Exit Time Warp. Return to reality.</string>
+           </property>
+           <property name="text">
+            <string>Unwarp</string>
+           </property>
+           <property name="icon">
+            <iconset resource="Resources.qrc">
+             <normaloff>:/icons/images/timewarpExit16.png</normaloff>:/icons/images/timewarpExit16.png</iconset>
+           </property>
+           <property name="toolButtonStyle">
+            <enum>Qt::ToolButtonTextUnderIcon</enum>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
         <widget class="QWidget" name="widgetRunPredict" native="true">
          <layout class="QHBoxLayout" name="horizontalLayout_2">
           <property name="margin" stdset="0">
