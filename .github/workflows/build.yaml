@@ -103,7 +103,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: "Debug: Linux-${{ needs.facts.outputs.version }}-Makefile"
+          name: "Debug_Linux-Makefile"
           path: ./Makefile*
       - name: Upload
         uses: actions/upload-artifact@v2
@@ -153,7 +153,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: "Debug: Win-${{ needs.facts.outputs.version }}-Makefile"
+          name: "Debug_Win-Makefile"
           path: ./Makefile*
       - name: zip
         run: |
@@ -189,7 +189,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v2
         with:
-          name: "Debug: macos-${{ needs.facts.outputs.version }}-Makefile"
+          name: "Debug_macos-${{ needs.facts.outputs.version }}-Makefile"
           path: ./Makefile*
       - name: zip
         run: |
