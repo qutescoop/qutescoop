@@ -96,9 +96,10 @@ jobs:
            cp "$QT_PLUGIN_PATH"/platforms/libqxcb*.so* ./DIST-unix64/platforms
            cp -ar "$QT_PLUGIN_PATH"/xcbglintegrations ./DIST-unix64/
       - name: tgz
+        working-directory: DIST-unix64
         run: |
           mkdir ~/release
-          tar --directory=./DIST-unix64 -cvzf ~/release/QuteScoop-${{ needs.facts.outputs.version }}-linux.tgz ./
+          tar -cvzf ~/release/QuteScoop-${{ needs.facts.outputs.version }}-linux.tgz .* *
       - name: Upload Makefile on failure
         if: failure()
         uses: actions/upload-artifact@v2
