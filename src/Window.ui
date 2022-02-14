@@ -115,6 +115,11 @@ Whazzups (replay)</string>
          </item>
          <item>
           <widget class="QDateTimeEdit" name="dateTimePredict">
+           <property name="styleSheet">
+            <string notr="true">* {
+  padding-right: 5px;
+}</string>
+           </property>
            <property name="wrapping">
             <bool>true</bool>
            </property>
