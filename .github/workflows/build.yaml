@@ -156,9 +156,10 @@ jobs:
           name: "Debug: Win-${{ needs.facts.outputs.version }}-Makefile"
           path: ./Makefile*
       - name: zip
+        working-directory: DIST-win64
         run: |
           mkdir ~/release
-          Compress-Archive DIST-win64 ~/release/QuteScoop-${{ needs.facts.outputs.version }}-win.zip
+          Compress-Archive -Path * -DestinationPath ~/release/QuteScoop-${{ needs.facts.outputs.version }}-win.zip
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
