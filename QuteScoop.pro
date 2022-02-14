@@ -1,13 +1,13 @@
 # versiony things
-GIT_HASH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --short HEAD)\\\""
+GIT_HASH="\\\"$(shell git -C \""$$_PRO_FILE_PWD_"\" rev-parse --short HEAD)\\\""
 DEFINES += GIT_HASH=$$GIT_HASH
 
-GIT_BRANCH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --abbrev-ref HEAD)\\\""
+GIT_BRANCH="\\\"$(shell git -C \""$$_PRO_FILE_PWD_"\" rev-parse --abbrev-ref HEAD)\\\""
 DEFINES += GIT_BRANCH=$$GIT_BRANCH
 
 ## this produces v2.3.0 / v2.3.0-6-g29966c2 / v2.3.0-6-g29966c2-dirty
 ## C/I sets these "long" versions as tags for pre-releases, so we exclude them here as bases
-GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclude '*-*-*' --dirty --always)\\\""
+GIT_DESCRIBE="\\\"$(shell git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclude '*-*-*' --dirty --always)\\\""
 
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
 
