@@ -108,7 +108,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: QuteScoop-${{ needs.facts.outputs.version }}-linux
+          name: QuteScoop-linux
           path: ~/release/*
 
   build-win:
@@ -162,7 +162,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: QuteScoop-${{ needs.facts.outputs.version }}-win
+          name: QuteScoop-win
           path: ~/release/*
 
   build-mac:
@@ -199,7 +199,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
-          name: QuteScoop-${{ needs.facts.outputs.version }}-macos
+          name: QuteScoop-macos
           path: ~/release/*
 
   release:
