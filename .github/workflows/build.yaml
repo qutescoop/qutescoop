@@ -70,7 +70,7 @@ jobs:
           #commitLog="from commitLogFrom: $(git log "$commitLogFrom"..HEAD --format='%h - %s (%an)')"
 
           commitLog=""
-          for sha in $(git log "$commitLogFrom"..HEAD --format='%H')"; do
+          for sha in "$(git log "$commitLogFrom"..HEAD --format='%H')"; do
             echo $sha
             commitUrl="$(sed 's#{/sha}#/#' <<< ${{ github.event.repository.commits_url }} )"
 
