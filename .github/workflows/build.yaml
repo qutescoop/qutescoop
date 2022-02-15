@@ -83,8 +83,8 @@ jobs:
           compareLastPreReleaseUrl="$(sed 's#{base}#$lastPreRelease#' <<< ${{ github.event.repository.compare_url }} | sed 's#{head}#$version#')"
           compareLastReleaseUrl="$(sed 's#{base}#$lastRelease#' <<< ${{ github.event.repository.compare_url }} | sed 's#{head}#$version#')"
 
-          tagBody="${commitLog}*since last pre-release*: [$lastPreRelease...$version]($compareLastPreReleaseUrl)\n"
-          tagBody="${commitLog}*since last release*: [$lastRelease...$version]($compareLastReleaseUrl)"
+          tagBody="${commitLog}*since last pre-release*: [$lastPreRelease...$version]\($compareLastPreReleaseUrl\)\n"
+          tagBody="${commitLog}*since last release*: [$lastRelease...$version]\($compareLastReleaseUrl\)"
 
           # Github multiline var workaround
           tagBody="${tagBody//'%'/'%25'}"
