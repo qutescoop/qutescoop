@@ -208,48 +208,7 @@ QSet<Controller*> AirportDetails::checkSectors() const {
     QSet<Controller*> result;
 
     foreach(Controller *c, Whazzup::instance()->whazzupData().controllersWithSectors()) {
-        int crossings = 0;
-        double x1, x2;
-
-        int size = c->sector->points.size();
-        for(int ii = 0; ii < size ; ii++ ) {
-            /* This is done to ensure that we get the same result when
-               the line goes from left to right and right to left */
-            if(c->sector->points.value(ii).first <
-                 c->sector->points.value((ii + 1) % size).first) {
-                x1 = c->sector->points.value(ii).first;
-                x2 = c->sector->points.value((ii + 1) % size).first;
-            } else {
-                x1 = c->sector->points.value((ii + 1) % size).first;
-                x2 = c->sector->points.value(ii).first;
-            }
-
-            /* First check if the ray is able to cross the line */
-            if(_airport->lat > x1 && _airport->lat <= x2 && (
-                    _airport->lon < c->sector->points.value(ii).second
-                    || _airport->lon <= c->sector->points.value((ii + 1) % 8).second)) {
-                /* Calculate the equation of the line */
-                double dx = c->sector->points.value((ii + 1) % size).first
-                            - c->sector->points.value(ii).first;
-                double dy = c->sector->points.value((ii + 1) % size).second
-                            - c->sector->points.value(ii).second;
-                double k;
-
-                if(qFuzzyIsNull(dx))
-                    k = INFINITY;	// math.h
-                else
-                    k = dy/dx;
-
-                double m = c->sector->points.value(ii).second
-                           - k * c->sector->points.value(ii).first;
-
-                /* Check if the ray crosses the line */
-                double y2 = k * _airport->lat + m;
-                if(_airport->lon <= y2)
-                    crossings++;
-            }
-        }
-        if(crossings % 2 == 1)
+        if(c->sector->containsPoint(QPointF(_airport->lat, _airport->lon)))
             result.insert(c);
     }
     return result;

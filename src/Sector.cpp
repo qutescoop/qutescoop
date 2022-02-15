@@ -35,6 +35,11 @@ const QPolygonF Sector::sectorPolygon() const {
     return pol;
 }
 
+bool Sector::containsPoint(const QPointF &pt) const
+{
+    return sectorPolygon().containsPoint(pt, Qt::OddEvenFill);
+}
+
 GLuint Sector::glPolygon() {
     if (_polygon == 0) {
         _polygon = glGenLists(1);
