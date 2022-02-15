@@ -342,9 +342,12 @@ class Settings {
         static bool simpleLabels();
         static void setSimpleLabels(bool value);
 
-        static QStringList friends();
+        static const QStringList friends();
         static void addFriend(const QString& friendId);
         static void removeFriend(const QString& friendId);
+
+        static const QString clientAlias(const QString& userId);
+        static void setClientAlias(const QString& userId, const QString& alias = QString());
 
         static bool resetOnNextStart();
         static void setResetOnNextStart(bool value);

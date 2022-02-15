@@ -24,6 +24,10 @@ class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
     private slots:
         void on_buttonAddFriend_clicked();
         void on_pbAirportDetails_clicked();
+
+        // @todo move to ClientDetails
+        void on_pbAlias_clicked();
+
     private:
         ControllerDetails(QWidget *parent);
         Controller* _controller;
