@@ -67,14 +67,32 @@ jobs:
           # curl --silent -H "Accept: application/vnd.github.v3+json" \
           #     https://api.github.com/repos/qutescoop/qutescoop/commits/825341a2c9551b2831d392895d5c4bd4b86e93ee \
           #   | jq -r '.author.login'
-          commitLog="from commitLogFrom: $(git log "$commitLogFrom"..HEAD --format='%h - %s (%an)')"
+          #commitLog="from commitLogFrom: $(git log "$commitLogFrom"..HEAD --format='%h - %s (%an)')"
+
+          commitLog=""
+          for sha in $(git log "$commitLogFrom"..HEAD --format='%H')"; do
+            echo $sha
+            commitUrl="$(sed 's#{/sha}#/#' <<< ${{ github.event.repository.commits_url }} )"
+
+            echo curl --silent -H 'Accept: application/vnd.github.v3+json' $commitUrl
+            jq="$(curl --silent -H 'Accept: application/vnd.github.v3+json' $commitUrl)"
+
+            commitLog="${commitLog}${sha::7} $(jq -r '.author.login' <<< "$jq") $(jq -r '.commit.message' <<< "$jq")\n"
+          done
+
+          compareLastPreReleaseUrl="$(sed 's#{base}#$lastPreRelease#' <<< ${{ github.event.repository.compare_url }} | sed 's#{head}#$version#')"
+          compareLastReleaseUrl="$(sed 's#{base}#$lastRelease#' <<< ${{ github.event.repository.compare_url }} | sed 's#{head}#$version#')"
+
+          tagBody="${commitLog}*since last pre-release*: [$lastPreRelease...$version]($compareLastPreReleaseUrl)\n"
+          tagBody="${commitLog}*since last release*: [$lastRelease...$version]($compareLastReleaseUrl)"
+
           # Github multiline var workaround
-          commitLog="${commitLog//'%'/'%25'}"
-          commitLog="${commitLog//$'\n'/'%0A'}"
-          commitLog="${commitLog//$'\r'/'%0D'}"
+          tagBody="${tagBody//'%'/'%25'}"
+          tagBody="${tagBody//$'\n'/'%0A'}"
+          tagBody="${tagBody//$'\r'/'%0D'}"
           echo ::set-output name=commitLog::"$commitLog"
 
-          echo ::set-output name=tagBody::"$commitLog"
+          echo ::set-output name=tagBody::"$tagBody"
       - name: outputs
         env: 
           OUTPUTS: ${{ toJson(steps.gather.outputs) }}
@@ -283,3 +301,5 @@ jobs:
           tag_name: ${{ needs.facts.outputs.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# vim: ts=2:
