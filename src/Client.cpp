@@ -15,7 +15,6 @@ Client::Client(const QJsonObject& json, const WhazzupData*) {
     lat = json["latitude"].toDouble();
     lon = json["longitude"].toDouble();
     server = json["server"].toString();
-    protrevision = 0; // Not included in the JSON data
     rating = json["rating"].toInt();
     timeConnected = QDateTime::fromString(json["logon_time"].toString(), Qt::ISODate);
 
