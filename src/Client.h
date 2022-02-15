@@ -30,7 +30,6 @@ class Client: public MapObject {
         QString clientInformation() const;
 
         QString userId, realName, homeBase, server;
-        int protrevision;
         QDateTime timeConnected;
 
         int adminRating, rating;
