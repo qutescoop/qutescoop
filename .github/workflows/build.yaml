@@ -77,7 +77,10 @@ jobs:
             echo curl --silent -H 'Accept: application/vnd.github.v3+json' $commitUrl
             jq="$(curl --silent -H 'Accept: application/vnd.github.v3+json' $commitUrl)"
 
-            commitLog="${commitLog}${sha::7} $(jq -r '.author.login' <<< "$jq") $(jq -r '.commit.message' <<< "$jq")\n"
+            jq -r '.author.login' <<< "$jq"
+            jq -r '.commit.message' <<< "$jq"
+
+            commitLog="${commitLog}${sha::7} @$(jq -r '.author.login' <<< "$jq") $(jq -r '.commit.message' <<< "$jq")\n"
           done
 
           compareLastPreReleaseUrl="$(sed "s#{base}#$lastPreRelease#" <<< ${{ github.event.repository.compare_url }} | sed 's#{head}#$version#')"
