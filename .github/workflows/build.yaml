@@ -70,8 +70,8 @@ jobs:
           #commitLog="from commitLogFrom: $(git log "$commitLogFrom"..HEAD --format='%h - %s (%an)')"
 
           commitLog=""
-          for sha in "$(git log "$commitLogFrom"..HEAD --format='%H')"; do
-            echo $sha
+          for sha in $(git log "$commitLogFrom"..HEAD --format='%H'); do
+            echo "SHA $sha"
             commitUrl=$(sed s#{/sha}#/$sha# <<< "${{ github.event.repository.commits_url }}" )
 
             echo curl --silent -H 'Accept: application/vnd.github.v3+json' $commitUrl
