@@ -19,6 +19,7 @@ class Sector {
         bool isNull() const { return icao.isNull(); }
 
         const QPolygonF sectorPolygon() const;
+        bool containsPoint(const QPointF &pt) const;
 
         QList<QPair<double, double> > points;
         QString icao, name, id;
