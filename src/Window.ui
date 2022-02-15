@@ -690,7 +690,7 @@ Whazzups (replay)</string>
      <item>
       <widget class="QTreeView" name="friendsList">
        <property name="toolTip">
-        <string>Friends can be added via each controller or pilot detail dialogs.</string>
+        <string>Friends can be added via controller or pilot detail dialogs.</string>
        </property>
        <property name="rootIsDecorated">
         <bool>false</bool>

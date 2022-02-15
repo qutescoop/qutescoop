@@ -210,7 +210,7 @@ QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Name, C1)
     result += " (";
     if(!isObserver() && !frequency.isEmpty())
         result += frequency + ", ";
-    result += realName;
+    result += realName();
     if(!rank().isEmpty())
         result += ", " + rank();
     result += ")";
@@ -226,7 +226,7 @@ QString Controller::mapLabel() const { // LOVV
 bool Controller::matches(const QRegExp& regex) const {
     if (frequency.contains(regex)) return true;
     if (atisMessage.contains(regex)) return true;
-    if(realName.contains(regex)) return true;
+    if(realName().contains(regex)) return true;
     if (sector != 0)
         if (sector->name.contains(regex)) return true;
     return MapObject::matches(regex);

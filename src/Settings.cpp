@@ -1003,7 +1003,7 @@ QPoint Settings::savedPosition() {
     return instance()->value("mainWindowState/position", QPoint()).toPoint();
 }
 
-QStringList Settings::friends() {
+const QStringList Settings::friends() {
     return instance()->value("friends/friendList", QStringList()).toStringList();
 }
 
@@ -1020,6 +1020,27 @@ void Settings::removeFriend(const QString& friendId) {
     if(i >= 0 && i < fl.size())
         fl.removeAt(i);
     instance()->setValue("friends/friendList", fl);
+}
+
+const QString Settings::friendAlias(const QString &userId)
+{
+    return instance()->value(
+        QString("friends/alias_%1").arg(userId)
+    ).toString();
+}
+
+void Settings::setFriendAlias(const QString &userId, const QString &alias)
+{
+    if (alias.isEmpty()) {
+        instance()->remove(
+            QString("friends/alias_%1").arg(userId)
+        );
+    } else {
+        instance()->setValue(
+            QString("friends/alias_%1").arg(userId),
+            alias
+        );
+    }
 }
 
 bool Settings::resetOnNextStart() {

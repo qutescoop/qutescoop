@@ -102,11 +102,7 @@ Window::Window(QWidget *parent) :
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
     // METAR widget
-    _sortmodelMetar = new QSortFilterProxyModel;
-    _sortmodelMetar->setDynamicSortFilter(true);
-    _sortmodelMetar->setSourceModel(&_metarModel);
-
-    metarList->setModel(_sortmodelMetar);
+    metarList->setModel(&_metarModel);
     MetarDelegate *metarDelegate = new MetarDelegate();
     metarDelegate->setParent(metarList);
     metarList->setItemDelegate(metarDelegate);
@@ -117,10 +113,7 @@ Window::Window(QWidget *parent) :
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
     // friends widget
-    _sortmodelFriends = new QSortFilterProxyModel;
-    _sortmodelFriends->setDynamicSortFilter(true);
-    _sortmodelFriends->setSourceModel(&_modelFriends);
-    friendsList->setModel(_sortmodelFriends);
+    friendsList->setModel(&_modelFriends);
 
     connect(friendsList, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(friendClicked(const QModelIndex&)));
@@ -472,11 +465,11 @@ void Window::updateMetars() {
 }
 
 void Window::friendClicked(const QModelIndex& index) {
-    _modelFriends.modelClicked(_sortmodelFriends->mapToSource(index));
+    _modelFriends.modelClicked(index);
 }
 
 void Window::metarClicked(const QModelIndex& index) {
-    _metarModel.modelClicked(_sortmodelMetar->mapToSource(index));
+    _metarModel.modelClicked(index);
 }
 
 void Window::metarDockMoved(Qt::DockWidgetArea area) {

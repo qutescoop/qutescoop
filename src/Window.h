@@ -100,7 +100,6 @@ class Window : public QMainWindow, public Ui::Window {
         SearchResultModel _modelSearchResult, _modelFriends;
         QTimer _timerSearch, _timerMetar, _timerEditPredict, _timerRunPredict,
         _timerWhazzup, _timerCloud;
-        QSortFilterProxyModel *_sortmodelMetar, *_sortmodelFriends;
         MetarModel _metarModel;
         QNetworkReply *_cloudDownloadReply;
         QDateTime _dateTimePredict_old;

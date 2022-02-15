@@ -7,26 +7,26 @@
 #include "Whazzup.h"
 #include "Settings.h"
 
-
 Client::Client(const QJsonObject& json, const WhazzupData*) {
     label = json["callsign"].toString();
     userId = QString::number(json["cid"].toInt());
-    realName = json["name"].toString();
+    m_name = json["name"].toString();
     lat = json["latitude"].toDouble();
     lon = json["longitude"].toDouble();
     server = json["server"].toString();
     rating = json["rating"].toInt();
     timeConnected = QDateTime::fromString(json["logon_time"].toString(), Qt::ISODate);
 
-    if(realName.contains(QRegExp("\\b[A-Z]{4}$"))) {
-        homeBase = realName.right(4);
-        realName = realName.left(realName.length() - 4).trimmed();
+    if(m_name.contains(QRegExp("\\b[A-Z]{4}$"))) {
+        homeBase = m_name.right(4);
+        m_name = m_name.left(m_name.length() - 4).trimmed();
     }
 }
 
 QString Client::onlineTime() const {
     if (!timeConnected.isValid())
         return QString("not connected");
+
     return QDateTime::fromTime_t( // this will get wrapped by 24h but that should not be a problem...
             Whazzup::instance()->whazzupData().whazzupTime.toTime_t()
             - timeConnected.toTime_t()
@@ -34,7 +34,8 @@ QString Client::onlineTime() const {
 }
 
 QString Client::displayName(bool withLink) const {
-    QString result = realName;
+    QString result = realName();
+
     if(!rank().isEmpty())
         result += " (" + rank() + ")";
 
@@ -60,20 +61,30 @@ QString Client::detailInformation() const {
 }
 
 bool Client::matches(const QRegExp& regex) const {
-    if(realName.contains(regex)) return true;
+    if(m_name.contains(regex)) return true;
     if(userId.contains(regex)) return true;
     return MapObject::matches(regex);
 }
 
 QString Client::toolTip() const {
-    QString result = label + " (" + realName;
+    QString result = label + " (" + realName();
+
     if(!rank().isEmpty()) {
         result += ", " + rank();
     }
+
     result += ")";
     return result;
 }
 
 bool Client::isFriend() const {
     return Settings::friends().contains(userId);
+}
+
+const QString Client::realName() const {
+     auto& _alias = Settings::friendAlias(userId);
+     if (!_alias.isEmpty()) {
+         return _alias + "|" + m_name;
+     }
+     return m_name;
 }
