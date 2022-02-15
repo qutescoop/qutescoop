@@ -22,6 +22,7 @@ class Client: public MapObject {
         virtual QString rank() const { return QString(); }
         virtual bool matches(const QRegExp& regex) const;
         bool isFriend() const;
+        const QString realName() const;
 
         // convenience functions for detail displays
         QString onlineTime() const;
@@ -29,11 +30,14 @@ class Client: public MapObject {
         virtual QString detailInformation() const;
         QString clientInformation() const;
 
-        QString userId, realName, homeBase, server;
         int protrevision;
+        QString userId, homeBase, server;
         QDateTime timeConnected;
 
         int adminRating, rating;
+
+    protected:
+        QString m_name;
 };
 
 #endif /*CLIENT_H_*/
