@@ -471,7 +471,6 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
 }
 
 QSet<Controller*> WhazzupData::controllersWithSectors() const {
-    qDebug() << "WhazzupData::activeSectors()";
     QSet<Controller*> result;
     foreach(Controller *c, controllers.values())
         if (c->sector != 0)

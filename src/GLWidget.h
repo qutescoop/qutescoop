@@ -41,9 +41,6 @@ class GLWidget : public QGLWidget {
         void zoomIn(double factor);
         void zoomTo(double _zoom);
 
-        // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
-        QList<MapObject *> objectsAt(int x, int y, double radius = 0) const;
-
         void rememberPosition(int nr);
         void restorePosition(int nr);
 
@@ -55,6 +52,7 @@ class GLWidget : public QGLWidget {
         void createControllersLists();
         void createStaticLists();
         void createStaticSectorLists(QList<Sector*> sectors);
+        void createHoveredControllersLists(QSet<Controller*> controllers);
 
         void useClouds();
 
@@ -66,6 +64,10 @@ class GLWidget : public QGLWidget {
     protected:
         virtual void paintGL();
         virtual void resizeGL(int width, int height);
+
+        // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
+        QList<MapObject *> objectsAt(int x, int y, double radius = 0) const;
+
         void mouseDoubleClickEvent(QMouseEvent *event);
         void mousePressEvent(QMouseEvent *event);
         void mouseReleaseEvent(QMouseEvent *event);
@@ -117,8 +119,9 @@ class GLWidget : public QGLWidget {
         _pilotsList, _activeAirportsList, _inactiveAirportsList,
         _fixesList, _usedWaypointsList, _plannedRouteList,
         _sectorPolygonsList, _sectorPolygonBorderLinesList, _appBorderLinesList, _congestionsList,
-        _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList;
-        QSet<Controller*> _sectorsToDraw;
+        _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
+        _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
+        QSet<Controller*> _sectorsToDraw, _hoveredControllers;
         double _sondeLabelZoomTreshold, _pilotLabelZoomTreshold,
                 _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
         _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,

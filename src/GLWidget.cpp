@@ -434,8 +434,6 @@ void GLWidget::createControllersLists() {
     }
     glEndList();
 
-    QList<Airport*> airportList = NavData::instance()->airports.values();
-
     // FIR borders
     if(_sectorPolygonBorderLinesList == 0)
         _sectorPolygonBorderLinesList = glGenLists(1);
@@ -468,6 +466,7 @@ void GLWidget::createControllersLists() {
     if(_appBorderLinesList == 0)
         _appBorderLinesList = glGenLists(1);
 
+    QList<Airport*> airportList = NavData::instance()->airports.values();
     if(Settings::appBorderLineStrength() > 0.) {
         foreach(Airport *a, airportList)
             if(!a->approaches.isEmpty())
@@ -480,6 +479,50 @@ void GLWidget::createControllersLists() {
         glEndList();
     }
     qDebug() << "GLWidget::createControllersLists() -- finished";
+}
+
+
+void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
+    qDebug() << "GLWidget::createHoveredSectorsLists() ";
+
+    //Polygon
+    if (_hoveredSectorPolygonsList == 0)
+            _hoveredSectorPolygonsList = glGenLists(1);
+
+    // make sure all the lists are there to avoid nested glNewList calls
+    foreach(Controller *c, controllers) {
+        if (c->sector != 0)
+                c->sector->glPolygon();
+    }
+
+    // create a list of lists
+    glNewList(_hoveredSectorPolygonsList, GL_COMPILE);
+    foreach(Controller *c, controllers) {
+        if (c->sector != 0)
+                glCallList(c->sector->glPolygon());
+    }
+    glEndList();
+
+
+    // FIR borders
+    if (_hoveredSectorPolygonBorderLinesList == 0)
+            _hoveredSectorPolygonBorderLinesList = glGenLists(1);
+
+
+    if (!_allSectorsDisplayed && Settings::firBorderLineStrength() > 0.) {
+        // first, make sure all lists are there
+        foreach(Controller *c, controllers) {
+            if (c->sector != 0)
+                    c->sector->glBorderLine();
+        }
+        glNewList(_hoveredSectorPolygonBorderLinesList, GL_COMPILE);
+        foreach(Controller *c, controllers) {
+            if(c->sector != 0)
+                    glCallList(c->sector->glBorderLine());
+        }
+        glEndList();
+    }
+    qDebug() << "GLWidget::createHoveredSectorsLists() -- finished";
 }
 
 void GLWidget::createStaticLists() {
@@ -678,8 +721,6 @@ void GLWidget::createStaticSectorLists(QList<Sector*> sectors) {
         }
         glEndList();
     }
-
-
 }
 
 //////////////////////////////////////////
@@ -912,10 +953,16 @@ void GLWidget::paintGL() {
     if(Settings::showUsedWaypoints() && _zoom < _usedWaypointsLabelZoomThreshold * .7)
         glCallList(_usedWaypointsList);
 
-    //render Center
+    //render sectors
     if(Settings::showCTR()) {
         glCallList(_sectorPolygonsList);
         glCallList(_sectorPolygonBorderLinesList);
+    }
+
+    //render hovered sectors
+    if(_hoveredControllers.size() > 0) {
+        glCallList(_hoveredSectorPolygonsList);
+        glCallList(_hoveredSectorPolygonBorderLinesList);
     }
 
     //Static Sectors (for editing Sectordata)
@@ -1077,6 +1124,23 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
         _mapRectSelecting = true;
         updateGL();
+    }
+
+
+    double currLat, currLon;
+    if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
+        QSet<Controller*> _newHoveredControllers;
+        foreach(Controller *c, Whazzup::instance()->whazzupData().controllersWithSectors().values()) {
+            if (c->sector->containsPoint(QPointF(currLat, currLon))) {
+                _newHoveredControllers.insert(c);
+            }
+        }
+        if (_newHoveredControllers != _hoveredControllers) {
+            _hoveredControllers = _newHoveredControllers;
+            createHoveredControllersLists(_hoveredControllers);
+            qDebug() << "hovered controllers" << _hoveredControllers;
+            updateGL();
+        }
     }
 }
 
@@ -1502,7 +1566,8 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
         if(fr->rect.contains(x, y))
             result.append(fr->object);
 
-    double lat, lon; if(!mouse2latlon(x, y, lat, lon)) // returns false if not on globe
+    double lat, lon;
+    if(!mouse2latlon(x, y, lat, lon)) // returns false if not on globe
         return result;
 
     double radiusDegQuad = Nm2Deg((qFuzzyIsNull(radius)? 30. * _zoom: radius));
@@ -1518,6 +1583,7 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
             }
         }
     }
+
     foreach(Pilot *p, Whazzup::instance()->whazzupData().pilots.values()) {
         double x = p->lat - lat;
         double y = p->lon - lon;
