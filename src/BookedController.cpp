@@ -207,7 +207,7 @@ QString BookedController::toolTip() const {
     result += " (";
     if(!isObserver() && !frequency.isEmpty())
         result += frequency + ", ";
-    result += realName;
+    result += realName();
     if(!rank().isEmpty())
         result += ", " + rank();
     result += ")";

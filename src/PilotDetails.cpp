@@ -59,12 +59,9 @@ void PilotDetails::refresh(Pilot *pilot) {
     if (_pilot->server.isEmpty())
         lblConnected->setText(QString("<i>not connected</i>"));
     else
-        lblConnected->setText(QString("on %1 for %2%3")
-                     .arg(_pilot->server)
-                     .arg(_pilot->onlineTime())
-                     .arg(_pilot->clientInformation().isEmpty()? "": ", "+ _pilot->clientInformation()));
-    buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);
+        lblConnected->setText(QString("on %1 for %2").arg(_pilot->server, _pilot->onlineTime()));
 
+    buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);
 
     // Aircraft Information
     lblAircraft->setText(QString("%1").arg(_pilot->planAircraft));
@@ -171,3 +168,11 @@ void PilotDetails::closeEvent(QCloseEvent *event) {
     Settings::setPilotDetailsGeometry(saveGeometry());
     event->accept();
 }
+
+void PilotDetails::on_pbAlias_clicked()
+{
+    if (_pilot->showAliasDialog(this)) {
+        refresh();
+    }
+}
+
