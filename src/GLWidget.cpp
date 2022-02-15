@@ -1526,6 +1526,15 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
             result.append(p);
         }
     }
+
+    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers.values()) {
+        if (c->sector != 0) {
+            if (c->sector->containsPoint(QPointF(lat, lon))) {
+                result.removeAll(c);
+                result.append(c);
+            }
+        }
+    }
     return result;
 }
 
