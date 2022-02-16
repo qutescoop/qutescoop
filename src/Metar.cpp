@@ -65,7 +65,7 @@ QString Metar::decodeWind(QStringList& tokens) const {
     //35006KT
     if(wind.contains(QRegExp("^[0-9]{5}KT"))) {
         tokens.removeFirst();
-        result = "Wind from " + wind.left(3) + "°/";
+        result = "Wind from " + wind.left(3) + "°@";
         wind = wind.right(wind.length() - 3);
         result += wind;
     }
@@ -73,7 +73,7 @@ QString Metar::decodeWind(QStringList& tokens) const {
     //13022G25KT
     if(wind.contains(QRegExp("^[0-9]{5}G[0-9]{2}KT"))) {
         tokens.removeFirst();
-        result = "Wind from " + wind.left(3) + "°/";
+        result = "Wind from " + wind.left(3) + "°@";
         wind.remove(0, 3);
         result += wind.left(2) + " ";
         wind.remove(0, 3);
@@ -307,8 +307,16 @@ QString Metar::humanHtml() const {
     QStringList tokens = encoded.split(" ", Qt::SkipEmptyParts);
 
     // LOWW 012020Z 35006KT 320V040 9999 -RA FEW060 SCT070 BKN080 08/05 Q1014 NOSIG
-    // ignore airport and time
+    Airport *a = NavData::instance()->airports[tokens.first()];
+    if(a == 0)
+        result = tokens.first();
+    else
+        result = a->prettyName();
+
     tokens.removeFirst();
+    result += "<br>";
+
+    // ignore recorded time
     tokens.removeFirst();
 
     while(!tokens.isEmpty()) {

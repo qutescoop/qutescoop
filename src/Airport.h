@@ -25,6 +25,7 @@ class Airport: public MapObject {
         virtual QString toolTip() const;
         virtual QString mapLabel() const;
         virtual bool matches(const QRegExp &regex) const;
+        virtual QString prettyName() const;
 
         void resetWhazzupStatus();
 

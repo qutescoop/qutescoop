@@ -266,10 +266,18 @@ QSet<Controller*> Airport::allControllers() const {
 }
 
 bool Airport::matches(const QRegExp& regex) const {
-    if (name.contains(regex)) return true;
-    if (city.contains(regex)) return true;
-    if (countryCode.contains(regex)) return true;
-    return MapObject::matches(regex);
+    return name.contains(regex)
+            || city.contains(regex)
+            || countryCode.contains(regex)
+            || MapObject::matches(regex);
+}
+
+QString Airport::prettyName() const
+{
+    if (name.contains(city)) {
+        return name;
+    }
+    return city + " " + name;
 }
 
 QString Airport::mapLabel() const {
@@ -281,11 +289,14 @@ QString Airport::mapLabel() const {
         result += QString(" %1/%2").arg(numFilteredArrivals? QString::number(numFilteredArrivals): "-")
                   .arg(numFilteredDepartures? QString::number(numFilteredDepartures): "-");
     else
-        result += QString(" %1/%2").arg(arrivals.isEmpty()? "-": QString::number(arrivals.size()))
-                  .arg(departures.isEmpty()? "-": QString::number(departures.size()));
+        result += QString(" %1/%2")
+                .arg(
+                    arrivals.isEmpty()? "-": QString::number(arrivals.size()),
+                    departures.isEmpty()? "-": QString::number(departures.size())
+                );
     return result;
 }
 
 QString Airport::toolTip() const {
-    return QString("%1 %2 (%3, %4)").arg(label).arg(name).arg(city).arg(countryCode);
+    return QString("%1 (%2, %3)").arg(label, prettyName(), countryCode);
 }
