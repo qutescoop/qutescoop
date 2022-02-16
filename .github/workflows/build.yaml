@@ -99,7 +99,7 @@ jobs:
         working-directory: DIST-unix64
         run: |
           mkdir ~/release
-          tar -cvzf ~/release/QuteScoop-${{ needs.facts.outputs.version }}-linux.tgz .* *
+          tar -cvzf ~/release/QuteScoop-${{ needs.facts.outputs.version }}-linux.tgz *
       - name: Upload Makefile on failure
         if: failure()
         uses: actions/upload-artifact@v2
