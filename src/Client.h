@@ -29,7 +29,6 @@ class Client: public MapObject {
         QString onlineTime() const;
         virtual QString displayName(bool withLink = false) const;
         virtual QString detailInformation() const;
-        QString clientInformation() const;
 
         QString userId, homeBase, server;
         QDateTime timeConnected;

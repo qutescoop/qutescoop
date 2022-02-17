@@ -145,12 +145,6 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 
 void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
     qDebug() << "PilotDetails::on_cbPlotRoute_clicked()" << checked;
-    bool plottedAirports = false; // plotted?
-    if (_pilot->depAirport() != 0)
-        plottedAirports |= _pilot->depAirport()->showFlightLines;
-    if (_pilot->destAirport() != 0)
-        plottedAirports |= _pilot->destAirport()->showFlightLines;
-
     if (_pilot->showDepDestLine != checked) {
         _pilot->showDepDestLine = checked;
         if (Window::instance(false) != 0) {

@@ -49,10 +49,6 @@ QString Client::displayName(bool withLink) const {
     return result;
 }
 
-QString Client::clientInformation() const {
-    return QString();
-}
-
 QString Client::detailInformation() const {
     if(!homeBase.isEmpty()) {
         return "(" + homeBase + ")";
