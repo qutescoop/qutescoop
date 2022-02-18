@@ -90,8 +90,9 @@ QPair<double, double> Sector::getCenter() const {
     const int count = points.size();
 
     if(count == 0) {
-        qDebug() << "Sector::getCenter() Sector " << name << "(" << icao << ") doesn't contain any points";
-        return runningTotal;
+        qCritical() << "Sector::getCenter() Sector " << name << "(" << icao << ") doesn't contain any points";
+        QTextStream(stdout) << "CRITICAL: Sector " << name << "(" << icao << ") doesn't contain any points";
+        exit(EXIT_FAILURE);
     }
 
     QPair<double, double> previous = points[0];
