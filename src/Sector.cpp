@@ -13,8 +13,6 @@ Sector::Sector(QStringList strings) {
     //LSAZ:Zurich:CH:46.9:9.1:189
     icao = strings[0];
     name = strings[1];
-    lat = strings[3].toDouble();
-    lon = strings[4].toDouble();
     id = strings[5];
 
     _polygon = 0;
