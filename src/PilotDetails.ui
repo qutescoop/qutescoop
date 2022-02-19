@@ -22,17 +22,14 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,0">
         <item>
          <widget class="QLabel" name="lblPilotInfo">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="toolTip">
+           <string>Link opens the VATSIM Statistics Center</string>
           </property>
           <property name="text">
-           <string>Surname Name, (EDDF)</string>
+           <string>&lt;a href=&quot;https://&quot;&gt;Surname Name, (EDDF)&lt;/a&gt;</string>
           </property>
           <property name="openExternalLinks">
            <bool>true</bool>
