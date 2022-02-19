@@ -191,7 +191,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             QJsonObject controllerObject;
 
             controllerObject["callsign"] = bc->label;
-            controllerObject["name"] = bc->realName;
+            controllerObject["name"] = bc->realName();
             controllerObject["facility"] = bc->facilityType;
 
             //atisMessage = getField(stringList, 35);

@@ -24,6 +24,10 @@ class PilotDetails : public ClientDetails, private Ui::PilotDetails {
         void on_buttonDest_clicked();
         void on_buttonFrom_clicked();
         void on_buttonAddFriend_clicked();
+
+        // @todo move to ClientDetails
+        void on_pbAlias_clicked();
+
     private:
         PilotDetails(QWidget *parent);
         Pilot *_pilot;

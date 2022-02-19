@@ -7,13 +7,18 @@
 #include "Client.h"
 
 FriendsVisitor::FriendsVisitor() {
-	_friendList = Settings::friends();
+    _friendList = Settings::friends();
 }
 
 void FriendsVisitor::visit(MapObject* object) {
-	Client *c = dynamic_cast<Client*>(object);
-	if(c != 0) {
-		if(_friendList.contains(c->userId))
-			_friends.append(c);
-	}
+    Client *c = dynamic_cast<Client*>(object);
+    if(c != 0) {
+        if(c->isFriend()) {
+            _friends.append(c);
+        }
+    }
+}
+
+QList<MapObject *> FriendsVisitor::result() const {
+    return _friends;
 }

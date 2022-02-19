@@ -60,7 +60,7 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
         switch(index.column()) {
             case 0: return c->label;
             case 1: return c->rank();
-            case 2: return c->realName;
+            case 2: return c->realName();
             case 3: return c->onlineTime();
             case 4: return co != 0? QString("%1").arg(co->visualRange, 4, 'f', 0, ' '): QString();
             case 5:

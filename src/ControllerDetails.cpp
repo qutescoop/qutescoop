@@ -56,18 +56,15 @@ void ControllerDetails::refresh(Controller *newController) {
     if(!details.isEmpty())
         controllerInfo += details + "<br>";
 
-    controllerInfo += QString("on %3 for %4")
-                      .arg(_controller->server)
-                      .arg(_controller->onlineTime());
-    if(!_controller->clientInformation().isEmpty())
-        controllerInfo += ", " + _controller->clientInformation();
     lblControllerInfo->setText(controllerInfo);
+
+    lblOnline->setText(QString("on %3 for %4").arg(_controller->server, _controller->onlineTime()));
 
     QString stationInfo = _controller->facilityString();
     if(!_controller->isObserver() && _controller->frequency.length() != 0)
         stationInfo += QString(" on frequency %1")
                 .arg(_controller->frequency);
-    lblStationInformatoin->setText(stationInfo);
+    lblStationInformation->setText(stationInfo);
 
     pbAirportDetails->setVisible(_controller->airport() != 0);
     pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
@@ -111,3 +108,11 @@ void ControllerDetails::closeEvent(QCloseEvent *event) {
     Settings::setControllerDetailsGeometry(saveGeometry());
     event->accept();
 }
+
+void ControllerDetails::on_pbAlias_clicked()
+{
+    if (_controller->showAliasDialog(this)) {
+        refresh();
+    }
+}
+
