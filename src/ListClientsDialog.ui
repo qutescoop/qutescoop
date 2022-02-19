@@ -41,7 +41,7 @@
         <x>0</x>
         <y>0</y>
         <width>730</width>
-        <height>450</height>
+        <height>443</height>
        </rect>
       </property>
       <attribute name="label">
@@ -96,26 +96,11 @@
             <property name="toolTip">
              <string>Lists all connected Clients for the selected network</string>
             </property>
-            <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
-            </property>
             <property name="rootIsDecorated">
-             <bool>false</bool>
-            </property>
-            <property name="uniformRowHeights">
-             <bool>true</bool>
-            </property>
-            <property name="itemsExpandable">
              <bool>false</bool>
             </property>
             <property name="sortingEnabled">
              <bool>true</bool>
-            </property>
-            <property name="allColumnsShowFocus">
-             <bool>true</bool>
-            </property>
-            <property name="expandsOnDoubleClick">
-             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -130,7 +115,7 @@
         <x>0</x>
         <y>0</y>
         <width>730</width>
-        <height>450</height>
+        <height>443</height>
        </rect>
       </property>
       <attribute name="label">

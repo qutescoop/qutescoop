@@ -29,13 +29,15 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
         case 2: return QString("Name");
         case 3: return QString("Online");
         case 4: return QString("ATC:\nvisibility\nrange [NM]");
-        case 5: return QString("TTG");
+        case 5: return QString("Pilot:\nTTG");
         case 6: return QString("Pilot:\nroute DEP");
         case 7: return QString("Pilot:\nroute DEST");
-        case 8: return QString("Pilot:\nflight type");
-        case 9: return QString("Pilot:\nroute dist [NM]");
+        case 8: return QString("Pilot:\naircraft");
+        case 9: return QString("Pilot:\nflight type");
+        case 10: return QString("Pilot:\nroute dist [NM]");
+        case 11: return QString("Pilot:\naircraft (FP)");
+        case 12: return QString("Pilot:\nFP remarks");
     }
-
     return QVariant();
 }
 
@@ -83,8 +85,9 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
                 if (p != 0 && p->destAirport() != 0)
                     return p->destAirport()->label;
                 return QString();
-            case 8: return p != 0? p->planFlighttypeString(): QString();
-            case 9:
+            case 8: return p != 0? p->aircraftType(): QString();
+            case 9: return p != 0? p->planFlighttypeString(): QString();
+            case 10:
                 if (p != 0 && p->depAirport() != 0 && p->destAirport() != 0)
                     return QString("%1").arg(
                             NavData::distance(p->depAirport()->lat, p->depAirport()->lon,
@@ -92,21 +95,20 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
                             5, 'f', 0, ' '
                     );
                 return QString();
-            case 10: return c->adminRating > 2? QString("%1").arg(c->adminRating): QString();
+            case 11: return p != 0? p->planAircraft: QString();
+            case 12: return p != 0? p->planRemarks: QString();
         }
     }
 
     return QVariant();
 }
 
-int ListClientsDialogModel::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
+int ListClientsDialogModel::rowCount(const QModelIndex&) const {
     return _clients.count();
 }
 
-int ListClientsDialogModel::columnCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
-    return 10;
+int ListClientsDialogModel::columnCount(const QModelIndex&) const {
+    return 13;
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {

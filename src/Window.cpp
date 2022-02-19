@@ -210,8 +210,8 @@ R"html(
 <h3>QuteScoop</h3>
 
 <p>
-    QuteScoop is free software.
-    Find downloads, get help and join the discussion here:
+    QuteScoop is free (libre) software.
+    Find downloads, get help, voice your wishes, contribute and join the discussion here:
     <a href="https://github.com/qutescoop/qutescoop">QuteScoop on Github</a>.
 </p>
 
@@ -226,7 +226,7 @@ R"html(
 <p>
     QuteScoop is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 </p>
 )html"

@@ -35,7 +35,7 @@ class Client: public MapObject {
 
         bool showAliasDialog(QWidget *parent) const;
 
-        int adminRating, rating;
+        int rating;
 
     protected:
         QString m_name;
