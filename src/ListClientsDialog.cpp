@@ -47,6 +47,8 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     treeListClients->setColumnWidth(1, 100);
     treeListClients->setColumnWidth(2, 200);
     treeListClients->setColumnWidth(3, 100);
+    treeListClients->setColumnWidth(12, 800); // FP remarks
+    treeListClients->header()->setMinimumHeight(fontMetrics().lineSpacing() * 3);
 
     connect(treeListClients, SIGNAL(clicked(const QModelIndex&)),
             this, SLOT(modelSelected(const QModelIndex&)));
@@ -144,8 +146,7 @@ void ListClientsDialog::refresh() {
     qApp->restoreOverrideCursor();
 }
 
-void ListClientsDialog::on_editFilter_textChanged(QString searchStr) {
-    Q_UNUSED(searchStr);
+void ListClientsDialog::on_editFilter_textChanged(QString) {
     _editFilterTimer.start(1000);
 }
 

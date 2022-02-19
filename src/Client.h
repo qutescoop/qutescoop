@@ -32,7 +32,7 @@ class Client: public MapObject {
         QString userId, realName, homeBase, server;
         QDateTime timeConnected;
 
-        int adminRating, rating;
+        int rating;
 };
 
 #endif /*CLIENT_H_*/
