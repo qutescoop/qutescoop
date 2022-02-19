@@ -53,9 +53,13 @@ void PilotDetails::refresh(Pilot *pilot) {
     setWindowTitle(_pilot->toolTip());
 
     // Pilot Information
-    lblPilotInfo->setText(QString("<strong>%1</strong>%2")
-                        .arg(_pilot->displayName(true))
-                        .arg(_pilot->detailInformation().isEmpty() ? "" : ", " + _pilot->detailInformation()));
+    lblPilotInfo->setText(
+      QString("<strong>%1</strong>%2")
+        .arg(
+          _pilot->displayName(true),
+          _pilot->detailInformation().isEmpty() ? "" : ", " + _pilot->detailInformation()
+        )
+    );
     if (_pilot->server.isEmpty())
         lblConnected->setText(QString("<i>not connected</i>"));
     else
@@ -68,7 +72,7 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblAirline->setText(_pilot->airline);
     lblAltitude->setText(QString("%1 ft").arg(_pilot->altitude));
     lblGroundspeed->setText(QString("%1 kts").arg(_pilot->groundspeed));
-    lblSquwak->setText(QString("%1").arg(_pilot->transponder));
+    lblSquawk->setText(QString("%1").arg(_pilot->transponder));
 
     // flight status
     groupStatus->setTitle(QString("Status: %1").arg(_pilot->flightStatusShortString()));
@@ -90,11 +94,11 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));
     lblFuel->setText(QTime(_pilot->planFuel_hrs, _pilot->planFuel_mins).toString("H:mm"));
-    lblRoute->setText(_pilot->planRoute);
+    lblRoute->setText(QString("<code>%1</code>").arg(_pilot->planRoute));
     lblPlanTas->setText(QString("N%1").arg(_pilot->planTasInt()));
     lblPlanFl->setText(QString("F%1").arg(_pilot->defuckPlanAlt(_pilot->planAlt)/100));
     lblPlanEte->setText(QString("%1").arg(QTime(_pilot->planEnroute_hrs, _pilot->planEnroute_mins).toString("H:mm")));
-    lblRemarks->setText(_pilot->planRemarks);
+    lblRemarks->setText(QString("<code>%1</code>").arg(_pilot->planRemarks));
 
     // check if we know userId
     buttonAddFriend->setDisabled(_pilot->userId.isEmpty());

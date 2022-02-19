@@ -98,7 +98,7 @@
    <item>
     <widget class="QGroupBox" name="gbAtis">
      <property name="title">
-      <string>ATIS</string>
+      <string>Controller Info LON_W_CTR</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="margin" stdset="0">
