@@ -52,10 +52,10 @@ LRBB      - FIR code, usually an ICAO code but you can also use non-ICAO
             codes, or add middle letter(s) to them (e.g. LRBB_N)
 Bucharest - name of the sector
 RO        - [UNUSED] ISO code of the country where this airspace is
-45.3      - position of the label - decimal latitude (north is positive,
-            south is negative)
-25.6      - position of the label - decimal longitude (east is positive,
-            west is negative)
+45.3 [unused] - position of the label - decimal latitude (north is positive,
+            south is negative) [deprecated, not used in QuteScoop any more]
+25.6 [unused] - position of the label - decimal longitude (east is positive,
+            west is negative) [deprecated, not used in QuteScoop any more]
 186       - Display List ID, a number that uniquely identifies the shape
             in firdisplay.dat that is displayed when this sector is active
 

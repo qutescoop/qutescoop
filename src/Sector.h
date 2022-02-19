@@ -11,7 +11,7 @@
 class Sector {
     public:
         Sector() :
-            icao(), name(), id(), lat(0.), lon(0.), _polygon(0), _borderline(0)
+            icao(), name(), id(), _polygon(0), _borderline(0)
         {}
         Sector(QStringList strings);
         ~Sector();
@@ -23,7 +23,6 @@ class Sector {
 
         QList<QPair<double, double> > points;
         QString icao, name, id;
-        double lat, lon;
 
         GLuint glPolygon();
         GLuint glBorderLine();
