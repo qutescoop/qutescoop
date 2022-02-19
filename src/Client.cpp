@@ -61,8 +61,8 @@ bool Client::showAliasDialog(QWidget *parent) const
     bool ok;
     QString alias = QInputDialog::getText(
         parent,
-        QString("Add alias"),
-        QString("Set an alias for %1 [empty to unset]:").arg(name()),
+        QString("Edit alias"),
+        QString("Set the alias for %1 [empty to unset]:").arg(name()),
         QLineEdit::Normal,
         Settings::clientAlias(userId),
         &ok

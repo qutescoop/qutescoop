@@ -6,18 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>327</width>
+    <width>284</width>
     <height>409</height>
    </rect>
-  </property>
-  <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
-    <horstretch>1</horstretch>
-    <verstretch>0</verstretch>
-   </sizepolicy>
-  </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
@@ -34,14 +25,11 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
         <item>
          <widget class="QLabel" name="lblControllerInfo">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-            <horstretch>1</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="toolTip">
+           <string>Link opens the VATSIM Statistics Center</string>
           </property>
           <property name="text">
            <string>&lt;a href=&quot;https://&quot;&gt;Donald Fauntleroy Duck (C3)&lt;/a&gt;</string>
@@ -53,11 +41,8 @@
         </item>
         <item>
          <widget class="QPushButton" name="pbAlias">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+          <property name="toolTip">
+           <string>Add or edit an alias for this VATSIM member</string>
           </property>
           <property name="text">
            <string>alias…</string>
@@ -74,11 +59,31 @@
        </widget>
       </item>
       <item>
-       <widget class="QLabel" name="lblStationInformation">
-        <property name="text">
-         <string>APP on frequency 123.45</string>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="frequencyLayout" stretch="1,0">
+        <item>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>freq</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblFrequency">
+          <property name="text">
+           <string>&lt;h1&gt;&lt;code&gt;123.45&lt;/code&gt;&lt;/h1&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::TextBrowserInteraction</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QPushButton" name="pbAirportDetails">

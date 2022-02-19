@@ -60,13 +60,13 @@ void ControllerDetails::refresh(Controller *newController) {
 
     lblControllerInfo->setText(controllerInfo);
 
-    lblOnline->setText(QString("on %3 for %4").arg(_controller->server, _controller->onlineTime()));
+    lblOnline->setText(QString("%1 on %2 for %3 hrs").arg(_controller->label, _controller->server, _controller->onlineTime()));
 
-    QString stationInfo = _controller->facilityString();
-    if(!_controller->isObserver() && _controller->frequency.length() != 0)
-        stationInfo += QString(" on frequency %1")
-                .arg(_controller->frequency);
-    lblStationInformation->setText(stationInfo);
+    QString frequencyHtml;
+    if(!_controller->isObserver() && _controller->frequency.length() != 0) {
+        frequencyHtml = QString("<h1><pre>%1</pre></h1>").arg(_controller->frequency);
+    }
+    lblFrequency->setText(frequencyHtml);
 
     pbAirportDetails->setVisible(_controller->airport() != 0);
     pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
