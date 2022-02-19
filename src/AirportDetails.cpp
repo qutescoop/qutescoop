@@ -137,7 +137,6 @@ void AirportDetails::refresh(Airport* newAirport) {
     }
 
     QSet<Controller*> atcContent = _airport->allControllers() + checkSectors();
-    groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
 
     // ATIS
     Controller* atis = Whazzup::instance()->whazzupData().controllers[_airport->label + "_ATIS"];
@@ -156,6 +155,7 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     _atcModel.setClients(atcContent.values());
     _atcSortModel->invalidate();
+    groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
     cbPlotRoutes->setChecked(_airport->showFlightLines);
