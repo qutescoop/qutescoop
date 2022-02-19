@@ -20,6 +20,8 @@ CONFIG *= qt
 CONFIG *= warn_on
 TARGET = QuteScoop
 
+DISTFILES += uncrustify.cfg
+
 win32: {
     contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "win64"
     else:PLATFORM = "win32"
