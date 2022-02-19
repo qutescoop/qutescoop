@@ -1034,9 +1034,9 @@ void GLWidget::paintGL() {
             glLineWidth(lineWidth);
             glColor4f(red, green, blue, alpha);
             GLdouble circle_distort = qCos(_friend.first * Pi180);
-            for(int i = 0; i <= 360; i += 20) {
-                double x = _friend.first  + Nm2Deg((100-(range*20))) * circle_distort * qCos(i * Pi180);
-                double y = _friend.second + Nm2Deg((100-(range*20))) * qSin(i * Pi180);
+            for(int i = 0; i <= 360; i += 10) {
+                double x = _friend.first  + Nm2Deg((80-(range*20))) * circle_distort * qCos(i * Pi180);
+                double y = _friend.second + Nm2Deg((80-(range*20))) * qSin(i * Pi180);
                 VERTEX(x, y);
             }
             glEnd();
