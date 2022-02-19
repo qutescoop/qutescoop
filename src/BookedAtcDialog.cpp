@@ -166,10 +166,10 @@ void BookedAtcDialog::performSearch() {
     // Text
     qDebug() << "BookedAtcDialog/performSearch(): building RegExp";
     QRegExp regex;
-    QStringList tokens =
-            editFilter->text().trimmed()
-                    .replace(QRegExp("\\*"), ".*")
-                    .split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
+    // @todo this tries to cater for both ways (wildcards and regexp) but it does a bad job at that.
+    QStringList tokens = editFilter->text()
+            .replace(QRegExp("\\*"), ".*")
+            .split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
     if(tokens.size() == 1) {
         regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
     } else if(tokens.size() == 0) {

@@ -26,19 +26,14 @@
      <item row="0" column="1">
       <widget class="QLineEdit" name="editFilter">
        <property name="toolTip">
-        <string>Filter by login or name. Wildcards (*, ?) and those powerful &quot;regular expressions&quot;.</string>
+        <string>Filter by login or name. Wildcards (*, ?) &quot;Regular Expressions&quot; allowed.</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
-       <property name="font">
-        <font>
-         <bold>true</bold>
-        </font>
-       </property>
        <property name="text">
-        <string>Search</string>
+        <string>Search:</string>
        </property>
        <property name="buddy">
         <cstring>editFilter</cstring>
@@ -156,9 +151,6 @@
         </property>
         <property name="uniformRowHeights">
          <bool>true</bool>
-        </property>
-        <property name="itemsExpandable">
-         <bool>false</bool>
         </property>
         <property name="sortingEnabled">
          <bool>true</bool>

@@ -27,7 +27,6 @@ class SearchVisitor : public MapObjectVisitor {
         QHash<QString, Controller*> _controllers, _observers;
         QHash<QString, MapObject*> _others;
         QHash<QString, QString> _otherStrings;
-        QString _searchString;
 };
 
 #endif /*SEARCHVISITOR_H_*/
