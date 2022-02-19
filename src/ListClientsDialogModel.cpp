@@ -65,14 +65,15 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
             case 4: return co != 0? QString("%1").arg(co->visualRange, 4, 'f', 0, ' '): QString();
             case 5:
                 if (co != 0) {
-                    if (co->assumeOnlineUntil.isValid())
-                        return QTime().addSecs(
-                           QDateTime::currentDateTimeUtc().secsTo(co->assumeOnlineUntil)
-                        );
+                    if (co->assumeOnlineUntil.isValid()) {
+                            return QString("%1 hrs").arg(
+                                QTime().addSecs(QDateTime::currentDateTimeUtc().secsTo(co->assumeOnlineUntil)).toString("H:mm")
+                            );
+                        }
                     return QString();
                 }
                 if (p != 0)
-                    return p->eet();
+                    return QString("%1 hrs").arg(p->eet().toString("H:mm"));
                 break;
             case 6:
                 if (p != 0 && p->depAirport() != 0)

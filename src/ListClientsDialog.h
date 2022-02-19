@@ -35,7 +35,6 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
         ListClientsDialog(QWidget *parent);
 
         ListClientsDialogModel *_clientsModel;
-        //ListClientsSortFilter *listClientsSortModel;
         QSortFilterProxyModel *_clientsProxyModel;
         QColor mapPingToColor(int ms);
         QStack <QString> _pingStack;

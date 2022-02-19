@@ -5,59 +5,62 @@
 #include "SearchVisitor.h"
 
 SearchVisitor::SearchVisitor(const QString& searchStr) {
-        _searchString = searchStr;
-    QStringList tokens = searchStr.trimmed().replace(QRegExp("\\*"), ".*").split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
-	if(tokens.size() == 1) {
-		_regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
-		return;
-	}
-	
-	QString regExpStr = "^(" + tokens.first();
-	for(int i = 1; i < tokens.size(); i++)
-		regExpStr += "|" + tokens[i];
-	regExpStr += ".*)";
-	_regex = QRegExp(regExpStr, Qt::CaseInsensitive);
+    // @todo this tries to cater for both ways (wildcards and regexp) but it does a bad job at that.
+    QStringList tokens = QString(searchStr)
+            .replace(QRegExp("\\*"), ".*")
+            .split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
+
+    if(tokens.size() == 1) {
+        _regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
+        return;
+    }
+
+    QString regExpStr = "^(" + tokens.first();
+    for(int i = 1; i < tokens.size(); i++)
+        regExpStr += "|" + tokens[i];
+    regExpStr += ".*)";
+    _regex = QRegExp(regExpStr, Qt::CaseInsensitive);
 }
 
 void SearchVisitor::visit(MapObject* object) {
-	if(!object->matches(_regex))
-		return;
+    if(!object->matches(_regex))
+        return;
 
-	Pilot *p = dynamic_cast<Pilot*>(object);
-	if(p != 0) {
-		_pilots[p->label] = p;
-                return;
-	}
+    Pilot *p = dynamic_cast<Pilot*>(object);
+    if(p != 0) {
+        _pilots[p->label] = p;
+        return;
+    }
 
-	Controller *c = dynamic_cast<Controller*>(object);
-	if(c != 0) {
-		if(c->isObserver())
-			_observers[c->label] = c;
-		else
-			_controllers[c->label] = c;
-		return;
-	}
-	
-	_others[object->label] = object;
+    Controller *c = dynamic_cast<Controller*>(object);
+    if(c != 0) {
+        if(c->isObserver())
+            _observers[c->label] = c;
+        else
+            _controllers[c->label] = c;
+        return;
+    }
+
+    _others[object->label] = object;
 }
 
 void SearchVisitor::checkAirlines() {
     QHashIterator<QString, QString> i(AirlineCodes);
-     while (i.hasNext()) {
-         i.next();
-         if (i.key().contains(_regex)) {
-             _otherStrings[i.key()] = i.value();
-         }
+    while (i.hasNext()) {
+        i.next();
+        if (i.key().contains(_regex)) {
+            _otherStrings[i.key()] = i.value();
+        }
 
-         if(i.value().contains(_regex)) {
-             _otherStrings[i.key()] = i.value();
-         }
+        if(i.value().contains(_regex)) {
+            _otherStrings[i.key()] = i.value();
+        }
 
-     }
+    }
 }
 
 QList<MapObject*> SearchVisitor::result() const {
-	QList<MapObject*> result;
+    QList<MapObject*> result;
 
     //airlines
     QList<QString> labels = _otherStrings.keys();
@@ -70,29 +73,29 @@ QList<MapObject*> SearchVisitor::result() const {
         result.append(object);
     }
 
-	// airports
+    // airports
     labels = _others.keys();
     labels.sort();
     for(int i = 0; i < labels.size(); i++)
-                result.append(_others[labels[i]]);
-	
-	// controllers
-	labels = _controllers.keys();
+        result.append(_others[labels[i]]);
+
+    // controllers
+    labels = _controllers.keys();
     labels.sort();
-	for(int i = 0; i < labels.size(); i++)
-		result.append(_controllers[labels[i]]);
-	
-	// pilots
-	labels = _pilots.keys();
+    for(int i = 0; i < labels.size(); i++)
+        result.append(_controllers[labels[i]]);
+
+    // pilots
+    labels = _pilots.keys();
     labels.sort();
-	for(int i = 0; i < labels.size(); i++)
-		result.append(_pilots[labels[i]]);
-	
-	// observers
-	labels = _observers.keys();
+    for(int i = 0; i < labels.size(); i++)
+        result.append(_pilots[labels[i]]);
+
+    // observers
+    labels = _observers.keys();
     labels.sort();
-	for(int i = 0; i < labels.size(); i++)
-		result.append(_observers[labels[i]]);
-	
-	return result;
+    for(int i = 0; i < labels.size(); i++)
+        result.append(_observers[labels[i]]);
+
+    return result;
 }
