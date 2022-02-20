@@ -202,6 +202,15 @@ class Settings {
         static QColor firFillColor();
         static void setFirFillColor(const QColor& color);
 
+        static QColor firHighlightedBorderLineColor();
+        static void setFirHighlightedBorderLineColor(const QColor& color);
+
+        static double firHighlightedBorderLineStrength();
+        static void setFirHighlightedBorderLineStrength(double strength);
+
+        static QColor firHighlightedFillColor();
+        static void setFirHighlightedFillColor(const QColor& color);
+
         static QFont firFont();
         static void setFirFont(const QFont& font);
 

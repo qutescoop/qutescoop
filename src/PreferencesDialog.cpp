@@ -168,6 +168,15 @@ void PreferencesDialog::loadSettings() {
     pbFirFontColor->setPalette(QPalette(color));
     pbFirFont->setFont(Settings::firFont());
 
+    color = Settings::firHighlightedBorderLineColor();
+    pbFirHighlightedBorderLineColor->setText(color.name());
+    pbFirHighlightedBorderLineColor->setPalette(QPalette(color));
+    sbFirHighlightedBorderLineStrength->setValue(Settings::firHighlightedBorderLineStrength());
+
+    color = Settings::firHighlightedFillColor();
+    pbFirHighlightedFillColor->setText(color.name());
+    pbFirHighlightedFillColor->setPalette(QPalette(color));
+
     color = Settings::windColor();
     pbUpperWindColor->setText(color.name());
     pbUpperWindColor->setPalette(QPalette(color));
@@ -622,6 +631,32 @@ void PreferencesDialog::on_pbFirFillColor_clicked() {
         pbFirFillColor->setText(color.name());
         pbFirFillColor->setPalette(QPalette(color));
         Settings::setFirFillColor(color);
+    }
+}
+
+void PreferencesDialog::on_pbFirHighlightedBorderLineColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::firHighlightedBorderLineColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+    if(color.isValid()) {
+        pbFirHighlightedBorderLineColor->setText(color.name());
+        pbFirHighlightedBorderLineColor->setPalette(QPalette(color));
+        Settings::setFirHighlightedBorderLineColor(color);
+    }
+}
+
+void PreferencesDialog::on_sbFirHighlightedBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded)
+        return;
+    Settings::setFirHighlightedBorderLineStrength(value);
+}
+
+void PreferencesDialog::on_pbFirHighlightedFillColor_clicked() {
+    QColor color = QColorDialog::getColor(Settings::firHighlightedFillColor(), this,
+                                          "Select color", QColorDialog::ShowAlphaChannel);
+    if(color.isValid()) {
+        pbFirHighlightedFillColor->setText(color.name());
+        pbFirHighlightedFillColor->setPalette(QPalette(color));
+        Settings::setFirHighlightedFillColor(color);
     }
 }
 
@@ -1309,3 +1344,4 @@ void PreferencesDialog::on_sbWindSecondarySpan_valueChanged(int value) {
     if (Window::instance(false) != 0)
         Window::instance()->mapScreen->glWidget->update();
 }
+

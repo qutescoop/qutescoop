@@ -9,14 +9,16 @@
 #include "NavData.h"
 #include "helpers.h"
 
-Sector::Sector(QStringList strings) {
+Sector::Sector(QStringList strings) :
+  _polygon(0),
+  _borderline(0),
+  _polygonHighlighted(0),
+  _borderlineHighlighted(0)
+{
     //LSAZ:Zurich:CH:46.9:9.1:189
     icao = strings[0];
     name = strings[1];
     id = strings[5];
-
-    _polygon = 0;
-    _borderline = 0;
 }
 
 Sector::~Sector() {
@@ -24,6 +26,10 @@ Sector::~Sector() {
         glDeleteLists(_polygon, 1);
     if(_borderline != 0)
         glDeleteLists(_borderline, 1);
+    if(_polygonHighlighted != 0)
+        glDeleteLists(_polygonHighlighted, 1);
+    if(_borderlineHighlighted != 0)
+        glDeleteLists(_borderlineHighlighted, 1);
 }
 
 const QPolygonF Sector::sectorPolygon() const {
@@ -45,11 +51,6 @@ GLuint Sector::glPolygon() {
         QColor color = Settings::firFillColor();
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
         Tessellator().tessellate(points);
-        // without Tesselator:
-//        glBegin(GL_POLYGON);
-//        foreach(const DoublePair &p, points)
-//            VERTEXhigh(p.first, p.second);
-//        glEnd;
         glEndList();
     }
     return _polygon;
@@ -69,6 +70,34 @@ GLuint Sector::glBorderLine() {
         glEndList();
     }
     return _borderline;
+}
+
+GLuint Sector::glPolygonHighlighted() {
+    if (_polygonHighlighted == 0) {
+        _polygonHighlighted = glGenLists(1);
+        glNewList(_polygonHighlighted, GL_COMPILE);
+        QColor color = Settings::firHighlightedFillColor();
+        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+        Tessellator().tessellate(points);
+        glEndList();
+    }
+    return _polygonHighlighted;
+}
+
+GLuint Sector::glBorderLineHighlighted() {
+    if (_borderlineHighlighted == 0) {
+        _borderlineHighlighted = glGenLists(1);
+        glNewList(_borderlineHighlighted, GL_COMPILE);
+        glLineWidth(Settings::firHighlightedBorderLineStrength());
+        glBegin(GL_LINE_LOOP);
+        QColor color = Settings::firHighlightedBorderLineColor();
+        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+        for (int i = 0; i < points.size(); i++)
+            VERTEXhigh(points[i].first, points[i].second);
+        glEnd();
+        glEndList();
+    }
+    return _borderlineHighlighted;
 }
 
 /* At 180 the longitude wraps around to -180

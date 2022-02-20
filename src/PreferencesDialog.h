@@ -91,6 +91,9 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_pbFirFontColor_clicked();
         void on_pbFirFont_clicked();
         void on_pbFirFillColor_clicked();
+        void on_pbFirHighlightedBorderLineColor_clicked();
+        void on_sbFirHighlightedBorderLineStrength_valueChanged(double value);
+        void on_pbFirHighlightedFillColor_clicked();
         void on_pbAirportDotColor_clicked();
         void on_sbAirportDotSize_valueChanged(double value);
         void on_pbAirportFontColor_clicked();
@@ -142,7 +145,8 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_cbRememberMapPositionOnClose_toggled(bool checked);
         void on_sbWindSize_valueChanged(int factor);
         void on_sbWindSecondarySpan_valueChanged(int value);
-    private:
+
+private:
         PreferencesDialog(QWidget *parent);
         bool _settingsLoaded;
 };

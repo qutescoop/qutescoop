@@ -26,10 +26,12 @@ class Sector {
 
         GLuint glPolygon();
         GLuint glBorderLine();
+        GLuint glPolygonHighlighted();
+        GLuint glBorderLineHighlighted();
 
         QPair<double, double> getCenter() const;
     private:
-        GLuint _polygon, _borderline;
+        GLuint _polygon, _borderline, _polygonHighlighted, _borderlineHighlighted;
 };
 
 #endif /*SECTOR_H_*/
