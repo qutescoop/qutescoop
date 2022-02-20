@@ -555,9 +555,8 @@ void Settings::setCoastLineStrength(double strength) {
 }
 
 // FIRs
-
 QColor Settings::firBorderLineColor() {
-    return instance()->value("firDisplay/borderLineColor", QColor::fromRgbF(0.0, 0.0, 1.0)).value<QColor>();
+    return instance()->value("firDisplay/borderLineColor", QColor::fromRgbF(0.0, 0.0, 1.0, 0.3)).value<QColor>();
 }
 
 void Settings::setFirBorderLineColor(const QColor& color) {
@@ -581,7 +580,7 @@ void Settings::setFirFontColor(const QColor& color) {
 }
 
 QColor Settings::firFillColor() {
-    return instance()->value("firDisplay/fillColor", QColor::fromRgb(42, 163, 214, 100)).value<QColor>();
+    return instance()->value("firDisplay/fillColor", QColor::fromRgb(42, 163, 214, 42)).value<QColor>();
 }
 
 void Settings::setFirFillColor(const QColor& color) {
@@ -599,6 +598,30 @@ QFont Settings::firFont() {
 
 void Settings::setFirFont(const QFont& font) {
     instance()->setValue("firDisplay/font", font);
+}
+
+QColor Settings::firHighlightedBorderLineColor() {
+    return instance()->value("firDisplay/borderLineColorHighlighted", QColor::fromRgbF(1.0, 1.0, 0.5, 0.3)).value<QColor>();
+}
+
+void Settings::setFirHighlightedBorderLineColor(const QColor& color) {
+    instance()->setValue("firDisplay/borderLineColorHighlighted", color);
+}
+
+double Settings::firHighlightedBorderLineStrength() {
+    return instance()->value("firDisplay/borderLineStrengthHighlighted", 1.5).toDouble();
+}
+
+void Settings::setFirHighlightedBorderLineStrength(double strength) {
+    instance()->setValue("firDisplay/borderLineStrengthHighlighted", strength);
+}
+
+QColor Settings::firHighlightedFillColor() {
+    return instance()->value("firDisplay/fillColorHighlighted", QColor::fromRgb(200, 13, 214, 50)).value<QColor>();
+}
+
+void Settings::setFirHighlightedFillColor(const QColor& color) {
+    instance()->setValue("firDisplay/fillColorHighlighted", color);
 }
 
 //airport

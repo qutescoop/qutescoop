@@ -451,7 +451,7 @@ void GLWidget::createControllersLists() {
                     glCallList(c->sector->glBorderLine());
             }
             glEndList();
-        } else if(_allSectorsDisplayed) {
+        } else {
             // display ALL fir borders
             foreach(Sector *s, NavData::instance()->sectors.values())
                 s->glBorderLine();
@@ -492,14 +492,14 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
     // make sure all the lists are there to avoid nested glNewList calls
     foreach(Controller *c, controllers) {
         if (c->sector != 0)
-                c->sector->glPolygon();
+                c->sector->glPolygonHighlighted();
     }
 
     // create a list of lists
     glNewList(_hoveredSectorPolygonsList, GL_COMPILE);
     foreach(Controller *c, controllers) {
         if (c->sector != 0)
-                glCallList(c->sector->glPolygon());
+                glCallList(c->sector->glPolygonHighlighted());
     }
     glEndList();
 
@@ -509,16 +509,16 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
             _hoveredSectorPolygonBorderLinesList = glGenLists(1);
 
 
-    if (!_allSectorsDisplayed && Settings::firBorderLineStrength() > 0.) {
+    if (!_allSectorsDisplayed && Settings::firHighlightedBorderLineStrength() > 0.) {
         // first, make sure all lists are there
         foreach(Controller *c, controllers) {
             if (c->sector != 0)
-                    c->sector->glBorderLine();
+                    c->sector->glBorderLineHighlighted();
         }
         glNewList(_hoveredSectorPolygonBorderLinesList, GL_COMPILE);
         foreach(Controller *c, controllers) {
             if(c->sector != 0)
-                    glCallList(c->sector->glBorderLine());
+                    glCallList(c->sector->glBorderLineHighlighted());
         }
         glEndList();
     }
