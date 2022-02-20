@@ -12,37 +12,39 @@ NavAid::NavAid(const QStringList& stringList) {
 
     _type = (Type)stringList[0].toInt(&ok);
 	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList;
+		qWarning() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList << 0;
 		return;
 	}
 	lat = stringList[1].toDouble(&ok);
 	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse lat (double):" << stringList;
+		qWarning() << "NavAid::NavAid() unable to parse lat (double):" << stringList << 1;
 		return;
 	}
 	lon = stringList[2].toDouble(&ok);
 	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse lon (double):" << stringList;
+		qWarning() << "NavAid::NavAid() unable to parse lon (double):" << stringList << 2;
 		return;
 	}
 	_alt = stringList[3].toInt(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse altitude (int):" << stringList;
-		return;
-	}
+	// @todo
+	// ignore parsing erros (format: "0-0012") since altitude is currently unused
+	//  if(!ok) {
+	//          qWarning() << "NavAid::NavAid() unable to parse altitude (int):" << stringList << 3;
+	//          return;
+	//  }
 	_freq = stringList[4].toInt(&ok);
 	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse frequency (int):" << stringList;
+		qWarning() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
 		return;
 	}
 	_range = stringList[5].toInt(&ok);
 	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse range (int):" << stringList;
+		qWarning() << "NavAid::NavAid() unable to parse range (int):" << stringList << 5;
 		return;
 	}
 	_hdg = stringList[6].toFloat(&ok);
 	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse heading (float):" << stringList;
+		qWarning() << "NavAid::NavAid() unable to parse heading (float):" << stringList << 6;
 		return;
 	}
 	label = stringList[7];
