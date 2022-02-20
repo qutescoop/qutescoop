@@ -129,15 +129,6 @@ void Settings::setBookingsInterval(int value) {
     instance()->setValue("download/bookingsInterval", value);
 }
 
-//
-bool Settings::useSupFile() {
-    return instance()->value("data/useSupFile", true).toBool();
-}
-
-void Settings::setUseSupFile(bool value) {
-    instance()->setValue("data/useSupFile", value);
-}
-
 int Settings::downloadNetwork() {
     return instance()->value("download/network", 1).toInt();
 }

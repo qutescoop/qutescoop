@@ -99,6 +99,7 @@ Avoid having two shapes with the same Display List ID.
 ------
 
 FIRDISPLAY.SUP
+[unused since QuteScoop v2.5.0]
 
 Any shapes present in this file will suppress those in firdisplay.dat. These
 are not overwritten each time when firdisplay.dat is updated, so it is
@@ -124,7 +125,7 @@ Country:		Australia
 
 
 ------
-deprecated: will be removed
+[deprecated: might be removed]
 CLOUDMIRRORS.dat
 
 This contains mirrors to download cloud images.
