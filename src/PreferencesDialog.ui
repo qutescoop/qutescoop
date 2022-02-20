@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1007</width>
-    <height>719</height>
+    <height>756</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -2200,20 +2200,33 @@ airports with at least</string>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <layout class="QGridLayout" name="gridLayout_5">
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_14">
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_17">
               <property name="text">
-               <string>border</string>
+               <string>font</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirFontColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="label_44">
+              <property name="text">
+               <string>border (highlighted)</string>
               </property>
               <property name="buddy">
                <cstring>pbFirBorderLineColor</cstring>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="pbFirBorderLineColor">
+            <item row="0" column="2">
+             <widget class="QPushButton" name="pbFirFont">
               <property name="autoFillBackground">
                <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>EURM</string>
               </property>
               <property name="flat">
                <bool>true</bool>
@@ -2261,6 +2274,62 @@ airports with at least</string>
               </property>
              </spacer>
             </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>border</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirBorderLineColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pbFirBorderLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="4">
+             <widget class="QLabel" name="label_45">
+              <property name="text">
+               <string>fill (highlighted)</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirFillColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="6">
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="2" column="5">
+             <widget class="QPushButton" name="pbFirHighlightedFillColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to deactivate.</string>
+              </property>
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="4">
              <widget class="QLabel" name="label_16">
               <property name="text">
@@ -2284,26 +2353,41 @@ airports with at least</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="6">
-             <spacer name="horizontalSpacer_6">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="2" column="2">
+             <widget class="QDoubleSpinBox" name="sbFirHighlightedBorderLineStrength">
+              <property name="toolTip">
+               <string>set to 0 to deactivate.</string>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
+              <property name="specialValueText">
+               <string>off</string>
               </property>
-             </spacer>
+              <property name="suffix">
+               <string> px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="minimum">
+               <double>0.000000000000000</double>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>0.000000000000000</double>
+              </property>
+             </widget>
             </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_17">
-              <property name="text">
-               <string>font</string>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="pbFirHighlightedBorderLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
               </property>
-              <property name="buddy">
-               <cstring>pbFirFontColor</cstring>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -2314,19 +2398,6 @@ airports with at least</string>
               </property>
               <property name="autoFillBackground">
                <bool>true</bool>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="pbFirFont">
-              <property name="autoFillBackground">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>EURM</string>
               </property>
               <property name="flat">
                <bool>true</bool>
