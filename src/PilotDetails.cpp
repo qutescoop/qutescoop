@@ -53,25 +53,26 @@ void PilotDetails::refresh(Pilot *pilot) {
     setWindowTitle(_pilot->toolTip());
 
     // Pilot Information
-    lblPilotInfo->setText(QString("<strong>%1</strong>%2")
-                        .arg(_pilot->displayName(true))
-                        .arg(_pilot->detailInformation().isEmpty() ? "" : ", " + _pilot->detailInformation()));
+    lblPilotInfo->setText(
+      QString("<strong>%1</strong>%2")
+        .arg(
+          _pilot->displayName(true),
+          _pilot->detailInformation().isEmpty() ? "" : ", " + _pilot->detailInformation()
+        )
+    );
     if (_pilot->server.isEmpty())
         lblConnected->setText(QString("<i>not connected</i>"));
     else
-        lblConnected->setText(QString("on %1 for %2%3")
-                     .arg(_pilot->server)
-                     .arg(_pilot->onlineTime())
-                     .arg(_pilot->clientInformation().isEmpty()? "": ", "+ _pilot->clientInformation()));
-    buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);
+        lblConnected->setText(QString("on %1 for %2 hrs").arg(_pilot->server, _pilot->onlineTime()));
 
+    buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);
 
     // Aircraft Information
     lblAircraft->setText(QString("%1").arg(_pilot->planAircraft));
     lblAirline->setText(_pilot->airline);
     lblAltitude->setText(QString("%1 ft").arg(_pilot->altitude));
     lblGroundspeed->setText(QString("%1 kts").arg(_pilot->groundspeed));
-    lblSquwak->setText(QString("%1").arg(_pilot->transponder));
+    lblSquawk->setText(QString("%1").arg(_pilot->transponder));
 
     // flight status
     groupStatus->setTitle(QString("Status: %1").arg(_pilot->flightStatusShortString()));
@@ -93,11 +94,11 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));
     lblFuel->setText(QTime(_pilot->planFuel_hrs, _pilot->planFuel_mins).toString("H:mm"));
-    lblRoute->setText(_pilot->planRoute);
+    lblRoute->setText(QString("<code>%1</code>").arg(_pilot->planRoute));
     lblPlanTas->setText(QString("N%1").arg(_pilot->planTasInt()));
     lblPlanFl->setText(QString("F%1").arg(_pilot->defuckPlanAlt(_pilot->planAlt)/100));
     lblPlanEte->setText(QString("%1").arg(QTime(_pilot->planEnroute_hrs, _pilot->planEnroute_mins).toString("H:mm")));
-    lblRemarks->setText(_pilot->planRemarks);
+    lblRemarks->setText(QString("<code>%1</code>").arg(_pilot->planRemarks));
 
     // check if we know userId
     buttonAddFriend->setDisabled(_pilot->userId.isEmpty());
@@ -148,12 +149,6 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 
 void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
     qDebug() << "PilotDetails::on_cbPlotRoute_clicked()" << checked;
-    bool plottedAirports = false; // plotted?
-    if (_pilot->depAirport() != 0)
-        plottedAirports |= _pilot->depAirport()->showFlightLines;
-    if (_pilot->destAirport() != 0)
-        plottedAirports |= _pilot->destAirport()->showFlightLines;
-
     if (_pilot->showDepDestLine != checked) {
         _pilot->showDepDestLine = checked;
         if (Window::instance(false) != 0) {
@@ -171,3 +166,11 @@ void PilotDetails::closeEvent(QCloseEvent *event) {
     Settings::setPilotDetailsGeometry(saveGeometry());
     event->accept();
 }
+
+void PilotDetails::on_pbAlias_clicked()
+{
+    if (_pilot->showAliasDialog(this)) {
+        refresh();
+    }
+}
+

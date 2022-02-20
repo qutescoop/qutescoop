@@ -20,6 +20,8 @@ CONFIG *= qt
 CONFIG *= warn_on
 TARGET = QuteScoop
 
+DISTFILES += uncrustify.cfg
+
 win32: {
     contains(QMAKE_TARGET.arch, x86_64):PLATFORM = "win64"
     else:PLATFORM = "win32"
@@ -73,7 +75,6 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/countrycodes.dat
     dataFiles.files += ./data/dataversions.txt
     dataFiles.files += ./data/firdisplay.dat
-    dataFiles.files += ./data/firdisplay.sup
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat

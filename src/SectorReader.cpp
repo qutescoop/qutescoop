@@ -14,8 +14,6 @@ void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
     loadSectorlist(sectors);
 
     loadSectordisplay(sectors, Settings::dataDirectory("data/firdisplay.dat"));
-    if(Settings::useSupFile())
-        loadSectordisplay(sectors, Settings::dataDirectory("data/firdisplay.sup"));
 }
 
 void SectorReader::loadSectorlist(QHash<QString, Sector*>& sectors) {

@@ -44,7 +44,7 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
         switch(index.column()) {
             case 0: return c->label;
             case 1: return c->facilityString();
-            case 2: return c->realName;
+            case 2: return c->realName();
             case 3: return c->starts().toString("MM/dd (ddd)");
             case 4: return c->starts().time().toString("HHmm'z'");
             case 5: return c->ends().time().toString("HHmm'z'");

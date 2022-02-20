@@ -1034,9 +1034,9 @@ void GLWidget::paintGL() {
             glLineWidth(lineWidth);
             glColor4f(red, green, blue, alpha);
             GLdouble circle_distort = qCos(_friend.first * Pi180);
-            for(int i = 0; i <= 360; i += 20) {
-                double x = _friend.first  + Nm2Deg((100-(range*20))) * circle_distort * qCos(i * Pi180);
-                double y = _friend.second + Nm2Deg((100-(range*20))) * qSin(i * Pi180);
+            for(int i = 0; i <= 360; i += 10) {
+                double x = _friend.first  + Nm2Deg((80-(range*20))) * circle_distort * qCos(i * Pi180);
+                double y = _friend.second + Nm2Deg((80-(range*20))) * qSin(i * Pi180);
                 VERTEX(x, y);
             }
             glEnd();
@@ -1333,9 +1333,13 @@ void GLWidget::renderLabels() {
                  Settings::firFontColor());
     if(_allSectorsDisplayed) {
         qglColor(Settings::firFontColor());
-        foreach (const Sector *sector, NavData::instance()->sectors)
-            renderText(SX(sector->lat, sector->lon), SY(sector->lat, sector->lon),
-                       SZ(sector->lat, sector->lon), sector->icao, Settings::firFont());
+        foreach (const Sector *sector, NavData::instance()->sectors) {
+            QPair<double, double> center = sector->getCenter();
+            double lat = center.first;
+            double lon = center.second;
+            renderText(SX(lat, lon), SY(lat, lon),
+                       SZ(lat, lon), sector->icao, Settings::firFont());
+        }
     }
 
     // planned route waypoint labels from Flightplan Dialog

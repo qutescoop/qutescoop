@@ -6,12 +6,9 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>327</width>
-    <height>238</height>
+    <width>284</width>
+    <height>409</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>Dialog</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
@@ -26,27 +23,63 @@
      <property name="title">
       <string>Controller</string>
      </property>
-     <layout class="QVBoxLayout">
-      <property name="margin" stdset="0">
-       <number>6</number>
-      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="lblControllerInfo">
+       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+        <item>
+         <widget class="QLabel" name="lblControllerInfo">
+          <property name="toolTip">
+           <string>Link opens the VATSIM Statistics Center</string>
+          </property>
+          <property name="text">
+           <string>&lt;a href=&quot;https://&quot;&gt;Donald Fauntleroy Duck (C3)&lt;/a&gt;</string>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbAlias">
+          <property name="toolTip">
+           <string>Add or edit an alias for this VATSIM member</string>
+          </property>
+          <property name="text">
+           <string>alias…</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QLabel" name="lblOnline">
         <property name="text">
-         <string>Donald Fauntleroy Duck (C3)
-On IVANIT for 01:23, IvAc 1.2.3</string>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
+         <string>On SERVER for 01:23</string>
         </property>
        </widget>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="detailsLayout">
+       <layout class="QHBoxLayout" name="frequencyLayout" stretch="1,0">
         <item>
-         <widget class="QLabel" name="lblStationInformatoin">
+         <widget class="QLabel" name="label">
           <property name="text">
-           <string>APP on frequency 123.45</string>
+           <string>freq</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="lblFrequency">
+          <property name="text">
+           <string>&lt;h1&gt;&lt;code&gt;123.45&lt;/code&gt;&lt;/h1&gt;</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          </property>
+          <property name="textInteractionFlags">
+           <set>Qt::TextBrowserInteraction</set>
           </property>
          </widget>
         </item>
@@ -70,7 +103,7 @@ On IVANIT for 01:23, IvAc 1.2.3</string>
    <item>
     <widget class="QGroupBox" name="gbAtis">
      <property name="title">
-      <string>ATIS</string>
+      <string>Controller Info LON_W_CTR</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <property name="margin" stdset="0">
@@ -85,7 +118,7 @@ On IVANIT for 01:23, IvAc 1.2.3</string>
          </sizepolicy>
         </property>
         <property name="text">
-         <string>TextLabel</string>
+         <string>ATIS</string>
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>

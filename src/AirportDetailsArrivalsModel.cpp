@@ -77,9 +77,9 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
                     return (p->distanceToDestination() < 3? 0: (int)p->distanceToDestination());
             case 9:
                 if (p->flightStatus() == Pilot::GROUND_ARR || p->flightStatus() == Pilot::BLOCKED)
-                    return "--:--";
+                    return "--:-- hrs";
                 else if(!p->eet().toString("H:mm").isEmpty())
-                    return p->eet().toString("H:mm");
+                    return QString("%1 hrs").arg(p->eet().toString("H:mm"));
                 else
                     return QString();
             case 10:

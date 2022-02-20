@@ -191,13 +191,13 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             QJsonObject controllerObject;
 
             controllerObject["callsign"] = bc->label;
-            controllerObject["name"] = bc->realName;
+            controllerObject["name"] = bc->realName();
             controllerObject["facility"] = bc->facilityType;
 
             //atisMessage = getField(stringList, 35);
             QJsonArray atisLines;
-            atisLines.append(QString("BOOKED from %1, online until %2").arg(bc->starts().toString("HHmm'z'")
-                                                                .arg(bc->ends().toString("HHmm'z'"))));
+            atisLines.append(QString("BOOKED from %1, online until %2").arg(bc->starts().toString("HHmm'z'"))
+                                                                .arg(bc->ends().toString("HHmm'z'")));
             atisLines.append(bc->bookingInfoStr);
             controllerObject["text_atis"] = atisLines;
 

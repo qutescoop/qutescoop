@@ -7,46 +7,51 @@
     <x>0</x>
     <y>0</y>
     <width>464</width>
-    <height>635</height>
+    <height>599</height>
    </rect>
-  </property>
-  <property name="windowTitle">
-   <string>AUA325</string>
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
-   <property name="spacing">
-    <number>1</number>
-   </property>
+  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0">
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Pilot</string>
      </property>
-     <layout class="QVBoxLayout">
-      <property name="spacing">
-       <number>1</number>
-      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
       <item>
-       <widget class="QLabel" name="lblPilotInfo">
-        <property name="text">
-         <string>Surname Name, (EDDF)</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-        </property>
-        <property name="openExternalLinks">
-         <bool>true</bool>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_7" stretch="1,0">
+        <item>
+         <widget class="QLabel" name="lblPilotInfo">
+          <property name="toolTip">
+           <string>Link opens the VATSIM Statistics Center</string>
+          </property>
+          <property name="text">
+           <string>&lt;a href=&quot;https://&quot;&gt;Surname Name, (EDDF)&lt;/a&gt;</string>
+          </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pbAlias">
+          <property name="toolTip">
+           <string>Add or edit an alias for this VATSIM member</string>
+          </property>
+          <property name="text">
+           <string>alias…</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <widget class="QLabel" name="lblConnected">
         <property name="text">
-         <string>on IVANDE for 1:41</string>
+         <string>on SERVER for 1:41</string>
         </property>
        </widget>
       </item>
@@ -87,7 +92,6 @@
          <widget class="QLabel" name="lblAircraft">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -101,10 +105,6 @@
         </item>
         <item>
          <widget class="QLabel" name="label_12">
-          <property name="toolTip">
-           <string>airline callsing
-source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
-          </property>
           <property name="text">
            <string>airline</string>
           </property>
@@ -117,7 +117,6 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
          <widget class="QLabel" name="lblAirline">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -146,7 +145,7 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
         <property name="spacing">
          <number>10</number>
         </property>
-        <property name="margin">
+        <property name="margin" stdset="0">
          <number>0</number>
         </property>
         <item>
@@ -166,7 +165,6 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
          <widget class="QLabel" name="lblGroundspeed">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -195,7 +193,6 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
          <widget class="QLabel" name="lblAltitude">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -218,10 +215,9 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="lblSquwak">
+         <widget class="QLabel" name="lblSquawk">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -257,8 +253,9 @@ source: data/airlines.dat or use Euroscopdata (Preferences/Special)</string>
       <item>
        <widget class="QLabel" name="lblFlightStatus">
         <property name="toolTip">
-         <string>TTG: estimated remaining enroute time (&lt;b&gt;t&lt;/b&gt;ime-&lt;b&gt;t&lt;/b&gt;o-&lt;b&gt;g&lt;/b&gt;o)
-ETA: calculated &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival
+         <string>%: percent of route completion&lt;br&gt;
+TTG: estimated remaining enroute time (&lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;t&lt;/b&gt;o &lt;b&gt;g&lt;/b&gt;o)&lt;br&gt;
+ETA: calculated &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival&lt;br&gt;
 delay: difference between planned and calculated ETA</string>
         </property>
         <property name="text">
@@ -284,15 +281,14 @@ delay: difference between planned and calculated ETA</string>
          <widget class="QLabel" name="label_3">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
           <property name="toolTip">
-           <string>departure aerodrome / &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;d&lt;/b&gt;eparture</string>
+           <string>departure aerodrome / &lt;b&gt;p&lt;/b&gt;lanned &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;d&lt;/b&gt;eparture</string>
           </property>
           <property name="text">
-           <string>dep/ETD</string>
+           <string>dep/PTD</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -303,15 +299,14 @@ delay: difference between planned and calculated ETA</string>
          <widget class="QLabel" name="label_4">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
           <property name="toolTip">
-           <string>destination aerodrome / &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival (flightplan)</string>
+           <string>destination / &lt;b&gt;p&lt;/b&gt;lanned &lt;b&gt;t&lt;/b&gt;ime of &lt;b&gt;a&lt;/b&gt;rrival</string>
           </property>
           <property name="text">
-           <string>dest/ETA</string>
+           <string>dest/PTA</string>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -322,7 +317,6 @@ delay: difference between planned and calculated ETA</string>
          <widget class="QLabel" name="lblPlanEta">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -347,7 +341,6 @@ delay: difference between planned and calculated ETA</string>
           </property>
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -368,7 +361,6 @@ delay: difference between planned and calculated ETA</string>
            <widget class="QLabel" name="lblPlanTas">
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -387,7 +379,6 @@ delay: difference between planned and calculated ETA</string>
            <widget class="QLabel" name="lblPlanFl">
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -405,15 +396,14 @@ delay: difference between planned and calculated ETA</string>
          <widget class="QLabel" name="label_2">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
           <property name="toolTip">
-           <string>filed &lt;b&gt;t&lt;/b&gt;rue &lt;b&gt;a&lt;/b&gt;ir&lt;b&gt;s&lt;/b&gt;peed / cruise level / &lt;b&gt;e&lt;/b&gt;stimated &lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;e&lt;/b&gt;nroute</string>
+           <string>filed &lt;b&gt;t&lt;/b&gt;rue &lt;b&gt;a&lt;/b&gt;ir&lt;b&gt;s&lt;/b&gt;peed / cruise level / &lt;b&gt;p&lt;/b&gt;lanned &lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;e&lt;/b&gt;nroute</string>
           </property>
           <property name="text">
-           <string>TAS/FL/ETE</string>
+           <string>TAS/FL/PTE</string>
           </property>
          </widget>
         </item>
@@ -421,7 +411,6 @@ delay: difference between planned and calculated ETA</string>
          <widget class="QLabel" name="lblPlanEte">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -448,7 +437,6 @@ delay: difference between planned and calculated ETA</string>
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -477,7 +465,6 @@ delay: difference between planned and calculated ETA</string>
             </property>
             <property name="font">
              <font>
-              <weight>75</weight>
               <bold>true</bold>
              </font>
             </property>
@@ -518,7 +505,7 @@ delay: difference between planned and calculated ETA</string>
         <item row="2" column="0">
          <widget class="QLabel" name="label_9">
           <property name="toolTip">
-           <string>alternate aerodrome / fuel on Board</string>
+           <string>alternate aerodrome / time of fuel on board (endurance)</string>
           </property>
           <property name="text">
            <string>altern/fuel</string>
@@ -626,7 +613,6 @@ delay: difference between planned and calculated ETA</string>
          <widget class="QLabel" name="label_6">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>
@@ -662,7 +648,6 @@ route</string>
          <widget class="QLabel" name="label">
           <property name="font">
            <font>
-            <weight>75</weight>
             <bold>true</bold>
            </font>
           </property>

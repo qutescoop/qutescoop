@@ -44,35 +44,34 @@ void ControllerDetails::refresh(Controller *newController) {
         _controller = newController;
     else
         _controller = Whazzup::instance()->whazzupData().controllers[callsign];
-    if(_controller == 0)
+    if(_controller == 0) {
+        close();
         return;
+    }
     setMapObject(_controller);
     setWindowTitle(_controller->toolTip());
 
     // Controller Information
-    QString controllerInfo = QString("<strong>%1</strong><br>").arg(_controller->displayName(true));
+    QString controllerInfo = QString("<strong>%1</strong>").arg(_controller->displayName(true));
 
     QString details = _controller->detailInformation();
     if(!details.isEmpty())
-        controllerInfo += details + "<br>";
+        controllerInfo += details;
 
-    controllerInfo += QString("on %3 for %4")
-                      .arg(_controller->server)
-                      .arg(_controller->onlineTime());
-    if(!_controller->clientInformation().isEmpty())
-        controllerInfo += ", " + _controller->clientInformation();
     lblControllerInfo->setText(controllerInfo);
 
-    QString stationInfo = _controller->facilityString();
-    if(!_controller->isObserver() && _controller->frequency.length() != 0)
-        stationInfo += QString(" on frequency %1")
-                .arg(_controller->frequency);
-    lblStationInformatoin->setText(stationInfo);
+    lblOnline->setText(QString("%1 on %2 for %3 hrs").arg(_controller->label, _controller->server, _controller->onlineTime()));
+
+    QString frequencyHtml;
+    if(!_controller->isObserver() && _controller->frequency.length() != 0) {
+        frequencyHtml = QString("<h1><pre>%1</pre></h1>").arg(_controller->frequency);
+    }
+    lblFrequency->setText(frequencyHtml);
 
     pbAirportDetails->setVisible(_controller->airport() != 0);
     pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
 
-    QString atis = _controller->atisMessage;
+    QString atis = QString("<code>%1</code>").arg(_controller->atisMessage);
     if (_controller->assumeOnlineUntil.isValid())
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(_controller->assumeOnlineUntil.toString("HHmm"));
@@ -111,3 +110,11 @@ void ControllerDetails::closeEvent(QCloseEvent *event) {
     Settings::setControllerDetailsGeometry(saveGeometry());
     event->accept();
 }
+
+void ControllerDetails::on_pbAlias_clicked()
+{
+    if (_controller->showAliasDialog(this)) {
+        refresh();
+    }
+}
+

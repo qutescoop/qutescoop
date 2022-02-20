@@ -7,6 +7,9 @@
 
 #include "Whazzup.h"
 #include "Window.h"
+#include "PilotDetails.h"
+#include "ControllerDetails.h"
+#include "AirportDetails.h"
 
 QSettings *settingsInstance = 0;
 QSettings* Settings::instance() {
@@ -124,15 +127,6 @@ int Settings::bookingsInterval() {
 
 void Settings::setBookingsInterval(int value) {
     instance()->setValue("download/bookingsInterval", value);
-}
-
-//
-bool Settings::useSupFile() {
-    return instance()->value("data/useSupFile", true).toBool();
-}
-
-void Settings::setUseSupFile(bool value) {
-    instance()->setValue("data/useSupFile", value);
 }
 
 int Settings::downloadNetwork() {
@@ -1003,7 +997,7 @@ QPoint Settings::savedPosition() {
     return instance()->value("mainWindowState/position", QPoint()).toPoint();
 }
 
-QStringList Settings::friends() {
+const QStringList Settings::friends() {
     return instance()->value("friends/friendList", QStringList()).toStringList();
 }
 
@@ -1020,6 +1014,45 @@ void Settings::removeFriend(const QString& friendId) {
     if(i >= 0 && i < fl.size())
         fl.removeAt(i);
     instance()->setValue("friends/friendList", fl);
+}
+
+const QString Settings::clientAlias(const QString &userId)
+{
+    return instance()->value(
+        QString("clients/alias_%1").arg(userId)
+    ).toString();
+}
+
+void Settings::setClientAlias(const QString &userId, const QString &alias)
+{
+    if (alias.isEmpty()) {
+        instance()->remove(
+            QString("clients/alias_%1").arg(userId)
+        );
+    } else {
+        instance()->setValue(
+            QString("clients/alias_%1").arg(userId),
+            alias
+        );
+    }
+
+    // should maybe use signals instead
+    if (Window::instance(false) != 0) {
+        Window::instance()->friendsList->reset();
+        Window::instance()->searchResult->reset();
+    }
+
+    if (PilotDetails::instance(false) != 0) {
+        PilotDetails::instance()->refresh();
+    }
+
+    if (ControllerDetails::instance(false) != 0) {
+        ControllerDetails::instance()->refresh();
+    }
+
+    if (AirportDetails::instance(false) != 0) {
+        AirportDetails::instance()->refresh();
+    }
 }
 
 bool Settings::resetOnNextStart() {

@@ -68,16 +68,18 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
         facilityType = 6;
         QString ctr = this->getCenter();
         if (NavData::instance()->sectors.contains(ctr)) {
-            lat = NavData::instance()->sectors[ctr]->lat;
-            lon = NavData::instance()->sectors[ctr]->lon;
+            QPair<double, double> sectorCenter = NavData::instance()->sectors[ctr]->getCenter();
+            lat = sectorCenter.first;
+            lon = sectorCenter.second;
             visualRange = 150;
         }
     } else if (label.right(4) == "_FSS") {
         facilityType = 7;
         QString ctr = this->getCenter();
         if (NavData::instance()->sectors.contains(ctr)) {
-            lat = NavData::instance()->sectors[ctr]->lat;
-            lon = NavData::instance()->sectors[ctr]->lon;
+            QPair<double, double> sectorCenter = NavData::instance()->sectors[ctr]->getCenter();
+            lat = sectorCenter.first;
+            lon = sectorCenter.second;
             visualRange = 500;
         }
     }
@@ -115,8 +117,9 @@ QString BookedController::getCenter() {
         list.removeLast();
         QString result = list.join("_");
         if(NavData::instance()->sectors.contains(result)) {
-            lat = NavData::instance()->sectors[result]->lat; // fix my coordinates
-            lon = NavData::instance()->sectors[result]->lon;
+            QPair<double, double> sectorCenter = NavData::instance()->sectors[result]->getCenter();
+            lat = sectorCenter.first;
+            lon = sectorCenter.second;
         }
         return result;
     }
@@ -207,7 +210,7 @@ QString BookedController::toolTip() const {
     result += " (";
     if(!isObserver() && !frequency.isEmpty())
         result += frequency + ", ";
-    result += realName;
+    result += realName();
     if(!rank().isEmpty())
         result += ", " + rank();
     result += ")";
