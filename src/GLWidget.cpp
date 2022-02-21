@@ -1186,6 +1186,13 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
         } else
             updateGL();
     } else if (_mouseDownPos == event->pos() && event->button() == Qt::LeftButton) {
+        // chasing a "click-spot" vertically offset problem on Win/nvidia
+        double lat, lon;
+        bool onGlobe = mouse2latlon(event->x(), event->y(), lat, lon);
+        qDebug() << "GLWidget::mouseReleaseEvent left btn before objectsAt()"
+                 << QString("widget[width=%5, height=%6], event[x=%1, y=%2], onGlobe=%7, globe[lat=%3, lon=%4]")
+                    .arg(event->x()).arg(event->y()).arg(lat).arg(lon).arg(width()).arg(height()).arg(onGlobe);
+
         QList<MapObject*> objects;
         foreach(MapObject* m, objectsAt(event->x(), event->y())) {
             if (dynamic_cast<Waypoint*>(m) != 0) // all but waypoints have a dialog
