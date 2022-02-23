@@ -5,7 +5,7 @@
 #include "Waypoint.h"
 
 Waypoint::Waypoint(const QStringList& stringList) {
-    if(stringList.size() < 3)
+    if(stringList.size() != 6)
 		return;
 
 	bool ok;
