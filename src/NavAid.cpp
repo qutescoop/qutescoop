@@ -37,17 +37,24 @@ NavAid::NavAid(const QStringList& stringList) {
 		qWarning() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
 		return;
 	}
-	_range = stringList[5].toInt(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse range (int):" << stringList << 5;
-		return;
-	}
+    if (_type == Type::FAP_GBAS || _type == Type::GBAS_THR){
+        _range = 0;
+    }else {
+        _range = stringList[5].toInt(&ok);
+        if(!ok) {
+            qWarning() << "NavAid::NavAid() unable to parse range (int):" << stringList << 5;
+            return;
+        }
+    }
 	_hdg = stringList[6].toFloat(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse heading (float):" << stringList << 6;
 		return;
 	}
 	label = stringList[7];
+
+
+    regionCode = stringList[9];
 
 	_name = "";
 	for(int i = 8; i < stringList.size(); i++)
@@ -67,6 +74,10 @@ QString NavAid::typeStr(Type type) {
 	hash.insert(MM, "OM");
 	hash.insert(IM, "IM");
 	hash.insert(DME_NO_FREQ, "DME (no freq)");
+    hash.insert(DME, "DME");
+    hash.insert(FAP_GBAS, "FAP alignment point");
+    hash.insert(GBAS_GND, "GBAS Ground station");
+    hash.insert(GBAS_THR, "GBAS Threshold point");
 	return hash.value(type, QString());
 	if (type == NDB)
 		return (QString("NDB"));

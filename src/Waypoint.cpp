@@ -5,7 +5,7 @@
 #include "Waypoint.h"
 
 Waypoint::Waypoint(const QStringList& stringList) {
-	if(stringList.size() != 3)
+    if(stringList.size() < 3)
 		return;
 
 	bool ok;
@@ -20,6 +20,8 @@ Waypoint::Waypoint(const QStringList& stringList) {
 		return;
 	}
 	label = stringList[2];
+
+    regionCode = stringList[4];
 }
 
 Waypoint::Waypoint(const QString& id, const double lat, const double lon) {

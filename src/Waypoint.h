@@ -18,6 +18,7 @@ class Waypoint: public MapObject {
         virtual QString toolTip() const;
         virtual void showDetailsDialog() {} // not applicable
         virtual int type() { return 0;}
+        QString regionCode;
 };
 
 #endif /*WAYPOINT_H_*/

@@ -107,69 +107,41 @@ void Airac::readAirways(const QString& directory) {
             continue;
 
         QString id = list[0];
-        double lat = list[1].toDouble(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lat (double):" << list;
-            continue;
-        }
-        double lon = list[2].toDouble(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lon (double):" << list;
-            continue;
-        }
-
-        Waypoint *start = waypoint(id, lat, lon, 1);
-        if(start == 0) {
-            start = new Waypoint(id, lat, lon);
-            waypoints[start->label].insert(start);
-        }
+        QString regionCode = list[1];
+        Waypoint *start = waypoint(id, regionCode);
 
         id = list[3];
-        lat = list[4].toDouble(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lat (double):" << list;
-            continue;
-        }
-        lon = list[5].toDouble(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lon (double):" << list;
-            continue;
-        }
+        regionCode = list[4];
+        Waypoint *end = waypoint(id, regionCode);
 
-        Waypoint *end = waypoint(id, lat, lon, 1);
-        if(end == 0) {
-            end = new Waypoint(id, lat, lon);
-            waypoints[end->label].insert(end);
-        }
-
-        Airway::Type type = (Airway::Type)list[6].toInt(&ok);
+        Airway::Type type = (Airway::Type)list[7].toInt(&ok);
         if(!ok) {
             qWarning() << "Airac::readAirways() unable to parse airwaytype (int):" << list;
             continue;
         }
-        int base = list[7].toInt(&ok);
+        int base = list[8].toInt(&ok);
         if(!ok) {
             qWarning() << "Airac::readAirways() unable to parse base (int):" << list;
             continue;
         }
-        int top = list[8].toInt(&ok);
+        int top = list[9].toInt(&ok);
         if(!ok) {
             qWarning() << "Airac::readAirways() unable to parse top (int):" << list;
             continue;
         }
 
         QStringList names;
-        if(list.size() > 10) {
+        if(list.size() > 11) {
             //handle airways with spaces (!) in the name
             QString glue;
-            for(int i = 9; i < list.size(); i++) {
-                if(i > 9)
+            for(int i = 10; i < list.size(); i++) {
+                if(i > 10)
                     glue += " ";
                 glue += list[i];
             }
             names = glue.split('-', Qt::SkipEmptyParts);
         } else
-            names = list[9].split('-', Qt::SkipEmptyParts);
+            names = list[10].split('-', Qt::SkipEmptyParts);
 
         for(int i = 0; i < names.size(); i++) {
             addAirwaySegment(start, end, type, base, top, names[i]);
@@ -187,6 +159,19 @@ void Airac::readAirways(const QString& directory) {
 
     qDebug() << "Read airways from\t" << (directory + "/earth_awy.dat")
             << "-" << airways.size() << "airways," << segments << "segments imported and sorted";
+}
+
+Waypoint* Airac::waypoint(const QString &id, const QString &regionCode) const{
+    Waypoint *result = 0;
+    foreach(NavAid *n, navaids[id]){
+        if (n->regionCode == regionCode)
+            result = n;
+    }
+    foreach(Waypoint *w, waypoints[id]){
+        if(w->regionCode == regionCode)
+            result = w;
+    }
+    return result;
 }
 
 /**

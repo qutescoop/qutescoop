@@ -20,6 +20,7 @@ class Airac : public QObject {
 
         Waypoint* waypoint(const QString &id, double lat, double lon,
                            double maxDist = 2000.0) const;
+        Waypoint* waypoint(const QString &id, const QString &regionCode) const;
         QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon) const;
         Airway* airway(const QString& name, double lat, double lon) const;
 

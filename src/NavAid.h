@@ -21,11 +21,15 @@ class NavAid: public Waypoint {
             MM = 8,
             IM = 9,
             DME_NO_FREQ = 12,
-            DME = 13
+            DME = 13,
+            FAP_GBAS = 14,
+            GBAS_GND = 15,
+            GBAS_THR = 16
         };
         static QString typeStr(Type _type);
         virtual QString toolTip() const;
         int type() { return _type; }
+        QString regionCode;
 
     private:
         Type _type;
