@@ -29,11 +29,10 @@ class NavAid: public Waypoint {
         static QString typeStr(Type _type);
         virtual QString toolTip() const;
         int type() { return _type; }
-        QString regionCode;
 
     private:
         Type _type;
-        int _alt, _freq, _range;
+        int _freq;
         float _hdg;
         QString _name;
 };

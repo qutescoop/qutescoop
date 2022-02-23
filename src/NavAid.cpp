@@ -25,34 +25,14 @@ NavAid::NavAid(const QStringList& stringList) {
 		qWarning() << "NavAid::NavAid() unable to parse lon (double):" << stringList << 2;
 		return;
 	}
-	_alt = stringList[3].toInt(&ok);
-	// @todo
-	// ignore parsing erros (format: "0-0012") since altitude is currently unused
-	//  if(!ok) {
-	//          qWarning() << "NavAid::NavAid() unable to parse altitude (int):" << stringList << 3;
-	//          return;
-	//  }
+
 	_freq = stringList[4].toInt(&ok);
 	if(!ok) {
 		qWarning() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
 		return;
 	}
-    if (_type == Type::FAP_GBAS || _type == Type::GBAS_THR){
-        _range = 0;
-    }else {
-        _range = stringList[5].toInt(&ok);
-        if(!ok) {
-            qWarning() << "NavAid::NavAid() unable to parse range (int):" << stringList << 5;
-            return;
-        }
-    }
-	_hdg = stringList[6].toFloat(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse heading (float):" << stringList << 6;
-		return;
-	}
-	label = stringList[7];
 
+	label = stringList[7];
 
     regionCode = stringList[9];
 
@@ -79,27 +59,6 @@ QString NavAid::typeStr(Type type) {
     hash.insert(GBAS_GND, "GBAS Ground station");
     hash.insert(GBAS_THR, "GBAS Threshold point");
 	return hash.value(type, QString());
-	if (type == NDB)
-		return (QString("NDB"));
-	else if (type == VOR)
-		return (QString("VOR"));
-	else if (type == DME)
-		return (QString("DME"));
-	else if (type == ILS_LOC)
-		return (QString("ILS"));
-	else if (type == LOC)
-		return (QString("LOC"));
-	else if (type == GS)
-		return (QString("GS"));
-	else if (type == OM)
-		return (QString("OM"));
-	else if (type == MM)
-		return (QString("MM"));
-	else if (type == IM)
-		return (QString("IM"));
-	else if (type == DME_NO_FREQ)
-		return (QString("DME"));
-	return QString();
 }
 
 QString NavAid::toolTip() const {
