@@ -69,7 +69,7 @@ void PilotDetails::refresh(Pilot *pilot) {
 
     // Aircraft Information
     lblAircraft->setText(QString("%1").arg(_pilot->planAircraft));
-    lblAirline->setText(_pilot->airline);
+    lblAirline->setText(NavData::instance()->airlineStr(_pilot->airlineCode));
     lblAltitude->setText(QString("%1 ft").arg(_pilot->altitude));
     lblGroundspeed->setText(QString("%1 kts").arg(_pilot->groundspeed));
     lblSquawk->setText(QString("%1").arg(_pilot->transponder));

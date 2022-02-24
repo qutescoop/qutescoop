@@ -86,7 +86,7 @@ void NavData::loadAirlineCodes(const QString &filename) {
                                  .arg(filename));
             return;
         }
-        _airlineCodes[line.value(0)] = line.value(2);
+        _airlineCodes[line.value(0)] = QString("%1 (c/s \"%2\")").arg(line.value(1), line.value(2));
     }
 }
 
@@ -320,7 +320,7 @@ QString NavData::toArinc(const short lat, const short lon) { // returning QStrin
 			arg(qAbs(lon) >= 100? "": q);
 }
 
-QString NavData::airline(QString airlineCode) {
+QString NavData::airlineStr(QString airlineCode) {
     QString result;
     result = _airlineCodes[airlineCode];
     if(result.isEmpty()) result = tr("general aviation");

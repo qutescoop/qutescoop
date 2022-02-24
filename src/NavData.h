@@ -23,7 +23,7 @@ class NavData: public QObject {
         QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
         QHash<QString, Sector*> sectors;
         QHash<QString, QString> countryCodes;
-        QString airline(QString airlineCode);
+        QString airlineStr(QString airlineCode);
 
         Airport* airportAt(double lat, double lon, double maxDist) const;
 

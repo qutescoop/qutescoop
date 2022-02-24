@@ -106,10 +106,10 @@
         <item>
          <widget class="QLabel" name="label_12">
           <property name="text">
-           <string>airline</string>
+           <string>&lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_airline_codes&quot;&gt;airline&lt;/a&gt;</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+          <property name="openExternalLinks">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
