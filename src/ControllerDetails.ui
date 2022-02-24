@@ -23,21 +23,32 @@
      <property name="title">
       <string>Controller</string>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,0">
+       <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QLabel" name="lblControllerInfo">
-          <property name="toolTip">
-           <string>Link opens the VATSIM Statistics Center</string>
-          </property>
-          <property name="text">
-           <string>&lt;a href=&quot;https://&quot;&gt;Donald Fauntleroy Duck (C3)&lt;/a&gt;</string>
-          </property>
-          <property name="openExternalLinks">
-           <bool>true</bool>
-          </property>
-         </widget>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="QLabel" name="lblControllerInfo">
+            <property name="toolTip">
+             <string>Link opens the VATSIM Statistics Center</string>
+            </property>
+            <property name="text">
+             <string>&lt;a href=&quot;https://&quot;&gt;Donald Fauntleroy Duck (C3)&lt;/a&gt;</string>
+            </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblOnline">
+            <property name="text">
+             <string>On SERVER for 01:23</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
         <item>
          <widget class="QPushButton" name="pbAlias">
@@ -50,13 +61,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-      <item>
-       <widget class="QLabel" name="lblOnline">
-        <property name="text">
-         <string>On SERVER for 01:23</string>
-        </property>
-       </widget>
       </item>
       <item>
        <layout class="QHBoxLayout" name="frequencyLayout" stretch="1,0">
@@ -122,6 +126,9 @@
         </property>
         <property name="textFormat">
          <enum>Qt::RichText</enum>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
         </property>
         <property name="wordWrap">
          <bool>true</bool>
