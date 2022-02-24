@@ -5,7 +5,7 @@
 #include "NavAid.h"
 
 NavAid::NavAid(const QStringList& stringList) {
-	if(stringList.size() < 8 || stringList.size() > 15)
+    if(stringList.size() < 12)
 		return;
 
 	bool ok;
@@ -37,8 +37,8 @@ NavAid::NavAid(const QStringList& stringList) {
     regionCode = stringList[9];
 
 	_name = "";
-	for(int i = 8; i < stringList.size(); i++)
-		_name += stringList[i] + (i > 8? " ": "");
+    for(int i = 10; i < stringList.size(); i++)
+        _name += stringList[i] + (i > 9? " ": "");
 }
 
 QString NavAid::typeStr(Type type) {
