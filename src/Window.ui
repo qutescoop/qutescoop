@@ -537,7 +537,7 @@ Whazzups (replay)</string>
        <item>
         <widget class="QLabel" name="label">
          <property name="text">
-          <string>Search:</string>
+          <string>&amp;Search:</string>
          </property>
          <property name="buddy">
           <cstring>searchEdit</cstring>
@@ -596,7 +596,10 @@ Whazzups (replay)</string>
        <item>
         <widget class="QLabel" name="label_2">
          <property name="text">
-          <string>Search:</string>
+          <string>S&amp;earch:</string>
+         </property>
+         <property name="buddy">
+          <cstring>metarEdit</cstring>
          </property>
         </widget>
        </item>
@@ -681,7 +684,7 @@ Whazzups (replay)</string>
           <string>draws a circle around friends on the map</string>
          </property>
          <property name="text">
-          <string>highlight</string>
+          <string>&amp;highlight</string>
          </property>
         </widget>
        </item>
