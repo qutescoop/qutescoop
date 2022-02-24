@@ -59,6 +59,7 @@ void Airac::load() {
 void Airac::readWaypoints(const QString& directory) {
     waypoints.clear();
     FileReader fr(directory + "/earth_fix.dat");
+    fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
@@ -77,6 +78,7 @@ void Airac::readWaypoints(const QString& directory) {
 void Airac::readNavaids(const QString& directory) {
     navaids.clear();
     FileReader fr(directory + "/earth_nav.dat");
+    fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
@@ -97,6 +99,7 @@ void Airac::readAirways(const QString& directory) {
     int segments = 0;
 
     FileReader fr(directory + "/earth_awy.dat");
+    fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
