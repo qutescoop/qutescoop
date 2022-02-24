@@ -211,21 +211,38 @@ void PlanFlightDialog::vrouteDownloaded() {
 }
 
 void PlanFlightDialog::on_edDep_textChanged(QString str) {
-    bDepDetails->setVisible(NavData::instance()->airports.contains(str));
+    int cursorPosition = edDep->cursorPosition();
+    edDep->setText(str.toUpper());
+    edDep->setCursorPosition(cursorPosition);
+    bDepDetails->setVisible(NavData::instance()->airports.contains(str.toUpper()));
+    Airport *airport = NavData::instance()->airports.value(str.toUpper());
+    if (airport != 0) {
+        bDepDetails->setText(airport->mapLabel());
+        bDepDetails->setToolTip(airport->toolTip());
+    }
+    bDepDetails->setVisible(airport != 0);
 }
 
 void PlanFlightDialog::on_edDest_textChanged(QString str) {
-    bDestDetails->setVisible(NavData::instance()->airports.contains(str));
+    int cursorPosition = edDest->cursorPosition();
+    edDest->setText(str.toUpper());
+    edDest->setCursorPosition(cursorPosition);
+    Airport *airport = NavData::instance()->airports.value(str.toUpper());
+    if (airport != 0) {
+        bDestDetails->setText(airport->mapLabel());
+        bDestDetails->setToolTip(airport->toolTip());
+    }
+    bDestDetails->setVisible(airport != 0);
 }
 
 void PlanFlightDialog::on_bDepDetails_clicked() {
-    Airport *airport = NavData::instance()->airports.value(edDep->text());
+    Airport *airport = NavData::instance()->airports.value(edDep->text().toUpper());
     if (airport != 0)
         airport->showDetailsDialog();
 }
 
 void PlanFlightDialog::on_bDestDetails_clicked() {
-    Airport *airport = NavData::instance()->airports.value(edDest->text());
+    Airport *airport = NavData::instance()->airports.value(edDest->text().toUpper());
     if (airport != 0)
         airport->showDetailsDialog();
 }
@@ -246,12 +263,15 @@ void PlanFlightDialog::plotPlannedRoute() const {
         lblPlotStatus->setText("no route to plot");
         return;
     }
-    lblPlotStatus->setText(QString("waypoints (calculated): %1").arg(selectedRoute->waypointsStr));
+    lblPlotStatus->setText(QString("waypoints (calculated): <code>%1</code>").arg(selectedRoute->waypointsStr));
     if(selectedRoute->waypoints.size() < 2)
         return;
     QList<DoublePair> points;
     foreach(const Waypoint *wp, selectedRoute->waypoints)
         points.append(DoublePair(wp->lat, wp->lon));
+
+    // @todo: make plot line color adjustable
+    // @todo: are we GLing here ouside a GL context?!
     glColor4f(0., 0., 1., 1.);
     glLineWidth(3.);
     glBegin(GL_LINE_STRIP);
