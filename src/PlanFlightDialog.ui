@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>907</width>
-    <height>573</height>
+    <height>552</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,13 +22,41 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_4">
-     <item>
+    <widget class="QSplitter" name="splitter_2">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
       <widget class="QGroupBox" name="gbEssentials">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="title">
         <string>Route essentials</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_2" rowstretch="0,0,0">
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="lblDep">
+          <property name="text">
+           <string>de&amp;p</string>
+          </property>
+          <property name="buddy">
+           <cstring>edDep</cstring>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="1">
          <widget class="QLineEdit" name="edDep">
           <property name="maxLength">
@@ -36,6 +64,22 @@
           </property>
           <property name="placeholderText">
            <string>ICAO</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QToolButton" name="bDepDetails">
+          <property name="toolTip">
+           <string>Open airport dialog (EDDS)</string>
+          </property>
+          <property name="text">
+           <string>EDDS 3/1</string>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextBesideIcon</enum>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::RightArrow</enum>
           </property>
          </widget>
         </item>
@@ -49,53 +93,37 @@
           </property>
          </widget>
         </item>
+        <item row="3" column="1">
+         <widget class="QToolButton" name="bDestDetails">
+          <property name="toolTip">
+           <string>Open airport dialog (EDDS)</string>
+          </property>
+          <property name="text">
+           <string>EDDS 3/1</string>
+          </property>
+          <property name="toolButtonStyle">
+           <enum>Qt::ToolButtonTextBesideIcon</enum>
+          </property>
+          <property name="arrowType">
+           <enum>Qt::RightArrow</enum>
+          </property>
+         </widget>
+        </item>
         <item row="2" column="0">
          <widget class="QLabel" name="lblDest">
           <property name="text">
-           <string>des&amp;tination</string>
+           <string>des&amp;t</string>
           </property>
           <property name="buddy">
            <cstring>edDest</cstring>
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
-         <widget class="QLabel" name="lblDep">
-          <property name="text">
-           <string>de&amp;parture</string>
-          </property>
-          <property name="buddy">
-           <cstring>edDep</cstring>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QToolButton" name="bDepDetails">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextOnly</enum>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="2">
-         <widget class="QToolButton" name="bDestDetails">
-          <property name="text">
-           <string>...</string>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextOnly</enum>
-          </property>
-         </widget>
-        </item>
        </layout>
       </widget>
-     </item>
-     <item>
       <widget class="QGroupBox" name="groupBox_2">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
          <horstretch>2</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -103,9 +131,23 @@
        <property name="title">
         <string>Select providers</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout">
-        <item row="2" column="6" rowspan="2">
-         <widget class="QLabel" name="lblVrouteStatus">
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0,5,0">
+        <item row="1" column="4">
+         <layout class="QHBoxLayout" name="horizontalLayout_5">
+          <item>
+           <widget class="QLineEdit" name="edGenerated">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>20</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="5">
+         <widget class="QLabel" name="lblGeneratedStatus">
           <property name="font">
            <font>
             <italic>true</italic>
@@ -119,7 +161,7 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="0">
+        <item row="1" column="0">
          <widget class="QLabel" name="pixGenerated">
           <property name="text">
            <string/>
@@ -135,18 +177,22 @@
           </property>
          </widget>
         </item>
-        <item row="0" column="1">
-         <widget class="QCheckBox" name="cbGenerated">
-          <property name="text">
-           <string>user</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
+        <item row="5" column="0">
+         <widget class="QLabel" name="pixVroute">
+          <property name="pixmap">
+           <pixmap resource="Resources.qrc">:/routeproviders/images/vroute.png</pixmap>
           </property>
          </widget>
         </item>
-        <item row="0" column="6">
-         <widget class="QLabel" name="lblGeneratedStatus">
+        <item row="0" column="0" colspan="6">
+         <widget class="Line" name="line">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="5" rowspan="2">
+         <widget class="QLabel" name="lblVrouteStatus">
           <property name="font">
            <font>
             <italic>true</italic>
@@ -160,75 +206,41 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="cbVroute">
-          <property name="text">
-           <string>&amp;vroute</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0" colspan="7">
+        <item row="3" column="0" colspan="6">
          <widget class="Line" name="line_11">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
          </widget>
         </item>
-        <item row="2" column="0" rowspan="3">
-         <layout class="QVBoxLayout" name="verticalLayout_5">
-          <item>
-           <widget class="QLabel" name="pixVroute">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="Resources.qrc">:/routeproviders/images/vroute.png</pixmap>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="lblVroute">
-            <property name="text">
-             <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;a href=&quot;http://www.vroute.net&quot;&gt;&lt;span style=&quot; font-size:8pt; text-decoration: underline; color:#0000ff;&quot;&gt;www.vroute.net&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="textFormat">
-             <enum>Qt::RichText</enum>
-            </property>
-            <property name="openExternalLinks">
-             <bool>true</bool>
-            </property>
-            <property name="textInteractionFlags">
-             <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
-            </property>
-            <property name="buddy">
-             <cstring>cbVroute</cstring>
-            </property>
-           </widget>
-          </item>
-         </layout>
+        <item row="1" column="2">
+         <widget class="QCheckBox" name="cbGenerated">
+          <property name="text">
+           <string>user</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
-        <item row="2" column="2">
+        <item row="1" column="3">
+         <widget class="QLabel" name="label_3">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>1</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>your route</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="4" rowspan="2">
          <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,0,1">
-          <item>
-           <widget class="QLabel" name="lblAirac">
-            <property name="toolTip">
-             <string>Based on the given Airac (nav database) cycle. Leave blank for standard.</string>
-            </property>
-            <property name="text">
-             <string>Airac cycle</string>
-            </property>
-            <property name="buddy">
-             <cstring>edCycle</cstring>
-            </property>
-           </widget>
-          </item>
           <item>
            <widget class="QLineEdit" name="edCycle">
             <property name="maximumSize">
@@ -245,6 +257,22 @@ p, li { white-space: pre-wrap; }
             </property>
             <property name="placeholderText">
              <string>yymm</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="lblVroute">
+            <property name="text">
+             <string>&lt;a href=&quot;http://www.vroute.net&quot;&gt;www.vroute.net&lt;/a&gt;</string>
+            </property>
+            <property name="textFormat">
+             <enum>Qt::RichText</enum>
+            </property>
+            <property name="openExternalLinks">
+             <bool>true</bool>
+            </property>
+            <property name="textInteractionFlags">
+             <set>Qt::LinksAccessibleByKeyboard|Qt::LinksAccessibleByMouse</set>
             </property>
            </widget>
           </item>
@@ -266,119 +294,132 @@ p, li { white-space: pre-wrap; }
           </item>
          </layout>
         </item>
-        <item row="0" column="2">
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
-          <item>
-           <widget class="QLabel" name="label_3">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-              <horstretch>1</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>your route</string>
-            </property>
-            <property name="wordWrap">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="edGenerated">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-              <horstretch>20</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </item>
-         </layout>
+        <item row="5" column="2">
+         <widget class="QCheckBox" name="cbVroute">
+          <property name="text">
+           <string>&amp;vroute</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="3">
+         <widget class="QLabel" name="lblAirac">
+          <property name="toolTip">
+           <string>Based on the given Airac (nav database) cycle. Leave blank for standard.</string>
+          </property>
+          <property name="text">
+           <string>Airac cycle</string>
+          </property>
+          <property name="buddy">
+           <cstring>edCycle</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0" colspan="6">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="7" column="5">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="8" column="0" colspan="6">
+         <widget class="QPushButton" name="buttonRequest">
+          <property name="text">
+           <string>r&amp;equest</string>
+          </property>
+          <property name="autoDefault">
+           <bool>false</bool>
+          </property>
+          <property name="default">
+           <bool>true</bool>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QPushButton" name="buttonRequest">
-     <property name="text">
-      <string>r&amp;equest</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-     <property name="default">
-      <bool>true</bool>
-     </property>
+     </widget>
+     <widget class="QGroupBox" name="gbResults">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="title">
+       <string>Results [LSZH-EPWA]: 0</string>
+      </property>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QTreeView" name="treeRoutes">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <property name="rootIsDecorated">
+          <bool>false</bool>
+         </property>
+         <property name="itemsExpandable">
+          <bool>false</bool>
+         </property>
+         <property name="sortingEnabled">
+          <bool>true</bool>
+         </property>
+         <property name="wordWrap">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2">
+         <item>
+          <widget class="QPushButton" name="pbCopyToClipboard">
+           <property name="text">
+            <string>&amp;copy to clipboard</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="pbVatsimPrefile">
+           <property name="toolTip">
+            <string>Launches prefile page in your browser.</string>
+           </property>
+           <property name="text">
+            <string>&amp;VATSIM prefile</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
    <item>
-    <widget class="QGroupBox" name="gbResults">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>Results [LSZH-EPWA]: 0</string>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QTreeView" name="treeRoutes">
-        <property name="editTriggers">
-         <set>QAbstractItemView::NoEditTriggers</set>
-        </property>
-        <property name="alternatingRowColors">
-         <bool>true</bool>
-        </property>
-        <property name="rootIsDecorated">
-         <bool>false</bool>
-        </property>
-        <property name="itemsExpandable">
-         <bool>false</bool>
-        </property>
-        <property name="sortingEnabled">
-         <bool>true</bool>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QPushButton" name="pbCopyToClipboard">
-          <property name="text">
-           <string>&amp;copy to clipboard</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pbVatsimPrefile">
-          <property name="toolTip">
-           <string>Launches prefile page in your browser.</string>
-          </property>
-          <property name="text">
-           <string>VATSIM prefile</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,0,1,0">
      <item>
       <widget class="QCheckBox" name="cbPlot">
+       <property name="toolTip">
+        <string>Needs a navigation database (see Preferences/Special)</string>
+       </property>
        <property name="text">
-        <string>&amp;plot route
-(see Preferences/Special)</string>
+        <string>&amp;plot route</string>
        </property>
       </widget>
      </item>
@@ -391,12 +432,6 @@ p, li { white-space: pre-wrap; }
      </item>
      <item>
       <widget class="QLabel" name="lblPlotStatus">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>1</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
        <property name="font">
         <font>
          <italic>true</italic>
@@ -427,12 +462,9 @@ p, li { white-space: pre-wrap; }
  <tabstops>
   <tabstop>edDep</tabstop>
   <tabstop>edDest</tabstop>
-  <tabstop>bDepDetails</tabstop>
-  <tabstop>bDestDetails</tabstop>
   <tabstop>cbGenerated</tabstop>
   <tabstop>edGenerated</tabstop>
   <tabstop>edCycle</tabstop>
-  <tabstop>buttonRequest</tabstop>
   <tabstop>treeRoutes</tabstop>
   <tabstop>pbCopyToClipboard</tabstop>
   <tabstop>pbVatsimPrefile</tabstop>
