@@ -121,7 +121,7 @@ void PilotDetails::refresh(Pilot *pilot) {
     if (_pilot->showDepDestLine)
         cbPlotRoute->setCheckState(Qt::Checked);
     if (_pilot->showDepDestLine || plottedAirports)
-        lblPlotStatus->setText(QString("waypoints (calculated): %1").arg(_pilot->routeWaypointsStr()));
+        lblPlotStatus->setText(QString("waypoints (calculated): <code>%1</code>").arg(_pilot->routeWaypointsStr()));
     lblPlotStatus->setVisible(_pilot->showDepDestLine || plottedAirports);
 
     adjustSize();
