@@ -33,9 +33,8 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
     planAlt = flightPlan["altitude"].toString();
     planDest = flightPlan["arrival"].toString();
 
-    QString airlineCode = json["callsign"].toString();
+    airlineCode = json["callsign"].toString();
     airlineCode.resize(3);
-    airline = NavData::instance()->airline(airlineCode);
 
     transponder = json["transponder"].toString();
     planRevision = QString::number(flightPlan["revision_id"].toInt());

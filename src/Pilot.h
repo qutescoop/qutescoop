@@ -58,8 +58,8 @@ class Pilot: public Client {
 
         QString planAircraft, planTAS, planDep, planAlt, planDest,
         planAltAirport, planRevision, planFlighttype, planDeptime,
-        transponder, planRemarks, planRoute, planActtime, airline,
-        qnh_inHg, qnh_mb, // VATSIM only
+        transponder, planRemarks, planRoute, planActtime, airlineCode,
+        qnh_inHg, qnh_mb,
         routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
         routeWaypointsPlanRouteCache;
         QDate dayOfFlight;
