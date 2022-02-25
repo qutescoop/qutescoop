@@ -62,7 +62,7 @@ void Airac::readWaypoints(const QString& directory) {
     fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
-        if(line.isEmpty())
+        if(line.isEmpty() || line.startsWith("99")) //99 denotes EOF
             continue;
 
         Waypoint *wp = new Waypoint(line.split(' ', Qt::SkipEmptyParts));
@@ -81,7 +81,7 @@ void Airac::readNavaids(const QString& directory) {
     fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
-        if(line.isEmpty())
+        if(line.isEmpty() || line.startsWith("99"))  //99 denotes EOF
             continue;
 
         NavAid *nav = new NavAid(line.split(' ', Qt::SkipEmptyParts));
@@ -102,8 +102,11 @@ void Airac::readAirways(const QString& directory) {
     fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
-        if(line.isEmpty())
+        if(line.isEmpty() || line.startsWith("99"))  //99 denotes EOF
             continue;
+
+        // ABDOR GM 11 VALBA GM 11 N 2 195 460 UZ801
+        // https://developer.x-plane.com/article/navdata-in-x-plane-11/
 
         QStringList list = line.split(' ', Qt::SkipEmptyParts);
         if(list.size() < 10 || list.size() > 20)
