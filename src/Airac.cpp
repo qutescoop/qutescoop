@@ -111,11 +111,30 @@ void Airac::readAirways(const QString& directory) {
 
         QString id = list[0];
         QString regionCode = list[1];
-        Waypoint *start = waypoint(id, regionCode);
+        int fixType = list[2].toInt(&ok);
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse fix type (int):" << list;
+            continue;
+        }
+        Waypoint *start = waypoint(id, regionCode, fixType);
+        if(start == 0){
+            qWarning() << "Airac::readAirways() unable to find start waypoint:" << list;
+            continue;
+        }
 
         id = list[3];
         regionCode = list[4];
-        Waypoint *end = waypoint(id, regionCode);
+        fixType = list[5].toInt(&ok);
+        if(!ok) {
+            qWarning() << "Airac::readAirways() unable to parse fix type (int):" << list;
+            continue;
+        }
+        Waypoint *end = waypoint(id, regionCode, fixType);
+        if(end == 0){
+            qWarning() << "Airac::readAirways() unable to find end waypoint:" << list;
+            continue;
+        }
+
 
         Airway::Type type = (Airway::Type)list[7].toInt(&ok);
         if(!ok) {
@@ -164,15 +183,18 @@ void Airac::readAirways(const QString& directory) {
             << "-" << airways.size() << "airways," << segments << "segments imported and sorted";
 }
 
-Waypoint* Airac::waypoint(const QString &id, const QString &regionCode) const{
+Waypoint* Airac::waypoint(const QString &id, const QString &regionCode, const int &type) const{
     Waypoint *result = 0;
-    foreach(NavAid *n, navaids[id]){
-        if (n->regionCode == regionCode)
-            result = n;
-    }
-    foreach(Waypoint *w, waypoints[id]){
-        if(w->regionCode == regionCode)
-            result = w;
+    if (type == 11){
+        foreach(Waypoint *w, waypoints[id]){
+            if(w->regionCode == regionCode)
+               return w;
+        }
+    } else {
+        foreach(NavAid *n, navaids[id]){
+            if (n->regionCode == regionCode)
+                return n;
+        }
     }
     return result;
 }
