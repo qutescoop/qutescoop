@@ -5,8 +5,10 @@
 #include "NavAid.h"
 
 NavAid::NavAid(const QStringList& stringList) {
-    if(stringList.size() < 12)
+    if(stringList.size() < 12){
+        qWarning() << "NavAid(): could not parse " << stringList << " as Navaid. Expected more than 12 fields.";
 		return;
+    }
 
 	bool ok;
 

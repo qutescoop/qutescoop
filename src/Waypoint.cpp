@@ -5,8 +5,10 @@
 #include "Waypoint.h"
 
 Waypoint::Waypoint(const QStringList& stringList) {
-    if(stringList.size() != 6)
-		return;
+    if(stringList.size() != 6){
+        qWarning() << "Waypoint(): could not parse " << stringList << " as Waypoint. Expected 6 fields.";
+        return;
+    }
 
 	bool ok;
 	lat = stringList[0].toDouble(&ok);
