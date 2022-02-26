@@ -22,11 +22,6 @@ FileReader::~FileReader() {
 		delete _stream;
 }
 
-void FileReader::skipLines(int nLines) const {
-    for (int i = 0; i < nLines; i++)
-        _stream->readLine();
-}
-
 QString FileReader::nextLine() const {
 	if(_stream == 0 || _stream->atEnd())
 		return QString();

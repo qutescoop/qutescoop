@@ -56,33 +56,69 @@ void Airac::load() {
     qDebug() << "Airac::load() -- finished";
 }
 
-void Airac::readWaypoints(const QString& directory) {
-    waypoints.clear();
-    FileReader fr(directory + "/earth_fix.dat");
-    fr.skipLines(3);
+void Airac::readFixes(const QString& directory) {
+    fixes.clear();
+
+    const QString file(directory + "/earth_fix.dat");
+    FileReader fr(file);
+
+    // 1st line: just an "I"
+    fr.nextLine();
+    // 2nd line: navdata format version, build information and data source
+    const QString version = fr.nextLine();
+    if (version.left(2) != "11") {
+        qCritical() << file << "is not in X-Plane version 11 data format";
+    }
+
     while(!fr.atEnd()) {
+        // file format:
+        //  49.862241667    9.348325000  SPESA ENRT ED 4530243
+        // https://developer.x-plane.com/article/navdata-in-x-plane-11/
+
         QString line = fr.nextLine().trimmed();
-        if(line.isEmpty() || line.startsWith("99")) //99 denotes EOF
+        if(line.isEmpty())
             continue;
+
+        // 99 denotes EOF
+        if(line == "99")
+            break;
 
         Waypoint *wp = new Waypoint(line.split(' ', Qt::SkipEmptyParts));
         if (wp == 0 || wp->isNull())
             continue;
 
-        waypoints[wp->label].insert(wp);
+        fixes[wp->label].insert(wp);
     }
     qDebug() << "Read fixes from\t" << (directory + "/earth_fix.dat")
-             << "-" << waypoints.size() << "imported";
+             << "-" << fixes.size() << "imported";
 }
 
 void Airac::readNavaids(const QString& directory) {
     navaids.clear();
-    FileReader fr(directory + "/earth_nav.dat");
-    fr.skipLines(3);
+
+    const QString file(directory + "/earth_nav.dat");
+    FileReader fr(file);
+
+    // 1st line: just an "I"
+    fr.nextLine();
+    // 2nd line: navdata format version, build information and data source
+    const QString version = fr.nextLine();
+    if (version.left(2) != "11") {
+        qCritical() << file << "is not in X-Plane version 11 data format";
+    }
+
     while(!fr.atEnd()) {
+        // file format:
+        //  3  52.721000000   -8.885222222      200    11330   130     -4.000  SHA ENRT EI SHANNON VOR/DME
+        // https://developer.x-plane.com/article/navdata-in-x-plane-11/
+
         QString line = fr.nextLine().trimmed();
-        if(line.isEmpty() || line.startsWith("99"))  //99 denotes EOF
+        if(line.isEmpty())
             continue;
+
+        // 99 denotes EOF
+        if(line == "99")
+            break;
 
         NavAid *nav = new NavAid(line.split(' ', Qt::SkipEmptyParts));
         if (nav == 0 || nav->isNull())
@@ -95,20 +131,38 @@ void Airac::readNavaids(const QString& directory) {
 }
 
 void Airac::readAirways(const QString& directory) {
+    // @todo: bring this in line with the other navdata source -> object converters
+
+    airways.clear();
+
+    const QString file(directory + "/earth_awy.dat");
+    FileReader fr(file);
+
+    // 1st line: just an "I"
+    fr.nextLine();
+    // 2nd line: navdata format version, build information and data source
+    const QString version = fr.nextLine();
+    if (version.left(2) != "11") {
+        qCritical() << file << "is not in X-Plane version 11 data format";
+    }
+
     bool ok;
     int segments = 0;
-
-    FileReader fr(directory + "/earth_awy.dat");
-    fr.skipLines(3);
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
-        if(line.isEmpty() || line.startsWith("99"))  //99 denotes EOF
-            continue;
-
+        // file format:
         // ABDOR GM 11 VALBA GM 11 N 2 195 460 UZ801
         // https://developer.x-plane.com/article/navdata-in-x-plane-11/
 
+        if(line.isEmpty())
+            continue;
+
+        // 99 denotes EOF
+        if(line == "99")
+            break;
+
         QStringList list = line.split(' ', Qt::SkipEmptyParts);
+        // @todo: why is this check here?
         if(list.size() < 10 || list.size() > 20)
             continue;
 
@@ -116,12 +170,12 @@ void Airac::readAirways(const QString& directory) {
         QString regionCode = list[1];
         int fixType = list[2].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse fix type (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse fix type (int):" << list;
             continue;
         }
         Waypoint *start = waypoint(id, regionCode, fixType);
         if(start == 0){
-            qWarning() << "Airac::readAirways() unable to find start waypoint:" << list;
+            qCritical() << "Airac::readAirways() unable to find start waypoint:" << list;
             continue;
         }
 
@@ -129,29 +183,30 @@ void Airac::readAirways(const QString& directory) {
         regionCode = list[4];
         fixType = list[5].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse fix type (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse fix type (int):" << list;
             continue;
         }
         Waypoint *end = waypoint(id, regionCode, fixType);
         if(end == 0){
-            qWarning() << "Airac::readAirways() unable to find end waypoint:" << list;
+            qCritical() << "Airac::readAirways() unable to find end waypoint:" << list;
             continue;
         }
-
 
         Airway::Type type = (Airway::Type)list[7].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse airwaytype (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse airwaytype (int):" << list;
             continue;
         }
+
         int base = list[8].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse base (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse base (int):" << list;
             continue;
         }
+
         int top = list[9].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse top (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse top (int):" << list;
             continue;
         }
 

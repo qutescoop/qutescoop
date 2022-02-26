@@ -13,7 +13,6 @@ class FileReader {
 
         bool atEnd() const;
         QString nextLine() const;
-        void skipLines(int nLines) const;
     private:
         QFile *_file;
         QTextStream *_stream;
