@@ -25,7 +25,7 @@ class Airac : public QObject {
         Airway* airway(const QString& name, double lat, double lon) const;
 
         QSet<Waypoint*> allPoints;
-        QHash<QString, QSet<Waypoint*> > waypoints;
+        QHash<QString, QSet<Waypoint*> > fixes;
         QHash<QString, QSet<NavAid*> > navaids;
         QHash<QString, QList<Airway*> > airways;
     public slots:
@@ -34,7 +34,7 @@ class Airac : public QObject {
         void loaded();
     private:
         Airac();
-        void readWaypoints(const QString &directory);
+        void readFixes(const QString &directory);
         void readNavaids(const QString &directory);
         void readAirways(const QString &directory);
         void addAirwaySegment(Waypoint* from, Waypoint* to, Airway::Type type,

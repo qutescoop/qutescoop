@@ -22,7 +22,7 @@ Airac::Airac() {
 }
 
 Airac::~Airac() {
-    foreach (const QSet<Waypoint*> &wl, waypoints.values())
+    foreach (const QSet<Waypoint*> &wl, fixes.values())
         foreach(Waypoint *w, wl)
             delete w;
     foreach (const QSet<NavAid*> &nl, navaids.values())
@@ -37,14 +37,14 @@ void Airac::load() {
     qDebug() << "Airac::load()" << Settings::navdataDirectory();
     GuiMessages::status("Loading navigation database...", "airacload");
     if (Settings::useNavdata()) {
-        readWaypoints(Settings::navdataDirectory());
+        readFixes(Settings::navdataDirectory());
         readNavaids(Settings::navdataDirectory());
         readAirways(Settings::navdataDirectory());
     }
 
     allPoints.clear();
-    allPoints.reserve(waypoints.size() + navaids.size());
-    foreach (const QSet<Waypoint*> &wl, waypoints.values())
+    allPoints.reserve(fixes.size() + navaids.size());
+    foreach (const QSet<Waypoint*> &wl, fixes.values())
         foreach(Waypoint *w, wl)
             allPoints.insert(w);
     foreach (const QSet<NavAid*> &nl, navaids.values())
@@ -189,7 +189,7 @@ void Airac::readAirways(const QString& directory) {
 Waypoint* Airac::waypoint(const QString &id, const QString &regionCode, const int &type) const{
     Waypoint *result = 0;
     if (type == 11){
-        foreach(Waypoint *w, waypoints[id]){
+        foreach(Waypoint *w, fixes[id]){
             if(w->regionCode == regionCode)
                return w;
         }
@@ -218,7 +218,7 @@ Waypoint* Airac::waypoint(const QString& id, double lat, double lon, double maxD
             minDist = d;
         }
     }
-    foreach (Waypoint *w, waypoints[id]) {
+    foreach (Waypoint *w, fixes[id]) {
         double d = NavData::distance(lat, lon, w->lat, w->lon);
         if ((d < minDist) && (d < maxDist)) {
             result = w;
