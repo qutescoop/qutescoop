@@ -280,8 +280,8 @@ class Settings {
         static double pilotDotSize();
         static void setPilotDotSize(double value);
 
-        static QColor timeLineColor();
-        static void setTimeLineColor(const QColor& color);
+        static QColor leaderLineColor();
+        static void setLeaderLineColor(const QColor& color);
 
         static bool showUsedWaypoints();
         static void setShowUsedWaypoints(bool value);
@@ -319,8 +319,8 @@ class Settings {
         static bool destLineDashed();
         static void setDestLineDashed(bool value);
 
-        static QColor highlightColor();
-        static void setHighlightColor(QColor& color);
+        static QColor friendsHighlightColor();
+        static void setFriendsHighlightColor(QColor& color);
 
         static double highlightLineWidth();
         static void setHighlightLineWidth(double value);

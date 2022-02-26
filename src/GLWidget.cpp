@@ -248,7 +248,7 @@ void GLWidget::createPilotsList() {
     if(Settings::timelineSeconds() > 0 && Settings::timeLineStrength() > 0.) {
         glLineWidth(Settings::timeLineStrength());
         glBegin(GL_LINES);
-        qglColor(Settings::timeLineColor());
+        qglColor(Settings::leaderLineColor());
         foreach(const Pilot *p, pilots) {
             if (p->groundspeed < 30)
                 continue;
@@ -1016,10 +1016,10 @@ void GLWidget::paintGL() {
         double range = (time.second()%5);
         range += (time.msec()%500)/1000;
 
-        GLfloat red = Settings::highlightColor().redF();
-        GLfloat green = Settings::highlightColor().greenF();
-        GLfloat blue = Settings::highlightColor().blueF();
-        GLfloat alpha = Settings::highlightColor().alphaF();
+        GLfloat red = Settings::friendsHighlightColor().redF();
+        GLfloat green = Settings::friendsHighlightColor().greenF();
+        GLfloat blue = Settings::friendsHighlightColor().blueF();
+        GLfloat alpha = Settings::friendsHighlightColor().alphaF();
         double lineWidth = Settings::highlightLineWidth();
         if(!Settings::useHighlightAnimation()) {
             range = 0;

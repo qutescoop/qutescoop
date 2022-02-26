@@ -601,7 +601,7 @@ void Settings::setFirFont(const QFont& font) {
 }
 
 QColor Settings::firHighlightedBorderLineColor() {
-    return instance()->value("firDisplay/borderLineColorHighlighted", QColor::fromRgbF(1.0, 1.0, 0.5, 0.3)).value<QColor>();
+    return instance()->value("firDisplay/borderLineColorHighlighted", QColor::fromRgb(200, 13, 214, 77)).value<QColor>();
 }
 
 void Settings::setFirHighlightedBorderLineColor(const QColor& color) {
@@ -617,7 +617,7 @@ void Settings::setFirHighlightedBorderLineStrength(double strength) {
 }
 
 QColor Settings::firHighlightedFillColor() {
-    return instance()->value("firDisplay/fillColorHighlighted", QColor::fromRgb(200, 13, 214, 50)).value<QColor>();
+    return instance()->value("firDisplay/fillColorHighlighted", QColor::fromRgb(200, 13, 214, 35)).value<QColor>();
 }
 
 void Settings::setFirHighlightedFillColor(const QColor& color) {
@@ -689,14 +689,13 @@ QFont Settings::inactiveAirportFont() {
     result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
     return result;
 }
+
 void Settings::setInactiveAirportFont(const QFont& font) {
     instance()->setValue("airportDisplay/inactiveFont", font);
 }
 
-
-
 QColor Settings::appBorderLineColor() {
-    return instance()->value("airportDisplay/appBorderLineColor", QColor::fromRgb(255, 255, 127)).value<QColor>();
+    return instance()->value("airportDisplay/appBorderLineColor", QColor::fromRgb(255, 255, 127, 150)).value<QColor>();
 }
 
 void Settings::setAppBorderLineColor(const QColor& color) {
@@ -712,7 +711,7 @@ void Settings::setAppBorderLineStrength(double value) {
 }
 
 QColor Settings::appCenterColor() {
-    return instance()->value("airportDisplay/appCenterColor", QColor::fromRgbF(0.0, 0.0, 1.0, 0.0)).value<QColor>();
+    return instance()->value("airportDisplay/appCenterColor", QColor::fromRgb(0, 0, 0, 0)).value<QColor>();
 }
 
 void Settings::setAppCenterColor(const QColor& color) {
@@ -720,31 +719,31 @@ void Settings::setAppCenterColor(const QColor& color) {
 }
 
 QColor Settings::appMarginColor() {
-    return instance()->value("airportDisplay/appMarginColor", QColor::fromRgb(85, 170, 255)).value<QColor>();
+    return instance()->value("airportDisplay/appMarginColor", QColor::fromRgb(34, 85, 99, 128)).value<QColor>();
 }
 
 void Settings::setAppMarginColor(const QColor& color) {
     instance()->setValue("airportDisplay/appMarginColor", color);
 }
 
-QColor Settings::twrMarginColor() {
-    return instance()->value("airportDisplay/twrMarginColor", QColor::fromRgb(102, 85, 67)).value<QColor>();
-}
-
-void Settings::setTwrMarginColor(const QColor& color) {
-    instance()->setValue("airportDisplay/twrMarginColor", color);
-}
-
 QColor Settings::twrCenterColor() {
-    return instance()->value("airportDisplay/twrCenterColor", QColor::fromRgbF(0.8, 0.8, 0.0, 0.0)).value<QColor>();
+    return instance()->value("airportDisplay/twrCenterColor", QColor::fromRgb(34, 85, 99, 100)).value<QColor>();
 }
 
 void Settings::setTwrCenterColor(const QColor& color) {
     instance()->setValue("airportDisplay/twrCenterColor", color);
 }
 
+QColor Settings::twrMarginColor() {
+    return instance()->value("airportDisplay/twrMarginColor", QColor::fromRgb(34, 85, 99, 200)).value<QColor>();
+}
+
+void Settings::setTwrMarginColor(const QColor& color) {
+    instance()->setValue("airportDisplay/twrMarginColor", color);
+}
+
 QColor Settings::gndBorderLineColor() {
-    return instance()->value("airportDisplay/gndBorderLineColor", QColor::fromRgb(179, 0, 179)).value<QColor>();
+    return instance()->value("airportDisplay/gndBorderLineColor", QColor::fromRgb(172, 172, 172, 100)).value<QColor>();
 }
 
 void Settings::setGndBorderLineColor(const QColor& color) {
@@ -752,7 +751,7 @@ void Settings::setGndBorderLineColor(const QColor& color) {
 }
 
 double Settings::gndBorderLineStrength() {
-    return instance()->value("airportDisplay/gndBorderLineStrength", 0.2).toDouble();
+    return instance()->value("airportDisplay/gndBorderLineStrength", 1.0).toDouble();
 }
 
 void Settings::setGndBorderLineStrength(double value) {
@@ -760,12 +759,69 @@ void Settings::setGndBorderLineStrength(double value) {
 }
 
 QColor Settings::gndFillColor() {
-    return instance()->value("airportDisplay/gndFillColor", QColor::fromRgb(255, 255, 127)).value<QColor>();
+    return instance()->value("airportDisplay/gndFillColor", QColor::fromRgb(12, 30, 35, 86)).value<QColor>();
 }
 
 void Settings::setGndFillColor(const QColor& color) {
     instance()->setValue("airportDisplay/gndFillColor", color);
 }
+
+// Airport traffic
+bool Settings::filterTraffic() {
+    return instance()->value("airportTraffic/filterTraffic", true).toBool();
+}
+
+void Settings::setFilterTraffic(bool v) {
+    instance()->setValue("airportTraffic/filterTraffic", v);
+}
+
+int Settings::filterDistance() {
+    return instance()->value("airportTraffic/filterDistance", 5).toInt();
+}
+
+void Settings::setFilterDistance(int v) {
+    instance()->setValue("airportTraffic/filterDistance", v);
+}
+
+double Settings::filterArriving() {
+    return instance()->value("airportTraffic/filterArriving", 1.0).toDouble();
+}
+
+void Settings::setFilterArriving(double v) {
+    instance()->setValue("airportTraffic/filterArriving", v);
+}
+// airport congestion
+bool Settings::showAirportCongestion() {
+    return instance()->value("airportTraffic/showCongestion", true).toBool();
+}
+void Settings::setAirportCongestion(bool value) {
+    instance()->setValue("airportTraffic/showCongestion", value);
+}
+
+int Settings::airportCongestionMinimum() {
+    return instance()->value("airportTraffic/minimumMovements", 8).toInt();
+}
+
+void Settings::setAirportCongestionMinimum(int value) {
+    instance()->setValue("airportTraffic/minimumMovements", value);
+}
+
+QColor Settings::airportCongestionBorderLineColor() {
+    return instance()->value("airportTraffic/borderLineColor", QColor::fromRgb(255, 0, 127, 103)).value<QColor>();
+}
+
+void Settings::setAirportCongestionBorderLineColor(const QColor& color) {
+    instance()->setValue("airportTraffic/borderLineColor", color);
+}
+
+double Settings::airportCongestionBorderLineStrength() {
+    return instance()->value("airportTraffic/borderLineStrength", 2).toDouble();
+}
+
+void Settings::setAirportCongestionBorderLineStrength(double value) {
+    instance()->setValue("airportTraffic/borderLineStrength", value);
+}
+
 
 // pilot
 QColor Settings::pilotFontColor() {
@@ -786,18 +842,8 @@ void Settings::setPilotFont(const QFont& font) {
     instance()->setValue("pilotDisplay/font", font);
 }
 
-QFont Settings::sondeFont() {
-    QFont defaultFont;
-    defaultFont.setPixelSize(9);
-    return instance()->value("sondeDisplay/font", defaultFont).value<QFont>();
-}
-
-void Settings::setSondeFont(const QFont& font) {
-    instance()->setValue("sondeDisplay/font", font);
-}
-
 QColor Settings::pilotDotColor() {
-    return instance()->value("pilotDisplay/dotColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
+    return instance()->value("pilotDisplay/dotColor", QColor::fromRgb(255, 0, 127, 100)).value<QColor>();
 }
 
 void Settings::setPilotDotColor(const QColor& color) {
@@ -819,10 +865,10 @@ void Settings::setTimelineSeconds(int value) {
     instance()->setValue("pilotDisplay/timelineSeconds", value);
 }
 
-QColor Settings::timeLineColor() {
-    return instance()->value("pilotDisplay/timeLineColor", QColor::fromRgb(255, 0, 127)).value<QColor>();
+QColor Settings::leaderLineColor() {
+    return instance()->value("pilotDisplay/timeLineColor", QColor::fromRgb(255, 0, 127, 80)).value<QColor>();
 }
-void Settings::setTimeLineColor(const QColor& color) {
+void Settings::setLeaderLineColor(const QColor& color) {
     instance()->setValue("pilotDisplay/timeLineColor", color);
 }
 
@@ -834,6 +880,18 @@ void Settings::setTimeLineStrength(double value) {
     instance()->setValue("pilotDisplay/timeLineStrength", value);
 }
 
+// Wind
+QFont Settings::sondeFont() {
+    QFont defaultFont;
+    defaultFont.setPixelSize(9);
+    return instance()->value("sondeDisplay/font", defaultFont).value<QFont>();
+}
+
+void Settings::setSondeFont(const QFont& font) {
+    instance()->setValue("sondeDisplay/font", font);
+}
+
+// Waypoints
 bool Settings::showUsedWaypoints() {
     return instance()->value("display/showUsedWaypoints", false).toBool();
 }
@@ -873,9 +931,9 @@ void Settings::setWaypointsFont(const QFont& font) {
     instance()->setValue("pilotDisplay/waypointsFont", font);
 }
 
-
+// routes
 QColor Settings::depLineColor() {
-    return instance()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 150)).value<QColor>();
+    return instance()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 100)).value<QColor>();
 }
 
 void Settings::setDepLineColor(const QColor& color) {
@@ -883,19 +941,19 @@ void Settings::setDepLineColor(const QColor& color) {
 }
 
 QColor Settings::destLineColor() {
-    return instance()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0, 150)).value<QColor>();
+    return instance()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0, 100)).value<QColor>();
 }
 
 void Settings::setDestLineColor(const QColor& color) {
     instance()->setValue("pilotDisplay/destLineColor", color);
 }
 
-void Settings::setDepLineDashed(bool value) {
-    instance()->setValue("pilotDisplay/depLineDashed", value);
+bool Settings::depLineDashed() {
+    return instance()->value("pilotDisplay/depLineDashed", true).toBool();
 }
 
-bool Settings::depLineDashed() {
-    return instance()->value("pilotDisplay/depLineDashed", false).toBool();
+void Settings::setDepLineDashed(bool value) {
+    instance()->setValue("pilotDisplay/depLineDashed", value);
 }
 
 void Settings::setDestLineDashed(bool value) {
@@ -903,11 +961,11 @@ void Settings::setDestLineDashed(bool value) {
 }
 
 bool Settings::destLineDashed() {
-    return instance()->value("pilotDisplay/destLineDashed", true).toBool();
+    return instance()->value("pilotDisplay/destLineDashed", false).toBool();
 }
 
 double Settings::depLineStrength() {
-    return instance()->value("pilotDisplay/depLineStrength", 1.5).toDouble();
+    return instance()->value("pilotDisplay/depLineStrength", 0.8).toDouble();
 }
 
 void Settings::setDepLineStrength(double value) {
@@ -983,15 +1041,15 @@ QByteArray Settings::savedGeometry() {
     return instance()->value("mainWindowState/geometry", QByteArray()).toByteArray();
 }
 
-QColor Settings::highlightColor() {
-    return instance()->value("pilotDisplay/highlightColor", QColor::fromRgb(255, 0 , 0, 255)).value<QColor>();
+QColor Settings::friendsHighlightColor() {
+    return instance()->value("pilotDisplay/highlightColor", QColor::fromRgb(255, 255, 127, 180)).value<QColor>();
 }
-void Settings::setHighlightColor(QColor &color) {
+void Settings::setFriendsHighlightColor(QColor &color) {
     instance()->setValue("pilotDisplay/highlightColor", color);
 }
 
 double Settings::highlightLineWidth() {
-    return instance()->value("pilotDisplay/highlightLineWidth" , 1.5).toDouble();
+    return instance()->value("pilotDisplay/highlightLineWidth" , 2.5).toDouble();
 }
 void Settings::setHighlightLineWidth(double value) {
     instance()->setValue("pilotDisplay/highlightLineWidth", value);
@@ -1086,61 +1144,6 @@ void Settings::setResetOnNextStart(bool value) {
     instance()->setValue("main/resetConfiguration", value);
 }
 
-// Airport traffic
-bool Settings::filterTraffic() {
-    return instance()->value("airportTraffic/filterTraffic", true).toBool();
-}
-
-void Settings::setFilterTraffic(bool v) {
-    instance()->setValue("airportTraffic/filterTraffic", v);
-}
-
-int Settings::filterDistance() {
-    return instance()->value("airportTraffic/filterDistance", 5).toInt();
-}
-
-void Settings::setFilterDistance(int v) {
-    instance()->setValue("airportTraffic/filterDistance", v);
-}
-
-double Settings::filterArriving() {
-    return instance()->value("airportTraffic/filterArriving", 1.0).toDouble();
-}
-
-void Settings::setFilterArriving(double v) {
-    instance()->setValue("airportTraffic/filterArriving", v);
-}
-// airport congestion
-bool Settings::showAirportCongestion() {
-    return instance()->value("airportTraffic/showCongestion", true).toBool();
-}
-void Settings::setAirportCongestion(bool value) {
-    instance()->setValue("airportTraffic/showCongestion", value);
-}
-
-int Settings::airportCongestionMinimum() {
-    return instance()->value("airportTraffic/minimumMovements", 8).toInt();
-}
-
-void Settings::setAirportCongestionMinimum(int value) {
-    instance()->setValue("airportTraffic/minimumMovements", value);
-}
-
-QColor Settings::airportCongestionBorderLineColor() {
-    return instance()->value("airportTraffic/borderLineColor", QColor::fromRgb(255, 0, 127, 150)).value<QColor>();
-}
-
-void Settings::setAirportCongestionBorderLineColor(const QColor& color) {
-    instance()->setValue("airportTraffic/borderLineColor", color);
-}
-
-double Settings::airportCongestionBorderLineStrength() {
-    return instance()->value("airportTraffic/borderLineStrength", 2).toDouble();
-}
-
-void Settings::setAirportCongestionBorderLineStrength(double value) {
-    instance()->setValue("airportTraffic/borderLineStrength", value);
-}
 
 // zooming
 int Settings::wheelMax() {
