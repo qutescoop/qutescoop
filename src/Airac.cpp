@@ -262,7 +262,11 @@ Waypoint* Airac::waypoint(const QString &id, const QString &regionCode, const in
   the given maximum distance @maxDist.
   @returns 0 if none found
 **/
-Waypoint* Airac::waypoint(const QString& id, double lat, double lon, double maxDist) const {
+Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, double maxDist) const {
+    // @todo clean this up
+    // @todo add "virtual" fixes (ARINC424) to our nav database upfront instead of returning them
+    // here dynamically (without adding them), which leads to duplicates
+
     Waypoint *result = 0;
     double minDist = 99999;
 
@@ -357,7 +361,7 @@ Airway* Airac::airway(const QString& name, Airway::Type type, int base, int top)
     return awy;
 }
 
-Airway* Airac::airway(const QString& name, double lat, double lon) const {
+Airway* Airac::airwayNearby(const QString& name, double lat, double lon) const {
     const QList<Airway*> list = airways[name];
     if(list.isEmpty())
         return 0;
@@ -408,12 +412,12 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
         QString id = plan.takeFirst();
         Airway *awy = 0;
         if (wantAirway)
-            awy = airway(id, lat, lon);
+            awy = airwayNearby(id, lat, lon);
         if (awy != 0 && !plan.isEmpty()) {
             wantAirway = false;
             // have airway - next should be a waypoint
             QString endId = plan.first();
-            Waypoint* wp = waypoint(endId, lat, lon);
+            Waypoint* wp = waypointNearby(endId, lat, lon);
             if(wp != 0) {
                 if (currPoint != 0)
                     result += awy->expand(currPoint->label, wp->label);
@@ -430,7 +434,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
                     QRegExp("(\\d{2,3}|\\d{5})[EW]").exactMatch(plan.first()))
                                     // but preserving correct ARINC style (\\d{4}[EW])
                     id += plan.takeFirst();
-            Waypoint* wp = waypoint(id, lat, lon);
+            Waypoint* wp = waypointNearby(id, lat, lon);
             if(wp != 0) {
                 result.append(wp);
                 currPoint = wp;
