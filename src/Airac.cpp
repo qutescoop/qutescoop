@@ -22,7 +22,7 @@ Airac::Airac() {
 }
 
 Airac::~Airac() {
-    foreach (const QSet<Waypoint*> &wl, waypoints.values())
+    foreach (const QSet<Waypoint*> &wl, fixes.values())
         foreach(Waypoint *w, wl)
             delete w;
     foreach (const QSet<NavAid*> &nl, navaids.values())
@@ -37,14 +37,14 @@ void Airac::load() {
     qDebug() << "Airac::load()" << Settings::navdataDirectory();
     GuiMessages::status("Loading navigation database...", "airacload");
     if (Settings::useNavdata()) {
-        readWaypoints(Settings::navdataDirectory());
+        readFixes(Settings::navdataDirectory());
         readNavaids(Settings::navdataDirectory());
         readAirways(Settings::navdataDirectory());
     }
 
     allPoints.clear();
-    allPoints.reserve(waypoints.size() + navaids.size());
-    foreach (const QSet<Waypoint*> &wl, waypoints.values())
+    allPoints.reserve(fixes.size() + navaids.size());
+    foreach (const QSet<Waypoint*> &wl, fixes.values())
         foreach(Waypoint *w, wl)
             allPoints.insert(w);
     foreach (const QSet<NavAid*> &nl, navaids.values())
@@ -56,31 +56,69 @@ void Airac::load() {
     qDebug() << "Airac::load() -- finished";
 }
 
-void Airac::readWaypoints(const QString& directory) {
-    waypoints.clear();
-    FileReader fr(directory + "/earth_fix.dat");
+void Airac::readFixes(const QString& directory) {
+    fixes.clear();
+
+    const QString file(directory + "/earth_fix.dat");
+    FileReader fr(file);
+
+    // 1st line: just an "I"
+    fr.nextLine();
+    // 2nd line: navdata format version, build information and data source
+    const QString version = fr.nextLine();
+    if (version.left(2) != "11") {
+        qCritical() << file << "is not in X-Plane version 11 data format";
+    }
+
     while(!fr.atEnd()) {
+        // file format:
+        //  49.862241667    9.348325000  SPESA ENRT ED 4530243
+        // https://developer.x-plane.com/article/navdata-in-x-plane-11/
+
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
             continue;
+
+        // 99 denotes EOF
+        if(line == "99")
+            break;
 
         Waypoint *wp = new Waypoint(line.split(' ', Qt::SkipEmptyParts));
         if (wp == 0 || wp->isNull())
             continue;
 
-        waypoints[wp->label].insert(wp);
+        fixes[wp->label].insert(wp);
     }
     qDebug() << "Read fixes from\t" << (directory + "/earth_fix.dat")
-             << "-" << waypoints.size() << "imported";
+             << "-" << fixes.size() << "imported";
 }
 
 void Airac::readNavaids(const QString& directory) {
     navaids.clear();
-    FileReader fr(directory + "/earth_nav.dat");
+
+    const QString file(directory + "/earth_nav.dat");
+    FileReader fr(file);
+
+    // 1st line: just an "I"
+    fr.nextLine();
+    // 2nd line: navdata format version, build information and data source
+    const QString version = fr.nextLine();
+    if (version.left(2) != "11") {
+        qCritical() << file << "is not in X-Plane version 11 data format";
+    }
+
     while(!fr.atEnd()) {
+        // file format:
+        //  3  52.721000000   -8.885222222      200    11330   130     -4.000  SHA ENRT EI SHANNON VOR/DME
+        // https://developer.x-plane.com/article/navdata-in-x-plane-11/
+
         QString line = fr.nextLine().trimmed();
         if(line.isEmpty())
             continue;
+
+        // 99 denotes EOF
+        if(line == "99")
+            break;
 
         NavAid *nav = new NavAid(line.split(' ', Qt::SkipEmptyParts));
         if (nav == 0 || nav->isNull())
@@ -93,83 +131,97 @@ void Airac::readNavaids(const QString& directory) {
 }
 
 void Airac::readAirways(const QString& directory) {
+    // @todo: bring this in line with the other navdata source -> object converters
+
+    airways.clear();
+
+    const QString file(directory + "/earth_awy.dat");
+    FileReader fr(file);
+
+    // 1st line: just an "I"
+    fr.nextLine();
+    // 2nd line: navdata format version, build information and data source
+    const QString version = fr.nextLine();
+    if (version.left(2) != "11") {
+        qCritical() << file << "is not in X-Plane version 11 data format";
+    }
+
     bool ok;
     int segments = 0;
-
-    FileReader fr(directory + "/earth_awy.dat");
     while(!fr.atEnd()) {
         QString line = fr.nextLine().trimmed();
+        // file format:
+        // ABDOR GM 11 VALBA GM 11 N 2 195 460 UZ801
+        // https://developer.x-plane.com/article/navdata-in-x-plane-11/
+
         if(line.isEmpty())
             continue;
 
+        // 99 denotes EOF
+        if(line == "99")
+            break;
+
         QStringList list = line.split(' ', Qt::SkipEmptyParts);
+        // @todo: why is this check here?
         if(list.size() < 10 || list.size() > 20)
             continue;
 
         QString id = list[0];
-        double lat = list[1].toDouble(&ok);
+        QString regionCode = list[1];
+        int fixType = list[2].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lat (double):" << list;
+            qCritical() << "Airac::readAirways() unable to parse fix type (int):" << list;
             continue;
         }
-        double lon = list[2].toDouble(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lon (double):" << list;
+        Waypoint *start = waypoint(id, regionCode, fixType);
+        if(start == 0){
+            qCritical() << "Airac::readAirways() unable to find start waypoint:" << list;
             continue;
-        }
-
-        Waypoint *start = waypoint(id, lat, lon, 1);
-        if(start == 0) {
-            start = new Waypoint(id, lat, lon);
-            waypoints[start->label].insert(start);
         }
 
         id = list[3];
-        lat = list[4].toDouble(&ok);
+        regionCode = list[4];
+        fixType = list[5].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lat (double):" << list;
+            qCritical() << "Airac::readAirways() unable to parse fix type (int):" << list;
             continue;
         }
-        lon = list[5].toDouble(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse lon (double):" << list;
+        Waypoint *end = waypoint(id, regionCode, fixType);
+        if(end == 0){
+            qCritical() << "Airac::readAirways() unable to find end waypoint:" << list;
             continue;
         }
 
-        Waypoint *end = waypoint(id, lat, lon, 1);
-        if(end == 0) {
-            end = new Waypoint(id, lat, lon);
-            waypoints[end->label].insert(end);
+        Airway::Type type = (Airway::Type)list[7].toInt(&ok);
+        if(!ok) {
+            qCritical() << "Airac::readAirways() unable to parse airwaytype (int):" << list;
+            continue;
         }
 
-        Airway::Type type = (Airway::Type)list[6].toInt(&ok);
+        int base = list[8].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse airwaytype (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse base (int):" << list;
             continue;
         }
-        int base = list[7].toInt(&ok);
+
+        int top = list[9].toInt(&ok);
         if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse base (int):" << list;
-            continue;
-        }
-        int top = list[8].toInt(&ok);
-        if(!ok) {
-            qWarning() << "Airac::readAirways() unable to parse top (int):" << list;
+            qCritical() << "Airac::readAirways() unable to parse top (int):" << list;
             continue;
         }
 
         QStringList names;
-        if(list.size() > 10) {
+        if(list.size() > 11) {
             //handle airways with spaces (!) in the name
             QString glue;
-            for(int i = 9; i < list.size(); i++) {
-                if(i > 9)
+            for(int i = 10; i < list.size(); i++) {
+                if(i > 10)
                     glue += " ";
                 glue += list[i];
             }
             names = glue.split('-', Qt::SkipEmptyParts);
         } else
-            names = list[9].split('-', Qt::SkipEmptyParts);
+            names = list[10].split('-', Qt::SkipEmptyParts);
 
         for(int i = 0; i < names.size(); i++) {
             addAirwaySegment(start, end, type, base, top, names[i]);
@@ -189,12 +241,32 @@ void Airac::readAirways(const QString& directory) {
             << "-" << airways.size() << "airways," << segments << "segments imported and sorted";
 }
 
+Waypoint* Airac::waypoint(const QString &id, const QString &regionCode, const int &type) const{
+    Waypoint *result = 0;
+    if (type == 11){
+        foreach(Waypoint *w, fixes[id]){
+            if(w->regionCode == regionCode)
+               return w;
+        }
+    } else {
+        foreach(NavAid *n, navaids[id]){
+            if (n->regionCode == regionCode)
+                return n;
+        }
+    }
+    return result;
+}
+
 /**
   find a waypoint that is near the given location @param lat, @param lon with
   the given maximum distance @maxDist.
   @returns 0 if none found
 **/
-Waypoint* Airac::waypoint(const QString& id, double lat, double lon, double maxDist) const {
+Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, double maxDist) const {
+    // @todo clean this up
+    // @todo add "virtual" fixes (ARINC424) to our nav database upfront instead of returning them
+    // here dynamically (without adding them), which leads to duplicates
+
     Waypoint *result = 0;
     double minDist = 99999;
 
@@ -205,7 +277,7 @@ Waypoint* Airac::waypoint(const QString& id, double lat, double lon, double maxD
             minDist = d;
         }
     }
-    foreach (Waypoint *w, waypoints[id]) {
+    foreach (Waypoint *w, fixes[id]) {
         double d = NavData::distance(lat, lon, w->lat, w->lon);
         if ((d < minDist) && (d < maxDist)) {
             result = w;
@@ -289,7 +361,7 @@ Airway* Airac::airway(const QString& name, Airway::Type type, int base, int top)
     return awy;
 }
 
-Airway* Airac::airway(const QString& name, double lat, double lon) const {
+Airway* Airac::airwayNearby(const QString& name, double lat, double lon) const {
     const QList<Airway*> list = airways[name];
     if(list.isEmpty())
         return 0;
@@ -340,12 +412,12 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
         QString id = plan.takeFirst();
         Airway *awy = 0;
         if (wantAirway)
-            awy = airway(id, lat, lon);
+            awy = airwayNearby(id, lat, lon);
         if (awy != 0 && !plan.isEmpty()) {
             wantAirway = false;
             // have airway - next should be a waypoint
             QString endId = plan.first();
-            Waypoint* wp = waypoint(endId, lat, lon);
+            Waypoint* wp = waypointNearby(endId, lat, lon);
             if(wp != 0) {
                 if (currPoint != 0)
                     result += awy->expand(currPoint->label, wp->label);
@@ -362,7 +434,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
                     QRegExp("(\\d{2,3}|\\d{5})[EW]").exactMatch(plan.first()))
                                     // but preserving correct ARINC style (\\d{4}[EW])
                     id += plan.takeFirst();
-            Waypoint* wp = waypoint(id, lat, lon);
+            Waypoint* wp = waypointNearby(id, lat, lon);
             if(wp != 0) {
                 result.append(wp);
                 currPoint = wp;

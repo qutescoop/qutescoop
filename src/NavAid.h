@@ -21,7 +21,10 @@ class NavAid: public Waypoint {
             MM = 8,
             IM = 9,
             DME_NO_FREQ = 12,
-            DME = 13
+            DME = 13,
+            FAP_GBAS = 14,
+            GBAS_GND = 15,
+            GBAS_THR = 16
         };
         static QString typeStr(Type _type);
         virtual QString toolTip() const;
@@ -29,7 +32,7 @@ class NavAid: public Waypoint {
 
     private:
         Type _type;
-        int _alt, _freq, _range;
+        int _freq;
         float _hdg;
         QString _name;
 };
