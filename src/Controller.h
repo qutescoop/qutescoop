@@ -23,6 +23,7 @@ class Controller: public Client {
 
         QString facilityString() const;
         QString toolTip() const;
+        QString toolTipShort() const;
         QString mapLabel() const;
         bool matches(const QRegExp& regex) const;
 

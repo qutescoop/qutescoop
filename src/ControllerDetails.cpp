@@ -49,7 +49,7 @@ void ControllerDetails::refresh(Controller *newController) {
         return;
     }
     setMapObject(_controller);
-    setWindowTitle(_controller->toolTip());
+    setWindowTitle(_controller->toolTipShort());
 
     // Controller Information
     QString controllerInfo = QString("<strong>%1</strong>").arg(_controller->displayName(true));
@@ -60,7 +60,12 @@ void ControllerDetails::refresh(Controller *newController) {
 
     lblControllerInfo->setText(controllerInfo);
 
-    lblOnline->setText(QString("%1 on %2 for %3 hrs").arg(_controller->label, _controller->server, _controller->onlineTime()));
+    lblOnline->setText(QString("On %1 for %2 hrs").arg(_controller->server, _controller->onlineTime()));
+
+    if (_controller->sector != 0) {
+        lblCallsign->setText(_controller->sector->name);
+    }
+    lblCallsign->setVisible(_controller->sector != 0);
 
     QString frequencyHtml;
     if(!_controller->isObserver() && _controller->frequency.length() != 0) {

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>284</width>
+    <width>286</width>
     <height>409</height>
    </rect>
   </property>
@@ -63,7 +63,17 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="frequencyLayout" stretch="1,0">
+       <layout class="QHBoxLayout" name="frequencyLayout" stretch="0,1,0">
+        <item>
+         <widget class="QLabel" name="lblCallsign">
+          <property name="text">
+           <string>Langen KIT</string>
+          </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
         <item>
          <widget class="QLabel" name="label">
           <property name="text">
