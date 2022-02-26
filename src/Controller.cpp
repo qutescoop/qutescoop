@@ -203,7 +203,7 @@ QString Controller::rank() const {
     }
 }
 
-QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Name, C1)
+QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Alias | Name, C1)
     QString result = label;
     if (sector != 0)
         result += " [" + sector->name + "]";
@@ -215,6 +215,14 @@ QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Name, C1)
         result += ", " + rank();
     result += ")";
     return result;
+}
+
+QString Controller::toolTipShort() const // LOVV_CTR [Vienna]
+{
+  QString result = label;
+  if (sector != 0)
+      result += " [" + sector->name + "]";
+  return result;
 }
 
 QString Controller::mapLabel() const { // LOVV

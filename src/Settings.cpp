@@ -197,6 +197,7 @@ QString Settings::statusLocation() {
         case 1: // user defined
             return userDownloadLocation();
     }
+    return QString();
 }
 
 bool Settings::useProxy() {
