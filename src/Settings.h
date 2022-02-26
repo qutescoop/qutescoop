@@ -48,7 +48,6 @@ class Settings {
         static QString userDownloadLocation();
         static void setUserDownloadLocation(const QString& location);
         static QString statusLocation();
-        static void setStatusLocation(const QString& location);
         static QString bookingsLocation();
         static void setBookingsLocation(const QString& value);
         static bool downloadBookings();
