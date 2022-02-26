@@ -70,31 +70,43 @@ void Whazzup::processStatus() {
     _url1Url = "";
     _user0Url = "";
 
-    while(_replyStatus->canReadLine()) {
-        QString line = QString(_replyStatus->readLine()).trimmed();
-        if(line.startsWith(";")) // ignore comments
-            continue;
+    QJsonDocument data = QJsonDocument::fromJson(_replyStatus->readAll());
 
-        QStringList list = line.split('=');
-        if(list.size() < 2) continue;
+    if(data.isNull()) {
+        GuiMessages::warning("Couldn't parse status. Does the status URL return the old format?");
+    } else {
+        QJsonObject json = data.object();
+        if(json.contains("data") && json["data"].isObject()) {
+            QJsonObject vatsimDataSources = json["data"].toObject();
+            if(vatsimDataSources.contains("v3") && vatsimDataSources["v3"].isArray()) {
+                QJsonArray v3Urls = vatsimDataSources["v3"].toArray();
+                for(int i = 0; i < v3Urls.size(); ++i) {
+                    if(v3Urls[i].isString()) {
+                        _json3Urls.append(v3Urls[i].toString());
+                    }
+                }
+            }
+            // The vatsimDataSources also contains links where the list of servers can be found, however those are extracted from the jsonv3 anyways
+        }
 
-        QString key = list[0];
-        QString value = list.mid(1).join('='); // everything right of the first =
+        if(json.contains("user") && json["user"].isArray()) {
+            QJsonArray userUrls = json["user"].toArray();
+            for(int i = 0; i < userUrls.size(); ++i) {
+                if(userUrls[i].isString()) {
+                    _user0Url = userUrls[i].toString();
+                    break;
+                }
+            }
+        }
 
-        if("msg0" == key) { // message to be displayed at application startup
-            _msg0 = value;
-        } else if("json3" == key) { // JSON Data Version 3
-            _json3Urls.append(value);
-        } else if("metar0" == key) { // URL where to retrieve metar. Invoke it passing a parameter like for example: http://metar.vatsim.net/metar.php?id=KBOS
-            _metar0Url = value;
-        } else if("url1" == key) { // URLs where servers list data files are available. Please choose one randomly every time
-            _url1Url = value;
-        } else if("user0" == key) { // URL where to retrieve statistics web pages
-            _user0Url = value;
-        } else if("moveto0" == key) { // URL where to retrieve a more updated status.txt file that overrides this one
-            _replyStatus = Net::g(value);
-            connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
-            return;
+        if(json.contains("metar") && json["metar"].isArray()) {
+            QJsonArray metarUrls = json["metar"].toArray();
+            for(int i = 0; i < metarUrls.size(); ++i) {
+                if(metarUrls[i].isString()) {
+                    _metar0Url = metarUrls[i].toString();
+                    break;
+                }
+            }
         }
     }
 

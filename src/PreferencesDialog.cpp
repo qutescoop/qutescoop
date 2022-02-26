@@ -410,11 +410,9 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 
     switch(index) {
     case 0: // VATSIM
-        Settings::setStatusLocation("http://status.vatsim.net/");
         gbDownloadBookings->setChecked(true);
         break;
     case 1: // user defined
-        Settings::setStatusLocation(editUserDefinedLocation->text());
         gbDownloadBookings->setChecked(false);
         break;
     }
@@ -427,7 +425,7 @@ void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
     if (!_settingsLoaded)
         return;
     Settings::setUserDownloadLocation(editUserDefinedLocation->text());
-    Settings::setStatusLocation(editUserDefinedLocation->text());
+    Settings::setDownloadNetwork(Settings::downloadNetwork()); // To force a reload of the status data
 }
 
 void PreferencesDialog::on_cbSaveWhazzupData_stateChanged(int state) {

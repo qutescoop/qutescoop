@@ -19,7 +19,12 @@ QSettings* Settings::instance() {
         const int requiredSettingsVersion = 1;
         const int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
         if (currentSettingsVersion < requiredSettingsVersion) {
-            // do migration steps here
+            if((settingsInstance->value("download/network", 0).toInt() == 1)
+            && (settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/")) {
+                settingsInstance->setValue("download/network", 0);
+                qDebug() << "Found a user defined network, but VATSIM status location. Migrated.";
+            }
+            settingsInstance->remove("download/statusLocation");
             settingsInstance->setValue("settings/version", requiredSettingsVersion);
         }
     }
@@ -137,11 +142,12 @@ void Settings::setBookingsInterval(int value) {
 }
 
 int Settings::downloadNetwork() {
-    return instance()->value("download/network", 1).toInt();
+    return instance()->value("download/network", 0).toInt();
 }
 
 void Settings::setDownloadNetwork(int i) {
     instance()->setValue("download/network", i);
+    Whazzup::instance()->setStatusLocation(statusLocation());
 }
 
 QString Settings::downloadNetworkName() {
@@ -185,12 +191,12 @@ void Settings::setUpdateVersionNumber(const QString& version) {
 }
 
 QString Settings::statusLocation() {
-    return instance()->value("download/statusLocation", "http://status.vatsim.net/").toString();
-}
-
-void Settings::setStatusLocation(const QString& location) {
-    instance()->setValue("download/statusLocation", location);
-    Whazzup::instance()->setStatusLocation(location);
+    switch(downloadNetwork()) {
+        case 0: // VATSIM
+            return "https://status.vatsim.net/status.json";
+        case 1: // user defined
+            return userDownloadLocation();
+    }
 }
 
 bool Settings::useProxy() {
