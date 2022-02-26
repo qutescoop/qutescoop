@@ -209,7 +209,7 @@ void PreferencesDialog::loadSettings() {
     color = Settings::appBorderLineColor();
     pbAppBorderLineColor->setText(color.name());
     pbAppBorderLineColor->setPalette(QPalette(color));
-    sbAppBorderLineStrength->setValue(Settings::appBorderLineStrength());
+    sbAppBorderLineStrength->setValue(Settings::appBorderLineWidth());
 
     color = Settings::appCenterColor();
     pbAppColorCenter->setText(color.name());
@@ -230,7 +230,7 @@ void PreferencesDialog::loadSettings() {
     color = Settings::gndBorderLineColor();
     pbGndBorderLineColor->setText(color.name());
     pbGndBorderLineColor->setPalette(QPalette(color));
-    sbGndBorderLineStrength->setValue(Settings::gndBorderLineStrength());
+    sbGndBorderLineStrength->setValue(Settings::gndBorderLineWidth());
 
     color = Settings::gndFillColor();
     pbGndFillColor->setText(color.name());
@@ -257,7 +257,7 @@ void PreferencesDialog::loadSettings() {
     pbPilotDotColor->setPalette(QPalette(color));
     sbPilotDotSize->setValue(Settings::pilotDotSize());
 
-    color = Settings::timeLineColor();
+    color = Settings::leaderLineColor();
     pbTimeLineColor->setText(color.name());
     pbTimeLineColor->setPalette(QPalette(color));
     sbTimeLineStrength->setValue(Settings::timeLineStrength());
@@ -298,8 +298,8 @@ void PreferencesDialog::loadSettings() {
 
     //highlight Friends
     sb_highlightFriendsLineWidth->setValue(Settings::highlightLineWidth());
-    pb_highlightFriendsColor->setPalette(QPalette(Settings::highlightColor()));
-    pb_highlightFriendsColor->setText(Settings::highlightColor().name());
+    pb_highlightFriendsColor->setPalette(QPalette(Settings::friendsHighlightColor()));
+    pb_highlightFriendsColor->setText(Settings::friendsHighlightColor().name());
     cb_Animation->setChecked(Settings::useHighlightAnimation());
 
     // FINISHED
@@ -819,12 +819,12 @@ void PreferencesDialog::on_sbPilotDotSize_valueChanged(double value) {
 }
 
 void PreferencesDialog::on_pbTimeLineColor_clicked() {
-    QColor color = QColorDialog::getColor(Settings::timeLineColor(), this,
+    QColor color = QColorDialog::getColor(Settings::leaderLineColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
     if(color.isValid()) {
         pbTimeLineColor->setText(color.name());
         pbTimeLineColor->setPalette(QPalette(color));
-        Settings::setTimeLineColor(color);
+        Settings::setLeaderLineColor(color);
     }
 }
 
@@ -1302,13 +1302,13 @@ void PreferencesDialog::on_cb_Animation_stateChanged(int state) {
 }
 
 void PreferencesDialog::on_pb_highlightFriendsColor_clicked() {
-    QColor color = QColorDialog::getColor(Settings::backgroundColor(), this,
+    QColor color = QColorDialog::getColor(Settings::friendsHighlightColor(), this,
                                           "Select color", QColorDialog::ShowAlphaChannel);
 
     if(color.isValid()) {
         pb_highlightFriendsColor->setText(color.name());
         pb_highlightFriendsColor->setPalette(QPalette(color));
-        Settings::setHighlightColor(color);
+        Settings::setFriendsHighlightColor(color);
     }
 }
 

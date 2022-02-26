@@ -50,7 +50,6 @@ class Airport: public MapObject {
         bool showFlightLines;
 
         const GLuint &appDisplayList();
-        const GLuint &appBorderDisplayList();
         const GLuint &twrDisplayList();
         const GLuint &gndDisplayList();
         const GLuint &delDisplayList();
@@ -58,7 +57,7 @@ class Airport: public MapObject {
         Metar metar;
 
     private:
-        GLuint _appDisplayList, _appBorderDisplayList, _twrDisplayList,
+        GLuint _appDisplayList, _twrDisplayList,
         _gndDisplayList, _delDisplayList;
 };
 

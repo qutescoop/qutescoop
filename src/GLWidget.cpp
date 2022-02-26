@@ -26,7 +26,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         _earthList(0), _coastlinesList(0), _countriesList(0), _gridlinesList(0),
         _pilotsList(0), _activeAirportsList(0), _inactiveAirportsList(0), _fixesList(0),
         _usedWaypointsList(0), _sectorPolygonsList(0), _sectorPolygonBorderLinesList(0),
-        _appBorderLinesList(0),
         _congestionsList(0),
         _sondeLabelZoomTreshold(3.),
         _pilotLabelZoomTreshold(.9),
@@ -59,7 +58,6 @@ GLWidget::~GLWidget() {
     glDeleteLists(_usedWaypointsList, 1); glDeleteLists(_pilotsList, 1);
     glDeleteLists(_activeAirportsList, 1); glDeleteLists(_inactiveAirportsList, 1);
     glDeleteLists(_congestionsList, 1);
-    glDeleteLists(_appBorderLinesList, 1);
     glDeleteLists(_sectorPolygonsList, 1); glDeleteLists(_sectorPolygonBorderLinesList, 1);
 
     if (_earthTex != 0)
@@ -248,7 +246,7 @@ void GLWidget::createPilotsList() {
     if(Settings::timelineSeconds() > 0 && Settings::timeLineStrength() > 0.) {
         glLineWidth(Settings::timeLineStrength());
         glBegin(GL_LINES);
-        qglColor(Settings::timeLineColor());
+        qglColor(Settings::leaderLineColor());
         foreach(const Pilot *p, pilots) {
             if (p->groundspeed < 30)
                 continue;
@@ -398,7 +396,7 @@ void GLWidget::createAirportsList() {
             if(congested < Settings::airportCongestionMinimum()) continue;
             GLdouble circle_distort = qCos(airportList[i]->lat * Pi180);
             QList<QPair<double, double> > points;
-            for(int h = 0; h <= 360; h += 10) {
+            for(int h = 0; h <= 360; h += 6) {
                 double x = airportList[i]->lat + Nm2Deg(congested*5) * circle_distort *qCos(h * Pi180);
                 double y = airportList[i]->lon + Nm2Deg(congested*5) * qSin(h * Pi180);
                 points.append(QPair<double, double>(x, y));
@@ -460,23 +458,6 @@ void GLWidget::createControllersLists() {
                 glCallList(s->glBorderLine());
             glEndList();
         }
-    }
-
-    // APP border lines
-    if(_appBorderLinesList == 0)
-        _appBorderLinesList = glGenLists(1);
-
-    QList<Airport*> airportList = NavData::instance()->airports.values();
-    if(Settings::appBorderLineStrength() > 0.) {
-        foreach(Airport *a, airportList)
-            if(!a->approaches.isEmpty())
-                a->appBorderDisplayList();
-
-        glNewList(_appBorderLinesList, GL_COMPILE);
-        foreach(Airport *a, airportList)
-            if(!a->approaches.isEmpty())
-                glCallList(a->appBorderDisplayList());
-        glEndList();
     }
     qDebug() << "GLWidget::createControllersLists() -- finished";
 }
@@ -974,7 +955,6 @@ void GLWidget::paintGL() {
     QList<Airport*> airportList = NavData::instance()->airports.values();
     //render Approach
     if(Settings::showAPP()) {
-        glCallList(_appBorderLinesList);
         foreach(Airport *a, airportList) {
             if(!a->approaches.isEmpty())
                 glCallList(a->appDisplayList());
@@ -992,10 +972,10 @@ void GLWidget::paintGL() {
     //render Ground/Delivery
     if(Settings::showGND()) {
         foreach(Airport *a, airportList) {
-            if(!a->grounds.isEmpty())
-                glCallList(a->gndDisplayList());
             if(!a->deliveries.isEmpty())
                 glCallList(a->delDisplayList());
+            if(!a->grounds.isEmpty())
+                glCallList(a->gndDisplayList());
         }
     }
 
@@ -1016,10 +996,10 @@ void GLWidget::paintGL() {
         double range = (time.second()%5);
         range += (time.msec()%500)/1000;
 
-        GLfloat red = Settings::highlightColor().redF();
-        GLfloat green = Settings::highlightColor().greenF();
-        GLfloat blue = Settings::highlightColor().blueF();
-        GLfloat alpha = Settings::highlightColor().alphaF();
+        GLfloat red = Settings::friendsHighlightColor().redF();
+        GLfloat green = Settings::friendsHighlightColor().greenF();
+        GLfloat blue = Settings::friendsHighlightColor().blueF();
+        GLfloat alpha = Settings::friendsHighlightColor().alphaF();
         double lineWidth = Settings::highlightLineWidth();
         if(!Settings::useHighlightAnimation()) {
             range = 0;
