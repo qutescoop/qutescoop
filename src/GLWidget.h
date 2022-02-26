@@ -118,7 +118,7 @@ class GLWidget : public QGLWidget {
         _earthList, _coastlinesList, _countriesList, _gridlinesList,
         _pilotsList, _activeAirportsList, _inactiveAirportsList,
         _fixesList, _usedWaypointsList, _plannedRouteList,
-        _sectorPolygonsList, _sectorPolygonBorderLinesList, _appBorderLinesList, _congestionsList,
+        _sectorPolygonsList, _sectorPolygonBorderLinesList, _congestionsList,
         _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
         _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
         QSet<Controller*> _sectorsToDraw, _hoveredControllers;
