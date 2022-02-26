@@ -11,13 +11,13 @@
 
 Airport::Airport() :
         showFlightLines(false),
-        _appDisplayList(0), _appBorderDisplayList(0),
+        _appDisplayList(0),
         _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 }
 Airport::Airport(const QStringList& list) :
         showFlightLines(false),
-        _appDisplayList(0), _appBorderDisplayList(0),
+        _appDisplayList(0),
         _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 
@@ -34,7 +34,6 @@ Airport::Airport(const QStringList& list) :
 
 Airport::~Airport() {
     if(_appDisplayList != 0) glDeleteLists(_appDisplayList, 1);
-    if(_appBorderDisplayList != 0) glDeleteLists(_appBorderDisplayList, 1);
     if(_twrDisplayList != 0) glDeleteLists(_twrDisplayList, 1);
     if(_gndDisplayList != 0) glDeleteLists(_gndDisplayList, 1);
     if(_delDisplayList != 0) glDeleteLists(_delDisplayList, 1);
@@ -62,48 +61,45 @@ void Airport::addDeparture(Pilot* client) {
     active = true;
 }
 
-const GLuint& Airport::appBorderDisplayList() {
-    if(_appBorderDisplayList != 0)
-        return _appBorderDisplayList;
-
-    QColor borderLine = Settings::appBorderLineColor();
-    _appBorderDisplayList = glGenLists(1);
-    glNewList(_appBorderDisplayList, GL_COMPILE);
-    glLineWidth(Settings::appBorderLineStrength());
-    glBegin(GL_LINE_LOOP);
-    glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
-    GLdouble circle_distort = qCos(lat * Pi180);
-    for(int i = 0; i <= 360; i += 10) {
-        double x = lat + Nm2Deg(40) * circle_distort * qCos(i * Pi180);
-        double y = lon + Nm2Deg(40) * qSin(i * Pi180);
-        VERTEX(x, y);
-    }
-    glEnd();
-    glEndList();
-    return _appBorderDisplayList;
-}
-
 const GLuint& Airport::appDisplayList() {
     if(_appDisplayList != 0)
         return _appDisplayList;
 
+    QColor middleColor = Settings::appCenterColor();
+    QColor marginColor = Settings::appMarginColor();
+    QColor borderColor = Settings::appBorderLineColor();
+    GLfloat borderLineWidth = Settings::appBorderLineWidth();
+
     _appDisplayList = glGenLists(1);
     glNewList(_appDisplayList, GL_COMPILE);
 
-    QColor colorMiddle = Settings::appCenterColor();
-    QColor colorBorder = Settings::appMarginColor();
-
     glBegin(GL_TRIANGLE_FAN);
-    glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
+    glColor4f(middleColor.redF(), middleColor.greenF(), middleColor.blueF(), middleColor.alphaF());
     VERTEX(lat, lon);
-    glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
+    glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
     GLdouble circle_distort = qCos(lat * Pi180);
+    GLfloat deltaLon = Nm2Deg(40);
+    GLfloat deltaLat = circle_distort * deltaLon;
+
     for(int i = 0; i <= 360; i += 10) {
-        double x = lat + Nm2Deg(40) * circle_distort * qCos(i * Pi180);
-        double y = lon + Nm2Deg(40) * qSin(i * Pi180);
-        VERTEX(x, y);
+        VERTEX(
+            lat + deltaLat * qCos(i * Pi180),
+            lon + deltaLon * qSin(i * Pi180)
+        );
     }
     glEnd();
+
+    glBegin(GL_LINE_LOOP);
+    glLineWidth(borderLineWidth);
+    glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+    for(int i = 0; i <= 360; i += 10) {
+        VERTEX(
+            lat + deltaLat * qCos(i * Pi180),
+            lon + deltaLon * qSin(i * Pi180)
+        );
+    }
+    glEnd();
+
     glEndList();
 
     return _appDisplayList;
@@ -113,30 +109,48 @@ const GLuint& Airport::twrDisplayList() {
     if(_twrDisplayList != 0)
         return _twrDisplayList;
 
-    QColor colorMiddle = Settings::twrCenterColor();
-    QColor colorBorder = Settings::twrMarginColor();
+    QColor middleColor = Settings::twrCenterColor();
+    QColor marginColor = Settings::twrMarginColor();
+    // @todo: using APP border currently
+    QColor borderColor = Settings::appBorderLineColor();
+    GLfloat borderWidth = Settings::appBorderLineWidth();
 
-    // This draws a TWR controller 'small filled circle' at x, y coordinates
     _twrDisplayList = glGenLists(1);
     glNewList(_twrDisplayList, GL_COMPILE);
 
     GLdouble circle_distort = qCos(lat * Pi180);
+    GLfloat deltaLon = Nm2Deg(22);
+    GLfloat deltaLat = circle_distort * deltaLon;
 
-    QList<QPair<double, double> > points;
-    for(int i = 0; i <= 360; i += 20) {
-        double x = lat + Nm2Deg(22) * circle_distort * qCos(i * Pi180);
-        double y = lon + Nm2Deg(22) * qSin(i * Pi180);
-        points.append(QPair<double, double>(x, y));
+    QList<QPointF> points;
+    for(int i = 0; i <= 360; i += 10) {
+        points.append(
+            QPointF(
+                lon + deltaLon * qSin(i * Pi180),
+                lat + deltaLat * qCos(i * Pi180)
+            )
+        );
     }
 
     glBegin(GL_TRIANGLE_FAN);
-    glColor4f(colorMiddle.redF(), colorMiddle.greenF(), colorMiddle.blueF(), colorMiddle.alphaF());
+    glColor4f(middleColor.redF(), middleColor.greenF(), middleColor.blueF(), middleColor.alphaF());
     VERTEX(lat, lon);
-    glColor4f(colorBorder.redF(), colorBorder.greenF(), colorBorder.blueF(), colorBorder.alphaF());
+    glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
     for(int i = 0; i < points.size(); i++) {
-        VERTEX(points[i].first, points[i].second);
+        VERTEX(points[i].y(), points[i].x());
     }
     glEnd();
+
+    if (Settings::appBorderLineWidth() > 0.) {
+        glBegin(GL_LINE_LOOP);
+        glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+        glLineWidth(borderWidth);
+        for(int i = 0; i < points.size(); i++) {
+            VERTEX(points[i].y(), points[i].x());
+        }
+        glEnd();
+    }
+
     glEndList();
 
     return _twrDisplayList;
@@ -146,47 +160,48 @@ const GLuint& Airport::gndDisplayList() {
     if(_gndDisplayList != 0)
         return _gndDisplayList;
 
+    QColor fillColor = Settings::gndFillColor();
+    QColor borderColor = Settings::gndBorderLineColor();
+
     _gndDisplayList = glGenLists(1);
     glNewList(_gndDisplayList, GL_COMPILE);
 
-    GLdouble circle_distort = qCos(lat * Pi180);
-    GLdouble s1 = circle_distort * 0.07;
-    GLdouble s3 = circle_distort * 0.25;
-
-    QColor color = Settings::gndFillColor();
+    GLfloat circle_distort = qCos(lat * Pi180);
+    GLfloat innerDeltaLon = Nm2Deg(4);
+    GLfloat outerDeltaLon = Nm2Deg(18);
+    GLfloat innerDeltaLat = circle_distort * innerDeltaLon;
+    GLfloat outerDeltaLat = circle_distort * outerDeltaLon;
 
     glBegin(GL_POLYGON);
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        // first point is in center to avoid problems with the concave shape
-        VERTEX(lat, lon);
+    glColor4f(fillColor.redF(), fillColor.greenF(), fillColor.blueF(), fillColor.alphaF());
+    // first point is in center to avoid problems with the concave shape
+    VERTEX(lat, lon);
 
-        // draw a star shape
-        VERTEX(lat + s3, lon);
-        VERTEX(lat + s1, lon + 0.07);
-        VERTEX(lat,      lon + 0.25);
-        VERTEX(lat - s1, lon + 0.07);
-        VERTEX(lat - s3, lon);
-        VERTEX(lat - s1, lon - 0.07);
-        VERTEX(lat,      lon - 0.25);
-        VERTEX(lat + s1, lon - 0.07);
-        VERTEX(lat + s3, lon);
+    // draw a star shape
+    VERTEX(lat + outerDeltaLat, lon);
+    VERTEX(lat + innerDeltaLat, lon + innerDeltaLon);
+    VERTEX(lat, lon + outerDeltaLon);
+    VERTEX(lat - innerDeltaLat, lon + innerDeltaLon);
+    VERTEX(lat - outerDeltaLat, lon);
+    VERTEX(lat - innerDeltaLat, lon - innerDeltaLon);
+    VERTEX(lat, lon - outerDeltaLon);
+    VERTEX(lat + innerDeltaLat, lon - innerDeltaLon);
+    VERTEX(lat + outerDeltaLat, lon);
     glEnd();
 
-    if (Settings::gndBorderLineStrength() > 0.) {
-        color = Settings::gndBorderLineColor();
+    if (Settings::gndBorderLineWidth() > 0.) {
         glBegin(GL_LINE_STRIP);
-            // draw the border for the star
-            glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-            glLineWidth(Settings::gndBorderLineStrength());
-            VERTEX(lat + s3, lon);
-            VERTEX(lat + s1, lon + 0.07);
-            VERTEX(lat,      lon + 0.25);
-            VERTEX(lat - s1, lon + 0.07);
-            VERTEX(lat - s3, lon);
-            VERTEX(lat - s1, lon - 0.07);
-            VERTEX(lat,      lon - 0.25);
-            VERTEX(lat + s1, lon - 0.07);
-            VERTEX(lat + s3, lon);
+        glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+        glLineWidth(Settings::gndBorderLineWidth());
+        VERTEX(lat + outerDeltaLat, lon);
+        VERTEX(lat + innerDeltaLat, lon + innerDeltaLon);
+        VERTEX(lat, lon + outerDeltaLon);
+        VERTEX(lat - innerDeltaLat, lon + innerDeltaLon);
+        VERTEX(lat - outerDeltaLat, lon);
+        VERTEX(lat - innerDeltaLat, lon - innerDeltaLon);
+        VERTEX(lat, lon - outerDeltaLon);
+        VERTEX(lat + innerDeltaLat, lon - innerDeltaLon);
+        VERTEX(lat + outerDeltaLat, lon);
         glEnd();
     }
     glEndList();
@@ -197,35 +212,45 @@ const GLuint& Airport::delDisplayList() {
     if(_delDisplayList != 0)
         return _delDisplayList;
 
-    QColor color = Settings::gndFillColor();
-    QColor borderLine = Settings::gndBorderLineColor();
-
-    // This draws a DEL controller 'small filled circle' at x, y coordinates
+    // @todo: using GND colors currently
+    QColor fillColor = Settings::gndFillColor();
+    QColor borderColor = Settings::gndBorderLineColor();
+    GLfloat borderLineWidth = Settings::gndBorderLineWidth();
     _delDisplayList = glGenLists(1);
     glNewList(_delDisplayList, GL_COMPILE);
 
-    GLdouble circle_distort = qCos(lat * Pi180);
+    GLfloat circle_distort = qCos(lat * Pi180);
+    GLfloat deltaLon = Nm2Deg(14);
+    GLfloat deltaLat = circle_distort * deltaLon;
 
-    QList<DoublePair> points;
-    for(int i = 0; i <= 360; i += 20) {
-        double x = lat + Nm2Deg(8) * circle_distort * qCos(i * Pi180);
-        double y = lon + Nm2Deg(8) * qSin(i * Pi180);
-        points.append(DoublePair(x, y));
+    QList<QPointF> points;
+    for(int i = 0; i <= 360; i += 10) {
+        points.append(
+            QPointF(
+                lon + deltaLon * qSin(i * Pi180),
+                lat + deltaLat * qCos(i * Pi180)
+            )
+        );
     }
 
     glBegin(GL_TRIANGLE_FAN);
-    glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    glColor4f(fillColor.redF(), fillColor.greenF(), fillColor.blueF(), fillColor.alphaF());
     VERTEX(lat, lon);
-    foreach(const DoublePair &p, points)
-        VERTEX(p.first, p.second);
+    for(int i = 0; i < points.size(); i++) {
+        VERTEX(points[i].y(), points[i].x());
+    }
     glEnd();
-    // Border Line
-    glLineWidth(Settings::gndBorderLineStrength());
-    glBegin(GL_LINE_LOOP);
-    glColor4f(borderLine.redF(), borderLine.greenF(), borderLine.blueF(), borderLine.alphaF());
-    foreach(const DoublePair &p, points)
-        VERTEX(p.first, p.second);
-    glEnd();
+
+    if (Settings::gndBorderLineWidth() > 0.) {
+        glBegin(GL_LINE_LOOP);
+        glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+        glLineWidth(borderLineWidth);
+        for(int i = 0; i < points.size(); i++) {
+            VERTEX(points[i].y(), points[i].x());
+        }
+        glEnd();
+    }
+
     glEndList();
 
     return _delDisplayList;
