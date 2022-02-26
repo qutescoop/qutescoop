@@ -1,70 +1,70 @@
 /**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
+*  This file is part of QuteScoop. See README for license
+**************************************************************************/
 
 #include "NavAid.h"
 
-NavAid::NavAid(const QStringList& stringList) {
-    if(stringList.size() < 12){
-        qWarning() << "NavAid(): could not parse " << stringList << " as Navaid. Expected more than 12 fields.";
-		return;
+NavAid::NavAid(const QStringList&stringList) {
+    if (stringList.size() < 12) {
+        qCritical() << "NavAid(): could not parse " << stringList << " as Navaid. Expected more than 12 fields.";
+        return;
     }
 
-	bool ok;
+    bool ok;
 
     _type = (Type)stringList[0].toInt(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList << 0;
-		return;
-	}
-	lat = stringList[1].toDouble(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse lat (double):" << stringList << 1;
-		return;
-	}
-	lon = stringList[2].toDouble(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse lon (double):" << stringList << 2;
-		return;
-	}
+    if (!ok) {
+        qCritical() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList << 0;
+        return;
+    }
+    lat = stringList[1].toDouble(&ok);
+    if (!ok) {
+        qCritical() << "NavAid::NavAid() unable to parse lat (double):" << stringList << 1;
+        return;
+    }
+    lon = stringList[2].toDouble(&ok);
+    if (!ok) {
+        qCritical() << "NavAid::NavAid() unable to parse lon (double):" << stringList << 2;
+        return;
+    }
 
-	_freq = stringList[4].toInt(&ok);
-	if(!ok) {
-		qWarning() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
-		return;
-	}
+    _freq = stringList[4].toInt(&ok);
+    if (!ok) {
+        qCritical() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
+        return;
+    }
 
-	label = stringList[7];
+    label = stringList[7];
 
     regionCode = stringList[9];
 
-	_name = "";
-    for(int i = 10; i < stringList.size(); i++)
+    _name = "";
+    for (int i = 10; i < stringList.size(); i++)
         _name += stringList[i] + (i > 9? " ": "");
 }
 
 QString NavAid::typeStr(Type type) {
-	QHash<Type, QString> hash;
-	hash.reserve(10);
-	hash.insert(NDB, "NDB");
-	hash.insert(VOR, "VOR");
-	hash.insert(DME, "DME");
-	hash.insert(ILS_LOC, "ILS");
-	hash.insert(LOC, "LOC");
-	hash.insert(GS, "GS");
-	hash.insert(OM, "OM");
-	hash.insert(MM, "OM");
-	hash.insert(IM, "IM");
-	hash.insert(DME_NO_FREQ, "DME (no freq)");
+    QHash<Type, QString> hash;
+    hash.reserve(10);
+    hash.insert(NDB, "NDB");
+    hash.insert(VOR, "VOR");
+    hash.insert(DME, "DME");
+    hash.insert(ILS_LOC, "ILS");
+    hash.insert(LOC, "LOC");
+    hash.insert(GS, "GS");
+    hash.insert(OM, "OM");
+    hash.insert(MM, "OM");
+    hash.insert(IM, "IM");
+    hash.insert(DME_NO_FREQ, "DME (no freq)");
     hash.insert(DME, "DME");
     hash.insert(FAP_GBAS, "FAP alignment point");
     hash.insert(GBAS_GND, "GBAS Ground station");
     hash.insert(GBAS_THR, "GBAS Threshold point");
-	return hash.value(type, QString());
+    return hash.value(type, QString());
 }
 
 QString NavAid::toolTip() const {
-	QString ret = Waypoint::toolTip();
+    QString ret = Waypoint::toolTip();
     if (_type == NDB)
         ret.append(QString(" %1 kHz").arg(_freq));
     else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS)

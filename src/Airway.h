@@ -20,10 +20,10 @@ class Airway {
         virtual ~Airway() {}
 
         /**
-     * Returns a list of all fixes along this airway from start
-     * to end. The expanded list will not include the given start
-     * point, but will include the given end point.
-     */
+         * Returns a list of all fixes along this airway from start
+         * to end. The expanded list will not include the given start
+         * point, but will include the given end point.
+         */
         QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
         Waypoint* closestPointTo(double lat, double lon) const;
         void addSegment(Waypoint* from, Waypoint* to);
