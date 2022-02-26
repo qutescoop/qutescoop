@@ -15,6 +15,13 @@ QSettings *settingsInstance = 0;
 QSettings* Settings::instance() {
     if(settingsInstance == 0) {
         settingsInstance = new QSettings();
+
+        const int requiredSettingsVersion = 1;
+        const int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
+        if (currentSettingsVersion < requiredSettingsVersion) {
+            // do migration steps here
+            settingsInstance->setValue("settings/version", requiredSettingsVersion);
+        }
     }
     return settingsInstance;
 }
