@@ -232,6 +232,7 @@ jobs:
         id: draftrelease
         uses: ncipollo/release-action@v1
         with:
+          allowUpdates: true
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
           body: ${{ needs.facts.outputs.commitLog }}
@@ -250,9 +251,11 @@ jobs:
           allowUpdates: true
           commit: ${{ github.sha }}
           draft: false
+          name: ${{ needs.facts.outputs.version }}
           omitBodyDuringUpdate: true
           omitNameDuringUpdate: true
           omitPrereleaseDuringUpdate: true
+          prerelease: ${{ github.ref_type != 'tag' }}
           tag: ${{ needs.facts.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: delete potential stray release
