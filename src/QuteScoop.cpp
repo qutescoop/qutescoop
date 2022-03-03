@@ -54,6 +54,8 @@ int main(int argc, char *argv[]) {
 
     // some initial debug logging
     qDebug().noquote() << "QuteScoop" << Platform::version();
+    qDebug() << "Using settings from" << Settings::fileName();
+    qDebug() << "Using application data from" << Settings::dataDirectory();
 
     qDebug().noquote() << QString("Compiled with Qt %1 [%4, mode: %2], running with Qt %3 on %5.").arg(
                     QT_VERSION_STR, Platform::compileMode(), qVersion(), Platform::compiler(), Platform::platformOS()
@@ -63,10 +65,6 @@ int main(int argc, char *argv[]) {
     app.addLibraryPath(QString("%1/imageformats").arg(app.applicationDirPath()));
     qDebug() << "Library paths:" << app.libraryPaths();
     qDebug() << "Supported image formats:" << QImageReader::supportedImageFormats();
-
-    // directory
-    qDebug() << "Expecting application data in"
-             << Settings::dataDirectory();
 
     // show Launcher
     Launcher::instance()->fireUp();
