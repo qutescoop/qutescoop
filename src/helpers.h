@@ -11,10 +11,14 @@
 typedef QPair<double, double> DoublePair;
 
 // modulo, but always positive, not like fmod()
-static double inline modPositive(double x, double y) {
+static float inline modPositive(float x, float y) {
     if (qFuzzyIsNull(y))
         return x;
     return x - y * floor(x/y);
+}
+
+static float lerp(float v0, float v1, float t) {
+    return v0 + t * (v1 - v0);
 }
 
 /* mathematical constants */
