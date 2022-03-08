@@ -40,6 +40,7 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     _bookedAtcSortModel->setSourceModel(_bookedAtcModel);
     treeBookedAtc->setUniformRowHeights(true);
     treeBookedAtc->setModel(_bookedAtcSortModel);
+    treeBookedAtc->sortByColumn(0, Qt::AscendingOrder);
     connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
 
     // disconnect to set DateTime without being disturbed
