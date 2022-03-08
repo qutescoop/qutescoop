@@ -32,16 +32,89 @@ Sector::~Sector() {
         glDeleteLists(_borderlineHighlighted, 1);
 }
 
-const QPolygonF Sector::sectorPolygon() const {
-    QPolygonF pol;
-    foreach(const DoublePair p, points)
-        pol.append(QPointF(p.first, p.second));
-    return pol;
+const QList<QPair<double, double> > &Sector::points() const
+{
+    return m_points;
 }
 
 bool Sector::containsPoint(const QPointF &pt) const
 {
-    return sectorPolygon().containsPoint(pt, Qt::OddEvenFill);
+    foreach (const auto polygon, nonWrappedPolygons()) {
+        if (polygon.containsPoint(pt, Qt::OddEvenFill)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * This contains 2 polygons where 1 can be empty.
+ * If this sector wraps at the longitude +/-180, this returns this sector split
+ * at the lon=-/+180 meridian.
+ * They are suitable to check for containment of a point.
+ */
+const QList<QPolygonF> &Sector::nonWrappedPolygons() const
+{
+    return m_nonWrappedPolygons;
+}
+
+void Sector::setPoints(const QList<QPair<double, double> > &points)
+{
+    m_points = points;
+
+    // Populate m_nonWrappedPolygons:
+    m_nonWrappedPolygons = {QPolygonF(), QPolygonF()};
+    bool iCurrentPolygon = 0;
+    auto currentPolygon = &m_nonWrappedPolygons[iCurrentPolygon];
+
+    const int count = m_points.size();
+    for (int i = 0; i < count; i++) {
+        auto current = m_points[i];
+
+        auto next = m_points[(i + 1) % count];
+        currentPolygon->append(QPointF(current.first, current.second));
+        // Lon +/-180 wrap
+        auto diff = std::abs(next.second - current.second);
+        if (diff > 180.) {
+            // add supporting point at the border to both sub-polygons
+            float latAtBorder = 0.;
+            float t;
+            if (current.second > 90.) {
+                auto diffCurrent = 180. - current.second;
+                auto diffNext = 180. + next.second;
+                auto total = diffCurrent + diffNext;
+
+                if (qFuzzyIsNull(total)) {
+                    t = 0.;
+                } else {
+                    t = diffCurrent / total;
+                }
+                latAtBorder = lerp(current.first, next.first, t);
+
+                currentPolygon->append(QPointF(latAtBorder, 180.));
+            } else { // < -90.
+                auto diffCurrent = 180. + current.second;
+                auto diffNext = 180. - next.second;
+                auto total = diffCurrent + diffNext;
+
+                if (qFuzzyIsNull(total)) {
+                    t = 0.;
+                } else {
+                    t = diffCurrent / total;
+                }
+                latAtBorder = lerp(current.first, next.first, t);
+
+                currentPolygon->append(QPointF(latAtBorder, -180.));
+            }
+            iCurrentPolygon = !iCurrentPolygon;
+            currentPolygon = &m_nonWrappedPolygons[iCurrentPolygon];
+            if (current.second > 90.) {
+                currentPolygon->append(QPointF(latAtBorder, -180.));
+            } else {
+                currentPolygon->append(QPointF(latAtBorder, 180.));
+            }
+        }
+    }
 }
 
 GLuint Sector::glPolygon() {
@@ -50,7 +123,7 @@ GLuint Sector::glPolygon() {
         glNewList(_polygon, GL_COMPILE);
         QColor color = Settings::firFillColor();
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        Tessellator().tessellate(points);
+        Tessellator().tessellate(m_points);
         glEndList();
     }
     return _polygon;
@@ -64,8 +137,8 @@ GLuint Sector::glBorderLine() {
         glBegin(GL_LINE_LOOP);
         QColor color = Settings::firBorderLineColor();
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        for (int i = 0; i < points.size(); i++)
-            VERTEXhigh(points[i].first, points[i].second);
+        for (int i = 0; i < m_points.size(); i++)
+            VERTEXhigh(m_points[i].first, m_points[i].second);
         glEnd();
         glEndList();
     }
@@ -78,7 +151,7 @@ GLuint Sector::glPolygonHighlighted() {
         glNewList(_polygonHighlighted, GL_COMPILE);
         QColor color = Settings::firHighlightedFillColor();
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        Tessellator().tessellate(points);
+        Tessellator().tessellate(m_points);
         glEndList();
     }
     return _polygonHighlighted;
@@ -92,8 +165,8 @@ GLuint Sector::glBorderLineHighlighted() {
         glBegin(GL_LINE_LOOP);
         QColor color = Settings::firHighlightedBorderLineColor();
         glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        for (int i = 0; i < points.size(); i++)
-            VERTEXhigh(points[i].first, points[i].second);
+        for (int i = 0; i < m_points.size(); i++)
+            VERTEXhigh(m_points[i].first, m_points[i].second);
         glEnd();
         glEndList();
     }
@@ -119,19 +192,13 @@ QPair<double, double> Sector::getCenter() const {
     QPair<double, double> runningTotal;
     runningTotal.first = 0;
     runningTotal.second = 0;
-    const int count = points.size();
 
-    if(count == 0) {
-        qCritical() << "Sector::getCenter() Sector " << name << "(" << icao << ") doesn't contain any points";
-        QTextStream(stdout) << "CRITICAL: Sector " << name << "(" << icao << ") doesn't contain any points";
-        exit(EXIT_FAILURE);
-    }
+    QPair<double, double> previous = m_points[0];
 
-    QPair<double, double> previous = points[0];
-
+    const int count = m_points.size();
     for(int i = 0; i < count; ++i) {
-        QPair<double, double> current = points[i];
-        QPair<double, double> next = points[(i + 1)%count];
+        QPair<double, double> current = m_points[i];
+        QPair<double, double> next = m_points[(i + 1) % count];
         if(i > 0)
             adjustPoint(previous, current);
         adjustPoint(current, next);

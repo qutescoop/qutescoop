@@ -18,10 +18,11 @@ class Sector {
 
         bool isNull() const { return icao.isNull(); }
 
-        const QPolygonF sectorPolygon() const;
         bool containsPoint(const QPointF &pt) const;
 
-        QList<QPair<double, double> > points;
+        const QList<QPolygonF> &nonWrappedPolygons() const;
+        const QList<QPair<double, double> > &points() const;
+        void setPoints(const QList<QPair<double, double> >&);
         QString icao, name, id;
 
         GLuint glPolygon();
@@ -31,6 +32,8 @@ class Sector {
 
         QPair<double, double> getCenter() const;
     private:
+        QList<QPolygonF> m_nonWrappedPolygons;
+        QList<QPair<double, double> > m_points;
         GLuint _polygon, _borderline, _polygonHighlighted, _borderlineHighlighted;
 };
 
