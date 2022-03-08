@@ -99,14 +99,17 @@ QPair<double, double> GLWidget::currentPosition() const {
 /**
   rotate according to mouse movement
 **/
-void GLWidget::handleRotation(QMouseEvent *event) {
+void GLWidget::handleRotation(QMouseEvent*) {
+    // Nvidia mouse coordinates workaround (https://github.com/qutescoop/qutescoop/issues/46)
+    QPoint currentPos = mapFromGlobal(QCursor::pos());
+
     const double zoomFactor = _zoom / 10.;
-    double dx = (  event->x() - _lastPos.x()) * zoomFactor;
-    double dy = (- event->y() + _lastPos.y()) * zoomFactor;
+    double dx = (  currentPos.x() - _lastPos.x()) * zoomFactor;
+    double dy = (- currentPos.y() + _lastPos.y()) * zoomFactor;
     _xRot = modPositive(_xRot + dy + 180., 360.) - 180.;
     _zRot = modPositive(_zRot + dx + 180., 360.) - 180.;
     updateGL();
-    _lastPos = event->pos();
+    _lastPos = currentPos;
     emit newPosition();
 }
 
@@ -1093,14 +1096,17 @@ void GLWidget::resizeGL(int width, int height) {
 // SLOTS: mouse, key... and general user-map interaction
 //
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
+    // Nvidia mouse coordinates workaround (https://github.com/qutescoop/qutescoop/issues/46)
+    QPoint currentPos = mapFromGlobal(QCursor::pos());
+
     if(event->buttons().testFlag(Qt::RightButton) || // check before left button if useSelectionRectangle=off
             (!Settings::useSelectionRectangle() && event->buttons().testFlag(Qt::LeftButton))) { // rotate
         _mapMoving = true;
         handleRotation(event);
     } else if (event->buttons().testFlag(Qt::MiddleButton)) { // zoom
         _mapZooming = true;
-        zoomIn((event->x() - _lastPos.x() - event->y() + _lastPos.y()) / 100. * Settings::zoomFactor());
-        _lastPos = event->pos();
+        zoomIn((currentPos.x() - _lastPos.x() - currentPos.y() + _lastPos.y()) / 100. * Settings::zoomFactor());
+        _lastPos = currentPos;
     } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
         _mapRectSelecting = true;
         updateGL();
@@ -1108,7 +1114,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
 
     double currLat, currLon;
-    if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
+    if (mouse2latlon(currentPos.x(), currentPos.y(), currLat, currLon)) {
         QSet<Controller*> _newHoveredControllers;
         foreach(Controller *c, Whazzup::instance()->whazzupData().controllersWithSectors().values()) {
             if (c->sector->containsPoint(QPointF(currLat, currLon))) {
@@ -1124,7 +1130,10 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     }
 }
 
-void GLWidget::mousePressEvent(QMouseEvent *event) {
+void GLWidget::mousePressEvent(QMouseEvent*) {
+    // Nvidia mouse coordinates workaround (https://github.com/qutescoop/qutescoop/issues/46)
+    QPoint currentPos = mapFromGlobal(QCursor::pos());
+
     QToolTip::hideText();
     if (_mapMoving || _mapZooming || _mapRectSelecting) {
         _mapMoving = false;
@@ -1133,10 +1142,13 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
         updateGL();
     }
     if (!_mapRectSelecting)
-        _lastPos = _mouseDownPos = event->pos();
+        _lastPos = _mouseDownPos = currentPos;
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
+    // Nvidia mouse coordinates workaround (https://github.com/qutescoop/qutescoop/issues/46)
+    QPoint currentPos = mapFromGlobal(QCursor::pos());
+
     QToolTip::hideText();
     if (_mapMoving)
         _mapMoving = false;
@@ -1144,16 +1156,16 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
         _mapZooming = false;
     else if (_mapRectSelecting) {
         _mapRectSelecting = false;
-        if (event->pos() != _mouseDownPos) {
+        if (currentPos != _mouseDownPos) {
             // moved more than 40px?
             if (
-                ((event->x() - _mouseDownPos.x()) * (event->x() - _mouseDownPos.x()))
-                + ((event->y() - _mouseDownPos.y()) * (event->y() - _mouseDownPos.y())) > 40 * 40
+                ((currentPos.x() - _mouseDownPos.x()) * (currentPos.x() - _mouseDownPos.x()))
+                + ((currentPos.y() - _mouseDownPos.y()) * (currentPos.y() - _mouseDownPos.y())) > 40 * 40
             ) {
                 double downLat, downLon;
                 if (mouse2latlon(_mouseDownPos.x(), _mouseDownPos.y(), downLat, downLon)) {
                     double currLat, currLon;
-                    if (mouse2latlon(event->x(), event->y(), currLat, currLon)) {
+                    if (mouse2latlon(currentPos.x(), currentPos.y(), currLat, currLon)) {
                         DoublePair mid = NavData::greatCircleFraction(downLat, downLon, currLat, currLon, .5);
                         setMapPosition(mid.first, mid.second,
                                        qMax(NavData::distance(downLat, downLon,
@@ -1165,9 +1177,27 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
             }
         } else
             updateGL();
-    } else if (_mouseDownPos == event->pos() && event->button() == Qt::LeftButton) {
+    } else if (_mouseDownPos == currentPos && event->button() == Qt::LeftButton) {
+        // chasing a "click-spot" vertically offset problem on Win/nvidia
+        double lat, lon;
+        bool onGlobe = mouse2latlon(currentPos.x(), currentPos.y(), lat, lon);
+        qDebug() << "GLWidget::mouseReleaseEvent left btn before objectsAt()"
+                 << QString(
+                      "widget[width=%5, height=%6], event[x=%1,"
+                      " y=%2], mapFromGlobal(used value)[x=%10, y=%11], global[x=%8,y=%9]"
+                      " onGlobe=%7, globe[lat=%3, lon=%4]"
+                    )
+                    .arg(event->x()).arg(event->y())
+                    .arg(lat).arg(lon)
+                    .arg(width()).arg(height())
+                    .arg(onGlobe)
+                    .arg(QCursor::pos().x())
+                    .arg(QCursor::pos().y())
+                    .arg(mapFromGlobal(QCursor::pos()).x())
+                    .arg(mapFromGlobal(QCursor::pos()).y());
+
         QList<MapObject*> objects;
-        foreach(MapObject* m, objectsAt(event->x(), event->y())) {
+        foreach(MapObject* m, objectsAt(currentPos.x(), currentPos.y())) {
             if (dynamic_cast<Waypoint*>(m) != 0) // all but waypoints have a dialog
                 continue;
 
@@ -1179,11 +1209,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
         } else if (objects.size() == 1)
             objects[0]->showDetailsDialog();
         else {
-            clientSelection->move(event->globalPos());
+            clientSelection->move(QCursor::pos());
             clientSelection->setObjects(objects);
         }
-    } else if (_mouseDownPos == event->pos() && event->button() == Qt::RightButton)
-        rightClick(event->pos());
+    } else if (_mouseDownPos == currentPos && event->button() == Qt::RightButton)
+        rightClick(currentPos);
     updateGL();
 }
 
@@ -1234,10 +1264,13 @@ void GLWidget::rightClick(const QPoint& pos) {
 }
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
+    // Nvidia mouse coordinates workaround (https://github.com/qutescoop/qutescoop/issues/46)
+    QPoint currentPos = mapFromGlobal(QCursor::pos());
+
     QToolTip::hideText();
     if (event->buttons().testFlag(Qt::LeftButton)) {
         double lat, lon;
-        if (mouse2latlon(event->x(), event->y(), lat, lon))
+        if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon))
             setMapPosition(lat, lon, _zoom, false);
         zoomIn(.6);
         QCursor::setPos(
@@ -1245,7 +1278,7 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
         );
     } else if (event->button() == Qt::RightButton) {
         double lat, lon;
-        if (mouse2latlon(event->x(), event->y(), lat, lon))
+        if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon))
             setMapPosition(lat, lon, _zoom, false);
         zoomIn(-.6);
         QCursor::setPos(
