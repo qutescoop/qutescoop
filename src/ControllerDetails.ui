@@ -7,14 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>326</width>
-    <height>304</height>
+    <height>310</height>
    </rect>
   </property>
   <property name="windowIcon">
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
-  <layout class="QVBoxLayout" stretch="0,1,0">
+  <layout class="QVBoxLayout">
    <property name="margin" stdset="0">
     <number>6</number>
    </property>
