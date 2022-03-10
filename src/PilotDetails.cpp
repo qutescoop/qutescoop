@@ -124,7 +124,8 @@ void PilotDetails::refresh(Pilot *pilot) {
         lblPlotStatus->setText(QString("waypoints (calculated): <code>%1</code>").arg(_pilot->routeWaypointsStr()));
     lblPlotStatus->setVisible(_pilot->showDepDestLine || plottedAirports);
 
-    adjustSize();
+    // @see https://github.com/qutescoop/qutescoop/issues/124
+    // adjustSize();
 }
 
 void PilotDetails::on_buttonDest_clicked() {
