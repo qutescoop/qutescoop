@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>326</width>
-    <height>310</height>
+    <width>286</width>
+    <height>278</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -20,7 +20,10 @@
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
-  <layout class="QVBoxLayout">
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="_2">
    <property name="margin" stdset="0">
     <number>6</number>
    </property>
