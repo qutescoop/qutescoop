@@ -106,6 +106,23 @@ jobs:
         with:
           name: "Debug_Linux-Makefile"
           path: ./Makefile*
+      - name: Install linuxpeploy
+        uses: miurahr/install-linuxdeploy-action@v1
+        with:
+          plugins: qt appimage
+      - name: Create AppDir and AppImage
+        run: |
+          VERSION="${{ needs.facts.outputs.version }}" \
+            OUTPUT="QuteScoop-${{ needs.facts.outputs.version }}-linux-x86_64.AppImage" \
+            linuxdeploy-x86_64.AppImage \
+              --plugin=qt \
+              --output=appimage \
+              --desktop-file=QuteScoop.desktop \
+              --executable=DIST-unix64/QuteScoop \
+              --appdir=AppDir \
+              --icon-file=src/images/QuteScoop.svg
+          tree AppDir
+          mv *.AppImage ~/release/
       - name: Upload
         uses: actions/upload-artifact@v2
         with:
