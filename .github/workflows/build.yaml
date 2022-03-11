@@ -79,7 +79,6 @@ jobs:
       - run: ldd --version
       - run: qmake -config release QuteScoop.pro
       - run: make -j$(nproc) install
-      #- run: chmod +x ./DIST-unix64/QuteScoop ./DIST-unix64/QuteScoop.sh
       - run: ldd ./DIST-unix64/QuteScoop
       - run: mkdir ./DIST-unix64/lib
       - name: package dynamically linked libraries (not really happy with that yet - this is by far not stable enough)
@@ -106,11 +105,42 @@ jobs:
         with:
           name: "Debug_Linux-Makefile"
           path: ./Makefile*
-      - name: Upload
+      - name: Upload plain
         uses: actions/upload-artifact@v2
         with:
           name: QuteScoop-linux
           path: ~/release/*
+      - name: Install linuxpeploy
+        uses: miurahr/install-linuxdeploy-action@v1
+        with:
+          plugins: qt appimage
+      - name: "Prepare AppDir (@todo: this is not using correct paths yet)"
+        run: |
+          mkdir -p AppDir/usr/bin/
+          cp -ar DIST-unix64/data DIST-unix64/downloaded DIST-unix64/screenshots DIST-unix64/textures AppDir/usr/bin/
+      - name: Create AppImage
+        run: |
+          VERSION="${{ needs.facts.outputs.version }}" \
+            OUTPUT="QuteScoop-${{ needs.facts.outputs.version }}-linux-x86_64.AppImage" \
+            linuxdeploy-x86_64.AppImage \
+              --plugin=qt \
+              --output=appimage \
+              --desktop-file=QuteScoop.desktop \
+              --executable=DIST-unix64/QuteScoop \
+              --appdir=AppDir \
+              --icon-file=src/images/QuteScoop.svg
+      - name: Show AppDir
+        run: tree AppDir
+      - name: Upload AppDir
+        uses: actions/upload-artifact@v2
+        with:
+          name: QuteScoop-linux-AppDir
+          path: 'AppDir/'
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v2
+        with:
+          name: QuteScoop-linux-AppImage
+          path: '*.AppImage'
 
   build-win:
     needs: facts

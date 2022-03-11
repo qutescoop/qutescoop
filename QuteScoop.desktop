@@ -1,22 +1,6 @@
-
 [Desktop Entry]
-# application .desktop file for Linux users:
-# Adapt paths as needed.
-# Then move it to ~/.local/share/applications [for per-user] or 
-# /usr/share/applications [systemwide] recognition of QuteScoop as an application. 
-# If your system supports it, you can use 'desktop-file-install QuteScoop.desktop' instead.
-# You may need to run 'update-desktop-database' afterwards.
-# This allows:
-#  * to execute QuteScoop from desktop environment's application menus
-#  * to execute QuteScoop by searching for its name in the KDE-, Unity- or Xfce-Launcher
-#  * allow an icon to sit on the Unity panel for quick access (don't ask me why 'lock to 
-#    panel' won't work without that)
+Categories=Utility;
+Name=QuteScoop
+Icon=QuteScoop
 Type=Application
-Version=0.9.4
-Name=QuteScoop from sources
-Comment=QuteScoop
-Icon=/home/jonas/Qt/QuteScoop/trunk/DIST-unix64/qutescoop.png
-Exec=/home/jonas/Qt/QuteScoop/trunk/DIST-unix64/QuteScoop.sh
-Terminal=false
-Path=/home/jonas/Qt/QuteScoop/trunk/DIST-unix64
-X-Desktop-File-Install-Version=0.20
+Exec=QuteScoop
