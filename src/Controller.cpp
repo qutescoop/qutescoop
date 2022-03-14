@@ -61,11 +61,13 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
                 //s->lat = lat; s->lon = lon; // position label on primary visibility center
                 s->icao = icao;
                 s->name = "no sector data";
+                QList<QPair<double, double> > pointList;
                 for(float u = 0.; u < 2. * M_PI; u += M_PI / 24.) { // 48 segments
-                    s->points.append(QPair<double, double>(lat + qCos(u) * visualRange / 2. / 60.,
+                    pointList.append(QPair<double, double>(lat + qCos(u) * visualRange / 2. / 60.,
                                                            lon + qSin(u) * visualRange / 2. / 60. /
                                                                 qCos(qAbs(lat) * Pi180)));
                 }
+                s->setPoints(pointList);
                 NavData::instance()->sectors.insert(icao, s); // adding to the pool
             } else
                 icao = icao.left(p);

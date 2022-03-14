@@ -6,6 +6,7 @@
 
 #include "FileReader.h"
 #include "Settings.h"
+#include "helpers.h"
 
 void SectorReader::loadSectors(QHash<QString, Sector*>& sectors) {
     sectors.clear();
@@ -49,8 +50,18 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
             if(!workingSectorId.isEmpty()) {
                 QList<QString> sectorIcaos = _idIcaoMapping.values(workingSectorId);
                 for(int i = 0; i < sectorIcaos.size(); i++) {
-                    if(sectors.value(sectorIcaos[i]) != 0) // be conservative as a segfault was reported on Mac OS
-                        sectors[sectorIcaos[i]]->points = pointList;
+                    auto sector = sectors[sectorIcaos[i]];
+                    if(sector != 0) {
+                        if(pointList.size() < 3) {
+                            auto msg = QString("Sector %1 (%2) doesn't contain enough points (%3)")
+                                .arg(sector->name, sector->icao).arg(pointList.size());
+                            qCritical() << "Sector::getCenter()" << msg;
+                            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                            exit(EXIT_FAILURE);
+                        }
+
+                        sector->setPoints(pointList);
+                    }
                 }
             }
             workingSectorId = line.split('_').last();
@@ -59,8 +70,16 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
             QStringList points = line.split(':');
             if(points.size() < 2) continue;
             double lat = points[0].toDouble();
-            double lon = points[1].toDouble();
-            if(lat != 0. || lon != 0.)
+            double lon = modPositive(points[1].toDouble() + 180., 360.) - 180.;
+            if (lat > 90. || lat < -90. || lon > 180. || lon < -180. || (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
+                auto msg = QString("Sector id=%1 has invalid point %2:%3")
+                    .arg(workingSectorId).arg(lat).arg(lon);
+                qCritical() << "Sector::getCenter()" << msg;
+                QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                exit(EXIT_FAILURE);
+            }
+
+            if(!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon))
                 pointList.append(QPair<double, double>(lat, lon));
         }
     }
