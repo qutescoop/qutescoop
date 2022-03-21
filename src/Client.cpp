@@ -39,7 +39,7 @@ QString Client::displayName(bool withLink) const {
     if(!rank().isEmpty())
         result += " (" + rank() + ")";
 
-    if(withLink && !userId.isEmpty()) {
+    if(withLink && hasValidID()) {
         QString link = Whazzup::instance()->userUrl(userId);
         if(link.isEmpty())
             return result;

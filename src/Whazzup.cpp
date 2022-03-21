@@ -326,7 +326,7 @@ void Whazzup::processBookings() {
 
 
 QString Whazzup::userUrl(const QString& id) const {
-    if(_user0Url.isEmpty())
+    if(_user0Url.isEmpty() || !Client::isValidID(id))
         return QString();
     return _user0Url + "?id=" + id;
 }
