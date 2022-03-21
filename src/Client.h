@@ -37,6 +37,11 @@ class Client: public MapObject {
 
         int rating;
 
+        static bool isValidID(const QString id) {
+            return !id.isEmpty() && id.toInt() >= 800000;
+        };
+        bool hasValidID() const;
+
     protected:
         QString m_name;
 };

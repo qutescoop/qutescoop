@@ -92,7 +92,7 @@ void ControllerDetails::refresh(Controller *newController) {
         buttonAddFriend->setText("add &friend");
 
     // check if we know UserId
-    bool invalidID = !isValidID(_controller->userId);
+    bool invalidID = !(_controller->hasValidID());
     buttonAddFriend->setDisabled(invalidID);
     pbAlias->setDisabled(invalidID);
 

@@ -10,7 +10,7 @@
 #include "PilotDetails.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
-#include "helpers.h"
+#include "Client.h"
 
 QSettings *settingsInstance = 0;
 QSettings* Settings::instance() {
@@ -37,7 +37,7 @@ QSettings* Settings::instance() {
                 foreach(auto key, keys) {
                     if(key.startsWith("alias_")) {
                         QString id = key.mid(6);
-                        if(!isValidID(id)) {
+                        if(!Client::isValidID(id)) {
                             settingsInstance->remove(key);
                             qDebug() << "Found an alias for (invalid) client " << id << " and removed it. For more information see https://github.com/qutescoop/qutescoop/issues/130";
                         }
@@ -46,7 +46,7 @@ QSettings* Settings::instance() {
                 settingsInstance->endGroup();
                 QStringList friendList = settingsInstance->value("friends/friendList", QStringList()).toStringList();
                 foreach(auto friendID, friendList) {
-                    if(!isValidID(friendID)) {
+                    if(!Client::isValidID(friendID)) {
                         friendList.removeAt(friendList.indexOf(friendID));
                         qDebug() << "Found a friend list entry for (invalid) client " << friendID << " and removed it. For more information see https://github.com/qutescoop/qutescoop/issues/130";
                     }
