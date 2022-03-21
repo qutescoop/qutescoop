@@ -21,6 +21,12 @@ static float lerp(float v0, float v1, float t) {
     return v0 + t * (v1 - v0);
 }
 
+static bool isValidID(QString id) {
+    if(id.isEmpty()) return false;
+    int iid = id.toInt();
+    return iid >= 800000;
+}
+
 /* mathematical constants */
 const double Pi180 = M_PI / 180.;
 
