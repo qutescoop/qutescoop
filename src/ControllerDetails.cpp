@@ -7,6 +7,7 @@
 #include "Window.h"
 #include "Settings.h"
 #include "Whazzup.h"
+#include "helpers.h"
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;
@@ -91,7 +92,10 @@ void ControllerDetails::refresh(Controller *newController) {
         buttonAddFriend->setText("add &friend");
 
     // check if we know UserId
-    buttonAddFriend->setDisabled(_controller->userId.isEmpty());
+    bool invalidID = !(_controller->hasValidID());
+    buttonAddFriend->setDisabled(invalidID);
+    pbAlias->setDisabled(invalidID);
+
 
     // check if we know position
     buttonShowOnMap->setDisabled(qFuzzyIsNull(_controller->lat) && qFuzzyIsNull(_controller->lon));

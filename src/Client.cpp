@@ -106,3 +106,7 @@ const QString Client::name() const
 {
     return m_name;
 }
+
+bool Client::hasValidID() const {
+    return Client::isValidID(userId);
+}

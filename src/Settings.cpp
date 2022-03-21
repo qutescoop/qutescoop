@@ -10,22 +10,51 @@
 #include "PilotDetails.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
+#include "Client.h"
 
 QSettings *settingsInstance = 0;
 QSettings* Settings::instance() {
     if(settingsInstance == 0) {
         settingsInstance = new QSettings();
 
-        const int requiredSettingsVersion = 1;
-        const int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
+        const int requiredSettingsVersion = 2;
+        int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
         if (currentSettingsVersion < requiredSettingsVersion) {
-            if((settingsInstance->value("download/network", 0).toInt() == 1)
-            && (settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/")) {
-                settingsInstance->setValue("download/network", 0);
-                qDebug() << "Found a user defined network, but VATSIM status location. Migrated.";
+            if(currentSettingsVersion < 1) {
+                qDebug() << "Starting migration 0 -> 1";
+                if((settingsInstance->value("download/network", 0).toInt() == 1)
+                && (settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/")) {
+                    settingsInstance->setValue("download/network", 0);
+                    qDebug() << "Found a user defined network, but VATSIM status location. Migrated.";
+                }
+                settingsInstance->remove("download/statusLocation");
+                currentSettingsVersion = 1;
             }
-            settingsInstance->remove("download/statusLocation");
-            settingsInstance->setValue("settings/version", requiredSettingsVersion);
+            if(currentSettingsVersion < 2) {
+                qDebug() << "Starting migration 1 -> 2";
+                settingsInstance->beginGroup("clients");
+                QStringList keys = settingsInstance->childKeys();
+                foreach(auto key, keys) {
+                    if(key.startsWith("alias_")) {
+                        QString id = key.mid(6);
+                        if(!Client::isValidID(id)) {
+                            settingsInstance->remove(key);
+                            qDebug() << "Found an alias for (invalid) client " << id << " and removed it. For more information see https://github.com/qutescoop/qutescoop/issues/130";
+                        }
+                    }
+                }
+                settingsInstance->endGroup();
+                QStringList friendList = settingsInstance->value("friends/friendList", QStringList()).toStringList();
+                foreach(auto friendID, friendList) {
+                    if(!Client::isValidID(friendID)) {
+                        friendList.removeAt(friendList.indexOf(friendID));
+                        qDebug() << "Found a friend list entry for (invalid) client " << friendID << " and removed it. For more information see https://github.com/qutescoop/qutescoop/issues/130";
+                    }
+                }
+                settingsInstance->setValue("friends/friendList", friendList);
+                currentSettingsVersion = 2;
+            }
+            settingsInstance->setValue("settings/version", currentSettingsVersion);
         }
     }
     return settingsInstance;
