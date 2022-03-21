@@ -35,7 +35,6 @@ class BookedController: public Client {
 
         QString frequency, atisMessage;
         int facilityType, visualRange;
-        QDateTime timeLastAtisReceived;
 
         // Booking values
         QString link, bookingInfoStr, timeFrom, timeTo, date, eventLink;

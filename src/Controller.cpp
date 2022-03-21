@@ -23,7 +23,6 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
     if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
 
     visualRange = json["visual_range"].toInt();
-    timeLastAtisReceived = QDateTime::fromString(json["last_updated"].toString(), Qt::ISODate);
 
     atisMessage = "";
     if(json.contains("text_atis") && json["text_atis"].isArray()) {

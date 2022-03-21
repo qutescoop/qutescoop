@@ -41,7 +41,7 @@ class Controller: public Client {
 
         QString frequency, atisMessage;
         int facilityType, visualRange;
-        QDateTime timeLastAtisReceived, assumeOnlineUntil;
+        QDateTime assumeOnlineUntil;
 
         Sector *sector;
 

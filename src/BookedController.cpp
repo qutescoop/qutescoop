@@ -89,7 +89,6 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     //some unapplicable data for a booked controller, but we might need it once to cast BookedController -> Controller
     frequency = "";
     atisMessage = "";
-    timeLastAtisReceived = QDateTime();
     server = "";
 }
 
