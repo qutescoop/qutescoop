@@ -101,7 +101,9 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblRemarks->setText(QString("<code>%1</code>").arg(_pilot->planRemarks));
 
     // check if we know userId
-    buttonAddFriend->setDisabled(_pilot->userId.isEmpty());
+    bool invalidID = !isValidID(_controller->userId);
+    buttonAddFriend->setDisabled(invalidID);
+    pbAlias->setDisabled(invalidID);
     buttonAddFriend->setText(_pilot->isFriend()? "remove &friend": "add &friend");
 
     // check if we know position
