@@ -192,6 +192,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
 
             controllerObject["callsign"] = bc->label;
             controllerObject["name"] = bc->realName();
+            controllerObject["cid"] = bc->userId.toInt();
             controllerObject["facility"] = bc->facilityType;
 
             //atisMessage = getField(stringList, 35);
