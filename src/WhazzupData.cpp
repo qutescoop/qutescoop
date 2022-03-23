@@ -213,8 +213,6 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             // not applicable:
             //frequency = getField(stringList, 4);
             //visualRange = getField(stringList, 19).toInt();
-            //timeLastAtisReceived = QDateTime::fromString(getField(stringList, 36), "yyyyMMddHHmmss");
-            //protrevision = getField(stringList, 15).toInt();
             //rating = getField(stringList, 16).toInt();
 
             controllers[bc->label] = new Controller(controllerObject, this);
