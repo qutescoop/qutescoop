@@ -1273,17 +1273,11 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
         if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon))
             setMapPosition(lat, lon, _zoom, false);
         zoomIn(.6);
-        QCursor::setPos(
-            mapToGlobal(QPoint(width() / 2, height() / 2))
-        );
     } else if (event->button() == Qt::RightButton) {
         double lat, lon;
         if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon))
             setMapPosition(lat, lon, _zoom, false);
         zoomIn(-.6);
-        QCursor::setPos(
-            mapToGlobal(QPoint(width() / 2, height() / 2))
-        );
     } else if (event->button() == Qt::MiddleButton)
         zoomTo(2.);
 }
