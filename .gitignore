@@ -3,6 +3,7 @@
 /*.pro.user
 
 # build
+/.qtc_clangd
 /.cache
 /.qmake*
 /Makefile
