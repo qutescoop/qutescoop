@@ -51,21 +51,24 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 6: return c->bookingInfoStr;
             case 7: return c->link;
         }
-    } else if(role == Qt::EditRole) { // we are faking "EditRole" to access raw data
+    } else if(role == Qt::EditRole) { // we are faking "EditRole" to access raw data and for sorting
         BookedController* c = _controllers[index.row()];
         switch(index.column()) {
-            case 4: return c->starts(); break;
-            case 5: return c->ends(); break;
-            case 6: return c->bookingInfoStr; break;
-            case 7: return c->link; break;
+            case 0: return c->label;
+            case 1: return c->facilityString();
+            case 2: return c->realName();
+            case 3: return c->starts();
+            case 4: return c->starts();
+            case 5: return c->ends();
+            case 6: return c->bookingInfoStr;
+            case 7: return c->link;
         }
     }
 
     return QVariant();
 }
 
-int BookedAtcDialogModel::rowCount(const QModelIndex &parent) const {
-    Q_UNUSED(parent);
+int BookedAtcDialogModel::rowCount(const QModelIndex&) const {
     return _controllers.count();
 }
 

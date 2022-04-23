@@ -150,13 +150,11 @@ void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
     _editFilterTimer.start(1000);
 }
 
-void BookedAtcDialog::on_editFilter_textChanged(QString searchStr) {
-    Q_UNUSED(searchStr);
+void BookedAtcDialog::on_editFilter_textChanged(QString) {
     _editFilterTimer.start(1000);
 }
 
-void BookedAtcDialog::on_spinHours_valueChanged(int val) {
-    Q_UNUSED(val);
+void BookedAtcDialog::on_spinHours_valueChanged(int) {
     _editFilterTimer.start(1000);
 }
 
@@ -188,7 +186,7 @@ void BookedAtcDialog::performSearch() {
     _bookedAtcSortModel->setFilterRegExp(regex);
 
     //Date, Time, TimeSpan
-    QDateTime from = dateTimeFilter->dateTime();
+    QDateTime from = dateTimeFilter->dateTime().toUTC();
     QDateTime to = from.addSecs(spinHours->value() * 3600);
     _bookedAtcSortModel->setDateTimeRange(from, to);
 

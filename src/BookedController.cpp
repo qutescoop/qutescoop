@@ -224,16 +224,16 @@ QString BookedController::mapLabel() const {
 
 QDateTime BookedController::starts() const {
     return QDateTime(
-            QDate::fromString(date, QString("yyyyMMdd")),
-            QTime::fromString(timeFrom, QString("HHmm")),
-            Qt::UTC
-            );
+        QDate::fromString(date, QString("yyyyMMdd")),
+        QTime::fromString(timeFrom, QString("HHmm")),
+        Qt::UTC
+    );
 }
 
 QDateTime BookedController::ends() const {
     return QDateTime(
-            QDate::fromString(date, QString("yyyyMMdd")),
-            QTime::fromString(timeTo, QString("HHmm")),
-            Qt::UTC
-            );
+        QDate::fromString(date, QString("yyyyMMdd")),
+        QTime::fromString(timeTo, QString("HHmm")),
+        Qt::UTC
+    );
 }
