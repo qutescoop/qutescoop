@@ -34,7 +34,7 @@ MapScreen::MapScreen(QWidget *parent) :
     fmt.setRgba(true);
 
     qDebug() << "MapScreen::MapScreen() creating GLWidget";
-    glWidget = new GLWidget(fmt, this);
+    glWidget = new GLWidget(this);
     QGridLayout *layout = new QGridLayout;
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setMargin(0);

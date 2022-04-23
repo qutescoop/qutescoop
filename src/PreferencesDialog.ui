@@ -210,16 +210,14 @@ on program &amp;start</string>
                <item>
                 <widget class="QComboBox" name="cbScreenshotMethod">
                  <property name="toolTip">
-                  <string>Screenshots can be obtained by different methods. One or the other could make problems on your setup as grabbing an OpenGL-window can be complex. Try out which one works best for you.</string>
+                  <string>Screenshots can be obtained by different methods. One or the other could make problems on your setup as grabbing an OpenGL-window can be complex. Try which one works best for you.</string>
+                 </property>
+                 <property name="currentIndex">
+                  <number>0</number>
                  </property>
                  <item>
                   <property name="text">
                    <string>screengrab (only works if window is on top) [default]</string>
-                  </property>
-                 </item>
-                 <item>
-                  <property name="text">
-                   <string>OpenGL off-screen render (resource-intensive)</string>
                   </property>
                  </item>
                  <item>
