@@ -83,8 +83,9 @@ DNLL:Lagos:NG:6.7:5.2:4505
 DNLL_E:Lagos:NG:6.85:7.08:5101
 DRRR:Niamey:NE:17:2.9:212
 DTTC:Tunis:TN:34.6:9.5:213
-EBBU:Brussels:BE:50.5:4.2:100
-EBUR:Brussels Upper:BE:49.5:4.2:100
+EBBU_E:Brussels:BE:50.5:4.2:100
+EBBU_W:Brussels:BE:50.5:4.2:100
+EBBU_U:Brussels Upper:BE:49.5:4.2:100
 EDGG_E:Langen KIT:DE:49.8:9.5:1100
 EDGG_K:Langen HER:DE:49.8:9.5:1100
 EDGG_P:Langen PAD:DE:51.6:7.8:1101
@@ -116,6 +117,7 @@ EDUU_W:Rhein WUR+FFM:DE:50:9.3:1130
 EDWW:Bremen:DE:53.0:10.2:1000
 EDWW_A:Bremen:DE:53.2:8.8:106
 EDWW_B:Bremen:DE:52.31:12.50:101
+EDWW_M:Bremen:DE:52.31:12.50:101
 EDYY_C:Maastricht CEL:NL:52.6:9.6:1010
 EDYY_D:Maastricht DEL:NL:52.5:4.5:1011
 EDYY_H:Maastricht HOL:NL:54.0:9.75:1012
@@ -190,12 +192,12 @@ ESMM:Sweden Malmo:SE:57.4:15:147
 ESOS:Sweden:SE:62.1:16.7:148
 EURE:Eurocontrol East:HU:46:23:524
 EURI:Eurocontrol Islands:GB:57:-5:5537
-EURM:Maastricht:NL:50.50:9.64:521
-EURM_W:Maastricht West:NL:51.50:6.50:5211
-EURM_E:Maastricht East:NL:50:13.50:5212
+EURM-W:Maastricht West:NL:51.50:6.50:5211
+EURM-E:Maastricht East:NL:50:13.50:5212
 EURN:Eurocontrol North:SE:59:16:525
 EURS:Eurocontrol South:IT:38:20:523
-EURW:Eurocontrol West:FR:43:-4:522
+EURW-N:Eurocontrol West North:FR:47:1:5221
+EURW-S:Eurocontrol West South:ES:41:-7:5222
 EVRR:Riga:LV:57:23.3:150
 EYVL:Vilnius:LT:55.1:22.4:151
 FACA:Cape Town:ZA:-34.0:20.0:6741
