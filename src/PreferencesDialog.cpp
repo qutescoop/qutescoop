@@ -1187,7 +1187,7 @@ void PreferencesDialog::on_glLightsSpread_valueChanged(int value) {
 void PreferencesDialog::on_pbReinitOpenGl_clicked() {
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->initializeGL();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->update();
     }
 }
 
@@ -1201,7 +1201,7 @@ void PreferencesDialog::on_applyAirports_clicked() {
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->createAirportsList();
         Window::instance()->mapScreen->glWidget->createControllersLists();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->update();
     }
 
 }
@@ -1211,7 +1211,7 @@ void PreferencesDialog::on_applyPilots_clicked() {
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->createPilotsList();
         Window::instance()->mapScreen->glWidget->createControllersLists();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->update();
     }
     qDebug() << "PreferencesDialog::on_applyPilots_clicked() -- finished";
 }

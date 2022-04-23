@@ -178,7 +178,7 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
         _airport->showFlightLines = checked;
         if (Window::instance(false) != 0) {
             Window::instance()->mapScreen->glWidget->createPilotsList();
-            Window::instance()->mapScreen->glWidget->updateGL();;
+            Window::instance()->mapScreen->glWidget->update();;
         }
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();

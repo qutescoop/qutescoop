@@ -826,11 +826,8 @@ void Window::shootScreenshot() {
     if (Settings::screenshotMethod() == 0)
         qApp->screens().first()->grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                                     Settings::screenshotFormat().toLatin1());
-    else if (Settings::screenshotMethod() == 1)
-        mapScreen->glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                      Settings::screenshotFormat().toLatin1(), true);
-    else if (Settings::screenshotMethod() == 2)
-        mapScreen->glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+    else
+        mapScreen->glWidget->grabFramebuffer().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
                                              Settings::screenshotFormat().toLatin1());
     qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
@@ -853,7 +850,7 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
 
     // map update
     mapScreen->glWidget->createPilotsList();
-    mapScreen->glWidget->updateGL();
+    mapScreen->glWidget->update();
     //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
     qDebug() << "Window::on_actionShowRoutes_triggered() -- finished";
 }
@@ -861,7 +858,7 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
 void Window::on_actionShowWaypoints_triggered(bool checked) {
     Settings::setShowUsedWaypoints(checked);
     mapScreen->glWidget->createPilotsList();
-    mapScreen->glWidget->updateGL();
+    mapScreen->glWidget->update();
 }
 
 void Window::allSectorsChanged(bool state) {
@@ -945,7 +942,7 @@ void Window::on_actionHighlight_Friends_triggered(bool checked) {
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
     if (!checked) mapScreen->glWidget->destroyFriendHightlighter();
-    mapScreen->glWidget->updateGL();
+    mapScreen->glWidget->update();
 }
 
 void Window::on_pb_highlightFriends_toggled(bool checked) {

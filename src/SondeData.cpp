@@ -240,7 +240,7 @@ void SondeData::decodeData() {
     // update GL if already created
     if (Settings::showSonde() && Window::instance(false) != 0) {
         qDebug() << "WindData::decodeData() updating OpenGL map";
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->update();
     }
 
     // showing an hourglass cursor during long operations

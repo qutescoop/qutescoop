@@ -289,7 +289,7 @@ void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
     qDebug() << "PlanFlightDialog::on_cbPlot_toggled()" << checked;
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->createPilotsList();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->update();
     }
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);

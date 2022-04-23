@@ -18,8 +18,8 @@
 #include "PilotDetails.h"
 //#include <GL/glext.h>   // Multitexturing - not platform-independant
 
-GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
-        QGLWidget(fmt, parent),
+GLWidget::GLWidget(QWidget *parent) :
+        QOpenGLWidget(parent),
         _mapMoving(false), _mapZooming(false), _mapRectSelecting(false),
         _lightsGenerated(false),
         _earthTex(0),
@@ -61,10 +61,9 @@ GLWidget::~GLWidget() {
     glDeleteLists(_sectorPolygonsList, 1); glDeleteLists(_sectorPolygonBorderLinesList, 1);
 
     if (_earthTex != 0)
-        deleteTexture(_earthTex);
-        //glDeleteTextures(1, &earthTex); // handled Qt'ish by deleteTexture
+        glDeleteTextures(1, &_earthTex);
     if (_cloudTex != 0)
-        deleteTexture(_cloudTex);
+        glDeleteTextures(1, &_cloudTex);
     gluDeleteQuadric(_earthQuad);
 
     delete clientSelection;
@@ -84,7 +83,7 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updat
     _zoom = newZoom;
     resetZoom();
     if (updateGL)
-        this->updateGL();
+        this->update();
     emit newPosition();
 }
 
@@ -108,7 +107,7 @@ void GLWidget::handleRotation(QMouseEvent*) {
     double dy = (- currentPos.y() + _lastPos.y()) * zoomFactor;
     _xRot = modPositive(_xRot + dy + 180., 360.) - 180.;
     _zRot = modPositive(_zRot + dx + 180., 360.) - 180.;
-    updateGL();
+    update();
     _lastPos = currentPos;
     emit newPosition();
 }
@@ -160,7 +159,7 @@ void GLWidget::scrollBy(int moveByX, int moveByY) {
     QPair<double, double> cur = currentPosition();
     setMapPosition(cur.first  - (double) moveByY * _zoom * 6., // 6° on zoom=1
                    cur.second + (double) moveByX * _zoom * 6., _zoom);
-    updateGL();
+    update();
 }
 
 void GLWidget::resetZoom() {
@@ -201,7 +200,7 @@ void GLWidget::restorePosition(int nr) {
     _xRot = modPositive(_xRot, 360.);
     _zRot = modPositive(_zRot, 360.);
     resetZoom();
-    updateGL();
+    update();
     emit newPosition();
 }
 
@@ -711,32 +710,25 @@ void GLWidget::createStaticSectorLists(QList<Sector*> sectors) {
 // initializeGL(), paintGL() & resizeGL()
 //////////////////////////////////////////
 /**
-  gets called on instantiation by QGLWidget. The preferred place for anything that does not
+  gets called on instantiation by QOpenGLWidget. The preferred place for anything that does not
   need to be done when just rotating the globe or on a Whazzup update.
   Sets up the whole OpenGL environment and prepares static artefacts for quick access later.
 **/
 void GLWidget::initializeGL() {
+    this->isInGlContext = true;
     qDebug() << "GLWidget::initializeGL()";
-    qDebug() << "OpenGL support: " << context()->format().hasOpenGL()
-            << "; 1.1:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_1)
-            << "; 1.2:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_2)
-            << "; 1.3:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_3) // multitexturing
-            << "; 1.4:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_4)
-            << "; 1.5:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_5)
-            << "; 2.0:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_2_0)
-            << "; 2.1:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_2_1)
-            << "; 3.0:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_3_0)
-            << "; 3.1:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_3_1)
-            << "; 3.2:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_3_2)
-            << "; 3.3:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_3_3)
-            << "; 4.0:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_4_0);
     qDebug() << "GL_VENDOR:  " << reinterpret_cast<char const*> (glGetString(GL_VENDOR));
     qDebug() << "GL_RENDERER:" << reinterpret_cast<char const*> (glGetString(GL_RENDERER));
     qDebug() << "GL_VERSION: " << reinterpret_cast<char const*> (glGetString(GL_VERSION));
     qDebug() << "GL_SHADING_LANGUAGE_VERSION:"
              << reinterpret_cast<char const*> (glGetString(GL_SHADING_LANGUAGE_VERSION));
     qDebug() << "GL_EXTENSIONS:" << reinterpret_cast<char const*> (glGetString(GL_EXTENSIONS));
-    qglClearColor(Settings::backgroundColor());
+    glClearColor(
+        Settings::backgroundColor().redF(),
+        Settings::backgroundColor().greenF(),
+        Settings::backgroundColor().blueF(),
+        Settings::backgroundColor().alphaF()
+    );
 
     if (Settings::glStippleLines())
         glEnable(GL_LINE_STIPPLE);
@@ -867,14 +859,15 @@ void GLWidget::initializeGL() {
 
     createStaticLists();
     qDebug() << "GLWidget::initializeGL() -- finished";
+    this->isInGlContext = false;
 }
 
 /**
   gets called whenever a screen refresh is needed. If you want to force a repaint,
-  call update() (or updateGL(), when already initialized) instead which is the
-  preferred method on a QGLWidget.
+  call update() instead which is the preferred method on a QOpenGLWidget.
 */
 void GLWidget::paintGL() {
+    this->isInGlContext = true;
     //qint64 started = QDateTime::currentMSecsSinceEpoch(); // for method execution time calculation.
                                     // See last line of method.
     //qDebug() << "GLWidget::paintGL()";
@@ -1084,12 +1077,16 @@ void GLWidget::paintGL() {
 
     // just for performance measurement:
     //qDebug() << "GLWidget::paintGL() -- finished in" << QDateTime::currentMSecsSinceEpoch() - started << "ms";
+
+    this->isInGlContext = false;
 }
 
 void GLWidget::resizeGL(int width, int height) {
+    this->isInGlContext = true;
     _aspectRatio = (double)width / (double)height;
     glViewport(0, 0, width, height);
     resetZoom();
+    this->isInGlContext = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -1109,7 +1106,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         _lastPos = currentPos;
     } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
         _mapRectSelecting = true;
-        updateGL();
+        update();
     }
 
 
@@ -1125,7 +1122,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
             _hoveredControllers = _newHoveredControllers;
             createHoveredControllersLists(_hoveredControllers);
             qDebug() << "hovered controllers" << _hoveredControllers;
-            updateGL();
+            update();
         }
     }
 }
@@ -1139,7 +1136,7 @@ void GLWidget::mousePressEvent(QMouseEvent*) {
         _mapMoving = false;
         _mapZooming = false;
         _mapRectSelecting = false;
-        updateGL();
+        update();
     }
     if (!_mapRectSelecting)
         _lastPos = _mouseDownPos = currentPos;
@@ -1176,7 +1173,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
                 }
             }
         } else
-            updateGL();
+            update();
     } else if (_mouseDownPos == currentPos && event->button() == Qt::LeftButton) {
         // chasing a "click-spot" vertically offset problem on Win/nvidia
         double lat, lon;
@@ -1214,7 +1211,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
         }
     } else if (_mouseDownPos == currentPos && event->button() == Qt::RightButton)
         rightClick(currentPos);
-    updateGL();
+    update();
 }
 
 void GLWidget::rightClick(const QPoint& pos) {
@@ -1248,7 +1245,7 @@ void GLWidget::rightClick(const QPoint& pos) {
         if (PilotDetails::instance(false) != 0) // can have an effect on the state of
             PilotDetails::instance()->refresh(); // ...PilotDetails::cbPlotRoutes
         createPilotsList();
-        updateGL();
+        update();
     } else if (pilot != 0) {
         // display flight path for pilot
         GuiMessages::message(QString("toggled route for %1 [%2]").arg(pilot->label).
@@ -1258,7 +1255,7 @@ void GLWidget::rightClick(const QPoint& pos) {
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();
         createPilotsList();
-        updateGL();
+        update();
     }
     qDebug() << "GLWidget::rightClick() -- finished";
 }
@@ -1305,19 +1302,71 @@ bool GLWidget::event(QEvent *event) {
             QToolTip::showText(helpEvent->globalPos(), toolTip);
         }
     }
-    return QGLWidget::event(event);
+    return QOpenGLWidget::event(event);
+}
+
+/**
+ * helper function to ease transition from QGlWidget
+ */
+void GLWidget::qglColor(const QColor &c)
+{
+  glColor4f(c.redF(), c.greenF(), c.blueF(), c.alphaF());
+}
+
+/**
+ * helper function to ease transition from QGlWidget
+ * @todo
+ */
+void GLWidget::renderText(double x, double y, double z, const QString &str, const QFont &font)
+{
+    int height = this->height();
+    //GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
+    //project(x, y, 0f, &textPosX, &textPosY, &textPosZ);
+    GLdouble textPosX = x, textPosY = y, textPosZ = z;
+    textPosY = height - textPosY; // y is inverted
+
+    // Retrieve last OpenGL color to use as a font color
+    GLdouble glColor[4];
+    glGetDoublev(GL_CURRENT_COLOR, glColor);
+    QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
+
+    QPainter painter(this);
+    painter.setPen(fontColor);
+    painter.setFont(font);
+    painter.drawText(textPosX, textPosY, str);
+    painter.end();
+}
+
+void GLWidget::renderText(int x, int y, const QString &str, const QFont &font)
+{
+  int height = this->height();
+  //GLdouble textPosX = 0, textPosY = 0, textPosZ = 0;
+  //project(x, y, 0f, &textPosX, &textPosY, &textPosZ);
+  GLdouble textPosX = x, textPosY = y;
+  textPosY = height - textPosY; // y is inverted
+
+  // Retrieve last OpenGL color to use as a font color
+  GLdouble glColor[4];
+  glGetDoublev(GL_CURRENT_COLOR, glColor);
+  QColor fontColor = QColor(glColor[0], glColor[1], glColor[2], glColor[3]);
+
+  QPainter painter(this);
+  painter.setPen(fontColor);
+  painter.setFont(font);
+  painter.drawText(textPosX, textPosY, str);
+  painter.end();
 }
 
 void GLWidget::zoomIn(double factor) {
     _zoom -= _zoom * qMax(-.6, qMin(.6, .2 * factor * Settings::zoomFactor()));
     resetZoom();
-    updateGL();
+    update();
 }
 
 void GLWidget::zoomTo(double zoom) {
     this->_zoom = zoom;
     resetZoom();
-    updateGL();
+    update();
 }
 
 
@@ -1497,11 +1546,12 @@ void GLWidget::renderLabelsComplex(const QList<MapObject *> &objects, const QFon
                 if(shouldDrawLabel(r)) {
                     drawnFontRect = new FontRectangle(r, o);
                     // shadow: changing colors is expensive, could be made better
-                    if (bgColor.isValid()) {
-                        qglColor(bgColor);
-                        renderText(r.left() + 1, (r.top() + r.height()) + 1, text, font);
-                        qglColor(color);
-                    }
+                    // @todo
+                    // if (bgColor.isValid()) {
+                    //    qglColor(bgColor);
+                    //    renderText(r.left() + 1, (r.top() + r.height()) + 1, text, font);
+                    //    qglColor(color);
+                    // }
 
                     // yes, this is slow and it is known: ..
                     // https://bugreports.qt-project.org/browse/QTBUG-844
@@ -1762,7 +1812,7 @@ void GLWidget::newWhazzupData(bool isNew) {
         createControllersLists();
         _friends = Whazzup::instance()->whazzupData().friendsLatLon();
 
-        updateGL();
+        update();
     }
     qDebug() << "GLWidget::newWhazzupData -- finished";
 }
@@ -1780,14 +1830,14 @@ void GLWidget::showInactiveAirports(bool value) {
 void GLWidget::createFriendHighlighter() {
     _highlighter = new QTimer(this);
     _highlighter->setInterval(100);
-    connect(_highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
+    connect(_highlighter, SIGNAL(timeout()), this, SLOT(update()));
     _highlighter->start();
 }
 
 void GLWidget::destroyFriendHightlighter() {
     if(_highlighter == 0) return;
     if(_highlighter->isActive()) _highlighter->stop();
-    disconnect(_highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
+    disconnect(_highlighter, SIGNAL(timeout()), this, SLOT(update()));
     delete _highlighter;
     _highlighter = 0;
 }
@@ -1908,8 +1958,10 @@ void GLWidget::parseEarthClouds() {
         qDebug() << "Emptying error buffer";
         glGetError(); // empty the error buffer
         qDebug() << "Binding texture";
-        _earthTex = bindTexture(_completedEarthIm, GL_TEXTURE_2D, GL_RGBA,
-                               QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
+        QOpenGLTexture *_earthTex = new QOpenGLTexture(earthTexIm.mirrored());
+        _earthTex->bind();
+//        _earthTex = bindTexture(_completedEarthIm, GL_TEXTURE_2D, GL_RGBA,
+//                               QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
         if (GLenum glError = glGetError())
             qCritical() << QString("OpenGL returned an error (0x%1)")
                            .arg((int) glError, 4, 16, QChar('0'));

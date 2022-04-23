@@ -22,15 +22,16 @@
 #include "SondeData.h"
 
 
-class GLWidget : public QGLWidget {
+class GLWidget : public QOpenGLWidget {
         Q_OBJECT
     public:
-        GLWidget(QGLFormat format, QWidget *parent = 0);
+        GLWidget(QWidget *parent = 0);
         ~GLWidget();
 
         QPair<double, double> currentPosition() const;
         ClientSelectionWidget *clientSelection;
         void savePosition();
+        bool isInGlContext = false;
     public slots:
         virtual void initializeGL();
         void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
@@ -74,7 +75,10 @@ class GLWidget : public QGLWidget {
         void mouseMoveEvent(QMouseEvent *event);
         void wheelEvent(QWheelEvent* event);
         bool event(QEvent *event);
-    private:
+        void qglColor(const QColor&);
+        void renderText(double x, double y, double z, const QString &str, const QFont & font = QFont());
+        void renderText(int x, int y, const QString &str, const QFont & font = QFont());
+  private:
         void resetZoom();
         void handleRotation(QMouseEvent *event);
         bool isOnGlobe(int x, int y) const;
