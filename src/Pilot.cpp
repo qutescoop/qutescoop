@@ -259,7 +259,7 @@ QString Pilot::aircraftType() const {
 }
 
 Airport *Pilot::depAirport() const {
-    if(NavData::instance()->airports.contains(planDep))
+    if(!planDep.isNull() && NavData::instance()->airports.contains(planDep))
         return NavData::instance()->airports[planDep];
     else return 0;
 }

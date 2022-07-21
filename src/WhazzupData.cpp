@@ -311,20 +311,25 @@ WhazzupData::WhazzupData(const WhazzupData &data) {
 }
 
 WhazzupData::~WhazzupData() {
-    foreach(auto c, pilots.values())
-        delete c;
+    // this section is under surveillance:
+    // not deleting these objects saves us from segfaults which were clearly reproducible since
+    // we use QMultiHash (they might be the reason for #107), but on the other hand we thought to have
+    // fixed memory leaks when we added these.
+
+    // foreach(auto c, pilots.values())
+    //     delete c;
     pilots.clear();
 
-    foreach(auto v, bookedPilots.values())
-        delete v;
+    // foreach(auto v, bookedPilots.values())
+    //     delete v;
     bookedPilots.clear();
 
-    foreach(auto v, controllers.values())
-        delete v;
+    // foreach(auto v, controllers.values())
+    //     delete v;
     controllers.clear();
 
-    foreach(const BookedController *bc, bookedControllers)
-        delete bc;
+    // foreach(const BookedController *bc, bookedControllers)
+    //     delete bc;
     bookedControllers.clear();
 }
 
