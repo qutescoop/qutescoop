@@ -30,7 +30,7 @@ class WhazzupData {
         void updateFrom(const WhazzupData &data);
 
         QSet<Controller*> controllersWithSectors() const;
-        QHash<QString, Pilot*> pilots, bookedPilots;
+        QMultiHash<QString, Pilot*> pilots, bookedPilots;
         QHash<QString, Controller*> controllers;
         QList<Pilot*> allPilots() const { return bookedPilots.values() + pilots.values(); }
         QList<BookedController*> bookedControllers;

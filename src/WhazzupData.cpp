@@ -65,7 +65,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
             for(int i = 0; i < pilotsArray.size(); ++i) {
                 QJsonObject pilotObject = pilotsArray[i].toObject();
                 Pilot *p = new Pilot(pilotObject, this);
-                pilots[p->label] = p;
+                pilots.insert(p->label, p);
             }
         }
         
@@ -92,7 +92,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
             for(int i = 0; i < prefilesArray.size(); ++i) {
                 QJsonObject prefileObject = prefilesArray[i].toObject();
                 Pilot *p = new Pilot(prefileObject, this);
-                bookedPilots[p->label] = p;
+                bookedPilots.insert(p->label, p);
             }
         }
     } else if(type == ATCBOOKINGS) {
@@ -248,7 +248,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
                 //departure as in non-Warped view
                 Pilot* np = new Pilot(*p);
                 np->whazzupTime = QDateTime(predictTime);
-                bookedPilots[np->label] = np; // just copy him over
+                bookedPilots.insert(np->label, np); // just copy him over
                 continue;
             }
             continue; // not on the map on the selected time
@@ -300,7 +300,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
         np->trueHeading = trueHeading;
         np->groundspeed = (int) groundspeed;
 
-        pilots[np->label] = np;
+        pilots.insert(np->label, np);
     }
     qApp->restoreOverrideCursor();
     qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";
@@ -311,16 +311,16 @@ WhazzupData::WhazzupData(const WhazzupData &data) {
 }
 
 WhazzupData::~WhazzupData() {
-    foreach(const QString s, pilots.keys())
-        delete pilots[s];
+    foreach(auto c, pilots.values())
+        delete c;
     pilots.clear();
 
-    foreach(const QString s, bookedPilots.keys())
-        delete bookedPilots[s];
+    foreach(auto v, bookedPilots.values())
+        delete v;
     bookedPilots.clear();
 
-    foreach(const QString s, controllers.keys())
-        delete controllers[s];
+    foreach(auto v, controllers.values())
+        delete v;
     controllers.clear();
 
     foreach(const BookedController *bc, bookedControllers)
@@ -347,11 +347,11 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
 
         pilots.clear();
         foreach(const QString s, data.pilots.keys())
-            pilots[s] = new Pilot(*data.pilots[s]);
+            pilots.insert(s, new Pilot(*data.pilots.value(s)));
 
         bookedPilots.clear();
         foreach(const QString s, data.bookedPilots.keys())
-            bookedPilots[s] = new Pilot(*data.bookedPilots[s]);
+            bookedPilots.insert(s, new Pilot(*data.bookedPilots.value(s)));
 
         controllers.clear();
         foreach(const QString s, data.controllers.keys())
@@ -382,17 +382,17 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
     foreach(const QString s, data.pilots.keys()) {
         if(!pilots.contains(s)) { // new pilots
             // create a new copy of new pilot
-            Pilot *p = new Pilot(*data.pilots[s]);
-            pilots[s] = p;
+            Pilot *p = new Pilot(*data.pilots.value(s));
+            pilots.insert(s, p);
         } else { // existing pilots: data saved in the object needs to be transferred
-            data.pilots[s]->showDepDestLine              = pilots[s]->showDepDestLine;
-            data.pilots[s]->routeWaypointsCache          = pilots[s]->routeWaypointsCache;
-            data.pilots[s]->routeWaypointsPlanDepCache   = pilots[s]->routeWaypointsPlanDepCache;
-            data.pilots[s]->routeWaypointsPlanDestCache  = pilots[s]->routeWaypointsPlanDestCache;
-            data.pilots[s]->routeWaypointsPlanRouteCache = pilots[s]->routeWaypointsPlanRouteCache;
-            data.pilots[s]->checkStatus();
+            data.pilots.value(s)->showDepDestLine              = pilots.value(s)->showDepDestLine;
+            data.pilots.value(s)->routeWaypointsCache          = pilots.value(s)->routeWaypointsCache;
+            data.pilots.value(s)->routeWaypointsPlanDepCache   = pilots.value(s)->routeWaypointsPlanDepCache;
+            data.pilots.value(s)->routeWaypointsPlanDestCache  = pilots.value(s)->routeWaypointsPlanDestCache;
+            data.pilots.value(s)->routeWaypointsPlanRouteCache = pilots.value(s)->routeWaypointsPlanRouteCache;
+            data.pilots.value(s)->checkStatus();
 
-            *pilots[s] = *data.pilots[s];
+            pilots.insert(s, data.pilots.value(s));
         }
     }
 
@@ -405,10 +405,10 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
     }
     foreach(const QString s, data.bookedPilots.keys()) {
         if(!bookedPilots.contains(s)) { // new pilots
-            Pilot *p = new Pilot(*data.bookedPilots[s]);
-            bookedPilots[s] = p;
+            Pilot *p = new Pilot(*data.bookedPilots.value(s));
+            bookedPilots.insert(s, p);
         } else // existing pilots
-            *bookedPilots[s] = *data.bookedPilots[s];
+            bookedPilots.insert(s, data.bookedPilots.value(s));
     }
     qDebug() << "WhazzupData::updatePilotsFrom() -- finished";
 }
