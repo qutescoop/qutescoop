@@ -70,7 +70,7 @@ void SectorReader::loadSectordisplay(QHash<QString, Sector*>& sectors, const QSt
             QStringList points = line.split(':');
             if(points.size() < 2) continue;
             double lat = points[0].toDouble();
-            double lon = modPositive(points[1].toDouble() + 180., 360.) - 180.;
+            double lon = Helpers::modPositive(points[1].toDouble() + 180., 360.) - 180.;
             if (lat > 90. || lat < -90. || lon > 180. || lon < -180. || (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
                 auto msg = QString("Sector id=%1 has invalid point %2:%3")
                     .arg(workingSectorId).arg(lat).arg(lon);

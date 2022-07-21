@@ -89,7 +89,7 @@ void Sector::setPoints(const QList<QPair<double, double> > &points)
                 } else {
                     t = diffCurrent / total;
                 }
-                latAtBorder = lerp(current.first, next.first, t);
+                latAtBorder = Helpers::lerp(current.first, next.first, t);
 
                 currentPolygon->append(QPointF(latAtBorder, 180.));
             } else { // < -90.
@@ -102,7 +102,7 @@ void Sector::setPoints(const QList<QPair<double, double> > &points)
                 } else {
                     t = diffCurrent / total;
                 }
-                latAtBorder = lerp(current.first, next.first, t);
+                latAtBorder = Helpers::lerp(current.first, next.first, t);
 
                 currentPolygon->append(QPointF(latAtBorder, -180.));
             }
