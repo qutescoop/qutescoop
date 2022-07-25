@@ -240,3 +240,12 @@ bool Controller::matches(const QRegExp& regex) const {
         if (sector->name.contains(regex)) return true;
     return MapObject::matches(regex);
 }
+
+bool Controller::isObserver() const {
+  return facilityType == 0;
+}
+
+bool Controller::isATC() const {
+  // 199.998 gets transmitted on VATSIM for a controller without prim freq
+  return facilityType > 0 && frequency != "199.998";
+}

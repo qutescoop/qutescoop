@@ -27,8 +27,8 @@ class Controller: public Client {
         QString mapLabel() const;
         bool matches(const QRegExp& regex) const;
 
-        bool isObserver() const { return facilityType == 0; }
-        bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations (at least from VATSIM)
+        bool isObserver() const;
+        bool isATC() const; // facilityType = 1 is reported for FSS stations (at least from VATSIM)
         QString rank() const;
 
         QString getCenter() const;
