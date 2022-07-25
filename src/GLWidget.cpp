@@ -41,9 +41,9 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 
     // call default (=9) map position
     Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, 9);
-    _xRot = modPositive(_xRot, 360.);
-    _yRot = modPositive(_yRot, 360.);
-    _zRot = modPositive(_zRot, 360.);
+    _xRot = Helpers::modPositive(_xRot, 360.);
+    _yRot = Helpers::modPositive(_yRot, 360.);
+    _zRot = Helpers::modPositive(_zRot, 360.);
     resetZoom();
     emit newPosition();
 
@@ -79,8 +79,8 @@ GLWidget::~GLWidget() {
 // This looks a bit anarchic, but it fits the automatically created texture coordinates.
 // call drawCoordinateAxii() inside paintGL() to se where the axii are.
 void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updateGL) {
-    _xRot = modPositive(270. - lat, 360.);
-    _zRot = modPositive(     - lon, 360.);
+    _xRot = Helpers::modPositive(270. - lat, 360.);
+    _zRot = Helpers::modPositive(     - lon, 360.);
     _zoom = newZoom;
     resetZoom();
     if (updateGL)
@@ -92,8 +92,8 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updat
   current lat/lon
 **/
 QPair<double, double> GLWidget::currentPosition() const {
-    return QPair<double, double>(modPositive(-90. - _xRot + 180., 360.) - 180.,
-                                 modPositive(     - _zRot + 180., 360.) - 180.);
+    return QPair<double, double>(Helpers::modPositive(-90. - _xRot + 180., 360.) - 180.,
+                                 Helpers::modPositive(     - _zRot + 180., 360.) - 180.);
 }
 
 /**
@@ -106,8 +106,8 @@ void GLWidget::handleRotation(QMouseEvent*) {
     const double zoomFactor = _zoom / 10.;
     double dx = (  currentPos.x() - _lastPos.x()) * zoomFactor;
     double dy = (- currentPos.y() + _lastPos.y()) * zoomFactor;
-    _xRot = modPositive(_xRot + dy + 180., 360.) - 180.;
-    _zRot = modPositive(_zRot + dx + 180., 360.) - 180.;
+    _xRot = Helpers::modPositive(_xRot + dy + 180., 360.) - 180.;
+    _zRot = Helpers::modPositive(_zRot + dx + 180., 360.) - 180.;
     updateGL();
     _lastPos = currentPos;
     emit newPosition();
@@ -152,7 +152,7 @@ bool GLWidget::mouse2latlon(int x, int y, double &lat, double &lon) const {
     if (xGl >= 0)
             lon += 180;
 
-    lon = modPositive(lon - _zRot + 180., 360.) - 180.;
+    lon = Helpers::modPositive(lon - _zRot + 180., 360.) - 180.;
     return true;
 }
 
@@ -198,8 +198,8 @@ void GLWidget::rememberPosition(int nr) {
 void GLWidget::restorePosition(int nr) {
     GuiMessages::message(QString("Recalled map position %1").arg(nr));
     Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, nr);
-    _xRot = modPositive(_xRot, 360.);
-    _zRot = modPositive(_zRot, 360.);
+    _xRot = Helpers::modPositive(_xRot, 360.);
+    _zRot = Helpers::modPositive(_zRot, 360.);
     resetZoom();
     updateGL();
     emit newPosition();
