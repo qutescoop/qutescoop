@@ -39,7 +39,7 @@ class Controller: public Client {
 
         Airport *airport() const;
 
-        QString frequency, atisMessage;
+        QString frequency, atisMessage, atisCode;
         int facilityType, visualRange;
         QDateTime assumeOnlineUntil;
 
