@@ -31,7 +31,7 @@ class Airport: public MapObject {
 
         bool active;
 
-        QSet<Controller*> approaches, towers, grounds, deliveries;
+        QSet<Controller*> approaches, towers, grounds, deliveries, atises;
         QSet<Pilot*> arrivals, departures;
         QSet<Controller*> allControllers() const;
 
@@ -44,6 +44,7 @@ class Airport: public MapObject {
         void addTower(Controller *client);
         void addGround(Controller *client);
         void addDelivery(Controller *client);
+        void addAtis(Controller *client);
 
         QString name, city, countryCode;
 

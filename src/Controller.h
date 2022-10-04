@@ -31,11 +31,12 @@ class Controller: public Client {
         bool isATC() const; // facilityType = 1 is reported for FSS stations (at least from VATSIM)
         QString rank() const;
 
-        QString getCenter() const;
+        QString getSectorName() const;
         QString getApproach() const;
         QString getTower() const;
         QString getGround() const;
         QString getDelivery() const;
+        QString getAtis() const;
 
         Airport *airport() const;
 

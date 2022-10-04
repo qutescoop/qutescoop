@@ -45,6 +45,7 @@ void Airport::resetWhazzupStatus() {
     approaches.clear();
     grounds.clear();
     deliveries.clear();
+    atises.clear();
     arrivals.clear();
     departures.clear();
     numFilteredArrivals = 0;
@@ -276,6 +277,10 @@ void Airport::addDelivery(Controller* client) {
     active = true;
 }
 
+void Airport::addAtis(Controller* client) {
+    atises.insert(client);
+    active = true;
+}
 
 void Airport::showDetailsDialog() {
     AirportDetails *infoDialog = AirportDetails::instance();
@@ -287,7 +292,7 @@ void Airport::showDetailsDialog() {
 }
 
 QSet<Controller*> Airport::allControllers() const {
-    return approaches + towers + grounds + deliveries;
+    return approaches + towers + grounds + deliveries + atises;
 }
 
 bool Airport::matches(const QRegExp& regex) const {
