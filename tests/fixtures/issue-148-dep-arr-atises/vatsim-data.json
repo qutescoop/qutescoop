@@ -24,7 +24,7 @@
       ],
       "last_updated": "2022-02-22T19:32:11.3455091Z",
       "logon_time": "2022-02-22T19:22:47.5757947Z"
-    },
+    }
   ],
   "atis": [
     {
@@ -101,7 +101,7 @@
       "clients_connection_allowed": 1,
       "client_connections_allowed": true,
       "is_sweatbox": false
-    },
+    }
   ],
   "prefiles": [
   ],
