@@ -138,12 +138,6 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     QSet<Controller*> atcContent = _airport->allControllers() + checkSectors();
 
-    // ATIS
-    Controller* atis = Whazzup::instance()->whazzupData().controllers[_airport->label + "_ATIS"];
-    if (atis != 0) {
-        atcContent.insert(atis);
-    }
-
     // non-ATC
     if(cbOtherAtc->isChecked()) {
         foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {

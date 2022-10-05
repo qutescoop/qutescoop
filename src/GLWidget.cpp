@@ -1334,7 +1334,7 @@ void GLWidget::renderLabels() {
     QList<MapObject*> objects;
     // draw all CTR+FSS labels, also if sector unknown
     foreach(Controller *c, Whazzup::instance()->whazzupData().controllers)
-        if (!c->getCenter().isNull())
+        if (!c->getSectorName().isNull())
             objects.append(c);
     renderLabels(objects, Settings::firFont(), _controllerLabelZoomTreshold,
                  Settings::firFontColor());

@@ -181,6 +181,11 @@ void NavData::updateData(const WhazzupData& whazzupData) {
             airports[icao]->addDelivery(c);
             newActiveAirportsSet.insert(airports[icao]);
         }
+        icao = c->getAtis();
+        if(!icao.isNull() && airports.contains(icao)) {
+            airports[icao]->addAtis(c);
+            newActiveAirportsSet.insert(airports[icao]);
+        }
     }
 
     // new method with MultiMap. Tests show: 450ms vs. 3800ms for 800 pilots :)

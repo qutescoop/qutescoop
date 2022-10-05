@@ -46,7 +46,7 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
         }
     }
 
-    QString icao = this->getCenter();
+    QString icao = this->getSectorName();
     if (!icao.isEmpty()) {
         while(!NavData::instance()->sectors.contains(icao) && !icao.isEmpty()) {
             int p = icao.lastIndexOf('_');
@@ -95,7 +95,7 @@ QString Controller::facilityString() const {
     return QString();
 }
 
-QString Controller::getCenter() const{
+QString Controller::getSectorName() const{
     if(!isATC())
         return QString();
     QStringList list = label.split('_');
@@ -158,6 +158,18 @@ QString Controller::getDelivery() const {
         return QString();
     QStringList list = label.split('_');
     if(list.last().startsWith("DEL")) {
+        if(list.first().length() == 3)
+            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
+        return list.first();
+    }
+    return QString();
+}
+
+QString Controller::getAtis() const {
+    if(!isATC())
+        return QString();
+    QStringList list = label.split('_');
+    if(list.last().startsWith("ATIS")) {
         if(list.first().length() == 3)
             return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
         return list.first();
