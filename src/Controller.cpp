@@ -31,6 +31,11 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
             atisMessage += atis[i].toString() + " <br>";
     }
 
+    atisCode = "";
+    if(json.contains("atis_code")) {
+        atisCode = json["atis_code"].toString();
+    }
+
     // do some magic for Controller Info like "online until"...
     QRegExp rxOnlineUntil = QRegExp(
             "(open|close|online|offline|till|until)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?", Qt::CaseInsensitive);
