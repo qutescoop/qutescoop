@@ -24,8 +24,7 @@ void Route::calculateWaypointsAndDistance() {
         return;
 
     QStringList list = route.split(' ', Qt::SkipEmptyParts);
-    waypoints = Airac::instance()->resolveFlightplan(
-            list, depAirport->lat, depAirport->lon);
+    waypoints = Airac::instance()->resolveFlightplan(list, depAirport->lat, depAirport->lon);
 
     Waypoint* depWp = new Waypoint(depAirport->label, depAirport->lat, depAirport->lon);
     waypoints.prepend(depWp);
