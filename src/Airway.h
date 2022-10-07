@@ -11,26 +11,15 @@
 
 class Airway {
     public:
-        enum Type {
-            LOW = 1,
-            HIGH = 2
-        };
-
-        Airway(const QString& name, Type type, int base, int top);
+        Airway(const QString& name);
         virtual ~Airway() {}
 
-        /**
-         * Returns a list of all fixes along this airway from start
-         * to end. The expanded list will not include the given start
-         * point, but will include the given end point.
-         */
+        QList<Waypoint*> waypoints() const { return _waypoints; };
         QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
         Waypoint* closestPointTo(double lat, double lon) const;
         void addSegment(Waypoint* from, Waypoint* to);
         QList<Airway*> sort();
 
-        Type type;
-        int base, top;
         QString name;
 
     private:

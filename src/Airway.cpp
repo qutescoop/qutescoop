@@ -16,18 +16,15 @@ bool Airway::Segment::operator==(const Airway::Segment& other) const {
 			(to == other.from || to == other.to);
 }
 
-Airway::Airway(const QString& name, Type type, int base, int top) {
+Airway::Airway(const QString& name) {
 	this->name = name;
-	this->type = type;
-	this->base = base;
-	this->top = top;
 }
 
 void Airway::addSegment(Waypoint* from, Waypoint* to) {
 	Segment newSegment(from, to);
 	// check if we already have this segment
 	for(int i = 0; i < _segments.size(); i++) {
-		if(_segments[i] == newSegment) {
+		if(_segments[i].from == newSegment.from && _segments[i].to == newSegment.to) {
 			return;
 		}
 	}
@@ -38,7 +35,7 @@ Airway* Airway::createFromSegments() {
 	if(_segments.isEmpty())
 		return 0;
 
-	Airway* result = new Airway(name, type, base, top);
+	Airway* result = new Airway(name);
 	Segment seg = _segments.first();
 	_segments.removeFirst();
 	result->_waypoints.append(seg.from);
@@ -94,16 +91,24 @@ QList<Airway*> Airway::sort() {
 		if(awy != 0)
 			result.append(awy);
 	} while(awy != 0);
-	return result;
+
+        return result;
 }
 
 int Airway::index(const QString& id) const {
-	for(int i = 0; i < _waypoints.size(); i++)
-		if(_waypoints[i]->label == id)
+	for(int i = 0; i < _waypoints.size(); i++) {
+		if(_waypoints[i]->label == id) {
 			return i;
+		}
+	}
 	return -1;
 }
 
+/**
+ * Returns a list of all fixes along this airway from start
+ * to end. The expanded list will not include the given start
+ * point, but will include the given end point.
+ */
 QList<Waypoint*> Airway::expand(const QString& startId, const QString& endId) const {
 	QList<Waypoint*> result;
 	int startIndex = index(startId);
