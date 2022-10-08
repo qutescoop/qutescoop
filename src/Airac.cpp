@@ -375,10 +375,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
     Airway* awy = 0;
     bool wantAirway = false;
     while (!plan.isEmpty()) {
-        QString id = plan.takeFirst();
-
-        // remove everything following an invalid character (e.g. "/N320F240")
-        id = id.replace(QRegExp("[^A-Za-z0-9].*$"), "");
+        QString id = fpTokenToWaypoint(plan.takeFirst());
 
         if (wantAirway) {
             awy = airwayNearby(id, lat, lon);
@@ -386,7 +383,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
         if (wantAirway && (awy != 0) && !plan.isEmpty()) {
             wantAirway = false;
             // have airway - next should be a waypoint
-            QString endId = plan.first();
+            QString endId = fpTokenToWaypoint(plan.first());
             Waypoint* wp = waypointNearby(endId, lat, lon);
             if(wp != 0) {
                 if (currPoint != 0) {
@@ -407,7 +404,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
                           // but preserving correct ARINC style (\\d{4}[EW])
                 ) {
 
-                    id += plan.takeFirst();
+                    id += fpTokenToWaypoint(plan.takeFirst());
                 }
             }
 
@@ -423,4 +420,10 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
     }
 
     return result;
+}
+
+QString Airac::fpTokenToWaypoint(QString token) const
+{
+  // remove everything following an invalid character (e.g. "/N320F240")
+  return token.replace(QRegExp("[^A-Za-z0-9].*$"), "");
 }

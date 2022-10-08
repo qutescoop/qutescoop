@@ -40,6 +40,8 @@ class Airac : public QObject {
         void readNavaids(const QString &directory);
         void readAirways(const QString &directory);
         void addAirwaySegment(Waypoint* from, Waypoint* to, const QString &name);
+
+        QString fpTokenToWaypoint(QString token) const;
 };
 
 #endif /* AIRAC_H_ */
