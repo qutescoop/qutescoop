@@ -4,20 +4,17 @@
 
 #include "Controller.h"
 
-#include "_pch.h"
-
 #include "Client.h"
+#include "ClientDetails.h"
 #include "ControllerDetails.h"
 #include "NavData.h"
-#include "Settings.h"
-#include "helpers.h"
 
 #include <QJsonObject>
 
 Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
-        Client(json, whazzup),
-        sector(0) {
-
+    Client(json, whazzup),
+    sector(0)
+{
     frequency = json["frequency"].toString();
     facilityType = json["facility"].toInt();
     if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
@@ -25,10 +22,11 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
     visualRange = json["visual_range"].toInt();
 
     atisMessage = "";
-    if(json.contains("text_atis") && json["text_atis"].isArray()) {
+    if (json.contains("text_atis") && json["text_atis"].isArray()) {
         QJsonArray atis = json["text_atis"].toArray();
-        for(int i = 0; i < atis.size(); ++i)
+        for (int i = 0; i < atis.size(); ++i) {
             atisMessage += atis[i].toString() + " <br>";
+        }
     }
 
     atisCode = "";
@@ -38,159 +36,118 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
 
     // do some magic for Controller Info like "online until"...
     QRegExp rxOnlineUntil = QRegExp(
-            "(open|close|online|offline|till|until)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?", Qt::CaseInsensitive);
+          "(open|close|online|offline|till|until)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?",
+          Qt::CaseInsensitive
+    );
     if (rxOnlineUntil.indexIn(atisMessage) > 0) {
         //fixme
         QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
         if(found.isValid()) {
-            if (qAbs(found.secsTo(whazzup->whazzupTime.time())) > 60*60 * 12) // e.g. now its 2200z, and he says
-                                                                //"online until 0030z", allow for up to 12 hours
+            if (qAbs(found.secsTo(whazzup->whazzupTime.time())) > 60*60 * 12) {
+                // e.g. now its 2200z, and he says "online until 0030z", allow for up to 12 hours
                 assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date().addDays(1), found, Qt::UTC);
-            else
+            } else {
                 assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date(), found, Qt::UTC);
+            }
         }
     }
 
-    QString icao = this->getSectorName();
+    QString icao = this->controllerSectorName();
+    // Look for a sector name matching any part of the login down to 4 characters
     if (!icao.isEmpty()) {
-        while(!NavData::instance()->sectors.contains(icao) && !icao.isEmpty()) {
-            int p = icao.lastIndexOf('_');
-            if(p == -1) {
-                qDebug() << "Unknown sector/FIR\t" << icao << "\tPlease provide sector information if you can";
-                if (visualRange == 0 || (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
-                    icao = "";
-                    continue;
-                }
-                Sector *s = new Sector(); // creating a round sector with 0.5 * visualRange radius
-                //s->lat = lat; s->lon = lon; // position label on primary visibility center
-                s->icao = icao;
-                s->name = "no sector data";
-                QList<QPair<double, double> > pointList;
-                for(float u = 0.; u < 2. * M_PI; u += M_PI / 24.) { // 48 segments
-                    pointList.append(QPair<double, double>(lat + qCos(u) * visualRange / 2. / 60.,
-                                                           lon + qSin(u) * visualRange / 2. / 60. /
-                                                                qCos(qAbs(lat) * Pi180)));
-                }
-                s->setPoints(pointList);
-                NavData::instance()->sectors.insert(icao, s); // adding to the pool
-            } else
-                icao = icao.left(p);
-        }
-        if(NavData::instance()->sectors.contains(icao) && !icao.isEmpty()) {
-            this->sector = NavData::instance()->sectors[icao];
-            // The new VATSIM Data format doesn't provide data on controller position, so we'll need to average out the positions in the sector
-            QPair<double, double> center = this->sector->getCenter();
-            this->lat = center.first;
-            this->lon = center.second;
+        do {
+            this->sector = NavData::instance()->sectors.value(icao, 0);
+            if (sector != 0) {
+                // We determine lat/lon from the sector
+                QPair<double, double> center = this->sector->getCenter();
+                this->lat = center.first;
+                this->lon = center.second;
+
+                break;
+            }
+            icao.chop(1);
+        } while (icao.length() >= 2);
+
+        if (sector == 0) {
+            qDebug() << "Unknown sector/FIR" << icao << "Please provide sector information if you can";
         }
     }
 }
 
 QString Controller::facilityString() const {
-    switch(facilityType) {
-    case 0: return "OBS";
-    case 1: return "Staff";
-    case 2: return "DEL";
-    case 3: return "GND";
-    case 4: return "TWR";
-    case 5: return "APP";
-    case 6: return "CTR";
-    case 7: return "FSS";
+    switch (facilityType) {
+        case 0: return "OBS";
+        case 1: return "Staff";
+        case 2: return "DEL";
+        case 3: return "GND";
+        case 4: return "TWR";
+        case 5: return "APP";
+        case 6: return "CTR";
+        case 7: return "FSS";
     }
     return QString();
 }
 
-QString Controller::getSectorName() const{
-    if(!isATC())
-        return QString();
-    QStringList list = label.split('_');
+QStringList Controller::atcLabelTokens() const {
+  if(!isATC())
+      return QStringList();
 
-    // allow only _FSS* and _CTR*
-    if(list.last().startsWith("CTR") || list.last().startsWith("FSS")) {
-        list.removeLast();
-        return list.join("_");
+  return label.split('_', Qt::SkipEmptyParts);
+}
+
+QString Controller::controllerSectorName() const{
+    auto _atcLabelTokens = atcLabelTokens();
+
+    if(
+       !_atcLabelTokens.empty()
+       && (_atcLabelTokens.last().startsWith("CTR") || _atcLabelTokens.last().startsWith("FSS"))
+    ) {
+        _atcLabelTokens.removeLast();
+        return _atcLabelTokens.join("_");
     }
     return QString();
 }
 
-QString Controller::getApproach() const {
-    if(!isATC())
-        return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("APP") || list.last().startsWith("DEP")) {
-        // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
-        if(list.first() == "EDBB")
-            return "EDDB"; // map EDBB -> EDDB (no other active airfields covered by this sector)
-        else if(list.first() == "NY")
-            return "KLGA"; // map NY -> KLGA
-        else if(list.first() == "MSK")
-            return "UUWW"; // map MSK -> UUWW
-
-        // VATSIMmers don't think ICAO codes are cool
-        if(list.first().length() == 3)
-            return "K" + list.first();
-        return list.first();
-    }
-    return QString();
+bool Controller::isCtrFss() const
+{
+  return label.endsWith("_CTR") || label.endsWith("FSS");
 }
 
-QString Controller::getTower() const {
-    if(!isATC())
-        return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("TWR")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
-    return QString();
+bool Controller::isAppDep() const
+{
+  return label.endsWith("_APP") || label.endsWith("DEP");
 }
 
-QString Controller::getGround() const {
-    if(!isATC())
-        return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("GND")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
-    return QString();
+bool Controller::isTwr() const
+{
+  return label.endsWith("_TWR");
 }
 
-QString Controller::getDelivery() const {
-    if(!isATC())
-        return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("DEL")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
-    return QString();
+bool Controller::isGnd() const
+{
+  return label.endsWith("_GND");
 }
 
-QString Controller::getAtis() const {
-    if(!isATC())
-        return QString();
-    QStringList list = label.split('_');
-    if(list.last().startsWith("ATIS")) {
-        if(list.first().length() == 3)
-            return "K" + list.first(); // VATSIMmers don't think ICAO codes are cool
-        return list.first();
-    }
-    return QString();
+bool Controller::isDel() const
+{
+  return label.endsWith("_DEL");
+}
+
+bool Controller::isAtis() const
+{
+  return label.endsWith("_ATIS");
 }
 
 Airport *Controller::airport() const {
-    QString tryAirport;
-    if (!label.split("_").isEmpty())
-        tryAirport = label.split("_").first();
-    if (tryAirport.size() == 3)
-        tryAirport = "K" + tryAirport;
-    if(NavData::instance()->airports.contains(tryAirport))
-        return NavData::instance()->airports[tryAirport];
-    else return 0;
+    auto _atcLabelTokens = atcLabelTokens();
+
+    if (!_atcLabelTokens.empty()) {
+        QString tryAirport = specialAirportWorkarounds(_atcLabelTokens.first());
+        if (NavData::instance()->airports.contains(tryAirport))
+            return NavData::instance()->airports[tryAirport];
+    }
+
+    return 0;
 }
 
 void Controller::showDetailsDialog() {
@@ -244,8 +201,10 @@ QString Controller::toolTipShort() const // LOVV_CTR [Vienna]
 }
 
 QString Controller::mapLabel() const { // LOVV
-    if(label.endsWith("_CTR") || label.endsWith("_FSS"))
-        return label.left(label.length() - 4);
+    if(sector != 0) {
+        return controllerSectorName();
+    }
+
     return label;
 }
 
@@ -265,4 +224,20 @@ bool Controller::isObserver() const {
 bool Controller::isATC() const {
   // 199.998 gets transmitted on VATSIM for a controller without prim freq
   return facilityType > 0 && frequency != "199.998";
+}
+
+QString Controller::specialAirportWorkarounds(const QString& rawAirport) const {
+  // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
+  if(rawAirport == "EDBB")
+      return "EDDB"; // map EDBB -> EDDB (no other active airfields covered by this sector)
+  else if(rawAirport == "NY")
+      return "KLGA"; // map NY -> KLGA
+  else if(rawAirport == "MSK")
+      return "UUWW"; // map MSK -> UUWW
+
+  // VATSIMmers don't think ICAO codes are cool
+  if(rawAirport.length() == 3)
+      return "K" + rawAirport;
+
+  return rawAirport;
 }

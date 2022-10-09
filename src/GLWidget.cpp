@@ -1332,9 +1332,8 @@ void GLWidget::renderLabels() {
 
     // FIR labels
     QList<MapObject*> objects;
-    // draw all CTR+FSS labels, also if sector unknown
     foreach(Controller *c, Whazzup::instance()->whazzupData().controllers)
-        if (!c->getSectorName().isNull())
+        if (c->sector != 0)
             objects.append(c);
     renderLabels(objects, Settings::firFont(), _controllerLabelZoomTreshold,
                  Settings::firFontColor());
