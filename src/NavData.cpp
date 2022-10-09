@@ -161,37 +161,30 @@ void NavData::updateData(const WhazzupData& whazzupData) {
     }
 
     foreach(Controller *c, whazzupData.controllers) {
-        QString icao = c->getApproach();
-        if(!icao.isNull() && airports.contains(icao)) {
-            airports[icao]->addApproach(c);
-            newActiveAirportsSet.insert(airports[icao]);
-        }
-        icao = c->getTower();
-        if(!icao.isNull() && airports.contains(icao)) {
-            airports[icao]->addTower(c);
-            newActiveAirportsSet.insert(airports[icao]);
-        }
-        icao = c->getGround();
-        if(!icao.isNull() && airports.contains(icao)) {
-            airports[icao]->addGround(c);
-            newActiveAirportsSet.insert(airports[icao]);
-        }
-        icao = c->getDelivery();
-        if(!icao.isNull() && airports.contains(icao)) {
-            airports[icao]->addDelivery(c);
-            newActiveAirportsSet.insert(airports[icao]);
-        }
-        icao = c->getAtis();
-        if(!icao.isNull() && airports.contains(icao)) {
-            airports[icao]->addAtis(c);
-            newActiveAirportsSet.insert(airports[icao]);
-        }
+        auto _airport = c->airport();
+        if (_airport != 0) {
+            if(c->isAppDep()) {
+                _airport->addApproach(c);
+            }
+            if(c->isTwr()) {
+                _airport->addTower(c);
+            }
+            if(c->isGnd()) {
+                _airport->addGround(c);
+            }
+            if(c->isDel()) {
+                _airport->addDelivery(c);
+            }
+            if(c->isAtis()) {
+                _airport->addAtis(c);
+            }
+            newActiveAirportsSet.insert(_airport);
+        }  
     }
 
-    // new method with MultiMap. Tests show: 450ms vs. 3800ms for 800 pilots :)
     activeAirports.clear();
     foreach(Airport *a, newActiveAirportsSet) {
-        int congestion = a->numFilteredArrivals + a->numFilteredDepartures; // sort key
+        int congestion = a->numFilteredArrivals + a->numFilteredDepartures;
         activeAirports.insert(congestion, a);
     }
 
