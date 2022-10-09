@@ -108,9 +108,6 @@ void AirportDetails::refresh(Airport* newAirport) {
     int utcDev = (int) (_airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
     QString lt = Whazzup::instance()->whazzupData().whazzupTime.
                  addSecs(utcDev * 3600).time().toString("HH:mm");
-    lblTime->setText(QString("%1 loc, UTC %2%3")
-                        .arg(lt, utcDev < 0 ? "": "+") // just a plus sign
-                        .arg(utcDev));
     // fetch METAR
     connect(_metarModel, &MetarModel::gotMetar, this, &AirportDetails::onGotMetar);
     on_pbMetar_clicked();

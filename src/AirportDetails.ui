@@ -37,20 +37,8 @@
        <property name="alignment">
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
        </property>
-       <layout class="QGridLayout" name="gridLayout" columnstretch="0,1">
-        <item row="1" column="1">
-         <widget class="QLabel" name="lblCountry">
-          <property name="font">
-           <font>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="text">
-           <string>Austria</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
+       <layout class="QGridLayout" name="gridLayout" columnstretch="0,0">
+        <item row="3" column="1">
          <widget class="QLabel" name="lblCharts">
           <property name="text">
            <string>[chartfox.org/EKCH](https://chartfox.org/EKCH)</string>
@@ -66,7 +54,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="2" column="1">
          <widget class="QLabel" name="lblMetar">
           <property name="text">
            <string>LOWI 062220Z 27016G28KT 240V350 9999 SHRA FEW008 BKN020TCU BKN030 05/03 Q1004</string>
@@ -82,22 +70,7 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
-         <widget class="QLabel" name="lblTime">
-          <property name="font">
-           <font>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="toolTip">
-           <string>local time simply estimated by longitude</string>
-          </property>
-          <property name="text">
-           <string>09:13 loc, UTC +2</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
+        <item row="3" column="0">
          <widget class="QLabel" name="_lblCharts">
           <property name="text">
            <string>Charts</string>
@@ -107,7 +80,7 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="0">
+        <item row="2" column="0">
          <widget class="QWidget" name="verticalWidgetMetar" native="true">
           <layout class="QVBoxLayout" name="verticalLayoutMetar">
            <property name="leftMargin">
@@ -159,16 +132,6 @@
           </layout>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_5">
-          <property name="text">
-           <string>country</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="1">
          <widget class="QLabel" name="lblName">
           <property name="font">
@@ -179,6 +142,41 @@
           <property name="text">
            <string>Innsbruck
 Kranebitten</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLabel" name="lblCountry">
+          <property name="font">
+           <font>
+            <bold>true</bold>
+           </font>
+          </property>
+          <property name="text">
+           <string>Austria</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>country</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
         </item>
@@ -194,32 +192,6 @@ Kranebitten</string>
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
           </property>
          </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="toolTip">
-           <string>local time simply estimated by longitude</string>
-          </property>
-          <property name="text">
-           <string>time (est.)</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <spacer name="verticalSpacer">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
