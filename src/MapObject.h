@@ -7,8 +7,6 @@
 
 #include "_pch.h"
 
-#include "ClientDetails.h"
-
 class MapObject: public QObject {
         Q_OBJECT
     public:

@@ -7,7 +7,9 @@
 #include "Whazzup.h"
 #include "Settings.h"
 
-Client::Client(const QJsonObject& json, const WhazzupData*) {
+Client::Client(const QJsonObject& json, const WhazzupData*) :
+    server("")
+{
     label = json["callsign"].toString();
     userId = QString::number(json["cid"].toInt());
     m_name = json["name"].toString();

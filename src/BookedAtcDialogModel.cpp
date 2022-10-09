@@ -93,6 +93,5 @@ void BookedAtcDialogModel::modelSelected(const QModelIndex& index) const {
                                           tr("URL %1 is invalid").arg(url.toString()));
             }
         }
-        _controllers[index.row()]->showDetailsDialog();
     }
 }

@@ -5,11 +5,7 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
-#include "_pch.h"
-
-#include "MapObject.h"
 #include "WhazzupData.h"
-#include "ClientDetails.h"
 
 #include <QJsonDocument>
 
@@ -18,7 +14,6 @@ class Client: public MapObject {
         Client(const QJsonObject& json, const WhazzupData *whazzup);
 
         virtual QString toolTip() const;
-
         virtual QString rank() const { return QString(); }
         virtual bool matches(const QRegExp& regex) const;
         bool isFriend() const;
