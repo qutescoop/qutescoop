@@ -7,7 +7,6 @@
 
 #include "Client.h"
 #include "WhazzupData.h"
-#include "ClientDetails.h"
 #include "Sector.h"
 #include "Airport.h"
 
@@ -28,15 +27,18 @@ class Controller: public Client {
         bool matches(const QRegExp& regex) const;
 
         bool isObserver() const;
-        bool isATC() const; // facilityType = 1 is reported for FSS stations (at least from VATSIM)
+        bool isATC() const;
         QString rank() const;
 
-        QString getSectorName() const;
-        QString getApproach() const;
-        QString getTower() const;
-        QString getGround() const;
-        QString getDelivery() const;
-        QString getAtis() const;
+        QStringList atcLabelTokens() const;
+
+        QString controllerSectorName() const;
+        bool isCtrFss() const;
+        bool isAppDep() const;
+        bool isTwr() const;
+        bool isGnd() const;
+        bool isDel() const;
+        bool isAtis() const;
 
         Airport *airport() const;
 
@@ -45,8 +47,9 @@ class Controller: public Client {
         QDateTime assumeOnlineUntil;
 
         Sector *sector;
-
-    private:
+protected:
+        QString specialAirportWorkarounds(const QString& rawAirport) const;
+private:
 };
 
 #endif /*CONTROLLER_H_*/
