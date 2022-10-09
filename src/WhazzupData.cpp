@@ -186,8 +186,8 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
     _dataType = data._dataType;
     // so now lets fake some controllers
     foreach(const BookedController* bc, data.bookedControllers) {
-        //if (bc == 0) continue;
-        if (bc->starts() <= predictTime && bc->ends() >= predictTime) { // only ones booked for the selected time
+        // only ones booked for the selected time
+        if (bc->starts() <= predictTime && bc->ends() >= predictTime) {
             QJsonObject controllerObject;
 
             controllerObject["callsign"] = bc->label;
@@ -211,12 +211,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
             controllerObject["server"] = "BOOKED SESSION";
 
             //visualRange = getField(stringList, 19).toInt();
-            controllerObject["visual_range"] = bc->visualRange;
-
-            // not applicable:
-            //frequency = getField(stringList, 4);
-            //visualRange = getField(stringList, 19).toInt();
-            //rating = getField(stringList, 16).toInt();
+            controllerObject["visual_range"] = 0;
 
             controllers[bc->label] = new Controller(controllerObject, this);
         }

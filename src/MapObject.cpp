@@ -6,6 +6,8 @@
 
 MapObject::MapObject() :
     QObject(),
+    lat(0.),
+    lon(0.),
     drawLabel(true) {
 }
 
