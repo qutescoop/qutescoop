@@ -77,12 +77,13 @@ void ControllerDetails::refresh(Controller *newController) {
     pbAirportDetails->setVisible(_controller->airport() != 0);
     pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
 
-    QString atis = QString("<code>%1</code>").arg(_controller->atisMessage);
+    QString atis = QString("<code style='margin: 50px; padding: 50px'>%1</code>").arg(_controller->atisMessage);
     if (_controller->assumeOnlineUntil.isValid())
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(_controller->assumeOnlineUntil.toString("HHmm"));
     lblAtis->setText(atis);
-    lblAtis->adjustSize(); // ensure auto-resize
+    // This does not seem to be necessary. Changing the content changes the size hint and triggers a window resize.
+    // lblAtis->adjustSize(); // ensure auto-resize
 
     gbAtis->setTitle(_controller->label.endsWith("_ATIS")? "ATIS" : "Controller info");
 
@@ -96,11 +97,11 @@ void ControllerDetails::refresh(Controller *newController) {
     buttonAddFriend->setDisabled(invalidID);
     pbAlias->setDisabled(invalidID);
 
-
-    // check if we know position
+    // enable if we know position
     buttonShowOnMap->setDisabled(qFuzzyIsNull(_controller->lat) && qFuzzyIsNull(_controller->lon));
 
-    adjustSize();
+    // @see https://github.com/qutescoop/qutescoop/issues/124
+    // adjustSize();
 }
 
 void ControllerDetails::on_buttonAddFriend_clicked() {

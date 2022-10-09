@@ -14,7 +14,10 @@
    <iconset resource="Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,1,0">
+  <property name="sizeGripEnabled">
+   <bool>true</bool>
+  </property>
+  <layout class="QVBoxLayout" name="_2">
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -127,6 +130,12 @@
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
          </spacer>
         </item>
        </layout>
@@ -221,6 +230,12 @@
          <spacer name="horizontalSpacer_2">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
           </property>
          </spacer>
         </item>
@@ -552,12 +567,6 @@ delay: difference between planned and calculated ETA</string>
       </item>
       <item row="4" column="1" colspan="3">
        <widget class="QLabel" name="lblRoute">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="mouseTracking">
          <bool>true</bool>
         </property>
@@ -587,6 +596,12 @@ delay: difference between planned and calculated ETA</string>
          <spacer name="horizontalSpacer_3">
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
           </property>
          </spacer>
         </item>
@@ -636,12 +651,6 @@ route</string>
       </item>
       <item row="6" column="1" colspan="3">
        <widget class="QLabel" name="lblRemarks">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
         <property name="text">
          <string>&lt;code&gt;PBN/A1B1D1O1S2 NAV/RNVD1E2A1 DOF/220222 REG/DABVM EET/EDUU0013 LOVV0029 LJLA0039 LDZO0044 LQSB0054 LYBA0109 BKPR0117 LWSS0124 LGGG0133 LTBB0212 LGGG0217 LCCC0235 HECC0255 OJAC0325 OEJD0334 OBBB0447 OMAE0508 RMK/TCAS /V/&lt;/code&gt;</string>
         </property>
