@@ -1,51 +1,38 @@
 /**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
+*  This file is part of QuteScoop. See README for license
+**************************************************************************/
 
 #ifndef BOOKEDCONTROLLER_H_
 #define BOOKEDCONTROLLER_H_
 
 #include "Client.h"
 #include "WhazzupData.h"
-#include "ClientDetails.h"
 
 #include <QJsonObject>
 
 class WhazzupData;
 class Sector;
 
+/*
+ * @todo:
+ * This is not a "Client" in the sense of a VATSIM client. This is rather a Dto to initialize
+ * actual "Controller"s from.
+ */
 class BookedController: public Client {
-    public:
-        BookedController(const QJsonObject& json, const WhazzupData* whazzup);
+public:
+    BookedController(const QJsonObject& json, const WhazzupData* whazzup);
 
-        bool isObserver() const { return facilityType == 0; }
-        bool isATC() const { return facilityType > 0; } // facilityType = 1 is reported for FSS stations and staff (at least from VATSIM)
+    QString facilityString() const;
 
-        virtual QString toolTip() const;
-        virtual QString mapLabel() const;
-        virtual QString rank() const;
-        virtual void showDetailsDialog() {} // not applicable
+    int facilityType;
 
-        QString facilityString() const;
-        QString getCenter(); // not const as we assign lat, lon
-        QString getApproach() const;
-        QString getTower() const;
-        QString getGround() const;
-        QString getDelivery() const;
+    // Booking values
+    QString link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
+    int bookingType;
 
-        QString frequency, atisMessage;
-        int facilityType, visualRange;
-
-        // Booking values
-        QString link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
-        int bookingType;
-
-        QDateTime starts() const;
-        QDateTime ends() const;
-
-        Sector *sector;
-
-    private:
+    QDateTime starts() const;
+    QDateTime ends() const;
+private:
 };
 
 #endif /*BOOKEDCONTROLLER_H_*/
