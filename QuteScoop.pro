@@ -10,6 +10,7 @@ DEFINES += GIT_BRANCH=$$GIT_BRANCH
 GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclude '*-*-*' --dirty --always)\\\""
 
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
+message(compiling version $$GIT_DESCRIBE)
 
 # maybe fixes version incompatibilities, gets ignored by clang
 QMAKE_CXXFLAGS += "-fno-sized-deallocation"
