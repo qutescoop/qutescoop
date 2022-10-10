@@ -95,9 +95,6 @@
             <bold>true</bold>
            </font>
           </property>
-          <property name="toolTip">
-           <string>ICAO aircraft type</string>
-          </property>
           <property name="text">
            <string>A319</string>
           </property>
@@ -195,9 +192,6 @@
            <font>
             <bold>true</bold>
            </font>
-          </property>
-          <property name="toolTip">
-           <string>current altitude</string>
           </property>
           <property name="text">
            <string>28000 ft</string>

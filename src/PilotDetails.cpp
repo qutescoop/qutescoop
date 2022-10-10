@@ -69,10 +69,27 @@ void PilotDetails::refresh(Pilot *pilot) {
 
     // Aircraft Information
     lblAircraft->setText(QString("%1").arg(_pilot->planAircraft));
+    lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
+
     lblAirline->setText(NavData::instance()->airlineStr(_pilot->airlineCode));
-    lblAltitude->setText(QString("%1 ft").arg(_pilot->altitude));
+    if (_pilot->altitude < 10000) {
+        lblAltitude->setText(
+          QString("%1 ft").arg(_pilot->altitude));
+    } else {
+        lblAltitude->setText(
+          QString("FL %1").arg(Pilot::altToFl(_pilot->altitude, _pilot->qnh_mb))
+        );
+    }
+    lblAltitude->setToolTip(
+      QString("local QNH %2 inHg / %3 hPa")
+        .arg(_pilot->qnh_inHg)
+        .arg(_pilot->qnh_mb)
+    );
+
     lblGroundspeed->setText(QString("%1 kts").arg(_pilot->groundspeed));
+
     lblSquawk->setText(QString("%1").arg(_pilot->transponder));
+    lblSquawk->setToolTip(QString("assigned: %1").arg(_pilot->transponderAssigned));
 
     // flight status
     groupStatus->setTitle(QString("Status: %1").arg(_pilot->flightStatusShortString()));

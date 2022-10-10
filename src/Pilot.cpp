@@ -6,10 +6,19 @@
 
 #include "PilotDetails.h"
 #include "NavData.h"
-#include "helpers.h"
 #include "Settings.h"
 
 #include <QJsonObject>
+
+int Pilot::altToFl(int alt_ft, int qnh_mb)
+{
+    int diff = qnh_mb - 1013;
+
+    // 27ft per mb
+    int fl_ft = alt_ft - diff * 27;
+
+    return qRound((float) fl_ft / 100);
+}
 
 Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
         Client(json, whazzup),
@@ -23,11 +32,15 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
     altitude = json["altitude"].toInt(); // we could do some barometric
                                     // calculations here (only for VATSIM needed)
     groundspeed = json["groundspeed"].toInt();
+
     // The JSON data provides 3 different aircraft data
     // 1: The full ICAO Data, this is too long to display
     // 2: The FAA Data, this is what was displayed previously
     // 3: The short Data, consisting only of the aircraft code
-    planAircraft = flightPlan["aircraft_faa"].toString();
+    planAircraftFull = flightPlan["aircraft"].toString();
+    planAircraft = flightPlan["aircraft_short"].toString();
+    planAircraftFaa = flightPlan["aircraft_faa"].toString();
+
     planTAS = flightPlan["cruise_tas"].toString();
     planDep = flightPlan["departure"].toString();
     planAlt = flightPlan["altitude"].toString();
@@ -37,6 +50,8 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
     airlineCode.resize(3);
 
     transponder = json["transponder"].toString();
+    transponderAssigned = flightPlan["assigned_transponder"].toString();
+
     planRevision = QString::number(flightPlan["revision_id"].toInt());
     planFlighttype = flightPlan["flight_rules"].toString();
     planDeptime = flightPlan["deptime"].toString();
@@ -50,16 +65,16 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
         planEnroute_hrs = -1;
     else
         planEnroute_hrs = tmpStr.toInt();
-    planEnroute_mins = timeEnroute.right(2).toInt();
-    planFuel_hrs = timeFuel.left(2).toInt();
-    planFuel_mins = timeFuel.right(2).toInt();
+    planEnroute_mins = timeEnroute.rightRef(2).toInt();
+    planFuel_hrs = timeFuel.leftRef(2).toInt();
+    planFuel_mins = timeFuel.rightRef(2).toInt();
     planAltAirport = flightPlan["alternate"].toString();
     planRemarks = flightPlan["remarks"].toString();
     planRoute = flightPlan["route"].toString();
 
     trueHeading = json["heading"].toInt();
-    qnh_inHg = QString::number(json["qnh_i_hg"].toDouble()); // VATSIM only
-    qnh_mb = QString::number(json["qnh_mb"].toInt()); // VATSIM only
+    qnh_inHg = json["qnh_i_hg"].toDouble();
+    qnh_mb = json["qnh_mb"].toInt();
     // day of flight
     if(!QTime::fromString(planDeptime, "HHmm").isValid()) // no Plan ETA given: maybe some more magic needed here
         dayOfFlight = whazzupTime.date();
@@ -369,13 +384,13 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
     altStr = altStr.trimmed();
     if(altStr.length() < 4 && altStr.toInt() != 0) // 280: naive mode
         return altStr.toInt() * 100;
-    if(altStr.left(2) == "FL") // FL280: bastard mode
+    if(altStr.leftRef(2) == "FL") // FL280: bastard mode
         return altStr.midRef(2).toInt() * 100;
-    if(altStr.at(0) == "F") // F280
+    if(altStr.leftRef(1) == "F") // F280
         return altStr.midRef(1).toInt() * 100;
-    if(altStr.at(0) == "A" && altStr.length() <= 4) // A45
+    if(altStr.leftRef(1) == "A" && altStr.length() <= 4) // A45
         return altStr.midRef(1).toInt() * 100;
-    if(altStr.at(0) == "A" && altStr.length() > 4) // A4500: idiot mode...
+    if(altStr.leftRef(1) == "A" && altStr.length() > 4) // A4500: idiot mode...
         return altStr.midRef(1).toInt();
     return altStr.toInt();
 }

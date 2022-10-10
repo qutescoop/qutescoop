@@ -5,8 +5,6 @@
 #ifndef PILOT_H_
 #define PILOT_H_
 
-#include "_pch.h"
-
 #include "Airport.h"
 #include "Client.h"
 #include "Waypoint.h"
@@ -17,6 +15,8 @@ class Airport;
 
 class Pilot: public Client {
     public:
+        static int altToFl(int alt_ft, int qnh_mb);
+
         enum FlightStatus {
             BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING,
             GROUND_ARR, BLOCKED, CRASHED, BUSH, PREFILED
@@ -56,16 +56,17 @@ class Pilot: public Client {
         QList<Waypoint*> routeWaypointsWithDepDest();
         void checkStatus(); // adjust label visibility from flight status
 
-        QString planAircraft, planTAS, planDep, planAlt, planDest,
+        QString planAircraft, planAircraftFaa, planAircraftFull,
+        planTAS, planDep, planAlt, planDest,
         planAltAirport, planRevision, planFlighttype, planDeptime,
-        transponder, planRemarks, planRoute, planActtime, airlineCode,
-        qnh_inHg, qnh_mb,
+        transponder, transponderAssigned, planRemarks, planRoute, planActtime, airlineCode,
         routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
         routeWaypointsPlanRouteCache;
         QDate dayOfFlight;
         int altitude, groundspeed, planEnroute_hrs, planEnroute_mins,
-        planFuel_hrs, planFuel_mins;
-        double trueHeading;
+        planFuel_hrs, planFuel_mins,
+        qnh_mb;
+        double trueHeading, qnh_inHg;
         bool showDepDestLine;
         QDateTime whazzupTime; // need some local reference to that
         QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
