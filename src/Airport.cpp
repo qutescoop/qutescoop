@@ -90,9 +90,9 @@ const GLuint& Airport::appDisplayList() {
     }
     glEnd();
 
-    glBegin(GL_LINE_LOOP);
     glLineWidth(borderLineWidth);
     glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+    glBegin(GL_LINE_LOOP);
     for(int i = 0; i <= 360; i += 10) {
         VERTEX(
             lat + deltaLat * qCos(i * Pi180),
@@ -142,10 +142,10 @@ const GLuint& Airport::twrDisplayList() {
     }
     glEnd();
 
-    if (Settings::appBorderLineWidth() > 0.) {
+    if (borderWidth > 0.) {
+        glLineWidth(borderWidth);
         glBegin(GL_LINE_LOOP);
         glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
-        glLineWidth(borderWidth);
         for(int i = 0; i < points.size(); i++) {
             VERTEX(points[i].y(), points[i].x());
         }
@@ -191,9 +191,9 @@ const GLuint& Airport::gndDisplayList() {
     glEnd();
 
     if (Settings::gndBorderLineWidth() > 0.) {
+        glLineWidth(Settings::gndBorderLineWidth());
         glBegin(GL_LINE_STRIP);
         glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
-        glLineWidth(Settings::gndBorderLineWidth());
         VERTEX(lat + outerDeltaLat, lon);
         VERTEX(lat + innerDeltaLat, lon + innerDeltaLon);
         VERTEX(lat, lon + outerDeltaLon);
@@ -243,9 +243,9 @@ const GLuint& Airport::delDisplayList() {
     glEnd();
 
     if (Settings::gndBorderLineWidth() > 0.) {
+        glLineWidth(borderLineWidth);
         glBegin(GL_LINE_LOOP);
         glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
-        glLineWidth(borderLineWidth);
         for(int i = 0; i < points.size(); i++) {
             VERTEX(points[i].y(), points[i].x());
         }
