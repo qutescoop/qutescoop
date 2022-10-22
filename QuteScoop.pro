@@ -166,6 +166,7 @@ HEADERS += src/_pch.h \
     src/Controller.h \
     src/Client.h \
     src/BookedController.h \
+    src/Airline.h \
     src/Airway.h \
     src/Airport.h \
     src/Airac.h \

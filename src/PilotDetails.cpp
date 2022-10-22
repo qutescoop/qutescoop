@@ -60,10 +60,11 @@ void PilotDetails::refresh(Pilot *pilot) {
           _pilot->detailInformation().isEmpty() ? "" : ", " + _pilot->detailInformation()
         )
     );
-    if (_pilot->server.isEmpty())
+    if (_pilot->server.isEmpty()) {
         lblConnected->setText(QString("<i>not connected</i>"));
-    else
+    } else {
         lblConnected->setText(QString("on %1 for %2 hrs").arg(_pilot->server, _pilot->onlineTime()));
+    }
 
     buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);
 
@@ -71,7 +72,13 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblAircraft->setText(QString("%1").arg(_pilot->planAircraft));
     lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
 
-    lblAirline->setText(NavData::instance()->airlineStr(_pilot->airlineCode));
+    if (_pilot->airline != 0) {
+        lblAirline->setText(QString("%1 \"%2\"").arg(_pilot->airline->code, _pilot->airline->callsign));
+        lblAirline->setToolTip(QString("%1, %2").arg(_pilot->airline->name, _pilot->airline->country));
+    } else {
+        lblAirline->setText("n/a");
+    }
+
     if (_pilot->altitude < 10000) {
         lblAltitude->setText(
           QString("%1 ft").arg(_pilot->altitude));
@@ -81,9 +88,10 @@ void PilotDetails::refresh(Pilot *pilot) {
         );
     }
     lblAltitude->setToolTip(
-      QString("local QNH %2 inHg / %3 hPa")
+      QString("local QNH %1 inHg / %2 hPa (%3 ft)")
         .arg(_pilot->qnh_inHg)
         .arg(_pilot->qnh_mb)
+        .arg(_pilot->altitude)
     );
 
     lblGroundspeed->setText(QString("%1 kts").arg(_pilot->groundspeed));

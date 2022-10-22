@@ -5,13 +5,9 @@
 #ifndef NAVDATA_H_
 #define NAVDATA_H_
 
-#include "_pch.h"
-
-#include "Airport.h"
 #include "Sector.h"
-#include "Airac.h"
-#include "GuiMessage.h"
 #include "SearchVisitor.h"
+#include "Airline.h"
 
 class NavData: public QObject {
         Q_OBJECT
@@ -23,7 +19,8 @@ class NavData: public QObject {
         QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
         QHash<QString, Sector*> sectors;
         QHash<QString, QString> countryCodes;
-        QString airlineStr(QString airlineCode);
+        QString airline(const QString &airlineCode);
+        QHash<QString, Airline*> airlines;
 
         Airport* airportAt(double lat, double lon, double maxDist) const;
 
@@ -52,7 +49,6 @@ class NavData: public QObject {
         void loadSectors();
         void loadCountryCodes(const QString& filename);
         void loadAirlineCodes(const QString& filename);
-        QHash<QString, QString> _airlineCodes;
 };
 
 #endif /*NAVDATA_H_*/

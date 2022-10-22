@@ -69,25 +69,35 @@ void NavData::loadSectors() {
     SectorReader().loadSectors(sectors);
 }
 
-void NavData::loadAirlineCodes(const QString &filename) {
-    qDebug() << "loading airline codes from" << filename;
-    _airlineCodes.clear();
-    if(filename.isEmpty()) {
+void NavData::loadAirlineCodes(const QString &filePath) {
+    qDebug() << "loading airlines from" << filePath;
+    foreach(const auto _a, airlines) {
+        delete _a;
+    }
+    airlines.clear();
+    if(filePath.isEmpty()) {
         qWarning() << "NavData::loadAirlineCodes() -- bad filename";
         return;
     }
-    FileReader fileReader(filename);
 
+    auto count = 0;
+    FileReader fileReader(filePath);
     while(!fileReader.atEnd()) {
-
-        QStringList line = fileReader.nextLine().split(0x09);   // 0x09 code for Tabulator
-        if (line.size() < 3) {
-            GuiMessages::warning(QString(tr("%1 has not the correct format to load the airlines!"))
-                                 .arg(filename));
-            return;
+        QString _line = fileReader.nextLine();
+        QStringList _fields = _line.split(0x09);   // 0x09 code for Tabulator
+        if (_fields.count() != 4) {
+            auto msg = QString("Could not load line '%1' (%2 fields) from %3")
+                .arg(_line).arg(_fields.count()).arg(filePath);
+            qCritical() << "NavData::loadAirlineCodes()" << msg;
+            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+            exit(EXIT_FAILURE);
         }
-        _airlineCodes[line.value(0)] = QString("%1 (c/s \"%2\")").arg(line.value(1), line.value(2));
+
+        auto airline = new Airline(_fields[0], _fields[1], _fields[2], _fields[3]);
+        airlines[airline->code] = airline;
+        count++;
     }
+    qDebug() << "loaded" << count << "airlines";
 }
 
 double NavData::distance(double lat1, double lon1, double lat2, double lon2) {
@@ -196,7 +206,7 @@ void NavData::accept(SearchVisitor* visitor) {
     foreach(Airport *a, airports) {
         visitor->visit(a);
     }
-    visitor->AirlineCodes = _airlineCodes;
+    visitor->AirlineCodes = airlines;
     visitor->checkAirlines();
 }
 
@@ -272,25 +282,35 @@ void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) {
 /** converts (oceanic) points from ARINC424 format
   @return 0 on error
 */
-QPair<double, double> *NavData::fromArinc(const QString &str) {
-	QRegExp arinc("(\\d{2})([NSEW]?)(\\d{2})([NSEW]?)"); // ARINC424 waypoints (strict)
-	if (arinc.exactMatch(str)) {
-		if (!arinc.capturedTexts()[2].isEmpty() ||
-			!arinc.capturedTexts()[4].isEmpty()) {
-			double wLat = arinc.capturedTexts()[1].toDouble();
-			double wLon = arinc.capturedTexts()[3].toDouble();
-			if (QRegExp("[SW]").exactMatch(arinc.capturedTexts()[2]) ||
-				QRegExp("[SW]").exactMatch(arinc.capturedTexts()[4]))
-				wLat = -wLat;
-			if (!arinc.capturedTexts()[2].isEmpty())
-				wLon = wLon + 100.;
-			if (QRegExp("[NW]").exactMatch(arinc.capturedTexts()[2]) ||
-				QRegExp("[NW]").exactMatch(arinc.capturedTexts()[4]))
-				wLon = -wLon;
-			return new QPair<double, double>(wLat, wLon);
-		}
-	}
-	return 0;
+QPair<double, double>*NavData::fromArinc(const QString &str) {
+    QRegExp arinc("(\\d{2})([NSEW]?)(\\d{2})([NSEW]?)");     // ARINC424 waypoints (strict)
+    if (arinc.exactMatch(str)) {
+        auto capturedTexts = arinc.capturedTexts();
+        if (
+            !capturedTexts[2].isEmpty()
+            || !capturedTexts[4].isEmpty()
+        ) {
+            double wLat = capturedTexts[1].toDouble();
+            double wLon = capturedTexts[3].toDouble();
+            if (
+                QRegExp("[SW]").exactMatch(capturedTexts[2])
+                || QRegExp("[SW]").exactMatch(capturedTexts[4])
+            ) {
+                wLat = -wLat;
+            }
+            if (!capturedTexts[2].isEmpty()) {
+                wLon = wLon + 100.;
+            }
+            if (
+                QRegExp("[NW]").exactMatch(capturedTexts[2])
+                || QRegExp("[NW]").exactMatch(capturedTexts[4])
+            ) {
+                wLon = -wLon;
+            }
+            return new QPair<double, double>(wLat, wLon);
+        }
+    }
+    return 0;
 }
 
 /** converts (oceanic) points to ARINC424 format
@@ -316,11 +336,4 @@ QString NavData::toArinc(const short lat, const short lon) { // returning QStrin
 			arg(qAbs(lon) >= 100? q: "").
 			arg(qAbs(lon) >= 100? qAbs(lon) - 100: qAbs(lon), 2, 10, QChar('0')).
 			arg(qAbs(lon) >= 100? "": q);
-}
-
-QString NavData::airlineStr(QString airlineCode) {
-    QString result;
-    result = _airlineCodes[airlineCode];
-    if(result.isEmpty()) result = tr("general aviation");
-    return result;
 }

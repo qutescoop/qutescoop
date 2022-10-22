@@ -4,7 +4,7 @@
 #ifndef FILEREADER_H_
 #define FILEREADER_H_
 
-#include "_pch.h"
+#include <QtCore>
 
 class FileReader {
     public:

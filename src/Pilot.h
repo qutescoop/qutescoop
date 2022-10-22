@@ -5,6 +5,7 @@
 #ifndef PILOT_H_
 #define PILOT_H_
 
+#include "Airline.h"
 #include "Airport.h"
 #include "Client.h"
 #include "Waypoint.h"
@@ -59,7 +60,7 @@ class Pilot: public Client {
         QString planAircraft, planAircraftFaa, planAircraftFull,
         planTAS, planDep, planAlt, planDest,
         planAltAirport, planRevision, planFlighttype, planDeptime,
-        transponder, transponderAssigned, planRemarks, planRoute, planActtime, airlineCode,
+        transponder, transponderAssigned, planRemarks, planRoute, planActtime,
         routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
         routeWaypointsPlanRouteCache;
         QDate dayOfFlight;
@@ -70,6 +71,7 @@ class Pilot: public Client {
         bool showDepDestLine;
         QDateTime whazzupTime; // need some local reference to that
         QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
+        Airline* airline;
     private:
 };
 

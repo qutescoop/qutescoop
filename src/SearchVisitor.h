@@ -7,12 +7,11 @@
 
 #include <QHash>
 
-
 #include "MapObjectVisitor.h"
 #include "MapObject.h"
 #include "Controller.h"
-#include "BookedController.h"
 #include "Pilot.h"
+#include "Airline.h"
 
 class SearchVisitor : public MapObjectVisitor {
     public:
@@ -20,7 +19,7 @@ class SearchVisitor : public MapObjectVisitor {
         virtual void visit(MapObject *object);
         virtual void checkAirlines(void);
         virtual QList<MapObject*> result() const;
-        QHash<QString, QString> AirlineCodes;
+        QHash<QString, Airline*> AirlineCodes;
     protected:
         QRegExp _regex;
         QHash<QString, Pilot*> _pilots;
