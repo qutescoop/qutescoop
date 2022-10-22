@@ -999,10 +999,6 @@ void GLWidget::paintGL() {
         double range = (time.second()%5);
         range += (time.msec()%500)/1000;
 
-        GLfloat red = Settings::friendsHighlightColor().redF();
-        GLfloat green = Settings::friendsHighlightColor().greenF();
-        GLfloat blue = Settings::friendsHighlightColor().blueF();
-        GLfloat alpha = Settings::friendsHighlightColor().alphaF();
         double lineWidth = Settings::highlightLineWidth();
         if(!Settings::useHighlightAnimation()) {
             range = 0;
@@ -1013,9 +1009,9 @@ void GLWidget::paintGL() {
             if (qFuzzyIsNull(_friend.first) && qFuzzyIsNull(_friend.second))
                 continue;
 
-            glBegin(GL_LINE_LOOP);
             glLineWidth(lineWidth);
-            glColor4f(red, green, blue, alpha);
+            qglColor(Settings::friendsHighlightColor());
+            glBegin(GL_LINE_LOOP);
             GLdouble circle_distort = qCos(_friend.first * Pi180);
             for(int i = 0; i <= 360; i += 10) {
                 double x = _friend.first  + Nm2Deg((80-(range*20))) * circle_distort * qCos(i * Pi180);
