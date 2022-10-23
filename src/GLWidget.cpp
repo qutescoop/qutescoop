@@ -1456,7 +1456,7 @@ void GLWidget::renderLabelsComplex(const QList<MapObject *> &objects, const QFon
         return; // don't draw if too far away or color-alpha == 0
 
     // fade out
-    color.setAlphaF(qMax(0., qMin(1., (zoomTreshold - _zoom) / zoomTreshold * 1.5))); // fade out
+    color.setAlphaF(qMax(0., qMin(color.alphaF(), (zoomTreshold - _zoom) / zoomTreshold * 1.5))); // fade out
 
     // fade out: shadow
     if (bgColor.isValid())
