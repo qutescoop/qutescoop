@@ -2,11 +2,10 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "Pilot.h"
-
 #include "PilotDetails.h"
 #include "NavData.h"
 #include "Settings.h"
+#include "Airac.h"
 
 #include <QJsonObject>
 
@@ -46,8 +45,9 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
     planAlt = flightPlan["altitude"].toString();
     planDest = flightPlan["arrival"].toString();
 
-    airlineCode = json["callsign"].toString();
-    airlineCode.resize(3);
+    auto _airlineCode = json["callsign"].toString();
+    _airlineCode.resize(3);
+    airline = NavData::instance()->airlines.value(_airlineCode, 0);
 
     transponder = json["transponder"].toString();
     transponderAssigned = flightPlan["assigned_transponder"].toString();
@@ -82,6 +82,7 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
         dayOfFlight = whazzupTime.date();
     else
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
+
 
     checkStatus();
 

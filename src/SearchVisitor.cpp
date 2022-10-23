@@ -45,17 +45,12 @@ void SearchVisitor::visit(MapObject* object) {
 }
 
 void SearchVisitor::checkAirlines() {
-    QHashIterator<QString, QString> i(AirlineCodes);
+    QHashIterator<QString, Airline*> i(AirlineCodes);
     while (i.hasNext()) {
         i.next();
-        if (i.key().contains(_regex)) {
-            _otherStrings[i.key()] = i.value();
+        if (i.key().contains(_regex) || i.value()->name.contains(_regex)) {
+            _otherStrings[i.key()] = i.value()->name;
         }
-
-        if(i.value().contains(_regex)) {
-            _otherStrings[i.key()] = i.value();
-        }
-
     }
 }
 
