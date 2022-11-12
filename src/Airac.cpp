@@ -424,6 +424,6 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
 
 QString Airac::fpTokenToWaypoint(QString token) const
 {
-  // remove everything following an invalid character (e.g. "/N320F240")
+  // remove everything following an invalid character (e.g. "/N320F240", "/S1130K400")
   return token.replace(QRegExp("[^A-Za-z0-9].*$"), "");
 }

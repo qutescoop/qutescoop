@@ -40,6 +40,6 @@ const double Pi180 = M_PI / 180.;
 
 /* units */
 #define Nm2Deg(miles) (miles / 60.0)
-
+#define mToFt(m) (m * 3.28084)
 
 #endif /*HELPERS_H_*/
