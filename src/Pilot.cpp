@@ -6,6 +6,7 @@
 #include "NavData.h"
 #include "Settings.h"
 #include "Airac.h"
+#include "helpers.h"
 
 #include <QJsonObject>
 
@@ -393,6 +394,10 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
         return altStr.midRef(1).toInt() * 100;
     if(altStr.leftRef(1) == "A" && altStr.length() > 4) // A4500: idiot mode...
         return altStr.midRef(1).toInt();
+    if(altStr.leftRef(1) == "S") // S1130 (FL 1130m)
+        return mToFt(altStr.midRef(1).toInt());
+    if(altStr.leftRef(1) == "M" && altStr.length() <= 4) // M0840 (840m)
+        return mToFt(altStr.midRef(1).toInt());
     return altStr.toInt();
 }
 
