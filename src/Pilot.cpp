@@ -12,12 +12,15 @@
 
 int Pilot::altToFl(int alt_ft, int qnh_mb)
 {
-    int diff = qnh_mb - 1013;
+    float diff = qnh_mb - 1013.25;
 
-    // 27ft per mb
-    int fl_ft = alt_ft - diff * 27;
+    // https://edwilliams.org/avform147.htm
+    // https://www.pprune.org/tech-log/123900-temp-height-change-per-millibar.html
 
-    return qRound((float) fl_ft / 100);
+    // 30ft per mb - this is what xPilot uses for XP11
+    float fl_ft = alt_ft - diff * 30;
+
+    return qRound(fl_ft / 100.);
 }
 
 Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
