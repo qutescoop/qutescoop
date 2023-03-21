@@ -25,7 +25,8 @@ int Pilot::altToFl(int alt_ft, int qnh_mb)
 
 Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
         Client(json, whazzup),
-        showDepDestLine(false) {
+        showDepDestLine(false),
+        airline(0) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
     QJsonObject flightPlan = json["flight_plan"].toObject();
@@ -49,9 +50,11 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
     planAlt = flightPlan["altitude"].toString();
     planDest = flightPlan["arrival"].toString();
 
-    auto _airlineCode = json["callsign"].toString();
-    _airlineCode.resize(3);
-    airline = NavData::instance()->airlines.value(_airlineCode, 0);
+    QRegExp _airlineRegEx("([A-Z]{3})[0-9].*");
+    if (_airlineRegEx.exactMatch(label)) {
+        auto _capturedTexts = _airlineRegEx.capturedTexts();
+        airline = NavData::instance()->airlines.value(_capturedTexts[1], 0);
+    }
 
     transponder = json["transponder"].toString();
     transponderAssigned = flightPlan["assigned_transponder"].toString();
