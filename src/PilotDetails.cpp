@@ -79,14 +79,7 @@ void PilotDetails::refresh(Pilot *pilot) {
         lblAirline->setText("n/a");
     }
 
-    if (_pilot->altitude < 10000) {
-        lblAltitude->setText(
-          QString("%1 ft").arg(_pilot->altitude));
-    } else {
-        lblAltitude->setText(
-          QString("FL %1").arg(Pilot::altToFl(_pilot->altitude, _pilot->qnh_mb))
-        );
-    }
+    lblAltitude->setText(_pilot->humanAlt());
     lblAltitude->setToolTip(
       QString("local QNH %1 inHg / %2 hPa (%3 ft)")
         .arg(_pilot->qnh_inHg)

@@ -28,6 +28,7 @@ class Pilot: public Client {
         virtual QString toolTip() const;
         virtual QString rank() const;
         virtual void showDetailsDialog();
+        virtual QString mapLabel() const { return QString("%1 %2").arg(label, shortAlt()); }
 
         FlightStatus flightStatus() const;
         QString flightStatusString() const;
@@ -48,6 +49,8 @@ class Pilot: public Client {
         QString delayStr() const;
         int planTasInt() const; // defuck TAS for Mach numbers
         int defuckPlanAlt(QString alt) const; // returns an altitude from various flightplan strings
+        QString humanAlt() const; // altitude as string, prefixed with FL if applicable
+        QString shortAlt() const; // altitude prefixed with F
         QPair<double, double> positionInFuture(int seconds) const;
         int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
         bool showDepLine() const,
