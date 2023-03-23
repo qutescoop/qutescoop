@@ -206,8 +206,7 @@ void NavData::accept(SearchVisitor* visitor) {
     foreach(Airport *a, airports) {
         visitor->visit(a);
     }
-    visitor->AirlineCodes = airlines;
-    visitor->checkAirlines();
+    visitor->airlines = airlines;
 }
 
 double NavData::courseTo(double lat1, double lon1, double lat2, double lon2) {
