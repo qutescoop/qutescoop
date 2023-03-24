@@ -259,7 +259,7 @@ jobs:
           tag: ${{ needs.facts.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: delete potential stray release
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
         if: failure()
         with:
           delete_release: true
