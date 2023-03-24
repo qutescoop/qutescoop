@@ -26,71 +26,27 @@ void SearchVisitor::visit(MapObject* object) {
     if(!object->matches(_regex))
         return;
 
-    Pilot *p = dynamic_cast<Pilot*>(object);
-    if(p != 0) {
-        _pilots[p->label] = p;
-        return;
-    }
-
-    Controller *c = dynamic_cast<Controller*>(object);
-    if(c != 0) {
-        if(c->isObserver())
-            _observers[c->label] = c;
-        else
-            _controllers[c->label] = c;
-        return;
-    }
-
-    _others[object->label] = object;
-}
-
-void SearchVisitor::checkAirlines() {
-    QHashIterator<QString, Airline*> i(AirlineCodes);
-    while (i.hasNext()) {
-        i.next();
-        if (i.key().contains(_regex) || i.value()->name.contains(_regex)) {
-            _otherStrings[i.key()] = i.value()->name;
-        }
-    }
+    _resultFromVisitors.append(object);
 }
 
 QList<MapObject*> SearchVisitor::result() const {
-    QList<MapObject*> result;
+    QList<MapObject*> result(_resultFromVisitors);
 
-    //airlines
-    QList<QString> labels = _otherStrings.keys();
-    labels.sort();
-    for(int i = 0; i < labels.size(); i++) {
-        MapObject *object = new MapObject();
-        object->label = labels[i];
-        object->label.append("  ");
-        object->label.append(_otherStrings[labels[i]]);
-        result.append(object);
+    // airlines - this is not using the visitor model
+    foreach (const Airline *_airline, airlines) {
+        if (_airline->code.contains(_regex) || _airline->name.contains(_regex) || _airline->callsign.contains(_regex)) {
+            // we make it into a MapObject, because that fits the results here well
+            MapObject *object = new MapObject(
+                _airline->label(),
+                _airline->toolTip()
+            );
+            result.append(object);
+        }
     }
 
-    // airports
-    labels = _others.keys();
-    labels.sort();
-    for(int i = 0; i < labels.size(); i++)
-        result.append(_others[labels[i]]);
-
-    // controllers
-    labels = _controllers.keys();
-    labels.sort();
-    for(int i = 0; i < labels.size(); i++)
-        result.append(_controllers[labels[i]]);
-
-    // pilots
-    labels = _pilots.keys();
-    labels.sort();
-    for(int i = 0; i < labels.size(); i++)
-        result.append(_pilots[labels[i]]);
-
-    // observers
-    labels = _observers.keys();
-    labels.sort();
-    for(int i = 0; i < labels.size(); i++)
-        result.append(_observers[labels[i]]);
+    std::sort(result.begin(), result.end(), [](const MapObject* a, const MapObject* b) {
+        return a->toolTip() < b->mapLabel();
+    });
 
     return result;
 }

@@ -2,9 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
+#include "Pilot.h"
 #include "SearchResultModel.h"
-
-#include "Window.h"
 
 SearchResultModel::SearchResultModel(QObject *parent):
     QAbstractListModel(parent) {
@@ -29,11 +28,14 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
         switch(index.column()) {
         case 0: return o->toolTip(); break;
         }
-    }
-
-    if(role == Qt::FontRole) {
+    } else if (role == Qt::ToolTipRole) {
+        MapObject* o = _content[index.row()];
+        switch(index.column()) {
+        case 0: return o->mapLabel(); break;
+        }
+    } else if (role == Qt::FontRole) {
         QFont result;
-        //prefiled italic
+        // prefiled italic
         if(dynamic_cast<Pilot*>(_content[index.row()])) {
             Pilot *p = dynamic_cast<Pilot*>(_content[index.row()]);
             if(p->flightStatus() == Pilot::PREFILED) {
@@ -41,7 +43,7 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
             }
         }
 
-        //friends bold
+        // friends bold
         Client *c = dynamic_cast<Client*>(_content[index.row()]);
         if(c == 0) return QVariant();
 

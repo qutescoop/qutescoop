@@ -73,20 +73,13 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
 
     if (_pilot->airline != 0) {
-        lblAirline->setText(QString("%1 \"%2\"").arg(_pilot->airline->code, _pilot->airline->callsign));
-        lblAirline->setToolTip(QString("%1, %2").arg(_pilot->airline->name, _pilot->airline->country));
+        lblAirline->setText(_pilot->airline->label());
+        lblAirline->setToolTip(_pilot->airline->toolTip());
     } else {
         lblAirline->setText("n/a");
     }
 
-    if (_pilot->altitude < 10000) {
-        lblAltitude->setText(
-          QString("%1 ft").arg(_pilot->altitude));
-    } else {
-        lblAltitude->setText(
-          QString("FL %1").arg(Pilot::altToFl(_pilot->altitude, _pilot->qnh_mb))
-        );
-    }
+    lblAltitude->setText(_pilot->humanAlt());
     lblAltitude->setToolTip(
       QString("local QNH %1 inHg / %2 hPa (%3 ft)")
         .arg(_pilot->qnh_inHg)

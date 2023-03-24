@@ -7,6 +7,8 @@
 
 #include <QtCore>
 
+#include <src/Client.h>
+
 class Airline {
 public:
     Airline(const QString& code, const QString& name, const QString& callsign, const QString& country) :
@@ -15,6 +17,15 @@ public:
         callsign(callsign),
         country(country){
     }
+
+    QString label() const {
+        return QString("%1 \"%2\"").arg(code, callsign);
+    }
+
+    QString toolTip() const {
+        return QString("%1, %2").arg(name, country);
+    }
+
     virtual ~Airline() {
     }
 

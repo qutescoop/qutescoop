@@ -31,10 +31,9 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
 
     QJsonObject flightPlan = json["flight_plan"].toObject();
 
-    rating = json["pilot_rating"].toInt(); // Use the correct rating
+    rating = json["pilot_rating"].toInt();
 
-    altitude = json["altitude"].toInt(); // we could do some barometric
-                                    // calculations here (only for VATSIM needed)
+    altitude = json["altitude"].toInt();
     groundspeed = json["groundspeed"].toInt();
 
     // The JSON data provides 3 different aircraft data
@@ -246,8 +245,9 @@ QString Pilot::planFlighttypeString() const {
 }
 
 QString Pilot::toolTip() const {
-    return Client::toolTip() +
-            (!planDep.isEmpty() || !planDest.isEmpty()? " " + planDep + "-" + planDest: "");
+    return Client::toolTip()
+            + (!planDep.isEmpty() || !planDest.isEmpty()? " " + planDep + "-" + planDest: "")
+            + " " + humanAlt();
 }
 
 QString Pilot::rank() const {
@@ -405,6 +405,19 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
     if(altStr.leftRef(1) == "M" && altStr.length() <= 4) // M0840 (840m)
         return mToFt(altStr.midRef(1).toInt());
     return altStr.toInt();
+}
+
+QString Pilot::humanAlt() const
+{
+    if (altitude < 10000) {
+        return QString("%1 ft").arg(altitude);
+    }
+    return QString("FL %1").arg(Pilot::altToFl(altitude, qnh_mb));
+}
+
+QString Pilot::shortAlt() const
+{
+    return QString("F%1").arg(Pilot::altToFl(altitude, qnh_mb));
 }
 
 QStringList Pilot::waypoints() const {

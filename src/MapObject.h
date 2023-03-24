@@ -11,6 +11,7 @@ class MapObject: public QObject {
         Q_OBJECT
     public:
         MapObject();
+        MapObject(QString label, QString toolTip);
         MapObject(const MapObject& obj);
         MapObject& operator=(const MapObject& obj);
         virtual ~MapObject();
@@ -19,13 +20,15 @@ class MapObject: public QObject {
 
         virtual bool matches(const QRegExp& regex) const { return label.contains(regex); }
         virtual QString mapLabel() const { return label; }
-        virtual QString toolTip() const { return label; }
+        virtual QString toolTip() const { return _toolTip; }
 
-        virtual void showDetailsDialog() {return;}
+        virtual void showDetailsDialog() {}
 
         double lat, lon;
         QString label;
         bool drawLabel;
+    protected:
+        QString _toolTip;
 };
 
 #endif /*MAPOBJECT_H_*/
