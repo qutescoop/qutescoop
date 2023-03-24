@@ -73,8 +73,8 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
 
     if (_pilot->airline != 0) {
-        lblAirline->setText(QString("%1 \"%2\"").arg(_pilot->airline->code, _pilot->airline->callsign));
-        lblAirline->setToolTip(QString("%1, %2").arg(_pilot->airline->name, _pilot->airline->country));
+        lblAirline->setText(_pilot->airline->label());
+        lblAirline->setToolTip(_pilot->airline->toolTip());
     } else {
         lblAirline->setText("n/a");
     }
