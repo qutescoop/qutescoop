@@ -69,7 +69,9 @@ void PilotDetails::refresh(Pilot *pilot) {
     buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);
 
     // Aircraft Information
-    lblAircraft->setText(QString("%1").arg(_pilot->planAircraft));
+    lblAircraft->setText(
+        QString("<a href='https://doc8643.com/aircraft/%1'>%1</a>").arg(_pilot->planAircraft)
+    );
     lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
 
     if (_pilot->airline != 0) {
