@@ -45,7 +45,7 @@ QString Client::displayName(bool withLink) const {
         QString link = Whazzup::instance()->userUrl(userId);
         if(link.isEmpty())
             return result;
-        result = QString("<a href='%1'>%2</a>").arg(link, result);
+        result = QString("<a href='%1'>%2</a>").arg(link, result.toHtmlEscaped());
     }
 
     return result;

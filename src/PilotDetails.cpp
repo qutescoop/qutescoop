@@ -70,7 +70,7 @@ void PilotDetails::refresh(Pilot *pilot) {
 
     // Aircraft Information
     lblAircraft->setText(
-        QString("<a href='https://doc8643.com/aircraft/%1'>%1</a>").arg(_pilot->planAircraft)
+        QString("<a href='https://doc8643.com/aircraft/%1'>%1</a>").arg(_pilot->planAircraft.toHtmlEscaped())
     );
     lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
 
@@ -114,11 +114,11 @@ void PilotDetails::refresh(Pilot *pilot) {
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));
     lblFuel->setText(QTime(_pilot->planFuel_hrs, _pilot->planFuel_mins).toString("H:mm"));
-    lblRoute->setText(QString("<code>%1</code>").arg(_pilot->planRoute));
+    lblRoute->setText(QString("<code>%1</code>").arg(_pilot->planRoute.toHtmlEscaped()));
     lblPlanTas->setText(QString("N%1").arg(_pilot->planTasInt()));
     lblPlanFl->setText(QString("F%1").arg(_pilot->defuckPlanAlt(_pilot->planAlt)/100));
     lblPlanEte->setText(QString("%1").arg(QTime(_pilot->planEnroute_hrs, _pilot->planEnroute_mins).toString("H:mm")));
-    lblRemarks->setText(QString("<code>%1</code>").arg(_pilot->planRemarks));
+    lblRemarks->setText(QString("<code>%1</code>").arg(_pilot->planRemarks.toHtmlEscaped()));
 
     // check if we know userId
     bool invalidID = !(_pilot->hasValidID());
