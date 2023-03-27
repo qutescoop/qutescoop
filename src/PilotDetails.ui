@@ -98,6 +98,9 @@
           <property name="text">
            <string>A319</string>
           </property>
+          <property name="openExternalLinks">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
         <item>
