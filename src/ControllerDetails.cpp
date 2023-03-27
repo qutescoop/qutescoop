@@ -77,7 +77,9 @@ void ControllerDetails::refresh(Controller *newController) {
     pbAirportDetails->setVisible(_controller->airport() != 0);
     pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
 
-    QString atis = QString("<code style='margin: 50px; padding: 50px'>%1</code>").arg(_controller->atisMessage);
+    QString atis = QString("<code style='margin: 50px; padding: 50px'>%1</code>").arg(
+        QString(_controller->atisMessage).replace("\n", "<br>")
+    );
     if (_controller->assumeOnlineUntil.isValid())
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(_controller->assumeOnlineUntil.toString("HHmm"));

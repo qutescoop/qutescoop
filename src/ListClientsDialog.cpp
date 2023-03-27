@@ -48,10 +48,10 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     treeListClients->setColumnWidth(2, 200);
     treeListClients->setColumnWidth(3, 100);
     treeListClients->setColumnWidth(12, 800); // FP remarks
+    treeListClients->setColumnWidth(13, 800); // controller info
     treeListClients->header()->setMinimumHeight(fontMetrics().lineSpacing() * 3);
 
-    connect(treeListClients, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(modelSelected(const QModelIndex&)));
+    connect(treeListClients, &QAbstractItemView::clicked, this, &ListClientsDialog::modelSelected);
 
     // servers
     QStringList serverHeaders;
@@ -234,7 +234,7 @@ void ListClientsDialog::on_pbPingServers_clicked() {
 void ListClientsDialog::pingNextFromStack() {
     if (!_pingStack.empty()) {
         Ping *ping = new Ping();
-        connect(ping, SIGNAL(havePing(QString,int)), SLOT(pingReceived(QString,int)));
+        connect(ping, &Ping::havePing, this, &ListClientsDialog::pingReceived);
         ping->startPing(_pingStack.pop());
     }
 }
