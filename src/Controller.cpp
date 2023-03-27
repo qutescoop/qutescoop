@@ -5,7 +5,6 @@
 #include "Controller.h"
 
 #include "Client.h"
-#include "ClientDetails.h"
 #include "ControllerDetails.h"
 #include "NavData.h"
 
@@ -25,7 +24,7 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
     if (json.contains("text_atis") && json["text_atis"].isArray()) {
         QJsonArray atis = json["text_atis"].toArray();
         for (int i = 0; i < atis.size(); ++i) {
-            atisMessage += atis[i].toString() + " <br>";
+            atisMessage += atis[i].toString() + "\n";
         }
     }
 

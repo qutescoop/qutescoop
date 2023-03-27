@@ -4,13 +4,12 @@
 
 #include "ListClientsDialogModel.h"
 
-#include "Whazzup.h"
 #include "NavData.h"
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
     qDebug() << "ListClientsDialogModel::setClients()";
     beginResetModel();
-    this->_clients = clients;
+    _clients = clients;
     endResetModel();
     qDebug() << "ListClientsDialogModel::setClients() -- finished";
 }
@@ -37,6 +36,7 @@ QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation or
         case 10: return QString("Pilot:\nroute dist [NM]");
         case 11: return QString("Pilot:\naircraft (FP)");
         case 12: return QString("Pilot:\nFP remarks");
+        case 13: return QString("ATC:\ncontroller\ninfo");
     }
     return QVariant();
 }
@@ -97,6 +97,7 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
                 return QString();
             case 11: return p != 0? p->planAircraft: QString();
             case 12: return p != 0? p->planRemarks: QString();
+            case 13: return co != 0? QString(co->atisMessage).replace("\n", " – "): QString();
         }
     }
 
@@ -108,7 +109,7 @@ int ListClientsDialogModel::rowCount(const QModelIndex&) const {
 }
 
 int ListClientsDialogModel::columnCount(const QModelIndex&) const {
-    return 13;
+    return 14;
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {
