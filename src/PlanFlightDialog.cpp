@@ -9,7 +9,7 @@
 #include "Route.h"
 #include "Window.h"
 #include "NavData.h"
-#include "AirportDetails.h"
+#include "Net.h"
 #include "helpers.h"
 
 PlanFlightDialog *planFlightDialogInstance = 0;

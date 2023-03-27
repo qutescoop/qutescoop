@@ -5,9 +5,10 @@
 #ifndef CLIENTSELECTIONWIDGET_H_
 #define CLIENTSELECTIONWIDGET_H_
 
-#include "_pch.h"
-
 #include "MapObject.h"
+
+#include <QListWidget>
+#include <QtGui>
 
 class ClientSelectionWidget : public QListWidget {
         Q_OBJECT

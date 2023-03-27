@@ -1,8 +1,9 @@
 #ifndef METARDELEGATE_H
 #define METARDELEGATE_H
 
+#include <QPainter>
 #include <QStyledItemDelegate>
-#include <QObject>
+#include <QtCore>
 
 class MetarDelegate : public QStyledItemDelegate
 {

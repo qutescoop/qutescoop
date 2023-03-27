@@ -7,14 +7,9 @@
 
 #include "ui_AirportDetails.h"
 
-#include "_pch.h"
-
 #include "ClientDetails.h"
 #include "Airport.h"
 #include "MetarModel.h"
-#include "Whazzup.h"
-#include "Settings.h"
-
 #include "AirportDetailsAtcModel.h"
 #include "AirportDetailsArrivalsModel.h"
 #include "AirportDetailsDeparturesModel.h"

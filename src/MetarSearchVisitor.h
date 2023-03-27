@@ -11,10 +11,10 @@ class MetarSearchVisitor : public SearchVisitor {
     public:
         MetarSearchVisitor(const QString& search): SearchVisitor(search) {}
         virtual void visit(MapObject *object);
-        virtual QList<MapObject*> result();
-        QList<Airport*> airports();
+        QList<Airport*> airports() const;
 
-    private:
+        virtual QList<MapObject*> result() const;
+private:
         QHash<QString, Airport*> _airportMap;
 };
 

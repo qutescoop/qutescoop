@@ -5,7 +5,13 @@
 #include "Launcher.h"
 #include "SondeData.h"
 #include "JobList.h"
-#include "Platform.h"
+#include "Net.h"
+#include "Airac.h"
+#include "GuiMessage.h"
+#include "Window.h"
+#include "Whazzup.h"
+#include "Settings.h"
+#include "NavData.h"
 
 // singleton instance
 Launcher *launcherInstance = 0;

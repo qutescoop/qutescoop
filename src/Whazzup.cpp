@@ -4,10 +4,10 @@
 
 #include "Whazzup.h"
 
-#include "_pch.h"
-
 #include "Settings.h"
 #include "Window.h"
+#include "Net.h"
+#include "GuiMessage.h"
 
 Whazzup *whazzupInstance = 0;
 

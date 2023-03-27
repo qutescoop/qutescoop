@@ -3,9 +3,9 @@
  **************************************************************************/
 
 #include "PilotDetails.h"
-#include "NavData.h"
 #include "Window.h"
 #include "Whazzup.h"
+#include "Settings.h"
 
 //singleton instance
 PilotDetails *pilotDetails = 0;

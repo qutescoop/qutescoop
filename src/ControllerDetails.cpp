@@ -7,7 +7,6 @@
 #include "Window.h"
 #include "Settings.h"
 #include "Whazzup.h"
-#include "helpers.h"
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;

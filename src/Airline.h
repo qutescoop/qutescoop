@@ -7,8 +7,6 @@
 
 #include <QtCore>
 
-#include <src/Client.h>
-
 class Airline {
 public:
     Airline(const QString& code, const QString& name, const QString& callsign, const QString& country) :

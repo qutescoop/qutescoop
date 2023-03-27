@@ -3,6 +3,9 @@
  **************************************************************************/
 
 #include "AirportDetailsDeparturesModel.h"
+#include "Airport.h"
+
+#include <QFont>
 
 void AirportDetailsDeparturesModel::setClients(const QList<Pilot*>& pilots) {
     beginResetModel();

@@ -5,8 +5,6 @@
 #ifndef LISTCLIENTSDIALOGMODEL_H_
 #define LISTCLIENTSDIALOGMODEL_H_
 
-#include "_pch.h"
-
 #include "Client.h"
 
 class ListClientsDialogModel : public QAbstractTableModel {

@@ -1,4 +1,5 @@
 #include "Net.h"
+#include "Settings.h"
 
 
 //Single instance

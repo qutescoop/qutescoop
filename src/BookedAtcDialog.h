@@ -7,8 +7,6 @@
 
 #include "ui_BookedAtcDialog.h"
 
-#include "_pch.h"
-
 #include "BookedAtcDialogModel.h"
 #include "BookedAtcSortFilter.h"
 

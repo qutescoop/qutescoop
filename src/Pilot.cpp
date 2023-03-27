@@ -2,7 +2,10 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
+#include "Pilot.h"
+
 #include "PilotDetails.h"
+#include "Airport.h"
 #include "NavData.h"
 #include "Settings.h"
 #include "Airac.h"

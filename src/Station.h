@@ -1,12 +1,11 @@
+// TODO: remove
+
 #ifndef STATION_H
 #define STATION_H
 
 #include <QHash>
 #include <QPair>
 
-#include "NavData.h"
-#include "helpers.h"
-#include "Settings.h"
 #include "MapObject.h"
 
 class Station: public MapObject {

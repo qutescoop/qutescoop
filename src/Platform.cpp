@@ -2,8 +2,6 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "_pch.h"
-
 #include "Platform.h"
 
 QString Platform::platformOS() {

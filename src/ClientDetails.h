@@ -5,18 +5,19 @@
 #ifndef CLIENTDETAILS_H_
 #define CLIENTDETAILS_H_
 
-#include "_pch.h"
-
 #include "MapObject.h"
+
+#include <QDialog>
+
+class Client;
 class MapObject;
 
 class ClientDetails : public QDialog {
         Q_OBJECT
 
     protected:
-        ClientDetails(QWidget *parent);
-        virtual void refresh() {}
-        void setMapObject(MapObject *object);
+        ClientDetails(QWidget*);
+        void setMapObject(MapObject*);
 
     protected slots:
         void showOnMap() const;

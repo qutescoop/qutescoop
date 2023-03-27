@@ -7,8 +7,6 @@
 
 #include "ui_Window.h"
 
-#include "_pch.h"
-
 #include "MapScreen.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"

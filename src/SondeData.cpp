@@ -1,6 +1,10 @@
+// TODO: remove
+
 #include "SondeData.h"
 #include "Window.h"
 #include "Net.h"
+#include "GuiMessage.h"
+#include "Settings.h"
 
 SondeData *windDataInstance = 0;
 SondeData *SondeData::instance(bool createIfNoInstance) {

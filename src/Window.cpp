@@ -5,7 +5,7 @@
 #include "Window.h"
 
 #include "GLWidget.h"
-#include "ClientDetails.h"
+#include "Net.h"
 #include "PilotDetails.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
@@ -19,7 +19,6 @@
 #include "MetarSearchVisitor.h"
 #include "NavData.h"
 #include "FriendsVisitor.h"
-#include "helpers.h"
 #include "GuiMessage.h"
 #include "SectorView.h"
 #include "Platform.h"

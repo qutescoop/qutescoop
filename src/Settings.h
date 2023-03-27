@@ -5,7 +5,7 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
-#include "_pch.h"
+#include <QtCore>
 
 class Settings {
     public:

@@ -7,9 +7,9 @@
 
 #include "ui_PlanFlightDialog.h"
 
-#include "_pch.h"
-
 #include "PlanFlightRoutesModel.h"
+
+#include <QtNetwork>
 
 class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
         Q_OBJECT

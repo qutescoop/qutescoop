@@ -7,8 +7,6 @@
 
 #include "ui_ListClientsDialog.h"
 
-#include "_pch.h"
-
 #include "ListClientsDialogModel.h"
 
 class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {

@@ -5,7 +5,9 @@
 #ifndef HELPERS_H_
 #define HELPERS_H_
 
-#include "_pch.h"
+#include <QPair>
+#include <math.h>
+
 
 // typedefs: needed to get the QPair template running inside foreach's
 typedef QPair<double, double> DoublePair;

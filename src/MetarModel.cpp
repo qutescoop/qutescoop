@@ -4,7 +4,7 @@
 
 #include "MetarModel.h"
 
-#include "Settings.h"
+#include "Net.h"
 #include "Whazzup.h"
 #include "Window.h"
 

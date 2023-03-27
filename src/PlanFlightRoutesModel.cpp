@@ -4,7 +4,7 @@
 
 #include "PlanFlightRoutesModel.h"
 
-#include "PlanFlightDialog.h"
+#include <QPixmap>
 
 void PlanFlightRoutesModel::setClients(const QList<Route*>& routes) {
     beginResetModel();

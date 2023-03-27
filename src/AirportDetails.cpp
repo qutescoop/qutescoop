@@ -4,11 +4,11 @@
 
 #include "AirportDetails.h"
 
-#include "helpers.h"
 #include "NavData.h"
 #include "Window.h"
 #include "PilotDetails.h"
 #include "Settings.h"
+#include "Whazzup.h"
 
 AirportDetails *airportDetails = 0;
 AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *parent) {

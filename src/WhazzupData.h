@@ -5,8 +5,6 @@
 #ifndef WHAZZUPDATA_H_
 #define WHAZZUPDATA_H_
 
-#include "_pch.h"
-
 #include "MapObjectVisitor.h"
 
 class Pilot;

@@ -6,6 +6,7 @@
 
 #include <QRegExp>
 
+#include "Airport.h"
 #include "FileReader.h"
 #include "SectorReader.h"
 #include "helpers.h"

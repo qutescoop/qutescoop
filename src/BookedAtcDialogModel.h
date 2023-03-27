@@ -5,8 +5,6 @@
 #ifndef BOOKEDATCDIALOGMODEL_H_
 #define BOOKEDATCDIALOGMODEL_H_
 
-#include "_pch.h"
-
 #include "BookedController.h"
 
 class BookedAtcDialogModel : public QAbstractTableModel {

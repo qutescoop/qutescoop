@@ -5,12 +5,9 @@
 #ifndef WHAZZUP_H_
 #define WHAZZUP_H_
 
-#include "_pch.h"
-
 #include "WhazzupData.h"
-#include "Window.h"
-#include "GuiMessage.h"
-#include "Net.h"
+
+#include <QNetworkReply>
 
 class Whazzup: public QObject {
         Q_OBJECT

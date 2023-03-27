@@ -5,14 +5,11 @@
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 
-#include "_pch.h"
-
-#include "Window.h"
-#include "NavData.h"
-#include "FileReader.h"
-#include "Whazzup.h"
-#include "Settings.h"
-#include "GuiMessage.h"
+#include <QLabel>
+#include <QProgressBar>
+#include <QWidget>
+#include <QtGui>
+#include <QtNetwork>
 
 class Launcher : public QWidget {
         Q_OBJECT
@@ -36,7 +33,6 @@ class Launcher : public QWidget {
         QPixmap _map;
         QLabel *_image, *_text;
         QProgressBar *_progress;
-        //required to move the widget
         QPoint _dragPosition;
         QNetworkReply *_replyDataVersionsAndFiles;
         QList<QString> _dataFilesToDownload;

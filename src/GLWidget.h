@@ -5,7 +5,6 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
-#include "_pch.h"
 #include <QPoint>
 #ifdef __APPLE__
 #include <OpenGL/glu.h>
@@ -14,13 +13,8 @@
 #endif
 #include "MapObject.h"
 #include "Sector.h"
-#include "Airport.h"
-#include "WhazzupData.h"
-#include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
-#include "Airac.h"
-#include "SondeData.h"
-
+#include "Controller.h"
 
 class GLWidget : public QGLWidget {
         Q_OBJECT

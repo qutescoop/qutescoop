@@ -6,16 +6,18 @@
 
 #include "helpers.h"
 #include "LineReader.h"
-#include "Tessellator.h"
 #include "Pilot.h"
 #include "Controller.h"
 #include "Whazzup.h"
 #include "NavData.h"
+#include "GuiMessage.h"
 #include "Settings.h"
 #include "Waypoint.h"
 #include "PlanFlightDialog.h"
 #include "AirportDetails.h"
 #include "PilotDetails.h"
+#include "Airac.h"
+#include "SondeData.h"
 //#include <GL/glext.h>   // Multitexturing - not platform-independant
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
