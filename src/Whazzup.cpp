@@ -5,9 +5,10 @@
 #include "Whazzup.h"
 
 #include "Settings.h"
-#include "Window.h"
 #include "Net.h"
 #include "GuiMessage.h"
+#include "Client.h"
+#include "Window.h"
 
 Whazzup *whazzupInstance = 0;
 
