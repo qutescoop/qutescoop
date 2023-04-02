@@ -105,9 +105,6 @@ void AirportDetails::refresh(Airport* newAirport) {
                         .arg(_airport->countryCode, NavData::instance()->countryCodes[_airport->countryCode]));
     lblCharts->setText(QString("[chartfox.org/%1](https://chartfox.org/%1)").arg(_airport->label));
 
-    int utcDev = (int) (_airport->lon / 180. * 12. + .5); // lets estimate the deviation from UTC and round that
-    QString lt = Whazzup::instance()->whazzupData().whazzupTime.
-                 addSecs(utcDev * 3600).time().toString("HH:mm");
     // fetch METAR
     connect(_metarModel, &MetarModel::gotMetar, this, &AirportDetails::onGotMetar);
     on_pbMetar_clicked();
