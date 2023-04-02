@@ -78,7 +78,7 @@
         <item>
          <widget class="QLabel" name="label_10">
           <property name="toolTip">
-           <string>ICAO aircraft type (link to ICAO type designators)</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Opens searchable list &amp;quot;ICAO Aircraft Type Designators&amp;quot; in web browser.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>&lt;a href=&quot;https://www.icao.int/publications/DOC8643/Pages/Search.aspx&quot;&gt;type&lt;/a&gt;</string>
@@ -95,6 +95,9 @@
             <bold>true</bold>
            </font>
           </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Added dynamically.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>A319</string>
           </property>
@@ -105,6 +108,9 @@
         </item>
         <item>
          <widget class="QLabel" name="label_12">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open list of airline codes in web browser.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>&lt;a href=&quot;https://en.wikipedia.org/wiki/List_of_airline_codes&quot;&gt;airline&lt;/a&gt;</string>
           </property>
@@ -119,6 +125,9 @@
            <font>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:400;&quot;&gt;Added dynamically&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>Austrian</string>
@@ -150,9 +159,6 @@
         </property>
         <item>
          <widget class="QLabel" name="label_13">
-          <property name="toolTip">
-           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
-          </property>
           <property name="text">
            <string>GS</string>
           </property>
@@ -168,9 +174,6 @@
             <bold>true</bold>
            </font>
           </property>
-          <property name="toolTip">
-           <string>current &lt;b&gt;g&lt;/b&gt;round&lt;b&gt;s&lt;/b&gt;peed</string>
-          </property>
           <property name="text">
            <string>419 kts</string>
           </property>
@@ -178,9 +181,6 @@
         </item>
         <item>
          <widget class="QLabel" name="label_15">
-          <property name="toolTip">
-           <string>current altitude</string>
-          </property>
           <property name="text">
            <string>alt</string>
           </property>
@@ -217,6 +217,9 @@
            <font>
             <bold>true</bold>
            </font>
+          </property>
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;dynamically set&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>2200</string>
@@ -415,7 +418,7 @@ delay: difference between planned and calculated ETA</string>
       <item row="2" column="0">
        <widget class="QLabel" name="label_9">
         <property name="toolTip">
-         <string>alternate aerodrome / time of fuel on board (endurance)</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;alternate aerodrome / fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>altern/fuel</string>
@@ -551,9 +554,6 @@ delay: difference between planned and calculated ETA</string>
           <bold>true</bold>
          </font>
         </property>
-        <property name="toolTip">
-         <string>filed route</string>
-        </property>
         <property name="text">
          <string>route</string>
         </property>
@@ -605,7 +605,7 @@ delay: difference between planned and calculated ETA</string>
         <item>
          <widget class="QCheckBox" name="cbPlotRoute">
           <property name="toolTip">
-           <string>plot route on map (requires navigation database). Also accessible via right click on the airplane's label on the map.</string>
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plot route on map (requires navigation database). Also accessible via right click on the airplane's label on the map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="text">
            <string>&amp;plot
@@ -682,6 +682,9 @@ route</string>
      </item>
      <item>
       <widget class="QPushButton" name="buttonAddFriend">
+       <property name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add to / remove from friends list&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
        <property name="text">
         <string>add &amp;friend</string>
        </property>

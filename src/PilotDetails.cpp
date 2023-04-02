@@ -70,15 +70,18 @@ void PilotDetails::refresh(Pilot *pilot) {
 
     // Aircraft Information
     lblAircraft->setText(
-        QString("<a href='https://doc8643.com/aircraft/%1'>%1</a>").arg(_pilot->planAircraft.toHtmlEscaped())
+        QString("<a href='https://contentzone.eurocontrol.int/aircraftperformance/default.aspx?ICAOFilter=%1'>%1</a>").arg(_pilot->planAircraft.toHtmlEscaped())
     );
-    lblAircraft->setToolTip(QString("%1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa));
+    lblAircraft->setToolTip(
+        QString("Opens performance data in web browser.<br>Raw data: %1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa)
+    );
 
     if (_pilot->airline != 0) {
         lblAirline->setText(_pilot->airline->label());
         lblAirline->setToolTip(_pilot->airline->toolTip());
     } else {
         lblAirline->setText("n/a");
+        lblAirline->setToolTip("");
     }
 
     lblAltitude->setText(_pilot->humanAlt());
@@ -89,10 +92,21 @@ void PilotDetails::refresh(Pilot *pilot) {
         .arg(_pilot->altitude)
     );
 
-    lblGroundspeed->setText(QString("%1 kts").arg(_pilot->groundspeed));
+    lblGroundspeed->setText(QString("%1 kt").arg(_pilot->groundspeed));
 
-    lblSquawk->setText(QString("%1").arg(_pilot->transponder));
-    lblSquawk->setToolTip(QString("assigned: %1").arg(_pilot->transponderAssigned));
+    if (_pilot->transponderAssigned != "0000" && _pilot->transponderAssigned != "") {
+        if (_pilot->transponderAssigned != _pilot->transponder) {
+            lblSquawk->setText(QString("%1 !").arg(_pilot->transponder, _pilot->transponderAssigned));
+            lblSquawk->setToolTip(QString("ATC assigned: %1").arg(_pilot->transponderAssigned));
+        } else {
+            lblSquawk->setText(QString("%1 =").arg(_pilot->transponder));
+            lblSquawk->setToolTip("ATC assigned squawk set");
+        }
+    } else {
+        lblSquawk->setText(QString("%1").arg(_pilot->transponder));
+        lblSquawk->setToolTip("no ATC assigned squawk");
+    }
+
 
     // flight status
     groupStatus->setTitle(QString("Status: %1").arg(_pilot->flightStatusShortString()));
