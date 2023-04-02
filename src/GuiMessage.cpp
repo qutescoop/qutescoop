@@ -213,12 +213,12 @@ void GuiMessages::update() {
             } else {
                 switch (gm->type) {
                     case GuiMessage::FatalUserInteraction:
-                        QMessageBox::critical(qApp->desktop(), gm->id, gm->msg);
+                        QMessageBox::critical(nullptr, gm->id, gm->msg);
                         qFatal("%s %s", (const char*) gm->id.constData(), (const char*) gm->msg.constData());
                         _messages.remove(key, gm);
                         return;
                     case GuiMessage::CriticalUserInteraction:
-                        QMessageBox::critical(qApp->desktop(), gm->id, gm->msg);
+                        QMessageBox::critical(nullptr, gm->id, gm->msg);
                         qCritical("%s %s", (const char*) gm->id.constData(), (const char*) gm->msg.constData());
                         _messages.remove(key, gm);
                         return;
@@ -238,7 +238,7 @@ void GuiMessages::update() {
                         _timer.start(gm->showMs);
                         return;
                     case GuiMessage::InformationUserInteraction:
-                        QMessageBox::information(qApp->desktop(), gm->id, gm->msg);
+                        QMessageBox::information(nullptr, gm->id, gm->msg);
                         _messages.remove(key, gm);
                         return;
                     case GuiMessage::ProgressBar:
