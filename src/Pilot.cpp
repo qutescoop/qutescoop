@@ -410,7 +410,7 @@ int Pilot::defuckPlanAlt(QString altStr) const { // returns an altitude from var
 QString Pilot::humanAlt() const
 {
     if (altitude < 10000) {
-        return QString("%1 ft").arg(altitude);
+        return QString("%1 ft").arg(round(altitude / 100.) * 100);
     }
     return QString("FL %1").arg(Pilot::altToFl(altitude, qnh_mb));
 }

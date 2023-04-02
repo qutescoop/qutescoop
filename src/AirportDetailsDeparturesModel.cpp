@@ -65,9 +65,9 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
         case 4:
             return p->planFlighttype;
         case 5:
-            return p->waypoints().isEmpty()? QString(): p->waypoints().first();
+            return p->waypoints().isEmpty()? QString(): p->waypoints().constFirst();
         case 6:
-            return (p->altitude == 0? QString(""): QString("%1").arg(p->altitude));
+            return (p->altitude == 0? QString(""): p->humanAlt());
         case 7:
             return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed));
         case 8:
