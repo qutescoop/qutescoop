@@ -21,7 +21,7 @@ GuiMessages::GuiMessages() :
         _currentStatusMessage(new GuiMessage()),
         _currentProgressMessage(new GuiMessage()) {
     _timer.setSingleShot(true);
-    connect(&_timer, SIGNAL(timeout()), this, SLOT(update()));
+    connect(&_timer, &QTimer::timeout, this, &GuiMessages::update);
 }
 
 ///////////////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ void GuiMessages::remove(const QString &id) {
 void GuiMessages::addStatusLabel(QLabel *label, bool hideIfNothingToDisplay) {
     //qDebug() << "GuiMessages::addStatusLabel()" << label->objectName();
     // we want to be notified before this QLabel is getting invalid
-    connect(label, SIGNAL(destroyed(QObject*)), this, SLOT(labelDestroyed(QObject*)));
+    connect(label, &QObject::destroyed, this, &GuiMessages::labelDestroyed);
     _labels.insert(label, hideIfNothingToDisplay);
     update();
 }
@@ -99,7 +99,7 @@ void GuiMessages::labelDestroyed(QObject *obj) {
 void GuiMessages::addProgressBar(QProgressBar *progressBar, bool hideIfNothingToDisplay) {
     //qDebug() << "GuiMessages::addProgressBar()" << progressBar->objectName();
     // we want to be notified before this QProgressBar is getting invalid
-    connect(progressBar, SIGNAL(destroyed(QObject*)), this, SLOT(progressBarDestroyed(QObject*)));
+    connect(progressBar, &QObject::destroyed, this, &GuiMessages::progressBarDestroyed);
     _bars.insert(progressBar, hideIfNothingToDisplay);
     update();
 }

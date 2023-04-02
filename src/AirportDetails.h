@@ -26,9 +26,9 @@ class AirportDetails : public ClientDetails, private Ui::AirportDetails {
 
     private slots:
         void onGotMetar(const QString &airportLabel, const QString &encoded, const QString &humanHtml);
-        void on_pbMetar_clicked();
-        void on_cbPlotRoutes_toggled(bool checked);
-        void on_cbOtherAtc_toggled(bool checked);
+        void refreshMetar();
+        void togglePlotRoutes(bool checked);
+        void toggleShowOtherAtc(bool checked);
         void atcSelected(const QModelIndex &index);
         void arrivalSelected(const QModelIndex &index);
         void departureSelected(const QModelIndex &index);

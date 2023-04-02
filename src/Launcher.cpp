@@ -143,7 +143,7 @@ void Launcher::fireUp() {
     fadeOut->setDuration(1000);
     fadeOut->setEndValue(0.);
     fadeOut->setEasingCurve(QEasingCurve::InOutExpo);
-    connect(fadeOut, SIGNAL(finished()), SLOT(deleteLater()));
+    connect(fadeOut, &QAbstractAnimation::finished, this, &QObject::deleteLater);
     QPropertyAnimation *fadeIn = new QPropertyAnimation(Window::instance(), "windowOpacity");
     fadeIn->setDuration(1000);
     fadeIn->setEndValue(1.);
@@ -195,14 +195,12 @@ void Launcher::checkData() {
     qDebug() << "checkForDataUpdates()" << url.toString();
     _replyDataVersionsAndFiles = Net::g(url);
 
-    connect(_replyDataVersionsAndFiles, SIGNAL(finished()),
-            SLOT(dataVersionsDownloaded()));
+    connect(_replyDataVersionsAndFiles, &QNetworkReply::finished, this, &Launcher::dataVersionsDownloaded);
 }
 
 void Launcher::dataVersionsDownloaded() {
     qDebug() << "dataVersionsDownloaded()";
-    disconnect(_replyDataVersionsAndFiles, SIGNAL(finished()),
-            this, SLOT(dataVersionsDownloaded()));
+    disconnect(_replyDataVersionsAndFiles, &QNetworkReply::finished, this, &Launcher::dataVersionsDownloaded);
     _replyDataVersionsAndFiles->deleteLater();
 
     if(_replyDataVersionsAndFiles->error() != QNetworkReply::NoError) {
@@ -256,8 +254,7 @@ void Launcher::dataVersionsDownloaded() {
              .arg(_dataFilesToDownload.first()));
         qDebug() << "dataVersionsDownloaded() Downloading datafile" << url.toString();
         _replyDataVersionsAndFiles = Net::g(url);
-        connect(_replyDataVersionsAndFiles, SIGNAL(finished()),
-                this, SLOT(dataFileDownloaded()));
+        connect(_replyDataVersionsAndFiles, &QNetworkReply::finished, this, &Launcher::dataFileDownloaded);
     } else {
         qDebug() << "dataVersionsDownloaded() all files up to date";
         GuiMessages::remove("checknavdata");
@@ -270,8 +267,7 @@ void Launcher::dataFileDownloaded() {
     if (!_replyDataVersionsAndFiles->url().isEmpty()) {
         qDebug() << "dataFileDownloaded() received"
                     << _replyDataVersionsAndFiles->url();
-        disconnect(_replyDataVersionsAndFiles, SIGNAL(finished()),
-                this, SLOT(dataFileDownloaded()));
+        disconnect(_replyDataVersionsAndFiles, &QNetworkReply::finished, this, &Launcher::dataFileDownloaded);
         // error?
         if(_replyDataVersionsAndFiles->error() != QNetworkReply::NoError) {
             GuiMessages::criticalUserInteraction(QString("Error downloading %1:\n%2")
@@ -312,8 +308,7 @@ void Launcher::dataFileDownloaded() {
              .arg(_dataFilesToDownload.first()));
         qDebug() << "dataVersionsDownloaded() Downloading datafile" << url.toString();
         _replyDataVersionsAndFiles = Net::g(url);
-        connect(_replyDataVersionsAndFiles, SIGNAL(finished()),
-                this, SLOT(dataFileDownloaded()));
+        connect(_replyDataVersionsAndFiles, &QNetworkReply::finished, this, &Launcher::dataFileDownloaded);
     } else {
         // we are finished
         GuiMessages::infoUserAttention(

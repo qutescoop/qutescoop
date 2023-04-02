@@ -15,13 +15,13 @@ class MapObject;
 class ClientDetails : public QDialog {
         Q_OBJECT
 
+    public slots:
+        void showOnMap() const;
+        void friendClicked() const;
+
     protected:
         ClientDetails(QWidget*);
         void setMapObject(MapObject*);
-
-    protected slots:
-        void showOnMap() const;
-        void friendClicked() const;
 
     protected:
         double _lat, _lon;

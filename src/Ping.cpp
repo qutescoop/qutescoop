@@ -15,10 +15,10 @@ void Ping::pingReadyRead() {
 }
 
 void Ping::startPing(QString server) {
-    this->_server = server;
+    _server = server;
 
     _pingProcess = new QProcess(this);
-    connect(_pingProcess, SIGNAL(finished(int)), this, SLOT(pingReadyRead()));
+    connect(_pingProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &Ping::pingReadyRead);
 
     QStringList pingArgs;
 #ifdef Q_OS_WIN

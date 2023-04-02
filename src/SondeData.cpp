@@ -295,9 +295,8 @@ void SondeData::load() {
 
     QUrl url(Settings::sondeUrl());
     _replySondeData = Net::g(url);
-    connect(_replySondeData, SIGNAL(downloadProgress(qint64,qint64)),
-            this, SLOT(sondeDataProgress(qint64,qint64)));
-    connect(_replySondeData, SIGNAL(finished()) , this , SLOT(processSondeData()));
+    connect(_replySondeData, &QNetworkReply::downloadProgress, this, &SondeData::sondeDataProgress);
+    connect(_replySondeData, &QNetworkReply::finished , this , &SondeData::processSondeData);
 
     GuiMessages::progress("loadsonde",
                           QString("Downloading sonde data from %1...").arg(url.toString()));

@@ -39,8 +39,7 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     treeRoutes->setModel(_routesSortModel);
     treeRoutes->header()->setSectionResizeMode(QHeaderView::Interactive);
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
-    connect(treeRoutes->header(), SIGNAL(sectionClicked(int)), treeRoutes, SLOT(sortByColumn(int)));
-    connect(treeRoutes, SIGNAL(clicked(const QModelIndex&)), this, SLOT(routeSelected(const QModelIndex&)));
+    connect(treeRoutes, &QAbstractItemView::clicked, this, &PlanFlightDialog::routeSelected);
 
     pbVatsimPrefile->setVisible(Settings::downloadNetwork() == 1); // only for VATSIM
 
@@ -118,14 +117,14 @@ void PlanFlightDialog::requestVroute() {
 
 
     _replyVroute = Net::g(url);
-    connect(_replyVroute, SIGNAL(finished()), this, SLOT(vrouteDownloaded()));
+    connect(_replyVroute, &QNetworkReply::finished, this, &PlanFlightDialog::vrouteDownloaded);
 
     lblVrouteStatus->setText(QString("request sent..."));
 }
 
 void PlanFlightDialog::vrouteDownloaded() {
     qDebug() << "PlanFlightDialog::vrouteDownloaded()";
-    disconnect(_replyVroute, SIGNAL(finished()), this, SLOT(vrouteDownloaded()));
+    disconnect(_replyVroute, &QNetworkReply::finished, this, &PlanFlightDialog::vrouteDownloaded);
     _replyVroute->deleteLater();
 
     if(_replyVroute->error() != QNetworkReply::NoError) {

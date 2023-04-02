@@ -24,6 +24,8 @@
 #include "Platform.h"
 #include "MetarDelegate.h"
 
+#include <QModelIndex>
+
 // singleton instance
 Window *windowInstance = 0;
 
@@ -54,10 +56,10 @@ Window::Window(QWidget *parent) :
     mapScreen = new MapScreen(this);
     centralwidget->layout()->addWidget(mapScreen);
 
-    connect(mapScreen, SIGNAL(toggleRoutes()), actionShowRoutes, SLOT(trigger()));
-    connect(mapScreen, SIGNAL(toggleSectors(bool)), this, SLOT(allSectorsChanged(bool)));
-    connect(mapScreen, SIGNAL(toggleRouteWaypoints()), actionShowWaypoints, SLOT(trigger()));
-    connect(mapScreen, SIGNAL(toggleInactiveAirports()), actionShowInactiveAirports,SLOT(trigger()));
+    connect(mapScreen, &MapScreen::toggleRoutes, actionShowRoutes, &QAction::trigger);
+    connect(mapScreen, &MapScreen::toggleSectors, this, &Window::allSectorsChanged);
+    connect(mapScreen, &MapScreen::toggleRouteWaypoints, actionShowWaypoints, &QAction::trigger);
+    connect(mapScreen, &MapScreen::toggleInactiveAirports, actionShowInactiveAirports,&QAction::trigger);
 
     // Status- & ProgressBar
     _progressBar = new QProgressBar(statusbar);
@@ -70,34 +72,32 @@ Window::Window(QWidget *parent) :
     statusbar->addPermanentWidget(tbZoomOut, 0);
 
     // actions
-    connect(actionAbout, SIGNAL(triggered()), this, SLOT(about()));
-    connect(actionToggleFullscreen, SIGNAL(triggered()), this, SLOT(toggleFullscreen()));
-    connect(actionPreferences, SIGNAL(triggered()), this, SLOT(openPreferences()));
-    connect(actionPlanFlight, SIGNAL(triggered()), this, SLOT(openPlanFlight()));
-    connect(actionBookedAtc, SIGNAL(triggered()), this, SLOT(openBookedAtc()));
-    connect(actionListClients, SIGNAL(triggered()), this, SLOT(openListClients()));
-    connect(actionSectorview, SIGNAL(triggered()), this, SLOT(openSectorView()));
+    connect(actionAbout, &QAction::triggered, this, &Window::about);
+    connect(actionToggleFullscreen, &QAction::triggered, this, &Window::toggleFullscreen);
+    connect(actionPreferences, &QAction::triggered, this, &Window::openPreferences);
+    connect(actionPlanFlight, &QAction::triggered, this, &Window::openPlanFlight);
+    connect(actionBookedAtc, &QAction::triggered, this, &Window::openBookedAtc);
+    connect(actionListClients, &QAction::triggered, this, &Window::openListClients);
+    connect(actionSectorview, &QAction::triggered, this, &Window::openSectorView);
     actionDisplayAllSectors->setChecked(Settings::showAllSectors());
-    connect(actionDisplayAllSectors, SIGNAL(toggled(bool)), this, SLOT(allSectorsChanged(bool)));
+    connect(actionDisplayAllSectors, &QAction::toggled, this, &Window::allSectorsChanged);
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
-    connect(actionShowInactiveAirports, SIGNAL(toggled(bool)),
-            mapScreen->glWidget, SLOT(showInactiveAirports(bool)));
+    connect(actionShowInactiveAirports, &QAction::toggled, mapScreen->glWidget, &GLWidget::showInactiveAirports);
     pb_highlightFriends->setChecked(Settings::highlightFriends());
     actionHighlight_Friends->setChecked(Settings::highlightFriends());
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
     Whazzup *whazzup = Whazzup::instance();
-    connect(actionDownload, SIGNAL(triggered()), whazzup, SLOT(downloadJson3()));
+    connect(actionDownload, &QAction::triggered, whazzup, &Whazzup::downloadJson3);
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
-    connect(whazzup, SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-    connect(whazzup, SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
+    connect(whazzup, &Whazzup::newData, mapScreen->glWidget, &GLWidget::newWhazzupData);
+    connect(whazzup, &Whazzup::newData, this, &Window::processWhazzup);
 
     // search result widget
     searchResult->setModel(&_modelSearchResult);
-    connect(searchResult, SIGNAL(clicked(const QModelIndex&)),
-            &_modelSearchResult, SLOT(modelClicked(const QModelIndex&)));
+    connect(searchResult, &QAbstractItemView::clicked, &_modelSearchResult, &SearchResultModel::modelClicked);
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
     // METAR widget
@@ -111,8 +111,7 @@ Window::Window(QWidget *parent) :
     metarList->setItemDelegate(metarDelegate);
     //metarList->setWordWrap(true); // some say this causes sizeHint() to be called on resize, but it does not
 
-    connect(metarList, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(metarClicked(const QModelIndex&)));
+    connect(metarList, &QAbstractItemView::clicked, this, &Window::metarClicked);
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
     // friends widget
@@ -121,37 +120,40 @@ Window::Window(QWidget *parent) :
     _sortmodelFriends->setSourceModel(&_modelFriends);
     friendsList->setModel(_sortmodelFriends);
 
-    connect(friendsList, SIGNAL(clicked(const QModelIndex&)),
-            this, SLOT(friendClicked(const QModelIndex&)));
-    connect(friendsList->header(), SIGNAL(sectionClicked(int)),
-            friendsList, SLOT(sortByColumn(int)));
+    connect(friendsList, &QAbstractItemView::clicked, this, &Window::friendClicked);
     friendsList->sortByColumn(0, Qt::AscendingOrder);
 
     // debounce input timers
-    connect(&_timerSearch, SIGNAL(timeout()), this, SLOT(performSearch()));
-    connect(&_timerMetar, SIGNAL(timeout()), this, SLOT(updateMetars()));
+    connect(&_timerSearch, &QTimer::timeout, this, &Window::performSearch);
+    connect(&_timerMetar, &QTimer::timeout, this, &Window::updateMetars);
 
     // Whazzup download timer
-    connect(&_timerWhazzup, SIGNAL(timeout()),
-            this, SLOT(downloadWatchdogTriggered()));
+    connect(&_timerWhazzup, &QTimer::timeout, this, &Window::downloadWatchdogTriggered);
 
     // Cloud download timer
-    connect(&_timerCloud, SIGNAL(timeout()), this, SLOT(downloadCloud()));
+    connect(&_timerCloud, &QTimer::timeout, this, &Window::downloadCloud);
 
     // dock layout
-    connect(metarDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
-            this, SLOT(metarDockMoved(Qt::DockWidgetArea)));
-    connect(searchDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
-            this, SLOT(searchDockMoved(Qt::DockWidgetArea)));
-    connect(friendsDock, SIGNAL(dockLocationChanged(Qt::DockWidgetArea)),
-            this, SLOT(friendsDockMoved(Qt::DockWidgetArea)));
+    connect(metarDock, &QDockWidget::dockLocationChanged,
+            this, &Window::metarDockMoved);
+    connect(searchDock, &QDockWidget::dockLocationChanged,
+            this, &Window::searchDockMoved);
+    connect(friendsDock, &QDockWidget::dockLocationChanged,
+            this, &Window::friendsDockMoved);
 
     // Forecast / Predict settings
     framePredict->hide();
     _timerEditPredict.stop();
-    connect(&_timerEditPredict, SIGNAL(timeout()), this, SLOT(performWarp()));
+    connect(
+        &_timerEditPredict,
+        &QTimer::timeout,
+        [=]() {
+            // using lambda due to default parameter
+            this->performWarp(true);
+        }
+    );
     _timerRunPredict.stop();
-    connect(&_timerRunPredict, SIGNAL(timeout()), this, SLOT(runPredict()));
+    connect(&_timerRunPredict, &QTimer::timeout, this, &Window::runPredict);
     widgetRunPredict->hide();
 
     QFont font = lblWarpInfo->font();
@@ -531,13 +533,13 @@ void Window::performWarp(bool forceUseDownloaded) {
                 // only if different
                 if (downloaded[i].first != Whazzup::instance()->realWhazzupData().whazzupTime) {
                     // disconnect to inhibit update because will be updated later
-                    disconnect(Whazzup::instance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-                    disconnect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
+                    disconnect(Whazzup::instance(), &Whazzup::newData, mapScreen->glWidget, &GLWidget::newWhazzupData);
+                    disconnect(Whazzup::instance(), &Whazzup::newData, this, &Window::processWhazzup);
 
                     Whazzup::instance()->fromFile(downloaded[i].second);
 
-                    connect(Whazzup::instance(), SIGNAL(newData(bool)), mapScreen->glWidget, SLOT(newWhazzupData(bool)));
-                    connect(Whazzup::instance(), SIGNAL(newData(bool)), this, SLOT(processWhazzup(bool)));
+                    connect(Whazzup::instance(), &Whazzup::newData, mapScreen->glWidget, &GLWidget::newWhazzupData);
+                    connect(Whazzup::instance(), &Whazzup::newData, this, &Window::processWhazzup);
                 }
                 break;
             }
@@ -619,9 +621,9 @@ void Window::runPredict() {
     }
 
     // setting dateTimePredict without "niceify"
-    disconnect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    disconnect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
     dateTimePredict->setDateTime(to);
-    connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
 
     performWarp();
     _timerRunPredict.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
@@ -630,7 +632,7 @@ void Window::runPredict() {
 void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
     // + only allow selecting downloaded Whazzups if respective option is selected
-    disconnect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    disconnect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
     _timerEditPredict.stop();
 
     // make year change if M 12+ or 0-
@@ -698,7 +700,7 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     if(dateTime.isValid() && (dateTime != dateTimePredict->dateTime()))
         dateTimePredict->setDateTime(dateTime);
 
-    connect(dateTimePredict, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimePredict_dateTimeChanged(QDateTime)));
+    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
     _timerEditPredict.start(1000);
 }
 
@@ -914,7 +916,7 @@ void Window::downloadCloud() {
     }
     if(_cloudDownloadReply != 0) _cloudDownloadReply = 0;
     _cloudDownloadReply = Net::g(url);
-    connect(_cloudDownloadReply, SIGNAL(finished()), this, SLOT(cloudDownloadFinished()));
+    connect(_cloudDownloadReply, &QNetworkReply::finished, this, &Window::cloudDownloadFinished);
 
     qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
 }

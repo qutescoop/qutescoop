@@ -22,10 +22,10 @@ Whazzup::Whazzup():
         _replyStatus(0), _replyWhazzup(0), _replyBookings(0) {
     _downloadTimer = new QTimer(this);
     _bookingsTimer = new QTimer(this);
-    connect(_downloadTimer, SIGNAL(timeout()), SLOT(downloadJson3()));
-    connect(_bookingsTimer, SIGNAL(timeout()), SLOT(downloadBookings()));
+    connect(_downloadTimer, &QTimer::timeout, this, &Whazzup::downloadJson3);
+    connect(_bookingsTimer, &QTimer::timeout, this, &Whazzup::downloadBookings);
 
-    connect(this, SIGNAL(needBookings()), SLOT(downloadBookings()));
+    connect(this, &Whazzup::needBookings, this, &Whazzup::downloadBookings);
 }
 
 Whazzup::~Whazzup() {
@@ -41,12 +41,12 @@ void Whazzup::setStatusLocation(const QString& statusLocation) {
     GuiMessages::progress("statusdownload", "Getting network status...");
 
     _replyStatus = Net::g(statusLocation);
-    connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
+    connect(_replyStatus, &QNetworkReply::finished, this, &Whazzup::processStatus);
 }
 
 void Whazzup::processStatus() {
     qDebug() << "Whazzup::processStatus()";
-    disconnect(_replyStatus, SIGNAL(finished()), this, SLOT(processStatus()));
+    disconnect(_replyStatus, &QNetworkReply::finished, this, &Whazzup::processStatus);
     _replyStatus->deleteLater();
 
     // status.vatsim.net uses redirection
@@ -56,7 +56,7 @@ void Whazzup::processStatus() {
         qDebug() << "Whazzup::processStatus() redirected to" << urlRedirect;
         // send new request
         _replyStatus = Net::g(urlRedirect);
-        connect(_replyStatus, SIGNAL(finished()), SLOT(processStatus()));
+        connect(_replyStatus, &QNetworkReply::finished, this, &Whazzup::processStatus);
         return;
     }
 
@@ -134,7 +134,7 @@ void Whazzup::fromFile(QString filename) {
     GuiMessages::progress("whazzupDownload", "Loading Whazzup from file...");
 
     _replyWhazzup = Net::g(QUrl::fromLocalFile(filename));
-    connect(_replyWhazzup, SIGNAL(finished()), SLOT(processWhazzup()));
+    connect(_replyWhazzup, &QNetworkReply::finished, this, &Whazzup::processWhazzup);
 }
 
 void Whazzup::downloadJson3() {
@@ -160,9 +160,8 @@ void Whazzup::downloadJson3() {
                          arg(url.toString(QUrl::RemoveUserInfo)));
 
     _replyWhazzup = Net::g(url);
-    connect(_replyWhazzup, SIGNAL(finished()), SLOT(processWhazzup()));
-    connect(_replyWhazzup, SIGNAL(downloadProgress(qint64,qint64)),
-            SLOT(whazzupProgress(qint64,qint64)));
+    connect(_replyWhazzup, &QNetworkReply::finished, this, &Whazzup::processWhazzup);
+    connect(_replyWhazzup, &QNetworkReply::downloadProgress, this, &Whazzup::whazzupProgress);
 }
 
 void Whazzup::whazzupProgress(qint64 prog, qint64 tot) {
@@ -172,9 +171,8 @@ void Whazzup::whazzupProgress(qint64 prog, qint64 tot) {
 void Whazzup::processWhazzup() {
     GuiMessages::remove("whazzupDownload");
     emit whazzupDownloaded();
-    disconnect(_replyWhazzup, SIGNAL(finished()), this, SLOT(processWhazzup()));
-    disconnect(_replyWhazzup, SIGNAL(downloadProgress(qint64,qint64)),
-            this, SLOT(whazzupProgress(qint64,qint64)));
+    disconnect(_replyWhazzup, &QNetworkReply::finished, this, &Whazzup::processWhazzup);
+    disconnect(_replyWhazzup, &QNetworkReply::downloadProgress, this, &Whazzup::whazzupProgress);
     _replyWhazzup->deleteLater();
     if(_replyWhazzup == 0) {
         GuiMessages::criticalUserInteraction("Buffer unavailable.",
@@ -252,9 +250,8 @@ void Whazzup::downloadBookings() {
                           .arg(url.toString(QUrl::RemoveUserInfo)));
 
     _replyBookings = Net::g(url);
-    connect(_replyBookings, SIGNAL(finished()), SLOT(processBookings()));
-    connect(_replyBookings, SIGNAL(downloadProgress(qint64,qint64)),
-            SLOT(bookingsProgress(qint64,qint64)));
+    connect(_replyBookings, &QNetworkReply::finished, this, &Whazzup::processBookings);
+    connect(_replyBookings, &QNetworkReply::downloadProgress, this, &Whazzup::bookingsProgress);
 }
 
 void Whazzup::bookingsProgress(qint64 prog, qint64 tot) {
@@ -264,9 +261,8 @@ void Whazzup::bookingsProgress(qint64 prog, qint64 tot) {
 void Whazzup::processBookings() {
     qDebug() << "Whazzup::processBookings()";
     GuiMessages::remove("bookingsDownload");
-    disconnect(_replyBookings, SIGNAL(finished()), this, SLOT(processBookings()));
-    disconnect(_replyBookings, SIGNAL(downloadProgress(qint64,qint64)),
-            this, SLOT(bookingsProgress(qint64,qint64)));
+    disconnect(_replyBookings, &QNetworkReply::finished, this, &Whazzup::processBookings);
+    disconnect(_replyBookings, &QNetworkReply::downloadProgress, this, &Whazzup::bookingsProgress);
     qDebug() << "Whazzup::processBookings() deleting buffer";
     _replyBookings->deleteLater();
     if(_replyBookings == 0) {
@@ -314,8 +310,7 @@ void Whazzup::processBookings() {
                            << out.fileName();
 
             // from now on we want to redownload when the user triggers a network update
-            connect(Window::instance()->actionDownload, SIGNAL(triggered()),
-                    this, SLOT(downloadBookings()));
+            connect(Window::instance()->actionDownload, &QAction::triggered, this, &Whazzup::downloadBookings);
             emit newData(true);
         } else
             GuiMessages::message(QString("We already have bookings with that timestamp: %1")

@@ -12,8 +12,8 @@ ClientSelectionWidget::ClientSelectionWidget(QWidget *parent):
     //setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),   this, SLOT(dialogForItem(QListWidgetItem*)));
-    connect(this, SIGNAL(itemActivated(QListWidgetItem*)), this, SLOT(dialogForItem(QListWidgetItem*)));
+    connect(this, &QListWidget::itemClicked,   this, &ClientSelectionWidget::dialogForItem);
+    connect(this, &QListWidget::itemActivated, this, &ClientSelectionWidget::dialogForItem);
 }
 
 void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {

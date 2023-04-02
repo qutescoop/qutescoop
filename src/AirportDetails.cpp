@@ -32,7 +32,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
     //    setWindowFlags(Qt::Tool);
 
-    connect(btnShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
+    connect(btnShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
+    connect(pbMetar, &QAbstractButton::clicked, this, &AirportDetails::refreshMetar);
+    connect(cbPlotRoutes, &QCheckBox::clicked, this, &AirportDetails::togglePlotRoutes);
+    connect(cbOtherAtc, &QCheckBox::clicked, this, &AirportDetails::toggleShowOtherAtc);
 
     // ATC list
     _atcSortModel = new QSortFilterProxyModel;
@@ -42,10 +45,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     treeAtc->sortByColumn(0, Qt::AscendingOrder);
     treeAtc->header()->setSectionResizeMode(QHeaderView::Interactive);
 
-    connect(treeAtc->header(), SIGNAL(sectionClicked(int)),
-            treeAtc, SLOT(sortByColumn(int)));
-    connect(treeAtc, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(atcSelected(QModelIndex)));
+    connect(treeAtc, &QAbstractItemView::clicked, this, &AirportDetails::atcSelected);
 
     // arrivals
     _arrivalsSortModel = new QSortFilterProxyModel;
@@ -55,10 +55,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     treeArrivals->sortByColumn(9, Qt::AscendingOrder);
     treeArrivals->header()->setSectionResizeMode(QHeaderView::Interactive);
 
-    connect(treeArrivals->header(), SIGNAL(sectionClicked(int)),
-            treeArrivals, SLOT(sortByColumn(int)));
-    connect(treeArrivals, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(arrivalSelected(QModelIndex)));
+    connect(treeArrivals, &QAbstractItemView::clicked, this, &AirportDetails::arrivalSelected);
 
     // departures
     _departuresSortModel = new QSortFilterProxyModel;
@@ -68,10 +65,7 @@ AirportDetails::AirportDetails(QWidget *parent):
     treeDepartures->sortByColumn(8, Qt::AscendingOrder);
     treeDepartures->header()->setSectionResizeMode(QHeaderView::Interactive);
 
-    connect(treeDepartures->header(), SIGNAL(sectionClicked(int)),
-            treeDepartures, SLOT(sortByColumn(int)));
-    connect(treeDepartures, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(departureSelected(QModelIndex)));
+    connect(treeDepartures, &QAbstractItemView::clicked, this, &AirportDetails::departureSelected);
 
     // METAR
     _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
@@ -107,7 +101,7 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     // fetch METAR
     connect(_metarModel, &MetarModel::gotMetar, this, &AirportDetails::onGotMetar);
-    on_pbMetar_clicked();
+    refreshMetar();
 
     // arrivals
     _arrivalsModel.setClients(_airport->arrivals.values());
@@ -161,7 +155,7 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
     _departuresModel.modelSelected(_departuresSortModel->mapToSource(index));
 }
 
-void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
+void AirportDetails::togglePlotRoutes(bool checked) {
     if(_airport->showFlightLines != checked) {
         _airport->showFlightLines = checked;
         if (Window::instance(false) != 0) {
@@ -173,8 +167,8 @@ void AirportDetails::on_cbPlotRoutes_toggled(bool checked) {
     }
 }
 
-void AirportDetails::on_pbMetar_clicked() {
-    qDebug() << "AirportDetails::on_pbMetar_clicked";
+void AirportDetails::refreshMetar() {
+    qDebug() << "AirportDetails::refreshMetar";
     lblMetar->setText("…");
     QList<Airport*> airports;
     if (_airport != 0) {
@@ -209,8 +203,7 @@ void AirportDetails::closeEvent(QCloseEvent *event) {
    event->accept();
 }
 
-void AirportDetails::on_cbOtherAtc_toggled(bool)
+void AirportDetails::toggleShowOtherAtc(bool)
 {
     refresh();
 }
-

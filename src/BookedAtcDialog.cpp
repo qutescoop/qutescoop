@@ -41,23 +41,21 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     treeBookedAtc->setUniformRowHeights(true);
     treeBookedAtc->setModel(_bookedAtcSortModel);
     treeBookedAtc->sortByColumn(0, Qt::AscendingOrder);
-    connect(treeBookedAtc, SIGNAL(clicked(const QModelIndex&)), this, SLOT(modelSelected(const QModelIndex&)));
+    connect(treeBookedAtc, &QAbstractItemView::clicked, this, &BookedAtcDialog::modelSelected);
 
     // disconnect to set DateTime without being disturbed
     // fixes https://sourceforge.net/p/qutescoop/tickets/5/
-    disconnect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
-               this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
+    disconnect(dateTimeFilter, &QDateTimeEdit::dateTimeChanged, this, &BookedAtcDialog::on_dateTimeFilter_dateTimeChanged);
     dateTimeFilter->setDateTime(QDateTime::currentDateTimeUtc());
     _dateTimeFilter_old = dateTimeFilter->dateTime();
-    connect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
-               this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
-    connect(&_editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
+    connect(dateTimeFilter, &QDateTimeEdit::dateTimeChanged, this, &BookedAtcDialog::on_dateTimeFilter_dateTimeChanged);
+    connect(&_editFilterTimer, &QTimer::timeout, this, &BookedAtcDialog::performSearch);
 
     QFont font = lblStatusInfo->font();
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    connect(this, SIGNAL(needBookings()), Whazzup::instance(), SLOT(downloadBookings()));
+    connect(this, &BookedAtcDialog::needBookings, Whazzup::instance(), &Whazzup::downloadBookings);
 
     if (!Settings::bookAtcDialogSize().isNull()) resize(Settings::bookAtcDialogSize());
     if (!Settings::bookAtcDialogPos().isNull()) move(Settings::bookAtcDialogPos());
@@ -98,8 +96,7 @@ void BookedAtcDialog::setDateTime(const QDateTime &dateTime)
 
 void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
-    disconnect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)),
-               this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
+    disconnect(dateTimeFilter, &QDateTimeEdit::dateTimeChanged, this, &BookedAtcDialog::on_dateTimeFilter_dateTimeChanged);
     _editFilterTimer.stop();
 
     // make year change if M 12+ or 0-
@@ -146,7 +143,7 @@ void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
         dateTimeFilter->setDateTime(dateTime);
     }
 
-    connect(dateTimeFilter, SIGNAL(dateTimeChanged(QDateTime)), this, SLOT(on_dateTimeFilter_dateTimeChanged(QDateTime)));
+    connect(dateTimeFilter, &QDateTimeEdit::dateTimeChanged, this, &BookedAtcDialog::on_dateTimeFilter_dateTimeChanged);
     _editFilterTimer.start(1000);
 }
 

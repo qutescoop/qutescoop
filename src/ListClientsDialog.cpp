@@ -65,7 +65,7 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
     font.setPointSize(lblStatusInfo->fontInfo().pointSize() - 1);
     lblStatusInfo->setFont(font); //make it a bit smaller than standard text
 
-    connect(&_editFilterTimer, SIGNAL(timeout()), this, SLOT(performSearch()));
+    connect(&_editFilterTimer, &QTimer::timeout, this, &ListClientsDialog::performSearch);
 
     QTimer::singleShot(100, this, SLOT(refresh())); // delayed insertion of clients to open the window now
 

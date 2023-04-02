@@ -33,7 +33,7 @@ PilotDetails::PilotDetails(QWidget *parent):
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
-    connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
+    connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
     if (!Settings::pilotDetailsSize().isNull()) resize(Settings::pilotDetailsSize());
     if (!Settings::pilotDetailsPos().isNull()) move(Settings::pilotDetailsPos());
