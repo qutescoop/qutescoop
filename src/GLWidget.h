@@ -5,12 +5,17 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
-#include <QPoint>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
+#include <qglobal.h>
+#ifdef Q_OS_WIN
+    #include <windows.h>
 #endif
+#ifdef __APPLE__
+    #include <OpenGL/glu.h>
+#else
+    #include <GL/glu.h>
+#endif
+
+#include <QPoint>
 #include "MapObject.h"
 #include "Sector.h"
 #include "ClientSelectionWidget.h"

@@ -3,7 +3,8 @@
  **************************************************************************/
 
 #include "GuiMessage.h"
-#include <QtOpenGL>
+#include <QApplication>
+#include <QMessageBox>
 
 ////////////////////////////////////////////////////////////////////////
 // GuiMessageProxy (singleton)

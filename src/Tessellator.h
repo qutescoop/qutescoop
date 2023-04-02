@@ -7,6 +7,9 @@
 
 #include <QtCore>
 
+#ifdef Q_OS_WIN
+    #include <windows.h>
+#endif
 #ifdef __APPLE__
     #include <OpenGL/glu.h>
 #else
