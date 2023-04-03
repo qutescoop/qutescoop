@@ -4,8 +4,6 @@
 #ifndef SECTORREADER_H_
 #define SECTORREADER_H_
 
-#include "_pch.h"
-
 #include "Sector.h"
 
 class SectorReader {

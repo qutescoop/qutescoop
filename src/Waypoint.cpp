@@ -34,10 +34,5 @@ Waypoint::Waypoint(const QString& id, const double lat, const double lon) {
 }
 
 QString Waypoint::toolTip() const {
-    return QString("%1 (%2%3 %4%5)")
-        .arg(label).
-         arg(lat > 0? "N": "S").
-         arg(qAbs(lat), 6, 'f', 3, '0').
-         arg(lon > 0? "E": "W").
-         arg(qAbs(lon), 7, 'f', 3, '0');
+    return label;
 }

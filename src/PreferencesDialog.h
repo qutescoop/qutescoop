@@ -5,8 +5,6 @@
 #ifndef PREFERENCESDIALOG_H_
 #define PREFERENCESDIALOG_H_
 
-#include "_pch.h"
-
 #include "ui_PreferencesDialog.h"
 
 

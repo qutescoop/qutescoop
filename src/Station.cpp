@@ -1,4 +1,11 @@
+// TODO: remove
+
+#include "NavData.h"
+#include "Settings.h"
 #include "Station.h"
+#include "helpers.h"
+
+#include <QtOpenGL>
 
 Station::Station(double lat, double lon,
                  int elev, QString icao, QString label) :

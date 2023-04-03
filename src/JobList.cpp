@@ -30,8 +30,9 @@ void JobList::start() {
                     SLOT(finish()));
         }
     }
-    if (jobs.isEmpty())
-        connect(this, SIGNAL(started()), SLOT(finish()));
+    if (jobs.isEmpty()) {
+        connect(this, &JobList::started, this, &JobList::finish);
+    }
     else {
         jobs[0].obj->connect(this, SIGNAL(started()), jobs[0].start);
         //jobs[0].obj->metaObject()->invokeMethod(jobs[0].obj, jobs[0].start);

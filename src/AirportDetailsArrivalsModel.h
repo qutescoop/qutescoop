@@ -5,8 +5,6 @@
 #ifndef AIRPORTDETAILSARRIVALSMODEL_H_
 #define AIRPORTDETAILSARRIVALSMODEL_H_
 
-#include "_pch.h"
-
 #include "Pilot.h"
 
 class AirportDetailsArrivalsModel : public QAbstractTableModel {

@@ -4,6 +4,7 @@
 
 #include "ListClientsDialogModel.h"
 
+#include "Airport.h"
 #include "NavData.h"
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {

@@ -8,7 +8,6 @@
 #include "Client.h"
 #include "WhazzupData.h"
 #include "Sector.h"
-#include "Airport.h"
 
 #include <QJsonObject>
 

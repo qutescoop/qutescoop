@@ -7,7 +7,6 @@
 #include "Window.h"
 #include "Settings.h"
 #include "Whazzup.h"
-#include "helpers.h"
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;
@@ -33,7 +32,7 @@ ControllerDetails::ControllerDetails(QWidget *parent):
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 //    setWindowFlags(Qt::Tool);
 
-    connect(buttonShowOnMap, SIGNAL(clicked()), this, SLOT(showOnMap()));
+    connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
     if (!Settings::controllerDetailsSize().isNull()) resize(Settings::controllerDetailsSize());
     if (!Settings::controllerDetailsPos().isNull()) move(Settings::controllerDetailsPos());

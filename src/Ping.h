@@ -5,14 +5,14 @@
 #ifndef PING_H
 #define PING_H
 
-#include "_pch.h"
+#include <QtCore>
 
 class Ping: public QObject {
         Q_OBJECT
     public:
         void startPing(QString server);
     signals:
-        void havePing(QString,int);
+        void havePing(QString, int);
     private slots:
         void pingReadyRead();
     private:

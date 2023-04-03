@@ -1,10 +1,7 @@
 #ifndef MAPSCREEN_H
 #define MAPSCREEN_H
 
-#include "_pch.h"
-
 #include "GLWidget.h"
-#include "Settings.h"
 
 class MapScreen : public QWidget {
         Q_OBJECT

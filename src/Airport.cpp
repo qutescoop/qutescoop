@@ -4,7 +4,6 @@
 
 #include "Airport.h"
 
-#include "Tessellator.h"
 #include "helpers.h"
 #include "AirportDetails.h"
 #include "Settings.h"

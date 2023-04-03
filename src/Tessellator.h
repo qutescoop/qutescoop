@@ -5,30 +5,33 @@
 #ifndef TESSELLATOR_H_
 #define TESSELLATOR_H_
 
-#include "_pch.h"
+#include <QtCore>
+
+#ifdef Q_OS_WIN
+    #include <windows.h>
+#endif
 #ifdef __APPLE__
-#include <OpenGL/glu.h>
+    #include <OpenGL/glu.h>
 #else
-#include <GL/glu.h>
+    #include <GL/glu.h>
 #endif
 // platform specific stuff. tessellator callback definitions are not the
 // same on all platforms
 
 #ifdef Q_OS_MAC
-#define CALLBACK_CAST (GLvoid (*)())
-#define CALLBACK_DECL GLvoid
+    #define CALLBACK_CAST (GLvoid (*)())
+    #define CALLBACK_DECL GLvoid
 #endif
 
 #ifdef Q_OS_LINUX
-#define CALLBACK_CAST (void (*)())
-#define CALLBACK_DECL GLvoid
+    #define CALLBACK_CAST (void (*)())
+    #define CALLBACK_DECL GLvoid
 #endif
 
 #ifdef Q_OS_WIN
-#define CALLBACK_CAST (GLvoid (*) ())
-#define CALLBACK_DECL void CALLBACK
+    #define CALLBACK_CAST (GLvoid (*) ())
+    #define CALLBACK_DECL void CALLBACK
 #endif
-#include <QPair>
 class Tessellator {
     public:
         Tessellator();

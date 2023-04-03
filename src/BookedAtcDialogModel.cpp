@@ -4,9 +4,9 @@
 
 #include "BookedAtcDialogModel.h"
 
-#include "_pch.h"
-
-#include "Window.h"
+#include <QApplication>
+#include <QDesktopServices>
+#include <QMessageBox>
 
 void BookedAtcDialogModel::setClients(const QList<BookedController*> &controllers) {
     qDebug() << "BookedAtcDialogModel/setClients()";

@@ -5,8 +5,8 @@
 #ifndef SECTOR_H_
 #define SECTOR_H_
 
-#include "_pch.h"
-
+#include <QtCore>
+#include <QtOpenGL>
 
 class Sector {
     public:

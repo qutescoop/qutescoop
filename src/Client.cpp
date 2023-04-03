@@ -7,6 +7,8 @@
 #include "Whazzup.h"
 #include "Settings.h"
 
+#include <QInputDialog>
+
 Client::Client(const QJsonObject& json, const WhazzupData*) :
     server("")
 {

@@ -6,16 +6,18 @@
 
 #include "helpers.h"
 #include "LineReader.h"
-#include "Tessellator.h"
 #include "Pilot.h"
 #include "Controller.h"
 #include "Whazzup.h"
 #include "NavData.h"
+#include "GuiMessage.h"
 #include "Settings.h"
 #include "Waypoint.h"
 #include "PlanFlightDialog.h"
 #include "AirportDetails.h"
 #include "PilotDetails.h"
+#include "Airac.h"
+#include "SondeData.h"
 //#include <GL/glext.h>   // Multitexturing - not platform-independant
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
@@ -1775,14 +1777,14 @@ void GLWidget::showInactiveAirports(bool value) {
 void GLWidget::createFriendHighlighter() {
     _highlighter = new QTimer(this);
     _highlighter->setInterval(100);
-    connect(_highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
+    connect(_highlighter, &QTimer::timeout, this, &QGLWidget::updateGL);
     _highlighter->start();
 }
 
 void GLWidget::destroyFriendHightlighter() {
     if(_highlighter == 0) return;
     if(_highlighter->isActive()) _highlighter->stop();
-    disconnect(_highlighter, SIGNAL(timeout()), this, SLOT(updateGL()));
+    disconnect(_highlighter, &QTimer::timeout, this, &QGLWidget::updateGL);
     delete _highlighter;
     _highlighter = 0;
 }

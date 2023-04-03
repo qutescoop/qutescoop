@@ -5,22 +5,21 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
-#include "_pch.h"
-#include <QPoint>
-#ifdef __APPLE__
-#include <OpenGL/glu.h>
-#else
-#include <GL/glu.h>
+#include <qglobal.h>
+#ifdef Q_OS_WIN
+    #include <windows.h>
 #endif
+#ifdef __APPLE__
+    #include <OpenGL/glu.h>
+#else
+    #include <GL/glu.h>
+#endif
+
+#include <QPoint>
 #include "MapObject.h"
 #include "Sector.h"
-#include "Airport.h"
-#include "WhazzupData.h"
-#include "GuiMessage.h"
 #include "ClientSelectionWidget.h"
-#include "Airac.h"
-#include "SondeData.h"
-
+#include "Controller.h"
 
 class GLWidget : public QGLWidget {
         Q_OBJECT

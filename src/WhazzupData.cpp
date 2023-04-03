@@ -2,17 +2,14 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "_pch.h"
-
+#include "Airport.h"
 #include "WhazzupData.h"
-
 #include "Sector.h"
 #include "Pilot.h"
 #include "Controller.h"
 #include "BookedController.h"
 #include "NavData.h"
 #include "Settings.h"
-#include "helpers.h"
 
 WhazzupData::WhazzupData():
         servers(QList<QStringList>()),

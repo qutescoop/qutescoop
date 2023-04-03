@@ -5,7 +5,7 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#include "_pch.h"
+#include <QString>
 
 class Platform {
     public:

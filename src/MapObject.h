@@ -5,7 +5,7 @@
 #ifndef MAPOBJECT_H_
 #define MAPOBJECT_H_
 
-#include "_pch.h"
+#include <QtCore>
 
 class MapObject: public QObject {
         Q_OBJECT

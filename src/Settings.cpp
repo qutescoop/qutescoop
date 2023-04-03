@@ -3,7 +3,6 @@
  **************************************************************************/
 
 #include "Settings.h"
-#include "GuiMessage.h"
 
 #include "Whazzup.h"
 #include "Window.h"

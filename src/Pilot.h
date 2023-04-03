@@ -6,7 +6,6 @@
 #define PILOT_H_
 
 #include "Airline.h"
-#include "Airport.h"
 #include "Client.h"
 #include "Waypoint.h"
 

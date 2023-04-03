@@ -5,8 +5,6 @@
 #ifndef AIRPORT_H_
 #define AIRPORT_H_
 
-#include "_pch.h"
-
 #include "MapObject.h"
 #include "Controller.h"
 #include "Pilot.h"

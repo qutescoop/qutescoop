@@ -4,6 +4,7 @@
 
 #include "Airac.h"
 
+#include "Airport.h"
 #include "FileReader.h"
 #include "Waypoint.h"
 #include "NavData.h"

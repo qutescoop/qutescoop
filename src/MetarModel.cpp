@@ -4,7 +4,7 @@
 
 #include "MetarModel.h"
 
-#include "Settings.h"
+#include "Net.h"
 #include "Whazzup.h"
 #include "Window.h"
 
@@ -143,13 +143,13 @@ void MetarModel::downloadNextFromQueue()
         return; // we will be called via downloaded() later
     }
 
-    _metarReply = Net::g(_downloadQueue.keys().first());
-    connect(_metarReply, SIGNAL(finished()), this, SLOT(metarReplyFinished()));
+    _metarReply = Net::g(_downloadQueue.keys().constFirst());
+    connect(_metarReply, &QNetworkReply::finished, this, &MetarModel::metarReplyFinished);
 }
 
 void MetarModel::metarReplyFinished() {
     qDebug() << "MetarModel::downloaded()" << _metarReply->url();
-    disconnect(_metarReply, SIGNAL(finished()), this, SLOT(metarReplyFinished()));
+    disconnect(_metarReply, &QNetworkReply::finished, this, &MetarModel::metarReplyFinished);
 
     if(_metarReply->error() == QNetworkReply::NoError) {
         QString line = _metarReply->readAll().trimmed();

@@ -146,7 +146,7 @@ FORMS = \
     src/ListClientsDialog.ui\
     src/SectorView.ui \
     src/Window.ui
-HEADERS += src/_pch.h \
+HEADERS += \
     src/WhazzupData.h \
     src/Whazzup.h \
     src/Waypoint.h \

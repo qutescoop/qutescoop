@@ -5,8 +5,6 @@
 #ifndef AIRWAY_H_
 #define AIRWAY_H_
 
-#include "_pch.h"
-
 #include "Waypoint.h"
 
 class Airway {

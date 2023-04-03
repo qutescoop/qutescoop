@@ -6,7 +6,6 @@
 
 #include "Settings.h"
 #include "Tessellator.h"
-#include "NavData.h"
 #include "helpers.h"
 
 Sector::Sector(QStringList strings) :

@@ -5,6 +5,8 @@
 #include "Pilot.h"
 #include "SearchResultModel.h"
 
+#include <QFont>
+
 SearchResultModel::SearchResultModel(QObject *parent):
     QAbstractListModel(parent) {
 }

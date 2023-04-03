@@ -1,6 +1,8 @@
 /**************************************************************************
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
+#include "MapScreen.h"
+#include "NavData.h"
 #include "SectorView.h"
 
 Sectorview* sectorViewInstance = 0;

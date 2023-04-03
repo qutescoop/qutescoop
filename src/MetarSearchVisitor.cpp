@@ -2,6 +2,7 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
+#include "Airport.h"
 #include "MetarSearchVisitor.h"
 
 void MetarSearchVisitor::visit(MapObject *object) {
@@ -11,7 +12,7 @@ void MetarSearchVisitor::visit(MapObject *object) {
 		_airportMap[a->label] = a;
 }
 
-QList<Airport*> MetarSearchVisitor::airports() {
+QList<Airport*> MetarSearchVisitor::airports() const {
 	QList<Airport*> res;
 	
 	QList<QString> labels = _airportMap.keys();
@@ -22,7 +23,7 @@ QList<Airport*> MetarSearchVisitor::airports() {
 	return res;
 }
 
-QList<MapObject*> MetarSearchVisitor::result() {
+QList<MapObject*> MetarSearchVisitor::result() const {
 	QList<MapObject*> res;
 	QList<Airport*> airpts = airports();
 	for(int i = 0; i < airpts.size(); i++) res.append(airpts[i]);

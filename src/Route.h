@@ -5,8 +5,6 @@
 #ifndef ROUTE_H
 #define ROUTE_H
 
-#include "_pch.h"
-
 #include "Waypoint.h"
 
 class Route: public QObject {

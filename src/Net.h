@@ -1,8 +1,8 @@
 #ifndef NET_H
 #define NET_H
 
-#include "_pch.h"
-#include "Settings.h"
+#include <QtCore>
+#include <QtNetwork>
 
 class Net : public QNetworkAccessManager {
         Q_OBJECT

@@ -1,13 +1,11 @@
+// TODO: remove
+
 #ifndef SONDEDATA_H
 #define SONDEDATA_H
 
-
-//#include <QThread>
-//#include <QMutex>
-#include "_pch.h"
-#include "FileReader.h"
-#include "Settings.h"
 #include "Station.h"
+#include <QtOpenGL>
+#include <QtNetwork>
 
 class SondeData : public QObject {
         Q_OBJECT

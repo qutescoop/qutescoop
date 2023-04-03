@@ -13,8 +13,8 @@ MapObject::MapObject() :
 }
 
 MapObject::MapObject(QString label, QString toolTip) :
-    _toolTip(toolTip),
-    label(label)
+    label(label),
+    _toolTip(toolTip)
 {
 }
 
