@@ -137,16 +137,35 @@ bool Controller::isAtis() const
   return label.endsWith("_ATIS");
 }
 
-Airport *Controller::airport() const {
+QList <Airport*> Controller::airports() const {
+    auto airports = QList<Airport*>();
     auto _atcLabelTokens = atcLabelTokens();
+    if (_atcLabelTokens.empty()) {
+        return airports;
+    }
+    auto prefix = _atcLabelTokens.constFirst();
 
-    if (!_atcLabelTokens.empty()) {
-        QString tryAirport = specialAirportWorkarounds(_atcLabelTokens.first());
-        if (NavData::instance()->airports.contains(tryAirport))
-            return NavData::instance()->airports[tryAirport];
+    // ordinary / normal match EDDS_STG_APP -> EDDS
+    auto a = NavData::instance()->airports.value(prefix, 0);
+    if (a != 0) {
+        airports.append(a);
     }
 
-    return 0;
+    auto suffix = _atcLabelTokens.constLast();
+    // use matches from controllerAirportsMapping.dat
+    airports.append(NavData::instance()->additionalMatchedAirportsForController(prefix, suffix));
+
+    // if we have not had any match yet and since some
+    // VATSIMmers still don't think ICAO codes are cool
+    // IAH_TWR -> IAH
+    if(airports.isEmpty() && prefix.length() == 3) {
+        auto a = NavData::instance()->airports.value("K" + prefix, 0);
+        if (a != 0) {
+            airports.append(a);
+        }
+    }
+
+    return airports;
 }
 
 void Controller::showDetailsDialog() {
@@ -208,12 +227,11 @@ QString Controller::mapLabel() const { // LOVV
 }
 
 bool Controller::matches(const QRegExp& regex) const {
-    if (frequency.contains(regex)) return true;
-    if (atisMessage.contains(regex)) return true;
-    if(realName().contains(regex)) return true;
-    if (sector != 0)
-        if (sector->name.contains(regex)) return true;
-    return MapObject::matches(regex);
+    return frequency.contains(regex)
+        || atisMessage.contains(regex)
+        || realName().contains(regex)
+        || (sector != 0 && sector->name.contains(regex))
+        || MapObject::matches(regex);
 }
 
 bool Controller::isObserver() const {
@@ -223,18 +241,4 @@ bool Controller::isObserver() const {
 bool Controller::isATC() const {
   // 199.998 gets transmitted on VATSIM for a controller without prim freq
   return facilityType > 0 && frequency != "199.998";
-}
-
-QString Controller::specialAirportWorkarounds(const QString& rawAirport) const {
-  // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
-  if(rawAirport == "NY")
-      return "KLGA"; // map NY -> KLGA
-  else if(rawAirport == "MSK")
-      return "UUWW"; // map MSK -> UUWW
-
-  // VATSIMmers don't think ICAO codes are cool
-  if(rawAirport.length() == 3)
-      return "K" + rawAirport;
-
-  return rawAirport;
 }

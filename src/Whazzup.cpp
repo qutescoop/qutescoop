@@ -68,7 +68,6 @@ void Whazzup::processStatus() {
 
     _json3Urls.clear();
     _metar0Url = "";
-    _url1Url = "";
     _user0Url = "";
 
     QJsonDocument data = QJsonDocument::fromJson(_replyStatus->readAll());
@@ -87,41 +86,29 @@ void Whazzup::processStatus() {
                     }
                 }
             }
-            // The vatsimDataSources also contains links where the list of servers can be found, however those are extracted from the jsonv3 anyways
         }
 
         if(json.contains("user") && json["user"].isArray()) {
             QJsonArray userUrls = json["user"].toArray();
-            for(int i = 0; i < userUrls.size(); ++i) {
-                if(userUrls[i].isString()) {
-                    _user0Url = userUrls[i].toString();
-                    break;
-                }
+            if (userUrls.first() != QJsonValue::Undefined) {
+                _user0Url = userUrls.first().toString();
             }
         }
 
         if(json.contains("metar") && json["metar"].isArray()) {
             QJsonArray metarUrls = json["metar"].toArray();
-            for(int i = 0; i < metarUrls.size(); ++i) {
-                if(metarUrls[i].isString()) {
-                    _metar0Url = metarUrls[i].toString();
-                    break;
-                }
+            if (metarUrls.first() != QJsonValue::Undefined) {
+                _metar0Url = metarUrls.first().toString();
             }
         }
     }
 
-    if(!_msg0.isEmpty())
-        GuiMessages::warning(_msg0);
-
     _lastDownloadTime = QTime();
 
     GuiMessages::remove("statusdownload");
-    qDebug() << "Whazzup::statusDownloaded() msg0:" << _msg0;
-    qDebug() << "Whazzup::statusDownloaded() json3:" << _json3Urls;
-    qDebug() << "Whazzup::statusDownloaded() metar0:" << _metar0Url;
-    qDebug() << "Whazzup::statusDownloaded() url1:" << _url1Url;
-    qDebug() << "Whazzup::statusDownloaded() user0:" << _user0Url;
+    qDebug() << "Whazzup::statusDownloaded() data.v3[]:" << _json3Urls;
+    qDebug() << "Whazzup::statusDownloaded() metar.0:" << _metar0Url;
+    qDebug() << "Whazzup::statusDownloaded() user.0:" << _user0Url;
 
     if(_json3Urls.size() == 0)
         GuiMessages::warning("No Whazzup-URLs found. Try again later.");

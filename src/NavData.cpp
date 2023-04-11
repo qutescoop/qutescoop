@@ -32,6 +32,7 @@ NavData::~NavData() {
 
 void NavData::load() {
     loadAirports(Settings::dataDirectory("data/airports.dat"));
+    loadControllerAirportsMapping(Settings::dataDirectory("data/controllerAirportsMapping.dat"));
     loadSectors();
     loadCountryCodes(Settings::dataDirectory("data/countrycodes.dat"));
     loadAirlineCodes(Settings::dataDirectory("data/airlines.dat"));
@@ -41,28 +42,76 @@ void NavData::load() {
 void NavData::loadAirports(const QString& filename) {
     airports.clear();
     activeAirports.clear();
-    FileReader fileReader(filename);
-    while (!fileReader.atEnd()) {
-        QString line = fileReader.nextLine();
-        if (line.isNull())
+    FileReader fr(filename);
+    while (!fr.atEnd()) {
+        QString _line = fr.nextLine();
+        if (_line.isNull()) {
             return;
-        Airport *airport = new Airport(line.split(':'));
+        }
+
+        Airport *airport = new Airport(_line.split(':'));
         if (airport != 0 && !airport->isNull())
             airports[airport->label] = airport;
     }
 }
 
-void NavData::loadCountryCodes(const QString& filename) {
-    countryCodes.clear();
-    FileReader fileReader(filename);
-    while (!fileReader.atEnd()) {
-        QString line = fileReader.nextLine();
-        if (line.isNull())
-            return;
-        QStringList list = line.split(':');
-        if(!(list.size() == 2))
+void NavData::loadControllerAirportsMapping(const QString &filePath)
+{
+    m_controllerAirportsMapping.clear();
+    FileReader fr(filePath);
+    while(!fr.atEnd()) {
+        QString _line = fr.nextLine().trimmed();
+
+        if(_line.isEmpty() || _line.startsWith(";")) {
             continue;
-        countryCodes[list.first()] = list.last();
+        }
+
+        QStringList _fields = _line.split(':');
+        if(_fields.size() != 3) {
+            auto msg = QString("Could not load line '%1' (%2 fields) from %3")
+                           .arg(_line).arg(_fields.count()).arg(filePath);
+            qCritical() << "NavData::loadControllerAirportsMapping()" << msg;
+            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+            exit(EXIT_FAILURE);
+        }
+
+        ControllerAirportsMapping _cam;
+        _cam.prefix = _fields[0];
+        _cam.suffixes = _fields[1].split(" ", Qt::SkipEmptyParts);
+        foreach(const auto _airportIcao, _fields[2].split(" ", Qt::SkipEmptyParts)) {
+            if (airports.contains(_airportIcao)) {
+                _cam.airports.append(airports.value(_airportIcao));
+            } else {
+                auto msg = QString("While processing line '%1' from %2: Airport '%3' not found.")
+                               .arg(_line, filePath, _airportIcao);
+                qCritical() << "NavData::loadControllerAirportsMapping()" << msg;
+                QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        m_controllerAirportsMapping.append(_cam);
+    }
+}
+
+void NavData::loadCountryCodes(const QString& filePath) {
+    countryCodes.clear();
+    FileReader fr(filePath);
+    while (!fr.atEnd()) {
+        QString _line = fr.nextLine();
+        if (_line.isNull()) {
+            return;
+        }
+
+        QStringList _fields = _line.split(':');
+        if(_fields.size() != 2) {
+            auto msg = QString("Could not load line '%1' (%2 fields) from %3")
+                           .arg(_line).arg(_fields.count()).arg(filePath);
+            qCritical() << "NavData::loadCountryCodes()" << msg;
+            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+            exit(EXIT_FAILURE);
+        }
+        countryCodes[_fields.first()] = _fields.last();
     }
 }
 
@@ -82,9 +131,9 @@ void NavData::loadAirlineCodes(const QString &filePath) {
     }
 
     auto count = 0;
-    FileReader fileReader(filePath);
-    while(!fileReader.atEnd()) {
-        QString _line = fileReader.nextLine();
+    FileReader fr(filePath);
+    while(!fr.atEnd()) {
+        QString _line = fr.nextLine();
         QStringList _fields = _line.split(0x09);   // 0x09 code for Tabulator
         if (_fields.count() != 4) {
             auto msg = QString("Could not load line '%1' (%2 fields) from %3")
@@ -131,6 +180,21 @@ Airport* NavData::airportAt(double lat, double lon, double maxDist) const {
     return 0;
 }
 
+QList<Airport*> NavData::additionalMatchedAirportsForController(QString prefix, QString suffix) const
+{
+    QList<Airport*> ret;
+    foreach(auto _cam, m_controllerAirportsMapping) {
+        if (
+            _cam.prefix == prefix
+            && (_cam.suffixes.isEmpty() || _cam.suffixes.contains(suffix))
+        ) {
+            ret.append(_cam.airports);
+        }
+    }
+
+    return ret;
+}
+
 void NavData::updateData(const WhazzupData& whazzupData) {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "NavData::updateData() on" << airports.size() << "airports";
@@ -172,8 +236,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
     }
 
     foreach(Controller *c, whazzupData.controllers) {
-        auto _airport = c->airport();
-        if (_airport != 0) {
+        foreach(auto _airport, c->airports()) {
             if(c->isAppDep()) {
                 _airport->addApproach(c);
             }
@@ -190,7 +253,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
                 _airport->addAtis(c);
             }
             newActiveAirportsSet.insert(_airport);
-        }  
+        }
     }
 
     activeAirports.clear();

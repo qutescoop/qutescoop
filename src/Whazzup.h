@@ -48,7 +48,7 @@ class Whazzup: public QObject {
 
         WhazzupData _data, _predictedData;
         QStringList _json3Urls;
-        QString _metar0Url, _url1Url, _user0Url, _msg0;
+        QString _metar0Url, _user0Url;
         QTime _lastDownloadTime;
         QTimer *_downloadTimer, *_bookingsTimer;
         QNetworkReply *_replyStatus, *_replyWhazzup, *_replyBookings;

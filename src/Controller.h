@@ -39,7 +39,7 @@ class Controller: public Client {
         bool isDel() const;
         bool isAtis() const;
 
-        Airport *airport() const;
+        QList<Airport*> airports() const;
 
         QString frequency, atisMessage, atisCode;
         int facilityType, visualRange;

@@ -1,0 +1,88 @@
+; By default airports are assigned to controllers by their common prefix (e.g. EDDS_STG_APP -> EDDS).
+;
+; Then THIS FILE allows to add additional arbitrary airports to a controller (e.g. EDDS_...APP/DEP -> EDSB).
+;
+; Special US handling: Then if there has not been an airport match yet and the controller login prefix is
+; only 3 letters, a "K" is prependend and a match with such an airport code is tried (e.g. IAH_TWR -> KIAH).
+;
+; The fields in this file are:
+; 1. Controller Login PREFIX
+; 2. Controller Login SUFFIXes (leave empty for any or add multiple space-separated)
+; 3. Airports (space-separated)
+;
+; PREFIX and SUFFIX are currently only interpreted as the chunk before/after the first/last _ in the
+; controller login. So currently it is not possible to map the hypothetical logins SCHWABEN_WEST_APP to EDDS
+; and SCHWABEN_EAST_APP to EDMA.
+; Empty lines and lines starting with ; are ignored.
+
+; controller logins covering additional airports
+EDDS:APP DEP:EDSB
+
+; no-airport-with-that-prefix terminal controller logins
+LIMM:APP DEP:LIMC LIML LIME LSZA
+LSFA:APP DEP:LSZR EDNY EDTM
+ESSEX:APP DEP:EGSS EGGW EGSC
+
+; shortened terminal controller logins (Russia)
+MSK::UUWW
+
+; shortened terminal controllers (USA)
+NY::KLGA
+
+; shortened terminal controllers (Australia)
+; https://vatpac.org/controllers/position
+AD::YPAD
+AY::YMAY
+AS::YBAS
+AM::YAMB
+AF::YBAF
+AV::YMAV
+BK::YSBK
+BN::YBBN
+BN-C:APP:YBBN
+BN-F:APP:YBBN
+BN-S:APP DEP:YBBN
+BN-N:GND:YBBN
+BN-S:GND:YBBN
+BN-W:TWR:YBBN
+BRM::YBRM
+CS::YBCS
+CN::YSCN
+CB::YSCB
+CB-W:APP:YSCB
+CFS::YCFS
+DN::YPDN
+DN-W:APP:YPDN
+ES::YMES
+ED::YPED
+EN::YMEN
+GIG::YGIG
+CG::YBCG
+HM::YBHM
+HB::YMHB
+JT::YPJT
+KA::YPKA
+LT::YMLT
+MK::YBMK
+ML::YMML
+ML-S:DEP:YMML
+MB::YMMB
+NW::YSNW
+OK::YBOK
+PF::YPPF
+PE::YPEA
+PH::YPPH
+PH-E:GND:YPPH
+RI::YSRI
+RK::YBRK
+SU::YBSU
+SY::YSSY
+SY-S:APP DEP:YSSY
+SY-DE:APP:YSSY
+SY-D:APP:YSSY
+SY-C:DEP:YSSY
+SY-E:GND TWR:YSSY
+TW::YSTW
+TN::YPTN
+TL::YBTL
+WLM::YWLM

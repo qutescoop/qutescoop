@@ -14,6 +14,11 @@ class Pilot;
 
 class Airport: public MapObject {
     public:
+        const static int symbologyAppRadius_nm = 28;
+        const static int symbologyTwrRadius_nm = 16;
+        const static int symbologyGndRadius_nm = 13;
+        const static int symbologyDelRadius_nm = 10;
+
         Airport();
         Airport(const QStringList &list);
         ~Airport();
@@ -56,8 +61,9 @@ class Airport: public MapObject {
         Metar metar;
 
     private:
-        GLuint _appDisplayList, _twrDisplayList,
-        _gndDisplayList, _delDisplayList;
+        GLuint _appDisplayList, _twrDisplayList, _gndDisplayList, _delDisplayList;
+        void appGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const;
+        void twrGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const;
 };
 
 #endif /*AIRPORT_H_*/

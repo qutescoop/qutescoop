@@ -477,22 +477,41 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
 
     // make sure all the lists are there to avoid nested glNewList calls
     foreach(Controller *c, controllers) {
-        if (c->sector != 0)
-                c->sector->glPolygonHighlighted();
+        if (c->sector != 0) {
+            c->sector->glPolygonHighlighted();
+        } else if (c->isAppDep()) {
+            foreach(auto _a, c->airports()) {
+                _a->appDisplayList();
+            }
+        } else if (c->isTwr()) {
+            foreach(auto _a, c->airports()) {
+                _a->twrDisplayList();
+            }
+        }
     }
 
     // create a list of lists
     glNewList(_hoveredSectorPolygonsList, GL_COMPILE);
     foreach(Controller *c, controllers) {
-        if (c->sector != 0)
-                glCallList(c->sector->glPolygonHighlighted());
+        if (c->sector != 0) {
+            glCallList(c->sector->glPolygonHighlighted());
+        } else if (c->isAppDep()) {
+            foreach(auto _a, c->airports()) {
+                glCallList(_a->appDisplayList());
+            }
+        } else if (c->isTwr()) {
+            foreach(auto _a, c->airports()) {
+                glCallList(_a->twrDisplayList());
+            }
+        }
     }
     glEndList();
 
 
     // FIR borders
-    if (_hoveredSectorPolygonBorderLinesList == 0)
-            _hoveredSectorPolygonBorderLinesList = glGenLists(1);
+    if (_hoveredSectorPolygonBorderLinesList == 0) {
+        _hoveredSectorPolygonBorderLinesList = glGenLists(1);
+    }
 
 
     if (!_allSectorsDisplayed && Settings::firHighlightedBorderLineStrength() > 0.) {
@@ -961,8 +980,9 @@ void GLWidget::paintGL() {
     //render Approach
     if(Settings::showAPP()) {
         foreach(Airport *a, airportList) {
-            if(!a->approaches.isEmpty())
+            if(!a->approaches.isEmpty()) {
                 glCallList(a->appDisplayList());
+            }
         }
     }
 
@@ -1111,12 +1131,24 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     }
 
 
-    double currLat, currLon;
-    if (mouse2latlon(currentPos.x(), currentPos.y(), currLat, currLon)) {
+    double lat, lon;
+    if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon)) {
         QSet<Controller*> _newHoveredControllers;
-        foreach(Controller *c, Whazzup::instance()->whazzupData().controllersWithSectors().values()) {
-            if (c->sector->containsPoint(QPointF(currLat, currLon))) {
+        foreach(Controller *c, Whazzup::instance()->whazzupData().controllers.values()) {
+            if (c->sector != 0 && c->sector->containsPoint(QPointF(lat, lon))) {
                 _newHoveredControllers.insert(c);
+            } else { // APP, TWR
+                int maxDist_nm = -1;
+                if (c->isAppDep()) {
+                    maxDist_nm = Airport::symbologyAppRadius_nm;
+                } else if (c->isTwr()) {
+                    maxDist_nm = Airport::symbologyTwrRadius_nm;
+                }
+                foreach(auto *_a, c->airports()) {
+                    if(NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
+                        _newHoveredControllers.insert(c);
+                    }
+                }
             }
         }
         if (_newHoveredControllers != _hoveredControllers) {
@@ -1186,7 +1218,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
                       " onGlobe=%7, globe[lat=%3, lon=%4]"
                     )
                     .arg(event->x()).arg(event->y())
-                    .arg(lat).arg(lon)
+                    .arg(onGlobe? lat: false).arg(onGlobe? lon: false)
                     .arg(width()).arg(height())
                     .arg(onGlobe)
                     .arg(QCursor::pos().x())
@@ -1237,9 +1269,10 @@ void GLWidget::rightClick(const QPoint& pos) {
     } else if (countRelevant > 1) {
         GuiMessages::message("too many objects under cursor");
     } else if (airport != 0) {
-        GuiMessages::message(QString("toggled routes for %1 [%2]").arg(airport->label).
-                             arg(airport->showFlightLines? "off": "on"),
-                             "routeToggleAirport");
+        GuiMessages::message(
+            QString("toggled routes for %1 [%2]").arg(airport->label, airport->showFlightLines? "off": "on"),
+            "routeToggleAirport"
+        );
         airport->showFlightLines = !airport->showFlightLines;
         if (AirportDetails::instance(false) != 0)
             AirportDetails::instance()->refresh();
@@ -1249,9 +1282,10 @@ void GLWidget::rightClick(const QPoint& pos) {
         updateGL();
     } else if (pilot != 0) {
         // display flight path for pilot
-        GuiMessages::message(QString("toggled route for %1 [%2]").arg(pilot->label).
-                             arg(pilot->showDepDestLine? "off": "on"),
-                             "routeTogglePilot");
+        GuiMessages::message(
+            QString("toggled route for %1 [%2]").arg(pilot->label, pilot->showDepDestLine? "off": "on"),
+            "routeTogglePilot"
+        );
         pilot->showDepDestLine = !pilot->showDepDestLine;
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();
@@ -1592,6 +1626,26 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
         }
     }
 
+    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers.values()) {
+        if (c->sector != 0 && c->sector->containsPoint(QPointF(lat, lon))) { // controllers with sectors
+            result.removeAll(c);
+            result.append(c);
+        } else { // APP, TWR
+            int maxDist_nm = -1;
+            if (c->isAppDep()) {
+                maxDist_nm = Airport::symbologyAppRadius_nm;
+            } else if (c->isTwr()) {
+                maxDist_nm = Airport::symbologyTwrRadius_nm;
+            }
+            foreach(auto *_a, c->airports()) {
+                if(NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
+                    result.removeAll(c);
+                    result.append(c);
+                }
+            }
+        }
+    }
+
     foreach(Pilot *p, Whazzup::instance()->whazzupData().pilots.values()) {
         double x = p->lat - lat;
         double y = p->lon - lon;
@@ -1601,14 +1655,6 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
         }
     }
 
-    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers.values()) {
-        if (c->sector != 0) {
-            if (c->sector->containsPoint(QPointF(lat, lon))) {
-                result.removeAll(c);
-                result.append(c);
-            }
-        }
-    }
     return result;
 }
 

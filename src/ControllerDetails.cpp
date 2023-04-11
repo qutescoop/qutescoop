@@ -30,7 +30,6 @@ ControllerDetails::ControllerDetails(QWidget *parent):
         _controller(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-//    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
@@ -73,9 +72,41 @@ void ControllerDetails::refresh(Controller *newController) {
     }
     lblFrequency->setText(frequencyHtml);
 
-    pbAirportDetails->setVisible(_controller->airport() != 0);
-    pbAirportDetails->setText(   _controller->airport() != 0? _controller->airport()->toolTip(): "");
+    // airports
+    foreach(auto _w, gridAirports->findChildren<QWidget *>(QString(), Qt::FindDirectChildrenOnly)) {
+        _w->disconnect();
+        _w->deleteLater();
+    }
 
+    delete gridAirportsLayout;
+    gridAirportsLayout = new QGridLayout(gridAirports);
+    gridAirports->setLayout(gridAirportsLayout);
+
+    int i = 0;
+    foreach(auto *_a, _controller->airports()) {
+        if (_a == 0) {
+            continue;
+        }
+
+        auto *_airportPb = new QPushButton(gridAirports);
+        _airportPb->setText(_a->toolTip());
+        auto _font = _airportPb->font();
+        _font.setBold(true);
+        _airportPb->setFont(_font);
+        connect(
+            _airportPb,
+            &QPushButton::clicked,
+            this,
+            [=](bool) {
+                _a->showDetailsDialog();
+            }
+        );
+        gridAirportsLayout->addWidget(_airportPb, floor(i / 2), i % 2);
+        i++;
+    }
+    gridAirportsLayout->update();
+
+    // ATIS / controller info
     QString atis = QString("<code style='margin: 50px; padding: 50px'>%1</code>").arg(
         QString(_controller->atisMessage.toHtmlEscaped()).replace("\n", "<br>")
     );
@@ -83,10 +114,8 @@ void ControllerDetails::refresh(Controller *newController) {
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(_controller->assumeOnlineUntil.toString("HHmm"));
     lblAtis->setText(atis);
-    // This does not seem to be necessary. Changing the content changes the size hint and triggers a window resize.
-    // lblAtis->adjustSize(); // ensure auto-resize
 
-    gbAtis->setTitle(_controller->label.endsWith("_ATIS")? "ATIS" : "Controller info");
+    gbInfo->setTitle(_controller->label.endsWith("_ATIS")? "ATIS" : "Controller info");
 
     if(_controller->isFriend())
         buttonAddFriend->setText("remove &friend");
@@ -100,19 +129,11 @@ void ControllerDetails::refresh(Controller *newController) {
 
     // enable if we know position
     buttonShowOnMap->setDisabled(qFuzzyIsNull(_controller->lat) && qFuzzyIsNull(_controller->lon));
-
-    // @see https://github.com/qutescoop/qutescoop/issues/124
-    // adjustSize();
 }
 
 void ControllerDetails::on_buttonAddFriend_clicked() {
     friendClicked();
     refresh();
-}
-
-void ControllerDetails::on_pbAirportDetails_clicked() {
-    if (_controller->airport() != 0)
-        _controller->airport()->showDetailsDialog();
 }
 
 void ControllerDetails::closeEvent(QCloseEvent *event) {
@@ -128,4 +149,3 @@ void ControllerDetails::on_pbAlias_clicked()
         refresh();
     }
 }
-
