@@ -268,6 +268,15 @@ Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, doubl
     }
 
     if (result == 0) { // trying generic formats
+        QRegExp eurocontrol("(\\d{2})"
+                            "((\\d{2})?)"
+                            "((\\d{2})?)"
+                            "([NS])"
+                            "(\\d{3})"
+                            "((\\d{2})?)"
+                            "((\\d{2})?)"
+                            "([EW])"); // things that are valid for the Eurocontrol route validator:
+                    // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
         QRegExp slash("([\\-]?\\d{2})/([\\-]?\\d{2,3})"); // some pilots
                                                 // ..like to use non-standard: -53/170
         QRegExp wildGuess("([NS]?)(\\d{2})([NSEW])(\\d{2,3})([EW]?)"); // or even
@@ -279,6 +288,20 @@ Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, doubl
             double d = NavData::distance(lat, lon, arincP->first, arincP->second);
             if ((d < minDist) && (d < maxDist)) {
                 result = new Waypoint(id, arincP->first, arincP->second);
+            }
+        } else if (eurocontrol.exactMatch(id)) { // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
+            auto capturedTexts = eurocontrol.capturedTexts();
+            double wLat = capturedTexts[1].toDouble() + capturedTexts[2].toDouble() / 60. + capturedTexts[4].toDouble() / 3600.;
+            double wLon = capturedTexts[7].toDouble() + capturedTexts[8].toDouble() / 60. + capturedTexts[10].toDouble() / 3600.;
+            if (capturedTexts[4] == "S") {
+                wLat = -wLat;
+            }
+            if (capturedTexts[12] == "W") {
+                wLon = -wLon;
+            }
+            double d = NavData::distance(lat, lon, wLat, wLon);
+            if ((d < minDist) && (d < maxDist)) {
+                result = new Waypoint(id, wLat, wLon);
             }
         } else if (slash.exactMatch(id)) { // slash-style: 35/30
             auto capturedTexts = slash.capturedTexts();
