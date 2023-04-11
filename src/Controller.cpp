@@ -227,9 +227,7 @@ bool Controller::isATC() const {
 
 QString Controller::specialAirportWorkarounds(const QString& rawAirport) const {
   // map special callsigns to airports. Still not perfect, because only 1 airport gets matched this way...
-  if(rawAirport == "EDBB")
-      return "EDDB"; // map EDBB -> EDDB (no other active airfields covered by this sector)
-  else if(rawAirport == "NY")
+  if(rawAirport == "NY")
       return "KLGA"; // map NY -> KLGA
   else if(rawAirport == "MSK")
       return "UUWW"; // map MSK -> UUWW
