@@ -1,6 +1,6 @@
 ------
-
-AIRPORTS.DAT
+airports.dat
+------
 
 This file contains data about airports. Each row refers to an airport and
 contains 6 fields separated with colons. An example of a row from this file:
@@ -21,10 +21,17 @@ RO          - ISO code of the country where this airport is
 To add an airport, simply add a line with the same formatting. Avoid having two
 lines with the same airport code (the code is an unique key for Dolomynum).
 
-
+------
+controllerAirportsMapping.dat
 ------
 
-COASTLINE.DAT and COUNTRIES.DAT
+By default airports are assigned to controllers by their common prefix (= ICAO-code).
+This file allows to add additional airports to a controller. See the comment in the
+file for how is works.
+
+------
+coastline.dat and countries.dat
+------
 
 These are the world coastline (continents, islands, large lakes etc) and
 country borders, drawn as closed polygons on the globe. Each line contains
@@ -40,8 +47,8 @@ closed polygons for faster drawing.
 
 
 ------
-
-FIRLIST.DAT
+firslist.dat
+------
 
 This contains the list of sectors, each row referring to a sector and
 containing 6 fields separated with colons. An example of a row from this file:
@@ -72,8 +79,8 @@ key for Dolomynum).
 
 
 ------
-
-FIRDISPLAY.DAT
+firdisplay.dat
+------
 
 This contains the shapes of the airspaces, constructed of points described as
 lat-lon pairs. The connection between firlist.dat and firdisplay.dat is made
@@ -97,9 +104,9 @@ Avoid having two shapes with the same Display List ID.
 
 
 ------
-
-FIRDISPLAY.SUP
+firdisplay.sup
 [unused since QuteScoop v2.5.0]
+------
 
 Any shapes present in this file will suppress those in firdisplay.dat. These
 are not overwritten each time when firdisplay.dat is updated, so it is
@@ -108,10 +115,10 @@ airspaces (e.g. VATSIM-IVAO differences).
 
 
 ------
+airlines.dat
+------
 
-AIRLINES.DAT
-
-This file structure is the same that EuroScope uses in its ICAO_Airlines.txt.
+The file structure is the same that EuroScope uses in its ICAO_Airlines.txt.
 
 ICAO Code 	Airline Name	Callsing	Country
 
@@ -127,7 +134,7 @@ Country:		Australia
 ------
 [deprecated: might be removed]
 CLOUDMIRRORS.dat
-
+------
 This contains mirrors to download cloud images.
 Format:
 
@@ -138,6 +145,3 @@ http://xplanet-sydney.inside.net/clouds_2048.jpg
 [2048px] -- for 2048 px images(low resolution)
 http://xplanet-sydney.inside.net/clouds_2048.jpg -- URL
 ;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg -- line comment, ignored
-
-------
-

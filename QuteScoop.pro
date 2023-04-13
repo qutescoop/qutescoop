@@ -71,6 +71,7 @@ CONFIG(release,release|debug) {
     dataFiles.path = $$DESTDIR/data
     dataFiles.files += ./data/_notes.txt
     dataFiles.files += ./data/airports.dat
+    dataFiles.files += ./data/controllerAirportsMapping.dat
     dataFiles.files += ./data/coastline.dat
     dataFiles.files += ./data/countries.dat
     dataFiles.files += ./data/countrycodes.dat

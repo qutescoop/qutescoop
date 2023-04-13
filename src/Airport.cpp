@@ -7,6 +7,7 @@
 #include "helpers.h"
 #include "AirportDetails.h"
 #include "Settings.h"
+#include "NavData.h"
 
 Airport::Airport() :
         showFlightLines(false),
@@ -65,27 +66,27 @@ const GLuint& Airport::appDisplayList() {
     if(_appDisplayList != 0)
         return _appDisplayList;
 
-    QColor middleColor = Settings::appCenterColor();
-    QColor marginColor = Settings::appMarginColor();
-    QColor borderColor = Settings::appBorderLineColor();
-    GLfloat borderLineWidth = Settings::appBorderLineWidth();
-
     _appDisplayList = glGenLists(1);
     glNewList(_appDisplayList, GL_COMPILE);
+    appGl(
+        Settings::appCenterColor(),
+        Settings::appMarginColor(),
+        Settings::appBorderLineColor(),
+        Settings::appBorderLineWidth()
+    );
+    glEndList();
 
+    return _appDisplayList;
+}
+
+void Airport::appGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const {
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(middleColor.redF(), middleColor.greenF(), middleColor.blueF(), middleColor.alphaF());
     VERTEX(lat, lon);
     glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
-    GLdouble circle_distort = qCos(lat * Pi180);
-    GLfloat deltaLon = Nm2Deg(40);
-    GLfloat deltaLat = circle_distort * deltaLon;
-
     for(int i = 0; i <= 360; i += 10) {
-        VERTEX(
-            lat + deltaLat * qCos(i * Pi180),
-            lon + deltaLon * qSin(i * Pi180)
-        );
+        auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyAppRadius_nm, i);
+        VERTEX(_p.first,_p.second);
     }
     glEnd();
 
@@ -93,67 +94,55 @@ const GLuint& Airport::appDisplayList() {
     glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
     glBegin(GL_LINE_LOOP);
     for(int i = 0; i <= 360; i += 10) {
-        VERTEX(
-            lat + deltaLat * qCos(i * Pi180),
-            lon + deltaLon * qSin(i * Pi180)
-        );
+        auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyAppRadius_nm, i);
+        VERTEX(_p.first,_p.second);
     }
     glEnd();
-
-    glEndList();
-
-    return _appDisplayList;
 }
+
 
 const GLuint& Airport::twrDisplayList() {
     if(_twrDisplayList != 0)
         return _twrDisplayList;
 
-    QColor middleColor = Settings::twrCenterColor();
-    QColor marginColor = Settings::twrMarginColor();
-    // @todo: using APP border currently
-    QColor borderColor = Settings::appBorderLineColor();
-    GLfloat borderWidth = Settings::appBorderLineWidth();
-
     _twrDisplayList = glGenLists(1);
     glNewList(_twrDisplayList, GL_COMPILE);
 
-    GLdouble circle_distort = qCos(lat * Pi180);
-    GLfloat deltaLon = Nm2Deg(22);
-    GLfloat deltaLat = circle_distort * deltaLon;
-
-    QList<QPointF> points;
-    for(int i = 0; i <= 360; i += 10) {
-        points.append(
-            QPointF(
-                lon + deltaLon * qSin(i * Pi180),
-                lat + deltaLat * qCos(i * Pi180)
-            )
-        );
-    }
-
-    glBegin(GL_TRIANGLE_FAN);
-    glColor4f(middleColor.redF(), middleColor.greenF(), middleColor.blueF(), middleColor.alphaF());
-    VERTEX(lat, lon);
-    glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
-    for(int i = 0; i < points.size(); i++) {
-        VERTEX(points[i].y(), points[i].x());
-    }
-    glEnd();
-
-    if (borderWidth > 0.) {
-        glLineWidth(borderWidth);
-        glBegin(GL_LINE_LOOP);
-        glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
-        for(int i = 0; i < points.size(); i++) {
-            VERTEX(points[i].y(), points[i].x());
-        }
-        glEnd();
-    }
+    twrGl(
+        Settings::twrCenterColor(),
+        Settings::twrMarginColor(),
+        // @todo: using APP border currently
+        Settings::appBorderLineColor(),
+        Settings::appBorderLineWidth()
+    );
 
     glEndList();
 
     return _twrDisplayList;
+}
+
+
+void Airport::twrGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const {
+    glBegin(GL_TRIANGLE_FAN);
+    glColor4f(middleColor.redF(), middleColor.greenF(), middleColor.blueF(), middleColor.alphaF());
+    VERTEX(lat, lon);
+    glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
+    for(int i = 0; i <= 360; i += 10) {
+        auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyTwrRadius_nm, i);
+        VERTEX(_p.first,_p.second);
+    }
+    glEnd();
+
+    if (borderLineWidth > 0.) {
+        glLineWidth(borderLineWidth);
+        glBegin(GL_LINE_LOOP);
+        glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+        for(int i = 0; i <= 360; i += 10) {
+            auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyTwrRadius_nm, i);
+            VERTEX(_p.first,_p.second);
+        }
+        glEnd();
+    }
 }
 
 const GLuint& Airport::gndDisplayList() {
@@ -167,8 +156,8 @@ const GLuint& Airport::gndDisplayList() {
     glNewList(_gndDisplayList, GL_COMPILE);
 
     GLfloat circle_distort = qCos(lat * Pi180);
-    GLfloat innerDeltaLon = Nm2Deg(4);
-    GLfloat outerDeltaLon = Nm2Deg(18);
+    GLfloat innerDeltaLon = Nm2Deg(Airport::symbologyGndRadius_nm / 2.);
+    GLfloat outerDeltaLon = Nm2Deg(Airport::symbologyGndRadius_nm / .7);
     GLfloat innerDeltaLat = circle_distort * innerDeltaLon;
     GLfloat outerDeltaLat = circle_distort * outerDeltaLon;
 
@@ -220,7 +209,7 @@ const GLuint& Airport::delDisplayList() {
     glNewList(_delDisplayList, GL_COMPILE);
 
     GLfloat circle_distort = qCos(lat * Pi180);
-    GLfloat deltaLon = Nm2Deg(14);
+    GLfloat deltaLon = Nm2Deg(Airport::symbologyDelRadius_nm / .7);
     GLfloat deltaLat = circle_distort * deltaLon;
 
     QList<QPointF> points;

@@ -6,5 +6,6 @@ station.dat%%246
 countrycodes.dat%%118
 firdisplay.dat%%330
 airports.dat%%337
+controllerAirportsMapping.dat%%1
 coastline.dat%%118
 firlist.dat%%336
