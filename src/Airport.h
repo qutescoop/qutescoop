@@ -20,7 +20,7 @@ class Airport: public MapObject {
         const static int symbologyDelRadius_nm = 10;
 
         Airport();
-        Airport(const QStringList &list);
+        Airport(const QStringList &list, unsigned int debugLineNumber = 0);
         ~Airport();
 
         virtual void showDetailsDialog();

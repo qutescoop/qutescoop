@@ -15,19 +15,33 @@ Airport::Airport() :
         _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 }
-Airport::Airport(const QStringList& list) :
+Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
         showFlightLines(false),
         _appDisplayList(0),
         _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 
-    if(list.size() != 6)
-        return;
+    if(list.size() != 6) {
+        auto msg = QString("While processing line #%1 '%2' from data/airports.dat: Found %3 fields, expected exactly 6.")
+                       .arg(debugLineNumber).arg(list.join(':')).arg(list.size());
+        qCritical() << "Airport::Airport()" << msg;
+        QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+        exit(EXIT_FAILURE);
+    }
 
     label = list[0];
     name = list[1];
     city = list[2];
     countryCode = list[3];
+
+    if (countryCode != "" && NavData::instance()->countryCodes.value(countryCode, "") == "") {
+        auto msg = QString("While processing line #%1 from data/airports.dat: Could not find country '%2' for airport %3 (%4, %5) in data/countryCodes.dat.")
+                       .arg(debugLineNumber).arg(countryCode).arg(label).arg(name).arg(city);
+        qCritical() << "Airport::Airport()" << msg;
+        QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+        exit(EXIT_FAILURE);
+    }
+
     lat = list[4].toDouble();
     lon = list[5].toDouble();
 }
