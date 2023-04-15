@@ -31,10 +31,10 @@ NavData::~NavData() {
 }
 
 void NavData::load() {
+    loadCountryCodes(Settings::dataDirectory("data/countrycodes.dat"));
     loadAirports(Settings::dataDirectory("data/airports.dat"));
     loadControllerAirportsMapping(Settings::dataDirectory("data/controllerAirportsMapping.dat"));
     loadSectors();
-    loadCountryCodes(Settings::dataDirectory("data/countrycodes.dat"));
     loadAirlineCodes(Settings::dataDirectory("data/airlines.dat"));
     emit loaded();
 }
@@ -43,15 +43,34 @@ void NavData::loadAirports(const QString& filename) {
     airports.clear();
     activeAirports.clear();
     FileReader fr(filename);
+
+    auto countMissingCountry = 0;
+
+    auto count = 0;
     while (!fr.atEnd()) {
-        QString _line = fr.nextLine();
-        if (_line.isNull()) {
-            return;
+        ++count;
+        QString _line = fr.nextLine().trimmed();
+
+        if(_line.isEmpty() || _line.startsWith(";")) {
+            continue;
         }
 
-        Airport *airport = new Airport(_line.split(':'));
-        if (airport != 0 && !airport->isNull())
+        Airport *airport = new Airport(_line.split(':'), count);
+
+        if (airport->countryCode == 0) {
+            ++countMissingCountry;
+        }
+
+        if (airport != 0 && !airport->isNull()) {
             airports[airport->label] = airport;
+        }
+    }
+
+    if (countMissingCountry != 0) {
+        auto msg = QString("%1 airports are missing a country code. Please help by adding them in data/airports.dat.")
+                       .arg(countMissingCountry);
+        qWarning() << "NavData::loadAirports()" << msg;
+        QTextStream(stdout) << "WARNING: " << msg << Qt::endl;
     }
 }
 
@@ -98,9 +117,10 @@ void NavData::loadCountryCodes(const QString& filePath) {
     countryCodes.clear();
     FileReader fr(filePath);
     while (!fr.atEnd()) {
-        QString _line = fr.nextLine();
-        if (_line.isNull()) {
-            return;
+        QString _line = fr.nextLine().trimmed();
+
+        if(_line.isEmpty() || _line.startsWith(";")) {
+            continue;
         }
 
         QStringList _fields = _line.split(':');

@@ -2,24 +2,9 @@
 airports.dat
 ------
 
-This file contains data about airports. Each row refers to an airport and
-contains 6 fields separated with colons. An example of a row from this file:
+This file contains ICAO code, name, city, country and location of airports.
+See the comment in the file for the file structure.
 
-LRTM:Vidrasau:Targu Mures:RO:46.468:24.413
-
-LRTM        - airport code, usually an ICAO code but you can also use non-ICAO
-              codes
-Vidrasau    - name of the airport
-Targu Mures - name of the city to which the airport belongs
-RO          - ISO code of the country where this airport is
-46.468      - position of the airport - decimal latitude (north is positive,
-              south is negative)
-24.413      - position of the airport - decimal longitude (east is positive,
-              west is negative)
-
-
-To add an airport, simply add a line with the same formatting. Avoid having two
-lines with the same airport code (the code is an unique key for Dolomynum).
 
 ------
 controllerAirportsMapping.dat
@@ -30,7 +15,7 @@ This file allows to add additional airports to a controller. See the comment in 
 file for how is works.
 
 ------
-coastline.dat and countries.dat
+coastline.dat
 ------
 
 These are the world coastline (continents, islands, large lakes etc) and
@@ -45,9 +30,15 @@ Extractor - http://rimmer.ngdc.noaa.gov/coast/ and adapted: some very fine
 reolution (<2 NM from each other) have been striped and lines arranged to be
 closed polygons for faster drawing.
 
+------
+countries.dat
+------
+
+Used to display long / short country names.
+See the comment in the file for the file structure.
 
 ------
-firslist.dat
+firlist.dat
 ------
 
 This contains the list of sectors, each row referring to a sector and
