@@ -3,7 +3,7 @@ cloudmirrors.dat%%2
 countries.dat%%120
 airlines.dat%%328
 station.dat%%246
-countrycodes.dat%%118
+countrycodes.dat%%119
 firdisplay.dat%%330
 airports.dat%%338
 controllerAirportsMapping.dat%%1
