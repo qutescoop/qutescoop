@@ -21,6 +21,7 @@ EDDS:APP DEP:EDSB
 ; no-airport-with-that-prefix terminal controller logins
 LIMM:APP DEP:LIMC LIML LIME LSZA
 LSFA:APP DEP:LSZR EDNY EDTM
+LIRR:APP DEP:LIRF LIRA LIRU
 ESSEX:APP DEP:EGSS EGGW EGSC
 
 ; shortened terminal controller logins (Russia)
