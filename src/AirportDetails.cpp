@@ -94,7 +94,14 @@ void AirportDetails::refresh(Airport* newAirport) {
     setWindowTitle(_airport->toolTip());
 
     // info panel
-    lblName->setText(QString("%1\n%2").arg(_airport->city, _airport->name));
+    lblCity->setText(_airport->city);
+    lblCity->setHidden(_airport->city.isEmpty());
+    lblCityLabel->setHidden(_airport->city.isEmpty());
+
+    lblName->setText(_airport->name);
+    lblName->setHidden(_airport->name.isEmpty());
+    lblNameLabel->setHidden(_airport->name.isEmpty());
+
     lblCountry->setText(QString("%1 (%2)")
                         .arg(_airport->countryCode, NavData::instance()->countryCodes[_airport->countryCode]));
     lblCharts->setText(QString("[chartfox.org/%1](https://chartfox.org/%1)").arg(_airport->label));
