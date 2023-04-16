@@ -9,12 +9,6 @@
 #include "Settings.h"
 #include "NavData.h"
 
-Airport::Airport() :
-        showFlightLines(false),
-        _appDisplayList(0),
-        _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
-    resetWhazzupStatus();
-}
 Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
         showFlightLines(false),
         _appDisplayList(0),
@@ -36,7 +30,8 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
 
     if (countryCode != "" && NavData::instance()->countryCodes.value(countryCode, "") == "") {
         auto msg = QString("While processing line #%1 from data/airports.dat: Could not find country '%2' for airport %3 (%4, %5) in data/countryCodes.dat.")
-                       .arg(debugLineNumber).arg(countryCode).arg(label).arg(name).arg(city);
+                       .arg(debugLineNumber)
+                       .arg(countryCode, label, name, city);
         qCritical() << "Airport::Airport()" << msg;
         QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
         exit(EXIT_FAILURE);
@@ -309,7 +304,7 @@ QString Airport::prettyName() const
     if (name.contains(city)) {
         return name;
     }
-    return city + " " + name;
+    return name + (city.isEmpty()? "": ", " + city);
 }
 
 QString Airport::mapLabel() const {
@@ -318,8 +313,11 @@ QString Airport::mapLabel() const {
         return label;
 
     if (Settings::filterTraffic())
-        result += QString(" %1/%2").arg(numFilteredArrivals? QString::number(numFilteredArrivals): "-")
-                  .arg(numFilteredDepartures? QString::number(numFilteredDepartures): "-");
+        result += QString(" %1/%2")
+                .arg(
+                    numFilteredArrivals? QString::number(numFilteredArrivals): "-",
+                    numFilteredDepartures? QString::number(numFilteredDepartures): "-"
+                );
     else
         result += QString(" %1/%2")
                 .arg(
