@@ -250,7 +250,7 @@ QString Pilot::planFlighttypeString() const {
 QString Pilot::toolTip() const {
     return Client::toolTip()
             + (!planDep.isEmpty() || !planDest.isEmpty()? " " + planDep + "-" + planDest: "")
-            + " " + humanAlt();
+            + (altitude > 0? " " + humanAlt(): "");
 }
 
 QString Pilot::rank() const {
