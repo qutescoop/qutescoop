@@ -9,22 +9,20 @@
 BookedController::BookedController(const QJsonObject& json, const WhazzupData* whazzup) :
     Client(json, whazzup)
 {
-    bookingType = json["bookingType"].toInt();
-    timeTo = json["timeTo"].toString();
-    date = json["date"].toString();
+    bookingType = json["type"].toString();
+    timeTo = json["end"].toString();
+    timeFrom = json["start"].toString();
 
-    link = json["link"].toString();
-    if (!link.isEmpty() && !link.contains("http://")) {
-        link = QString("http://%1").arg(link);
+    if(bookingType == "booking") {
+        bookingInfoStr = QString();
+    } else if (bookingType == "event") {
+        bookingInfoStr = QString("Event");
+    } else if (bookingType == "training") {
+        bookingInfoStr = QString("Training");
+    } else {
+        bookingInfoStr = QString(bookingType);
     }
-    timeFrom = json["timeFrom"].toString();
 
-    // computed values
-    switch (bookingType) {
-        case 0:  bookingInfoStr = QString(); break;
-        case 1:  bookingInfoStr = QString("Event"); break;
-        case 10: bookingInfoStr = QString("Training"); break;
-    }
     if (label.right(5) == "_ATIS") {
         facilityType = 2;
     } else if (label.right(4) == "_DEL") {
@@ -59,17 +57,9 @@ QString BookedController::facilityString() const {
 }
 
 QDateTime BookedController::starts() const {
-    return QDateTime(
-        QDate::fromString(date, QString("yyyyMMdd")),
-        QTime::fromString(timeFrom, QString("HHmm")),
-        Qt::UTC
-    );
+    return QDateTime::fromString(timeFrom, "yyyy-MM-dd HH:mm:ss");
 }
 
 QDateTime BookedController::ends() const {
-    return QDateTime(
-        QDate::fromString(date, QString("yyyyMMdd")),
-        QTime::fromString(timeTo, QString("HHmm")),
-        Qt::UTC
-    );
+    return QDateTime::fromString(timeTo, "yyyy-MM-dd HH:mm:ss");
 }

@@ -28,7 +28,7 @@ public:
 
     // Booking values
     QString link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
-    int bookingType;
+    QString bookingType;
 
     QDateTime starts() const;
     QDateTime ends() const;
