@@ -114,7 +114,7 @@ void Airport::appGl(const QColor &middleColor, const QColor &marginColor, const 
         if (airportsClose > 0) {
             // reduce opacity in overlap areas - https://github.com/qutescoop/qutescoop/issues/211
             // (this is still a TRIANGLE_FAN, so it has the potential to be a bit meh...)
-            glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF() / (airportsClose * 3));
+            glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF() / (airportsClose + 1));
         } else {
             glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
         }
