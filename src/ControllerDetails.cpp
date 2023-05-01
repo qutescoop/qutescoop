@@ -55,14 +55,14 @@ void ControllerDetails::refresh(Controller *newController) {
 
     QString details = _controller->detailInformation();
     if(!details.isEmpty())
-        controllerInfo += details;
+        controllerInfo += details.toHtmlEscaped();
 
     lblControllerInfo->setText(controllerInfo);
 
     lblOnline->setText(QString("On %1 for %2 hrs").arg(_controller->server, _controller->onlineTime()));
 
     if (_controller->sector != 0) {
-        lblCallsign->setText(_controller->sector->name);
+        lblCallsign->setText(_controller->sector->name.toHtmlEscaped());
     }
     lblCallsign->setVisible(_controller->sector != 0);
 
