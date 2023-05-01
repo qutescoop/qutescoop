@@ -89,21 +89,60 @@ const GLuint& Airport::appDisplayList() {
 }
 
 void Airport::appGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const {
+    auto otherAirportsOfAppControllers = QSet<Airport*>();
+    foreach(auto *approach, approaches) {
+        foreach(auto *airport, approach->airports()) {
+            if (airport != this) {
+                otherAirportsOfAppControllers.insert(airport);
+            }
+        }
+    }
+
     glBegin(GL_TRIANGLE_FAN);
     glColor4f(middleColor.redF(), middleColor.greenF(), middleColor.blueF(), middleColor.alphaF());
     VERTEX(lat, lon);
-    glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
-    for(int i = 0; i <= 360; i += 10) {
+    for(short int i = 0; i <= 360; i += 10) {
         auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyAppRadius_nm, i);
+
+        short int airportsClose = 0;
+        foreach(auto *a, otherAirportsOfAppControllers) {
+            auto _dist = NavData::distance(_p.first, _p.second, a->lat, a->lon);
+
+            airportsClose += _dist < Airport::symbologyAppRadius_nm;
+        }
+
+        if (airportsClose > 0) {
+            // reduce opacity in overlap areas - https://github.com/qutescoop/qutescoop/issues/211
+            // (this is still a TRIANGLE_FAN, so it has the potential to be a bit meh...)
+            glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF() / (airportsClose * 3));
+        } else {
+            glColor4f(marginColor.redF(), marginColor.greenF(), marginColor.blueF(), marginColor.alphaF());
+        }
+
         VERTEX(_p.first,_p.second);
     }
     glEnd();
 
+    glBegin(GL_LINE_STRIP);
     glLineWidth(borderLineWidth);
     glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
-    glBegin(GL_LINE_LOOP);
-    for(int i = 0; i <= 360; i += 10) {
+    for(short int i = 0; i <= 360; i += 1) {
         auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyAppRadius_nm, i);
+
+        short int airportsClose = 0;
+        foreach(auto *a, otherAirportsOfAppControllers) {
+            auto _dist = NavData::distance(_p.first, _p.second, a->lat, a->lon);
+
+            airportsClose += _dist < Airport::symbologyAppRadius_nm;
+        }
+
+        if (airportsClose > 0) {
+            // hide border line on overlap - https://github.com/qutescoop/qutescoop/issues/211
+            glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), 0.);
+        } else {
+            glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
+        }
+
         VERTEX(_p.first,_p.second);
     }
     glEnd();
