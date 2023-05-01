@@ -5,6 +5,7 @@
 #include "NavData.h"
 #include "SectorView.h"
 
+//singleton instance
 Sectorview* sectorViewInstance = 0;
 Sectorview* Sectorview::instance(bool createIfNoInstance, QWidget *parent) {
     if (sectorViewInstance == 0 && createIfNoInstance)
@@ -15,6 +16,8 @@ Sectorview* Sectorview::instance(bool createIfNoInstance, QWidget *parent) {
 Sectorview::Sectorview(QWidget *parent) :
         QDialog(parent) {
     setupUi(this);
+    setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
+
     sectorsHash = NavData::instance()->sectors;
     loadSectorList();
 }

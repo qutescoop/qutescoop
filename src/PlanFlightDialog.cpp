@@ -12,6 +12,7 @@
 #include "Net.h"
 #include "helpers.h"
 
+//singleton instance
 PlanFlightDialog *planFlightDialogInstance = 0;
 PlanFlightDialog *PlanFlightDialog::instance(bool createIfNoInstance, QWidget *parent) {
     if(planFlightDialogInstance == 0)
@@ -27,7 +28,6 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
         selectedRoute(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-//    setWindowFlags(Qt::Tool);
 
     bDepDetails->hide(); bDestDetails->hide();
     edCycle->setText(QDate::currentDate().toString("yyMM"));

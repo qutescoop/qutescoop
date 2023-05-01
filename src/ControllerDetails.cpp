@@ -11,11 +11,12 @@
 //singleton instance
 ControllerDetails *controllerDetails = 0;
 ControllerDetails* ControllerDetails::instance(bool createIfNoInstance, QWidget *parent) {
-    if(controllerDetails == 0)
+    if(controllerDetails == 0) {
         if (createIfNoInstance) {
             if (parent == 0) parent = Window::instance();
             controllerDetails = new ControllerDetails(parent);
         }
+    }
     return controllerDetails;
 }
 

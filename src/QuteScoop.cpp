@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
     app.setWindowIcon(QIcon(QPixmap(":/icons/qutescoop.png")));
     //QLocale::setDefault(QLocale::C); // bullet-proof string->float conversions
 
+    // this can be removed in Qt6 https://bugreports.qt.io/browse/QTBUG-70431
+    QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+
     // Open log.txt
     QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << '\n';
     QTextStream(stdout) << "Using settings from " << Settings::fileName() << '\n';

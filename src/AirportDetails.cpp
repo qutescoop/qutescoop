@@ -10,6 +10,7 @@
 #include "Settings.h"
 #include "Whazzup.h"
 
+//singleton instance
 AirportDetails *airportDetails = 0;
 AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *parent) {
     if(airportDetails == 0)
@@ -20,6 +21,7 @@ AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *paren
     return airportDetails;
 }
 
+// destroys a singleton instance
 void AirportDetails::destroyInstance() {
     delete airportDetails;
     airportDetails = 0;
@@ -30,7 +32,6 @@ AirportDetails::AirportDetails(QWidget *parent):
         _airport(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-    //    setWindowFlags(Qt::Tool);
 
     connect(btnShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
     connect(pbMetar, &QAbstractButton::clicked, this, &AirportDetails::refreshMetar);

@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include "PilotDetails.h"
+
 #include "Window.h"
 #include "Whazzup.h"
 #include "Settings.h"
@@ -25,13 +26,11 @@ void PilotDetails::destroyInstance() {
     pilotDetails = 0;
 }
 
-
 PilotDetails::PilotDetails(QWidget *parent):
         ClientDetails(parent),
         _pilot(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-//    setWindowFlags(Qt::Tool);
 
     connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 

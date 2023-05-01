@@ -12,7 +12,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         Q_OBJECT
     public:
         static PreferencesDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
-        void destroyInstance();
     protected:
         void closeEvent(QCloseEvent *event);
     private slots:
