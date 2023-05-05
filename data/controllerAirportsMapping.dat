@@ -15,22 +15,41 @@
 ; and SCHWABEN_EAST_APP to EDMA.
 ; Empty lines and lines starting with ; are ignored.
 
-; controller logins covering additional airports
+;---------------------------------------------------------------------------------------------
+; Controller logins whose names refer to an existing airport in airports.dat, 
+; but covering these additional airports:
+;---------------------------------------------------------------------------------------------
+
 EDDG:APP DEP:EDLW EDLP
+EDDH:APP DEP:EDHL EDHI
 EDDK:APP DEP:ETNN
 EDDL:APP DEP:EDLN EDLV
 EDDS:APP DEP:EDSB
+EDDV:APP DEP:EDVE ETNW ETHB ETHC ETHS
 EDFH:APP DEP:EDDR ETAR
+EGFF:APP DEP:EGSY
 EGJJ:APP DEP:EGJA EGJB
 EPWA:APP DEP:EPMO EPLL
 ESSA:APP DEP:ESSB
+ETNS:APP DEP:ETNH
+LEBL:APP DEP:LERS LELL LEDA LEGE
 LFPG:APP DEP:LFPO LFPB LFPN LFOB
 LPPT:APP DEP:LPCS
 LTAI:APP DEP:LTFC LTFG
 LTBA:APP DEP:LTFM LTFJ LTBA LTBU
 RKSS:APP DEP:RKSI
+RPLL:APP DEP:RPLC RPLB RPLS
+VTBS:APP DEP:VTBD
+WIII:APP DEP:WICA WICC WIHH WILL WIRR
 
-; no-airport-with-that-prefix terminal controller logins
+; USA
+MSP:APP DEP:KSTP KFCM KANE KMIC
+SDF:APP DEP:KLOU
+
+;---------------------------------------------------------------------------------------------
+; Controller logins whose names do NOT refer to an airport in airports.dat:
+;---------------------------------------------------------------------------------------------
+
 LIMM:APP DEP:LIMC LIML LIME LSZA
 LSFA:APP DEP:LSZR EDNY EDTM
 LIRR:APP DEP:LIRF LIRA LIRU
@@ -39,15 +58,9 @@ NY::KLGA KEWR KJFK
 PCT:APP DEP:KBWI KIAD KDCA KRIC KCHO
 ; https://laartcc.org/article/understand-socal-airspace
 SCT:APP DEP:KLAX KSAN KPSP KBUR KVNY KLGB KONT KSNA KSDM KAVX
-
-; shortened terminal controller logins (Russia)
 MSK::UUWW
 
-; shortened terminal controllers (USA)
-MSP:APP DEP:KSTP KFCM KANE KMIC
-
-; shortened terminal controllers (Australia)
-; https://vatpac.org/controllers/position
+; Australia - https://vatpac.org/controllers/position :
 AD::YPAD
 AY::YMAY
 AS::YBAS
