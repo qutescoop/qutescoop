@@ -172,55 +172,6 @@ GLuint Sector::glBorderLineHighlighted() {
     return _borderlineHighlighted;
 }
 
-/* At 180 the longitude wraps around to -180
- * Since this can cause problems in the computation this adjusts point B relative to point A
- * such that the difference in longitude is less than 180
- * That is: Instead of going from a longitude of 179 in point A to a longitude of -179 in point B by going westwards
- * we set the longitude of point B to 181 to indicate that we're going east
- */
-void adjustPoint(const QPair<double, double> &a, QPair<double, double> &b) {
-    const double diff = a.second - b.second;
-    if(std::abs(diff) > 180)
-        b.second += ((diff > 0) - (diff < 0)) * 360;
-}
-
 QPair<double, double> Sector::getCenter() const {
-    // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
-
-    double A = 0;
-    QPair<double, double> runningTotal;
-    runningTotal.first = 0;
-    runningTotal.second = 0;
-
-    QPair<double, double> previous = m_points[0];
-
-    const int count = m_points.size();
-    for(int i = 0; i < count; ++i) {
-        QPair<double, double> current = m_points[i];
-        QPair<double, double> next = m_points[(i + 1) % count];
-        if(i > 0)
-            adjustPoint(previous, current);
-        adjustPoint(current, next);
-        previous = current;
-
-        A += (current.first * next.second
-             - next.first * current.second);
-
-        double multiplyBy = current.first * next.second
-                            - (next.first * current.second);
-
-        runningTotal.first += (current.first + next.first)
-                            * multiplyBy;
-        
-        runningTotal.second += (current.second + next.second)
-                            * multiplyBy;
-    }
-    A /= 2;
-
-    runningTotal.first /= 6 * A;
-    runningTotal.second /= 6 * A;
-
-    runningTotal.second = std::fmod(runningTotal.second + 180, 360) - 180;
-
-    return runningTotal;
+    return Helpers::polygonCenter(m_points);
 }

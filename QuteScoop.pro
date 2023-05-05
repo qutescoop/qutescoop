@@ -148,6 +148,7 @@ FORMS = \
     src/SectorView.ui \
     src/Window.ui
 HEADERS += \
+    src/helpers.h \
     src/WhazzupData.h \
     src/Whazzup.h \
     src/Waypoint.h \
@@ -160,7 +161,6 @@ HEADERS += \
     src/MapObject.h \
     src/MapScreen.h\
     src/LineReader.h \
-    src/helpers.h \
     src/SectorReader.h \
     src/Sector.h \
     src/FileReader.h \
@@ -194,7 +194,6 @@ HEADERS += \
     src/Route.h \
     src/PlanFlightRoutesModel.h \
     src/BookedAtcSortFilter.h \
-    src/helpers.h \
     src/ListClientsDialogModel.h \
     src/ListClientsDialog.h \
     src/Ping.h \
