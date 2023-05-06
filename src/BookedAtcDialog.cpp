@@ -46,8 +46,8 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     // disconnect to set DateTime without being disturbed
     // fixes https://sourceforge.net/p/qutescoop/tickets/5/
     disconnect(dateTimeFilter, &QDateTimeEdit::dateTimeChanged, this, &BookedAtcDialog::on_dateTimeFilter_dateTimeChanged);
-    dateTimeFilter->setDateTime(QDateTime::currentDateTimeUtc());
-    _dateTimeFilter_old = dateTimeFilter->dateTime();
+    _dateTimeFilter_old = QDateTime::currentDateTimeUtc();
+    dateTimeFilter->setDateTime(_dateTimeFilter_old);
     connect(dateTimeFilter, &QDateTimeEdit::dateTimeChanged, this, &BookedAtcDialog::on_dateTimeFilter_dateTimeChanged);
     connect(&_editFilterTimer, &QTimer::timeout, this, &BookedAtcDialog::performSearch);
 
