@@ -2,7 +2,9 @@
 
 QuteScoop is a status indicator for the online flight simulation community VATSIM, compatible with Windows, Linux and MacOS.
 
-![QuteScoop window](docs/images/window.webp)
+![QuteScoop window](docs/images/window2.jpg)
+
+![APP controllers covering multiple airfields](docs/images/terminalControllersMultipleAirports.png)
 
 [More screenshots](https://github.com/qutescoop/qutescoop/tree/master/docs/images)
 

@@ -81,6 +81,57 @@
     {
       "cid": 1307841,
       "name": "Ashot Hakobyan",
+      "callsign": "EDDG_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+     {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "EDDL_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+     {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "EDDK_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+     {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
       "callsign": "LSFA_APP",
       "frequency": "135.550",
       "facility": 1,
@@ -96,6 +147,108 @@
       "logon_time": "2022-02-05T07:50:51.274713Z"
     },
     {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "LTBA_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+     {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "LFPG_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+    {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "LFEE_CTR",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+     {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "ESSEX_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+ {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "LIRR_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+      {
+      "cid": 1307841,
+      "name": "Ashot Hakobyan",
+      "callsign": "LSFA_APP",
+      "frequency": "135.550",
+      "facility": 1,
+      "rating": 5,
+      "server": "SINGAPORE",
+      "visual_range": 1500,
+      "text_atis": [
+        "Dalcontrol (Eastern Russia Control)",
+        "Top-down services for Khabarovsk, Magadan, Petropavlovsk-Kamchatsky, and Yakutsk FIRs when respective Centres are closed",
+        "Voice comms in Russian and English, text in English. Charts and info @ dalcontrol.ru"
+      ],
+      "last_updated": "2022-02-05T10:17:15.0365403Z",
+      "logon_time": "2022-02-05T07:50:51.274713Z"
+    },
+     {
       "cid": 1307841,
       "name": "Ashot Hakobyan",
       "callsign": "MSK_DEP",
