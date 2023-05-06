@@ -5,7 +5,7 @@ airlines.dat%%330
 station.dat%%246
 countrycodes.dat%%119
 firdisplay.dat%%330
-airports.dat%%338
+airports.dat%%339
 controllerAirportsMapping.dat%%4
 coastline.dat%%118
 firlist.dat%%336

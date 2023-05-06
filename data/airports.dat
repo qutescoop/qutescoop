@@ -11356,37 +11356,37 @@ EBZU:Zuienkerke:Zuienkerke:BE:51.25666809:3.14055562
 EBZW:Genk Zwartberg:Genk:BE:51.01527786:5.52638912
 ED01:Agathazell:Burgberg:DE:47.554142:10.27298641
 ED02:Fuessen:Fuessen:DE:47.58270645:10.68760204
-ED03:Pohlheim Viehweide:::50.53210831:8.73383522
-ED04:Braunfels:::50.52526855:8.39416885
-ED05:Unterwoessen:::47.73151398:12.43861198
+ED03:Pohlheim Viehweide::DE:50.53210831:8.73383522
+ED04:Braunfels::DE:50.52526855:8.39416885
+ED05:Unterwoessen::DE:47.73151398:12.43861198
 ED06:Butzbach Pfingstweide:Butzbach:DE:50.43515778:8.62139511
-ED07:Glashuetten-Oberems:::50.2421875:8.39866829
-ED08:Kaufbeuren:::47.86049652:10.61535358
-ED09:Riedelbach:::50.30233383:8.38511467
+ED07:Glashuetten-Oberems::DE:50.2421875:8.39866829
+ED08:Kaufbeuren::DE:47.86049652:10.61535358
+ED09:Riedelbach::DE:50.30233383:8.38511467
 ED1A:Uniklinik Giessen:Giessen:DE:50.57582092:8.6670742
-ED1B:Giessen Polizeipraesidium:::50.5699501:8.69682789
-ED1C:Uniklinik Frankfurt A.M.:::50.0955658:8.66252899
-ED1D:Klinikum Offenbach:::50.09379578:8.75667286
-ED1E:Bgu Bergen-Enkheim:::50.14546204:8.70957184
-ED1F:Klinikum Bad Soden Am Taunus:::50.15053558:8.51391983
-ED1G:Klinikum Frankfurt-Hoechst:::50.10842133:8.54687595
-ED1H:Uniklinik Marburg:::50.81391907:8.80439758
-ED1I:Klinikum Kassel:::51.32865143:9.50878334
-ED1J:Wiesbaden Unfallklinik:::50.0636673:8.19018555
-ED1K:Fulda Herz-Jesu Hospital:::50.56348801:9.67296791
-ED1L:Klinikum Fulda:::50.54541397:9.70475769
-ED1M:Rotorflug Gmbh Friedrichsdorf:::50.26432419:8.66571426
-ED1N:Krankenhaus Wetzlar:::50.53772736:8.52870369
-ED1O:Kassel Rotkreuz Krankenhaus:::51.31156921:9.45405388
+ED1B:Giessen Polizeipraesidium::DE:50.5699501:8.69682789
+ED1C:Uniklinik Frankfurt A.M.::DE:50.0955658:8.66252899
+ED1D:Klinikum Offenbach::DE:50.09379578:8.75667286
+ED1E:Bgu Bergen-Enkheim::DE:50.14546204:8.70957184
+ED1F:Klinikum Bad Soden Am Taunus::DE:50.15053558:8.51391983
+ED1G:Klinikum Frankfurt-Hoechst::DE:50.10842133:8.54687595
+ED1H:Uniklinik Marburg::DE:50.81391907:8.80439758
+ED1I:Klinikum Kassel::DE:51.32865143:9.50878334
+ED1J:Wiesbaden Unfallklinik::DE:50.0636673:8.19018555
+ED1K:Fulda Herz-Jesu Hospital::DE:50.56348801:9.67296791
+ED1L:Klinikum Fulda::DE:50.54541397:9.70475769
+ED1M:Rotorflug Gmbh Friedrichsdorf::DE:50.26432419:8.66571426
+ED1N:Krankenhaus Wetzlar::DE:50.53772736:8.52870369
+ED1O:Kassel Rotkreuz Krankenhaus::DE:51.31156921:9.45405388
 ED1P:Giessen Lrz:Giessen:DE:50.57249832:8.65273571
-ED1Q:Uniklinikum Goettingen:::51.55129623:9.94287872
-ED2A:Elmshorn Regioklinik Helipad:::53.75309753:9.68500328
-ED2B:Flensburg Diakonissenkrankenhaus:::54.79067993:9.42521286
-ED2C:Itzehoe Klinikum:::53.94314957:9.50570297
-ED3:Oyen Muni:::51.33484268:-110.4912338
-ED4:Fox Creek:::54.38022614:-116.7657318
-ED5:Taber:::49.8258934:-112.1836777
-ED6:De Winton/Highwood:::50.80120087:-113.8877411
+ED1Q:Uniklinikum Goettingen::DE:51.55129623:9.94287872
+ED2A:Elmshorn Regioklinik Helipad::DE:53.75309753:9.68500328
+ED2B:Flensburg Diakonissenkrankenhaus::DE:54.79067993:9.42521286
+ED2C:Itzehoe Klinikum::DE:53.94314957:9.50570297
+ED3:Oyen Muni::DE:51.33484268:-110.4912338
+ED4:Fox Creek::DE:54.38022614:-116.7657318
+ED5:Taber::DE:49.8258934:-112.1836777
+ED6:De Winton/Highwood::DE:50.80120087:-113.8877411
 EDAB:Bautzen:Bautzen:DE:51.19353104:14.51974678
 EDAC:Leipzig-Altenburg:Altenburg:DE:50.98181534:12.50636101
 EDAD:Dessau:Dessau:DE:51.83216476:12.18583298
@@ -11484,7 +11484,7 @@ EDEN:Bad Hersfeld::DE:50.8445015:9.70733356
 EDEP:Heppenheim Bergstrasse:Heppenheim:DE:49.62138748:8.625
 EDEQ:Muehlhausen:Muehlhausen:DE:51.21450043:10.54249954
 EDER:Wasserkuppe:Gersfeld:DE:50.49777603:9.94944477
-EDES:Darmstadt Griesheim:::49.85472107:8.58666706
+EDES:Darmstadt Griesheim::DE:49.85472107:8.58666706
 EDEW:Wallduern:Wallduern:DE:49.58166504:9.40222263
 EDFA:Neu-Anspach:Anspach:DE:50.28966522:8.53683376
 EDFB:Reichelsheim:Reichelsheim:DE:50.33866501:8.87866688
@@ -11532,7 +11532,7 @@ EDGW:Wolfhagen:Wolfhagen:DE:51.30699921:9.17533302
 EDGX:Walldorf:Walldorf:DE:49.30389023:8.65888882
 EDGY:Kitzingen::DE:49.74333191:10.2033329
 EDGZ:Weinheim Bergstrasse:Weinheim:DE:49.56750107:8.61116695
-EDH1:Neujellingsdorf:::54.4558754:11.10980797
+EDH1:Neujellingsdorf::DE:54.4558754:11.10980797
 EDHA:Ahlhorn:Ahlhorn:DE:52.88883209:8.23283291
 EDHB:Grube:Grube:DE:54.2452774:11.0247221
 EDHC:Luechow-Rehbeck:Luechow:DE:53.01599884:11.14566708
@@ -11555,7 +11555,7 @@ EDJG:Grabenstaett:Grabenstaett:DE:47.85300064:12.55049992
 EDKA:Aachen-Merzbrueck:Aachen:DE:50.82300186:6.18633318
 EDKB:Bonn-Hangelar:Bonn:DE:50.76883316:7.16400003
 EDKD:Altena-Hegenscheid:Altena:DE:51.31299973:7.70366669
-EDKE:Kamen-Heeren:::51.59070587:7.70979595
+EDKE:Kamen-Heeren::DE:51.59070587:7.70979595
 EDKF:Bergneustadt-Auf Dem Duempel:Bergneustadt:DE:51.05183411:7.70633316
 EDKH:Huensborn:Freudenberg:DE:50.92889023:7.89916658
 EDKI:Betzdorf:Betzdorf:DE:50.81816483:7.83249998
@@ -11610,13 +11610,13 @@ EDMN:Mindelheim Mattsies:Mindelheim:DE:48.10883331:10.524333
 EDMO:Oberpfaffenhofen::DE:48.08136368:11.28306675
 EDMP:Vilsbiburg:Vilsbiburg:DE:48.42649841:12.34549999
 EDMQ:Donauwoerth-Genderkingen:Donauwoerth:DE:48.70283508:10.85099983
-EDMR:Ottobrunn:::48.04766083:11.65366936
+EDMR:Ottobrunn::DE:48.04766083:11.65366936
 EDMS:Straubing:Straubing:DE:48.90095139:12.51818657
 EDMT:Tannheim:Tannheim:DE:48.01083374:10.10083294
 EDMU:Gundelfingen:Gundelfingen a.d.Donau:DE:48.56944275:10.35888863
 EDMV:Vilshofen:Vilshofen:DE:48.63516617:13.19566631
 EDMW:Deggendorf:Deggendorf:DE:48.83027649:12.8797226
-EDMX:Oberschleissheim Hel:::48.23370361:11.5637455
+EDMX:Oberschleissheim Hel::DE:48.23370361:11.5637455
 EDMY:Muehldorf:Muehldorf am Inn:DE:48.27899933:12.50466633
 EDNA:Ampfing-Waldkraiburg:Ampfing:DE:48.26433182:12.41399956
 EDNB:Arnbruck:Arnbruck:DE:49.12516785:12.98499966
@@ -11649,7 +11649,7 @@ EDOC:Gardelegen:Gardelegen:DE:52.52777863:11.35416698
 EDOD:Reinsdorf:Reinsdorf:DE:51.90093231:13.19426632
 EDOE:Boehlen:Boehlen:DE:51.21527863:12.36777782
 EDOF:Bad Frankenhausen:Bad Frankenhausen:DE:51.37316513:11.14133358
-EDOG:Torgau-Beilrode:::51.57110977:13.05222225
+EDOG:Torgau-Beilrode::DE:51.57110977:13.05222225
 EDOH:Langhennersdorf:Freiberg:DE:50.94833374:13.2616663
 EDOI:Bienenfarm-Nauen:Nauen:DE:52.65999985:12.7458334
 EDOJ:Luesse:Luesse:DE:52.14416504:12.66966629
@@ -11713,7 +11713,7 @@ EDQZ:Pegnitz-Zipser Berg:Pegnitz:DE:49.76216507:11.57466698
 EDRA:Bad Neuenahr-Ahrweiler:Bad Neuenahr:DE:50.55783463:7.1371665
 EDRB:Bitburg:Bitburg:DE:49.94533157:6.56500006
 EDRD:Neumagen-Dhron:Neumagen:DE:49.84266663:6.91616678
-EDRE:Mendig:::50.36600113:7.31533337
+EDRE:Mendig::DE:50.36600113:7.31533337
 EDRF:Bad Duerkheim:Bad Duerkheim:DE:49.47299957:8.19633293
 EDRG:Idar-Oberstein/Goettschied:Idar-Oberstein:DE:49.73283386:7.33799982
 EDRH:Hoppstaedten Weiersbach:Hoppstaedten:DE:49.61133194:7.18499994
@@ -11745,13 +11745,13 @@ EDSO:Gruibingen-Nortel:Goeppingen:DE:48.62116623:9.65583324
 EDSP:Poltringen::DE:48.54704285:8.94651222
 EDSR:Radolfzell-Stahringen::DE:47.80277634:8.97972202
 EDST:Hahnweide:Kirchheim unter Teck:DE:48.63183212:9.42949963
-EDSV:Waechtersberg:::48.61516571:8.75566673
+EDSV:Waechtersberg::DE:48.61516571:8.75566673
 EDSW:Altdorf-Wallburg:Altdorf:DE:48.26983261:7.8421669
 EDSZ:Rottweil-Zepfenhahn:Rottweil:DE:48.18650055:8.72116661
 EDTB:Baden-Baden Oos:Baden-Baden:DE:48.79183197:8.18666649
 EDTC:Bruchsal:Bruchsal:DE:49.13499832:8.5635004
 EDTD:Donaueschingen-Villingen:Donaueschingen:DE:47.97351837:8.52211094
-EDTE:Eutingen Im Gaeu:::48.48555756:8.77722359
+EDTE:Eutingen Im Gaeu::DE:48.48555756:8.77722359
 EDTF:Freiburg-Breisgau:Freiburg im Breisgau:DE:48.02050018:7.8336668
 EDTG:Bremgarten:Bremgarten:DE:47.90316772:7.61783314
 EDTH:Heubach:Heubach:DE:48.80222321:9.92749977
@@ -11771,7 +11771,7 @@ EDTY:Schwaebisch-Hall:Schwaebisch Hall:DE:49.11831665:9.78395557
 EDTZ:Konstanz:Konstanz:DE:47.6819458:9.13722229
 EDUA:Stechow-Ferchesar:Stechow-Ferchesar:DE:52.65055466:12.48777771
 EDUF:Falkenberg-Loennewitz:Uebigau-Wahrenbrueck:DE:51.54783249:13.22816658
-EDUG:Gransee:::53.00577545:13.20163631
+EDUG:Gransee::DE:53.00577545:13.20163631
 EDUO:Oberrissdorf:Lutherstadt Eisleben:DE:51.54249954:11.59583378
 EDUS:Finsterwalde-Schacksdorf:Finsterwalde:DE:51.60749817:13.73799992
 EDUW:Tutow:Demmin:DE:53.91749954:13.2203331
@@ -11790,7 +11790,7 @@ EDVL:Hoelleberg:Trendelburg:DE:51.61111069:9.39750004
 EDVM:Hildesheim:Hildesheim:DE:52.18000031:9.94666672
 EDVN:Northeim:Northeim:DE:51.70666504:10.03950024
 EDVP:Peine/Glindbruchkippe:Peine/Glindbruchkippe:DE:52.3237915:10.18150043
-EDVQ:Wilsche:::52.5245018:10.4628334
+EDVQ:Wilsche::DE:52.5245018:10.4628334
 EDVR:Rinteln:Rinteln:DE:52.17527771:9.05333328
 EDVS:Salzgitter-Druette:Salzgitter:DE:52.15416718:10.42650032
 EDVT:Ithwiesen:Ith:DE:51.95133209:9.6621666
@@ -11815,20 +11815,20 @@ EDWP:Wiefelstede- Conneforde:Wiefelstede:DE:53.32138824:8.07361126
 EDWQ:Ganderkesee Atlas Airfield:Ganderkesee:DE:53.0359993:8.50516701
 EDWR:Borkum:Borkum:DE:53.59550095:6.70916653
 EDWS:Norden Norddeich:Norddeich:DE:53.63305664:7.18944454
-EDWT:Blexen:::53.53833389:8.53833294
+EDWT:Blexen::DE:53.53833389:8.53833294
 EDWU:Varrelbusch:Cloppenburg:DE:52.9086113:8.04277802
 EDWV:Verden Scharnhorst:Verden (Aller):DE:52.965168:9.28416634
 EDWX:Westerstede-Felde:Westerstede:DE:53.28883362:7.93133354
 EDWY:Norderney:Norderney:DE:53.70700073:7.22866678
 EDWZ:Baltrum:Baltrum:DE:53.72533417:7.37216663
-EDX1:Hoherodskopf:::50.50116348:9.22245789
-EDX2:Giessen Wieseckaue:::50.60417938:8.72860146
-EDX3:Amoeneburg:::50.78974915:8.90680218
-EDX4:Schotten:::50.53516388:9.14624596
-EDX5:Asslarer Huette:::50.59932709:8.44446182
-EDX6:Schwalmstadt Ziegenhain:::50.90350342:9.23996544
-EDX8:Wetzlar Garbenheim:::50.57422638:8.52760601
-EDX9:Alsfeld:::50.75020599:9.24583244
+EDX1:Hoherodskopf::DE:50.50116348:9.22245789
+EDX2:Giessen Wieseckaue::DE:50.60417938:8.72860146
+EDX3:Amoeneburg::DE:50.78974915:8.90680218
+EDX4:Schotten::DE:50.53516388:9.14624596
+EDX5:Asslarer Huette::DE:50.59932709:8.44446182
+EDX6:Schwalmstadt Ziegenhain::DE:50.90350342:9.23996544
+EDX8:Wetzlar Garbenheim::DE:50.57422638:8.52760601
+EDX9:Alsfeld::DE:50.75020599:9.24583244
 EDXA:Achmer:Bramsche:DE:52.37749863:7.91349983
 EDXB:Heide Buesum:Buesum:DE:54.15333176:8.90166664
 EDXC:Schleswig Kropp:Schleswig:DE:54.42549896:9.54049969
@@ -11853,7 +11853,7 @@ EDXU:Huettenbusch:Huettenbusch:DE:53.28633499:8.94733334
 EDXW:Westerland Sylt:Westerland:DE:54.91163635:8.34238625
 EDXY:Wyk Auf Foehr:Wyk auf Foehr:DE:54.68533325:8.53183365
 EDXZ:Kuehrstedt-Bederkesa:Kuehrstedt:DE:53.5680542:8.78944397
-EDY1:Homberg Ohm:::50.74684906:9.01914787
+EDY1:Homberg Ohm::DE:50.74684906:9.01914787
 EE5:Wabasca:::55.96035004:-113.8191071
 EE8:Viking:::53.10859299:-111.8638306
 EECL:Tallinn City Hall:Tallinn:EE:59.44800186:24.75332451
@@ -31442,9 +31442,11 @@ WIEE:Minangkabau Intl:Ketaping/Padang-Sumatra Island:ID:-0.78833336:100.2863922
 WIHH:Jakarta Halim Perdanakusuma Intl:Jakarta:ID:-6.26749992:106.8863907
 WIHL:Tunggul Wulung:Cilacap-Java Island:ID:-7.64492178:109.0339966
 WIHP:Pondok Cabe:Jakarta:ID:-6.3369627:106.7645645
+WICA:Kertajati:Bandung:ID:-6.64892:108.16669
 WIIG:Pulau Panjang:::-5.64491892:106.5604401
 WIII:Jakarta Soekarno-Hatta Intl:Jakarta:ID:-6.12361097:106.6611099
 WIKL:Lubuk Linggau Silampari:Lubuk Linggau-Sumatra Island:ID:-3.28338194:102.9171448
+WILL:Radin Inten II:Lampung:ID:-5.2468:105.18253
 WIMB:Binaka:Gunung Sitoli-Nias Island:ID:1.16641665:97.7043457
 WIME:Aek Godang:Padang Sidempuan-Sumatra Island:ID:1.4001683:99.43042755
 WIMG:Padang Tabing:Padang-Sumatra Island:ID:-0.87555557:100.3505554
@@ -31478,6 +31480,7 @@ WIPQ:Pendopo:Talang Gudang-Sumatra Island:ID:-3.2860024:103.8795242
 WIPR:Rengat Japura:Rengat-Sumatra Island:ID:-0.35320628:102.3348694
 WIPT:Minangkabau:Ketaping/Padang-Sumatra Island:ID:-0.7857548:100.2811279
 WIPU:Muko Muko:Muko Muko-Sumatra Island:ID:-2.54071188:101.0874786
+WIRR:Budiarto:Tangerang-Java Island:ID:-6.293171:106.57
 WITA:Teuku Cut Ali:Tapak Tuan-Sumatra Island:ID:3.16923618:97.28831482
 WITC:Meulaboh/Cut Nyak Dien (Local Gov):Peureumeue-Sumatra Island:ID:4.04805565:96.25
 WITG:Lasikin:Lubang-Simeulue Island:ID:2.41073775:96.32706451
