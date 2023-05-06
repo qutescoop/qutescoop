@@ -21,6 +21,7 @@ class NavData: public QObject {
         static NavData *instance(bool createIfNoInstance = true);
         static QPair<double, double> *fromArinc(const QString &str);
         static QString toArinc(const short lat, const short lon);
+        static QString toEurocontrol(const double lat, const double lon);
 
         static double distance(double lat1, double lon1, double lat2, double lon2);
         static QPair<double, double> pointDistanceBearing(double lat, double lon,
