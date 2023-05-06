@@ -59,7 +59,6 @@ class GLWidget : public QGLWidget {
         void renderStaticSectors(bool value) { _renderStaticSectors = value; }
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
-        void newPosition();
     protected:
         virtual void paintGL();
         virtual void resizeGL(int width, int height);

@@ -47,7 +47,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
     _yRot = Helpers::modPositive(_yRot, 360.);
     _zRot = Helpers::modPositive(_zRot, 360.);
     resetZoom();
-    emit newPosition();
 
     clientSelection = new ClientSelectionWidget();
 }
@@ -85,9 +84,9 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updat
     _zRot = Helpers::modPositive(     - lon, 360.);
     _zoom = newZoom;
     resetZoom();
-    if (updateGL)
+    if (updateGL) {
         this->updateGL();
-    emit newPosition();
+    }
 }
 
 /**
@@ -112,7 +111,6 @@ void GLWidget::handleRotation(QMouseEvent*) {
     _zRot = Helpers::modPositive(_zRot + dx + 180., 360.) - 180.;
     updateGL();
     _lastPos = currentPos;
-    emit newPosition();
 }
 
 /**
@@ -204,7 +202,6 @@ void GLWidget::restorePosition(int nr) {
     _zRot = Helpers::modPositive(_zRot, 360.);
     resetZoom();
     updateGL();
-    emit newPosition();
 }
 
 const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const {
