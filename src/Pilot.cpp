@@ -446,8 +446,7 @@ int Pilot::nextPointOnRoute(const QList<Waypoint *> &waypoints) const { // next 
                                        waypoints[0]->lon);
     int minPoint = 0; // next to departure as default
     for(int i = 1; i < waypoints.size(); i++) {
-        if(NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon) <
-           minDist) {
+        if(NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon) < minDist) {
             minDist = NavData::distance(lat, lon, waypoints[i]->lat, waypoints[i]->lon);
             minPoint = i;
         }
@@ -477,19 +476,35 @@ int Pilot::nextPointOnRoute(const QList<Waypoint *> &waypoints) const { // next 
 }
 
 bool Pilot::showDepLine() const {
-    if (depAirport() != 0)
-        return (Settings::depLineStrength() > 0. &&
-                (showDepDestLine || depAirport()->showFlightLines));
-    else
-        return (Settings::depLineStrength() > 0. && showDepDestLine);
+    if (qFuzzyIsNull(Settings::depLineStrength())) {
+        return false;
+    }
+
+    if (showDepDestLine) {
+        return true;
+    }
+
+    if (depAirport() != 0) {
+        return depAirport()->showRoutes;
+    }
+
+    return false;
 }
 
 bool Pilot::showDestLine() const {
-    if (destAirport() != 0)
-        return (Settings::destLineStrength() > 0. &&
-                (showDepDestLine || destAirport()->showFlightLines));
-    else
-        return (Settings::destLineStrength() > 0. && showDepDestLine);
+    if (qFuzzyIsNull(Settings::destLineStrength())) {
+        return false;
+    }
+
+    if (showDepDestLine) {
+        return true;
+    }
+
+    if (destAirport() != 0) {
+        return destAirport()->showRoutes;
+    }
+
+    return false;
 }
 
 QList<Waypoint*> Pilot::routeWaypoints() {

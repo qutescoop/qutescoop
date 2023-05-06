@@ -50,7 +50,7 @@ class Airport: public MapObject {
 
         QString name, city, countryCode;
 
-        bool showFlightLines;
+        bool showRoutes;
 
         const GLuint &appDisplayList();
         const GLuint &twrDisplayList();

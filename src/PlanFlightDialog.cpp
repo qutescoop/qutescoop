@@ -274,7 +274,7 @@ void PlanFlightDialog::plotPlannedRoute() const {
     glColor4f(0., 0., 1., 1.);
     glLineWidth(3.);
     glBegin(GL_LINE_STRIP);
-    NavData::plotPointsOnEarth(points);
+    NavData::plotGreatCirclePoints(points);
     glEnd();
     glPointSize(4.);
     glColor4f(1., 0., 0., 1.);

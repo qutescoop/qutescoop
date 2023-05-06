@@ -31,7 +31,7 @@ class NavData: public QObject {
                                                          double lat2, double lon2, double fraction);
         static QList<QPair<double, double> > greatCirclePoints(double lat1, double lon1, double lat2,
                                                               double lon2, double intervalNm = 30.);
-        static void plotPointsOnEarth(const QList<QPair<double, double> > &points);
+        static void plotGreatCirclePoints(const QList<QPair<double, double> > &points);
 
         virtual ~NavData();
 

@@ -10,7 +10,7 @@
 #include "NavData.h"
 
 Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
-        showFlightLines(false),
+        showRoutes(false),
         _appDisplayList(0),
         _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();

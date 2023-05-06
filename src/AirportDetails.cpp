@@ -148,7 +148,7 @@ void AirportDetails::refresh(Airport* newAirport) {
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
-    cbPlotRoutes->setChecked(_airport->showFlightLines);
+    cbPlotRoutes->setChecked(_airport->showRoutes);
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {
@@ -164,8 +164,8 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 }
 
 void AirportDetails::togglePlotRoutes(bool checked) {
-    if(_airport->showFlightLines != checked) {
-        _airport->showFlightLines = checked;
+    if(_airport->showRoutes != checked) {
+        _airport->showRoutes = checked;
         if (Window::instance(false) != 0) {
             Window::instance()->mapScreen->glWidget->createPilotsList();
             Window::instance()->mapScreen->glWidget->updateGL();;

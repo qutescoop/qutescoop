@@ -346,16 +346,20 @@ QList<QPair<double, double> > NavData::greatCirclePoints(double lat1, double lon
 /**
   plot great-circles of lat/lon points on Earth
 **/
-void NavData::plotPointsOnEarth(const QList<QPair<double, double> > &points) {
+void NavData::plotGreatCirclePoints(const QList<QPair<double, double> > &points) {
     if (points.isEmpty())
         return;
     if (points.size() > 1) {
         DoublePair wpOld = points[0];
         for (int i=1; i < points.size(); i++) {
-            foreach(const DoublePair p, greatCirclePoints(wpOld.first, wpOld.second,
-                                                    points[i].first, points[i].second,
-                                                          400.))
+            auto subPoints = greatCirclePoints(
+                wpOld.first, wpOld.second,
+                points[i].first, points[i].second,
+                400.
+            );
+            foreach(const DoublePair p, subPoints) {
                 VERTEX(p.first, p.second);
+            }
             wpOld = points[i];
         }
     }

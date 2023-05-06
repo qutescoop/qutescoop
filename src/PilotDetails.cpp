@@ -145,9 +145,9 @@ void PilotDetails::refresh(Pilot *pilot) {
     // plotted?
     bool plottedAirports = false;
     if (_pilot->depAirport() != 0)
-        plottedAirports |= _pilot->depAirport()->showFlightLines;
+        plottedAirports |= _pilot->depAirport()->showRoutes;
     if (_pilot->destAirport() != 0)
-        plottedAirports |= _pilot->destAirport()->showFlightLines;
+        plottedAirports |= _pilot->destAirport()->showRoutes;
 
     if (!plottedAirports && !_pilot->showDepDestLine)
         cbPlotRoute->setCheckState(Qt::Unchecked);
