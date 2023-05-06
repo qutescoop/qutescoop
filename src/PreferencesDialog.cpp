@@ -7,20 +7,16 @@
 #include "SondeData.h"
 #include "Window.h"
 
+//singleton instance
 PreferencesDialog *preferencesDialogInstance = 0;
-PreferencesDialog *PreferencesDialog::instance(bool createIfNoInstance,
-                                                  QWidget *parent) {
-    if(preferencesDialogInstance == 0)
+PreferencesDialog *PreferencesDialog::instance(bool createIfNoInstance, QWidget *parent) {
+    if(preferencesDialogInstance == 0) {
         if (createIfNoInstance) {
             if (parent == 0) parent = Window::instance();
             preferencesDialogInstance = new PreferencesDialog(parent);
         }
+    }
     return preferencesDialogInstance;
-}
-// destroys a singleton instance
-void PreferencesDialog::destroyInstance() {
-    delete preferencesDialogInstance;
-    preferencesDialogInstance = 0;
 }
 
 PreferencesDialog::PreferencesDialog(QWidget *parent):
@@ -28,7 +24,6 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
         _settingsLoaded(false) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-//    setWindowFlags(Qt::Tool);
 
     foreach(const QByteArray &fmt, QImageWriter::supportedImageFormats())
         if(cbScreenshotFormat->findText(fmt.toLower()) == -1)

@@ -11,6 +11,7 @@
 #include "AirportDetails.h"
 #include "Client.h"
 
+//singleton instance
 QSettings *settingsInstance = 0;
 QSettings* Settings::instance() {
     if(settingsInstance == 0) {

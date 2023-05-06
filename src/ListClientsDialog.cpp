@@ -32,7 +32,6 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
         QDialog(parent) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
-    //    setWindowFlags(Qt::Tool);
 
     // clients
     _clientsModel = new ListClientsDialogModel;

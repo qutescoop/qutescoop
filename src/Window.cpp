@@ -147,6 +147,7 @@ Window::Window(QWidget *parent) :
     connect(
         &_timerEditPredict,
         &QTimer::timeout,
+        this,
         [=]() {
             // using lambda due to default parameter
             this->performWarp(true);
@@ -241,30 +242,31 @@ void Window::processWhazzup(bool isNew) {
     const WhazzupData &data = Whazzup::instance()->whazzupData();
 
     QString msg = QString(tr("%1%2 - %3: %4 clients"))
-                  .arg(Settings::downloadNetworkName())
-                  .arg(Whazzup::instance()->predictedTime.isValid()
-                       ? " - <b>W A R P E D</b>  to"
-                       : ""
-                       )
-                  .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-                        ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
-                        : data.whazzupTime.toString("ddd MM/dd HHmm'z'"))
-                  .arg(data.pilots.size() + data.controllers.size());
+        .arg(
+            Settings::downloadNetworkName(),
+            Whazzup::instance()->predictedTime.isValid() ? " - <b>W A R P E D</b>  to" : ""
+        )
+        .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+            ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
+            : data.whazzupTime.toString("ddd MM/dd HHmm'z'"))
+        .arg(data.pilots.size() + data.controllers.size());
     GuiMessages::status(msg, "status");
 
     msg = QString("Whazzup %1, bookings %2 updated")
-                  .arg(realdata.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-                        ? QString("today %1").arg(realdata.whazzupTime.time().toString("HHmm'z'"))
-                        : (realdata.whazzupTime.isValid()
-                           ? realdata.whazzupTime.toString("ddd MM/dd HHmm'z'")
-                           : "never")
-                        )
-                  .arg(realdata.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-                        ? QString("today %1").arg(realdata.bookingsTime.time().toString("HHmm'z'"))
-                        : (realdata.bookingsTime.isValid()
-                           ? realdata.bookingsTime.toString("ddd MM/dd HHmm'z'")
-                           : "never")
-                        );
+        .arg(
+            realdata.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                ? QString("today %1").arg(realdata.whazzupTime.time().toString("HHmm'z'"))
+                : (realdata.whazzupTime.isValid()
+                   ? realdata.whazzupTime.toString("ddd MM/dd HHmm'z'")
+                   : "never"
+                 ),
+            realdata.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+                ? QString("today %1").arg(realdata.bookingsTime.time().toString("HHmm'z'"))
+                : (realdata.bookingsTime.isValid()
+                   ? realdata.bookingsTime.toString("ddd MM/dd HHmm'z'")
+                   : "never"
+                 )
+        );
     lblWarpInfo->setText(msg);
 
     if (Whazzup::instance()->predictedTime.isValid()) {
