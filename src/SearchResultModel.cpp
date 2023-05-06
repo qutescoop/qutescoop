@@ -33,7 +33,7 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
     } else if (role == Qt::ToolTipRole) {
         MapObject* o = _content[index.row()];
         switch(index.column()) {
-        case 0: return o->mapLabel(); break;
+        case 0: return o->toolTip(); break;
         }
     } else if (role == Qt::FontRole) {
         QFont result;
