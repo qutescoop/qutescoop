@@ -16,12 +16,12 @@ class Airac : public QObject {
         virtual ~Airac();
 
         Waypoint* waypoint(const QString &id, const QString &regionCode, const int &type) const;
-        Waypoint* waypointNearby(const QString &id, double lat, double lon, double maxDist) const;
+        Waypoint* waypointNearby(const QString &id, double lat, double lon, double maxDist);
 
         Airway* airway(const QString& name);
         Airway* airwayNearby(const QString& name, double lat, double lon) const;
 
-        QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon) const;
+        QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon);
 
         QSet<Waypoint*> allPoints;
         QHash<QString, QSet<Waypoint*> > fixes;
