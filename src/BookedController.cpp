@@ -9,8 +9,11 @@
 BookedController::BookedController(const QJsonObject& json, const WhazzupData* whazzup) :
     Client(json, whazzup)
 {
+    m_name = userId;
+
     bookingType = json["type"].toString();
-    m_starts = QDateTime::fromString(json["start"].toString() + "Z", "yyyy-MM-dd HH:mm:sst");
+
+    timeConnected = m_starts = QDateTime::fromString(json["start"].toString() + "Z", "yyyy-MM-dd HH:mm:sst");
     m_ends = QDateTime::fromString(json["end"].toString() + "Z", "yyyy-MM-dd HH:mm:sst");
 
     if(bookingType == "booking") {
@@ -38,8 +41,6 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     } else if (label.right(4) == "_FSS") {
         facilityType = 7;
     }
-
-    timeConnected = starts();
 }
 
 QString BookedController::facilityString() const {

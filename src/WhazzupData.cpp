@@ -28,9 +28,9 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type) :
     _dataType = type;
     int reloadInMin = Settings::downloadInterval();
     QJsonDocument data = QJsonDocument::fromJson(*bytes);
-    if(data.isNull()) {
+    if (data.isNull()) {
         qDebug() << "Couldn't parse JSON";
-    } else if(type == WHAZZUP) {
+    } else if (type == WHAZZUP) {
         QJsonObject json = data.object();
         if (json.contains("general") && json["general"].isObject()) {
             QJsonObject generalObject = json["general"].toObject();
@@ -98,11 +98,11 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type) :
                 bookedPilots[p->label] = p;
             }
         }
-    } else if(type == ATCBOOKINGS) {
+    } else if (type == ATCBOOKINGS) {
         QJsonArray json = data.array();
-        for(int i = 0; i < json.size(); ++i) {
-            QJsonObject bookedControllerObject = json[i].toObject();
-            BookedController *bc = new BookedController(bookedControllerObject, this);
+        for (int i = 0; i < json.size(); ++i) {
+            QJsonObject bookedControllerJson = json[i].toObject();
+            BookedController* bc = new BookedController(bookedControllerJson, this);
             bookedControllers.append(bc);
         }
         bookingsTime = QDateTime::currentDateTime();

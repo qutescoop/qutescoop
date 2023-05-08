@@ -38,7 +38,12 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
     if(!index.isValid() || (index.row() >= rowCount(index)))
         return QVariant();
 
-    if(role == Qt::DisplayRole) {
+    if(role == Qt::FontRole) {
+        BookedController* c = _controllers[index.row()];
+        QFont result;
+        result.setBold(c->isFriend());
+        return result;
+    } else if(role == Qt::DisplayRole) {
         BookedController* c = _controllers[index.row()];
         switch(index.column()) {
             case 0: return c->label;
