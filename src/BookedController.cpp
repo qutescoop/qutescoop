@@ -57,9 +57,9 @@ QString BookedController::facilityString() const {
 }
 
 QDateTime BookedController::starts() const {
-    return QDateTime::fromString(timeFrom, "yyyy-MM-dd HH:mm:ss");
+    return QDateTime::fromString(timeFrom + "Z", "yyyy-MM-dd HH:mm:sst");
 }
 
 QDateTime BookedController::ends() const {
-    return QDateTime::fromString(timeTo, "yyyy-MM-dd HH:mm:ss");
+    return QDateTime::fromString(timeTo + "Z", "yyyy-MM-dd HH:mm:sst");
 }
