@@ -484,6 +484,14 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
             foreach(auto _a, c->airports()) {
                 _a->twrDisplayList();
             }
+        } else if (c->isGnd()) {
+            foreach(auto _a, c->airports()) {
+                _a->gndDisplayList();
+            }
+        } else if (c->isDel()) {
+            foreach(auto _a, c->airports()) {
+                _a->delDisplayList();
+            }
         }
     }
 
@@ -500,6 +508,14 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
             foreach(auto _a, c->airports()) {
                 glCallList(_a->twrDisplayList());
             }
+        } else if (c->isGnd()) {
+            foreach(auto _a, c->airports()) {
+                glCallList(_a->gndDisplayList());
+            }
+        } else if (c->isDel()) {
+            foreach(auto _a, c->airports()) {
+                glCallList(_a->delDisplayList());
+            }
         }
     }
     glEndList();
@@ -509,7 +525,6 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
     if (_hoveredSectorPolygonBorderLinesList == 0) {
         _hoveredSectorPolygonBorderLinesList = glGenLists(1);
     }
-
 
     if (!_allSectorsDisplayed && Settings::firHighlightedBorderLineStrength() > 0.) {
         // first, make sure all lists are there
@@ -1134,12 +1149,16 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         foreach(Controller *c, Whazzup::instance()->whazzupData().controllers.values()) {
             if (c->sector != 0 && c->sector->containsPoint(QPointF(lat, lon))) {
                 _newHoveredControllers.insert(c);
-            } else { // APP, TWR
+            } else { // APP, TWR, GND, DEL
                 int maxDist_nm = -1;
                 if (c->isAppDep()) {
                     maxDist_nm = Airport::symbologyAppRadius_nm;
                 } else if (c->isTwr()) {
                     maxDist_nm = Airport::symbologyTwrRadius_nm;
+                } else if (c->isGnd()) {
+                    maxDist_nm = Airport::symbologyGndRadius_nm;
+                } else if (c->isDel()) {
+                    maxDist_nm = Airport::symbologyDelRadius_nm;
                 }
                 foreach(auto *_a, c->airports()) {
                     if(NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
@@ -1627,12 +1646,16 @@ QList<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
         if (c->sector != 0 && c->sector->containsPoint(QPointF(lat, lon))) { // controllers with sectors
             result.removeAll(c);
             result.append(c);
-        } else { // APP, TWR
+        } else { // APP, TWR, GND, DEL
             int maxDist_nm = -1;
             if (c->isAppDep()) {
                 maxDist_nm = Airport::symbologyAppRadius_nm;
             } else if (c->isTwr()) {
                 maxDist_nm = Airport::symbologyTwrRadius_nm;
+            } else if (c->isGnd()) {
+                maxDist_nm = Airport::symbologyGndRadius_nm;
+            } else if (c->isDel() || c->isAtis()) { // add ATIS to clientSelection
+                maxDist_nm = Airport::symbologyDelRadius_nm;
             }
             foreach(auto *_a, c->airports()) {
                 if(NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
