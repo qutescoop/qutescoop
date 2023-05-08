@@ -22,7 +22,6 @@ class BookedAtcDialogModel : public QAbstractTableModel {
 
     public slots:
         void setClients(const QList<BookedController*>& controllers);
-        void modelSelected(const QModelIndex& index) const;
 
     private:
         QList<BookedController*> _controllers;
