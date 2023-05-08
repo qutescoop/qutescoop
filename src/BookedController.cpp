@@ -10,8 +10,8 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     Client(json, whazzup)
 {
     bookingType = json["type"].toString();
-    timeTo = json["end"].toString();
-    timeFrom = json["start"].toString();
+    m_starts = QDateTime::fromString(json["start"].toString() + "Z", "yyyy-MM-dd HH:mm:sst");
+    m_ends = QDateTime::fromString(json["end"].toString() + "Z", "yyyy-MM-dd HH:mm:sst");
 
     if(bookingType == "booking") {
         bookingInfoStr = QString();
@@ -20,7 +20,7 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
     } else if (bookingType == "training") {
         bookingInfoStr = QString("Training");
     } else {
-        bookingInfoStr = QString(bookingType);
+        bookingInfoStr = bookingType;
     }
 
     if (label.right(5) == "_ATIS") {
@@ -57,9 +57,9 @@ QString BookedController::facilityString() const {
 }
 
 QDateTime BookedController::starts() const {
-    return QDateTime::fromString(timeFrom + "Z", "yyyy-MM-dd HH:mm:sst");
+    return m_starts;
 }
 
 QDateTime BookedController::ends() const {
-    return QDateTime::fromString(timeTo + "Z", "yyyy-MM-dd HH:mm:sst");
+    return m_ends;
 }
