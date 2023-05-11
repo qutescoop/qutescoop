@@ -20,23 +20,42 @@
 ; but covering these additional airports:
 ;---------------------------------------------------------------------------------------------
 
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/hmm-hamm-eddg-hmm-app
 EDDG:APP DEP:EDLW EDLP
 EDDH:APP DEP:EDHL EDHI
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/dka-koln-arrival-eddk-app
 EDDK:APP DEP:ETNN
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/bot-bottrop-eddl-bot-app
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/dus-dusseldorf-terminal-eddl-app
 EDDL:APP DEP:EDLN EDLV
-EDDS:APP DEP:EDSB
+EDDM:APP DEP:EDMA EDMO
+; https://knowledgebase.vatsim-germany.org/books/sops-rg-munchen/page/arrival-franken-low
+EDDN:APP DEP:EDQM
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/pfa-pfalz-eddr-pfa-app
+EDDR:APP DEP:ETAD
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/reu-reutlingen-edds-reu-app
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/stg-stuttgart-edds-stg-app
+EDDS:APP DEP:EDSB EDTL EDTY
 EDDV:APP DEP:EDVE ETNW ETHB ETHC ETHS
-EDFH:APP DEP:EDDR ETAR
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/eif-eifel-edfh-eif-app
+EDFH:APP DEP:ETSB ETAD ETOU
+; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/padl-paderborn-low-edlp-pal-app
+EDLP:APP DEP:EDLW
 EGFF:APP DEP:EGSY
 EGJJ:APP DEP:EGJA EGJB
 EPWA:APP DEP:EPMO EPLL
 ESSA:APP DEP:ESSB
 ETNS:APP DEP:ETNH
+ETSI:APP DEP:ETSN
 LEBL:APP DEP:LERS LELL LEDA LEGE
 LFPG:APP DEP:LFPO LFPB LFPN LFOB
+; if LSFA is not online
+LSZH:APP DEP:EDNY LSZR
 LPPT:APP DEP:LPCS
 LTAI:APP DEP:LTFC LTFG
 LTBA:APP DEP:LTFM LTFJ LTBA LTBU
+LTBJ:APP DEP:LTFA LTBL LTBK LTFB LTBT
+MTPP:APP DEP:MTJA
 RKSS:APP DEP:RKSI
 RPLL:APP DEP:RPLC RPLB RPLS
 VTBS:APP DEP:VTBD
