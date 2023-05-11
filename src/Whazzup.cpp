@@ -326,14 +326,16 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
                  << "data.whazzupTime=" << _data.whazzupTime;
         GuiMessages::progress("warpProcess", "Calculating Warp...");
         this->predictedTime = predictedTime;
-        if (Settings::downloadBookings() && !_data.bookingsTime.isValid())
+        if (Settings::downloadBookings() && !_data.bookingsTime.isValid()) {
             emit needBookings();
+        }
         if(predictedTime == _data.whazzupTime) {
             qDebug() << "Whazzup::setPredictedTime() predictedTime == data.whazzupTime"
                      << "(no need to predict, we have it already :) )";
             _predictedData = _data;
-        } else
+        } else {
             _predictedData.updateFrom(WhazzupData(predictedTime, _data));
+        }
         GuiMessages::remove("warpProcess");
         emit newData(true);
     }
