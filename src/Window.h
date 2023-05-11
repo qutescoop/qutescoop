@@ -60,12 +60,12 @@ class Window : public QMainWindow, public Ui::Window {
         void on_actionRecallMapPosition7_triggered();
         void on_actionHideAllWindows_triggered();
         void on_actionPredict_toggled(bool );
-        void on_dateTimePredict_dateTimeChanged(QDateTime date);
         void on_tbDisablePredict_clicked();
         void on_tbRunPredict_toggled(bool checked);
         void on_cbUseDownloaded_toggled(bool checked);
         void on_cbOnlyUseDownloaded_toggled(bool checked);
-        void performWarp(bool forceUseDownloaded = false);
+        void dateTimePredict_dateTimeChanged(QDateTime date);
+        void performWarp();
         void runPredict();
         void about();
         void toggleFullscreen();
