@@ -144,18 +144,12 @@ Window::Window(QWidget *parent) :
     // Forecast / Predict settings
     framePredict->hide();
     _timerEditPredict.stop();
-    connect(
-        &_timerEditPredict,
-        &QTimer::timeout,
-        this,
-        [=]() {
-            // using lambda due to default parameter
-            this->performWarp(true);
-        }
-    );
+    connect(&_timerEditPredict, &QTimer::timeout, this, &Window::performWarp);
     _timerRunPredict.stop();
     connect(&_timerRunPredict, &QTimer::timeout, this, &Window::runPredict);
     widgetRunPredict->hide();
+
+    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::dateTimePredict_dateTimeChanged);
 
     QFont font = lblWarpInfo->font();
     font.setPointSize(lblWarpInfo->fontInfo().pointSize() - 1);
@@ -523,17 +517,19 @@ void Window::setEnableBookedAtc(bool enable) {
     actionBookedAtc->setEnabled(enable);
 }
 
-void Window::performWarp(bool forceUseDownloaded) {
+void Window::performWarp() {
     _timerEditPredict.stop();
 
     QDateTime warpToTime = dateTimePredict->dateTime();
-    if(cbUseDownloaded->isChecked() || forceUseDownloaded) { // use downloaded Whazzups for (past) replay
+    auto realWhazzupTime = Whazzup::instance()->realWhazzupData().whazzupTime;
+    qDebug() << "Window::performWarp() warpToTime=" << warpToTime << " realWhazzupTime=" << realWhazzupTime;
+    if(cbUseDownloaded->isChecked() && warpToTime < realWhazzupTime) {
         qDebug() << "Window::performWarp() Looking for downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
         for (int i = downloaded.size() - 1; i > -1; i--) {
-            if((downloaded[i].first <= warpToTime) || (i == 0)) {
+            if((downloaded[i].first <= warpToTime && realWhazzupTime < downloaded[i].first) || (i == 0)) {
                 // only if different
-                if (downloaded[i].first != Whazzup::instance()->realWhazzupData().whazzupTime) {
+                if (downloaded[i].first != realWhazzupTime) {
                     // disconnect to inhibit update because will be updated later
                     disconnect(Whazzup::instance(), &Whazzup::newData, mapScreen->glWidget, &GLWidget::newWhazzupData);
                     disconnect(Whazzup::instance(), &Whazzup::newData, this, &Window::processWhazzup);
@@ -553,16 +549,18 @@ void Window::performWarp(bool forceUseDownloaded) {
 void Window::on_cbUseDownloaded_toggled(bool checked) {
     qDebug() << "Window::cbUseDownloaded_toggled()" << checked;
     if(!checked) {
-        QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
-        if(!downloaded.isEmpty())
-            Whazzup::instance()->fromFile(downloaded.last().second);
-        cbOnlyUseDownloaded->setChecked(false); // uncheck when not using downloaded at all
+        // I currently don't understand why we had this
+        //        QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
+        //        if(!downloaded.isEmpty())
+        //            Whazzup::instance()->fromFile(downloaded.last().second);
+        cbOnlyUseDownloaded->setChecked(false);
     }
-    performWarp(true);
+    performWarp();
 }
 void Window::on_cbOnlyUseDownloaded_toggled(bool checked) {
-    if(checked) // if newly selected, set dateTime to valid Whazzup
-        on_dateTimePredict_dateTimeChanged(dateTimePredict->dateTime());
+    if(checked) { // if newly selected, set dateTime to valid Whazzup
+        dateTimePredict_dateTimeChanged(dateTimePredict->dateTime());
+    }
 }
 
 void Window::on_tbDisablePredict_clicked() {
@@ -590,8 +588,9 @@ void Window::on_tbRunPredict_toggled(bool checked) {
     if(checked) {
         dateTimePredict->setEnabled(false);
         widgetRunPredict->show();
-        if(!Whazzup::instance()->predictedTime.isValid())
+        if(!Whazzup::instance()->predictedTime.isValid()) {
             performWarp();
+        }
         _timerRunPredict.start(1000);
     } else {
         _timerRunPredict.stop();
@@ -604,11 +603,11 @@ void Window::runPredict() {
     _timerRunPredict.stop();
     QDateTime to;
 
-    if (dsRunPredictStep->value() == 0) // real time selected
+    if (dsRunPredictStep->value() == 0) { // real time selected
         to = QDateTime::currentDateTimeUtc();
-    else
-        to = Whazzup::instance()->predictedTime.addSecs(
-                static_cast<int>(dsRunPredictStep->value()*60));
+    } else {
+        to = Whazzup::instance()->predictedTime.addSecs(static_cast<int>(dsRunPredictStep->value()*60));
+    }
 
     // when only using downloaded Whazzups, select the next available
     if(cbOnlyUseDownloaded->isChecked()) {
@@ -622,19 +621,23 @@ void Window::runPredict() {
         }
     }
 
+    qDebug() << to;
+
     // setting dateTimePredict without "niceify"
-    disconnect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
+    disconnect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::dateTimePredict_dateTimeChanged);
     dateTimePredict->setDateTime(to);
-    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
+    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::dateTimePredict_dateTimeChanged);
+
+    qDebug() << dateTimePredict->dateTime();
 
     performWarp();
     _timerRunPredict.start(static_cast<int>(spinRunPredictInterval->value() * 1000));
 }
 
-void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
+void Window::dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     // some niceify on the default behaviour, making the sections depend on each other
     // + only allow selecting downloaded Whazzups if respective option is selected
-    disconnect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
+    disconnect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::dateTimePredict_dateTimeChanged);
     _timerEditPredict.stop();
 
     // make year change if M 12+ or 0-
@@ -676,7 +679,7 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
 
     // when only using downloaded Whazzups, select the next available
     if(cbOnlyUseDownloaded->isChecked()) {
-        qDebug() << "Window::on_dateTimePredict_dateTimeChanged()"
+        qDebug() << "Window::dateTimePredict_dateTimeChanged()"
                  << "restricting Warp target to downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded =
                 Whazzup::instance()->downloadedWhazzups();
@@ -702,7 +705,7 @@ void Window::on_dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     if(dateTime.isValid() && (dateTime != dateTimePredict->dateTime()))
         dateTimePredict->setDateTime(dateTime);
 
-    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::on_dateTimePredict_dateTimeChanged);
+    connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::dateTimePredict_dateTimeChanged);
     _timerEditPredict.start(1000);
 }
 
