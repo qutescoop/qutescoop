@@ -41,7 +41,6 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
     treeBookedAtc->setUniformRowHeights(true);
     treeBookedAtc->setModel(_bookedAtcSortModel);
     treeBookedAtc->sortByColumn(0, Qt::AscendingOrder);
-    connect(treeBookedAtc, &QAbstractItemView::clicked, this, &BookedAtcDialog::modelSelected);
 
     // disconnect to set DateTime without being disturbed
     // fixes https://sourceforge.net/p/qutescoop/tickets/5/
@@ -190,10 +189,6 @@ void BookedAtcDialog::performSearch() {
     boxResults->setTitle(QString("Results (%1)").arg(_bookedAtcSortModel->rowCount()));
     qApp->restoreOverrideCursor();
     qDebug() << "BookedAtcDialog/performSearch() -- finished";
-}
-
-void BookedAtcDialog::modelSelected(const QModelIndex& index) {
-    _bookedAtcModel->modelSelected(_bookedAtcSortModel->mapToSource(index));
 }
 
 void BookedAtcDialog::on_tbPredict_clicked() {

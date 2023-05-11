@@ -7,6 +7,7 @@
 #include "Whazzup.h"
 #include "Window.h"
 #include "PilotDetails.h"
+#include "GuiMessage.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
 #include "Client.h"
@@ -17,7 +18,7 @@ QSettings* Settings::instance() {
     if(settingsInstance == 0) {
         settingsInstance = new QSettings();
 
-        const int requiredSettingsVersion = 2;
+        const int requiredSettingsVersion = 3;
         int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
         if (currentSettingsVersion < requiredSettingsVersion) {
             if(currentSettingsVersion < 1) {
@@ -53,6 +54,16 @@ QSettings* Settings::instance() {
                 }
                 settingsInstance->setValue("friends/friendList", friendList);
                 currentSettingsVersion = 2;
+            }
+            if(currentSettingsVersion < 3) {
+                qDebug() << "Starting migration 2 -> 3";
+                if(settingsInstance->value("download/bookingsLocation").toString() != "http://vatbook.euroutepro.com/servinfo.asp") {
+                    GuiMessages::criticalUserInteraction(QString("You have set the location for bookings to %1.\nThis is different from the old default location. Due to an update in QuteScoop the old format for bookings is no longer supported.\n\nYou will be migrated to the new default VATSIM bookings URL.")
+                       .arg(settingsInstance->value("download/bookingsLocation").toString()),
+                       "Update of bookings format");
+                }
+                settingsInstance->setValue("download/bookingsLocation", "https://atc-bookings.vatsim.net/api/booking");
+                currentSettingsVersion = 3;
             }
             settingsInstance->setValue("settings/version", currentSettingsVersion);
         }

@@ -27,7 +27,6 @@ class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
     private slots:
         void on_dateTimeFilter_dateTimeChanged(QDateTime date);
         void performSearch();
-        void modelSelected(const QModelIndex& index);
         void on_tbPredict_clicked();
         void on_spinHours_valueChanged(int val);
         void on_editFilter_textChanged(QString str);

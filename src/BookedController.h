@@ -26,13 +26,12 @@ public:
 
     int facilityType;
 
-    // Booking values
-    QString link, bookingInfoStr, timeFrom, timeTo, date, eventLink;
-    int bookingType;
+    QString bookingInfoStr, bookingType;
 
     QDateTime starts() const;
     QDateTime ends() const;
-private:
+protected:
+    QDateTime m_starts, m_ends;
 };
 
 #endif /*BOOKEDCONTROLLER_H_*/
