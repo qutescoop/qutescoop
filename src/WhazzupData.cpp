@@ -14,13 +14,15 @@
 WhazzupData::WhazzupData():
         servers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()), bookingsTime(QDateTime()),
-        _whazzupVersion(0), _dataType(UNIFIED)  {
+        _dataType(UNIFIED)
+{
 }
 
 WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
         servers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()),
-        bookingsTime(QDateTime()), _whazzupVersion(0) {
+        bookingsTime(QDateTime())
+{
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     _dataType = type;
@@ -65,7 +67,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type):
                 pilots[p->label] = p;
             }
         }
-        
+
         if(json.contains("controllers") && json["controllers"].isArray()) {
             QJsonArray controllersArray = json["controllers"].toArray();
             for(int i = 0; i < controllersArray.size(); ++i) {
@@ -171,11 +173,10 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data):
         servers(QList<QStringList>()),
         updateEarliest(QDateTime()), whazzupTime(QDateTime()),
         bookingsTime(QDateTime()), predictionBasedOnTime(QDateTime()),
-        predictionBasedOnBookingsTime(QDateTime()), _whazzupVersion(0) {
+        predictionBasedOnBookingsTime(QDateTime()) {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
 
-    _whazzupVersion = data._whazzupVersion;
     whazzupTime = predictTime;
     predictionBasedOnTime = QDateTime(data.whazzupTime);
     predictionBasedOnBookingsTime = QDateTime(data.bookingsTime);
@@ -444,18 +445,21 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
         return;
 
     if (data._dataType == WHAZZUP || data._dataType == UNIFIED) {
-        if(_dataType == ATCBOOKINGS) _dataType = UNIFIED;
+        if(_dataType == ATCBOOKINGS) {
+            _dataType = UNIFIED;
+        }
         updatePilotsFrom(data);
         updateControllersFrom(data);
 
         servers = data.servers;
-        _whazzupVersion = data._whazzupVersion;
         whazzupTime = data.whazzupTime;
         updateEarliest = data.updateEarliest;
         predictionBasedOnTime = data.predictionBasedOnTime;
     }
     if (data._dataType == ATCBOOKINGS || data._dataType == UNIFIED) {
-        if(_dataType == WHAZZUP) _dataType = UNIFIED;
+        if(_dataType == WHAZZUP) {
+            _dataType = UNIFIED;
+        }
         updateBookedControllersFrom(data);
         bookingsTime = data.bookingsTime;
         predictionBasedOnBookingsTime = data.predictionBasedOnBookingsTime;
