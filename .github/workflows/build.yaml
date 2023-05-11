@@ -243,21 +243,21 @@ jobs:
           prerelease: ${{ github.ref_type != 'tag' }}
           tag: ${{ needs.facts.outputs.version }}
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: "publish release (if pre-release)"
-        # the "draft first" shall inhibit watcher emails until artifacts are uploaded
-        if: ${{ github.ref_type != 'tag' }}
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          commit: ${{ github.sha }}
-          draft: false
-          name: ${{ needs.facts.outputs.version }}
-          omitBodyDuringUpdate: true
-          omitNameDuringUpdate: true
-          omitPrereleaseDuringUpdate: true
-          prerelease: ${{ github.ref_type != 'tag' }}
-          tag: ${{ needs.facts.outputs.version }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+#      - name: "publish release (if pre-release)"
+#        # the "draft first" shall inhibit watcher emails until artifacts are uploaded
+#        if: ${{ github.ref_type != 'tag' }}
+#        uses: ncipollo/release-action@v1
+#        with:
+#          allowUpdates: true
+#          commit: ${{ github.sha }}
+#          draft: false
+#          name: ${{ needs.facts.outputs.version }}
+#          omitBodyDuringUpdate: true
+#          omitNameDuringUpdate: true
+#          omitPrereleaseDuringUpdate: true
+#          prerelease: ${{ github.ref_type != 'tag' }}
+#          tag: ${{ needs.facts.outputs.version }}
+#          token: ${{ secrets.GITHUB_TOKEN }}
       - name: delete potential stray release
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
         if: failure()
