@@ -466,7 +466,7 @@ void GLWidget::createControllersLists() {
 
 
 void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
-    qDebug() << "GLWidget::createHoveredSectorsLists() ";
+//    qDebug() << "GLWidget::createHoveredSectorsLists() ";
 
     //Polygon
     if (_hoveredSectorPolygonsList == 0)
@@ -539,7 +539,7 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
         }
         glEndList();
     }
-    qDebug() << "GLWidget::createHoveredSectorsLists() -- finished";
+//    qDebug() << "GLWidget::createHoveredSectorsLists() -- finished";
 }
 
 void GLWidget::createStaticLists() {
@@ -1170,7 +1170,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         if (_newHoveredControllers != _hoveredControllers) {
             _hoveredControllers = _newHoveredControllers;
             createHoveredControllersLists(_hoveredControllers);
-            qDebug() << "hovered controllers" << _hoveredControllers;
+//            qDebug() << "hovered controllers" << _hoveredControllers;
             updateGL();
         }
     }
