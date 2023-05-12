@@ -21,7 +21,7 @@ public:
     }
 
     QString toolTip() const {
-        return QString("%1, %2").arg(name, country);
+        return QString("%1 \"%2\", %3, %4").arg(code, callsign, name, country);
     }
 
     virtual ~Airline() {
