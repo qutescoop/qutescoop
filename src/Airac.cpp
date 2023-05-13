@@ -234,7 +234,7 @@ Waypoint* Airac::waypoint(const QString &id, const QString &regionCode, const in
   find a waypoint that is near the given location with the given maximum distance.
   @returns 0 if none found
 **/
-Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, double maxDist = 20000.) const {
+Waypoint* Airac::waypointNearby(const QString& input, double lat, double lon, double maxDist = 20000.) {
     // @todo clean this up
     // @todo add "virtual" fixes (ARINC424) to our nav database upfront instead of returning them
     // here dynamically (without adding them), which leads to duplicates
@@ -242,27 +242,27 @@ Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, doubl
     Waypoint *result = 0;
     double minDist = 99999;
 
-    foreach (NavAid *n, navaids[id]) {
+    foreach (NavAid *n, navaids[input]) {
         double d = NavData::distance(lat, lon, n->lat, n->lon);
         if ((d < minDist) && (d < maxDist)) {
             result = n;
             minDist = d;
         }
     }
-    foreach (Waypoint *w, fixes[id]) {
+    foreach (Waypoint *w, fixes[input]) {
         double d = NavData::distance(lat, lon, w->lat, w->lon);
         if ((d < minDist) && (d < maxDist)) {
             result = w;
             minDist = d;
         }
     }
-    if (NavData::instance()->airports.contains(id)) { // trying aerodromes
+    if (NavData::instance()->airports.contains(input)) { // trying aerodromes
         double d = NavData::distance(lat, lon,
-                                     NavData::instance()->airports[id]->lat,
-                                     NavData::instance()->airports[id]->lon);
+                                     NavData::instance()->airports[input]->lat,
+                                     NavData::instance()->airports[input]->lon);
         if ((d < minDist) && (d < maxDist)) {
-            result = new Waypoint(id, NavData::instance()->airports[id]->lat,
-                                  NavData::instance()->airports[id]->lon);
+            result = new Waypoint(input, NavData::instance()->airports[input]->lat,
+                                  NavData::instance()->airports[input]->lon);
             minDist = d;
         }
     }
@@ -279,21 +279,23 @@ Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, doubl
                     // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
         QRegExp slash("([\\-]?\\d{2})/([\\-]?\\d{2,3})"); // some pilots
                                                 // ..like to use non-standard: -53/170
-        QRegExp wildGuess("([NS]?)(\\d{2})([NSEW])(\\d{2,3})([EW]?)"); // or even
-                                                                        // .. N53W170
-        QRegExp idiotFormat("(\\d{2,4})([NS])(\\d{2,5})([EW])"); // complete ignorants
-                                                             // ..write: 3000N 02000W
-        const QPair<double, double> *arincP = NavData::fromArinc(id);
+
+        double foundLat = -180., foundLon = -360.;
+
+        const QPair<double, double> *arincP = NavData::fromArinc(input);
         if (arincP != 0) { // ARINC424
             double d = NavData::distance(lat, lon, arincP->first, arincP->second);
             if ((d < minDist) && (d < maxDist)) {
-                result = new Waypoint(id, arincP->first, arincP->second);
+                foundLat = arincP->first;
+                foundLon = arincP->second;
             }
-        } else if (eurocontrol.exactMatch(id)) { // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
+            delete arincP;
+        } else if (eurocontrol.exactMatch(input)) { // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
             auto capturedTexts = eurocontrol.capturedTexts();
+
             double wLat = capturedTexts[1].toDouble() + capturedTexts[2].toDouble() / 60. + capturedTexts[4].toDouble() / 3600.;
             double wLon = capturedTexts[7].toDouble() + capturedTexts[8].toDouble() / 60. + capturedTexts[10].toDouble() / 3600.;
-            if (capturedTexts[4] == "S") {
+            if (capturedTexts[6] == "S") {
                 wLat = -wLat;
             }
             if (capturedTexts[12] == "W") {
@@ -301,48 +303,41 @@ Waypoint* Airac::waypointNearby(const QString& id, double lat, double lon, doubl
             }
             double d = NavData::distance(lat, lon, wLat, wLon);
             if ((d < minDist) && (d < maxDist)) {
-                result = new Waypoint(id, wLat, wLon);
+                foundLat = wLat;
+                foundLon = wLon;
             }
-        } else if (slash.exactMatch(id)) { // slash-style: 35/30
+        } else if (slash.exactMatch(input)) { // slash-style: 35/30
             auto capturedTexts = slash.capturedTexts();
             double wLat = capturedTexts[1].toDouble();
             double wLon = capturedTexts[2].toDouble();
             double d = NavData::distance(lat, lon, wLat, wLon);
             if ((d < minDist) && (d < maxDist)) {
-                result = new Waypoint(NavData::toArinc(wLat, wLon), wLat, wLon);
-            }
-        } else if (wildGuess.exactMatch(id)) { // N53W170
-            auto capturedTexts = wildGuess.capturedTexts();
-            double wLat = capturedTexts[2].toDouble();
-            double wLon = capturedTexts[4].toDouble();
-            if ((capturedTexts[1] == "S") ||
-                (capturedTexts[3] == "S"))
-                wLat = -wLat;
-            if ((capturedTexts[3] == "W") ||
-                (capturedTexts[5] == "W"))
-                wLon = -wLon;
-            double d = NavData::distance(lat, lon, wLat, wLon);
-            if ((d < minDist) && (d < maxDist)) {
-                result = new Waypoint(NavData::toArinc(wLat, wLon), wLat, wLon);
-            }
-        } else if (idiotFormat.exactMatch(id)) { // 3000N 02000W (space removed by resolveFlightplan)
-            auto capturedTexts = idiotFormat.capturedTexts();
-            double wLat = capturedTexts[1].toDouble();
-            double wLon = capturedTexts[3].toDouble();
-            while (wLat > 90)
-                wLat /= 10.;
-            while (wLon > 180)
-                wLon /= 10.;
-            if (capturedTexts[2] == "S")
-                wLat = -wLat;
-            if (capturedTexts[4] == "W")
-                wLon = -wLon;
-            double d = NavData::distance(lat, lon, wLat, wLon);
-            if ((d < minDist) && (d < maxDist)) {
-                result = new Waypoint(NavData::toArinc(wLat, wLon), wLat, wLon);
+                foundLat = wLat;
+                foundLon = wLon;
             }
         }
+
+        if (foundLat > -180.) {
+            // try ARINC because some northern Atlantic waypoints are already in the AIRAC
+            QString foundId = NavData::toArinc(foundLat, foundLon);
+            if (foundId == "") {
+                foundId = NavData::toEurocontrol(foundLat, foundLon);
+            }
+
+            if (fixes.contains(foundId)) {
+                auto founds = fixes.value(foundId).values();
+                if (founds.size() > 0) {
+                    return founds.at(0);
+                }
+            }
+
+            result = new Waypoint(foundId, foundLat, foundLon);
+            // we add it to our database
+            // @todo consider if this is a good idea here
+            fixes[foundId].insert(result);
+        }
     }
+
     return result;
 }
 
@@ -392,7 +387,7 @@ void Airac::addAirwaySegment(Waypoint *from, Waypoint *to, const QString& name) 
 *
 * Unknown fixes and/or airways will be ignored.
 **/
-QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon) const {
+QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon) {
     //qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;
     Waypoint* currPoint = 0;
