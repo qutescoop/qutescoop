@@ -845,7 +845,7 @@ void Window::on_actionShowRoutes_triggered(bool checked) {
     qDebug() << "Window::on_actionShowRoutes_triggered()" << checked;
     GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
     foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
-        a->showFlightLines = checked;
+        a->showRoutes = checked;
     if (!checked) { // when disabled, this shall clear all routes
         foreach (Pilot *p, Whazzup::instance()->whazzupData().allPilots())
             p->showDepDestLine = false;
