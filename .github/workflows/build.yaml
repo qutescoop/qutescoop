@@ -13,7 +13,8 @@ jobs:
       pr: ${{ steps.gather.outputs.pr }}
       version: ${{ steps.gather.outputs.version }}
       commitLog: ${{ steps.gather.outputs.commitLog }}
-    runs-on: ubuntu-20.04
+      releaseBody: ${{ steps.gather.outputs.releaseBody }}
+    runs-on: ubuntu-22.04
     steps:
       - name: inputs
         env:
@@ -21,31 +22,45 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
           env | sort
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - id: gather
         name: gather
         run: |
+          set -x
           describe=$(git describe --tags --exclude '*-*-*' --dirty --always --debug)
-          echo ::set-output name=describe::$describe
+          echo "describe=$describe" >> "$GITHUB_OUTPUT"
           branch=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
-          echo ::set-output name=branch::$branch
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
           branch2=$(git rev-parse --abbrev-ref HEAD)
-          echo ::set-output name=branch2::$branch2
+          echo "branch2=$branch2" >> "$GITHUB_OUTPUT"
           pr=${{ github.event.number }}
-          echo ::set-output name=pr::$pr
+          echo "pr=$pr" >> "$GITHUB_OUTPUT"
           if [ -z "$pr" ]; then
-            echo ::set-output name=version::$describe
+            echo "version=$describe" >> "$GITHUB_OUTPUT"
           else
-            echo ::set-output name=version::$describe-pr$pr
+            echo "version=$describe-pr$pr" >> "$GITHUB_OUTPUT"
           fi
-          commitLog=$(git log "$(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)"..HEAD --format='%h - %s (%an)')
-          # Github multiline var workaround
-          commitLog="${commitLog//'%'/'%25'}"
-          commitLog="${commitLog//$'\n'/'%0A'}"
-          commitLog="${commitLog//$'\r'/'%0D'}"
-          echo ::set-output name=commitLog::"$commitLog"
+          commitLog="$(git log "$(git describe --tags --abbrev=0 --exclude '*-*-*' HEAD~1)"..HEAD --format='%h - %s (%an)')"
+
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "commitLog<<$EOF" >> "$GITHUB_OUTPUT"
+          echo "$commitLog" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
+         
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "releaseBody<<$EOF" >> "$GITHUB_OUTPUT"
+          echo '# Installation
+
+          Downloads can be found below this post ("Assets").
+          See the [Installation instructions](https://github.com/qutescoop/qutescoop/wiki/Installation) in the wiki.
+
+          # Changes
+          ' >> "$GITHUB_OUTPUT"
+          echo "${commitLog//\*/\\*}" >> "$GITHUB_OUTPUT"
+          echo "$EOF" >> "$GITHUB_OUTPUT"
+          cat "$GITHUB_OUTPUT"
       - name: outputs
         run: |
           echo describe="${{ steps.gather.outputs.describe }}"
@@ -54,28 +69,23 @@ jobs:
           echo pr="${{ steps.gather.outputs.pr }}"
           echo version="${{ steps.gather.outputs.version }}"
           echo commitLog="${{ steps.gather.outputs.commitLog }}"
+          echo releaseBody="${{ steps.gather.outputs.releaseBody }}"
 
   build-linux:
     needs: facts
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - run: sudo DEBIAN_FRONTEND=noninteractive apt-get update
       - name: Install GLU
         run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y libglu1-mesa-dev
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v1
-        with:
-          path: ../Qt
-          key: ${{ runner.os }}-QtCache
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: '5.15.2'
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          cache: true
       - run: ldd --version
       - run: qmake -config release QuteScoop.pro
       - run: make -j$(nproc) install
@@ -102,12 +112,12 @@ jobs:
           tar -cvzf ~/release/QuteScoop-${{ needs.facts.outputs.version }}-linux.tgz *
       - name: Upload Makefile on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Debug_Linux-Makefile"
           path: ./Makefile*
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: QuteScoop-linux
           path: ~/release/*
@@ -116,22 +126,16 @@ jobs:
     needs: facts
     runs-on: windows-2019
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v1
-        with:
-          path: ../Qt
-          key: ${{ runner.os }}-5152-win64_msvc2019_64-QtCache
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: 5.15.2
           arch: win64_msvc2019_64
           modules: qtwebglplugin
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          cache: true
       - run: env
         shell: bash
       - name: qmake
@@ -152,7 +156,7 @@ jobs:
         shell: cmd
       - name: Upload Makefile on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Debug_Win-Makefile"
           path: ./Makefile*
@@ -162,7 +166,7 @@ jobs:
           mkdir ~/release
           Compress-Archive -Path * -DestinationPath ~/release/QuteScoop-${{ needs.facts.outputs.version }}-win.zip
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: QuteScoop-win
           path: ~/release/*
@@ -171,25 +175,19 @@ jobs:
     needs: facts
     runs-on: macos-11
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Cache Qt
-        id: cache-qt
-        uses: actions/cache@v1
-        with:
-          path: ../Qt
-          key: ${{ runner.os }}-QtCache
       - name: Install Qt
-        uses: jurplel/install-qt-action@v2
+        uses: jurplel/install-qt-action@v3
         with:
           version: '5.15.2'
-          cached: ${{ steps.cache-qt.outputs.cache-hit }}
+          cache: true
       - run: qmake -config release QuteScoop.pro
       - run: make install
       - name: Upload Makefile on failure
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "Debug_macos-${{ needs.facts.outputs.version }}-Makefile"
           path: ./Makefile*
@@ -199,7 +197,7 @@ jobs:
           cd ./DIST-macx64
           zip -9 -y -r ~/release/QuteScoop-${{ needs.facts.outputs.version }}-macos.zip .
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: QuteScoop-macos
           path: ~/release/*
@@ -224,7 +222,7 @@ jobs:
         run: |
           echo "$GITHUB_CONTEXT"
           echo "$NEEDS"
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           path: release/
       - run: ls -lhR release/
@@ -235,10 +233,10 @@ jobs:
           allowUpdates: true
           artifactErrorsFailBuild: true
           artifacts: "release/*/QuteScoop-*"
-          body: ${{ needs.facts.outputs.commitLog }}
+          body: ${{ needs.facts.outputs.releaseBody }}
           commit: ${{ github.sha }}
           draft: true
-          generateReleaseNotes: true
+          generateReleaseNotes: false
           name: ${{ needs.facts.outputs.version }}
           prerelease: ${{ github.ref_type != 'tag' }}
           tag: ${{ needs.facts.outputs.version }}
