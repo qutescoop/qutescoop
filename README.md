@@ -16,6 +16,8 @@ It can be used to produce videos [like this](https://www.youtube.com/watch?v=oiu
 
 [Downloads/Releases](https://github.com/qutescoop/qutescoop/releases)
 
+[Installation](https://github.com/qutescoop/qutescoop/wiki/Installation)
+
 [Issues](https://github.com/qutescoop/qutescoop/issues)
 
 [Wiki](https://github.com/qutescoop/qutescoop/wiki)
