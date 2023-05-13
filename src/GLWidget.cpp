@@ -837,14 +837,10 @@ void GLWidget::initializeGL() {
     }
     if(Settings::displaySmoothLines()) {
         glEnable(GL_LINE_SMOOTH);
-        glEnable(GL_POLYGON_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_NICEST); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
-        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
     } else {
         glDisable(GL_LINE_SMOOTH);
-        glDisable(GL_POLYGON_SMOOTH);
         glHint(GL_LINE_SMOOTH_HINT, GL_FASTEST); // GL_FASTEST, GL_NICEST, GL_DONT_CARE
-        glHint(GL_POLYGON_SMOOTH_HINT, GL_FASTEST);
     }
     if (Settings::glBlending()) {
         glEnable(GL_BLEND);
