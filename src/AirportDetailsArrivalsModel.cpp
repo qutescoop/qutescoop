@@ -1,6 +1,6 @@
 /**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
+*  This file is part of QuteScoop. See README for license
+**************************************************************************/
 
 #include "AirportDetailsArrivalsModel.h"
 #include "Airport.h"
@@ -15,19 +15,18 @@ void AirportDetailsArrivalsModel::setClients(const QList<Pilot*>& pilots) {
 
 QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
     if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch(section) {
-        case 0: return QString("Callsign");
-        case 1: return QString("Type");
-        case 2: return QString("Name");
-        case 3: return QString("Arriving From");
-        case 4: return QString("T");
-        case 5: return QString("Via");
-        case 6: return QString("Alt");
-        case 7: return QString("GS");
-        case 8: return QString("Dist");
-        case 9: return QString("TTG");
-        case 10: return QString("Delay");
-        case 11: return QString("Status");
+        switch (section) {
+            case 0: return QString("Callsign");
+            case 1: return QString("Type");
+            case 2: return QString("Name");
+            case 3: return QString("Arriving From");
+            case 4: return QString("T");
+            case 5: return QString("Via");
+            case 6: return QString("Alt");
+            case 7: return QString("Dist");
+            case 8: return QString("TTG");
+            case 9: return QString("Delay");
+            case 10: return QString("Status");
         }
     }
     return QVariant();
@@ -35,7 +34,7 @@ QVariant AirportDetailsArrivalsModel::headerData(int section, enum Qt::Orientati
 
 int AirportDetailsArrivalsModel::columnCount(const QModelIndex &parent) const {
     Q_UNUSED(parent);
-    return 12;
+    return 11;
 }
 
 int AirportDetailsArrivalsModel::rowCount(const QModelIndex &parent) const {
@@ -44,18 +43,33 @@ int AirportDetailsArrivalsModel::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) const {
-    if (!index.isValid() || index.row() >= _pilots.size())
+    if (!index.isValid() || index.row() >= _pilots.size()) {
         return QVariant();
+    }
     Pilot* p = _pilots[index.row()];
 
-    if(role == Qt::FontRole) {
+    if (role == Qt::FontRole) {
         QFont result;
-        if (p->flightStatus() == Pilot::PREFILED)
+        if (p->flightStatus() == Pilot::PREFILED) {
             result.setItalic(true);
-        if (p->isFriend())
+        }
+        if (p->isFriend()) {
             result.setBold(true);
+        }
         return result;
-    } else if(role == Qt::DisplayRole) {
+    } else if (role == Qt::TextAlignmentRole) {
+        switch (index.column()) {
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+                return Qt::AlignRight;
+            case 10:
+                return Qt::AlignHCenter;
+        }
+
+        return Qt::AlignLeft;
+    } else if (role == Qt::DisplayRole) {
         switch (index.column()) {
             case 0:
                 return p->label;
@@ -72,25 +86,36 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 6:
                 return (p->altitude == 0? QString(""): p->humanAlt());
             case 7:
-                return (p->groundspeed == 0? QString(""): QString("%1").arg(p->groundspeed));
+                if (p->flightStatus() == Pilot::PREFILED) {
+                    return QString();
+                }
+                else {
+                    return QString("%1 NM").arg(p->distanceToDestination() < 3? 0: (int)p->distanceToDestination());
+                }
             case 8:
-                if(p->flightStatus() == Pilot::PREFILED)
-                    return QString();
-                else
-                    return (p->distanceToDestination() < 3? 0: (int)p->distanceToDestination());
-            case 9:
-                if (p->flightStatus() == Pilot::GROUND_ARR || p->flightStatus() == Pilot::BLOCKED)
+                if (p->flightStatus() == Pilot::GROUND_ARR || p->flightStatus() == Pilot::BLOCKED) {
                     return "--:-- hrs";
-                else if(!p->eet().toString("H:mm").isEmpty())
+                }
+                else if (!p->eet().toString("H:mm").isEmpty()) {
                     return QString("%1 hrs").arg(p->eet().toString("H:mm"));
-                else
+                }
+                else {
                     return QString();
-            case 10:
+                }
+            case 9:
                 return p->delayStr();
-            case 11:
+            case 10:
                 return p->flightStatusShortString();
         }
+    } else if (role == Qt::UserRole) { // used for sorting
+        switch (index.column()) {
+            case 7:
+                return p->flightStatus() == Pilot::PREFILED? -1: p->distanceToDestination();
+        }
+
+        return data(index, Qt::DisplayRole);
     }
+
     return QVariant();
 }
 
