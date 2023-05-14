@@ -10,7 +10,6 @@
 #include "NavData.h"
 
 Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
-        showRoutes(false),
         _appDisplayList(0),
         _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
@@ -39,6 +38,8 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
 
     lat = list[4].toDouble();
     lon = list[5].toDouble();
+
+    showRoutes = Settings::showRoutes();
 }
 
 Airport::~Airport() {

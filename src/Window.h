@@ -10,7 +10,6 @@
 #include "MapScreen.h"
 #include "SearchResultModel.h"
 #include "MetarModel.h"
-#include "FileReader.h"
 
 class Window : public QMainWindow, public Ui::Window {
         Q_OBJECT
@@ -22,7 +21,6 @@ class Window : public QMainWindow, public Ui::Window {
         //GLWidget *glWidget;
     public slots:
         void refreshFriends();
-        void on_actionShowRoutes_triggered(bool checked);
         void downloadCloud();
         void processWhazzup(bool isNew = true);
         void restore();
@@ -30,6 +28,7 @@ class Window : public QMainWindow, public Ui::Window {
         void restored();
         void cloudDownloaded();
     private slots:
+        void actionShowRoutes_triggered(bool checked);
         void on_actionShowWaypoints_triggered(bool checked);
         void on_actionHighlight_Friends_triggered(bool checked);
         void on_pb_highlightFriends_toggled(bool checked);
@@ -59,7 +58,7 @@ class Window : public QMainWindow, public Ui::Window {
         void on_actionRecallMapPosition6_triggered();
         void on_actionRecallMapPosition7_triggered();
         void on_actionHideAllWindows_triggered();
-        void on_actionPredict_toggled(bool );
+        void on_actionPredict_toggled(bool);
         void on_tbDisablePredict_clicked();
         void on_tbRunPredict_toggled(bool checked);
         void on_cbUseDownloaded_toggled(bool checked);

@@ -5,6 +5,7 @@
 #include "Net.h"
 #include "GuiMessage.h"
 #include "Settings.h"
+#include "FileReader.h"
 
 SondeData *windDataInstance = 0;
 SondeData *SondeData::instance(bool createIfNoInstance) {
