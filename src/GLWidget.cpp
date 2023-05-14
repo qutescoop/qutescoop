@@ -1090,7 +1090,7 @@ void GLWidget::paintGL() {
             destroyFriendHightlighter();
         }
 
-        foreach(const auto &_friend, _friends) {
+        foreach(const auto &_friend, m_friendPositions) {
             if (qFuzzyIsNull(_friend.first) && qFuzzyIsNull(_friend.second))
                 continue;
 
@@ -1895,7 +1895,7 @@ void GLWidget::newWhazzupData(bool isNew) {
         createPilotsList();
         createAirportsList();
         createControllersLists();
-        _friends = Whazzup::instance()->whazzupData().friendsLatLon();
+        m_friendPositions = Whazzup::instance()->whazzupData().friendsLatLon();
 
         updateGL();
     }

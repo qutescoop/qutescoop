@@ -125,7 +125,7 @@ class GLWidget : public QGLWidget {
         _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
         _xRot, _yRot, _zRot, _zoom, _aspectRatio;
         QTimer *_highlighter;
-        QList< QPair<double , double> > _friends;
+        QList< QPair<double , double> > m_friendPositions;
 };
 
 #endif /*GLWIDGET_H_*/
