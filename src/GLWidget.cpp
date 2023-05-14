@@ -717,7 +717,6 @@ void GLWidget::createStaticLists() {
         glLineWidth(Settings::countryLineStrength());
         LineReader countries = LineReader(Settings::dataDirectory("data/countries.dat"));
         QList<QPair<double, double> > line = countries.readLine();
-        glBegin(GL_LINE);
         while (!line.isEmpty()) {
             glBegin(GL_LINE_STRIP);
             for (int i = 0; i < line.size(); i++)
@@ -725,7 +724,6 @@ void GLWidget::createStaticLists() {
             glEnd();
             line = countries.readLine();
         }
-        glEnd();
     }
     glEndList();
 
