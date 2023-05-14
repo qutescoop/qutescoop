@@ -464,6 +464,9 @@ QList<QPair<double, double> > WhazzupData::friendsLatLon() const
     QStringList friends = Settings::friends();
     QList<QPair<double, double> > result;
     foreach (Controller* c, controllers.values()) {
+        if (c->isAtis()) {
+            continue;
+        }
         if (friends.contains(c->userId)) {
             result.append(QPair<double, double>(c->lat, c->lon));
         }

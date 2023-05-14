@@ -3,7 +3,6 @@
  **************************************************************************/
 
 #include "Controller.h"
-#include "helpers.h"
 
 #include "Client.h"
 #include "ControllerDetails.h"
@@ -75,21 +74,9 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
     } else {
         // We try to get lat/lng from covered airports
         auto _airports = airports();
-        if (_airports.size() == 1) {
+        if (_airports.size() > 0) {
             lat = _airports[0]->lat;
             lon = _airports[0]->lon;
-        } else if (_airports.size() > 1) {
-        QList<QPair<double, double>> points;
-            foreach(auto *_a, _airports) {
-                if (_a == 0) {
-                    continue;
-                }
-                points.append(DoublePair(_a->lat, _a->lon));
-            }
-
-            auto center = Helpers::polygonCenter(points);
-            lat = center.first;
-            lon = center.second;
         }
     }
 }
