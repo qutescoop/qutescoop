@@ -986,6 +986,13 @@ void Settings::setWaypointsFont(const QFont& font) {
 }
 
 // routes
+bool Settings::showRoutes() {
+    return instance()->value("display/showRoutes", false).toBool();
+}
+void Settings::setShowRoutes(bool value) {
+    instance()->setValue("display/showRoutes", value);
+}
+
 QColor Settings::depLineColor() {
     return instance()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 100)).value<QColor>();
 }

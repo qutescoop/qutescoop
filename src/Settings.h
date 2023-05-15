@@ -297,6 +297,9 @@ class Settings {
         static QFont waypointsFont();
         static void setWaypointsFont(const QFont& font);
 
+        static bool showRoutes();
+        static void setShowRoutes(bool value);
+
         static QColor depLineColor();
         static void setDepLineColor(const QColor& color);
 

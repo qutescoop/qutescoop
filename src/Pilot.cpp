@@ -28,7 +28,6 @@ int Pilot::altToFl(int alt_ft, int qnh_mb)
 
 Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
         Client(json, whazzup),
-        showDepDestLine(false),
         airline(0) {
     whazzupTime = QDateTime(whazzup->whazzupTime); // need some local reference to that
 
@@ -92,13 +91,9 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup):
     else
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
 
+    showDepDestLine = Settings::showRoutes();
 
     checkStatus();
-
-    // anti-idiot hack: some guys like routes like KORLI/MARPI/UA551/FOF/FUN...
-    // let's keep him... waypoints() takes care of it in places where we need it.
-    //if(planRoute.count("/") > 4)
-    //    planRoute.replace(QRegExp("[/]"), " ");
 }
 
 void Pilot::showDetailsDialog() {

@@ -23,6 +23,7 @@
 #include "SectorView.h"
 #include "Platform.h"
 #include "MetarDelegate.h"
+#include "FileReader.h"
 
 #include <QModelIndex>
 
@@ -56,11 +57,6 @@ Window::Window(QWidget *parent) :
     mapScreen = new MapScreen(this);
     centralwidget->layout()->addWidget(mapScreen);
 
-    connect(mapScreen, &MapScreen::toggleRoutes, actionShowRoutes, &QAction::trigger);
-    connect(mapScreen, &MapScreen::toggleSectors, this, &Window::allSectorsChanged);
-    connect(mapScreen, &MapScreen::toggleRouteWaypoints, actionShowWaypoints, &QAction::trigger);
-    connect(mapScreen, &MapScreen::toggleInactiveAirports, actionShowInactiveAirports,&QAction::trigger);
-
     // Status- & ProgressBar
     _progressBar = new QProgressBar(statusbar);
     _progressBar->setMaximumWidth(200);
@@ -87,6 +83,10 @@ Window::Window(QWidget *parent) :
     actionHighlight_Friends->setChecked(Settings::highlightFriends());
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
+
+    connect(actionShowRoutes, &QAction::toggled, this, &Window::actionShowRoutes_triggered);
+    actionShowRoutes->setChecked(Settings::showRoutes());
+    actionShowRoutes_triggered(Settings::showRoutes());
 
     Whazzup *whazzup = Whazzup::instance();
     connect(actionDownload, &QAction::triggered, whazzup, &Whazzup::downloadJson3);
@@ -841,8 +841,9 @@ void Window::shootScreenshot() {
     qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
 
-void Window::on_actionShowRoutes_triggered(bool checked) {
+void Window::actionShowRoutes_triggered(bool checked) {
     qDebug() << "Window::on_actionShowRoutes_triggered()" << checked;
+    Settings::setShowRoutes(checked);
     GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
     foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
         a->showRoutes = checked;
