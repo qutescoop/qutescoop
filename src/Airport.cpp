@@ -124,8 +124,8 @@ void Airport::appGl(const QColor &middleColor, const QColor &marginColor, const 
     }
     glEnd();
 
-    glBegin(GL_LINE_STRIP);
     glLineWidth(borderLineWidth);
+    glBegin(GL_LINE_STRIP);
     glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), borderColor.alphaF());
     for(short int i = 0; i <= 360; i += 1) {
         auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyAppRadius_nm, i);
