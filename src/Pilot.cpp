@@ -165,25 +165,25 @@ QString Pilot::flightStatusString() const {
         case BOARDING:
             return "TTG " + eet().toString("H:mm") + " hrs"
                     + ", ETA " + eta().toString("HHmm") + "z"
-                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr());
         case GROUND_DEP:
             return "TTG " + eet().toString("H:mm") + " hrs"
                     + ", ETA " + eta().toString("HHmm") + "z"
-                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr());
         case DEPARTING:
             return "TTG " + eet().toString("H:mm") + " hrs"
                     + ", ETA " + eta().toString("HHmm") + "z"
-                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr());
         case ARRIVING:
             return "TTG " + eet().toString("H:mm") + " hrs"
                     + ", ETA " + eta().toString("HHmm") + "z"
-                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr());
         case GROUND_ARR:
             return "ATA " + eta().toString("HHmm") + "z" // Actual Time of Arrival :)
-                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr());
         case BLOCKED:
             return "ATA " + eta().toString("HHmm") + "z" // Actual Time of Arrival :)
-                    + (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+                    + (delayStr().isEmpty()? "": ", Delay " + delayStr());
         case CRASHED: return QString();
         case BUSH: return QString();
         case EN_ROUTE: {
@@ -202,7 +202,7 @@ QString Pilot::flightStatusString() const {
             }
             result += ", TTG " + eet().toString("H:mm") + " hrs";
             result += ", ETA " + eta().toString("HHmm") + "z";
-            result += (delayStr().isEmpty()? "": ", Delay " + delayStr() + " hrs");
+            result += (delayStr().isEmpty()? "": ", Delay " + delayStr());
             return result;
         }
         case PREFILED:
@@ -346,7 +346,7 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
             enrouteSecs = (int) (distanceToDestination() * 3600) / groundspeed;
         } else
             enrouteSecs = (int) (distanceToDestination() * 3600) / planTasInt();
-        if(status == GROUND_DEP) enrouteSecs += 240; // taxi time outbound
+        if(status == GROUND_DEP) enrouteSecs += taxiTimeOutbound; // taxi time outbound
         return whazzupTime.addSecs(enrouteSecs);
     } else if(status == EN_ROUTE || status == ARRIVING) { // try groundspeed
         int enrouteSecs;
@@ -364,8 +364,7 @@ QDateTime Pilot::eta() const { // Estimated Time of Arrival
 
 QTime Pilot::eet() const { // Estimated Enroute Time remaining
     int secs = whazzupTime.secsTo(eta());
-    QTime ret = QTime((secs / 3600) % 24, (secs / 60) % 60);
-    return ret;
+    return QTime((secs / 3600) % 24, (secs / 60) % 60);
 }
 
 QDateTime Pilot::etaPlan() const { // Estimated Time of Arrival as flightplanned
@@ -375,14 +374,22 @@ QDateTime Pilot::etaPlan() const { // Estimated Time of Arrival as flightplanned
 }
 
 QString Pilot::delayStr() const { // delay
+    auto status = flightStatus();
+    if (status == BOARDING || status == GROUND_DEP || status == PREFILED) {
+        // output delta to planned off-block
+        auto secs = etd().secsTo(whazzupTime);
+        auto calcSecs = (secs < 0? -secs: secs);
+        return QString("%1%2 hrs")
+            .arg(secs < 0? "-": "", QTime((calcSecs / 3600) % 24, (calcSecs / 60) % 60).toString("H:mm"));
+    }
+
     if(!etaPlan().isValid())
         return QString();
-    int secs, calcSecs;
-    secs = etaPlan().secsTo(eta());
+    auto secs = etaPlan().secsTo(eta());
     if (secs == 0)
         return QString("n/a");
-    calcSecs = (secs < 0? -secs: secs);
-    return QString("%1%2")
+    auto calcSecs = (secs < 0? -secs: secs);
+    return QString("%1%2 hrs")
             .arg(secs < 0? "-": "", QTime((calcSecs / 3600) % 24, (calcSecs / 60) % 60).toString("H:mm"));
 }
 

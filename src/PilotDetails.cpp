@@ -62,7 +62,7 @@ void PilotDetails::refresh(Pilot *pilot) {
     if (_pilot->server.isEmpty()) {
         lblConnected->setText(QString("<i>not connected</i>"));
     } else {
-        lblConnected->setText(QString("on %1 for %2 hrs").arg(_pilot->server, _pilot->onlineTime()));
+        lblConnected->setText(QString("on %1 for %2").arg(_pilot->server, _pilot->onlineTime()));
     }
 
     buttonShowOnMap->setEnabled(_pilot->lat != 0 || _pilot->lon != 0);

@@ -34,7 +34,7 @@ QString Client::onlineTime() const {
     return QDateTime::fromTime_t( // this will get wrapped by 24h but that should not be a problem...
             Whazzup::instance()->whazzupData().whazzupTime.toTime_t()
             - timeConnected.toTime_t()
-            ).toUTC().toString("HH:mm");
+            ).toUTC().toString("HH:mm") + " hrs";
 }
 
 QString Client::displayName(bool withLink) const {

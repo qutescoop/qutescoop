@@ -52,8 +52,9 @@ AirportDetails::AirportDetails(QWidget *parent):
     _arrivalsSortModel = new QSortFilterProxyModel;
     _arrivalsSortModel->setDynamicSortFilter(true);
     _arrivalsSortModel->setSourceModel(&_arrivalsModel);
+    _arrivalsSortModel->setSortRole(Qt::UserRole);
     treeArrivals->setModel(_arrivalsSortModel);
-    treeArrivals->sortByColumn(9, Qt::AscendingOrder);
+    treeArrivals->sortByColumn(8, Qt::AscendingOrder);
     treeArrivals->header()->setSectionResizeMode(QHeaderView::Interactive);
 
     connect(treeArrivals, &QAbstractItemView::clicked, this, &AirportDetails::arrivalSelected);
@@ -62,8 +63,9 @@ AirportDetails::AirportDetails(QWidget *parent):
     _departuresSortModel = new QSortFilterProxyModel;
     _departuresSortModel->setDynamicSortFilter(true);
     _departuresSortModel->setSourceModel(&_departuresModel);
+    _departuresSortModel->setSortRole(Qt::UserRole);
     treeDepartures->setModel(_departuresSortModel);
-    treeDepartures->sortByColumn(8, Qt::AscendingOrder);
+    treeDepartures->sortByColumn(6, Qt::AscendingOrder);
     treeDepartures->header()->setSectionResizeMode(QHeaderView::Interactive);
 
     connect(treeDepartures, &QAbstractItemView::clicked, this, &AirportDetails::departureSelected);

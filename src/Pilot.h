@@ -15,6 +15,7 @@ class Airport;
 
 class Pilot: public Client {
     public:
+        static const int taxiTimeOutbound = 240;
         static int altToFl(int alt_ft, int qnh_mb);
 
         enum FlightStatus {

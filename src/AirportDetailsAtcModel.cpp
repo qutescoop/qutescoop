@@ -37,6 +37,7 @@ int AirportDetailsAtcModel::columnCount(const QModelIndex&) const {
 QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const {
     if(!index.isValid() || index.row() >= _controllers.size())
         return QVariant();
+
     Controller* c = _controllers[index.row()];
 
     if(role == Qt::FontRole) {
@@ -46,6 +47,16 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
             return result;
         }
         return QFont();
+    } else if (role == Qt::TextAlignmentRole) {
+        switch (index.column()) {
+        case 6:
+        case 7:
+            return Qt::AlignRight;
+        case 5:
+            return Qt::AlignHCenter;
+        }
+
+        return Qt::AlignLeft;
     } else if (role == Qt::DisplayRole) {
         switch(index.column()) {
         case 0: return c->label; break;

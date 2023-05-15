@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>913</width>
-    <height>524</height>
+    <width>840</width>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -303,9 +303,6 @@ ATC</string>
       </widget>
      </widget>
      <widget class="QGroupBox" name="groupBoxArrivals">
-      <property name="toolTip">
-       <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
-      </property>
       <property name="title">
        <string>Arrivals (10 filtered, 12 total)</string>
       </property>
@@ -347,9 +344,6 @@ ATC</string>
       </layout>
      </widget>
      <widget class="QGroupBox" name="groupBoxDepartures">
-      <property name="toolTip">
-       <string>numbers reflect the Preferences/Display (airports)/traffic visualization settings</string>
-      </property>
       <property name="title">
        <string>Departures (2 filtered, 8 total)</string>
       </property>
