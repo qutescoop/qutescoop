@@ -28,7 +28,7 @@ class Window : public QMainWindow, public Ui::Window {
         void restored();
         void cloudDownloaded();
     private slots:
-        void actionShowRoutes_triggered(bool checked);
+        void actionShowRoutes_triggered(bool checked, bool showStatus = true);
         void on_actionShowWaypoints_triggered(bool checked);
         void on_actionHighlight_Friends_triggered(bool checked);
         void on_pb_highlightFriends_toggled(bool checked);

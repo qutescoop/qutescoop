@@ -86,8 +86,8 @@ class GuiMessages : public QObject {
         };
         ///////////////////////////////////////////////////////////////////////////
         // INTERNALLY USED METHODS (public to be callable out of static methods)
-        void updateMessage(GuiMessage *gm, bool callUpdate = true);
-        void removeMessageById(const QString &id, bool callUpdate = true);
+        void updateMessage(GuiMessage *gm);
+        void removeMessageById(const QString &id);
     public slots:
         void labelDestroyed(QObject *obj);
         void progressBarDestroyed(QObject *obj);
