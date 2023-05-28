@@ -543,12 +543,12 @@ QString Pilot::routeWaypointsStr() {
 
 QList<Waypoint*> Pilot::routeWaypointsWithDepDest() {
     QList<Waypoint*> waypoints = routeWaypoints();
-    if(depAirport() != 0)
-        waypoints.prepend(new Waypoint(depAirport()->label, depAirport()->lat,
-                                       depAirport()->lon));
-    if(destAirport() != 0)
-        waypoints.append(new Waypoint(destAirport()->label, destAirport()->lat,
-                                      destAirport()->lon));
+    if(depAirport() != 0) {
+        waypoints.prepend(new Waypoint(depAirport()->label, depAirport()->lat, depAirport()->lon));
+    }
+    if(destAirport() != 0) {
+        waypoints.append(new Waypoint(destAirport()->label, destAirport()->lat, destAirport()->lon));
+    }
     return waypoints;
 }
 

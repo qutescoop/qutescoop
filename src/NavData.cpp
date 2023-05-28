@@ -375,6 +375,13 @@ QPair<double, double>*NavData::fromArinc(const QString &str) {
         auto capturedTexts = arinc.capturedTexts();
         if (
             !capturedTexts[2].isEmpty()
+            && !capturedTexts[4].isEmpty()
+            ) {
+            return 0;
+        }
+
+        if (
+            !capturedTexts[2].isEmpty()
             || !capturedTexts[4].isEmpty()
         ) {
             double wLat = capturedTexts[1].toDouble();
@@ -441,7 +448,7 @@ QString NavData::toArinc(const short lat, const short lon) {
 /** converts geographic points to "Eurocontrol" (that's just how I call it, it's the basic 40N030W) format
   @return QString("") on error
 */
-QString NavData::toEurocontrol(double lat, double lon) {
+QString NavData::toEurocontrol(double lat, double lon, const LatLngPrecission maxPrecision) {
     if (qAbs(lat) > 90 || qAbs(lon) > 180) {
         return QString();
     }
@@ -459,32 +466,36 @@ QString NavData::toEurocontrol(double lat, double lon) {
     ushort latDeg = floor(lat);
     ushort lonDeg = floor(lon);
 
-    ushort latMin = (int)(lat * 60.) % 60;
-    ushort lonMin = (int)(lon * 60.) % 60;
+    if (maxPrecision >= LatLngPrecission::Mins) {
+        ushort latMin = (int)(lat * 60.) % 60;
+        ushort lonMin = (int)(lon * 60.) % 60;
 
-    ushort latSec = (int)(lat * 3600.) % 60;
-    ushort lonSec = (int)(lon * 3600.) % 60;
+        if (maxPrecision >= LatLngPrecission::Secs) {
+            ushort latSec = (int)(lat * 3600.) % 60;
+            ushort lonSec = (int)(lon * 3600.) % 60;
 
-    if (latSec != 0 || lonSec != 0) {
-        return QString("%1%2%3%4%5%6%7%8")
-            .arg(latDeg, 2, 10, QChar('0'))
-            .arg(latMin, 2, 10, QChar('0'))
-            .arg(latSec, 2, 10, QChar('0'))
-            .arg(latLetter)
-            .arg(lonDeg, 3, 10, QChar('0'))
-            .arg(lonMin, 2, 10, QChar('0'))
-            .arg(lonSec, 2, 10, QChar('0'))
-            .arg(lonLetter);
-    }
+            if (latSec != 0 || lonSec != 0) {
+                return QString("%1%2%3%4%5%6%7%8")
+                    .arg(latDeg, 2, 10, QChar('0'))
+                    .arg(latMin, 2, 10, QChar('0'))
+                    .arg(latSec, 2, 10, QChar('0'))
+                    .arg(latLetter)
+                    .arg(lonDeg, 3, 10, QChar('0'))
+                    .arg(lonMin, 2, 10, QChar('0'))
+                    .arg(lonSec, 2, 10, QChar('0'))
+                    .arg(lonLetter);
+            }
+        }
 
-    if (latMin != 0 || lonMin != 0) {
-        return QString("%1%2%3%4%5%6")
-            .arg(latDeg, 2, 10, QChar('0'))
-            .arg(latMin, 2, 10, QChar('0'))
-            .arg(latLetter)
-            .arg(lonDeg, 3, 10, QChar('0'))
-            .arg(lonMin, 2, 10, QChar('0'))
-            .arg(lonLetter);
+        if (latMin != 0 || lonMin != 0) {
+            return QString("%1%2%3%4%5%6")
+                .arg(latDeg, 2, 10, QChar('0'))
+                .arg(latMin, 2, 10, QChar('0'))
+                .arg(latLetter)
+                .arg(lonDeg, 3, 10, QChar('0'))
+                .arg(lonMin, 2, 10, QChar('0'))
+                .arg(lonLetter);
+        }
     }
 
     return QString("%1%2%3%4")
