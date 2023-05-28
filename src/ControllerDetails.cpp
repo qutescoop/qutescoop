@@ -60,7 +60,7 @@ void ControllerDetails::refresh(Controller *newController) {
 
     lblControllerInfo->setText(controllerInfo);
 
-    lblOnline->setText(QString("On %1 for %2 hrs").arg(_controller->server, _controller->onlineTime()));
+    lblOnline->setText(QString("On %1 for %2").arg(_controller->server, _controller->onlineTime()));
 
     if (_controller->sector != 0) {
         lblCallsign->setText(_controller->sector->name.toHtmlEscaped());
