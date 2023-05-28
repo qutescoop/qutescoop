@@ -63,6 +63,8 @@ WIII:APP DEP:WICA WICC WIHH WILL WIRR
 
 ; USA
 MSP:APP DEP:KSTP KFCM KANE KMIC
+; https://zfwartcc.net/files/documents
+REG:APP DEP:KADS KAFW KDAL KDFW KDTO KFTW KFWS KGKY KGPM KHQZ KNFW KRBD KTKI
 SDF:APP DEP:KLOU
 
 ;---------------------------------------------------------------------------------------------
