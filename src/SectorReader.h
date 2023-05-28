@@ -11,11 +11,10 @@ class SectorReader {
         SectorReader() {}
         ~SectorReader() {}
 
-        void loadSectors(QHash<QString, Sector*>& sectors);
+        void loadSectors(QMultiMap<QString, Sector*>& sectors);
     private:
-        void loadSectorlist(QHash<QString, Sector*>& sectors);
-        void loadSectordisplay(QHash<QString, Sector*>& sectors, const QString& filename);
-        QMultiMap<QString, QString> _idIcaoMapping;
+        void loadSectorlist(QMultiMap<QString, Sector*>& sectors);
+        void loadSectordisplay(QMultiMap<QString, Sector*>& sectors);
 };
 
 #endif /*SECTORREADER_H_*/

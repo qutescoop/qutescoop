@@ -8,16 +8,30 @@
 #include "Tessellator.h"
 #include "helpers.h"
 
-Sector::Sector(QStringList strings) :
+Sector::Sector(QStringList fields, unsigned int debugLineNumber) :
   _polygon(0),
   _borderline(0),
   _polygonHighlighted(0),
   _borderlineHighlighted(0)
 {
-    //LSAZ:Zurich:CH:46.9:9.1:189
-    icao = strings[0];
-    name = strings[1];
-    id = strings[5];
+    // LSAZ:Zurich:CH:46.9:9.1:189[:CTR]
+    if(fields.size() != 6 && fields.size() != 7) {
+        auto msg = QString("While processing line #%1 '%2' from %3: Expected 6-7 fields, got %5")
+                       .arg(debugLineNumber)
+                       .arg(fields.join(':'))
+                       .arg("data/firlist.dat")
+                       .arg(fields.count());
+        qCritical() << "NavData::loadCountryCodes()" << msg;
+        QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+        exit(EXIT_FAILURE);
+    }
+
+    icao = fields[0];
+    name = fields[1];
+    id = fields[5];
+    if (fields.size() >= 7) {
+        m_controllerSuffixes = fields[6].split(" ", Qt::SkipEmptyParts);
+    }
 }
 
 Sector::~Sector() {

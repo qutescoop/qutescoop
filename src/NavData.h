@@ -37,7 +37,7 @@ class NavData: public QObject {
 
         QHash<QString, Airport*> airports;
         QMultiMap<int, Airport*> activeAirports; // holds activeAirports sorted by congestion ascending
-        QHash<QString, Sector*> sectors;
+        QMultiMap<QString, Sector*> sectors;
         QHash<QString, QString> countryCodes;
         QString airline(const QString &airlineCode);
         QHash<QString, Airline*> airlines;

@@ -11,9 +11,9 @@
 class Sector {
     public:
         Sector() :
-            icao(), name(), id(), _polygon(0), _borderline(0)
+            icao(), name(), id(), m_controllerSuffixes(QStringList()), _polygon(0), _borderline(0)
         {}
-        Sector(QStringList strings);
+        Sector(QStringList fields, unsigned int debugLineNumber);
         ~Sector();
 
         bool isNull() const { return icao.isNull(); }
@@ -31,7 +31,10 @@ class Sector {
         GLuint glBorderLineHighlighted();
 
         QPair<double, double> getCenter() const;
+
+        const QStringList& controllerSuffixes() const { return m_controllerSuffixes; }
     private:
+        QStringList m_controllerSuffixes = QStringList();
         QList<QPolygonF> m_nonWrappedPolygons;
         QList<QPair<double, double> > m_points;
         GLuint _polygon, _borderline, _polygonHighlighted, _borderlineHighlighted;

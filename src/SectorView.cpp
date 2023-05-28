@@ -18,7 +18,6 @@ Sectorview::Sectorview(QWidget *parent) :
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
-    sectorsHash = NavData::instance()->sectors;
     loadSectorList();
 }
 
@@ -33,7 +32,7 @@ Sectorview::~Sectorview() {
 
 void Sectorview::loadSectorList() {
     qDebug() << "Sectorview::loadSectorList -- started";
-    QList<Sector*> list = sectorsHash.values();
+    QList<Sector*> list = NavData::instance()->sectors.values();
     for(int i = 0; i < list.size() ; i++) {
         QListWidgetItem *item = new QListWidgetItem();
         QString itemText = list[i]->icao;
@@ -51,18 +50,14 @@ void Sectorview::loadSectorList() {
 }
 
 void Sectorview::on_bt_apply_clicked() {
-    QStringList CheckedSectorList;
     QList<Sector*> renderSectors;
 
     for(int i = listeView_sectors->count()-1; i >= 0 ; i--) {
         if(listeView_sectors->item(i)->checkState() == Qt::Checked) {
-            QString text = listeView_sectors->item(i)->text();
-            CheckedSectorList.append(text.split("(").first());
+            // renderSectors.append(sectorsHash[checkedSectorList[i]]);
         }
     }
 
-    for(int i = CheckedSectorList.count()-1; i >=0 ; i--)
-        renderSectors.append(sectorsHash[CheckedSectorList[i]]);
 
     MapScreen::instance()->glWidget->renderStaticSectors(true);
     MapScreen::instance()->glWidget->createStaticSectorLists(renderSectors);

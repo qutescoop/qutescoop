@@ -44,17 +44,21 @@ void SondeData::decodeData() {
                        "(.*)"   // elev (unused)
             );
             if (rx.exactMatch(rawLine)) {
-                const uint id = rx.capturedTexts()[1].left(5).toUInt();
-                const QString latRaw = rx.capturedTexts()[5];
-                const double lat = (latRaw[4] == 'N'? 1.: -1.) * latRaw.left(4).toUInt() / 100.;
-                const QString lonRaw = rx.capturedTexts()[6];
-                const double lon = (lonRaw[5] == 'E'? 1.: -1.) * lonRaw.left(5).toUInt() / 100.;
-                if (id != 0 && !qFuzzyIsNull(lat) && !qFuzzyIsNull(lon))
+                auto capturedTexts = rx.capturedTexts();
+                const uint id = capturedTexts[1].leftRef(5).toUInt();
+                const QString latRaw = capturedTexts[5];
+                const double lat = (latRaw[4] == 'N'? 1.: -1.) * latRaw.leftRef(4).toUInt() / 100.;
+                const QString lonRaw = capturedTexts[6];
+                const double lon = (lonRaw[5] == 'E'? 1.: -1.) * lonRaw.leftRef(5).toUInt() / 100.;
+                if (id != 0 && !qFuzzyIsNull(lat) && !qFuzzyIsNull(lon)) {
                     stationList[id] = new Station(lat, lon);
+                }
+
 //                qDebug() << "WindData::decodeData read" << id
 //                         << "lat:" << lat << "lon:" << lon;
-            } else
+            } else {
                 qWarning() << "SondeData::decodeData() could not parse" << rawLine;
+            }
         }
     }
 
