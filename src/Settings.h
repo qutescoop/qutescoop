@@ -18,6 +18,9 @@ class Settings {
         // data directory
         static QString dataDirectory(const QString& composeFilePath = QString(""));
 
+        // "constant" settings
+        static const QColor lightTextColor();
+
         // saved settings
         static void saveState(const QByteArray& state);
         static QByteArray savedState();

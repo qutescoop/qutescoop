@@ -117,21 +117,41 @@ void PilotDetails::refresh(Pilot *pilot) {
     groupFp->setTitle(QString("Flightplan (%1)")
                       .arg(_pilot->planFlighttypeString()));
 
-    buttonFrom->setEnabled(_pilot->depAirport()   != 0);
-    buttonFrom->setText(   _pilot->depAirport()   != 0? _pilot->depAirport() ->toolTip(): _pilot->planDep);
-    buttonDest->setEnabled(_pilot->destAirport()  != 0);
-    buttonDest->setText(   _pilot->destAirport()  != 0? _pilot->destAirport()->toolTip(): _pilot->planDest);
-    buttonAlt->setEnabled( _pilot->altAirport()   != 0);
-    buttonAlt-> setText(   _pilot->altAirport()   != 0? _pilot->altAirport() ->toolTip(): _pilot->planAltAirport);
+    buttonFrom->setEnabled(_pilot->depAirport() != 0);
+    buttonFrom->setText(   _pilot->depAirport() != 0? _pilot->depAirport()->toolTip(): _pilot->planDep);
+    buttonDest->setEnabled(_pilot->destAirport() != 0);
+    buttonDest->setText(   _pilot->destAirport() != 0? _pilot->destAirport()->toolTip(): _pilot->planDest);
+    buttonAlt->setEnabled( _pilot->altAirport() != 0);
+    buttonAlt->setText(   _pilot->altAirport() != 0? _pilot->altAirport()->toolTip(): _pilot->planAltAirport);
 
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));
     lblFuel->setText(QTime(_pilot->planFuel_hrs, _pilot->planFuel_mins).toString("H:mm"));
-    lblRoute->setText(QString("<code>%1</code>").arg(_pilot->planRoute.toHtmlEscaped()));
+
+    static QRegularExpression routeSlashAmendRe("([^/ ]+)/([^/ ]+)");
+    lblRoute->setText(
+        QString("<code>%1</code>").arg(
+            _pilot->planRoute.toHtmlEscaped().trimmed().replace(
+                routeSlashAmendRe,
+                "\\1<span style='color: " + Settings::lightTextColor().name(QColor::HexArgb) + "'>/<small>\\2</small></span>"
+            )
+        )
+    );
+
     lblPlanTas->setText(QString("N%1").arg(_pilot->planTasInt()));
     lblPlanFl->setText(QString("F%1").arg(_pilot->defuckPlanAlt(_pilot->planAlt)/100));
     lblPlanEte->setText(QString("%1").arg(QTime(_pilot->planEnroute_hrs, _pilot->planEnroute_mins).toString("H:mm")));
-    lblRemarks->setText(QString("<code>%1</code>").arg(_pilot->planRemarks.toHtmlEscaped()));
+
+    static QRegularExpression rmkSlashAmendRe("([ ]?[^ ]+)/");
+    lblRemarks->setText(
+        QString("<code>%1</code>").arg(
+            _pilot->planRemarks.toHtmlEscaped().trimmed().replace(
+                rmkSlashAmendRe,
+                // we make use of the error-tolerant HTML-parser...
+                "</small><b>\\1</b><span style='color: " + Settings::lightTextColor().name(QColor::HexArgb) + "'>/</span><small>"
+            )
+        )
+    );
 
     // check if we know userId
     bool invalidID = !(_pilot->hasValidID());
@@ -156,7 +176,7 @@ void PilotDetails::refresh(Pilot *pilot) {
     if (_pilot->showDepDestLine)
         cbPlotRoute->setCheckState(Qt::Checked);
     if (_pilot->showDepDestLine || plottedAirports)
-        lblPlotStatus->setText(QString("waypoints (calculated): <code>%1</code>").arg(_pilot->routeWaypointsStr()));
+        lblPlotStatus->setText(QString("<span style='color: " + Settings::lightTextColor().name(QColor::HexArgb) + "'>waypoints (calculated): <small><code>%1</code></small></span>").arg(_pilot->routeWaypointsStr()));
     lblPlotStatus->setVisible(_pilot->showDepDestLine || plottedAirports);
 
     // @see https://github.com/qutescoop/qutescoop/issues/124
