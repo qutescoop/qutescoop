@@ -154,6 +154,11 @@ void NavData::loadAirlineCodes(const QString &filePath) {
     FileReader fr(filePath);
     while(!fr.atEnd()) {
         QString _line = fr.nextLine();
+
+        if(_line.isEmpty() || _line.startsWith(";")) {
+            continue;
+        }
+
         QStringList _fields = _line.split(0x09);   // 0x09 code for Tabulator
         if (_fields.count() != 4) {
             auto msg = QString("Could not load line '%1' (%2 fields) from %3")

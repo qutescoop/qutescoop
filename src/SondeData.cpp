@@ -33,8 +33,11 @@ void SondeData::decodeData() {
     if(stationList.isEmpty()) { // Load station data from file
         FileReader file(Settings::dataDirectory("data/station.dat"));
         while(!file.atEnd()) {
-//            qApp->processEvents();
             QString rawLine =  file.nextLine();
+            if(rawLine.isEmpty() || rawLine.startsWith(";")) {
+                continue;
+            }
+
             QRegExp rx("(.{7})" // id (6 digits, our data has only 5)
                        "(.{7})" // icao (unused)
                        "(.{20})"// name (unused)
