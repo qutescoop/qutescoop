@@ -280,21 +280,15 @@ QString Pilot::aircraftType() const {
 }
 
 Airport *Pilot::depAirport() const {
-    if(NavData::instance()->airports.contains(planDep))
-        return NavData::instance()->airports[planDep];
-    else return 0;
+    return NavData::instance()->airports.value(planDep, 0);
 }
 
 Airport *Pilot::destAirport() const {
-    if(NavData::instance()->airports.contains(planDest))
-        return NavData::instance()->airports[planDest];
-    else return 0;
+    return NavData::instance()->airports.value(planDest, 0);
 }
 
 Airport *Pilot::altAirport() const {
-    if(NavData::instance()->airports.contains(planAltAirport))
-        return NavData::instance()->airports[planAltAirport];
-    else return 0;
+    return NavData::instance()->airports.value(planAltAirport, 0);
 }
 
 double Pilot::distanceFromDeparture() const {

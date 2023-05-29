@@ -130,14 +130,16 @@ void Airport::appGl(const QColor &middleColor, const QColor &marginColor, const 
     for(short int i = 0; i <= 360; i += 1) {
         auto _p = NavData::pointDistanceBearing(lat, lon, Airport::symbologyAppRadius_nm, i);
 
-        short int airportsClose = 0;
+        auto isAirportsClose = false;
         foreach(auto *a, otherAirportsOfAppControllers) {
             auto _dist = NavData::distance(_p.first, _p.second, a->lat, a->lon);
 
-            airportsClose += _dist < Airport::symbologyAppRadius_nm;
+            if (_dist < Airport::symbologyAppRadius_nm) {
+                isAirportsClose = true;
+            }
         }
 
-        if (airportsClose > 0) {
+        if (isAirportsClose) {
             // hide border line on overlap - https://github.com/qutescoop/qutescoop/issues/211
             glColor4f(borderColor.redF(), borderColor.greenF(), borderColor.blueF(), 0.);
         } else {
