@@ -32,6 +32,7 @@ class GLWidget : public QGLWidget {
         void invalidatePilots() { m_isPilotsDirty = true; update(); }
         void invalidateAirports() { m_isAirportsDirty = true; update(); }
         void invalidateControllers() { m_isControllersDirty = true; update(); }
+        void setStaticSectors(QList<Sector*>);
         void savePosition();
     public slots:
         virtual void initializeGL() override;
@@ -46,18 +47,9 @@ class GLWidget : public QGLWidget {
         void rememberPosition(int nr);
         void restorePosition(int nr);
 
-        void displayAllSectors(bool value);
         void showInactiveAirports(bool value);
 
-        void createPilotsList();
-        void createAirportsList();
-        void createControllerLists();
-        void createStaticLists();
-        void createStaticSectorLists(QList<Sector*> sectors);
-        void createHoveredControllersLists(QSet<Controller*> controllers);
-
         void destroyFriendHighlighter();
-        void renderStaticSectors(bool value) { _renderStaticSectors = value; }
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
     protected:
@@ -85,6 +77,13 @@ class GLWidget : public QGLWidget {
 
         const QPair<double, double> sunZenith(const QDateTime &dt) const;
 
+        void createPilotsList();
+        void createAirportsList();
+        void createControllerLists();
+        void createStaticLists();
+        void createStaticSectorLists();
+        void createHoveredControllersLists(QSet<Controller*> controllers);
+
         void renderLabels();
         void renderLabels(const QList<MapObject*>& objects, const QFont& font,
                           const double zoomTreshold, QColor color, QColor bgColor = QColor());
@@ -107,11 +106,11 @@ class GLWidget : public QGLWidget {
         };
         bool shouldDrawLabel(const QRectF &rect);
 
+        QList<Sector*> m_staticSectors;
         QSet<FontRectangle*> _fontRectangles, _allFontRectangles;
         QPoint _lastPos, _mouseDownPos;
-        bool _mapMoving, _mapZooming, _mapRectSelecting, _renderStaticSectors,
-            _lightsGenerated, _allSectorsDisplayed;
-        bool m_isPilotsDirty = true, m_isAirportsDirty = true, m_isControllersDirty = true;
+        bool _mapMoving, _mapZooming, _mapRectSelecting, _lightsGenerated;
+        bool m_isPilotsDirty = true, m_isAirportsDirty = true, m_isControllersDirty = true, m_isStaticSectorsDirty = true;
         GLUquadricObj *_earthQuad;
         GLuint _earthTex,
         _earthList, _coastlinesList, _countriesList, _gridlinesList,

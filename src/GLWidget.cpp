@@ -30,6 +30,8 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         _pilotsList(0), _activeAirportsList(0), _inactiveAirportsList(0), _fixesList(0),
         _usedWaypointsList(0), _sectorPolygonsList(0), _sectorPolygonBorderLinesList(0),
         _congestionsList(0),
+        _staticSectorPolygonsList(0), _staticSectorPolygonBorderLinesList(0),
+        _hoveredSectorPolygonsList(0), _hoveredSectorPolygonBorderLinesList(0),
         _pilotLabelZoomTreshold(.9),
         _activeAirportLabelZoomTreshold(1.2), _inactiveAirportLabelZoomTreshold(.15),
         _controllerLabelZoomTreshold(2.), _allWaypointsLabelZoomTreshold(.1),
@@ -38,8 +40,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         _highlighter(0) {
     setAutoFillBackground(false);
     setMouseTracking(true);
-
-    _allSectorsDisplayed = Settings::showAllSectors();
 
     // call default (=9) map position
     Settings::rememberedMapPosition(&_xRot, &_yRot, &_zRot, &_zoom, 9);
@@ -59,10 +59,15 @@ GLWidget::~GLWidget() {
     glDeleteLists(_activeAirportsList, 1); glDeleteLists(_inactiveAirportsList, 1);
     glDeleteLists(_congestionsList, 1);
     glDeleteLists(_sectorPolygonsList, 1); glDeleteLists(_sectorPolygonBorderLinesList, 1);
+    glDeleteLists(_staticSectorPolygonsList, 1);
+    glDeleteLists(_staticSectorPolygonBorderLinesList, 1);
+    glDeleteLists(_hoveredSectorPolygonsList, 1);
+    glDeleteLists(_hoveredSectorPolygonBorderLinesList, 1);
 
-    if (_earthTex != 0)
+    if (_earthTex != 0) {
         deleteTexture(_earthTex);
         //glDeleteTextures(1, &earthTex); // handled Qt'ish by deleteTexture
+    }
     gluDeleteQuadric(_earthQuad);
 
     delete clientSelection;
@@ -90,6 +95,13 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
 QPair<double, double> GLWidget::currentPosition() const {
     return QPair<double, double>(Helpers::modPositive(-90. - _xRot + 180., 360.) - 180.,
                                  Helpers::modPositive(     - _zRot + 180., 360.) - 180.);
+}
+
+void GLWidget::setStaticSectors(QList<Sector *> sectors)
+{
+    m_staticSectors = sectors;
+    m_isStaticSectorsDirty = true;
+    update();
 }
 
 /**
@@ -485,27 +497,17 @@ void GLWidget::createControllerLists() {
         _sectorPolygonBorderLinesList = glGenLists(1);
 
     if(Settings::firBorderLineStrength() > 0.) {
-        if(!_allSectorsDisplayed) {
-            // first, make sure all lists are there
-            foreach(const Controller *c, _sectorsToDraw) {
-                if(c->sector != 0)
-                    c->sector->glBorderLine();
-            }
-            glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
-            foreach(const Controller *c, _sectorsToDraw) {
-                if(c->sector != 0)
-                    glCallList(c->sector->glBorderLine());
-            }
-            glEndList();
-        } else {
-            // display ALL fir borders
-            foreach(Sector *s, NavData::instance()->sectors.values())
-                s->glBorderLine();
-            glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
-            foreach(Sector *s, NavData::instance()->sectors.values())
-                glCallList(s->glBorderLine());
-            glEndList();
+        // first, make sure all lists are there
+        foreach(const Controller *c, _sectorsToDraw) {
+            if(c->sector != 0)
+                c->sector->glBorderLine();
         }
+        glNewList(_sectorPolygonBorderLinesList, GL_COMPILE);
+        foreach(const Controller *c, _sectorsToDraw) {
+            if(c->sector != 0)
+                glCallList(c->sector->glBorderLine());
+        }
+        glEndList();
     }
     qDebug() << "GLWidget::createControllersLists() -- finished";
 }
@@ -571,7 +573,7 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
         _hoveredSectorPolygonBorderLinesList = glGenLists(1);
     }
 
-    if (!_allSectorsDisplayed && Settings::firHighlightedBorderLineStrength() > 0.) {
+    if (Settings::firHighlightedBorderLineStrength() > 0.) {
         // first, make sure all lists are there
         foreach(Controller *c, controllers) {
             if (c->sector != 0) {
@@ -713,41 +715,43 @@ void GLWidget::createStaticLists() {
     }
 }
 
-void GLWidget::createStaticSectorLists(QList<Sector*> sectors) {
+void GLWidget::createStaticSectorLists() {
     //Polygon
-    if (_staticSectorPolygonsList == 0)
-            _staticSectorPolygonsList = glGenLists(1);
+    if (_staticSectorPolygonsList == 0) {
+        _staticSectorPolygonsList = glGenLists(1);
+    }
 
     // make sure all the lists are there to avoid nested glNewList calls
-    foreach(Sector *sector, sectors) {
-        if (sector != 0)
-                sector->glPolygon();
+    foreach(Sector *sector, m_staticSectors) {
+        if (sector != 0) {
+            sector->glPolygon();
+        }
     }
 
     // create a list of lists
     glNewList(_staticSectorPolygonsList, GL_COMPILE);
-    foreach(Sector *sector, sectors) {
-        if (sector != 0)
-                glCallList(sector->glPolygon());
+    foreach(Sector *sector, m_staticSectors) {
+        if (sector != 0) {
+            glCallList(sector->glPolygon());
+        }
     }
     glEndList();
 
 
     // FIR borders
-    if (_staticSectorPolygonBorderLinesList == 0)
-            _staticSectorPolygonBorderLinesList = glGenLists(1);
+    if (_staticSectorPolygonBorderLinesList == 0) {
+        _staticSectorPolygonBorderLinesList = glGenLists(1);
+    }
 
-
-    if (!_allSectorsDisplayed && Settings::firBorderLineStrength() > 0.) {
+    if (Settings::firBorderLineStrength() > 0.) {
         // first, make sure all lists are there
-        foreach(Sector *sector, sectors) {
-            if (sector != 0)
-                    sector->glBorderLine();
+        foreach(Sector *sector, m_staticSectors) {
+            if (sector != 0) sector->glBorderLine();
         }
+
         glNewList(_staticSectorPolygonBorderLinesList, GL_COMPILE);
-        foreach(Sector *sector, sectors) {
-            if(sector != 0)
-                    glCallList(sector->glBorderLine());
+        foreach(Sector *sector, m_staticSectors) {
+            if(sector != 0) glCallList(sector->glBorderLine());
         }
         glEndList();
     }
@@ -821,7 +825,7 @@ void GLWidget::initializeGL() {
         glFogfv(GL_FOG_COLOR, fogColor);
         glFogf(GL_FOG_DENSITY, 1.);
         glHint(GL_FOG_HINT, GL_DONT_CARE);
-        glFogf(GL_FOG_START, 9.8);
+        glFogf(GL_FOG_START, (GLfloat) 9.8);
         glFogf(GL_FOG_END, 10.);
     } else {
         glBlendFunc(GL_ONE, GL_ZERO);
@@ -898,7 +902,7 @@ void GLWidget::initializeGL() {
             } else
                 glDisable(GL_LIGHT0 + light);
         }
-        const GLfloat modelAmbient[] = {.2, .2, .2, 1.}; // the "background" ambient light
+        const GLfloat modelAmbient[] = {(GLfloat) .2, (GLfloat) .2, (GLfloat) .2, (GLfloat) 1.}; // the "background" ambient light
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, modelAmbient); // GL_LIGHT_MODEL_AMBIENT, GL_LIGHT_MODEL_COLOR_CONTROL,
         //glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE); // ...GL_LIGHT_MODEL_LOCAL_VIEWER, GL_LIGHT_MODEL_TWO_SIDE
 
@@ -933,6 +937,10 @@ void GLWidget::paintGL() {
     if (m_isAirportsDirty) {
         createAirportsList();
         m_isAirportsDirty = false;
+    }
+    if (m_isStaticSectorsDirty) {
+        createStaticSectorLists();
+        m_isStaticSectorsDirty = false;
     }
     createHoveredControllersLists(_hoveredControllers);
 
@@ -1009,7 +1017,7 @@ void GLWidget::paintGL() {
     }
 
     // render sectors independently from Whazzup
-    if(_renderStaticSectors) {
+    if (m_staticSectors.size() > 0) {
         glCallList(_staticSectorPolygonsList);
         glCallList(_staticSectorPolygonBorderLinesList);
     }
@@ -1393,25 +1401,33 @@ void GLWidget::renderLabels() {
     _fontRectangles.clear();
     _allFontRectangles.clear();
 
-    // FIR labels
+    // sector controller labels
     QList<MapObject*> objects;
-    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers)
-        if (c->sector != 0)
+    foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {
+        if (c->sector != 0) {
             objects.append(c);
-    renderLabels(objects, Settings::firFont(), _controllerLabelZoomTreshold,
-                 Settings::firFontColor());
-    if(_allSectorsDisplayed) {
-        qglColor(Settings::firFontColor());
-        foreach (const Sector *sector, NavData::instance()->sectors) {
-            QPair<double, double> center = sector->getCenter();
-            if (center.first > -180.) {
-                double lat = center.first;
-                double lon = center.second;
-                renderText(SX(lat, lon), SY(lat, lon),
-                           SZ(lat, lon), sector->icao, Settings::firFont());
-            }
         }
     }
+    renderLabels(objects, Settings::firFont(), _controllerLabelZoomTreshold,
+                 Settings::firFontColor());
+
+    // static sectors
+    qglColor(Settings::firFontColor());
+    foreach (const Sector *sector, m_staticSectors) {
+        QPair<double, double> center = sector->getCenter();
+        if (center.first > -180.) {
+            double lat = center.first;
+            double lon = center.second;
+            renderText(
+                SX(lat, lon),
+                SY(lat, lon),
+                SZ(lat, lon),
+                sector->icao,
+                Settings::firFont()
+            );
+        }
+    }
+
 
     // planned route waypoint labels from Flightplan Dialog
     if(PlanFlightDialog::instance(false) != 0) {
@@ -1737,19 +1753,19 @@ void GLWidget::drawSelectionRectangle() {
             points.append(DoublePair(downLat, downLon));
 
             // draw background
-            glColor4f(0., 1., 1., .2);
+            glColor4f((GLfloat) 0., (GLfloat) 1., (GLfloat) 1., (GLfloat) .2);
             glBegin(GL_POLYGON);
             NavData::plotGreatCirclePoints(points);
             glEnd();
             // draw rectangle
             glLineWidth(2.);
-            glColor4f(0., 1., 1., .5);
+            glColor4f((GLfloat) 0., (GLfloat) 1., (GLfloat) 1., (GLfloat) .5);
             glBegin(GL_LINE_LOOP);
             NavData::plotGreatCirclePoints(points);
             glEnd();
             // draw great circle course line
             glLineWidth(2.);
-            glColor4f(0., 1., 1., .2);
+            glColor4f((GLfloat) 0., (GLfloat) 1., (GLfloat) 1., (GLfloat) .2);
             glBegin(GL_LINE_STRIP);
             NavData::plotGreatCirclePoints(QList<QPair<double, double> >() << points[0] << points[2]);
             glEnd();
@@ -1762,13 +1778,13 @@ void GLWidget::drawSelectionRectangle() {
             const QString currText = NavData::toEurocontrol(currLat, currLon);
             int x, y;
             if (isPointVisible(currLat, currLon, &x, &y)) {
-                glColor4f(0., 0., 0., .7);
+                glColor4f((GLfloat) 0., (GLfloat) 0., (GLfloat) 0., (GLfloat) .7);
                 renderText(
                         x + 21,
                         y + 21,
                         currText, font
                 );
-                glColor4f(0., 1., 1., 1.);
+                glColor4f((GLfloat) 0., (GLfloat) 1., (GLfloat) 1., (GLfloat) 1.);
                 renderText(
                         x + 20,
                         y + 20,
@@ -1787,7 +1803,7 @@ void GLWidget::drawSelectionRectangle() {
             );
             QRectF rect = fontMetrics.boundingRect(middleText);
             if (isPointVisible(middle.first, middle.second, &x, &y)) {
-                glColor4f(0., 0., 0., .7);
+                glColor4f((GLfloat) 0., (GLfloat) 0., (GLfloat) 0., (GLfloat) .7);
                 renderText(
                         x - rect.width() / 2. + 1,
                         y + rect.height() / 3. + 1,
@@ -1846,11 +1862,6 @@ void GLWidget::newWhazzupData(bool isNew) {
         m_friendPositions = Whazzup::instance()->whazzupData().friendsLatLon();
     }
     qDebug() << "GLWidget::newWhazzupData -- finished";
-}
-
-void GLWidget::displayAllSectors(bool value) {
-    _allSectorsDisplayed = value;
-    newWhazzupData(true);
 }
 
 void GLWidget::showInactiveAirports(bool value) {
@@ -1971,7 +1982,7 @@ void GLWidget::createLights() {
         } else
             glDisable(GL_LIGHT0 + light);
     }
-    const GLfloat modelAmbient[] = {.2, .2, .2, 1.}; // the "background" ambient light
+    const GLfloat modelAmbient[] = {(GLfloat) .2, (GLfloat) .2, (GLfloat) .2, (GLfloat) 1.}; // the "background" ambient light
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, modelAmbient); // GL_LIGHT_MODEL_AMBIENT, GL_LIGHT_MODEL_COLOR_CONTROL,
     //glLightModelf(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE); // ...GL_LIGHT_MODEL_LOCAL_VIEWER, GL_LIGHT_MODEL_TWO_SIDE
 

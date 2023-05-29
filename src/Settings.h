@@ -9,6 +9,12 @@
 
 class Settings {
     public:
+        struct DialogPreferences {
+            QSize size;
+            QPoint pos;
+            QByteArray geometry;
+        };
+
         static QString fileName();
 
         // export/import
@@ -114,8 +120,6 @@ class Settings {
         static void setShowTWR(bool value);
         static bool showGND();
         static void setShowGND(bool value);
-        static bool showAllSectors();
-        static void setShowAllSectors(bool value);
         static bool showRouteFix();
         static void setShowRouteFix(bool value);
         static bool showPilotsLabels();
@@ -433,6 +437,9 @@ class Settings {
 
         static QByteArray planFlightDialogGeometry();
         static void setPlanFlightDialogGeometry(const QByteArray& value);
+
+        static DialogPreferences dialogPreferences(const QString& name);
+        static void setDialogPreferences(const QString& name, const DialogPreferences& dialogPreferences);
 
         static bool maximized();
         static void saveMaximized(const bool val);

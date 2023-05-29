@@ -139,7 +139,7 @@ FORMS = \
     src/PlanFlightDialog.ui \
     src/BookedAtcDialog.ui \
     src/ListClientsDialog.ui\
-    src/SectorView.ui \
+    src/dialogs/StaticSectorsDialog.ui \
     src/Window.ui
 HEADERS += \
     src/helpers.h \
@@ -193,7 +193,7 @@ HEADERS += \
     src/Ping.h \
     src/GuiMessage.h \
     src/Launcher.h \
-    src/SectorView.h \
+    src/dialogs/StaticSectorsDialog.h \
     src/Net.h \
     src/JobList.h \
     src/MetarDelegate.h \
@@ -247,7 +247,7 @@ SOURCES += src/WhazzupData.cpp \
     src/Ping.cpp \
     src/GuiMessage.cpp \
     src/Launcher.cpp \
-    src/SectorView.cpp \
+    src/dialogs/StaticSectorsDialog.cpp \
     src/Net.cpp \
     src/JobList.cpp \
     src/MetarDelegate.cpp \

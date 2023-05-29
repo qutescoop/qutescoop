@@ -24,6 +24,7 @@ class Sector {
         const QList<QPair<double, double> > &points() const;
         void setPoints(const QList<QPair<double, double> >&);
         QString icao, name, id;
+        unsigned int debugControllerLineNumber, debugSectorLineNumber;
 
         GLuint glPolygon();
         GLuint glBorderLine();

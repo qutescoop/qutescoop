@@ -8,7 +8,7 @@
 #include "Tessellator.h"
 #include "helpers.h"
 
-Sector::Sector(QStringList fields, unsigned int debugLineNumber) :
+Sector::Sector(QStringList fields, unsigned int _debugLineNumber) :
   _polygon(0),
   _borderline(0),
   _polygonHighlighted(0),
@@ -17,7 +17,7 @@ Sector::Sector(QStringList fields, unsigned int debugLineNumber) :
     // LSAZ:Zurich:CH:46.9:9.1:189[:CTR]
     if(fields.size() != 6 && fields.size() != 7) {
         auto msg = QString("While processing line #%1 '%2' from %3: Expected 6-7 fields, got %5")
-                       .arg(debugLineNumber)
+                       .arg(_debugLineNumber)
                        .arg(fields.join(':'))
                        .arg("data/firlist.dat")
                        .arg(fields.count());
@@ -32,6 +32,7 @@ Sector::Sector(QStringList fields, unsigned int debugLineNumber) :
     if (fields.size() >= 7) {
         m_controllerSuffixes = fields[6].split(" ", Qt::SkipEmptyParts);
     }
+    debugControllerLineNumber = _debugLineNumber;
 }
 
 Sector::~Sector() {
