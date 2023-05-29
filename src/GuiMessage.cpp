@@ -122,7 +122,7 @@ void GuiMessages::progressBarDestroyed(QObject *obj) {
 
 ///////////////////////////////////////////////////////////////////////////
 // INTERNALLY USED CLASS AND METHODS (called by static methods)
-void GuiMessages::updateMessage(GuiMessage *gm, bool callUpdate) {
+void GuiMessages::updateMessage(GuiMessage *gm) {
     //qDebug() << "GuiMessages::updateMessage()" << guiMessage;
     GuiMessage *existing = messageById(gm->id, gm->type);
     if (existing != 0) {
@@ -141,10 +141,9 @@ void GuiMessages::updateMessage(GuiMessage *gm, bool callUpdate) {
         // qDebug() << "GuiMessage()::updateMessage() new" << gm;
         _messages.insert(gm->type, gm);
     }
-    if (callUpdate)
-        update();
+    update();
 }
-void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
+void GuiMessages::removeMessageById(const QString &id) {
     // qDebug() << "GuiMessages::removeMessage() id=" << id;
     foreach(int key, _messages.keys()) {
         foreach(GuiMessage *gm, _messages.values(key)) {
@@ -159,8 +158,7 @@ void GuiMessages::removeMessageById(const QString &id, bool callUpdate) {
             }
         }
     }
-    if (callUpdate)
-        update();
+    update();
 }
 
 ///////////////////////////////////////////////////////////////////////////

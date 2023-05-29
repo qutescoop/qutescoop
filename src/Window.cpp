@@ -84,9 +84,16 @@ Window::Window(QWidget *parent) :
     setEnableBookedAtc(Settings::downloadBookings());
     actionShowWaypoints->setChecked(Settings::showUsedWaypoints());
 
-    connect(actionShowRoutes, &QAction::toggled, this, &Window::actionShowRoutes_triggered);
     actionShowRoutes->setChecked(Settings::showRoutes());
-    actionShowRoutes_triggered(Settings::showRoutes());
+    connect(
+        actionShowRoutes,
+        &QAction::toggled,
+        this,
+        [=]( const bool &newValue ) {
+            actionShowRoutes_triggered(newValue);
+        }
+    );
+    actionShowRoutes_triggered(Settings::showRoutes(), false);
 
     Whazzup *whazzup = Whazzup::instance();
     connect(actionDownload, &QAction::triggered, whazzup, &Whazzup::downloadJson3);
@@ -841,10 +848,12 @@ void Window::shootScreenshot() {
     qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
 
-void Window::actionShowRoutes_triggered(bool checked) {
+void Window::actionShowRoutes_triggered(bool checked, bool showStatus) {
     qDebug() << "Window::on_actionShowRoutes_triggered()" << checked;
     Settings::setShowRoutes(checked);
-    GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
+    if (showStatus) {
+        GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
+    }
     foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
         a->showRoutes = checked;
     if (!checked) { // when disabled, this shall clear all routes
