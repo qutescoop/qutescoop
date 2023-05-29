@@ -1,11 +1,9 @@
-firdisplay.sup%%265
-cloudmirrors.dat%%2
-countries.dat%%120
 airlines.dat%%330
-station.dat%%246
+airports.dat%%340
+coastline.dat%%118
+controllerAirportsMapping.dat%%6
+countries.dat%%120
 countrycodes.dat%%119
 firdisplay.dat%%331
-airports.dat%%340
-controllerAirportsMapping.dat%%6
-coastline.dat%%118
 firlist.dat%%337
+station.dat%%246

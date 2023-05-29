@@ -759,41 +759,6 @@ p, li { white-space: pre-wrap; }
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_17">
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
-         <property name="title">
-          <string>Worldwide Cloud Imagery</string>
-         </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_16">
-          <item>
-           <widget class="QCheckBox" name="cbDownloadClouds">
-            <property name="toolTip">
-             <string>download a cloudlayer from the world </string>
-            </property>
-            <property name="text">
-             <string>download on program start</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cbUseHighResClouds">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>use images with 4096px instead of 2048px</string>
-            </property>
-            <property name="text">
-             <string>use high resolution (~2MB vs. 800kB)</string>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="groupBox_6">
          <property name="title">
           <string>Sonde Data: Temperature [not yet shown], Dewpoint/Spread [not yet shown] &amp;&amp; Wind by altitude</string>
@@ -3027,7 +2992,7 @@ airports with at least</string>
             <item>
              <widget class="QCheckBox" name="cb_Animation">
               <property name="text">
-               <string>with animation (needs more cpu power)</string>
+               <string>animated</string>
               </property>
              </widget>
             </item>

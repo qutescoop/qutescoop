@@ -97,7 +97,7 @@ void Settings::importFromFile(QString fileName) {
 }
 
 /**
-  @param composeFilePath path/file, e.g. "textures/clouds/clouds.jpg" (/ is multi-platform, also on Win)
+  @param composeFilePath path/file (/ is multi-platform, also on Win)
   @returns fully qualified path to the 'application data directory'.
 **/
 QString Settings::dataDirectory(const QString &composeFilePath) {
@@ -412,13 +412,6 @@ bool Settings::showInactiveAirports() {
 }
 void Settings::setShowInactiveAirports(const bool& value) {
     instance()->setValue("display/showInactive", value);
-}
-
-bool Settings::showClouds() {
-    return instance()->value("display/showClouds", false).toBool();
-}
-void Settings::setShowClouds(const bool value) {
-    instance()->setValue("display/showClouds", value);
 }
 
 bool Settings::highlightFriends() {
@@ -1247,22 +1240,6 @@ bool Settings::saveWhazzupData() {
 }
 void Settings::setSaveWhazzupData(bool value) {
     instance()->setValue("download/saveWhazzupData" , value);
-}
-
-bool Settings::downloadClouds() {
-    return instance()->value("clouds/downloadClouds", false).toBool();
-}
-
-void Settings::setDownloadClouds(const bool value) {
-    instance()->setValue("clouds/downloadClouds", value);
-}
-
-bool Settings::useHighResClouds() {
-    return instance()->value("clouds/useHighResClouds", false).toBool();
-}
-
-void Settings::setUseHighResClouds(const bool value) {
-    instance()->setValue("clouds/useHighResClouds", value);
 }
 
 

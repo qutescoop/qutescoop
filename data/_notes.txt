@@ -116,20 +116,3 @@ ICAO Code:		AAA
 Airline Name:	Ansett Australia
 Callsign:		"ANSETT"
 Country:		Australia
-
-
-------
-[deprecated: will be removed]
-CLOUDMIRRORS.dat
-------
-This historically contained mirrors to download cloud images.
-
-Examples:
-
-[2048px]
-http://xplanet-sydney.inside.net/clouds_2048.jpg
-;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg
-
-[2048px] -- for 2048 px images(low resolution)
-http://xplanet-sydney.inside.net/clouds_2048.jpg -- URL
-;http://home.megapass.co.kr/~gitto88/cloud_data/clouds_2048.jpg -- line comment, ignored

@@ -173,14 +173,6 @@ void Launcher::fireUp() {
         ));
     }
 
-    if (Settings::downloadClouds()) {
-        jobs->append(JobList::Job(
-                Window::instance(),
-                SLOT(downloadCloud()),
-                SIGNAL(cloudDownloaded())
-        ));
-    }
-
     jobs->start();
     qDebug() << "Launcher::fireUp() finished";
 }

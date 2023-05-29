@@ -80,8 +80,6 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
     dataFiles.files += ./data/station.dat
-    dataFiles.files += ./data/cloudmirrors.dat
-    dataFiles.files += "./data/clouds/_notes.txt"
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/_notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
@@ -103,8 +101,6 @@ CONFIG(release,release|debug) {
     texturesFiles.files += ./textures/10800px.png
     texturesFiles.files += ./textures/10800px-continents.png
     texturesFiles.files += ./textures/10800px-lights.png
-    cloudsFiles.path = $$DESTDIR/textures/clouds
-    cloudsFiles.files += ./textures/clouds/_notes.txt
     !build_pass:message("Run 'make install' to copy non-code files")
     
     # Adds an "install" target for make, executed by "make install"
@@ -113,8 +109,7 @@ CONFIG(release,release|debug) {
         dataFiles \
         downloadedFiles \
         screenshotsFiles \
-        texturesFiles \
-        cloudsFiles 
+        texturesFiles
 }
 
 # Notice: 32bit support dropped for OSX, all versions past 10.5 are able to execute 64bit-binaries

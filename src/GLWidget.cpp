@@ -54,7 +54,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
 }
 
 GLWidget::~GLWidget() {
-    makeCurrent();
     glDeleteLists(_earthList, 1); glDeleteLists(_gridlinesList, 1);
     glDeleteLists(_coastlinesList, 1); glDeleteLists(_countriesList, 1);
     glDeleteLists(_fixesList, 1);
@@ -66,8 +65,6 @@ GLWidget::~GLWidget() {
     if (_earthTex != 0)
         deleteTexture(_earthTex);
         //glDeleteTextures(1, &earthTex); // handled Qt'ish by deleteTexture
-    if (_cloudTex != 0)
-        deleteTexture(_cloudTex);
     gluDeleteQuadric(_earthQuad);
 
     delete clientSelection;
@@ -81,14 +78,12 @@ GLWidget::~GLWidget() {
 // The scene is then rotated by xRot/yRot/zRot. When looking onto N0/E0, -90°/0°/0°
 // This looks a bit anarchic, but it fits the automatically created texture coordinates.
 // call drawCoordinateAxii() inside paintGL() to se where the axii are.
-void GLWidget::setMapPosition(double lat, double lon, double newZoom, bool updateGL) {
+void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
     _xRot = Helpers::modPositive(270. - lat, 360.);
     _zRot = Helpers::modPositive(     - lon, 360.);
     _zoom = newZoom;
     resetZoom();
-    if (updateGL) {
-        this->updateGL();
-    }
+    update();
 }
 
 /**
@@ -111,7 +106,7 @@ void GLWidget::handleRotation(QMouseEvent*) {
     double dy = (- currentPos.y() + _lastPos.y()) * zoomFactor;
     _xRot = Helpers::modPositive(_xRot + dy + 180., 360.) - 180.;
     _zRot = Helpers::modPositive(_zRot + dx + 180., 360.) - 180.;
-    updateGL();
+    update();
     _lastPos = currentPos;
 }
 
@@ -162,7 +157,7 @@ void GLWidget::scrollBy(int moveByX, int moveByY) {
     QPair<double, double> cur = currentPosition();
     setMapPosition(cur.first  - (double) moveByY * _zoom * 6., // 6° on zoom=1
                    cur.second + (double) moveByX * _zoom * 6., _zoom);
-    updateGL();
+    update();
 }
 
 void GLWidget::resetZoom() {
@@ -203,7 +198,7 @@ void GLWidget::restorePosition(int nr) {
     _xRot = Helpers::modPositive(_xRot, 360.);
     _zRot = Helpers::modPositive(_zRot, 360.);
     resetZoom();
-    updateGL();
+    update();
 }
 
 const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const {
@@ -223,7 +218,6 @@ const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const
 //
 void GLWidget::createPilotsList() {
     qDebug() << "GLWidget::createPilotsList()";
-    makeCurrent();
 
     if(_pilotsList == 0)
         _pilotsList = glGenLists(1);
@@ -400,7 +394,6 @@ void GLWidget::createPilotsList() {
 
 void GLWidget::createAirportsList() {
     qDebug() << "GLWidget::createAirportsList() ";
-    makeCurrent();
     if (_activeAirportsList == 0)
         _activeAirportsList = glGenLists(1);
     QList<Airport*> airportList = NavData::instance()->airports.values();
@@ -466,12 +459,14 @@ void GLWidget::createAirportsList() {
     qDebug() << "GLWidget::createAirportsList() -- finished";
 }
 
-void GLWidget::createControllersLists() {
+void GLWidget::createControllerLists() {
     qDebug() << "GLWidget::createControllersLists() ";
 
     // FIR polygons
     if(_sectorPolygonsList == 0)
         _sectorPolygonsList = glGenLists(1);
+
+    auto _sectorsToDraw = Whazzup::instance()->whazzupData().controllersWithSectors();
 
     // make sure all the lists are there to avoid nested glNewList calls
     foreach(const Controller *c, _sectorsToDraw) {
@@ -521,10 +516,6 @@ void GLWidget::createControllersLists() {
 void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
 //    qDebug() << "GLWidget::createHoveredSectorsLists() ";
 
-    //Polygon
-    if (_hoveredSectorPolygonsList == 0)
-            _hoveredSectorPolygonsList = glGenLists(1);
-
     // make sure all the lists are there to avoid nested glNewList calls
     foreach(Controller *c, controllers) {
         if (c->sector != 0) {
@@ -549,6 +540,9 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
     }
 
     // create a list of lists
+    if (_hoveredSectorPolygonsList == 0) {
+        _hoveredSectorPolygonsList = glGenLists(1);
+    }
     glNewList(_hoveredSectorPolygonsList, GL_COMPILE);
     foreach(Controller *c, controllers) {
         if (c->sector != 0) {
@@ -582,17 +576,19 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
     if (!_allSectorsDisplayed && Settings::firHighlightedBorderLineStrength() > 0.) {
         // first, make sure all lists are there
         foreach(Controller *c, controllers) {
-            if (c->sector != 0)
-                    c->sector->glBorderLineHighlighted();
+            if (c->sector != 0) {
+                c->sector->glBorderLineHighlighted();
+            }
         }
         glNewList(_hoveredSectorPolygonBorderLinesList, GL_COMPILE);
         foreach(Controller *c, controllers) {
-            if(c->sector != 0)
-                    glCallList(c->sector->glBorderLineHighlighted());
+            if(c->sector != 0) {
+                glCallList(c->sector->glBorderLineHighlighted());
+            }
         }
         glEndList();
     }
-//    qDebug() << "GLWidget::createHoveredSectorsLists() -- finished";
+    // qDebug() << "GLWidget::createHoveredSectorsLists() -- finished";
 }
 
 void GLWidget::createStaticLists() {
@@ -605,39 +601,7 @@ void GLWidget::createStaticLists() {
     gluQuadricNormals(_earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
     gluQuadricOrientation(_earthQuad, GLU_OUTSIDE); // GLU_INSIDE
 
-    parseEarthClouds();
-    /*if (Settings::glTextures()) {
-         QString earthTexFile = Settings::applicationDataDirectory(
-                    QString("textures/%1").arg(Settings::glTextureEarth()));
-                    //QString("textures/overlays/gfs.png"));
-                    //QString("textures/clouds_4096.jpg"));
-        QImage earthTexIm = QImage(earthTexFile);
-        //QImage earthTexIm2 = QImage(earthTexFile2).copy(59, 142, 1220 - 59, 854 - 177);
-        if (completedEarthTexIm.isNull())
-            qWarning() << "Unable to load texture file: " << Settings::applicationDataDirectory(
-                              QString("textures/%1").arg(Settings::glTextureEarth()));
-        else {
-            GLint max_texture_size;  glGetIntegerv(GL_MAX_TEXTURE_SIZE,  &max_texture_size);
-            qDebug() << "OpenGL reported MAX_TEXTURE_SIZE as" << max_texture_size;
-
-            // multitexturing units, if we need it once (headers in GL/glext.h, on Windows not available ?!)
-            //GLint max_texture_units; glGetIntegerv(GL_MAX_TEXTURE_UNITS, &max_texture_units);
-            //qDebug() << "OpenGL reported MAX_TEXTURE_UNITS as" << max_texture_units;
-            qDebug() << "Binding parsed texture as" << completedEarthTexIm.width()
-                     << "x" << completedEarthTexIm.height() << "px texture";
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
-            glGetError(); // empty the error buffer
-            earthTex = bindTexture(completedEarthTexIm, GL_TEXTURE_2D,
-                                   GL_RGBA, QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
-            if (GLenum glError = glGetError())
-                qCritical() << QString("OpenGL returned an error (0x%1)").arg((int) glError, 4, 16, QChar('0'));
-            gluQuadricTexture(earthQuad, GL_TRUE); // prepare texture coordinates
-        }
-    }*/
-
-
+    parseTexture();
 
     _earthList = glGenLists(1);
     glNewList(_earthList, GL_COMPILE);
@@ -959,6 +923,21 @@ void GLWidget::paintGL() {
                                     // See last line of method.
     //qDebug() << "GLWidget::paintGL()";
 
+    // create lists (if necessary)
+    if (m_isPilotsDirty) {
+        createPilotsList();
+        m_isPilotsDirty = false;
+    }
+    if (m_isControllersDirty) {
+        createControllerLists();
+        m_isControllersDirty = false;
+    }
+    if (m_isAirportsDirty) {
+        createAirportsList();
+        m_isAirportsDirty = false;
+    }
+    createHoveredControllersLists(_hoveredControllers);
+
     // blank out the screen (buffered, of course)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -1019,26 +998,26 @@ void GLWidget::paintGL() {
         glCallList(_usedWaypointsList);
     }
 
-    //render sectors
+    // render sectors
     if(Settings::showCTR()) {
         glCallList(_sectorPolygonsList);
         glCallList(_sectorPolygonBorderLinesList);
     }
 
-    //render hovered sectors
+    // render hovered sectors
     if(_hoveredControllers.size() > 0) {
         glCallList(_hoveredSectorPolygonsList);
         glCallList(_hoveredSectorPolygonBorderLinesList);
     }
 
-    //Static Sectors (for editing Sectordata)
+    // render sectors independently from Whazzup
     if(_renderStaticSectors) {
         glCallList(_staticSectorPolygonsList);
         glCallList(_staticSectorPolygonBorderLinesList);
     }
 
     QList<Airport*> airportList = NavData::instance()->airports.values();
-    //render Approach
+    // render Approach
     if(Settings::showAPP()) {
         foreach(Airport *a, airportList) {
             if(!a->approaches.isEmpty()) {
@@ -1047,7 +1026,7 @@ void GLWidget::paintGL() {
         }
     }
 
-    //render Tower
+    // render Tower
     if(Settings::showTWR()) {
         foreach(Airport *a, airportList) {
             if(!a->towers.isEmpty())
@@ -1055,7 +1034,7 @@ void GLWidget::paintGL() {
         }
     }
 
-    //render Ground/Delivery
+    // render Ground/Delivery
     if(Settings::showGND()) {
         foreach(Airport *a, airportList) {
             if(!a->deliveries.isEmpty())
@@ -1072,10 +1051,11 @@ void GLWidget::paintGL() {
     if(Settings::showInactiveAirports() && (_zoom < _inactiveAirportLabelZoomTreshold * .7))
             glCallList(_inactiveAirportsList);
 
+    // render pilots
     glCallList(_pilotsList);
 
 
-    //Highlight friends
+    // highlight friends
     if(Settings::highlightFriends()) {
         if(_highlighter == 0) createFriendHighlighter();
         QTime time = QTime::currentTime();
@@ -1085,7 +1065,7 @@ void GLWidget::paintGL() {
         double lineWidth = Settings::highlightLineWidth();
         if(!Settings::useHighlightAnimation()) {
             range = 0;
-            destroyFriendHightlighter();
+            destroyFriendHighlighter();
         }
 
         foreach(const auto &_friend, m_friendPositions) {
@@ -1188,9 +1168,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         _lastPos = currentPos;
     } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
         _mapRectSelecting = true;
-        updateGL();
+        update();
     }
-
 
     double lat, lon;
     if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon)) {
@@ -1218,9 +1197,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
         }
         if (_newHoveredControllers != _hoveredControllers) {
             _hoveredControllers = _newHoveredControllers;
-            createHoveredControllersLists(_hoveredControllers);
-//            qDebug() << "hovered controllers" << _hoveredControllers;
-            updateGL();
+            update();
         }
     }
 }
@@ -1234,7 +1211,7 @@ void GLWidget::mousePressEvent(QMouseEvent*) {
         _mapMoving = false;
         _mapZooming = false;
         _mapRectSelecting = false;
-        updateGL();
+        update();
     }
     if (!_mapRectSelecting)
         _lastPos = _mouseDownPos = currentPos;
@@ -1245,11 +1222,11 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
     QPoint currentPos = mapFromGlobal(QCursor::pos());
 
     QToolTip::hideText();
-    if (_mapMoving)
+    if (_mapMoving) {
         _mapMoving = false;
-    else if (_mapZooming)
+    } else if (_mapZooming) {
         _mapZooming = false;
-    else if (_mapRectSelecting) {
+    } else if (_mapRectSelecting) {
         _mapRectSelecting = false;
         if (currentPos != _mouseDownPos) {
             // moved more than 40px?
@@ -1270,8 +1247,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
                     }
                 }
             }
-        } else
-            updateGL();
+        } else {
+            update();
+        }
     } else if (_mouseDownPos == currentPos && event->button() == Qt::LeftButton) {
         // chasing a "click-spot" vertically offset problem on Win/nvidia
         double lat, lon;
@@ -1307,9 +1285,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
             clientSelection->move(QCursor::pos());
             clientSelection->setObjects(objects);
         }
-    } else if (_mouseDownPos == currentPos && event->button() == Qt::RightButton)
+    } else if (_mouseDownPos == currentPos && event->button() == Qt::RightButton) {
         rightClick(currentPos);
-    updateGL();
+    }
+    update();
 }
 
 void GLWidget::rightClick(const QPoint& pos) {
@@ -1343,8 +1322,7 @@ void GLWidget::rightClick(const QPoint& pos) {
             AirportDetails::instance()->refresh();
         if (PilotDetails::instance(false) != 0) // can have an effect on the state of
             PilotDetails::instance()->refresh(); // ...PilotDetails::cbPlotRoutes
-        createPilotsList();
-        updateGL();
+        invalidatePilots();
     } else if (pilot != 0) {
         // display flight path for pilot
         GuiMessages::message(
@@ -1354,8 +1332,7 @@ void GLWidget::rightClick(const QPoint& pos) {
         pilot->showDepDestLine = !pilot->showDepDestLine;
         if (PilotDetails::instance(false) != 0)
             PilotDetails::instance()->refresh();
-        createPilotsList();
-        updateGL();
+        invalidatePilots();
     }
     qDebug() << "GLWidget::rightClick() -- finished";
 }
@@ -1367,16 +1344,19 @@ void GLWidget::mouseDoubleClickEvent(QMouseEvent *event) {
     QToolTip::hideText();
     if (event->buttons().testFlag(Qt::LeftButton)) {
         double lat, lon;
-        if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon))
-            setMapPosition(lat, lon, _zoom, false);
+        if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon)) {
+            setMapPosition(lat, lon, _zoom);
+        }
         zoomIn(.6);
     } else if (event->button() == Qt::RightButton) {
         double lat, lon;
-        if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon))
-            setMapPosition(lat, lon, _zoom, false);
+        if (mouse2latlon(currentPos.x(), currentPos.y(), lat, lon)) {
+            setMapPosition(lat, lon, _zoom);
+        }
         zoomIn(-.6);
-    } else if (event->button() == Qt::MiddleButton)
+    } else if (event->button() == Qt::MiddleButton) {
         zoomTo(2.);
+    }
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event) {
@@ -1408,13 +1388,13 @@ bool GLWidget::event(QEvent *event) {
 void GLWidget::zoomIn(double factor) {
     _zoom -= _zoom * qMax(-.6, qMin(.6, .2 * factor * Settings::zoomFactor()));
     resetZoom();
-    updateGL();
+    update();
 }
 
 void GLWidget::zoomTo(double zoom) {
     this->_zoom = zoom;
     resetZoom();
-    updateGL();
+    update();
 }
 
 
@@ -1882,14 +1862,10 @@ void GLWidget::newWhazzupData(bool isNew) {
         // update airports
         NavData::instance()->updateData(Whazzup::instance()->whazzupData());
 
-        _sectorsToDraw = Whazzup::instance()->whazzupData().controllersWithSectors();
-
-        createPilotsList();
-        createAirportsList();
-        createControllersLists();
+        invalidatePilots();
+        invalidateControllers();
+        invalidateAirports();
         m_friendPositions = Whazzup::instance()->whazzupData().friendsLatLon();
-
-        updateGL();
     }
     qDebug() << "GLWidget::newWhazzupData -- finished";
 }
@@ -1907,14 +1883,14 @@ void GLWidget::showInactiveAirports(bool value) {
 void GLWidget::createFriendHighlighter() {
     _highlighter = new QTimer(this);
     _highlighter->setInterval(100);
-    connect(_highlighter, &QTimer::timeout, this, &QGLWidget::updateGL);
+    connect(_highlighter, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
     _highlighter->start();
 }
 
-void GLWidget::destroyFriendHightlighter() {
+void GLWidget::destroyFriendHighlighter() {
     if(_highlighter == 0) return;
     if(_highlighter->isActive()) _highlighter->stop();
-    disconnect(_highlighter, &QTimer::timeout, this, &QGLWidget::updateGL);
+    disconnect(_highlighter, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
     delete _highlighter;
     _highlighter = 0;
 }
@@ -1924,124 +1900,54 @@ void GLWidget::destroyFriendHightlighter() {
 // Clouds, Lightning and Earth Textures
 //////////////////////////////////
 
-void GLWidget::useClouds() {
-    parseEarthClouds();
-}
-
-void GLWidget::parseEarthClouds() {
-    qDebug() << "GLWidget::parseEarthClouds()";
+void GLWidget::parseTexture() {
+    qDebug() << "GLWidget::parseTexture()";
     // how hourglass during CPU-intensive operation
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     GuiMessages::progress("textures", "Preparing textures...");
 
-    QImage earthTexIm, cloudsIm;
-
-    //Check if clouds available
-    QString cloudsTexFile =
-            Settings::dataDirectory("textures/clouds/clouds.jpg");
-    QFileInfo cloudsTexFI(cloudsTexFile);
-    if(Settings::showClouds() && cloudsTexFI.exists()) {
-        qDebug() << "GLWidget::parseEarthClouds() loading cloud texture";
-        GuiMessages::progress("textures", "Preparing textures: loading clouds...");
-        cloudsIm = QImage(cloudsTexFile);
-    }
+    QImage earthTexIm;
 
     if(Settings::glTextures()) {
-        QString earthTexFile = Settings::dataDirectory(
-                    QString("textures/%1").arg(Settings::glTextureEarth()));
-        qDebug() << "GLWidget::parseEarthClouds() loading earth texture";
+        QString earthTexFile = Settings::dataDirectory(QString("textures/%1").arg(Settings::glTextureEarth()));
+        qDebug() << "GLWidget::parseTexture() loading earth texture";
         GuiMessages::progress("textures", "Preparing textures: loading earth...");
         earthTexIm.load(earthTexFile);
-    } else {
-        qDebug() << "GLWidget::parseEarthClouds() finishing using clouds";
-        _completedEarthIm = cloudsIm;
     }
 
-    if((!Settings::showClouds() || cloudsIm.isNull()) && Settings::glTextures()) {
-        qDebug() << "GLWidget::parseEarthClouds() finishing using earthTex"
-                 << "(clouds deactivated or cloudsIm.isNull())";
-        _completedEarthIm = earthTexIm;
-    }
-
-    if(!cloudsIm.isNull() && !earthTexIm.isNull() && Settings::showClouds()) {
-        //transform so same size, take the bigger image
-//        int width = cloudsIm.width();
-//        int height = cloudsIm.height();
-
-        // this always scales clouds to earth texture size
-        GuiMessages::progress("textures", "Preparing textures: scaling clouds...");
-        qDebug() << "GLWidget::parseEarthClouds() scaling cloud image from"
-                 << cloudsIm.size() << "to" << earthTexIm.size();
-        cloudsIm = cloudsIm.scaled(earthTexIm.size(), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-//        if(earthTexIm.width() > width) {
-//            qDebug() << "GLWidget::parseEarthClouds upscaling cloud image horizontally";
-//            cloudsIm = cloudsIm.scaledToWidth(earthTexIm.width(), Qt::SmoothTransformation);
-//            width = earthTexIm.width();
-//        } else {
-//            qDebug() << "GLWidget::parseEarthClouds downscaling cloud image horizontally";
-//            earthTexIm = earthTexIm.scaledToWidth(width, Qt::SmoothTransformation);
-//        }
-
-//        if(earthTexIm.height() > height) {
-//            qDebug() << "GLWidget::parseEarthClouds upscaling cloud image vertically";
-//            cloudsIm = cloudsIm.scaledToHeight(earthTexIm.height(),
-//                                               Qt::SmoothTransformation);
-//            height = earthTexIm.height();
-//        } else {
-//            qDebug() << "GLWidget::parseEarthClouds downscaling cloud image vertically";
-//            earthTexIm = earthTexIm.scaledToHeight(height, Qt::SmoothTransformation);
-//        }
-
-        _completedEarthIm = earthTexIm;
-        GuiMessages::progress("textures", "Preparing textures: converting texture...");
-        qDebug() << "GLWidget::parseEarthClouds() converting image to ARGB32";
-        _completedEarthIm =
-                _completedEarthIm.convertToFormat(QImage::Format_ARGB32);
-
-        qDebug() << "GLWidget::parseEarthClouds() combining earth+clouds";
-        GuiMessages::progress("textures", "Preparing textures: combining textures...");
-        QPainter painter(&_completedEarthIm);
-        painter.setCompositionMode(QPainter::CompositionMode_Screen);
-                // more modes available:
-                // QPainter::CompositionMode_Screen
-                // QPainter::CompositionMode_ColorDodge
-                // QPainter::CompositionMode_Plus
-                // QPainter::CompositionMode_Lighten
-                // QPainter::CompositionMode_HardLight
-                // QPainter::CompositionMode_Exclusion
-                // QPainter::CompositionMode_Multiply
-        painter.drawImage(0, 0, cloudsIm);
-        painter.end();
-    }
-
-    if (_completedEarthIm.isNull())
+    if (earthTexIm.isNull()) {
         qWarning() << "Unable to load texture file: "
-                   << Settings::dataDirectory(
-                          QString("textures/%1").arg(Settings::glTextureEarth()));
-    else {
+                   << Settings::dataDirectory(QString("textures/%1").arg(Settings::glTextureEarth()));
+    } else {
         GLint max_texture_size;  glGetIntegerv(GL_MAX_TEXTURE_SIZE,  &max_texture_size);
         qDebug() << "OpenGL reported MAX_TEXTURE_SIZE as" << max_texture_size;
 
         // multitexturing units, if we need it once (headers in GL/glext.h, on Windows not available ?!)
         //GLint max_texture_units; glGetIntegerv(GL_MAX_TEXTURE_UNITS, &max_texture_units);
         //qDebug() << "OpenGL reported MAX_TEXTURE_UNITS as" << max_texture_units;
-        qDebug() << "Binding parsed texture as" << _completedEarthIm.width()
-                 << "x" << _completedEarthIm.height() << "px texture";
+        qDebug() << "Binding parsed texture as" << earthTexIm.width()
+                 << "x" << earthTexIm.height() << "px texture";
         qDebug() << "Generating texture coordinates";
         GuiMessages::progress("textures", "Preparing textures: preparing texture coordinates...");
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        //glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        // glGenTextures(1, &earthTex); // bindTexture does this the Qt'ish way already
         qDebug() << "Emptying error buffer";
         glGetError(); // empty the error buffer
         qDebug() << "Binding texture";
-        _earthTex = bindTexture(_completedEarthIm, GL_TEXTURE_2D, GL_RGBA,
-                               QGLContext::LinearFilteringBindOption); // QGLContext::MipmapBindOption
-        if (GLenum glError = glGetError())
+        _earthTex = bindTexture(
+            earthTexIm,
+            GL_TEXTURE_2D,
+            GL_RGBA,
+            QGLContext::LinearFilteringBindOption
+        ); // QGLContext::MipmapBindOption
+        if (GLenum glError = glGetError()) {
             qCritical() << QString("OpenGL returned an error (0x%1)")
                            .arg((int) glError, 4, 16, QChar('0'));
+        }
     }
-    qDebug() << "GLWidget::parseEarthClouds() finished";
+
+    qDebug() << "GLWidget::parseTexture() finished";
     update();
     qApp->restoreOverrideCursor();
     GuiMessages::remove("textures");

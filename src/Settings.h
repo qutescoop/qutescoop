@@ -128,8 +128,6 @@ class Settings {
         static void setShowRouteFix(bool value);
         static bool showPilotsLabels();
         static void setShowPilotsLabels(bool value);
-        static bool showClouds();
-        static void setShowClouds(bool value);
         static bool highlightFriends();
         static void setHighlightFriends(bool value);
         static bool glStippleLines();
@@ -365,12 +363,6 @@ class Settings {
 
         static bool saveWhazzupData();
         static void setSaveWhazzupData(const bool value);
-
-        static bool downloadClouds();
-        static void setDownloadClouds(const bool value);
-
-        static bool useHighResClouds();
-        static void setUseHighResClouds(const bool value);
 
         static int wheelMax();
         static void setWheelMax(const int value);

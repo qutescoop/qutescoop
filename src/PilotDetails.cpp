@@ -208,8 +208,7 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
     if (_pilot->showDepDestLine != checked) {
         _pilot->showDepDestLine = checked;
         if (Window::instance(false) != 0) {
-            Window::instance()->mapScreen->glWidget->createPilotsList();
-            Window::instance()->mapScreen->glWidget->updateGL();
+            Window::instance()->mapScreen->glWidget->invalidatePilots();
         }
         refresh();
     }
