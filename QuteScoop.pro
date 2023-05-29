@@ -12,8 +12,8 @@ GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclu
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
 message(compiling version $$GIT_DESCRIBE)
 
-# maybe fixes version incompatibilities, gets ignored by clang
-QMAKE_CXXFLAGS += "-fno-sized-deallocation"
+# C++20
+CONFIG += c++2a
 
 TEMPLATE = app
 CONFIG *= qt
