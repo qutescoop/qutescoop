@@ -34,9 +34,10 @@ ControllerDetails::ControllerDetails(QWidget *parent):
 
     connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
-    if (!Settings::controllerDetailsSize().isNull()) resize(Settings::controllerDetailsSize());
-    if (!Settings::controllerDetailsPos().isNull()) move(Settings::controllerDetailsPos());
-    if (!Settings::controllerDetailsGeometry().isNull()) restoreGeometry(Settings::controllerDetailsGeometry());
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
 }
 
 void ControllerDetails::refresh(Controller *newController) {
@@ -138,9 +139,14 @@ void ControllerDetails::on_buttonAddFriend_clicked() {
 }
 
 void ControllerDetails::closeEvent(QCloseEvent *event) {
-    Settings::setControllerDetailsPos(pos());
-    Settings::setControllerDetailsSize(size());
-    Settings::setControllerDetailsGeometry(saveGeometry());
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
     event->accept();
 }
 

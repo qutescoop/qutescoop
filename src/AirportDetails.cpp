@@ -74,9 +74,10 @@ AirportDetails::AirportDetails(QWidget *parent):
     _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
 
     // Geometry
-    if (!Settings::airportDetailsSize().isNull()) resize(Settings::airportDetailsSize());
-    if (!Settings::airportDetailsPos().isNull()) move(Settings::airportDetailsPos());
-    if (!Settings::airportDetailsGeometry().isNull()) restoreGeometry(Settings::airportDetailsGeometry());
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
 
     refresh();
 }
@@ -207,10 +208,15 @@ QSet<Controller*> AirportDetails::checkSectors() const {
 }
 
 void AirportDetails::closeEvent(QCloseEvent *event) {
-   Settings::setAirportDetailsPos(pos());
-   Settings::setAirportDetailsSize(size());
-   Settings::setAirportDetailsGeometry(saveGeometry());
-   event->accept();
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
+    event->accept();
 }
 
 void AirportDetails::toggleShowOtherAtc(bool)

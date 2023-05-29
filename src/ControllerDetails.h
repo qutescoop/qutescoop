@@ -27,6 +27,8 @@ class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
     private:
         ControllerDetails(QWidget *parent);
         Controller* _controller;
+
+        constexpr static char m_preferencesName[] = "controllerDetails";
 };
 
 #endif /*CONTROLLERDETAILS_H_*/

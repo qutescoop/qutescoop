@@ -34,9 +34,10 @@ PilotDetails::PilotDetails(QWidget *parent):
 
     connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
-    if (!Settings::pilotDetailsSize().isNull()) resize(Settings::pilotDetailsSize());
-    if (!Settings::pilotDetailsPos().isNull()) move(Settings::pilotDetailsPos());
-    if (!Settings::pilotDetailsGeometry().isNull()) restoreGeometry(Settings::pilotDetailsGeometry());
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
 }
 
 void PilotDetails::refresh(Pilot *pilot) {
@@ -216,9 +217,14 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
 }
 
 void PilotDetails::closeEvent(QCloseEvent *event) {
-    Settings::setPilotDetailsPos(pos());
-    Settings::setPilotDetailsSize(size());
-    Settings::setPilotDetailsGeometry(saveGeometry());
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
     event->accept();
 }
 

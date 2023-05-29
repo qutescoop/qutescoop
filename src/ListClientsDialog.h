@@ -39,6 +39,8 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
         void pingNextFromStack();
 
         QTimer _editFilterTimer;
+
+        constexpr static char m_preferencesName[] = "listClientsDialog";
 };
 
 #endif // LISTCLIENTSDIALOG_H

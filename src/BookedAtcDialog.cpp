@@ -56,9 +56,10 @@ BookedAtcDialog::BookedAtcDialog(QWidget *parent) :
 
     connect(this, &BookedAtcDialog::needBookings, Whazzup::instance(), &Whazzup::downloadBookings);
 
-    if (!Settings::bookAtcDialogSize().isNull()) resize(Settings::bookAtcDialogSize());
-    if (!Settings::bookAtcDialogPos().isNull()) move(Settings::bookAtcDialogPos());
-    if (!Settings::bookAtcDialogGeometry().isNull()) restoreGeometry(Settings::bookAtcDialogGeometry());
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
 
     refresh();
 }
@@ -199,8 +200,13 @@ void BookedAtcDialog::on_tbPredict_clicked() {
 }
 
 void BookedAtcDialog::closeEvent(QCloseEvent *event) {
-    Settings::setBookAtcDialogPos(pos());
-    Settings::setBookAtcDialogSize(size());
-    Settings::setBookAtcDialogGeometry(saveGeometry());
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
     event->accept();
 }

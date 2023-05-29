@@ -68,9 +68,10 @@ ListClientsDialog::ListClientsDialog(QWidget *parent) :
 
     QTimer::singleShot(100, this, SLOT(refresh())); // delayed insertion of clients to open the window now
 
-    if (!Settings::listClientsDialogSize().isNull()) resize(Settings::listClientsDialogSize());
-    if (!Settings::listClientsDialogPos().isNull()) move(Settings::listClientsDialogPos());
-    if (!Settings::listClientsDialogGeometry().isNull()) restoreGeometry(Settings::listClientsDialogGeometry());
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
 }
 
 void ListClientsDialog::refresh() {
@@ -250,9 +251,14 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 }
 
 void ListClientsDialog::closeEvent(QCloseEvent *event) {
-    Settings::setListClientsDialogPos(pos());
-    Settings::setListClientsDialogSize(size());
-    Settings::setListClientsDialogGeometry(saveGeometry());
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
     event->accept();
 }
 

@@ -48,6 +48,8 @@ class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
 
         PlanFlightRoutesModel _routesModel;
         QSortFilterProxyModel *_routesSortModel;
+
+        constexpr static char m_preferencesName[] = "planFlightDialog";
 };
 
 #endif // PLANFLIGHTDIALOG_H

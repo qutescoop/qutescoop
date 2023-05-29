@@ -141,6 +141,8 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
 private:
         PreferencesDialog(QWidget *parent);
         bool _settingsLoaded;
+
+        constexpr static char m_preferencesName[] = "preferences";
 };
 
 #endif /*PREFERENCESDIALOG_H_*/
