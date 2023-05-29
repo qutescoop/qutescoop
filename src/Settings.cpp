@@ -102,7 +102,15 @@ void Settings::importFromFile(QString fileName) {
 **/
 QString Settings::dataDirectory(const QString &composeFilePath) {
     return QString("%1/%2")
-            .arg(QCoreApplication::applicationDirPath(), composeFilePath);
+        .arg(QCoreApplication::applicationDirPath(), composeFilePath);
+}
+
+const QColor Settings::lightTextColor()
+{
+    auto _default = QGuiApplication::palette().text().color();
+    _default.setAlphaF(.5);
+
+    return instance()->value("display/lightTextColor", _default).value<QColor>();
 }
 
 bool Settings::shootScreenshots() {

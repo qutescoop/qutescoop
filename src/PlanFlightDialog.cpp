@@ -259,10 +259,10 @@ void PlanFlightDialog::routeSelected(const QModelIndex& index) {
 
 void PlanFlightDialog::plotPlannedRoute() const {
     if(selectedRoute == 0 || !cbPlot->isChecked()) {
-        lblPlotStatus->setText("no route to plot");
+        lblPlotStatus->setText("<span style='color: " + Settings::lightTextColor().name(QColor::HexArgb) + "'>no route to plot</span>");
         return;
     }
-    lblPlotStatus->setText(QString("waypoints (calculated): <code>%1</code>").arg(selectedRoute->waypointsStr));
+    lblPlotStatus->setText(QString("<span style='color: " + Settings::lightTextColor().name(QColor::HexArgb) + "'>waypoints (calculated): <code>%1</code></span>").arg(selectedRoute->waypointsStr));
     if(selectedRoute->waypoints.size() < 2)
         return;
     QList<DoublePair> points;
