@@ -1797,7 +1797,7 @@ void GLWidget::drawSelectionRectangle() {
             glEnd();
 
             // information labels
-            const QFont font = QFont(); //Settings::firFont();
+            const QFont font = Settings::firFont();
             const QFontMetricsF fontMetrics(font, this);
 
             // show position label
