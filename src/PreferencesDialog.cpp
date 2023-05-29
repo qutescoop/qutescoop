@@ -4,7 +4,6 @@
 
 #include "PreferencesDialog.h"
 #include "Settings.h"
-#include "SondeData.h"
 #include "Window.h"
 
 //singleton instance
@@ -171,12 +170,6 @@ void PreferencesDialog::loadSettings() {
     color = Settings::firHighlightedFillColor();
     pbFirHighlightedFillColor->setText(color.name());
     pbFirHighlightedFillColor->setPalette(QPalette(color));
-
-    color = Settings::windColor();
-    pbUpperWindColor->setText(color.name());
-    pbUpperWindColor->setPalette(QPalette(color));
-    sbWindSize->setValue(Settings::windArrowSize());
-    sbWindSecondarySpan->setValue(Settings::sondeAltSecondarySpan_1k());
 
     // airport traffic settings
     cbFilterTraffic->setChecked(Settings::filterTraffic());
@@ -1241,21 +1234,6 @@ void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked) {
     Settings::setUseSelctionRectangle(checked);
 }
 
-void PreferencesDialog::on_pbUpperWindColor_clicked() {
-    QColor color = QColorDialog::getColor(Settings::windColor(), this,
-                                          "Select color", QColorDialog::ShowAlphaChannel);
-    if(color.isValid()) {
-        pbUpperWindColor->setText(color.name());
-        pbUpperWindColor->setPalette(QPalette(color));
-        Settings::setWindColor(color);
-        if (SondeData::instance(false) != 0) {
-            SondeData::instance()->invalidateWindLists();
-            if (Window::instance(false) != 0)
-                Window::instance()->mapScreen->glWidget->update();
-        }
-    }
-}
-
 void PreferencesDialog::closeEvent(QCloseEvent *event) {
     Settings::setPreferencesDialogSize(size());
     Settings::setPreferencesDialogPos(pos());
@@ -1297,23 +1275,3 @@ void PreferencesDialog::on_cbRememberMapPositionOnClose_toggled(bool checked) {
         return;
     Settings::setRememberMapPositionOnClose(checked);
 }
-
-void PreferencesDialog::on_sbWindSize_valueChanged(int factor) {
-    if (!_settingsLoaded)
-        return;
-    Settings::setWindArrowSize(factor);
-    if (SondeData::instance(false) != 0) {
-        SondeData::instance()->invalidateWindLists();
-        if (Window::instance(false) != 0)
-            Window::instance()->mapScreen->glWidget->update();
-    }
-}
-
-void PreferencesDialog::on_sbWindSecondarySpan_valueChanged(int value) {
-    if (!_settingsLoaded)
-        return;
-    Settings::setSondeAltSecondarySpan_1k(value);
-    if (Window::instance(false) != 0)
-        Window::instance()->mapScreen->glWidget->update();
-}
-

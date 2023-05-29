@@ -6,4 +6,3 @@ countries.dat%%120
 countrycodes.dat%%119
 firdisplay.dat%%331
 firlist.dat%%337
-station.dat%%246

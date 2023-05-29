@@ -356,43 +356,6 @@ void Settings::setShowAllSectors(bool value) {
     instance()->setValue("display/showALLSectors", value);
 }
 
-bool Settings::showSonde() {
-    return instance()->value("display/showSonde", false).toBool();
-}
-void Settings::setShowSonde(bool value) {
-    instance()->setValue("display/showSonde", value);
-}
-
-int Settings::sondeAlt_1k() {
-    return instance()->value("display/sondeAlt_1k", 20).toInt();
-}
-void Settings::setSondeAlt_1k(int value) {
-    instance()->setValue("display/sondeAlt_1k", value);
-}
-
-QColor Settings::windColor() {
-    return instance()->value("display/windColor", QColor::fromRgb(136, 255, 134)).value<QColor>();
-}
-void Settings::setWindColor(const QColor &value) {
-    instance()->setValue("display/windColor", value);
-}
-
-int Settings::windArrowSize() {
-    return instance()->value("display/windArrowSize", 30).toInt();
-}
-
-void Settings::setWindArrowSize(int value) {
-    instance()->setValue("display/windArrowSize", value);
-}
-
-int Settings::sondeAltSecondarySpan_1k() {
-    return instance()->value("display/sondeAltSecondarySpan_1k", 2).toInt();
-}
-
-void Settings::setSondeAltSecondarySpan_1k(int value) {
-    instance()->setValue("display/sondeAltSecondarySpan_1k", value);
-}
-
 bool Settings::showRouteFix() {
     return instance()->value("display/showRouteFix", false).toBool();
 }
@@ -935,17 +898,6 @@ void Settings::setTimeLineStrength(double value) {
     instance()->setValue("pilotDisplay/timeLineStrength", value);
 }
 
-// Wind
-QFont Settings::sondeFont() {
-    QFont defaultFont;
-    defaultFont.setPixelSize(9);
-    return instance()->value("sondeDisplay/font", defaultFont).value<QFont>();
-}
-
-void Settings::setSondeFont(const QFont& font) {
-    instance()->setValue("sondeDisplay/font", font);
-}
-
 // Waypoints
 bool Settings::showUsedWaypoints() {
     return instance()->value("display/showUsedWaypoints", false).toBool();
@@ -1426,12 +1378,4 @@ void Settings::setSimpleLabels(bool value) {
 
 bool Settings::simpleLabels() {
     return instance()->value("gl/simpleLabels", false).toBool();
-}
-
-QString Settings::sondeUrl() {
-    return instance()->value("datasources/sondeUrl",
-                             "http://fsrealwx.rs-transline.de/upperair.txt").toString();
-}
-void Settings::setSondeUrl(QString val) {
-    instance()->setValue("datasources/sondeUrl", val);
 }

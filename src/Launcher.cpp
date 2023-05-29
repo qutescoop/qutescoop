@@ -3,7 +3,6 @@
  **************************************************************************/
 
 #include "Launcher.h"
-#include "SondeData.h"
 #include "JobList.h"
 #include "Net.h"
 #include "Airac.h"
@@ -162,14 +161,6 @@ void Launcher::fireUp() {
                 Whazzup::instance(),
                 SLOT(downloadJson3()),
                 SIGNAL(whazzupDownloaded())
-        ));
-    }
-
-    if (Settings::showSonde()) {
-        jobs->append(JobList::Job(
-                SondeData::instance(),
-                SLOT(load()),
-                SIGNAL(loaded())
         ));
     }
 

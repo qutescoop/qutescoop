@@ -121,10 +121,9 @@ class GLWidget : public QGLWidget {
         _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
         _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
         QSet<Controller*> _hoveredControllers;
-        double _sondeLabelZoomTreshold, _pilotLabelZoomTreshold,
-                _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
-        _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
-        _xRot, _yRot, _zRot, _zoom, _aspectRatio;
+        double _pilotLabelZoomTreshold, _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
+            _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
+            _xRot, _yRot, _zRot, _zoom, _aspectRatio;
         QTimer *_highlighter;
         QList< QPair<double , double> > m_friendPositions;
 };
