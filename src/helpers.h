@@ -38,8 +38,15 @@ public:
           b.second += ((diff > 0) - (diff < 0)) * 360;
   }
 
+  /*
+   * @return (-360., -360.) on error
+   */
   static DoublePair polygonCenter(const QList<DoublePair> points) {
       // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
+
+      if (points.size() == 0) {
+          return DoublePair(-360., -360.);
+      }
 
       double A = 0;
       DoublePair runningTotal;
@@ -52,8 +59,7 @@ public:
       for(int i = 0; i < count; ++i) {
           DoublePair current = points[i];
           DoublePair next = points[(i + 1) % count];
-          if(i > 0)
-              adjustPoint(previous, current);
+          if(i > 0) adjustPoint(previous, current);
           adjustPoint(current, next);
           previous = current;
 

@@ -72,8 +72,10 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
             if (sector != 0) {
                 // We determine lat/lon from the sector
                 QPair<double, double> center = this->sector->getCenter();
-                lat = center.first;
-                lon = center.second;
+                if (center.first > -180.) {
+                    lat = center.first;
+                    lon = center.second;
+                }
 
                 break;
             }

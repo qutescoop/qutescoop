@@ -1404,10 +1404,12 @@ void GLWidget::renderLabels() {
         qglColor(Settings::firFontColor());
         foreach (const Sector *sector, NavData::instance()->sectors) {
             QPair<double, double> center = sector->getCenter();
-            double lat = center.first;
-            double lon = center.second;
-            renderText(SX(lat, lon), SY(lat, lon),
-                       SZ(lat, lon), sector->icao, Settings::firFont());
+            if (center.first > -180.) {
+                double lat = center.first;
+                double lon = center.second;
+                renderText(SX(lat, lon), SY(lat, lon),
+                           SZ(lat, lon), sector->icao, Settings::firFont());
+            }
         }
     }
 

@@ -83,6 +83,9 @@ DISPLAY_LIST_186
 43.99:27.95
 (etc)
 
+The last line in the file must be:
+DISPLAY_LIST_
+
 To create new shapes, you can use
 the sconv.exe in from Dolomynum \tools that can convert sector files of ATC
 clients (IvAc, ASRC, VRC, ProController), or Servinfo / IvAe data files to
