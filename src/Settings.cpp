@@ -349,13 +349,6 @@ void Settings::setShowGND(bool value) {
     instance()->setValue("display/showGND", value);
 }
 
-bool Settings::showAllSectors() {
-    return instance()->value("display/showALLSectors", false).toBool();
-}
-void Settings::setShowAllSectors(bool value) {
-    instance()->setValue("display/showALLSectors", value);
-}
-
 bool Settings::showRouteFix() {
     return instance()->value("display/showRouteFix", false).toBool();
 }
@@ -1371,6 +1364,23 @@ QByteArray Settings::planFlightDialogGeometry() {
 void Settings::setPlanFlightDialogGeometry(const QByteArray &value) {
     instance()->setValue("windowmanagment/planFlightDialogGeo", value);
 }
+
+
+void Settings::setDialogPreferences(const QString &name, const DialogPreferences &dialogPreferences)
+{
+    instance()->setValue("windowmanagment/" + name + "Size", dialogPreferences.size);
+    instance()->setValue("windowmanagment/" + name + "Pos", dialogPreferences.pos);
+    instance()->setValue("windowmanagment/" + name + "Geo", dialogPreferences.geometry);
+}
+
+Settings::DialogPreferences Settings::dialogPreferences(const QString &name) {
+    return DialogPreferences {
+        .size =  instance()->value("windowmanagment/" + name + "Size").toSize(),
+        .pos = instance()->value("windowmanagment/" + name + "Pos").toPoint(),
+        .geometry = instance()->value("windowmanagment/" + name + "Geo").toByteArray()
+    };
+}
+
 
 void Settings::setSimpleLabels(bool value) {
     instance()->setValue("gl/simpleLabels", value);

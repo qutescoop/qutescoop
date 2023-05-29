@@ -430,11 +430,11 @@ Whazzups (replay)</string>
     <addaction name="separator"/>
     <addaction name="actionHighlight_Friends"/>
     <addaction name="separator"/>
-    <addaction name="actionDisplayAllSectors"/>
     <addaction name="actionShowInactiveAirports"/>
     <addaction name="actionShowRoutes"/>
     <addaction name="actionShowWaypoints"/>
-    <addaction name="actionSectorview"/>
+    <addaction name="separator"/>
+    <addaction name="actionOpenStaticSectorsDialog"/>
    </widget>
    <widget class="QMenu" name="menuPlan">
     <property name="statusTip">
@@ -854,18 +854,6 @@ Whazzups (replay)</string>
     <string>F2</string>
    </property>
   </action>
-  <action name="actionDisplayAllSectors">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
-   <property name="icon">
-    <iconset resource="Resources.qrc">
-     <normaloff>:/icons/images/sector16.png</normaloff>:/icons/images/sector16.png</iconset>
-   </property>
-   <property name="text">
-    <string>Display &amp;all sectors</string>
-   </property>
-  </action>
   <action name="actionPlanFlight">
    <property name="icon">
     <iconset resource="Resources.qrc">
@@ -1149,12 +1137,16 @@ Whazzups (replay)</string>
     <string>Ctrl+F2</string>
    </property>
   </action>
-  <action name="actionSectorview">
-   <property name="enabled">
-    <bool>false</bool>
+  <action name="actionOpenStaticSectorsDialog">
+   <property name="icon">
+    <iconset resource="Resources.qrc">
+     <normaloff>:/icons/images/sector16.png</normaloff>:/icons/images/sector16.png</iconset>
    </property>
    <property name="text">
-    <string>S&amp;ectorview</string>
+    <string>Select s&amp;ectors...</string>
+   </property>
+   <property name="toolTip">
+    <string>For viewing QuteScoop's data</string>
    </property>
   </action>
   <action name="actionRememberMapPosition9">

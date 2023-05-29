@@ -69,7 +69,7 @@ class Window : public QMainWindow, public Ui::Window {
         void openPlanFlight();
         void openBookedAtc();
         void openListClients();
-        void openSectorView();
+        void openStaticSectorsDialog();
         void on_searchEdit_textChanged(const QString& text);
         void on_metarEdit_textChanged(const QString& text);
         void on_btnRefreshMetar_clicked();
@@ -81,7 +81,6 @@ class Window : public QMainWindow, public Ui::Window {
         void friendsDockMoved(Qt::DockWidgetArea area);
         void friendClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();
-        void allSectorsChanged(bool);
     protected:
         virtual void closeEvent(QCloseEvent *event);
     private:

@@ -271,7 +271,7 @@ void PlanFlightDialog::plotPlannedRoute() const {
 
     // @todo: make plot line color adjustable
     // @todo: are we GLing here ouside a GL context?!
-    glColor4f(.7, 1., .4, .8);
+    glColor4f((GLfloat) .7, (GLfloat) 1., (GLfloat) .4, (GLfloat) .8);
     glLineWidth(2.);
     glBegin(GL_LINE_STRIP);
     NavData::plotGreatCirclePoints(points);

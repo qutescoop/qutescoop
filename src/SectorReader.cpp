@@ -45,7 +45,8 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
     QString workingSectorId;
     QList<QPair<double, double> > pointList;
 
-    auto count = 0;
+    unsigned int count = 0;
+    unsigned int debugLineWorkingSectorStart = 0;
     while(!fileReader->atEnd()) {
         ++count;
         QString line = fileReader->nextLine();
@@ -61,7 +62,8 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
         if(line.startsWith("DISPLAY_LIST_")) {
             if(!workingSectorId.isEmpty()) {
                 if(pointList.size() < 3) {
-                    auto msg = QString("While processing line #%1 from %2: Sector %3 doesn't contain enough points (%4, expected 3+)")
+                    auto msg = QString("While processing lines #%1-%2 from %3: Sector %4 doesn't contain enough points (%5, expected 3+)")
+                                   .arg(debugLineWorkingSectorStart)
                                    .arg(count)
                                    .arg(filePath, workingSectorId)
                                    .arg(pointList.size());
@@ -88,11 +90,13 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
 
                 foreach(auto sector, sectorsWithMatchingId) {
                     if(sector != 0) {
+                        sector->debugSectorLineNumber = debugLineWorkingSectorStart;
                         sector->setPoints(pointList);
                     }
                 }
             }
             workingSectorId = line.split('_').last();
+            debugLineWorkingSectorStart = count;
             pointList.clear();
         } else if(!workingSectorId.isEmpty()) {
             QStringList latLng = line.split(':');

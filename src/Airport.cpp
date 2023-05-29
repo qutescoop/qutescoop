@@ -207,8 +207,8 @@ const GLuint& Airport::gndDisplayList() {
     glNewList(_gndDisplayList, GL_COMPILE);
 
     GLfloat circle_distort = qCos(lat * Pi180);
-    GLfloat innerDeltaLon = Nm2Deg(Airport::symbologyGndRadius_nm / 2.);
-    GLfloat outerDeltaLon = Nm2Deg(Airport::symbologyGndRadius_nm / .7);
+    GLfloat innerDeltaLon = (GLfloat) Nm2Deg(Airport::symbologyGndRadius_nm / 2.);
+    GLfloat outerDeltaLon = (GLfloat) Nm2Deg(Airport::symbologyGndRadius_nm / .7);
     GLfloat innerDeltaLat = circle_distort * innerDeltaLon;
     GLfloat outerDeltaLat = circle_distort * outerDeltaLon;
 
@@ -260,7 +260,7 @@ const GLuint& Airport::delDisplayList() {
     glNewList(_delDisplayList, GL_COMPILE);
 
     GLfloat circle_distort = qCos(lat * Pi180);
-    GLfloat deltaLon = Nm2Deg(Airport::symbologyDelRadius_nm / .7);
+    GLfloat deltaLon = (GLfloat) Nm2Deg(Airport::symbologyDelRadius_nm / .7);
     GLfloat deltaLat = circle_distort * deltaLon;
 
     QList<QPointF> points;

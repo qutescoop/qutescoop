@@ -19,7 +19,7 @@
 #include "NavData.h"
 #include "FriendsVisitor.h"
 #include "GuiMessage.h"
-#include "SectorView.h"
+#include "dialogs/StaticSectorsDialog.h"
 #include "Platform.h"
 #include "MetarDelegate.h"
 
@@ -72,9 +72,7 @@ Window::Window(QWidget *parent) :
     connect(actionPlanFlight, &QAction::triggered, this, &Window::openPlanFlight);
     connect(actionBookedAtc, &QAction::triggered, this, &Window::openBookedAtc);
     connect(actionListClients, &QAction::triggered, this, &Window::openListClients);
-    connect(actionSectorview, &QAction::triggered, this, &Window::openSectorView);
-    actionDisplayAllSectors->setChecked(Settings::showAllSectors());
-    connect(actionDisplayAllSectors, &QAction::toggled, this, &Window::allSectorsChanged);
+    connect(actionOpenStaticSectorsDialog, &QAction::triggered, this, &Window::openStaticSectorsDialog);
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
     connect(actionShowInactiveAirports, &QAction::toggled, mapScreen->glWidget, &GLWidget::showInactiveAirports);
     pb_highlightFriends->setChecked(Settings::highlightFriends());
@@ -872,16 +870,6 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
     mapScreen->glWidget->invalidatePilots();
 }
 
-void Window::allSectorsChanged(bool state) {
-    if(actionDisplayAllSectors->isChecked() !=  state)
-    {
-        actionDisplayAllSectors->setChecked( state);
-    }
-
-    Settings::setShowAllSectors(state);
-    mapScreen->glWidget->displayAllSectors(state);
-}
-
 void Window::on_actionHighlight_Friends_triggered(bool checked) {
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
@@ -894,9 +882,9 @@ void Window::on_pb_highlightFriends_toggled(bool checked) {
     on_actionHighlight_Friends_triggered(checked);
 }
 
-void Window::openSectorView() {
-    Sectorview::instance(true, this)->show();
-    Sectorview::instance()->raise();
-    Sectorview::instance()->activateWindow();
-    Sectorview::instance()->setFocus();
+void Window::openStaticSectorsDialog() {
+    StaticSectorsDialog::instance(true, this)->show();
+    StaticSectorsDialog::instance()->raise();
+    StaticSectorsDialog::instance()->setFocus();
+    StaticSectorsDialog::instance()->activateWindow();
 }
