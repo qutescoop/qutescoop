@@ -1,773 +1,773 @@
-ABQ:Albuquerque:US:33.2:-107:257
-ADR:Adria Center:YU:45:18:1500
-ADR_E:Adria Center:YU:43.5:20.5:1501
-ADR_W:Adria Center:YU:44.5:16:1502
-AFRW:Africa West Control::3:-3:5102
-AFRC:Africa Central Control::-5:25:5103
-AFRE:Africa East Control::10:38:5104
-AFRN:Africa North Control::17:9:5105
-AFRS:Africa South Control:CD:-16:37:5106
-AGGG:Honiara:SB:-9.5:160.9:195
-ANAU:Nauru:NR:-4.2:165:196
-ANC:Anchorage:US:61.5:-175:474
-ZAN:Anchorage Oceanic:US:61.0:-175:474
-ASEA:South East Asia Control::10.5:106.00:4435
-ASEA_S:South East Asia Control::-0.5:114.50:4436
-ASEA_N:South East Asia Control::12.5:106.00:4437
-ASIA:West Asia Control::16:79:4224
-ATL:Atlanta:US:34.3:-84.1:258
-AYPM:Port Moresby:PG:-4:148.5:197
-BALT:Baltic Control::57.5:23.3:613
-BGGL:Nuuk:GL:71.2:-43.9:198
-BICC:Iceland Radio:IS:72.5:-33:1995
-BIRD:Reykjavik:IS:67:-33:1990
-BIRD_E:Reykjavik:IS:66:-8:1991
-BIRD_N:Reykjavik:IS:77:-40:1992
-BIRD_S:Reykjavik:IS:63:-24:1993
-BIRD_W:Reykjavik:IS:67:-48:1994
-BN-ARA:Arafura 133.7:AU:-12:140:1178
-BN-ARL:Armidale 130.9:AU:-31.75:151:1194
-BN-BAR:Barra 123.8*(120.15):AU:-15:145:1196
-BN-BUR:Burnett:AU:-26:153:1201
-BN-COL:Brisbane Radio(Coral)133.15*(124.65):AU:-15:156:1202
-BN-CNK:Cessnock 123.4*(130.9):AU:-32.75:151:12011
-BN-CVN:Carnarvon 133.8*(134.2):AU:-25.25:149:1204
-BN-DOS:Downs 135.6*(134.2):AU:-26:149:1182
-BN-FLD:Flinders 132.85*(124.65):AU:-21:158:1206
-BN-GOL:Gold Coast 130.4*(134.2):AU:-28.2:153.25:12012
-BN-INL:Inverell 134.2:AU:-25.5:150.75:1209
-BN-HWE:Brisbane Radio(Howe)124.95*(124.65):AU:-30:159:1212
-BN-ISA:Isa 125.2:AU:-21:141:1186
-BN-KEN:Kennedy 120.15:AU:-17:145:1217
-BN-KIY:Kimberley 133.4*(133.2):AU:-16:124:1218
-BN-KPL:Keppel 125.9*(134.2):AU:-23.5:151.5:1219
-BN-MDE:Mudgee 133.0*(130.9):AU:-32:150:1187
-BN-MLD:Maitland 132.35*(130.9):AU:-33:151.75:1221
-BN-MNN:Manning 130.1* (130.9):AU:-31.5:152:12013
-BN-NSA:Noosa 124.1* (134.2):AU:-17:110:12014
-BN-OCN:Ocean 128.6*(130.9):AU:-33.5:153.5:1224
-BN-SDY:Straddy 134.3*(134.2):AU:-27:154.5:1227
-BN-STR:Sturt 134.4*(133.2):AU:-18.25:134.5:1229
-BN-SWY:Swampy 133.2*(120.15):AU:-20.75:149.25:1228
-BN-TBP:Tabletop 120.55*(120.15):AU:-18.5:145.5:1191
-BN-TRT:Territory 133.2:AU:-15:131:1192
-BN-TSN:Brisbane Radio(Tasman)124.65:AU:-28:159:1193
-BN-WEG:Warrego 132.45*(125.2):AU:-25:143:1232
-BOS:Boston:US:43.8:-71.9:259
-CHI:Chicago:US:42.1:-89.2:260
-ORD:Chicago:US:42.1:-89.2:260
-CLE:Cleveland:US:41.5:-80.9:261
-CZEG:Edmonton:CA:64:-119:200
-EDM:Edmonton:CA:64.3:-119:200
-ZEG:Edmonton:CA:63.7:-119:200
-CZQM:Moncton:CA:46.5:-59:201
-CZQX:Gander Oceanic:CA:53:-35:207
-CZQO:Gander Oceanic:CA:53:-35:207
-CZQX_CTR:Gander Domestic:CA:45.5:-59:206
-CZUL:Montreal:CA:53:-74:202
-MTL:Montreal:CA:52:-74:202
-CZVR:Vancouver:CA:52:-125.6:203
-VAN:Vancouver:CA:52.5:-125.6:203
-ZVR:Vancouver:CA:51.5:-125.6:203
-CZWG:Winnipeg:CA:56:-95:204
-WPG:Winnipeg:CA:55:-95:204
-CYYZ:Toronto:CA:47.5:-81.6:205
-TOR:Toronto:CA:47:-81.6:205
-DAAA:Algiers:DZ:28.1:2.8:208
-DC:Washington:US:36.4:-76.8:281
-WAS:Washington:US:36.4:-76.8:281
-DEN:Denver:US:40.4:-105.4:270
-DGAC:Accra:GH:5.0:0:209
-DGAC_N:Accra:GH:9.30:0:4503
-DGAC_O:Accra:GH:-2:0:4504
-DIII:Abidjan:CI:-2:-5:210
-DNKK:Kano:NG:10.5:8.2:211
-DNKK_W:Kano:NG:11.6:4.56:5100
-DNLL:Lagos:NG:6.7:5.2:4505
-DNLL_E:Lagos:NG:6.85:7.08:5101
-DRRR:Niamey:NE:17:2.9:212
-DTTC:Tunis:TN:34.6:9.5:213
-EBBU_E:Brussels:BE:50.5:4.2:100
-EBBU_W:Brussels:BE:50.5:4.2:100
-EBBU_U:Brussels Upper:BE:49.5:4.2:100
-EDGG_BAD:Langen BAD:DE:49.8:9.5:1100
-EDGG_B1D:Langen BAD:DE:49.8:9.5:1100
-EDGG_DKB:Langen DKB:DE:49.8:9.5:1104
-EDGG_D1B:Langen DKB:DE:49.8:9.5:1104
-EDGG_FN:Langen Information:DE:49.8:9.5:1105
-EDGG_FO:Langen Information:DE:49.8:9.5:1105
-EDGG_FS:Langen Information:DE:49.8:9.5:1105
-EDGG_FW:Langen Information:DE:49.8:9.5:1105
-EDGG_GED:Langen GED:DE:49.8:9.5:1105
-EDGG_G1D:Langen GED:DE:49.8:9.5:1105
-EDGG_GIN:Langen GIN:DE:49.8:9.5:1103
-EDGG_G1N:Langen GIN:DE:49.8:9.5:1103
-EDGG_HEF:Langen HEF:DE:49.8:9.5:1105
-EDGG_H1F:Langen HEF:DE:49.8:9.5:1105
-EDGG_HAB:Langen HAB:DE:49.8:9.5:1105
-EDGG_H1B:Langen HAB:DE:49.8:9.5:1105
-EDGG_KNG:Langen KNG:DE:49.8:9.5:1105
-EDGG_KIR:Langen KIR:DE:49.8:9.5:1105
-EDGG_K1R:Langen KIR:DE:49.8:9.5:1105
-EDGG_KTG:Langen KTG:DE:49.8:9.5:1105
-EDGG_K1G:Langen KTG:DE:49.8:9.5:1105
-EDGG_LBU:Langen LBU:DE:49.8:9.5:1105
-EDGG_L1U:Langen LBU:DE:49.8:9.5:1105
-EDGG_MAN:Langen MAN:DE:49.8:9.5:1105
-EDGG_M1N:Langen MAN:DE:49.8:9.5:1105
-EDGG_NKH:Langen NKH:DE:49.8:9.5:1105
-EDGG_N1H:Langen NKH:DE:49.8:9.5:1105
-EDGG_PSA:Langen PSA (Holding):DE:49.8:9.5:1105
-EDGG_P1A:Langen PSA (Holding):DE:49.8:9.5:1105
-EDGG_RUD:Langen RUD:DE:49.8:9.5:1106
-EDGG_R1D:Langen RUD:DE:49.8:9.5:1106
-EDGG_PAH:Langen PAH:DE:51.6:7.8:1101
-EDGG_P1H:Langen PAH:DE:51.6:7.8:1101
-EDGG_SIG:Langen SIG:DE:51.6:7.8:1105
-EDGG_S1G:Langen SIG:DE:51.6:7.8:1105
-EDGG_TAU:Langen TAU:DE:51.6:7.8:1105
-EDGG_T1U:Langen TAU:DE:51.6:7.8:1105
-EDGG:Langen COMPLETE:DE:49.30:8.5:1102
-EDMM:Munchen ALL:DE:49:11.5:1150
-EDMM_A:Muenchen ALB:DE:49.24:10.97:1154
-EDMM_E:Muenchen EGG:DE:48.87:12.94:1155
-EDMM_B:Muenchen BBG:DE:50.14:11.23:1156
-EDMM_G:Muenchen GER:DE:51.15:11.24:1160
-EDMM_O:Muenchen GER:DE:51.15:11.24:1160
-EDMM_M:Muenchen MEI:DE:51.24:13.77:1158
-EDMM_N:Muenchen NDG:DE:48.70:10.20:1153
-EDMM_R:Muenchen RDG:DE:49.39:12.14:1121
-EDMM_T:Muenchen TEG:DE:47.47:11.33:1163
-EDMM_U:Muenchen TRU:DE:47.96:10.65:1164
-EDMM_W:Muenchen WLD:DE:48.95:10.55:1159
-EDMM_Z:Muenchen ZUG:DE:47.92:10:1162
-EDUU_D:Rhein DON:DE:49.3:12.14:1121
-EDUU_E:Rhein EAST:DE:53.91:12.50:1122
-EDUU_F:Rhein FUL:DE:50.75:9.75:1123
-EDUU_L:Rhein ALP:DE:47.77:10.64:1125
-EDUU_N:Rhein NTM+SLN:DE:49.5:7.75:1126
-EDUU_O:Rhein OSE+HVL:DE:53.75:12.50:1127
-EDUU_H:Rhein HVL:DE:52.25:12.50:11271
-EDUU_OSE:Rhein OSE:DE:53.75:12.50:11272
-EDUU_S:Rhein SAL:DE:49.9:11.45:1128
-EDUU_T:Rhein TGO:DE:48.7:9:1129
-EDUU_W:Rhein WUR+FFM:DE:50:9.3:1130
-EDWW:Bremen:DE:53.0:10.2:1000
-EDWW_A:Bremen ALR:DE:::106
-EDWW_B:Bremen BOR:DE:::101
-EDWW_D:Bremen DST:DE:::106
-EDWW_E:Bremen EIDE:DE:::106
-EDWW_F:Bremen FLG:DE:::101
-EDWW_H:Bremen HEI:DE:::106
-EDWW_K:Bremen MAR:DE:::101
-EDWW_M:Bremen NRZ:DE:::101
-EDWW_R:Bremen HRZ:DE:::106
-EDWW_S:Bremen EMS:DE:::106
-EDWW_W:Bremen EIDW:DE:::106
-EDYY_C:Maastricht CEL:NL:52.6:9.6:1010
-EDYY_CH:Maastricht CELH > F355:NL:52.6:9.6:1010
-EDYY_D:Maastricht DEL:NL:52.5:4.5:1011
-EDYY_H:Maastricht HOL:NL:54.0:9.75:1012
-EDYY_J:Maastricht JEV:NL:54.0:6.0:1013
-EDYY_JH:Maastricht JEVH > F355:NL:54.0:6.0:1013
-EDYY_K:Maastricht KOK:NL:51.15:2.85:1014
-EDYY_L:Maastricht LUX:NL:49.9:5.4:1015
-EDYY_MUN:Maastricht MUN:NL:52.1:7.3:1016
-EDYY_M1N:Maastricht MUN:NL:52.1:7.3:1016
-EDYY_N:Maastricht NIK:NL:50.8:4.3:1017
-EDYY_O:Maastricht OLN:NL:50.6:5.8:1018
-EDYY_RHR:Maastricht RHR:NL:51.4:6.6:1019
-EDYY_R1R:Maastricht RHR:NL:51.4:6.6:1019
-EDYY_S:Maastricht SOL:NL:51.7:9.4:1020
-EDYY_SH:Maastricht SOLH > FL355:NL:51.7:9.4:1020
-EETT:Tallinn:EE:58.7:24.4:118
-EFIN:Helsinki:FI:61.8:25.3:119
-EGGX:Shanwick Oceanic:GB:53:-25:914
-NAT:Gander+Shanwick combined:CA:55:-30:915
-EGTT:London ACC(Central):GB:52.8:-2:900
-LON:London ACC(Central):GB:52.5:-2:900
-EGTT-C:London ACC(Central):GB:52.4:0.5:901
-LON_C:London ACC(Central):GB:52.1:0.5:901
-LON_E:London ACC(Central):GB:52.7:0.5:901
-LTC_N:London ACC(Central):GB:52.1:0.5:901
-LTC_NW:London ACC(Central):GB:52.1:0.5:901
-EGTT-N:London ACC(North):GB:53.7:-1:902
-LON_N:London ACC(North):GB:53.4:-1:902
-EGTT-S:London ACC(South):GB:50.75:-1:903
-LON_S:London ACC(South):GB:50.45:-1:903
-LON_D:London ACC(South):GB:50.75:-1:903
-LTC_S:London ACC(South):GB:50.75:-1:903
-LTC_SE:London ACC(South):GB:50.75:-1:903
-LTC_SW:London ACC(South):GB:50.75:-1:903
-EGTT-SC:London ACC(S-Central):GB:51.75:0.15:904
-LON_SC:London ACC(S-Central):GB:51.45:0.15:904
-EGTL:London Terminal Control:GB:51.4:-0.46:905
-LTC:London TerminalControl:GB:51.1:-0.46:905
-EGTT-W:London ACC(West):GB:51:-5.5:906
-LON_W:London ACC(West):GB:50.7:-5.5:906
-EGTM:Manchester TMA(<FL285):GB:53.5:-2.75:907
-MAN:Manchester TMA(<FL285):GB:53.2:-3.5:907
-EGPX:Scottish:GB:57.4:-2.5:908
-SCO:Scottish:GB:57.1:-2.5:908
-EGPX-D:Scottish:GB:55.5:-4.5:909
-SCO_D:Scottish:GB:55.2:-4.5:909
-STC:Scottish TMA(<FL255):GB:55.0:-4.5:909
-STC_W:Scottish TMA(<FL255):GB:55.5:-4.5:909
-STC_E:Scottish TMA(<FL255):GB:56.0:-4.5:909
-EGPX-E:Scottish ACC(East):GB:57:-2.5:910
-SCO_E:Scottish ACC(East):GB:56.7:-2.5:910
-SCO_N:Scottish ACC(East):GB:57:-2.5:910
-SCO_S:Scottish ACC(East):GB:57:-2.5:910
-EGPX-WD:Scottish ACC(W/Dean Cross):GB:55.8:-9.5:911
-SCO_WD:Scottish ACC(W/Dean Cross):GB:55.5:-9.5:911
-EGPX-W:Scottish ACC(West):GB:57.3:-8.75:912
-SCO_W:Scottish ACC(West):GB:57:-8.75:912
-EGPX-R:Scottish ACC(Rathlin):GB:54.75:-7:913
-SCO_R:Scottish ACC(Rathlin):GB:54.45:-7:913
-STC_A:Scottish ACC(Antrim):GB:54.75:-7:913
-EHAA:Amsterdam:NL:52.8:4.6:138
-EHMC:DutchMill:NL:52.8:4.6:138
-EHML:Bandbox:NL:52.8:4.6:138
-EIDW:Dublin:IE:53.5:-6.7:916
-EISN:Shannon:IE:53.2:-10.3:917
-EKDK:Copenhagen:DK:56.4:10:140
-ENBD:Bodo:NO:67.5:11.5:141
-ENBD_S:Bodo South:NO:63:7:142
-ENOB:Bodo Oceanic:NO:72.5:15.2:1410
-ENOR:Norway:NO:65.15:8:143
-ENOR_S:Norway South:NO:59.5:9.7:1431
-ENOS:Oslo:NO:59.5:9.4:144
-ENSV:Stavanger:NO:60:4:145
-EPWW:Warsaw:PL:52.4:20.7:146
-ESMM:Sweden Malmo:SE:57.4:15:147
-ESOS:Sweden:SE:62.1:16.7:148
-EURE:Eurocontrol East:HU:46:23:524
-EURI:Eurocontrol Islands:GB:57:-5:5537
-EURM-W:Maastricht West:NL:51.50:6.50:5211
-EURM-E:Maastricht East:NL:50:13.50:5212
-EURN:Eurocontrol North:SE:59:16:525
-EURS:Eurocontrol South:IT:38:20:523
-EURW-N:Eurocontrol West North:FR:47:1:5221
-EURW-S:Eurocontrol West South:ES:41:-7:5222
-EVRR:Riga:LV:57:23.3:150
-EYVL:Vilnius:LT:55.1:22.4:151
-FACA:Cape Town:ZA:-34.0:20.0:6741
-FACA_E:Cape Town:ZA:-33.6:25.7:6742
-FACA_W:Cape Town:ZA:-34:17.7:6743
-FAJA:Johannesburg:ZA:-27.6:28:6746
-FAJA_C:Johannesburg:ZA:-30.2:23.4:6749
-FAJA_E:Johannesburg:ZA:-30:29.5:6745
-FAJA_N:Johannesburg:ZA:-24.3:28.6:6747
-FAJA_S:Johannesburg:ZA:-27.1:27.9:6748
-FAJA_W:Johannesburg:ZA:-29:18:6744
-FAJO:Johannesburg Oceanic:ZA:-39:32.5:6740
-FASA:South Africa:ZA:-30.2:23.4:6750
-FBGR:Gaborone:BW:-22.2:24.6:226
-FCCC:Brazzaville:CG:1.2:12:227
-FCCC_D:Brazzaville:CG:4.3:9.7:4507
-FCCC_L:Brazzaville:CG:0.7:7.6:4506
-FIMM:Mauritius:MU:-25.5:65.2:228
-FLFI:Lusaka:ZM:-13.1:27.8:229
-FMMM:Antananarivo:MG:-20:48.5:230
-FNAN:Luanda:AO:-12.1:7.1:231
-FQBE:Beira:MZ:-20.3:36.6:232
-FSSS:Seychelles:SC:0.1:52:233
-FTTT:NDjamena:TD:15:18.2:234
-FTW:Fort Worth:US:33.5:-97.9:271
-FVHF:Harare:ZW:-19.1:29.1:235
-FWLL:Lilongwe:MW:-12.8:34.2:236
-FYWH:Windhoek:NA:-22.3:17.6:237
-FZZA:Kinshasa:CD:-3.4:21.6:238
-FZZA_K:Kinshasa:CD:2.01:26.33:4501
-FZZA_L:Kinshasa:CD:-6.38:25.23:4502
-GCCC:Canarias:ES:25.3:-17.2:163
-GCCC_L:Canarias:ES:28.3:-16.6:164
-GCCO_O:Canarias Radio:ES:24.5:-17.2:165
-GLRB:Roberts:LR:6.7:-12.2:241
-GMMM:Casablanca:MA:31.8:-8.4:242
-GOOO:Dakar Control:SN:12.7:-12:243
-GOOC:Dakar Oceanic:SN:12.7:-12:244
-GULF:Gulf Control::26:47:3000
-GULF_E:Gulf EAST Control::30:54:3001
-GULF_W:Gulf WEST Control::25.5:40:3002
-GVSC:Sal Oceanic:CV:18.4:-28.8:245
-HAAA:Addis Ababa:ET:9.4:40.5:246
-HBBA:Bujumbura:BI:-3.4:29.9:247
-HCSM:Mogadishu:SO:5:50.5:248
-HECC:Cairo:EG:28:31:249
-HHAA:Asmara:ER:16.1:39.8:250
-HKNA:Nairobi:KE:-0.4:38.9:251
-HLLL:Tripoli:LY:26.9:17.2:252
-HNL:Honolulu:US:21.6:-157:267
-HOU:Houston:US:29:-97:276
-HRYR:Kigali:RW:-2:29.8:253
-HSSS:Khartoum:SD:13:30.1:254
-HTDC:Dar Es Salaam:TZ:-6.8:36.5:255
-HTDC_W:Dar Es Salaam:TZ:4.35:30.5:4508
-HUEC:Entebbe:UG:1.2:32.3:256
-IND:Indianapolis:US:38.5:-84.4:278
-JAX:Jacksonville:US:31.1:-82.2:262
-KC:Kansas City:US:38.1:-95.4:272
-MCI:Kansas City:US:38.1:-95.4:272
-KZAB:Albuquerque:US:33.2:-107:257
-KZAU:Chicago:US:42.1:-89.2:260
-KZBW:Boston:US:43.8:-71.9:259
-KZDC:Washington:US:36.4:-76.8:281
-KZDV:Denver:US:40.4:-105.4:270
-KZFW:Fort Worth:US:33.5:-97.9:271
-KZHU:Houston:US:29:-97:276
-KZHU_O:Houston Oceanic:US:26:-92:277
-KZID:Indianapolis:US:38.5:-84.4:278
-KZJX:Jacksonville:US:31.1:-82.2:262
-KZKC:Kansas City:US:38.1:-95.4:272
-KZLA:Los Angeles:US:34.3:-117.4:273
-KZLC:Salt Lake City:US:43.2:-111.4:275
-KZMA:Miami:US:27:-82:264
-KZMA_O:Miami Oceanic:US:22.8:-72.4:263
-KZME:Memphis:US:34.6:-90.5:279
-KZMP:Minneapolis:US:44.2:-92.7:274
-KZNY:New York:US:41:-77:266
-KZWY:New York Oceanic:US:31.5:-58.5:265
-KZOA:Oakland:US:37.9:-122.1:269
-KZAK:San Francisco Radio:US:30.75:-120.83:268
-KZOB:Cleveland:US:41.5:-80.9:261
-KZSE:Seattle:US:44.6:-121.4:280
-KZTL:Atlanta:US:34.3:-84.1:258
-LAAA:Tirana:AL:41.1:20.1:152
-LATI:Tirana:AL:41.1:20.1:152
-LAX:Los Angeles:US:34.3:-117.4:273
-LA:Los Angeles:US:34.3:-117.4:273
-LBSR:Sofia:BG:42.8:26.4:6760
-LBSR_E:Sofia:BG:43.1:28.1:154
-LBSR_W:Sofia:BG:42.8:24.4:153
-LBWR:Varna:BG:43.1:28.1:154
-LCCC:Nicosia:CY:34:32.9:155
-LDZO:Zagreb:HR:44.0:15.5:156
-LECB:Barcelona:ES:40.8:1.40:157
-LECL:Valencia:ES:39:-0.3:1571
-LECM:Madrid:ES:41.4:-4.1:160
-LECP:Palma:ES:39.4:2.5:162
-LECS:Sevilla:ES:37.5:-3.4:161
-LFBB:Bordeaux:FR:44.7:0.6:1768
-LFEE:Reims:FR:47.9:6.2:1769
-LFEE_N:Reims:FR:47.9:6.2:17691
-LFEE_S:Reims:FR:47.9:6.2:17692
-LFFF:Paris:FR:48.7:2.8:1770
-LFFM:France Military:FR:46.75:3:1774
-LFMM:Marseille:FR:45.6:5:1771
-LFRR:Brest:FR:46.7:-4.2:1772
-LGGG:Athens:GR:36.70:24.55:1503
-LGGG-E:Athens:GR:35.20:27.50:1504
-LGGG-W:Athens:GR:37.09:20.66:1505
-LGMD:Makedonia Control:GR:39.70:24.00:1506
-LHCC:Budapest:HU:47.2:19.5:170
-LIBB:Brindisi:IT:40.1:16.8:5315
-LIMM:Milano:IT:44.9:8.9:5316
-LIPP:Padova:IT:45.4:11.9:5317
-LIRR:Roma:IT:40.2:12.1:5318
-LJLA:Ljubljana:SI:46.2:15:178
-LKAA:Prague:CZ:49.8:15.6:179
-LLLL:Tel Aviv:IL:31.3:34.8:180
-LLPT:Pluto:IL:31.7:34.8:180
-LLSC:South:IL:30.9:34.7:530
-LMMM:Malta:MT:35.42:15.5:181
-LOVV:Wien:AT:47.7:14:182
-LOVV_N:Wien:AT:48.3:15:1821
-LOVV_S:Wien:AT:47:14:1822
-LPPC:Lisboa:PT:40:-9:1830
-LPPC_C:Lisboa CENTER:PT:38.75:-8:1831
-LPPC_D:Lisboa DEMOS:PT:41:-12:1832
-LPPC_I:Lisboa MADEIRA:PT:34.36:-14.85:1833
-LPPC_N:Lisboa NORTH:PT:40.75:-8:1834
-LPPC_S:Lisboa SOUTH:PT:36.75:-8.85:1835
-LPPC_V:Lisboa VERAM:PT:37.64:-11.84:1836
-LPPC_W:Lisboa WEST:PT:37.64:-14:1837
-LPPC_E:Lisboa EAST:PT:38.75:-9:1840
-LPPO:Santa Maria Radar:PT:39:-30:1839:CTR
-LPPO:Santa Maria Radio:PT:33:-28:1838:FSS
-LPAM:Lisboa Military:PT:41:-9:1830
-LQSB:Sarajevo:BA:43.9:17.8:185
-LRBB:Bucharest:RO:45.9:25.6:186
-LRUB:Black Sea West:RO:45:25.6:1861
-LSAS:Swiss:CH:46.9:8.4:187
-LSAG:Swiss GVA:CH:46.6:6.5:1871
-LSAZ:Swiss ZRH:CH:47.3:8.5:1872
-LTAA:Ankara:TR:39.4:37.2:190
-LTBB:Ankara:TR:39.4:28:191
-LUUU:Chisinau:MD:47:28.3:477
-LWSS:Skopje:MK:41.6:21.8:192
-LYBA:Beograd:YU:43.7:20.2:193
-LZBB:Bratislava:SK:48.8:19.7:194
-MDCS:Santo Domingo:DO:18.2:-70:282
-MEM:Memphis:US:34.6:-90.5:279
-MHCC:Central America:HN:11:-93.3:283
-MIA:Miami:US:27:-82:264
-MKJK:Kingston:JM:17.5:-77.7:284
-ML-ASP:Alice Springs 128.85:AU:-30:130:1179
-ML-ASW:Alice Springs West 131.8*(128.85):AU:-24.5:130:1238
-ML-AUG:Augusta 127.05*(125.3):AU:-33:136:1195
-ML-BIK:Bindook:AU:-34.25:149.5:1198
-ML-BLA:Benalla 132.2*(123.75):AU:-35.75:146.5:1200
-ML-BKE:Bourke 128.2*(125.3):AU:-31.5:143:1181
-ML-CRS:Cross 135.8*(133.9):AU:-30.5:119:1203
-ML-ELW:Eildon Weir 123.75:AU:-37:145.5:1205
-ML-ESP:Esperance 123.95*(133.9):AU:-31.9:117.9:1183
-ML-FOR:Forest 132.7*(128.85):AU:-34:131:1207
-ML-GEL:Geraldton 134.2*(133.9):AU:-28:114.5:1208
-ML-GVE:Grove 133.8*(133.9):AU:-29:118:1210
-ML-GTH:Griffith 122.75*(129.8):AU:-33.75:146.25:1211
-ML-GUN:Gundagai 128.4* (129.8):AU:-34.75:148.6:12015
-ML-HUO:Huon 122.6:AU:-41:146.5:12016
-ML-HYD:Hyden 118.2*(133.9):AU:-32.5:119:1213
-ML-IND:Brisbane Radio(Indian)129.25:AU:-28:95:1185
-ML-INE:Brisbane Radio(Indian East)123.65*(129.25):AU:-15:110:1214
-ML-INS:Brisbane Radio(Indian South)123.2*(129.25):AU:-49:149:1215
-ML-JAR:Jarrah 120.3*(133.9):AU:-34:117:1216
-ML-KAT:Katomba 133.5*(129.8):AU:-33.25:149:1199
-ML-LEA:Leeman 122.4*(133.9):AU:-31:114:1220
-ML-MEK:Meekatharra 132.0* (134.0):AU:-26:115:12017
-ML-MTK:Mount 133.7*(134.0):AU:-27:120:1222
-ML-MUN:Mungo 132.6*(125.3):AU:-35.5:142.5:1223
-ML-MZI:Menzies 134.3*(133.9):AU:-29.5:122:1239
-ML-NEW:Newman 125.4*(134.0):AU:-23:121:1184
-ML-OLW:Onslow 134.0:AU:-23:117:1230
-ML-OXL:Oxley 128.5*(125.3):AU:-34.5:145:1225
-ML-PAR:Paraburdoo 133.5*(134.0):AU:-23.3:116.5:1240
-ML-PIY:Pingelly 133.9:AU:-31.5:116.5:1226
-ML-POT:Port 127.0*(134.0):AU:-19.5:119:1241
-ML-SNO:Snowy 124.0*(123.75):AU:-38:146:1188
-ML-TBD:Tailem Bend 125.3:AU:-34.25:139:1190
-ML-WAR:MWarburton 124.9*(128.85):AU:-26:126.5:1231
-ML-WOL:Wollongong 125.0*(129.8):AU:-35.2:150.7:1180
-ML-WON:Wonthaggi 135.3*(123.75):AU:-38.5:146:1233
-ML-WRA:Woomera 132.9*(128.85):AU:-30:139.5:1234
-ML-YWE:Yarrowee 134.32*(123.75):AU:-37:143.5:1235
-MMEX:Mexico:MX:18.5:-100.5:483
-MMID:Merida:MX:18:-95.2:484
-MMTY:Monterrey:MX:27.3:-100.8:485
-MMZT:Mazatlan:MX:24.4:-111.9:487
-MMZT_O:Mazatlan Oceanic:MX:13.5:-116.9:486
-MPZL:Panama:PA:9.7:-80.2:285
-MSP:Minneapolis:US:44.2:-92.7:274
-MTEG:Port Au Prince:HT:18.7:-73.4:286
-MUFH:Havana:CU:21.2:-79.7:287
-MUHA:Havana:CU:21.2:-79.7:287
-MYNN:Nassau:BS:24.7:-77.5:288
-NFFF:Nadi Oceanic:FJ:-13.3:175:289
-NFFN:Nadi Center:FJ:-19:177.5:2890
-NTTT:Tahiti Radio:PF:-13.3:-138.5:290
-NSFA:Faleolo:WS:-15:-167:291
-NVVV:Port Vila:VU:-15.5:168.5:2892
-NWWN:Noumea:NC:-19.5:165.2:5724
-NY:New York:US:41:-77:266
-NY_E:New York Radio:US:31.50:-58.50:265
-NY_E_CTR:New York:US:41:-77:266
-ZWY:New York Radio:US:31.50:-58.50:265
-NY_FSS:New York Radio:US:31.50:-58.50:265
-NZAA:Auckland Control:NZ:-36:174:1040
-NZCH-B:Bay Approach:NZ:-38.25:177.5:1039
-NZCH-KI:Christchurch CTL:NZ:-42.5:173.5:1038
-NZCH-K:Christchurch CTL:NZ:-42.5:173.5:1041
-NZCH-S:Christchurch CTL:NZ:-44.5:169.5:1035
-NZCH-T:Christchurch CTL:NZ:-40:174:1037
-NZCM:McMurdo Radio:NZ:-73:171:1034
-NZOH-K:Ohakea Control:NZ:-40:176.5:1036
-NZZO:Auckland Oceanic:NZ:-40:-170:292
-OAK:Oakland:US:37.9:-122.1:269
-OAKX:Kabul:AF:33.9:67.6:294
-OBBB:Bahrain:BH:26.2:51.15:295
-OEJD:Jeddah:SA:23.9:45:296
-OIIX:Tehran:IR:33.2:53.6:297
-OJAC:Amman:JO:31.2:37:298
-OKAC:Kuwait:KW:29.1:48.1:299
-OLBB:Beirut:LB:33.8:35.7:300
-OMAE:Emirates:AE:24.4:54.1:301
-OOMM:Muscat:OM:21.1:58.2:302
-OPKR:Karachi:PK:26.7:67.2:303
-OPLR:Lahore:PK:33.4:71.6:304
-ORBB:Baghdad:IQ:33.2:43.7:305
-ORBS:Baghdad:IQ:33.2:43.7:305
-OSDI:Damascus:SY:34.7:38.9:306
-OSTT:Damascus:SY:34.7:38.9:306
-OYSC:Sanaa:YE:15.7:50.8:307
-PAZA:Anchorage:US:61:-175:474
-PHZH:Honolulu:US:21.6:-157:267
-PZGU:Guam:US:11:144:2671
-GUM:Guam:US:11:144:2671
-RCTP:Taipei:TW:23.67:121.39:308
-TPE:Taipei:TW:25:120.7:308
-RJCG:Sapporo:JP:41.61:138.37:3090
-SPO:Sapporo:JP:41.61:138.37:3090
-RJDG:Fukuoka:JP:31.5:128:3091
-FKO:Fukuoka:JP:31.5:128:3091
-RJTG_A:Tokyo ALL:JP:36:134.64:3092
-RJTG:Tokyo:JP:37.85:134.64:3093
-RJTG_E:Tokyo:JP:35.5:140.3:3094
-RJTG_W:Tokyo:JP:35.5:134.2:3095
-RORG:Naha:JP:25.5:129.25:3096
-RJBG:Kobe:JP:25.5:129.25:3096
-RJTG_FSS:Tokyo Radio:JP:32.54:150.21:3097
-RKRR_A:Incheon:KR:34.95:126.81:310
-RKRR:Incheon:KR:34.95:125:3100
-RKRR_N:Incheon:KR:36.48:125.73:3101
-RKRR_S:Incheon:KR:33.11:125.44:3102
-RKDA:Daegu:KR:36.43:129.51:3103
-RKDA_E:Daegu:KR:37.31:130.23:3104
-RKDA_C:Daegu:KR:35.32:128.43:3105
-MNL:Manila:PH:12.2:123.5:312
-RU-CEN:Central Asia:RU:46.25:66.47:838
-RU-ERC:Dal Control:RU:63.41:145.33:835
-RU-ESC:Baikal Center:RU:59.58:94.7:831
-RU-NWC:NW Control:RU:71.31:46.23:833
-RU-SC:Caucasus:RU:44:45:839
-RU-WRC:Moscow Radar:RU:51.23:40.20:837
-RU-WSC:Zapsib Control:RU:61.17:71.45:832
-CARI:Caribbean Control::17:-66.5:3204
-SAM-N:SAM Control North:CO:7:-74:3200
-SAM_N:SAM Control North:CO:7:-74:3200
-SAM-E:SAM Control East:BR:-12:-50:3201
-SAM_E:SAM Control East:BR:-12:-50:3201
-SAM-S:SAM Control South:AR:-36:-60:3202
-SAM_S:SAM Control South:AR:-36:-60:3202
-SAM-W:SAM Control West:CL:-36:-81:3203
-SAM_W:SAM Control West:CL:-36:-81:3203
-SACF:Cordoba:AR:-27.88:-64.93:3130
-SACU:Cordoba TMA:AR:-31.50:-64.20:3131
-SAEF:Ezeiza:AR:-42:-49:3140
-SAEF_N:Ezeiza N:AR:-33.10:-60.20:3141
-SAEF_S:Ezeiza S:AR:-37.50:-62.15:3142
-BAIRES:Baires TMA:AR:-35.4:-58.56:3143
-SAMF:Mendoza:AR:-35.35:-67.50:3150
-SAME:Mendoza TMA:AR:-33.05:-68.90:3151
-SARR:Resistencia:AR:-29.40:-58.90:3160
-SARE:Resistencia TMA:AR:-27.70:-59.10:3161
-SAVF:Comodoro Rivadavia:AR:-49.64:-49.00:3170
-SAVU:Comodoro Rivadavia TMA:AR:-46.00:-67.40:3171
-SBAZ:Amazonica:BR:-6.05:-57.66:318
-SBBS:Brasilia:BR:-16.05:-48.42:319
-SBCW:Curitiba:BR:-25.17:-51.1:320
-SBAO:Atlantico Oceanic:BR:-13.17:-30.38:321
-SBRE:Recife:BR:-8.736945:-40.28:322
-SCCZ:Punta Arenas:CL:-53.50:-77.85:323
-SCEZ:Santiago:CL:-33.50:-78.00:324
-SCFZ:Antofagasta:CL:-22.98:-78.00:325
-SCIZ:Pascua:CL:-37.50:-110.50:326
-SCTZ:Puerto Montt:CL:-42.75:-78.00:327
-SEFG:Guayaquil:EC:-1.77:-83.58:328
-SGFA:Asuncion:PY:-23.48:-58.46:329
-SKEC:Barranquilla:CO:11.32:-74.21:330
-SKED:Bogota:CO:2.21:-74.88:331
-SLLF:La Paz:BO:-16.26:-63.51:332
-SMPM:Paramaribo:SR:5.57:-55.95:333
-SOOO:Rochambeau:GF:7.82:-44.78:334
-LIM:Lima:PE:-9.20:-79.34:335
-SUEO:Montevideo:UY:-33.44:-55.04:475
-SUEO_O:Montevideo Oceanic:UY:-37.00:-31.60:476
-SVZM:Maiquetia:VE:8.21:-66.60:336
-SYGC:Georgetown:GY:5.03:-58.94:337
-SEA:Seattle:US:44.6:-121.4:280
-SJU:San Juan Oceanic:PR:19.2:-64.6:338
-SLC:Salt Lake City:US:43.2:-111.4:275
-TEH:Tehran:IR:32.2:53.6:297
-TJZS:San Juan Oceanic:PR:19.2:-64.6:338
-TNCF:Curacao:AN:14.2:-70.6:339
-TTZP:Piarco:TT:15.6:-51.3:340
-UKBV:Kiev:UA:50:30.9:378
-UKDV:Dnipropetrovsk:UA:48.9:36.5:379
-UKFV:Simferopol:UA:45.2:33.7:380
-UKLV:Lviv:UA:49.8:24.9:381
-UKOV:Odesa:UA:46.5:30.6:382
-UKR:Ukraine Radar:UA:47.46:32.50:3782
-UAAA:Almaty:KZ:47.04:77.55:3460
-UACN:Nur-Sultan:KZ:50.5:68.9:3461
-UAII:Shymkent:KZ:44:66:3462
-UATT:Aktyubinsk:KZ:48.9:57.5:3463
-UAKD:Zhezkazgan:KZ:48:67.2:343
-UAOO:Kzyl-Orda:KZ:44.8:64.7:344
-UARR:Uralsk:KZ:50.3:51:341
-UASS:Semipalatinsk:KZ:49.7:81.4:348
-UATG:Atyrau:KZ:47.1:51.7:342
-UAUU:Kostanay:KZ:52.3:63.7:347
-UBBA:Baku:AZ:40.27:48.69:3464
-UBBB:Baku:AZ:40.27:48.69:3464
-UCFM:Bishkek:KG:41.92:76.10:3465
-UCFO:Osh:KG:40.77:73.30:3466
-UDDD:Yerevan:AM:40:45:3467
-UGEE:Yerevan:AM:40:45:3467
-UEEE:Yakutsk:RU:66.25:130:3400
-UEBB:Batagay:RU:67.6:136.1:353
-UELL:Chulman:RU:56.8:125.5:357
-UERR:Mirny:RU:62.8:112.3:352
-UESO:Chokurdakh:RU:70.6:148:356
-UESS:Chersky:RU:69.5:160.5:355
-UEST:Tiksi:RU:72.8:129.1:359
-UESU:Zyryanka:RU:66:150.5:5931
-UEVV:Zhygansk:RU:66.9:122.5:354
-UGGG:Tbilisi:GE:42.1:43.4:3468
-UHHH:Khabarovsk:RU:48.8:135.2:3401
-UHBB:Blagoveshensk:RU:51.2:129.4:362
-UHNN:Nikolaevsk-Na-Amure:RU:55.1:136.9:363
-UHBI:Magdagachi:RU:53.5:125.9:364
-UHSH:Okha:RU:54:144.5:365
-UHOO:Okhotsk:RU:58.8:140.6:366
-UHSS:Yuzhno Sakhalinsk:RU:47.5:145:371
-UHMM:Magadan:RU:60.8:154.7:3402
-UHMI:Mys Shmidta:RU:70:180:488
-UHMA:Anadyr:RU:65:180:489
-UHMP:Pevek:RU:69:170.9:367
-UHPP:Petropavlovsk:RU:53:165:3403
-UHPT:Tilichiki:RU:60.6:168.5:369
-UHWW:Vladivostok:RU:43.6:135.2:3404
-UIII:Irkutsk:RU:56:111.5:3405
-UIAA:Chita:RU:52.1:114.3:376
-UIBB:Bratsk:RU:56.1:101.5:375
-UIKK:Kirensk:RU:58.7:107.3:374
-ULAA:Arkhangelsk:RU:64:43.8:3406
-ULDD:Amderma:RU:71.4:59:384
-ULAM:Naryan-Mar Arkhangelsk:RU:68.59:50.98:3407
-ULKK:Kotlas Arkhangelsk:RU:61.2:45.28:3408
-ULLL:Peterburg:RU:60.33:33.32:3409
-ULOL:Velikiye Luki:RU:57:30.3:383
-ULPH:Petrozavodsk:RU:63.6:33:493
-ULMM:Murmansk:RU:67.67:35.57:3410
-ULWW:Vologda:RU:59.73:39.72:3411
-UMKK:Kaliningrad:RU:55.21:20.22:3412
-UMMM:Minsk:BY:53.78:27.96:3469
-UMMV:Minsk:BY:53.38:27.96:3469
-UNKL:Krasnoyarsk:RU:66.85:94.092:3413
-UNII:Yeniseysk:RU:59.1:90.2:391
-UODD:Dikson:RU:74.4:92.7:480
-UOHH:Khatanga:RU:72.5:102.2:482
-UOOO:Norilsk:RU:69.8:92.7:481
-UOTT:Turukhansk:RU:65.1:89.3:479
-UNNT:Novosibirsk:RU:56.75:79.67:3414
-UNBB:Barnaul:RU:51.7:83.5:392
-UNOO:Omsk:RU:55.8:73.7:395
-URFV:Simferopol:RU:45.23:34.46:3415
-URRV:Rostov:RU:46.58:43.13:3416
-URWA:Astrakhan:RU:46.1:47.2:396
-URWW:Volgograd:RU:48.6:45.1:398
-USSV:Yekaterinburg Urla:RU:58.3:55.12:3420
-USCC:Chelyabinsk Ural:RU:55.08:61.68:3417
-USKK:Kirov:RU:58.2:48.6:399
-USPP:Perm:RU:58.8:55.3:405
-USUU:Kurgan:RU:55.6:66:408
-USTV:Tyumen:RU:64.43:72.03:3419
-USDD:Salekhard Tyumen:RU:66:67.6:3418
-USDK:Kamenny Mys Tyumen:RU:70.3:73.6:400
-USHB:Beryozovo:RU:63.4:65.9:401
-USHH:Khanty-Mansiysk:RU:61.4:68:404
-USRR:Surgut:RU:61.5:77:409
-UTAA:Ashkhabad:TM:38.6:59.6:3470
-UTAK:Turkmenbashi:TM:39.8:54.56:3471
-UTAT:Dashkhovuz:TM:41.41:59.08:3472
-UTAV:Turkmenabat:TM:38.54:63.46:3473
-UTDD:Dushanbe:TJ:38.8:71.33:3474
-UTSD:Samarkand:UZ:39.9:65.5:3475
-UTTR:Tashkent:UZ:41.88:64.29:3476
-UUWV:Moscow:RU:54.07:38.84:3421
-UUYY:Syktyvkar:RU:64:54.97:3422
-UUYW:Vorkuta:RU:67.4:63:415
-UUYP:Pechora:RU:64.6:56.2:416
-UWWW:Samara:RU:53.58:51.83:3423
-UWOO:Orenburg:RU:52.1:55:828
-UWKD:Kazan:RU:55.8:49.8:419
-UWPP:Penza:RU:52.7:45:421
-UWUU:Ufa:RU:54.6:56:423
-VAAH:Ahmedabad:IN:23.19:72.43:4200
-VABB:Mumbai:IN:18.35:71.59:4201
-VABF:Mumbai Radio:IN:15.29:70:4202
-VABF_N:Mumbai Radio:IN:22:75.5:4222
-VABX:Mumbai Radio:IN:11.57:65.08:4203
-VANP:Nagpur:IN:21.35:77.57:4204
-VEBN:Varanasi:IN:25.25:82.34:4205
-VECC:Calcutta:IN:22.97:86.46:4206
-VECC_B:Calcutta:IN:19.39:84.16:4207
-VECC_R:Calcutta:IN:22.20:82.33:4208
-VECF:Calcutta:IN:20.10:89.40:4209
-VECX:Calcutta:IN:16.58:88.50:4210
-VEGF:Guwahati:IN:26.46:92.13:4211
-VGFR:Dhaka:BD:24.00:90.00:450
-VIDF:Delhi:IN:30.26:76.56:4212
-VIDP:Delhi:IN:27.57:76.34:4213
-VOBL:Bengaluru:IN:14.39:77.33:4214
-VOCI:Cochin:IN:11.23:76.18:4215
-VOHS:Hyderabad:IN:17.54:78.33:4216
-VOMF:Chennai:IN:15.03:83.59:4217
-VOMM:Chennai:IN:13.31:81.15:4218
-VOMX:Chennai Radio:IN:10.47:88.57:4219
-VOML:Mangalore:IN:13.33:74.35:4220
-VOTV:Trivandrum:IN:08.13:75.33:4221
-VZUP:India Control:IN:19:77:4223
-VCCC:Colombo:LK:4:84.2:425
-VCCF:Colombo Male:LK:3:78:4235
-VCL:Mekong Radar:VN:15:108:429
-VDPF:Phnom Penh:VD:12.67:105:430
-VLVT:Vientiane:LA:18.2:103.9:431
-VNSM:Kathmandu:NP:28.3:84.1:432
-VRMF:Male:MV:0.7:73:434
-VTBB:Bangkok:TH:13:101:435
-VVHM:Ho-Chi-Minh:VN:12.3:108.3:436
-VVHN:Hanoi:VN:20.2:105:437
-VYYF:Yangon:MM:19.2:96.5:438
-WAAF:Bali:ID:-2.7:116.5:4441
-WAAZ:Ujung Pandang:ID:-2.7:126.5:440
-WABZ:Biak:ID:-3:135.1:439
-WBFC:Kota Kinabalu:MY:4.6:114.2:441
-WBGG:Kuching:MY:0.8:108.5:4411
-WIIF:Jakarta:ID:-3:103.2:442
-WIIF_N:Jakarta:ID:-3:103.2:4421
-WIIF_W:Jakarta:ID:-3:103.2:4422
-WIIF_E:Jakarta:ID:-3:103.2:4423
-WIIZ:Jakarta:ID:-3:103.2:442
-WMFC:Kuala Lumpur:MY:5.6:99.5:443
-WRRZ:Bali:ID:-3.9:118.6:444
-WSJC:Singapore:SG:4.8:109.3:445
-YBBB:Brisbane FL245+:AU:-17:140:1236
-YMMM:Melbourne FL245+:AU:-27:132:1237
-ZAK:San Francisco Radio:US:31.75:-120.83:268
-ZMA:Miami Oceanic:US:23.3:-72.4:263
-ZMO:Miami Oceanic:US:23.3:-72.4:263
-HKG:Hong Kong:HK:20.1:114.5:460
-VHHH:Hong Kong:HK:20.1:114.5:460
-VHHK:Hong Kong:HK:20.1:114.5:460
-PRC:Beijing Control:CH:34:107:4610
-ZBPE:Beijing:CN:39.98:112.61:461
-ZBAA:Beijing:CN:39.3:116.2:4611
-ZBHH:Hohhot:CN:42.1:111.3:4612
-ZBYN:Taiyuan:CN:37.3:111.7:4613
-ZHCC:Zhengzhou:CN:33.50:112.65:462
-ZHHH:Wuhan:CN:30.50:112.65:463
-ZHWH:Wuhan:CN:32.30:112.65:464
-ZGZU:Guangzhou:CN:25.8:111.4:465
-ZGGG:Guangzhou:CN:23.3:113.6:4651
-ZGNN:Nanning:CN:23.1:108:4652
-ZGKL:Guilin:CN:25.4:109.1:4653
-ZGHA:Changsha:CN:27.4:111.5:4654
-ZGZJ:Zhanjiang:CN:21.5:110.15:4655
-ZJSA:Sanya:CN:18.00:110.50:466
-ZJSY:Sanya:CN:18.00:110.50:4661
-ZLHW:Lanzhou:CN:37.37:99.13:467
-ZLLL:Lanzhou:CN:37.4:97.8:4671
-ZLXY:Xian:CN:35.5:107.9:4672
-ZPKM:Kunming:CN:30.78:95.57:468
-ZULS:Lhasa:CN:31.9:89.1:4681
-ZPPP:Kunming:CN:24.9:101.3:4682
-ZUUU:Chengdu:CN:30.2:102.9:4683
-ZUGY:Guiyang:CN:26.7:106.7:4684
-ZSHA:Shanghai:CN:30.63:118.98:469
-ZSOF:Hefei:CN:32.2:116.9:4691
-ZSJN:Jinan:CN:36.3:117.1:4692
-ZSCN:Nanchang:CN:27.6:115.7:4693
-ZSQD:Qingdao:CN:36.6:121.2:4694
-ZSSS:Shangai:CN:30.8:120:4695
-ZSAM:Xiamen:CN:25.6:118:4696
-ZWUQ:Urumqi:CN:39.67:84.97:470
-ZWWW:Urumqi:CN:39.67:82:4702
-ZYSH:Shenyang:CN:45.78:125.06:471
-ZYTX:Shenyang:CN:43.3:122.9:4711
-ZYHB:Harbin:CN:48.6:128:4712
-ZYTL:Dalian:CN:38.4:121.4:4713
-ZBLA:Hailar:CN:49.8:118.9:4714
-ZMUB:Ulaanbaatar:MN:46.85:103.85:472
-ZKKP:Pyongyang:KP:40.32:129.96:473
+ABQ:Albuquerque::::257
+ADR:Adria Center::::1500
+ADR_E:Adria Center::::1501
+ADR_W:Adria Center::::1502
+AFRW:Africa West Control::::5102
+AFRC:Africa Central Control::::5103
+AFRE:Africa East Control::::5104
+AFRN:Africa North Control::::5105
+AFRS:Africa South Control::::5106
+AGGG:Honiara::::195
+ANAU:Nauru::::196
+ANC:Anchorage::::474
+ZAN:Anchorage Oceanic::::474
+ASEA:South East Asia Control::::4435
+ASEA_S:South East Asia Control::::4436
+ASEA_N:South East Asia Control::::4437
+ASIA:West Asia Control::::4224
+ATL:Atlanta::::258
+AYPM:Port Moresby::::197
+BALT:Baltic Control::::613
+BGGL:Nuuk::::198
+BICC:Iceland Radio::::1995
+BIRD:Reykjavik::::1990
+BIRD_E:Reykjavik::::1991
+BIRD_N:Reykjavik::::1992
+BIRD_S:Reykjavik::::1993
+BIRD_W:Reykjavik::::1994
+BN-ARA:Arafura 133.7::::1178
+BN-ARL:Armidale 130.9::::1194
+BN-BAR:Barra 123.8*(120.15)::::1196
+BN-BUR:Burnett::::1201
+BN-COL:Brisbane Radio(Coral)133.15*(124.65)::::1202
+BN-CNK:Cessnock 123.4*(130.9)::::12011
+BN-CVN:Carnarvon 133.8*(134.2)::::1204
+BN-DOS:Downs 135.6*(134.2)::::1182
+BN-FLD:Flinders 132.85*(124.65)::::1206
+BN-GOL:Gold Coast 130.4*(134.2)::::12012
+BN-INL:Inverell 134.2::::1209
+BN-HWE:Brisbane Radio(Howe)124.95*(124.65)::::1212
+BN-ISA:Isa 125.2::::1186
+BN-KEN:Kennedy 120.15::::1217
+BN-KIY:Kimberley 133.4*(133.2)::::1218
+BN-KPL:Keppel 125.9*(134.2)::::1219
+BN-MDE:Mudgee 133.0*(130.9)::::1187
+BN-MLD:Maitland 132.35*(130.9)::::1221
+BN-MNN:Manning 130.1* (130.9)::::12013
+BN-NSA:Noosa 124.1* (134.2)::::12014
+BN-OCN:Ocean 128.6*(130.9)::::1224
+BN-SDY:Straddy 134.3*(134.2)::::1227
+BN-STR:Sturt 134.4*(133.2)::::1229
+BN-SWY:Swampy 133.2*(120.15)::::1228
+BN-TBP:Tabletop 120.55*(120.15)::::1191
+BN-TRT:Territory 133.2::::1192
+BN-TSN:Brisbane Radio(Tasman)124.65::::1193
+BN-WEG:Warrego 132.45*(125.2)::::1232
+BOS:Boston::::259
+CHI:Chicago::::260
+ORD:Chicago::::260
+CLE:Cleveland::::261
+CZEG:Edmonton::::200
+EDM:Edmonton::::200
+ZEG:Edmonton::::200
+CZQM:Moncton::::201
+CZQX:Gander Oceanic::::207
+CZQO:Gander Oceanic::::207
+CZQX_CTR:Gander Domestic::::206
+CZUL:Montreal::::202
+MTL:Montreal::::202
+CZVR:Vancouver::::203
+VAN:Vancouver::::203
+ZVR:Vancouver::::203
+CZWG:Winnipeg::::204
+WPG:Winnipeg::::204
+CYYZ:Toronto::::205
+TOR:Toronto::::205
+DAAA:Algiers::::208
+DC:Washington::::281
+WAS:Washington::::281
+DEN:Denver::::270
+DGAC:Accra::::209
+DGAC_N:Accra::::4503
+DGAC_O:Accra::::4504
+DIII:Abidjan::::210
+DNKK:Kano::::211
+DNKK_W:Kano::::5100
+DNLL:Lagos::::4505
+DNLL_E:Lagos::::5101
+DRRR:Niamey::::212
+DTTC:Tunis::::213
+EBBU_E:Brussels::::100
+EBBU_W:Brussels::::100
+EBBU_U:Brussels Upper::::100
+EDGG_BAD:Langen BAD::::1100
+EDGG_B1D:Langen BAD::::1100
+EDGG_DKB:Langen DKB::::1104
+EDGG_D1B:Langen DKB::::1104
+EDGG_FN:Langen Information::::1105
+EDGG_FO:Langen Information::::1105
+EDGG_FS:Langen Information::::1105
+EDGG_FW:Langen Information::::1105
+EDGG_GED:Langen GED::::1105
+EDGG_G1D:Langen GED::::1105
+EDGG_GIN:Langen GIN::::1103
+EDGG_G1N:Langen GIN::::1103
+EDGG_HEF:Langen HEF::::1105
+EDGG_H1F:Langen HEF::::1105
+EDGG_HAB:Langen HAB::::1105
+EDGG_H1B:Langen HAB::::1105
+EDGG_KNG:Langen KNG::::1105
+EDGG_KIR:Langen KIR::::1105
+EDGG_K1R:Langen KIR::::1105
+EDGG_KTG:Langen KTG::::1105
+EDGG_K1G:Langen KTG::::1105
+EDGG_LBU:Langen LBU::::1105
+EDGG_L1U:Langen LBU::::1105
+EDGG_MAN:Langen MAN::::1105
+EDGG_M1N:Langen MAN::::1105
+EDGG_NKH:Langen NKH::::1105
+EDGG_N1H:Langen NKH::::1105
+EDGG_PSA:Langen PSA (Holding)::::1105
+EDGG_P1A:Langen PSA (Holding)::::1105
+EDGG_RUD:Langen RUD::::1106
+EDGG_R1D:Langen RUD::::1106
+EDGG_PAH:Langen PAH::::1101
+EDGG_P1H:Langen PAH::::1101
+EDGG_SIG:Langen SIG::::1105
+EDGG_S1G:Langen SIG::::1105
+EDGG_TAU:Langen TAU::::1105
+EDGG_T1U:Langen TAU::::1105
+EDGG:Langen COMPLETE::::1102
+EDMM:Munchen ALL::::1150
+EDMM_A:Muenchen ALB::::1154
+EDMM_E:Muenchen EGG::::1155
+EDMM_B:Muenchen BBG::::1156
+EDMM_G:Muenchen GER::::1160
+EDMM_O:Muenchen GER::::1160
+EDMM_M:Muenchen MEI::::1158
+EDMM_N:Muenchen NDG::::1153
+EDMM_R:Muenchen RDG::::1121
+EDMM_T:Muenchen TEG::::1163
+EDMM_U:Muenchen TRU::::1164
+EDMM_W:Muenchen WLD::::1159
+EDMM_Z:Muenchen ZUG::::1162
+EDUU_D:Rhein DON::::1121
+EDUU_E:Rhein EAST::::1122
+EDUU_F:Rhein FUL::::1123
+EDUU_L:Rhein ALP::::1125
+EDUU_N:Rhein NTM+SLN::::1126
+EDUU_O:Rhein OSE+HVL::::1127
+EDUU_H:Rhein HVL::::11271
+EDUU_OSE:Rhein OSE::::11272
+EDUU_S:Rhein SAL::::1128
+EDUU_T:Rhein TGO::::1129
+EDUU_W:Rhein WUR+FFM::::1130
+EDWW:Bremen::::1000
+EDWW_A:Bremen ALR::::106
+EDWW_B:Bremen BOR::::101
+EDWW_D:Bremen DST::::106
+EDWW_E:Bremen EIDE::::106
+EDWW_F:Bremen FLG::::101
+EDWW_H:Bremen HEI::::106
+EDWW_K:Bremen MAR::::101
+EDWW_M:Bremen NRZ::::101
+EDWW_R:Bremen HRZ::::106
+EDWW_S:Bremen EMS::::106
+EDWW_W:Bremen EIDW::::106
+EDYY_C:Maastricht CEL::::1010
+EDYY_CH:Maastricht CELH > F355::::1010
+EDYY_D:Maastricht DEL::::1011
+EDYY_H:Maastricht HOL::::1012
+EDYY_J:Maastricht JEV::::1013
+EDYY_JH:Maastricht JEVH > F355::::1013
+EDYY_K:Maastricht KOK::::1014
+EDYY_L:Maastricht LUX::::1015
+EDYY_MUN:Maastricht MUN::::1016
+EDYY_M1N:Maastricht MUN::::1016
+EDYY_N:Maastricht NIK::::1017
+EDYY_O:Maastricht OLN::::1018
+EDYY_RHR:Maastricht RHR::::1019
+EDYY_R1R:Maastricht RHR::::1019
+EDYY_S:Maastricht SOL::::1020
+EDYY_SH:Maastricht SOLH > FL355::::1020
+EETT:Tallinn::::118
+EFIN:Helsinki::::119
+EGGX:Shanwick Oceanic::::914
+NAT:Gander+Shanwick combined::::915
+EGTT:London ACC(Central)::::900
+LON:London ACC(Central)::::900
+EGTT-C:London ACC(Central)::::901
+LON_C:London ACC(Central)::::901
+LON_E:London ACC(Central)::::901
+LTC_N:London ACC(Central)::::901
+LTC_NW:London ACC(Central)::::901
+EGTT-N:London ACC(North)::::902
+LON_N:London ACC(North)::::902
+EGTT-S:London ACC(South)::::903
+LON_S:London ACC(South)::::903
+LON_D:London ACC(South)::::903
+LTC_S:London ACC(South)::::903
+LTC_SE:London ACC(South)::::903
+LTC_SW:London ACC(South)::::903
+EGTT-SC:London ACC(S-Central)::::904
+LON_SC:London ACC(S-Central)::::904
+EGTL:London Terminal Control::::905
+LTC:London TerminalControl::::905
+EGTT-W:London ACC(West)::::906
+LON_W:London ACC(West)::::906
+EGTM:Manchester TMA(<FL285)::::907
+MAN:Manchester TMA(<FL285)::::907
+EGPX:Scottish::::908
+SCO:Scottish::::908
+EGPX-D:Scottish::::909
+SCO_D:Scottish::::909
+STC:Scottish TMA(<FL255)::::909
+STC_W:Scottish TMA(<FL255)::::909
+STC_E:Scottish TMA(<FL255)::::909
+EGPX-E:Scottish ACC(East)::::910
+SCO_E:Scottish ACC(East)::::910
+SCO_N:Scottish ACC(East)::::910
+SCO_S:Scottish ACC(East)::::910
+EGPX-WD:Scottish ACC(W/Dean Cross)::::911
+SCO_WD:Scottish ACC(W/Dean Cross)::::911
+EGPX-W:Scottish ACC(West)::::912
+SCO_W:Scottish ACC(West)::::912
+EGPX-R:Scottish ACC(Rathlin)::::913
+SCO_R:Scottish ACC(Rathlin)::::913
+STC_A:Scottish ACC(Antrim)::::913
+EHAA:Amsterdam::::138
+EHMC:DutchMill::::138
+EHML:Bandbox::::138
+EIDW:Dublin::::916
+EISN:Shannon::::917
+EKDK:Copenhagen::::140
+ENBD:Bodo::::141
+ENBD_S:Bodo South::::142
+ENOB:Bodo Oceanic::::1410
+ENOR:Norway::::143
+ENOR_S:Norway South::::1431
+ENOS:Oslo::::144
+ENSV:Stavanger::::145
+EPWW:Warsaw::::146
+ESMM:Sweden Malmo::::147
+ESOS:Sweden::::148
+EURE:Eurocontrol East::::524
+EURI:Eurocontrol Islands::::5537
+EURM-W:Maastricht West::::5211
+EURM-E:Maastricht East::::5212
+EURN:Eurocontrol North::::525
+EURS:Eurocontrol South::::523
+EURW-N:Eurocontrol West North::::5221
+EURW-S:Eurocontrol West South::::5222
+EVRR:Riga::::150
+EYVL:Vilnius::::151
+FACA:Cape Town::::6741
+FACA_E:Cape Town::::6742
+FACA_W:Cape Town::::6743
+FAJA:Johannesburg::::6746
+FAJA_C:Johannesburg::::6749
+FAJA_E:Johannesburg::::6745
+FAJA_N:Johannesburg::::6747
+FAJA_S:Johannesburg::::6748
+FAJA_W:Johannesburg::::6744
+FAJO:Johannesburg Oceanic::::6740
+FASA:South Africa::::6750
+FBGR:Gaborone::::226
+FCCC:Brazzaville::::227
+FCCC_D:Brazzaville::::4507
+FCCC_L:Brazzaville::::4506
+FIMM:Mauritius::::228
+FLFI:Lusaka::::229
+FMMM:Antananarivo::::230
+FNAN:Luanda::::231
+FQBE:Beira::::232
+FSSS:Seychelles::::233
+FTTT:NDjamena::::234
+FTW:Fort Worth::::271
+FVHF:Harare::::235
+FWLL:Lilongwe::::236
+FYWH:Windhoek::::237
+FZZA:Kinshasa::::238
+FZZA_K:Kinshasa::::4501
+FZZA_L:Kinshasa::::4502
+GCCC:Canarias::::163
+GCCC_L:Canarias::::164
+GCCO_O:Canarias Radio::::165
+GLRB:Roberts::::241
+GMMM:Casablanca::::242
+GOOO:Dakar Control::::243
+GOOC:Dakar Oceanic::::244
+GULF:Gulf Control::::3000
+GULF_E:Gulf EAST Control::::3001
+GULF_W:Gulf WEST Control::::3002
+GVSC:Sal Oceanic::::245
+HAAA:Addis Ababa::::246
+HBBA:Bujumbura::::247
+HCSM:Mogadishu::::248
+HECC:Cairo::::249
+HHAA:Asmara::::250
+HKNA:Nairobi::::251
+HLLL:Tripoli::::252
+HNL:Honolulu::::267
+HOU:Houston::::276
+HRYR:Kigali::::253
+HSSS:Khartoum::::254
+HTDC:Dar Es Salaam::::255
+HTDC_W:Dar Es Salaam::::4508
+HUEC:Entebbe::::256
+IND:Indianapolis::::278
+JAX:Jacksonville::::262
+KC:Kansas City::::272
+MCI:Kansas City::::272
+KZAB:Albuquerque::::257
+KZAU:Chicago::::260
+KZBW:Boston::::259
+KZDC:Washington::::281
+KZDV:Denver::::270
+KZFW:Fort Worth::::271
+KZHU:Houston::::276
+KZHU_O:Houston Oceanic::::277
+KZID:Indianapolis::::278
+KZJX:Jacksonville::::262
+KZKC:Kansas City::::272
+KZLA:Los Angeles::::273
+KZLC:Salt Lake City::::275
+KZMA:Miami::::264
+KZMA_O:Miami Oceanic::::263
+KZME:Memphis::::279
+KZMP:Minneapolis::::274
+KZNY:New York::::266
+KZWY:New York Oceanic::::265
+KZOA:Oakland::::269
+KZAK:San Francisco Radio::::268
+KZOB:Cleveland::::261
+KZSE:Seattle::::280
+KZTL:Atlanta::::258
+LAAA:Tirana::::152
+LATI:Tirana::::152
+LAX:Los Angeles::::273
+LA:Los Angeles::::273
+LBSR:Sofia::::6760
+LBSR_E:Sofia::::154
+LBSR_W:Sofia::::153
+LBWR:Varna::::154
+LCCC:Nicosia::::155
+LDZO:Zagreb::::156
+LECB:Barcelona::::157
+LECL:Valencia::::1571
+LECM:Madrid::::160
+LECP:Palma::::162
+LECS:Sevilla::::161
+LFBB:Bordeaux::::1768
+LFEE:Reims::::1769
+LFEE_N:Reims::::17691
+LFEE_S:Reims::::17692
+LFFF:Paris::::1770
+LFFM:France Military::::1774
+LFMM:Marseille::::1771
+LFRR:Brest::::1772
+LGGG:Athens::::1503
+LGGG-E:Athens::::1504
+LGGG-W:Athens::::1505
+LGMD:Makedonia Control::::1506
+LHCC:Budapest::::170
+LIBB:Brindisi::::5315
+LIMM:Milano::::5316
+LIPP:Padova::::5317
+LIRR:Roma::::5318
+LJLA:Ljubljana::::178
+LKAA:Prague::::179
+LLLL:Tel Aviv::::180
+LLPT:Pluto::::180
+LLSC:South::::530
+LMMM:Malta::::181
+LOVV:Wien::::182
+LOVV_N:Wien::::1821
+LOVV_S:Wien::::1822
+LPPC:Lisboa::::1830
+LPPC_C:Lisboa CENTER::::1831
+LPPC_D:Lisboa DEMOS::::1832
+LPPC_I:Lisboa MADEIRA::::1833
+LPPC_N:Lisboa NORTH::::1834
+LPPC_S:Lisboa SOUTH::::1835
+LPPC_V:Lisboa VERAM::::1836
+LPPC_W:Lisboa WEST::::1837
+LPPC_E:Lisboa EAST::::1840
+LPPO:Santa Maria Radar::::1839:CTR
+LPPO:Santa Maria Radio::::1838:FSS
+LPAM:Lisboa Military::::1830
+LQSB:Sarajevo::::185
+LRBB:Bucharest::::186
+LRUB:Black Sea West::::1861
+LSAS:Swiss::::187
+LSAG:Swiss GVA::::1871
+LSAZ:Swiss ZRH::::1872
+LTAA:Ankara::::190
+LTBB:Ankara::::191
+LUUU:Chisinau::::477
+LWSS:Skopje::::192
+LYBA:Beograd::::193
+LZBB:Bratislava::::194
+MDCS:Santo Domingo::::282
+MEM:Memphis::::279
+MHCC:Central America::::283
+MIA:Miami::::264
+MKJK:Kingston::::284
+ML-ASP:Alice Springs 128.85::::1179
+ML-ASW:Alice Springs West 131.8*(128.85)::::1238
+ML-AUG:Augusta 127.05*(125.3)::::1195
+ML-BIK:Bindook::::1198
+ML-BLA:Benalla 132.2*(123.75)::::1200
+ML-BKE:Bourke 128.2*(125.3)::::1181
+ML-CRS:Cross 135.8*(133.9)::::1203
+ML-ELW:Eildon Weir 123.75::::1205
+ML-ESP:Esperance 123.95*(133.9)::::1183
+ML-FOR:Forest 132.7*(128.85)::::1207
+ML-GEL:Geraldton 134.2*(133.9)::::1208
+ML-GVE:Grove 133.8*(133.9)::::1210
+ML-GTH:Griffith 122.75*(129.8)::::1211
+ML-GUN:Gundagai 128.4* (129.8)::::12015
+ML-HUO:Huon 122.6::::12016
+ML-HYD:Hyden 118.2*(133.9)::::1213
+ML-IND:Brisbane Radio(Indian)129.25::::1185
+ML-INE:Brisbane Radio(Indian East)123.65*(129.25)::::1214
+ML-INS:Brisbane Radio(Indian South)123.2*(129.25)::::1215
+ML-JAR:Jarrah 120.3*(133.9)::::1216
+ML-KAT:Katomba 133.5*(129.8)::::1199
+ML-LEA:Leeman 122.4*(133.9)::::1220
+ML-MEK:Meekatharra 132.0* (134.0)::::12017
+ML-MTK:Mount 133.7*(134.0)::::1222
+ML-MUN:Mungo 132.6*(125.3)::::1223
+ML-MZI:Menzies 134.3*(133.9)::::1239
+ML-NEW:Newman 125.4*(134.0)::::1184
+ML-OLW:Onslow 134.0::::1230
+ML-OXL:Oxley 128.5*(125.3)::::1225
+ML-PAR:Paraburdoo 133.5*(134.0)::::1240
+ML-PIY:Pingelly 133.9::::1226
+ML-POT:Port 127.0*(134.0)::::1241
+ML-SNO:Snowy 124.0*(123.75)::::1188
+ML-TBD:Tailem Bend 125.3::::1190
+ML-WAR:MWarburton 124.9*(128.85)::::1231
+ML-WOL:Wollongong 125.0*(129.8)::::1180
+ML-WON:Wonthaggi 135.3*(123.75)::::1233
+ML-WRA:Woomera 132.9*(128.85)::::1234
+ML-YWE:Yarrowee 134.32*(123.75)::::1235
+MMEX:Mexico::::483
+MMID:Merida::::484
+MMTY:Monterrey::::485
+MMZT:Mazatlan::::487
+MMZT_O:Mazatlan Oceanic::::486
+MPZL:Panama::::285
+MSP:Minneapolis::::274
+MTEG:Port Au Prince::::286
+MUFH:Havana::::287
+MUHA:Havana::::287
+MYNN:Nassau::::288
+NFFF:Nadi Oceanic::::289
+NFFN:Nadi Center::::2890
+NTTT:Tahiti Radio::::290
+NSFA:Faleolo::::291
+NVVV:Port Vila::::2892
+NWWN:Noumea::::5724
+NY:New York::::266
+NY_E:New York Radio::::265
+NY_E_CTR:New York::::266
+ZWY:New York Radio::::265
+NY_FSS:New York Radio::::265
+NZAA:Auckland Control::::1040
+NZCH-B:Bay Approach::::1039
+NZCH-KI:Christchurch CTL::::1038
+NZCH-K:Christchurch CTL::::1041
+NZCH-S:Christchurch CTL::::1035
+NZCH-T:Christchurch CTL::::1037
+NZCM:McMurdo Radio::::1034
+NZOH-K:Ohakea Control::::1036
+NZZO:Auckland Oceanic::::292
+OAK:Oakland::::269
+OAKX:Kabul::::294
+OBBB:Bahrain::::295
+OEJD:Jeddah::::296
+OIIX:Tehran::::297
+OJAC:Amman::::298
+OKAC:Kuwait::::299
+OLBB:Beirut::::300
+OMAE:Emirates::::301
+OOMM:Muscat::::302
+OPKR:Karachi::::303
+OPLR:Lahore::::304
+ORBB:Baghdad::::305
+ORBS:Baghdad::::305
+OSDI:Damascus::::306
+OSTT:Damascus::::306
+OYSC:Sanaa::::307
+PAZA:Anchorage::::474
+PHZH:Honolulu::::267
+PZGU:Guam::::2671
+GUM:Guam::::2671
+RCTP:Taipei::::308
+TPE:Taipei::::308
+RJCG:Sapporo::::3090
+SPO:Sapporo::::3090
+RJDG:Fukuoka::::3091
+FKO:Fukuoka::::3091
+RJTG_A:Tokyo ALL::::3092
+RJTG:Tokyo::::3093
+RJTG_E:Tokyo::::3094
+RJTG_W:Tokyo::::3095
+RORG:Naha::::3096
+RJBG:Kobe::::3096
+RJTG_FSS:Tokyo Radio::::3097
+RKRR_A:Incheon::::310
+RKRR:Incheon::::3100
+RKRR_N:Incheon::::3101
+RKRR_S:Incheon::::3102
+RKDA:Daegu::::3103
+RKDA_E:Daegu::::3104
+RKDA_C:Daegu::::3105
+MNL:Manila::::312
+RU-CEN:Central Asia::::838
+RU-ERC:Dal Control::::835
+RU-ESC:Baikal Center::::831
+RU-NWC:NW Control::::833
+RU-SC:Caucasus::::839
+RU-WRC:Moscow Radar::::837
+RU-WSC:Zapsib Control::::832
+CARI:Caribbean Control::::3204
+SAM-N:SAM Control North::::3200
+SAM_N:SAM Control North::::3200
+SAM-E:SAM Control East::::3201
+SAM_E:SAM Control East::::3201
+SAM-S:SAM Control South::::3202
+SAM_S:SAM Control South::::3202
+SAM-W:SAM Control West::::3203
+SAM_W:SAM Control West::::3203
+SACF:Cordoba::::3130
+SACU:Cordoba TMA::::3131
+SAEF:Ezeiza::::3140
+SAEF_N:Ezeiza N::::3141
+SAEF_S:Ezeiza S::::3142
+BAIRES:Baires TMA::::3143
+SAMF:Mendoza::::3150
+SAME:Mendoza TMA::::3151
+SARR:Resistencia::::3160
+SARE:Resistencia TMA::::3161
+SAVF:Comodoro Rivadavia::::3170
+SAVU:Comodoro Rivadavia TMA::::3171
+SBAZ:Amazonica::::318
+SBBS:Brasilia::::319
+SBCW:Curitiba::::320
+SBAO:Atlantico Oceanic::::321
+SBRE:Recife::::322
+SCCZ:Punta Arenas::::323
+SCEZ:Santiago::::324
+SCFZ:Antofagasta::::325
+SCIZ:Pascua::::326
+SCTZ:Puerto Montt::::327
+SEFG:Guayaquil::::328
+SGFA:Asuncion::::329
+SKEC:Barranquilla::::330
+SKED:Bogota::::331
+SLLF:La Paz::::332
+SMPM:Paramaribo::::333
+SOOO:Rochambeau::::334
+LIM:Lima::::335
+SUEO:Montevideo::::475
+SUEO_O:Montevideo Oceanic::::476
+SVZM:Maiquetia::::336
+SYGC:Georgetown::::337
+SEA:Seattle::::280
+SJU:San Juan Oceanic::::338
+SLC:Salt Lake City::::275
+TEH:Tehran::::297
+TJZS:San Juan Oceanic::::338
+TNCF:Curacao::::339
+TTZP:Piarco::::340
+UKBV:Kiev::::378
+UKDV:Dnipropetrovsk::::379
+UKFV:Simferopol::::380
+UKLV:Lviv::::381
+UKOV:Odesa::::382
+UKR:Ukraine Radar::::3782
+UAAA:Almaty::::3460
+UACN:Nur-Sultan::::3461
+UAII:Shymkent::::3462
+UATT:Aktyubinsk::::3463
+UAKD:Zhezkazgan::::343
+UAOO:Kzyl-Orda::::344
+UARR:Uralsk::::341
+UASS:Semipalatinsk::::348
+UATG:Atyrau::::342
+UAUU:Kostanay::::347
+UBBA:Baku::::3464
+UBBB:Baku::::3464
+UCFM:Bishkek::::3465
+UCFO:Osh::::3466
+UDDD:Yerevan::::3467
+UGEE:Yerevan::::3467
+UEEE:Yakutsk::::3400
+UEBB:Batagay::::353
+UELL:Chulman::::357
+UERR:Mirny::::352
+UESO:Chokurdakh::::356
+UESS:Chersky::::355
+UEST:Tiksi::::359
+UESU:Zyryanka::::5931
+UEVV:Zhygansk::::354
+UGGG:Tbilisi::::3468
+UHHH:Khabarovsk::::3401
+UHBB:Blagoveshensk::::362
+UHNN:Nikolaevsk-Na-Amure::::363
+UHBI:Magdagachi::::364
+UHSH:Okha::::365
+UHOO:Okhotsk::::366
+UHSS:Yuzhno Sakhalinsk::::371
+UHMM:Magadan::::3402
+UHMI:Mys Shmidta::::488
+UHMA:Anadyr::::489
+UHMP:Pevek::::367
+UHPP:Petropavlovsk::::3403
+UHPT:Tilichiki::::369
+UHWW:Vladivostok::::3404
+UIII:Irkutsk::::3405
+UIAA:Chita::::376
+UIBB:Bratsk::::375
+UIKK:Kirensk::::374
+ULAA:Arkhangelsk::::3406
+ULDD:Amderma::::384
+ULAM:Naryan-Mar Arkhangelsk::::3407
+ULKK:Kotlas Arkhangelsk::::3408
+ULLL:Peterburg::::3409
+ULOL:Velikiye Luki::::383
+ULPH:Petrozavodsk::::493
+ULMM:Murmansk::::3410
+ULWW:Vologda::::3411
+UMKK:Kaliningrad::::3412
+UMMM:Minsk::::3469
+UMMV:Minsk::::3469
+UNKL:Krasnoyarsk::::3413
+UNII:Yeniseysk::::391
+UODD:Dikson::::480
+UOHH:Khatanga::::482
+UOOO:Norilsk::::481
+UOTT:Turukhansk::::479
+UNNT:Novosibirsk::::3414
+UNBB:Barnaul::::392
+UNOO:Omsk::::395
+URFV:Simferopol::::3415
+URRV:Rostov::::3416
+URWA:Astrakhan::::396
+URWW:Volgograd::::398
+USSV:Yekaterinburg Urla::::3420
+USCC:Chelyabinsk Ural::::3417
+USKK:Kirov::::399
+USPP:Perm::::405
+USUU:Kurgan::::408
+USTV:Tyumen::::3419
+USDD:Salekhard Tyumen::::3418
+USDK:Kamenny Mys Tyumen::::400
+USHB:Beryozovo::::401
+USHH:Khanty-Mansiysk::::404
+USRR:Surgut::::409
+UTAA:Ashkhabad::::3470
+UTAK:Turkmenbashi::::3471
+UTAT:Dashkhovuz::::3472
+UTAV:Turkmenabat::::3473
+UTDD:Dushanbe::::3474
+UTSD:Samarkand::::3475
+UTTR:Tashkent::::3476
+UUWV:Moscow::::3421
+UUYY:Syktyvkar::::3422
+UUYW:Vorkuta::::415
+UUYP:Pechora::::416
+UWWW:Samara::::3423
+UWOO:Orenburg::::828
+UWKD:Kazan::::419
+UWPP:Penza::::421
+UWUU:Ufa::::423
+VAAH:Ahmedabad::::4200
+VABB:Mumbai::::4201
+VABF:Mumbai Radio::::4202
+VABF_N:Mumbai Radio::::4222
+VABX:Mumbai Radio::::4203
+VANP:Nagpur::::4204
+VEBN:Varanasi::::4205
+VECC:Calcutta::::4206
+VECC_B:Calcutta::::4207
+VECC_R:Calcutta::::4208
+VECF:Calcutta::::4209
+VECX:Calcutta::::4210
+VEGF:Guwahati::::4211
+VGFR:Dhaka::::450
+VIDF:Delhi::::4212
+VIDP:Delhi::::4213
+VOBL:Bengaluru::::4214
+VOCI:Cochin::::4215
+VOHS:Hyderabad::::4216
+VOMF:Chennai::::4217
+VOMM:Chennai::::4218
+VOMX:Chennai Radio::::4219
+VOML:Mangalore::::4220
+VOTV:Trivandrum::::4221
+VZUP:India Control::::4223
+VCCC:Colombo::::425
+VCCF:Colombo Male::::4235
+VCL:Mekong Radar::::429
+VDPF:Phnom Penh::::430
+VLVT:Vientiane::::431
+VNSM:Kathmandu::::432
+VRMF:Male::::434
+VTBB:Bangkok::::435
+VVHM:Ho-Chi-Minh::::436
+VVHN:Hanoi::::437
+VYYF:Yangon::::438
+WAAF:Bali::::4441
+WAAZ:Ujung Pandang::::440
+WABZ:Biak::::439
+WBFC:Kota Kinabalu::::441
+WBGG:Kuching::::4411
+WIIF:Jakarta::::442
+WIIF_N:Jakarta::::4421
+WIIF_W:Jakarta::::4422
+WIIF_E:Jakarta::::4423
+WIIZ:Jakarta::::442
+WMFC:Kuala Lumpur::::443
+WRRZ:Bali::::444
+WSJC:Singapore::::445
+YBBB:Brisbane FL245+::::1236
+YMMM:Melbourne FL245+::::1237
+ZAK:San Francisco Radio::::268
+ZMA:Miami Oceanic::::263
+ZMO:Miami Oceanic::::263
+HKG:Hong Kong::::460
+VHHH:Hong Kong::::460
+VHHK:Hong Kong::::460
+PRC:Beijing Control::::4610
+ZBPE:Beijing::::461
+ZBAA:Beijing::::4611
+ZBHH:Hohhot::::4612
+ZBYN:Taiyuan::::4613
+ZHCC:Zhengzhou::::462
+ZHHH:Wuhan::::463
+ZHWH:Wuhan::::464
+ZGZU:Guangzhou::::465
+ZGGG:Guangzhou::::4651
+ZGNN:Nanning::::4652
+ZGKL:Guilin::::4653
+ZGHA:Changsha::::4654
+ZGZJ:Zhanjiang::::4655
+ZJSA:Sanya::::466
+ZJSY:Sanya::::4661
+ZLHW:Lanzhou::::467
+ZLLL:Lanzhou::::4671
+ZLXY:Xian::::4672
+ZPKM:Kunming::::468
+ZULS:Lhasa::::4681
+ZPPP:Kunming::::4682
+ZUUU:Chengdu::::4683
+ZUGY:Guiyang::::4684
+ZSHA:Shanghai::::469
+ZSOF:Hefei::::4691
+ZSJN:Jinan::::4692
+ZSCN:Nanchang::::4693
+ZSQD:Qingdao::::4694
+ZSSS:Shangai::::4695
+ZSAM:Xiamen::::4696
+ZWUQ:Urumqi::::470
+ZWWW:Urumqi::::4702
+ZYSH:Shenyang::::471
+ZYTX:Shenyang::::4711
+ZYHB:Harbin::::4712
+ZYTL:Dalian::::4713
+ZBLA:Hailar::::4714
+ZMUB:Ulaanbaatar::::472
+ZKKP:Pyongyang::::473
