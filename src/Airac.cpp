@@ -125,7 +125,10 @@ void Airac::readNavaids(const QString& directory) {
         if (nav == 0 || nav->isNull())
             continue;
 
-        navaids[nav->label].insert(nav);
+        // we ignore all the rest (for now)
+        if (nav->type() == NavAid::Type::NDB || nav->type() == NavAid::Type::VOR) {
+            navaids[nav->label].insert(nav);
+        }
     }
     qDebug() << "Read navaids from" << (directory + "/earth_nav.dat")
             << "-" << navaids.size() << "imported";

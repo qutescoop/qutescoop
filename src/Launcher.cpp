@@ -254,8 +254,7 @@ void Launcher::dataFileDownloaded() {
         // error?
         if(_replyDataVersionsAndFiles->error() != QNetworkReply::NoError) {
             GuiMessages::criticalUserInteraction(QString("Error downloading %1:\n%2")
-                    .arg(_replyDataVersionsAndFiles->url().toString())
-                    .arg(_replyDataVersionsAndFiles->errorString()),
+                    .arg(_replyDataVersionsAndFiles->url().toString(), _replyDataVersionsAndFiles->errorString()),
                     "New datafiles");
         } else {
             // saving file
@@ -295,7 +294,7 @@ void Launcher::dataFileDownloaded() {
     } else {
         // we are finished
         GuiMessages::infoUserAttention(
-                    "These changes will take effect on the next start of QuteScoop.",
+                    "New data has been downloaded.",
                     "New datafiles");
         // updating local dataversions.txt
         QFile localDataVersionsFile(Settings::dataDirectory("data/dataversions.txt"));

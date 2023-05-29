@@ -41,6 +41,7 @@ NavAid::NavAid(const QStringList&stringList) {
     _name = "";
     for (int i = 10; i < stringList.size(); i++)
         _name += stringList[i] + (i > 9? " ": "");
+    _name = _name.trimmed();
 }
 
 QString NavAid::typeStr(Type type) {
@@ -65,6 +66,8 @@ QString NavAid::typeStr(Type type) {
 
 QString NavAid::toolTip() const {
     QString ret = Waypoint::toolTip();
+    ret.append(" (" + _name + ")");
+
     if (_type == NDB)
         ret.append(QString(" %1 kHz").arg(_freq));
     else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS)
