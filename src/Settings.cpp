@@ -378,6 +378,13 @@ void Settings::setHighlightFriends(bool value) {
 }
 
 // OpenGL
+void Settings::setSimpleLabels(bool value) {
+    instance()->setValue("gl/simpleLabels", value);
+}
+
+bool Settings::simpleLabels() {
+    return instance()->value("gl/simpleLabels", false).toBool();
+}
 
 bool Settings::displaySmoothLines() {
     return instance()->value("gl/smoothLines", true).toBool();
@@ -1016,36 +1023,11 @@ void Settings::setRememberMapPositionOnClose(bool val) {
     instance()->setValue("defaultMapPosition/rememberMapPositionOnClose", val);
 }
 
-void Settings::saveState(const QByteArray& state) {
-    instance()->setValue("mainWindowState/state", state);
-}
-
-QByteArray Settings::savedState() {
-    return instance()->value("mainWindowState/state", QByteArray()).toByteArray();
-}
-
-void Settings::saveMaximized(const bool val) {
-    instance()->setValue("mainWindowState/maximized", val);
-}
-
 // URL for data update checks; not in preferences
 QString Settings::remoteDataRepository() {
     return instance()->value("data/remoteDataRepository",
                              "https://raw.githubusercontent.com/qutescoop/qutescoop/master/data/%1")
             .toString();
-}
-
-
-bool Settings::maximized() {
-    return instance()->value("mainWindowState/maximized", true).toBool();
-}
-
-void Settings::saveGeometry(const QByteArray& state) {
-    instance()->setValue("mainWindowState/geometry", state);
-}
-
-QByteArray Settings::savedGeometry() {
-    return instance()->value("mainWindowState/geometry", QByteArray()).toByteArray();
 }
 
 QColor Settings::friendsHighlightColor() {
@@ -1067,22 +1049,6 @@ bool Settings::useHighlightAnimation() {
 }
 void Settings::setUseHighlightAnimation(bool value) {
     instance()->setValue("pilotDisplay/useHighlightAnimation", value);
-}
-
-void Settings::saveSize(const QSize& size) {
-    instance()->setValue("mainWindowState/size", size);
-}
-
-QSize Settings::savedSize() {
-    return instance()->value("mainWindowState/size", QSize()).toSize();
-}
-
-void Settings::savePosition(const QPoint& pos) {
-    instance()->setValue("mainWindowState/position", pos);
-}
-
-QPoint Settings::savedPosition() {
-    return instance()->value("mainWindowState/position", QPoint()).toPoint();
 }
 
 const QStringList Settings::friends() {
@@ -1191,181 +1157,6 @@ void Settings::setSaveWhazzupData(bool value) {
 //////////////////////////////////////
 // windowmanagment
 /////////////////////////////////////
-
-QSize Settings::preferencesDialogSize() {
-    return instance()->value("windowmanagment/preferencesSize", QSize()).toSize();
-}
-
-void Settings::setPreferencesDialogSize(const QSize &value) {
-    instance()->setValue("windowmanagment/preferencesSize", value);
-}
-
-QPoint Settings::preferencesDialogPos() {
-    return instance()->value("windowmanagment/preferencesPos", QPoint()).toPoint();
-}
-
-void Settings::setPreferencesDialogPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/preferencesPos", value);
-}
-
-QByteArray Settings::preferencesDialogGeometry() {
-    return instance()->value("windowmanagment/preferencesGeo", QByteArray()).toByteArray();
-}
-
-void Settings::setPreferencesDialogGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/preferencesGeo", value);
-}
-
-
-QSize Settings::airportDetailsSize() {
-    return instance()->value("windowmanagment/airportDetailsSize", QSize()).toSize();
-}
-
-void Settings::setAirportDetailsSize(const QSize &value) {
-    instance()->setValue("windowmanagment/airportDetailsSize", value);
-}
-
-QPoint Settings::airportDetailsPos() {
-    return instance()->value("windowmanagment/airportDetailsPos", QPoint()).toPoint();
-}
-
-void Settings::setAirportDetailsPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/airportDetailsPos", value);
-}
-
-QByteArray Settings::airportDetailsGeometry() {
-    return instance()->value("windowmanagment/airportDetailsGeo", QByteArray()).toByteArray();
-}
-
-void Settings::setAirportDetailsGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/airportDetailsGeo", value);
-}
-
-
-QSize Settings::bookAtcDialogSize() {
-    return instance()->value("windowmanagment/bookAtcDialogSize", QSize()).toSize();
-}
-
-void Settings::setBookAtcDialogSize(const QSize &value) {
-    instance()->setValue("windowmanagment/bookAtcDialogSize", value);
-}
-
-QPoint Settings::bookAtcDialogPos() {
-    return instance()->value("windowmanagment/bookAtcDialogPos", QPoint()).toPoint();
-}
-
-void Settings::setBookAtcDialogPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/bookAtcDialogPos", value);
-}
-
-QByteArray Settings::bookAtcDialogGeometry() {
-    return instance()->value("windowmanagment/bookAtcDialogGeo", QByteArray()).toByteArray();
-}
-
-void Settings::setBookAtcDialogGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/bookAtcDialogGeo", value);
-}
-
-
-QSize Settings::controllerDetailsSize() {
-    return instance()->value("windowmanagment/controllerDetailsSize", QSize()).toSize();
-}
-
-void Settings::setControllerDetailsSize(const QSize &value) {
-    instance()->setValue("windowmanagment/controllerDetailsSize", value);
-}
-
-QPoint Settings::controllerDetailsPos() {
-    return instance()->value("windowmanagment/controllerDetailsPos", QPoint()).toPoint();
-}
-
-void Settings::setControllerDetailsPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/controllerDetailsPos", value);
-}
-
-QByteArray Settings::controllerDetailsGeometry() {
-    return instance()->value("windowmanagment/controllerDetailsGeo", QByteArray()).toByteArray();
-}
-
-void Settings::setControllerDetailsGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/controllerDetailsGeo", value);
-}
-
-
-QSize Settings::listClientsDialogSize() {
-    return instance()->value("windowmanagment/listClientsDialogSize", QSize()).toSize();
-}
-
-void Settings::setListClientsDialogSize(const QSize &value) {
-    instance()->setValue("windowmanagment/listClientsDialogSize", value);
-}
-
-QPoint Settings::listClientsDialogPos() {
-    return instance()->value("windowmanagment/listClientsDialogPos", QPoint()).toPoint();
-}
-
-void Settings::setListClientsDialogPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/listClientsDialogPos", value);
-}
-
-QByteArray Settings::listClientsDialogGeometry() {
-    return instance()->value("windowmanagment/listClientsDialogGeo", QByteArray()).toByteArray();
-}
-
-void Settings::setListClientsDialogGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/listClientsDialogGeo", value);
-}
-
-
-QSize Settings::pilotDetailsSize() {
-    return instance()->value("windowmanagment/pilotDetailsSize", QSize()).toSize();
-}
-
-void Settings::setPilotDetailsSize(const QSize &value) {
-    instance()->setValue("windowmanagment/pilotDetailsSize", value);
-}
-
-QPoint Settings::pilotDetailsPos() {
-    return instance()->value("windowmanagment/pilotDetailsPos", QPoint()).toPoint();
-}
-
-void Settings::setPilotDetailsPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/pilotDetailsPos", value);
-}
-
-QByteArray Settings::pilotDetailsGeometry() {
-    return instance()->value("windowmanagment/pilotDetailsGeo", QByteArray()).toByteArray();
-}
-
-void Settings::setPilotDetailsGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/pilotDetailsGeo", value);
-}
-
-QSize Settings::planFlightDialogSize() {
-    return instance()->value("windowmanagment/planFlightDialogSize").toSize();
-}
-
-void Settings::setPlanFlightDialogSize(const QSize &value) {
-    instance()->setValue("windowmanagment/planFlightDialogSize", value);
-}
-
-QPoint Settings::planFlightDialogPos() {
-    return instance()->value("windowmanagment/planFlightDialogPos").toPoint();
-}
-
-void Settings::setPlanFlightDialogPos(const QPoint &value) {
-    instance()->setValue("windowmanagment/planFlightDialogPos", value);
-}
-
-QByteArray Settings::planFlightDialogGeometry() {
-    return instance()->value("windowmanagment/planFlightDialogGeo").toByteArray();
-}
-
-void Settings::setPlanFlightDialogGeometry(const QByteArray &value) {
-    instance()->setValue("windowmanagment/planFlightDialogGeo", value);
-}
-
-
 void Settings::setDialogPreferences(const QString &name, const DialogPreferences &dialogPreferences)
 {
     instance()->setValue("windowmanagment/" + name + "Size", dialogPreferences.size);
@@ -1381,11 +1172,42 @@ Settings::DialogPreferences Settings::dialogPreferences(const QString &name) {
     };
 }
 
-
-void Settings::setSimpleLabels(bool value) {
-    instance()->setValue("gl/simpleLabels", value);
+void Settings::saveSize(const QSize& size) {
+    instance()->setValue("mainWindowState/size", size);
 }
 
-bool Settings::simpleLabels() {
-    return instance()->value("gl/simpleLabels", false).toBool();
+QSize Settings::savedSize() {
+    return instance()->value("mainWindowState/size", QSize()).toSize();
+}
+
+void Settings::savePosition(const QPoint& pos) {
+    instance()->setValue("mainWindowState/position", pos);
+}
+
+QPoint Settings::savedPosition() {
+    return instance()->value("mainWindowState/position", QPoint()).toPoint();
+}
+
+void Settings::saveState(const QByteArray& state) {
+    instance()->setValue("mainWindowState/state", state);
+}
+
+QByteArray Settings::savedState() {
+    return instance()->value("mainWindowState/state", QByteArray()).toByteArray();
+}
+
+void Settings::saveMaximized(const bool val) {
+    instance()->setValue("mainWindowState/maximized", val);
+}
+
+void Settings::saveGeometry(const QByteArray& state) {
+    instance()->setValue("mainWindowState/geometry", state);
+}
+
+QByteArray Settings::savedGeometry() {
+    return instance()->value("mainWindowState/geometry", QByteArray()).toByteArray();
+}
+
+bool Settings::maximized() {
+    return instance()->value("mainWindowState/maximized", true).toBool();
 }

@@ -45,5 +45,7 @@ private:
         QSet<Controller*> checkSectors() const;
 
         MetarModel* _metarModel;
+
+        constexpr static char m_preferencesName[] = "airportDetails";
 };
 #endif /*AIRPORTDETAILS_H_*/

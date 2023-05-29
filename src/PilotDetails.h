@@ -31,6 +31,8 @@ class PilotDetails : public ClientDetails, private Ui::PilotDetails {
     private:
         PilotDetails(QWidget *parent);
         Pilot *_pilot;
+
+        constexpr static char m_preferencesName[] = "pilotDetails";
 };
 
 #endif /*PILOTDETAILS_H_*/

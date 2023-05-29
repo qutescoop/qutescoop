@@ -29,6 +29,11 @@ PlanFlightDialog::PlanFlightDialog(QWidget *parent):
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
+
     bDepDetails->hide(); bDestDetails->hide();
     edCycle->setText(QDate::currentDate().toString("yyMM"));
 
@@ -315,8 +320,13 @@ void PlanFlightDialog::on_pbVatsimPrefile_clicked() {
 }
 
 void PlanFlightDialog::closeEvent(QCloseEvent *event) {
-    Settings::setPlanFlightDialogPos(pos());
-    Settings::setPlanFlightDialogSize(size());
-    Settings::setPlanFlightDialogGeometry(saveGeometry());
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
     event->accept();
 }

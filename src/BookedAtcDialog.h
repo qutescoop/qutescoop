@@ -39,6 +39,8 @@ class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
 
         QDateTime _dateTimeFilter_old;
         QTimer _editFilterTimer;
+
+        constexpr static char m_preferencesName[] = "bookAtcDialog";
 };
 
 #endif // BOOKEDATCDIALOG_H

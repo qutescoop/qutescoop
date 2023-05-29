@@ -27,6 +27,12 @@ PreferencesDialog::PreferencesDialog(QWidget *parent):
     foreach(const QByteArray &fmt, QImageWriter::supportedImageFormats())
         if(cbScreenshotFormat->findText(fmt.toLower()) == -1)
             cbScreenshotFormat->addItem(fmt.toLower());
+
+    auto preferences = Settings::dialogPreferences(m_preferencesName);
+    if (!preferences.size.isNull()) { resize(preferences.size); }
+    if (!preferences.pos.isNull()) { move(preferences.pos); }
+    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
+
     loadSettings();
 }
 
@@ -1235,9 +1241,14 @@ void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked) {
 }
 
 void PreferencesDialog::closeEvent(QCloseEvent *event) {
-    Settings::setPreferencesDialogSize(size());
-    Settings::setPreferencesDialogPos(pos());
-    Settings::setPreferencesDialogGeometry(saveGeometry());
+    Settings::setDialogPreferences(
+        m_preferencesName,
+        Settings::DialogPreferences {
+            .size = size(),
+            .pos = pos(),
+            .geometry = saveGeometry()
+        }
+    );
     event->accept();
 }
 
