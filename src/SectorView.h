@@ -20,7 +20,6 @@ class Sectorview : public QDialog, public Ui::Sectorview {
         void on_bt_close_clicked();
     private:
         void loadSectorList();
-        QHash <QString, Sector*> sectorsHash;
 };
 
 

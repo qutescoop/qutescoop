@@ -40,7 +40,6 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
           Qt::CaseInsensitive
     );
     if (rxOnlineUntil.indexIn(atisMessage) > 0) {
-        //fixme
         QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
         if(found.isValid()) {
             if (qAbs(found.secsTo(whazzup->whazzupTime.time())) > 60*60 * 12) {
@@ -52,11 +51,24 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
         }
     }
 
-    QString icao = this->controllerSectorName();
-    // Look for a sector name matching any part of the login down to 4 characters
+    QString icao = controllerSectorName();
+    // Look for a sector name prefix matching the login
     if (!icao.isEmpty()) {
         do {
-            this->sector = NavData::instance()->sectors.value(icao, 0);
+            foreach (auto _sector, NavData::instance()->sectors.values(icao)) {
+                if (_sector->controllerSuffixes().isEmpty()) {
+                    sector = _sector;
+                    break;
+                }
+
+                foreach(auto suffix, _sector->controllerSuffixes()) {
+                    if (label.endsWith(suffix)) {
+                        sector = _sector;
+                        break;
+                    }
+                }
+            }
+
             if (sector != 0) {
                 // We determine lat/lon from the sector
                 QPair<double, double> center = this->sector->getCenter();
@@ -69,7 +81,9 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
         } while (icao.length() >= 2);
 
         if (sector == 0) {
-            qDebug() << "Unknown sector/FIR" << icao << "Please provide sector information if you can";
+            QString msg("Unknown sector/FIR " + controllerSectorName() + "Please provide sector information if you can");
+            qInfo() << msg;
+            QTextStream(stdout) << "INFO: " << msg << Qt::endl;
         }
     } else {
         // We try to get lat/lng from covered airports

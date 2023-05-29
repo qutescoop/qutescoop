@@ -41,42 +41,41 @@ See the comment in the file for the file structure.
 firlist.dat
 ------
 
-This contains the list of sectors, each row referring to a sector and
-containing 6 fields separated with colons. An example of a row from this file:
+This contains definitions of stations that have polygon sector areas
+(currently CTR+FSS).
 
-LRBB:Bucharest:RO:45.9:25.6:186
+An example of a row from this file:
 
-LRBB      - FIR code, usually an ICAO code but you can also use non-ICAO
-            codes, or add middle letter(s) to them (e.g. LRBB_N)
+LRBB:Bucharest:RO:45.9:25.6:186[:CTR]
+
+LRBB      - controller login prefix. Can contain _ (e.g. LRBB_N)
 Bucharest - name of the sector
 RO        - [UNUSED] ISO code of the country where this airspace is
-45.3 [unused] - position of the label - decimal latitude (north is positive,
+            [deprecated, not used in QuteScoop any more]
+45.3      - [UNUSED] position of the label - decimal latitude (north is positive,
             south is negative) [deprecated, not used in QuteScoop any more]
-25.6 [unused] - position of the label - decimal longitude (east is positive,
+25.6      - [UNUSED] position of the label - decimal longitude (east is positive,
             west is negative) [deprecated, not used in QuteScoop any more]
-186       - Display List ID, a number that uniquely identifies the shape
-            in firdisplay.dat that is displayed when this sector is active
-
-
-To create a new sector, you must add a new line with the same formatting. To
-create aliases to existing sectors (different codes identifying the same
-airspace), use the same Display List ID (186 in the above example). If you
-want to add a new airspace, you should first add its shape to firdisplay.dat
-with a previously unused Display List ID (you can use any ID between 100 and
-9999).
-
-Avoid having two lines with the same airspace code (the code is a unique
-key for Dolomynum).
+186       - Sector ID. See firdisplay.dat.
+CTR (optional) - controller login suffix(es): when given, is only assigned to 
+            controller logins with that suffix. You can give multiple, 
+            separated by space (CTR FSS).
 
 
 ------
 firdisplay.dat
 ------
 
-This contains the shapes of the airspaces, constructed of points described as
+This contains the shapes of sectors, constructed of points described as
 lat-lon pairs. The connection between firlist.dat and firdisplay.dat is made
-through the Display List IDs. The ID is mentioned at the beginning of each
-unit; after which the shape of the airspace will follow. For example:
+through the Sector IDs. The ID is mentioned at the beginning of each
+sector. For example:
+
+Blocks of sector descriptions, each starting with
+DISPLAY_LIST_<Sector ID> - the sector ID can not contain _, : or space but 
+                           anything else is valid.
+
+For example:
 
 DISPLAY_LIST_186
 43.75:28.6
@@ -84,14 +83,11 @@ DISPLAY_LIST_186
 43.99:27.95
 (etc)
 
-You can edit existing airspace shapes, or add new ones (in the latter case,
-don't forget to update firlist.dat too). To create new shapes, you can use
+To create new shapes, you can use
 the sconv.exe in from Dolomynum \tools that can convert sector files of ATC
 clients (IvAc, ASRC, VRC, ProController), or Servinfo / IvAe data files to
 Dolomynum format. To view the existing (or newly created) airspaces on the
 globe, use sectorview.exe from Dolomynum \tools.
-
-Avoid having two shapes with the same Display List ID.
 
 
 ------
@@ -99,10 +95,8 @@ firdisplay.sup
 [unused since QuteScoop v2.5.0]
 ------
 
-Any shapes present in this file will suppress those in firdisplay.dat. These
-are not overwritten each time when firdisplay.dat is updated, so it is
-especially useful when you wish to change the shape of only a couple of
-airspaces (e.g. VATSIM-IVAO differences).
+This has historically been used to provide VATSIM-specific changes to 
+firlist.dat.
 
 
 ------
@@ -111,23 +105,26 @@ airlines.dat
 
 The file structure is the same that EuroScope uses in its ICAO_Airlines.txt.
 
+It is tab(!)-separated.
+
 ICAO Code 	Airline Name	Callsing	Country
 
 Example:
 AAA	Ansett Australia	ANSETT	Australia
 
 ICAO Code:		AAA
-Airlnie Name:	Ansett Australia
-Callsign:		ANSETT
+Airline Name:	Ansett Australia
+Callsign:		"ANSETT"
 Country:		Australia
 
 
 ------
-[deprecated: might be removed]
+[deprecated: will be removed]
 CLOUDMIRRORS.dat
 ------
-This contains mirrors to download cloud images.
-Format:
+This historically contained mirrors to download cloud images.
+
+Examples:
 
 [2048px]
 http://xplanet-sydney.inside.net/clouds_2048.jpg
