@@ -1801,11 +1801,7 @@ void GLWidget::drawSelectionRectangle() {
             const QFontMetricsF fontMetrics(font, this);
 
             // show position label
-            const QString currText = QString("%1%2 %3%4").
-                    arg(currLat > 0? "N": "S").
-                    arg(qAbs(currLat), 5, 'f', 2, '0').
-                    arg(currLon > 0? "E": "W").
-                    arg(qAbs(currLon), 6, 'f', 2, '0');
+            const QString currText = NavData::toEurocontrol(currLat, currLon);
             int x, y;
             if (isPointVisible(currLat, currLon, &x, &y)) {
                 glColor4f(0., 0., 0., .7);
@@ -1823,10 +1819,8 @@ void GLWidget::drawSelectionRectangle() {
             }
 
             // show distance label
-            const DoublePair middle = NavData::greatCircleFraction(downLat, downLon,
-                                                             currLat, currLon,
-                                                             .5);
-            const QString middleText = QString("%1 NM / TC %2deg").arg(
+            const DoublePair middle = NavData::greatCircleFraction(downLat, downLon, currLat, currLon, .5);
+            const QString middleText = QString("%1 NM / TC %2 deg").arg(
                 NavData::distance(downLat, downLon, currLat, currLon),
                 0, 'f', 1
             ).arg(

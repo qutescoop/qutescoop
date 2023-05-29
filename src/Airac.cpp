@@ -272,11 +272,12 @@ Waypoint* Airac::waypointNearby(const QString& input, double lat, double lon, do
                             "((\\d{2})?)"
                             "((\\d{2})?)"
                             "([NS])"
-                            "(\\d{3})"
+                            "(\\d{2,3})"
                             "((\\d{2})?)"
                             "((\\d{2})?)"
                             "([EW])"); // things that are valid for the Eurocontrol route validator:
                     // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
+                    // we are not strict and also allow 2-char longitudes like 63N05W
         QRegExp slash("([\\-]?\\d{2})/([\\-]?\\d{2,3})"); // some pilots
                                                 // ..like to use non-standard: -53/170
 
@@ -290,7 +291,7 @@ Waypoint* Airac::waypointNearby(const QString& input, double lat, double lon, do
                 foundLon = arincP->second;
             }
             delete arincP;
-        } else if (eurocontrol.exactMatch(input)) { // 63N005W or 6330N00530W (minutes) or 633000N0053000W (minutes and seconds)
+        } else if (eurocontrol.exactMatch(input)) {
             auto capturedTexts = eurocontrol.capturedTexts();
 
             double wLat = capturedTexts[1].toDouble() + capturedTexts[2].toDouble() / 60. + capturedTexts[4].toDouble() / 3600.;
@@ -403,7 +404,8 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
             wantAirway = false;
             // have airway - next should be a waypoint
             QString endId = fpTokenToWaypoint(plan.first());
-            Waypoint* wp = waypointNearby(endId, lat, lon);
+            // 5500NM is the longest legitimate route part (PACOT entry-exit) that we can't resolve
+            Waypoint* wp = waypointNearby(endId, lat, lon, 5500.);
             if(wp != 0) {
                 if (currPoint != 0) {
                     auto _expand = awy->expand(currPoint->label, wp->label);
@@ -427,7 +429,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
                 }
             }
 
-            Waypoint* wp = waypointNearby(id, lat, lon);
+            Waypoint* wp = waypointNearby(id, lat, lon, 5500.);
             if(wp != 0) {
                 result.append(wp);
                 currPoint = wp;
