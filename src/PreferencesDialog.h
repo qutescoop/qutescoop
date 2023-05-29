@@ -130,8 +130,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_waypointsDotSize_valueChanged(double );
         void on_cbCheckForUpdates_stateChanged(int state);
         void on_cbSendVersionInfo_stateChanged(int state);
-        void on_cbDownloadClouds_stateChanged(int state);
-        void on_cbUseHighResClouds_stateChanged(int state);
         void on_pbWheelCalibrate_clicked();
         void on_sbZoomFactor_valueChanged(double );
         void on_cb_Animation_stateChanged(int state);

@@ -99,7 +99,7 @@ void PreferencesDialog::loadSettings() {
                     "See +notes.txt in the texture directory for more information.").
             arg(Settings::dataDirectory("textures")));
     glTextureEarth->addItems(texDir.entryList()); // first without icons, use lazy-load
-    QTimer::singleShot(1000, this, SLOT(lazyloadTextureIcons()));
+    QTimer::singleShot(100, this, SLOT(lazyloadTextureIcons()));
 
     glTextureEarth->setCurrentIndex(glTextureEarth->findText(Settings::glTextureEarth()));
 
@@ -283,10 +283,6 @@ void PreferencesDialog::loadSettings() {
     cbCheckForUpdates->setChecked(Settings::checkForUpdates());
     cbSendVersionInfo->setChecked(Settings::sendVersionInformation());
 
-    cbDownloadClouds->setChecked(Settings::downloadClouds());
-    if(Settings::downloadClouds())cbUseHighResClouds->setEnabled(true);
-    cbUseHighResClouds->setChecked(Settings::useHighResClouds());
-
     // zooming
     sbZoomFactor->setValue(Settings::zoomFactor());
     useSelectionRectangle->setChecked(Settings::useSelectionRectangle());
@@ -319,7 +315,7 @@ void PreferencesDialog::lazyloadTextureIcons() {
                                Qt::FastTransformation));
             glTextureEarth->setItemIcon(i, icon);
             delete pm;
-            QTimer::singleShot(1000, this, SLOT(lazyloadTextureIcons()));
+            QTimer::singleShot(100, this, SLOT(lazyloadTextureIcons()));
             return;
         }
     }
@@ -1182,7 +1178,7 @@ void PreferencesDialog::on_glLightsSpread_valueChanged(int value) {
 void PreferencesDialog::on_pbReinitOpenGl_clicked() {
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->initializeGL();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->update();
     }
 }
 
@@ -1194,9 +1190,8 @@ void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value) {
 
 void PreferencesDialog::on_applyAirports_clicked() {
     if (Window::instance(false) != 0) {
-        Window::instance()->mapScreen->glWidget->createAirportsList();
-        Window::instance()->mapScreen->glWidget->createControllersLists();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->invalidateAirports();
+        Window::instance()->mapScreen->glWidget->invalidateControllers();
     }
 
 }
@@ -1204,9 +1199,8 @@ void PreferencesDialog::on_applyAirports_clicked() {
 void PreferencesDialog::on_applyPilots_clicked() {
     qDebug() << "PreferencesDialog::on_applyPilots_clicked()";
     if (Window::instance(false) != 0) {
-        Window::instance()->mapScreen->glWidget->createPilotsList();
-        Window::instance()->mapScreen->glWidget->createControllersLists();
-        Window::instance()->mapScreen->glWidget->updateGL();
+        Window::instance()->mapScreen->glWidget->invalidatePilots();
+        Window::instance()->mapScreen->glWidget->invalidateControllers();
     }
     qDebug() << "PreferencesDialog::on_applyPilots_clicked() -- finished";
 }
@@ -1227,7 +1221,6 @@ void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
     if (!_settingsLoaded)
         return;
     Settings::setGlTextureEarth(tex);
-    Window::instance()->mapScreen->glWidget->useClouds();
 }
 
 void PreferencesDialog::on_cbScreenshotMethod_currentIndexChanged(int index) {
@@ -1261,20 +1254,6 @@ void PreferencesDialog::on_pbUpperWindColor_clicked() {
                 Window::instance()->mapScreen->glWidget->update();
         }
     }
-}
-
-void PreferencesDialog::on_cbDownloadClouds_stateChanged(int state) {
-    if (!_settingsLoaded)
-        return;
-    Settings::setDownloadClouds(state == Qt::Checked);
-    Window::instance()->downloadCloud();
-}
-
-void PreferencesDialog::on_cbUseHighResClouds_stateChanged(int state) {
-    if (!_settingsLoaded)
-        return;
-    Settings::setUseHighResClouds(state == Qt::Checked);
-    Window::instance()->downloadCloud();
 }
 
 void PreferencesDialog::closeEvent(QCloseEvent *event) {

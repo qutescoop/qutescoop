@@ -5,7 +5,6 @@
 #include "Window.h"
 
 #include "GLWidget.h"
-#include "Net.h"
 #include "PilotDetails.h"
 #include "ControllerDetails.h"
 #include "AirportDetails.h"
@@ -23,7 +22,6 @@
 #include "SectorView.h"
 #include "Platform.h"
 #include "MetarDelegate.h"
-#include "FileReader.h"
 
 #include <QModelIndex>
 
@@ -136,9 +134,6 @@ Window::Window(QWidget *parent) :
 
     // Whazzup download timer
     connect(&_timerWhazzup, &QTimer::timeout, this, &Window::downloadWatchdogTriggered);
-
-    // Cloud download timer
-    connect(&_timerCloud, &QTimer::timeout, this, &Window::downloadCloud);
 
     // dock layout
     connect(metarDock, &QDockWidget::dockLocationChanged,
@@ -868,16 +863,13 @@ void Window::actionShowRoutes_triggered(bool checked, bool showStatus) {
         PilotDetails::instance()->refresh();
 
     // map update
-    mapScreen->glWidget->createPilotsList();
-    mapScreen->glWidget->updateGL();
-    //glWidget->newWhazzupData(); // complete update, but (should be) unnecessary
+    mapScreen->glWidget->invalidatePilots();
     qDebug() << "Window::on_actionShowRoutes_triggered() -- finished";
 }
 
 void Window::on_actionShowWaypoints_triggered(bool checked) {
     Settings::setShowUsedWaypoints(checked);
-    mapScreen->glWidget->createPilotsList();
-    mapScreen->glWidget->updateGL();
+    mapScreen->glWidget->invalidatePilots();
 }
 
 void Window::allSectorsChanged(bool state) {
@@ -890,78 +882,11 @@ void Window::allSectorsChanged(bool state) {
     mapScreen->glWidget->displayAllSectors(state);
 }
 
-void Window::downloadCloud() {
-    qDebug() << "Window::startCloudDownload -- prepare Download";
-    _timerCloud.stop();
-
-    /*if(!Settings::downloadClouds()) {
-        mapScreen->glWidget->cloudsAvaliable = false;
-        return;
-    }*/
-
-    FileReader file(Settings::dataDirectory("data/cloudmirrors.dat"));
-
-    bool hiResMode = false;
-    QList<QString> loResMirrors;
-    QList<QString> hiResMirrors;
-
-    while(!file.atEnd()) {
-        QString line = file.nextLine();
-        if(line.startsWith(";")) continue;
-        if(line.startsWith("[2048px]")) {
-            hiResMode = false;
-            continue;
-        }
-        if(line.startsWith("[4096px]")) {
-            hiResMode = true;
-            continue;
-        }
-
-        if(!hiResMode) loResMirrors.append(line);
-        if(hiResMode) hiResMirrors.append(line);
-    }
-
-    QUrl url;
-    if(Settings::useHighResClouds()) {
-        if (!hiResMirrors.isEmpty())
-            url.setUrl(hiResMirrors[QRandomGenerator::global()->bounded(quint32(hiResMirrors.size() - 1))]);
-    } else {
-        if (!loResMirrors.isEmpty())
-            url.setUrl(loResMirrors[QRandomGenerator::global()->bounded(quint32(loResMirrors.size() - 1))]);
-    }
-    if(_cloudDownloadReply != 0) _cloudDownloadReply = 0;
-    _cloudDownloadReply = Net::g(url);
-    connect(_cloudDownloadReply, &QNetworkReply::finished, this, &Window::cloudDownloadFinished);
-
-    qDebug() << "Window::startCloudDownload -- Download started from " << url.toString();
-}
-
-void Window::cloudDownloadFinished() {
-    qDebug() << "Window::cloudDownloadFinished";
-    emit cloudDownloaded();
-    disconnect(_cloudDownloadReply, SIGNAL(finished()), this, SLOT(downloaded()));
-    _cloudDownloadReply->deleteLater();
-
-    if(_cloudDownloadReply->error() != QNetworkReply::NoError) {
-        GuiMessages::criticalUserInteraction(_cloudDownloadReply->errorString(), "cloudlayer download error:");
-        return;
-    }
-
-    QImage cloudlayer;
-    cloudlayer.load(_cloudDownloadReply->readAll(), "JPG");
-    cloudlayer.save(Settings::dataDirectory("textures/clouds/clouds.jpg"), "JPG");
-    qDebug() << "Window::cloudDownloadFinished -- clouds.jpg saved  here:"
-             << Settings::dataDirectory("textures/clouds/");
-
-    _timerCloud.start(12600000); //start download in 3,5 h again
-    mapScreen->glWidget->useClouds();
-}
-
 void Window::on_actionHighlight_Friends_triggered(bool checked) {
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
-    if (!checked) mapScreen->glWidget->destroyFriendHightlighter();
-    mapScreen->glWidget->updateGL();
+    if (!checked) mapScreen->glWidget->destroyFriendHighlighter();
+    mapScreen->glWidget->update();
 }
 
 void Window::on_pb_highlightFriends_toggled(bool checked) {

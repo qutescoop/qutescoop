@@ -29,12 +29,15 @@ class GLWidget : public QGLWidget {
 
         QPair<double, double> currentPosition() const;
         ClientSelectionWidget *clientSelection;
+        void invalidatePilots() { m_isPilotsDirty = true; update(); }
+        void invalidateAirports() { m_isAirportsDirty = true; update(); }
+        void invalidateControllers() { m_isControllersDirty = true; update(); }
         void savePosition();
     public slots:
-        virtual void initializeGL();
+        virtual void initializeGL() override;
         void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
         // updating the statusbar as well - we do not want a full GL update here sometimes
-        void setMapPosition(double lat, double lon, double newZoom, bool updateGL = true);
+        void setMapPosition(double lat, double lon, double newZoom);
         void scrollBy(int moveByX, int moveByY);
         void rightClick(const QPoint& pos);
         void zoomIn(double factor);
@@ -48,30 +51,28 @@ class GLWidget : public QGLWidget {
 
         void createPilotsList();
         void createAirportsList();
-        void createControllersLists();
+        void createControllerLists();
         void createStaticLists();
         void createStaticSectorLists(QList<Sector*> sectors);
         void createHoveredControllersLists(QSet<Controller*> controllers);
 
-        void useClouds();
-
-        void destroyFriendHightlighter();
+        void destroyFriendHighlighter();
         void renderStaticSectors(bool value) { _renderStaticSectors = value; }
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
     protected:
-        virtual void paintGL();
-        virtual void resizeGL(int width, int height);
+        virtual void paintGL() override;
+        virtual void resizeGL(int width, int height) override;
 
         // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
         QList<MapObject *> objectsAt(int x, int y, double radius = 0) const;
 
-        void mouseDoubleClickEvent(QMouseEvent *event);
-        void mousePressEvent(QMouseEvent *event);
-        void mouseReleaseEvent(QMouseEvent *event);
-        void mouseMoveEvent(QMouseEvent *event);
-        void wheelEvent(QWheelEvent* event);
-        bool event(QEvent *event);
+        void mouseDoubleClickEvent(QMouseEvent *event) override;
+        void mousePressEvent(QMouseEvent *event) override;
+        void mouseReleaseEvent(QMouseEvent *event) override;
+        void mouseMoveEvent(QMouseEvent *event) override;
+        void wheelEvent(QWheelEvent* event) override;
+        bool event(QEvent *event) override;
     private:
         void resetZoom();
         void handleRotation(QMouseEvent *event);
@@ -92,7 +93,7 @@ class GLWidget : public QGLWidget {
         void renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font,
                                  const double zoomTreshold, QColor color, QColor bgColor = QColor());
 
-        void parseEarthClouds();
+        void parseTexture();
         void createLights();
 
         void createFriendHighlighter();
@@ -109,17 +110,17 @@ class GLWidget : public QGLWidget {
         QSet<FontRectangle*> _fontRectangles, _allFontRectangles;
         QPoint _lastPos, _mouseDownPos;
         bool _mapMoving, _mapZooming, _mapRectSelecting, _renderStaticSectors,
-        _lightsGenerated, _allSectorsDisplayed;
-        QImage _completedEarthIm;
+            _lightsGenerated, _allSectorsDisplayed;
+        bool m_isPilotsDirty = true, m_isAirportsDirty = true, m_isControllersDirty = true;
         GLUquadricObj *_earthQuad;
-        GLuint _earthTex, _cloudTex,
+        GLuint _earthTex,
         _earthList, _coastlinesList, _countriesList, _gridlinesList,
         _pilotsList, _activeAirportsList, _inactiveAirportsList,
         _fixesList, _usedWaypointsList, _plannedRouteList,
         _sectorPolygonsList, _sectorPolygonBorderLinesList, _congestionsList,
         _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
         _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
-        QSet<Controller*> _sectorsToDraw, _hoveredControllers;
+        QSet<Controller*> _hoveredControllers;
         double _sondeLabelZoomTreshold, _pilotLabelZoomTreshold,
                 _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
         _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,

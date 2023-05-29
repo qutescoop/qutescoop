@@ -169,11 +169,11 @@ void AirportDetails::togglePlotRoutes(bool checked) {
     if(_airport->showRoutes != checked) {
         _airport->showRoutes = checked;
         if (Window::instance(false) != 0) {
-            Window::instance()->mapScreen->glWidget->createPilotsList();
-            Window::instance()->mapScreen->glWidget->updateGL();;
+            Window::instance()->mapScreen->glWidget->invalidatePilots();
         }
-        if (PilotDetails::instance(false) != 0)
+        if (PilotDetails::instance(false) != 0) {
             PilotDetails::instance()->refresh();
+        }
     }
 }
 

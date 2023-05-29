@@ -18,15 +18,12 @@ class Window : public QMainWindow, public Ui::Window {
         void setEnableBookedAtc(bool enable);
         void shootScreenshot();
         MapScreen *mapScreen;
-        //GLWidget *glWidget;
     public slots:
         void refreshFriends();
-        void downloadCloud();
         void processWhazzup(bool isNew = true);
         void restore();
     signals:
         void restored();
-        void cloudDownloaded();
     private slots:
         void actionShowRoutes_triggered(bool checked, bool showStatus = true);
         void on_actionShowWaypoints_triggered(bool checked);
@@ -85,7 +82,6 @@ class Window : public QMainWindow, public Ui::Window {
         void friendClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();
         void allSectorsChanged(bool);
-        void cloudDownloadFinished();
     protected:
         virtual void closeEvent(QCloseEvent *event);
     private:
@@ -95,11 +91,9 @@ class Window : public QMainWindow, public Ui::Window {
         void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
 
         SearchResultModel _modelSearchResult, _modelFriends;
-        QTimer _timerSearch, _timerMetar, _timerEditPredict, _timerRunPredict,
-        _timerWhazzup, _timerCloud;
+        QTimer _timerSearch, _timerMetar, _timerEditPredict, _timerRunPredict, _timerWhazzup;
         QSortFilterProxyModel *_sortmodelMetar, *_sortmodelFriends;
         MetarModel _metarModel;
-        QNetworkReply *_cloudDownloadReply;
         QDateTime _dateTimePredict_old;
         QLabel *_lblStatus;
         QProgressBar *_progressBar;
