@@ -36,7 +36,7 @@ class Launcher : public QWidget {
         QPoint _dragPosition;
         QNetworkReply *_replyDataVersionsAndFiles;
         QList<QString> _dataFilesToDownload;
-        QHash<QString, int> _localDataVersionsList, _serverDataVersionsList;
+        QMap<QString, int> _localDataVersionsList, _serverDataVersionsList;
 };
 
 #endif // LAUNCHER_H
