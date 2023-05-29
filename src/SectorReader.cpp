@@ -60,6 +60,16 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
 
         if(line.startsWith("DISPLAY_LIST_")) {
             if(!workingSectorId.isEmpty()) {
+                if(pointList.size() < 3) {
+                    auto msg = QString("While processing line #%1 from %2: Sector %3 doesn't contain enough points (%4, expected 3+)")
+                                   .arg(count)
+                                   .arg(filePath, workingSectorId)
+                                   .arg(pointList.size());
+                    qCritical() << "SectorReader::loadSectordisplay()" << msg;
+                    QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                    exit(EXIT_FAILURE);
+                }
+
                 QList<Sector*> sectorsWithMatchingId;
                 foreach(auto *sector, sectors) {
                     if (sector->id == workingSectorId) {
@@ -78,16 +88,6 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
 
                 foreach(auto sector, sectorsWithMatchingId) {
                     if(sector != 0) {
-                        if(pointList.size() < 3) {
-                            auto msg = QString("While processing line #%1 '%2' from %3: Sector %4 (%5) doesn't contain enough points (%3)")
-                                .arg(count)
-                                .arg(line, filePath)
-                                .arg(sector->name, sector->icao).arg(pointList.size());
-                            qCritical() << "Sector::getCenter()" << msg;
-                            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
-                            exit(EXIT_FAILURE);
-                        }
-
                         sector->setPoints(pointList);
                     }
                 }
@@ -104,7 +104,7 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
                     .arg(count)
                     .arg(line, filePath)
                     .arg(workingSectorId).arg(lat).arg(lon);
-                qCritical() << "Sector::getCenter()" << msg;
+                qCritical() << "SectorReader::loadSectordisplay()" << msg;
                 QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
                 exit(EXIT_FAILURE);
             }
