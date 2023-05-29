@@ -79,7 +79,6 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/firdisplay.dat
     dataFiles.files += ./data/firlist.dat
     dataFiles.files += ./data/airlines.dat
-    dataFiles.files += ./data/station.dat
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/_notes.txt
     screenshotsFiles.path = $$DESTDIR/screenshots
@@ -193,11 +192,9 @@ HEADERS += \
     src/ListClientsDialog.h \
     src/Ping.h \
     src/GuiMessage.h \
-    src/Station.h \
     src/Launcher.h \
     src/SectorView.h \
     src/Net.h \
-    src/SondeData.h \
     src/JobList.h \
     src/MetarDelegate.h \
     src/Platform.h
@@ -249,11 +246,9 @@ SOURCES += src/WhazzupData.cpp \
     src/ListClientsDialog.cpp \
     src/Ping.cpp \
     src/GuiMessage.cpp \
-    src/Station.cpp \
     src/Launcher.cpp \
     src/SectorView.cpp \
     src/Net.cpp \
-    src/SondeData.cpp \
     src/JobList.cpp \
     src/MetarDelegate.cpp \
     src/Platform.cpp

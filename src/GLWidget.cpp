@@ -17,7 +17,6 @@
 #include "AirportDetails.h"
 #include "PilotDetails.h"
 #include "Airac.h"
-#include "SondeData.h"
 
 //#include <GL/glext.h>   // Multitexturing - not platform-independant
 #include <algorithm>
@@ -31,7 +30,6 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget *parent) :
         _pilotsList(0), _activeAirportsList(0), _inactiveAirportsList(0), _fixesList(0),
         _usedWaypointsList(0), _sectorPolygonsList(0), _sectorPolygonBorderLinesList(0),
         _congestionsList(0),
-        _sondeLabelZoomTreshold(3.),
         _pilotLabelZoomTreshold(.9),
         _activeAirportLabelZoomTreshold(1.2), _inactiveAirportLabelZoomTreshold(.15),
         _controllerLabelZoomTreshold(2.), _allWaypointsLabelZoomTreshold(.1),
@@ -1085,18 +1083,6 @@ void GLWidget::paintGL() {
         }
     }
 
-    // render Wind
-    if(Settings::showSonde()) {
-        // show wind arrows of altitudes near the selected one
-        for(quint8 span = 1; span <= Settings::sondeAltSecondarySpan_1k(); span++) {
-            glCallList(SondeData::instance()->
-                       windArrows(Settings::sondeAlt_1k() - span, true));
-            glCallList(SondeData::instance()->
-                       windArrows(Settings::sondeAlt_1k() + span, true));
-        }
-        glCallList(SondeData::instance()->windArrows(Settings::sondeAlt_1k()));
-    }
-
     // render labels
     renderLabels();
 
@@ -1471,16 +1457,6 @@ void GLWidget::renderLabels() {
         }
         renderLabels(objects, Settings::pilotFont(), _pilotLabelZoomTreshold,
                  Settings::pilotFontColor());
-    }
-
-    // temperatures and spreads
-    if (Settings::showSonde()) {
-        objects.clear();
-        foreach(Station *s, SondeData::instance()->stationList)
-                if (!s->mapLabel().isEmpty())
-                        objects.append(s);
-        renderLabels(objects, Settings::sondeFont(), _sondeLabelZoomTreshold,
-                     Settings::windColor().lighter(), Settings::windColor().darker(300));
     }
 
     // waypoints used in shown routes

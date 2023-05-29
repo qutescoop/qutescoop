@@ -116,14 +116,6 @@ class Settings {
         static void setShowGND(bool value);
         static bool showAllSectors();
         static void setShowAllSectors(bool value);
-        static bool showSonde();
-        static void setShowSonde(bool value);
-        static int sondeAlt_1k();
-        static void setSondeAlt_1k(int value);
-        static QColor windColor();
-        static void setWindColor(const QColor& value);
-        static int windArrowSize();
-        static void setWindArrowSize(int value);
         static bool showRouteFix();
         static void setShowRouteFix(bool value);
         static bool showPilotsLabels();
@@ -446,13 +438,6 @@ class Settings {
         static void saveMaximized(const bool val);
 
         static QString remoteDataRepository();
-
-        static void setSondeAltSecondarySpan_1k(int value);
-        static int sondeAltSecondarySpan_1k();
-        static QString sondeUrl();
-        static void setSondeUrl(QString val);
-        static void setSondeFont(const QFont &font);
-        static QFont sondeFont();
 private:
         static QSettings *instance();
 };

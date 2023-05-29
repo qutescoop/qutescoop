@@ -69,7 +69,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_cbLineSmoothing_stateChanged(int state);
         void on_cbDotSmoothing_stateChanged(int state);
         void on_sbMaxTextLabels_valueChanged(int value);
-        void on_pbUpperWindColor_clicked();
         void on_editNavdir_editingFinished();
         void on_browseNavdirButton_clicked();
         void on_cbUseNavDatabase_stateChanged(int state);
@@ -138,8 +137,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_useSelectionRectangle_toggled(bool checked);
         void on_cbSimpleLabels_toggled(bool checked);
         void on_cbRememberMapPositionOnClose_toggled(bool checked);
-        void on_sbWindSize_valueChanged(int factor);
-        void on_sbWindSecondarySpan_valueChanged(int value);
 
 private:
         PreferencesDialog(QWidget *parent);
