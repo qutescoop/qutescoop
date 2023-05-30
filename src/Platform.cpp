@@ -48,4 +48,3 @@ QString Platform::version()
     // @see QuteScoop.pro
     return QString(GIT_DESCRIBE);
 }
-

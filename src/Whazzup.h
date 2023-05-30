@@ -6,13 +6,13 @@
 #include <QNetworkReply>
 
 class Whazzup: public QObject {
-        Q_OBJECT
+    Q_OBJECT
     public:
         static Whazzup* instance();
 
         const WhazzupData& whazzupData() {
             return (predictedTime.isValid()?
-                        _predictedData: _data);
+                _predictedData: _data);
         } // we fake it when predicting a certain time
         const WhazzupData& realWhazzupData() {
             return _data;
@@ -20,7 +20,7 @@ class Whazzup: public QObject {
 
         void setPredictedTime(QDateTime predictedTime);
         QString userUrl(const QString& id) const,
-                metarUrl(const QString& id) const;
+        metarUrl(const QString& id) const;
         QList <QPair <QDateTime, QString> > downloadedWhazzups() const;
         QDateTime predictedTime;
     signals:
@@ -34,9 +34,9 @@ class Whazzup: public QObject {
         void downloadBookings();
     private slots:
         void processStatus();
-        void whazzupProgress(qint64 prog,qint64 tot);
+        void whazzupProgress(qint64 prog, qint64 tot);
         void processWhazzup();
-        void bookingsProgress(qint64 prog,qint64 tot);
+        void bookingsProgress(qint64 prog, qint64 tot);
         void processBookings();
     private:
         Whazzup();
@@ -46,8 +46,8 @@ class Whazzup: public QObject {
         QStringList _json3Urls;
         QString _metar0Url, _user0Url;
         QTime _lastDownloadTime;
-        QTimer *_downloadTimer, *_bookingsTimer;
-        QNetworkReply *_replyStatus, *_replyWhazzup, *_replyBookings;
+        QTimer* _downloadTimer, * _bookingsTimer;
+        QNetworkReply* _replyStatus, * _replyWhazzup, * _replyBookings;
 };
 
 #endif /*WHAZZUP_H_*/

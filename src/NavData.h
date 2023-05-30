@@ -16,21 +16,27 @@ enum LatLngPrecission {
 };
 
 class NavData: public QObject {
-        Q_OBJECT
+    Q_OBJECT
     public:
-        static NavData *instance(bool createIfNoInstance = true);
-        static QPair<double, double> *fromArinc(const QString &str);
+        static NavData* instance(bool createIfNoInstance = true);
+        static QPair<double, double>* fromArinc(const QString &str);
         static QString toArinc(const short lat, const short lon);
         static QString toEurocontrol(const double lat, const double lon, const LatLngPrecission maxPrecision = LatLngPrecission::Secs);
 
         static double distance(double lat1, double lon1, double lat2, double lon2);
-        static QPair<double, double> pointDistanceBearing(double lat, double lon,
-                                                          double dist, double heading);
+        static QPair<double, double> pointDistanceBearing(
+        double lat, double lon,
+        double dist, double heading
+        );
         static double courseTo(double lat1, double lon1, double lat2, double lon2);
-        static QPair<double, double> greatCircleFraction(double lat1, double lon1,
-                                                         double lat2, double lon2, double fraction);
-        static QList<QPair<double, double> > greatCirclePoints(double lat1, double lon1, double lat2,
-                                                              double lon2, double intervalNm = 30.);
+        static QPair<double, double> greatCircleFraction(
+        double lat1, double lon1,
+        double lat2, double lon2, double fraction
+        );
+        static QList<QPair<double, double> > greatCirclePoints(
+        double lat1, double lon1, double lat2,
+        double lon2, double intervalNm = 30.
+        );
         static void plotGreatCirclePoints(const QList<QPair<double, double> > &points);
 
         virtual ~NavData();

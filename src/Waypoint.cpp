@@ -3,7 +3,7 @@
 #include "NavData.h"
 
 Waypoint::Waypoint(const QStringList& stringList) {
-    if(stringList.size() != 6){
+    if(stringList.size() != 6) {
         qCritical() << "Waypoint(): could not parse " << stringList << " as Waypoint. Expected 6 fields.";
         return;
     }
@@ -11,12 +11,12 @@ Waypoint::Waypoint(const QStringList& stringList) {
     bool ok;
 
     lat = stringList[0].toDouble(&ok);
-    if (!ok) {
+    if(!ok) {
         qCritical() << "Waypoint::Waypoint() unable to parse lat:" << stringList;
         return;
     }
     lon = stringList[1].toDouble(&ok);
-    if (!ok) {
+    if(!ok) {
         qCritical() << "Waypoint::Waypoint() unable to parse lon:" << stringList;
         return;
     }

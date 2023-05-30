@@ -13,20 +13,24 @@ class WhazzupData {
         enum WhazzupType { NONE, WHAZZUP, ATCBOOKINGS, UNIFIED };
 
         WhazzupData();
-        WhazzupData(QByteArray *bytes, WhazzupType type);
+        WhazzupData(QByteArray* bytes, WhazzupType type);
         WhazzupData(const QDateTime predictTime, const WhazzupData &data); // predict whazzup data
         ~WhazzupData();
         // copy constructor and assignment operator
         WhazzupData(const WhazzupData &data);
         WhazzupData &operator=(const WhazzupData &data);
 
-        bool isNull() const { return (whazzupTime.isNull() && bookingsTime.isNull()); }
+        bool isNull() const {
+            return (whazzupTime.isNull() && bookingsTime.isNull());
+        }
         void updateFrom(const WhazzupData &data);
 
         QSet<Controller*> controllersWithSectors() const;
         QHash<QString, Pilot*> pilots, bookedPilots;
         QHash<QString, Controller*> controllers;
-        QList<Pilot*> allPilots() const { return bookedPilots.values() + pilots.values(); }
+        QList<Pilot*> allPilots() const {
+            return bookedPilots.values() + pilots.values();
+        }
         QList<BookedController*> bookedControllers;
 
         QList<QPair<double, double> > friendsLatLon() const;
@@ -37,9 +41,11 @@ class WhazzupData {
 
         QDateTime updateEarliest, whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
 
-        bool isVatsim() const { return true; }
+        bool isVatsim() const {
+            return true;
+        }
 
-        void accept(MapObjectVisitor *visitor) const;
+        void accept(MapObjectVisitor* visitor) const;
     private:
         void assignFrom(const WhazzupData &data);
         void updatePilotsFrom(const WhazzupData &data);

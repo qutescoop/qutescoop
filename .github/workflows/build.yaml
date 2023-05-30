@@ -5,6 +5,34 @@ on:
   pull_request:
 
 jobs:
+  lint:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: setup
+        run: |
+          set -x
+          sudo apt-get -y install curl cmake build-essential python3 git colordiff
+          mkdir temp/ && cd temp/
+          wget -O - https://github.com/uncrustify/uncrustify/archive/uncrustify-0.75.1.tar.gz | tar -xzf -
+          cd uncrustify-*
+          mkdir build/ && cd build/
+          cmake ..
+          cmake --build . --parallel $(nproc)
+        env:
+          DEBIAN_FRONTEND: noninteractive
+      - name: uncrustify
+        id: uncrustify
+#        continue-on-error: true
+        run: |
+          set -x
+          set +e
+          temp/uncrustify-*/build/uncrustify --version
+          temp/uncrustify-*/build/uncrustify -q -c uncrustify.cfg --check src/*.{h,cpp} src/*/*.{h,cpp} \
+          || ( temp/uncrustify-*/build/uncrustify -q -c uncrustify.cfg --replace --no-backup src/*.{h,cpp} src/*/*.{h,cpp}; git diff --exit-code )
+
   facts:
     outputs:
       describe: ${{ steps.gather.outputs.describe }}

@@ -24,7 +24,9 @@ class NavAid: public Waypoint {
         };
         static QString typeStr(Type _type);
         virtual QString toolTip() const;
-        int type() { return _type; }
+        int type() {
+            return _type;
+        }
 
     private:
         Type _type;

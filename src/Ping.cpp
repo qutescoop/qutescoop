@@ -2,7 +2,7 @@
 
 void Ping::pingReadyRead() {
     QRegExp findMs = QRegExp("(\\d*\\.?\\d*)\\W?ms", Qt::CaseInsensitive);
-    if (findMs.indexIn(_pingProcess->readAll()) > 0) {
+    if(findMs.indexIn(_pingProcess->readAll()) > 0) {
         int ping = (int) findMs.cap(1).toDouble();
         emit havePing(_server, ping);
     } else {

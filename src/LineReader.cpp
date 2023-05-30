@@ -4,29 +4,29 @@
 
 const QList<QPair<double, double> >& LineReader::readLine() {
     _currentLine.clear();
-    while (!atEnd()) {
+    while(!atEnd()) {
         QString line = nextLine();
-        if (line == "end" || line.isNull()) {
+        if(line == "end" || line.isNull()) {
             break;
         }
 
-        if (line.isEmpty() || line.startsWith(";")) {
+        if(line.isEmpty() || line.startsWith(";")) {
             continue;
         }
 
         QStringList list = line.split(':');
-        if (list.size() != 2) {
+        if(list.size() != 2) {
             continue;
         }
 
         bool ok = true;
         double lat = list[0].toDouble(&ok);
-        if (!ok) {
+        if(!ok) {
             qWarning() << "LineReader::readLine() unable to read lat (double):" << list;
             continue;
         }
         double lon = list[1].toDouble(&ok);
-        if (!ok) {
+        if(!ok) {
             qWarning() << "LineReader::readLine() unable to read lon (double):" << list;
             continue;
         }

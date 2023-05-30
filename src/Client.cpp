@@ -24,25 +24,29 @@ Client::Client(const QJsonObject& json, const WhazzupData*) :
 }
 
 QString Client::onlineTime() const {
-    if (!timeConnected.isValid())
+    if(!timeConnected.isValid()) {
         return QString("not connected");
+    }
 
-    return QDateTime::fromTime_t( // this will get wrapped by 24h but that should not be a problem...
-            Whazzup::instance()->whazzupData().whazzupTime.toTime_t()
-            - timeConnected.toTime_t()
-            ).toUTC().toString("HH:mm") + " hrs";
+    return QDateTime::fromTime_t(
+        // this will get wrapped by 24h but that should not be a problem...
+        Whazzup::instance()->whazzupData().whazzupTime.toTime_t()
+        - timeConnected.toTime_t()
+    ).toUTC().toString("HH:mm") + " hrs";
 }
 
 QString Client::displayName(bool withLink) const {
     QString result = realName();
 
-    if(!rank().isEmpty())
+    if(!rank().isEmpty()) {
         result += " (" + rank() + ")";
+    }
 
     if(withLink && hasValidID()) {
         QString link = Whazzup::instance()->userUrl(userId);
-        if(link.isEmpty())
+        if(link.isEmpty()) {
             return result;
+        }
         result = QString("<a href='%1'>%2</a>").arg(link, result.toHtmlEscaped());
     }
 
@@ -56,7 +60,7 @@ QString Client::detailInformation() const {
     return QString();
 }
 
-bool Client::showAliasDialog(QWidget *parent) const
+bool Client::showAliasDialog(QWidget* parent) const
 {
     bool ok;
     QString alias = QInputDialog::getText(
@@ -67,15 +71,19 @@ bool Client::showAliasDialog(QWidget *parent) const
         Settings::clientAlias(userId),
         &ok
     );
-    if (ok) {
+    if(ok) {
         Settings::setClientAlias(userId, alias);
     }
     return ok;
 }
 
 bool Client::matches(const QRegExp& regex) const {
-    if(m_name.contains(regex)) return true;
-    if(userId.contains(regex)) return true;
+    if(m_name.contains(regex)) {
+        return true;
+    }
+    if(userId.contains(regex)) {
+        return true;
+    }
     return MapObject::matches(regex);
 }
 
@@ -95,11 +103,11 @@ bool Client::isFriend() const {
 }
 
 const QString Client::realName() const {
-     auto& _alias = Settings::clientAlias(userId);
-     if (!_alias.isEmpty()) {
-         return _alias + " | " + m_name;
-     }
-     return m_name;
+    auto& _alias = Settings::clientAlias(userId);
+    if(!_alias.isEmpty()) {
+        return _alias + " | " + m_name;
+    }
+    return m_name;
 }
 
 const QString Client::name() const

@@ -4,13 +4,13 @@
 #include "Waypoint.h"
 
 class Route: public QObject {
-        Q_OBJECT
+    Q_OBJECT
     public:
         Route();
         virtual ~Route();
 
         QString provider, dep, dest, route, minFl, maxFl, airacCycle, lastChange,
-        comments, routeDistance, waypointsStr;
+            comments, routeDistance, waypointsStr;
         QList<Waypoint*> waypoints;
         void calculateWaypointsAndDistance();
 };

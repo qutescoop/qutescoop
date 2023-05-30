@@ -5,10 +5,10 @@
 
 #include "../ListClientsDialogModel.h"
 
-class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
-        Q_OBJECT
+class ListClientsDialog: public QDialog, private Ui::ListClientsDialog {
+    Q_OBJECT
     public:
-        static ListClientsDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static ListClientsDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void destroyInstance();
 
     public slots:
@@ -17,8 +17,8 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
         void pingReceived(QString, int);
 
     protected:
-        void closeEvent(QCloseEvent *event);
-        void showEvent(QShowEvent *event);
+        void closeEvent(QCloseEvent* event);
+        void showEvent(QShowEvent* event);
 
     private slots:
         void on_pbPingServers_clicked();
@@ -26,10 +26,10 @@ class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
         void on_editFilter_textChanged(QString str);
 
     private:
-        ListClientsDialog(QWidget *parent);
+        ListClientsDialog(QWidget* parent);
 
-        ListClientsDialogModel *_clientsModel;
-        QSortFilterProxyModel *_clientsProxyModel;
+        ListClientsDialogModel* _clientsModel;
+        QSortFilterProxyModel* _clientsProxyModel;
         QColor mapPingToColor(int ms);
         QStack <QString> _pingStack;
         void pingNextFromStack();

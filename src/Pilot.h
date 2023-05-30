@@ -24,16 +24,18 @@ class Pilot: public Client {
         virtual QString toolTip() const;
         virtual QString rank() const;
         virtual void showDetailsDialog();
-        virtual QString mapLabel() const { return QString("%1 %2").arg(label, shortAlt()); }
+        virtual QString mapLabel() const {
+            return QString("%1 %2").arg(label, shortAlt());
+        }
 
         FlightStatus flightStatus() const;
         QString flightStatusString() const;
         QString flightStatusShortString() const;
         QString planFlighttypeString() const;
         QString aircraftType() const;
-        Airport *depAirport() const;
-        Airport *destAirport() const;
-        Airport *altAirport() const;
+        Airport* depAirport() const;
+        Airport* destAirport() const;
+        Airport* altAirport() const;
         QStringList waypoints() const;
         double distanceToDestination() const;
         double distanceFromDeparture() const;
@@ -57,15 +59,15 @@ class Pilot: public Client {
         void checkStatus(); // adjust label visibility from flight status
 
         QString planAircraft, planAircraftFaa, planAircraftFull,
-        planTAS, planDep, planAlt, planDest,
-        planAltAirport, planRevision, planFlighttype, planDeptime,
-        transponder, transponderAssigned, planRemarks, planRoute, planActtime,
-        routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
-        routeWaypointsPlanRouteCache;
+            planTAS, planDep, planAlt, planDest,
+            planAltAirport, planRevision, planFlighttype, planDeptime,
+            transponder, transponderAssigned, planRemarks, planRoute, planActtime,
+            routeWaypointsPlanDepCache, routeWaypointsPlanDestCache,
+            routeWaypointsPlanRouteCache;
         QDate dayOfFlight;
         int altitude, groundspeed, planEnroute_hrs, planEnroute_mins,
-        planFuel_hrs, planFuel_mins,
-        qnh_mb;
+            planFuel_hrs, planFuel_mins,
+            qnh_mb;
         double trueHeading, qnh_inHg;
         bool showDepDestLine;
         QDateTime whazzupTime; // need some local reference to that

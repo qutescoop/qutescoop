@@ -4,11 +4,11 @@
 #include "ui_PreferencesDialog.h"
 
 class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
-        Q_OBJECT
+    Q_OBJECT
     public:
-        static PreferencesDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static PreferencesDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);
     protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent* event);
     private slots:
         void loadSettings();
         void lazyloadTextureIcons();
@@ -133,8 +133,8 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_cbSimpleLabels_toggled(bool checked);
         void on_cbRememberMapPositionOnClose_toggled(bool checked);
 
-private:
-        PreferencesDialog(QWidget *parent);
+    private:
+        PreferencesDialog(QWidget* parent);
         bool _settingsLoaded;
 
         constexpr static char m_preferencesName[] = "preferences";

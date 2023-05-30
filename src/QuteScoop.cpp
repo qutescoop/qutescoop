@@ -13,13 +13,12 @@ void messageHandler(QtMsgType type, const QMessageLogContext& context, const QSt
     Q_UNUSED(context);
     QTextStream out(m_logFile.data());
     out << QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
-    switch (type)
-    {
-    case QtInfoMsg:     out << " [INF] "; break;
-    case QtDebugMsg:    out << " [DBG] "; break;
-    case QtWarningMsg:  out << " [WRN] "; break;
-    case QtCriticalMsg: out << " [CRT] "; break;
-    case QtFatalMsg:    out << " [FTL] "; break;
+    switch(type) {
+        case QtInfoMsg:     out << " [INF] "; break;
+        case QtDebugMsg:    out << " [DBG] "; break;
+        case QtWarningMsg:  out << " [WRN] "; break;
+        case QtCriticalMsg: out << " [CRT] "; break;
+        case QtFatalMsg:    out << " [FTL] "; break;
     }
     out << msg << '\n';
     out.flush();
@@ -27,7 +26,7 @@ void messageHandler(QtMsgType type, const QMessageLogContext& context, const QSt
 
 
 /* main */
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
     QApplication app(argc, argv); // before QT_REQUIRE_VERSION to prevent creating duplicate..
     QT_REQUIRE_VERSION(argc, argv, "5.15.0"); // ..application objects
 
@@ -57,8 +56,8 @@ int main(int argc, char *argv[]) {
     qDebug() << "Using application data from" << Settings::dataDirectory();
 
     qDebug().noquote() << QString("Compiled with Qt %1 [%4, mode: %2], running with Qt %3 on %5.").arg(
-                    QT_VERSION_STR, Platform::compileMode(), qVersion(), Platform::compiler(), Platform::platformOS()
-                );
+        QT_VERSION_STR, Platform::compileMode(), qVersion(), Platform::compiler(), Platform::platformOS()
+        );
 
     // image format plugins
     app.addLibraryPath(QString("%1/imageformats").arg(app.applicationDirPath()));

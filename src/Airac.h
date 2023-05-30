@@ -5,10 +5,10 @@
 #include "NavAid.h"
 #include "Waypoint.h"
 
-class Airac : public QObject {
-        Q_OBJECT
+class Airac: public QObject {
+    Q_OBJECT
     public:
-        static Airac *instance(bool createIfNoInstance = true);
+        static Airac* instance(bool createIfNoInstance = true);
         virtual ~Airac();
 
         Waypoint* waypoint(const QString &id, const QString &regionCode, const int &type) const;

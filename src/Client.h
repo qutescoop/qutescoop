@@ -7,10 +7,12 @@
 
 class Client: public MapObject {
     public:
-        Client(const QJsonObject& json, const WhazzupData *whazzup);
+        Client(const QJsonObject& json, const WhazzupData* whazzup);
 
         virtual QString toolTip() const;
-        virtual QString rank() const { return QString(); }
+        virtual QString rank() const {
+            return QString();
+        }
         virtual bool matches(const QRegExp& regex) const;
         bool isFriend() const;
         const QString realName() const;
@@ -24,7 +26,7 @@ class Client: public MapObject {
         QString userId, homeBase, server;
         QDateTime timeConnected;
 
-        bool showAliasDialog(QWidget *parent) const;
+        bool showAliasDialog(QWidget* parent) const;
 
         int rating;
 

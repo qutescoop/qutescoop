@@ -12,11 +12,13 @@ void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
 }
 
 QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if (role != Qt::DisplayRole)
+    if(role != Qt::DisplayRole) {
         return QVariant();
+    }
 
-    if(orientation == Qt::Vertical)
+    if(orientation == Qt::Vertical) {
         return QVariant();
+    }
 
     // orientation is Qt::Horizontal
     switch(section) {
@@ -44,18 +46,20 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
     //    return QVariant();
 
     Client* c = _clients.value(index.row(), 0);
-    if (c == 0) return QVariant();
+    if(c == 0) {
+        return QVariant();
+    }
 
     if(role == Qt::FontRole) {
-        if (c->isFriend()) {
+        if(c->isFriend()) {
             QFont result;
             result.setBold(true);
             return result;
         }
         return QFont();
-    } else if (role == Qt::DisplayRole) {
-        Controller *co = dynamic_cast <Controller*> (c);
-        Pilot *p = dynamic_cast <Pilot*> (c);
+    } else if(role == Qt::DisplayRole) {
+        Controller* co = dynamic_cast <Controller*> (c);
+        Pilot* p = dynamic_cast <Pilot*> (c);
         switch(index.column()) {
             case 0: return c->label;
             case 1: return c->rank();
@@ -63,34 +67,40 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
             case 3: return c->onlineTime();
             case 4: return co != 0? QString("%1").arg(co->visualRange, 4, 'f', 0, ' '): QString();
             case 5:
-                if (co != 0) {
-                    if (co->assumeOnlineUntil.isValid()) {
-                            return QString("%1 hrs").arg(
-                                QTime().addSecs(QDateTime::currentDateTimeUtc().secsTo(co->assumeOnlineUntil)).toString("H:mm")
-                            );
-                        }
+                if(co != 0) {
+                    if(co->assumeOnlineUntil.isValid()) {
+                        return QString("%1 hrs").arg(
+                            QTime().addSecs(QDateTime::currentDateTimeUtc().secsTo(co->assumeOnlineUntil)).toString("H:mm")
+                        );
+                    }
                     return QString();
                 }
-                if (p != 0)
+                if(p != 0) {
                     return QString("%1 hrs").arg(p->eet().toString("H:mm"));
+                }
                 break;
             case 6:
-                if (p != 0 && p->depAirport() != 0)
+                if(p != 0 && p->depAirport() != 0) {
                     return p->depAirport()->label;
+                }
                 return QString();
             case 7:
-                if (p != 0 && p->destAirport() != 0)
+                if(p != 0 && p->destAirport() != 0) {
                     return p->destAirport()->label;
+                }
                 return QString();
             case 8: return p != 0? p->aircraftType(): QString();
             case 9: return p != 0? p->planFlighttypeString(): QString();
             case 10:
-                if (p != 0 && p->depAirport() != 0 && p->destAirport() != 0)
+                if(p != 0 && p->depAirport() != 0 && p->destAirport() != 0) {
                     return QString("%1").arg(
-                            NavData::distance(p->depAirport()->lat, p->depAirport()->lon,
-                                              p->destAirport()->lat, p->destAirport()->lon),
-                            5, 'f', 0, ' '
+                        NavData::distance(
+                            p->depAirport()->lat, p->depAirport()->lon,
+                            p->destAirport()->lat, p->destAirport()->lon
+                        ),
+                        5, 'f', 0, ' '
                     );
+                }
                 return QString();
             case 11: return p != 0? p->planAircraft: QString();
             case 12: return p != 0? p->planRemarks: QString();
@@ -110,6 +120,7 @@ int ListClientsDialogModel::columnCount(const QModelIndex&) const {
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {
-    if (_clients[index.row()] != 0)
+    if(_clients[index.row()] != 0) {
         _clients[index.row()]->showDetailsDialog();
+    }
 }

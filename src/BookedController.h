@@ -12,19 +12,19 @@
  * actual "Controller"s from.
  */
 class BookedController: public Client {
-public:
-    BookedController(const QJsonObject& json, const WhazzupData* whazzup);
+    public:
+        BookedController(const QJsonObject& json, const WhazzupData* whazzup);
 
-    QString facilityString() const;
+        QString facilityString() const;
 
-    int facilityType;
+        int facilityType;
 
-    QString bookingInfoStr, bookingType;
+        QString bookingInfoStr, bookingType;
 
-    QDateTime starts() const;
-    QDateTime ends() const;
-protected:
-    QDateTime m_starts, m_ends;
+        QDateTime starts() const;
+        QDateTime ends() const;
+    protected:
+        QDateTime m_starts, m_ends;
 };
 
 #endif /*BOOKEDCONTROLLER_H_*/

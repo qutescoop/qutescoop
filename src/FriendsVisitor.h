@@ -6,10 +6,10 @@
 
 #include <QStringList>
 
-class FriendsVisitor : public MapObjectVisitor {
+class FriendsVisitor: public MapObjectVisitor {
     public:
         FriendsVisitor();
-        virtual void visit(MapObject *object);
+        virtual void visit(MapObject* object);
         virtual QList<MapObject*> result() const;
 
     private:

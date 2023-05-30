@@ -33,16 +33,16 @@ class Airport: public MapObject {
         QSet<Pilot*> arrivals, departures;
         QSet<Controller*> allControllers() const;
 
-        void addArrival(Pilot *client);
-        void addDeparture(Pilot *client);
+        void addArrival(Pilot* client);
+        void addDeparture(Pilot* client);
         int numFilteredArrivals, numFilteredDepartures;
 
         //void addCenter(Controller *client);
-        void addApproach(Controller *client);
-        void addTower(Controller *client);
-        void addGround(Controller *client);
-        void addDelivery(Controller *client);
-        void addAtis(Controller *client);
+        void addApproach(Controller* client);
+        void addTower(Controller* client);
+        void addGround(Controller* client);
+        void addDelivery(Controller* client);
+        void addAtis(Controller* client);
 
         QString name, city, countryCode;
 

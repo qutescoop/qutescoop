@@ -10,15 +10,15 @@
 #include "../AirportDetailsArrivalsModel.h"
 #include "../AirportDetailsDeparturesModel.h"
 
-class AirportDetails : public ClientDetails, private Ui::AirportDetails {
-        Q_OBJECT
+class AirportDetails: public ClientDetails, private Ui::AirportDetails {
+    Q_OBJECT
     public:
-        static AirportDetails *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static AirportDetails* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void destroyInstance();
         void refresh(Airport* _airport = 0);
 
     protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent* event);
 
     private slots:
         void onGotMetar(const QString &airportLabel, const QString &encoded, const QString &humanHtml);
@@ -29,14 +29,14 @@ class AirportDetails : public ClientDetails, private Ui::AirportDetails {
         void arrivalSelected(const QModelIndex &index);
         void departureSelected(const QModelIndex &index);
 
-private:
-        AirportDetails(QWidget *parent);
+    private:
+        AirportDetails(QWidget* parent);
 
         AirportDetailsAtcModel _atcModel;
         AirportDetailsArrivalsModel _arrivalsModel;
         AirportDetailsDeparturesModel _departuresModel;
         Airport* _airport;
-        QSortFilterProxyModel *_atcSortModel, *_arrivalsSortModel, *_departuresSortModel;
+        QSortFilterProxyModel* _atcSortModel, * _arrivalsSortModel, * _departuresSortModel;
 
         QSet<Controller*> checkSectors() const;
 

@@ -4,23 +4,23 @@
 #include "Airport.h"
 #include "NavData.h"
 
-Route::Route() {
-}
-Route::~Route() {
-}
+Route::Route() {}
+Route::~Route() {}
 
 void Route::calculateWaypointsAndDistance() {
     Airport* depAirport;
-    if(NavData::instance()->airports.contains(dep))
+    if(NavData::instance()->airports.contains(dep)) {
         depAirport = NavData::instance()->airports[dep];
-    else
+    } else {
         return;
+    }
 
     Airport* destAirport;
-    if(NavData::instance()->airports.contains(dest))
+    if(NavData::instance()->airports.contains(dest)) {
         destAirport = NavData::instance()->airports[dest];
-    else
+    } else {
         return;
+    }
 
     QStringList list = route.split(' ', Qt::SkipEmptyParts);
     waypoints = Airac::instance()->resolveFlightplan(list, depAirport->lat, depAirport->lon);
@@ -33,14 +33,19 @@ void Route::calculateWaypointsAndDistance() {
     waypointsStr = QString();
     double dist = 0;
     for(int i = 0; i < waypoints.size(); i++) {
-        if (routeDistance.isEmpty() && i > 0) {
-            dist += NavData::distance(waypoints[i-1]->lat, waypoints[i-1]->lon,
-                                      waypoints[i]->lat, waypoints[i]->lon);
+        if(routeDistance.isEmpty() && i > 0) {
+            dist += NavData::distance(
+                waypoints[i - 1]->lat, waypoints[i - 1]->lon,
+                waypoints[i]->lat, waypoints[i]->lon
+            );
         }
         waypointsStr += waypoints[i]->label;
-        if (i < waypoints.size()-1) waypointsStr += " ";
+        if(i < waypoints.size() - 1) {
+            waypointsStr += " ";
+        }
     }
     // setting distance if it was not set before
-    if (routeDistance.isEmpty())
+    if(routeDistance.isEmpty()) {
         routeDistance = QString("%1 NM (calculated)").arg(qRound(dist));
+    }
 }

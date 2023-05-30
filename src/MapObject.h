@@ -4,7 +4,7 @@
 #include <QtCore>
 
 class MapObject: public QObject {
-        Q_OBJECT
+    Q_OBJECT
     public:
         MapObject();
         MapObject(QString label, QString toolTip);
@@ -12,11 +12,19 @@ class MapObject: public QObject {
         MapObject& operator=(const MapObject& obj);
         virtual ~MapObject();
 
-        bool isNull() const { return label.isNull(); }
+        bool isNull() const {
+            return label.isNull();
+        }
 
-        virtual bool matches(const QRegExp& regex) const { return label.contains(regex); }
-        virtual QString mapLabel() const { return label; }
-        virtual QString toolTip() const { return _toolTip; }
+        virtual bool matches(const QRegExp& regex) const {
+            return label.contains(regex);
+        }
+        virtual QString mapLabel() const {
+            return label;
+        }
+        virtual QString toolTip() const {
+            return _toolTip;
+        }
 
         virtual void showDetailsDialog() {}
 

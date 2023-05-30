@@ -14,33 +14,33 @@ BookedController::BookedController(const QJsonObject& json, const WhazzupData* w
 
     if(bookingType == "booking") {
         bookingInfoStr = QString();
-    } else if (bookingType == "event") {
+    } else if(bookingType == "event") {
         bookingInfoStr = QString("Event");
-    } else if (bookingType == "training") {
+    } else if(bookingType == "training") {
         bookingInfoStr = QString("Training");
     } else {
         bookingInfoStr = bookingType;
     }
 
-    if (label.right(5) == "_ATIS") {
+    if(label.right(5) == "_ATIS") {
         facilityType = 2;
-    } else if (label.right(4) == "_DEL") {
+    } else if(label.right(4) == "_DEL") {
         facilityType = 2;
-    } else if (label.right(4) == "_GND") {
+    } else if(label.right(4) == "_GND") {
         facilityType = 3;
-    } else if (label.right(4) == "_TWR") {
+    } else if(label.right(4) == "_TWR") {
         facilityType = 4;
-    } else if (label.right(4) == "_APP" || label.right(4) == "_DEP") {
+    } else if(label.right(4) == "_APP" || label.right(4) == "_DEP") {
         facilityType = 5;
-    } else if (label.right(4) == "_CTR") {
+    } else if(label.right(4) == "_CTR") {
         facilityType = 6;
-    } else if (label.right(4) == "_FSS") {
+    } else if(label.right(4) == "_FSS") {
         facilityType = 7;
     }
 }
 
 QString BookedController::facilityString() const {
-    switch (facilityType) {
+    switch(facilityType) {
         case 0: return "OBS";
         case 1: return "Staff";
         case 2: return "DEL";

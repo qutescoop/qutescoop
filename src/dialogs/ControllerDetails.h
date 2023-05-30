@@ -7,13 +7,13 @@
 #include "../Controller.h"
 
 class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
-        Q_OBJECT
+    Q_OBJECT
     public:
-        static ControllerDetails* instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static ControllerDetails* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void destroyInstance();
         void refresh(Controller* = 0);
     protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent* event);
     private slots:
         void on_buttonAddFriend_clicked();
 
@@ -21,7 +21,7 @@ class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
         void on_pbAlias_clicked();
 
     private:
-        ControllerDetails(QWidget *parent);
+        ControllerDetails(QWidget* parent);
         Controller* _controller;
 
         constexpr static char m_preferencesName[] = "controllerDetails";
