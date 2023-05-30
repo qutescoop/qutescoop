@@ -489,3 +489,9 @@ void WhazzupData::accept(MapObjectVisitor* visitor) const {
         visitor->visit(b);
     }
 }
+
+Pilot *WhazzupData::findPilot(const QString &callsign) const {
+    Pilot* pilot = pilots.value(callsign);
+    if(pilot != 0) return pilot;
+    return bookedPilots.value(callsign, 0);
+}

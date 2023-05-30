@@ -35,13 +35,7 @@ class WhazzupData {
 
         QList<QPair<double, double> > friendsLatLon() const;
 
-        Pilot* findPilot(const QString& callsign) const {
-            Pilot* pilot = pilots.value(callsign);
-            if(pilot != 0)
-                return pilot;
-            else
-                return bookedPilots.value(callsign);
-        }
+        Pilot* findPilot(const QString& callsign) const;
 
         QList<QStringList> servers;
 
