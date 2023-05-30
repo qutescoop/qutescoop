@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef LISTCLIENTSDIALOG_H_
 #define LISTCLIENTSDIALOG_H_
 

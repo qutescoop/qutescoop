@@ -1,6 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
 #ifndef FILEREADER_H_
 #define FILEREADER_H_
 

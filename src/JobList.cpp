@@ -1,7 +1,3 @@
-/**************************************************************************
- This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #include "JobList.h"
 
 JobList::JobList(QObject *parent) :

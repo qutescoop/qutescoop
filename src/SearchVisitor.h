@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef SEARCHVISITOR_H_
 #define SEARCHVISITOR_H_
 

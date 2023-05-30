@@ -1,7 +1,3 @@
-/**************************************************************************
-*  This file is part of QuteScoop. See README for license
-**************************************************************************/
-
 #ifndef STATICSECTORSDIALOG_H
 #define STATICSECTORSDIALOG_H
 

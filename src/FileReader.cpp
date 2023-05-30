@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #include "FileReader.h"
 
 FileReader::FileReader(const QString& filename) {

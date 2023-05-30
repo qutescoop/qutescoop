@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef CONTROLLERDETAILS_H_
 #define CONTROLLERDETAILS_H_
 

@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef FRIENDSVISITOR_H_
 #define FRIENDSVISITOR_H_
 

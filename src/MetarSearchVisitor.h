@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef METARSEARCHVISITOR_H_
 #define METARSEARCHVISITOR_H_
 

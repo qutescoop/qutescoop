@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef PREFERENCESDIALOG_H_
 #define PREFERENCESDIALOG_H_
 

@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #include "SearchVisitor.h"
 
 SearchVisitor::SearchVisitor(const QString& searchStr) {

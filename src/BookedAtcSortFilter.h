@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef BOOKEDATCSORTFILTER_H_
 #define BOOKEDATCSORTFILTER_H_
 

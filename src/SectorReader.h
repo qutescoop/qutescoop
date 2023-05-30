@@ -1,6 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
 #ifndef SECTORREADER_H_
 #define SECTORREADER_H_
 

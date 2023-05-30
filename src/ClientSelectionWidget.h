@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef CLIENTSELECTIONWIDGET_H_
 #define CLIENTSELECTIONWIDGET_H_
 

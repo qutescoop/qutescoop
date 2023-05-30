@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #include "BookedAtcDialog.h"
 
 #include "Window.h"

@@ -1,7 +1,3 @@
-/**************************************************************************
- * This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef AIRPORTDETAILS_H_
 #define AIRPORTDETAILS_H_
 
