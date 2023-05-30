@@ -6,22 +6,22 @@
 #include <QFocusEvent>
 #include <QListWidget>
 
-class ClientSelectionWidget : public QListWidget {
-        Q_OBJECT
+class ClientSelectionWidget: public QListWidget {
+    Q_OBJECT
     public:
-        explicit ClientSelectionWidget(QWidget *parent = 0);
+        explicit ClientSelectionWidget(QWidget* parent = 0);
         ~ClientSelectionWidget() {}
 
         void setObjects(QList<MapObject*> objects);
         void clearObjects();
 
-        virtual QSize sizeHint () const;
+        virtual QSize sizeHint() const;
 
     public slots:
-        void dialogForItem(QListWidgetItem *item);
+        void dialogForItem(QListWidgetItem* item);
 
     protected:
-        void focusOutEvent(QFocusEvent *event);
+        void focusOutEvent(QFocusEvent* event);
 
     private:
         QList<MapObject*> _displayClients;

@@ -9,15 +9,15 @@ FriendsVisitor::FriendsVisitor() {
 
 void FriendsVisitor::visit(MapObject* object) {
     Client* c = dynamic_cast<Client*>(object);
-    if (c == 0) {
+    if(c == 0) {
         return;
     }
-    if (!c->isFriend()) {
+    if(!c->isFriend()) {
         return;
     }
     Controller* co = dynamic_cast<Controller*>(object);
-    if (co != 0) {
-        if (co->isAtis()) {
+    if(co != 0) {
+        if(co->isAtis()) {
             return;
         }
     }

@@ -22,18 +22,20 @@
 #include <QModelIndex>
 
 // singleton instance
-Window *windowInstance = 0;
+Window* windowInstance = 0;
 
 Window* Window::instance(bool createIfNoInstance) {
-    if(windowInstance == 0 && createIfNoInstance)
+    if(windowInstance == 0 && createIfNoInstance) {
         windowInstance = new Window();
+    }
     return windowInstance;
 }
 
-Window::Window(QWidget *parent) :
+Window::Window(QWidget* parent) :
     QMainWindow(parent) {
-    if(Settings::resetOnNextStart())
+    if(Settings::resetOnNextStart()) {
         QSettings().clear();
+    }
 
     GuiMessages::progress("mainwindow", "Setting up main window...");
     setupUi(this);
@@ -42,7 +44,7 @@ Window::Window(QWidget *parent) :
     setWindowTitle(QString("QuteScoop %1").arg(Platform::version()));
 
     // apply styleSheet
-    if (!Settings::stylesheet().isEmpty()) {
+    if(!Settings::stylesheet().isEmpty()) {
         qDebug() << "Window::() applying styleSheet:" << Settings::stylesheet();
         setStyleSheet(Settings::stylesheet());
     }
@@ -87,7 +89,7 @@ Window::Window(QWidget *parent) :
     );
     actionShowRoutes_triggered(Settings::showRoutes(), false);
 
-    Whazzup *whazzup = Whazzup::instance();
+    Whazzup* whazzup = Whazzup::instance();
     connect(actionDownload, &QAction::triggered, whazzup, &Whazzup::downloadJson3);
 
     // these 2 get disconnected and connected again to inhibit unnecessary updates:
@@ -105,7 +107,7 @@ Window::Window(QWidget *parent) :
     _sortmodelMetar->setSourceModel(&_metarModel);
 
     metarList->setModel(_sortmodelMetar);
-    MetarDelegate *metarDelegate = new MetarDelegate();
+    MetarDelegate* metarDelegate = new MetarDelegate();
     metarDelegate->setParent(metarList);
     metarList->setItemDelegate(metarDelegate);
     //metarList->setWordWrap(true); // some say this causes sizeHint() to be called on resize, but it does not
@@ -130,12 +132,18 @@ Window::Window(QWidget *parent) :
     connect(&_timerWhazzup, &QTimer::timeout, this, &Window::downloadWatchdogTriggered);
 
     // dock layout
-    connect(metarDock, &QDockWidget::dockLocationChanged,
-            this, &Window::metarDockMoved);
-    connect(searchDock, &QDockWidget::dockLocationChanged,
-            this, &Window::searchDockMoved);
-    connect(friendsDock, &QDockWidget::dockLocationChanged,
-            this, &Window::friendsDockMoved);
+    connect(
+        metarDock, &QDockWidget::dockLocationChanged,
+        this, &Window::metarDockMoved
+    );
+    connect(
+        searchDock, &QDockWidget::dockLocationChanged,
+        this, &Window::searchDockMoved
+    );
+    connect(
+        friendsDock, &QDockWidget::dockLocationChanged,
+        this, &Window::friendsDockMoved
+    );
 
     // Forecast / Predict settings
     framePredict->hide();
@@ -167,18 +175,28 @@ Window::Window(QWidget *parent) :
     qDebug() << "Window::() --finished";
 }
 
-Window::~Window() {
-}
+Window::~Window() {}
 
 void Window::restore() {
     qDebug() << "Window::restore() restoring window state, geometry and position";
 
-    if (!Settings::savedSize().isNull())     resize(Settings::savedSize());
-    if (!Settings::savedPosition().isNull()) move(Settings::savedPosition());
-    if (!Settings::savedGeometry().isNull()) restoreGeometry(Settings::savedGeometry());
-    if (!Settings::savedState().isNull())    restoreState(Settings::savedState());
-    if (Settings::maximized())               showMaximized();
-    else                                     show();
+    if(!Settings::savedSize().isNull()) {
+        resize(Settings::savedSize());
+    }
+    if(!Settings::savedPosition().isNull()) {
+        move(Settings::savedPosition());
+    }
+    if(!Settings::savedGeometry().isNull()) {
+        restoreGeometry(Settings::savedGeometry());
+    }
+    if(!Settings::savedState().isNull()) {
+        restoreState(Settings::savedState());
+    }
+    if(Settings::maximized()) {
+        showMaximized();
+    } else {
+        show();
+    }
 
     emit restored();
 }
@@ -198,7 +216,7 @@ void Window::about() {
         this,
         tr("About QuteScoop"),
         tr(
-R"html(
+            R"html(
 <h3>QuteScoop</h3>
 
 <p>
@@ -233,40 +251,46 @@ void Window::processWhazzup(bool isNew) {
 
     QString msg = QString(tr("%1%2 - %3: %4 clients"))
         .arg(
-            Settings::downloadNetworkName(),
-            Whazzup::instance()->predictedTime.isValid() ? " - <b>W A R P E D</b>  to" : ""
+        Settings::downloadNetworkName(),
+        Whazzup::instance()->predictedTime.isValid()? " - <b>W A R P E D</b>  to": ""
         )
-        .arg(data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+        .arg(
+        data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
             ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
-            : data.whazzupTime.toString("ddd MM/dd HHmm'z'"))
+            : data.whazzupTime.toString("ddd MM/dd HHmm'z'")
+        )
         .arg(data.pilots.size() + data.controllers.size());
     GuiMessages::status(msg, "status");
 
     msg = QString("Whazzup %1, bookings %2 updated")
         .arg(
-            realdata.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+        realdata.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
                 ? QString("today %1").arg(realdata.whazzupTime.time().toString("HHmm'z'"))
                 : (realdata.whazzupTime.isValid()
                    ? realdata.whazzupTime.toString("ddd MM/dd HHmm'z'")
                    : "never"
-                 ),
-            realdata.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
+        ),
+        realdata.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
                 ? QString("today %1").arg(realdata.bookingsTime.time().toString("HHmm'z'"))
                 : (realdata.bookingsTime.isValid()
                    ? realdata.bookingsTime.toString("ddd MM/dd HHmm'z'")
                    : "never"
-                 )
+                )
         );
     lblWarpInfo->setText(msg);
 
-    if (Whazzup::instance()->predictedTime.isValid()) {
+    if(Whazzup::instance()->predictedTime.isValid()) {
         framePredict->show();
         dateTimePredict->setDateTime(Whazzup::instance()->predictedTime);
         if(isNew) {
             // recalculate prediction on new data arrived
-            if(data.predictionBasedOnTime != realdata.whazzupTime
-                || data.predictionBasedOnBookingsTime != realdata.bookingsTime)
+            if(
+                data.predictionBasedOnTime != realdata.whazzupTime
+                || data.predictionBasedOnBookingsTime != realdata.bookingsTime
+            )
+            {
                 Whazzup::instance()->setPredictedTime(dateTimePredict->dateTime());
+            }
         }
     }
 
@@ -276,56 +300,63 @@ void Window::processWhazzup(bool isNew) {
 
         performSearch();
 
-        if (AirportDetails::instance(false) != 0) {
-            if (AirportDetails::instance()->isVisible())
+        if(AirportDetails::instance(false) != 0) {
+            if(AirportDetails::instance()->isVisible()) {
                 AirportDetails::instance()->refresh();
-            else // not visible -> delete it...
+            } else { // not visible -> delete it...
                 AirportDetails::instance()->destroyInstance();
+            }
         }
-        if (PilotDetails::instance(false) != 0) {
-            if (PilotDetails::instance()->isVisible())
+        if(PilotDetails::instance(false) != 0) {
+            if(PilotDetails::instance()->isVisible()) {
                 PilotDetails::instance()->refresh();
-            else // not visible -> delete it...
+            } else { // not visible -> delete it...
                 PilotDetails::instance()->destroyInstance();
+            }
         }
-        if (ControllerDetails::instance(false) != 0) {
-            if (ControllerDetails::instance()->isVisible())
+        if(ControllerDetails::instance(false) != 0) {
+            if(ControllerDetails::instance()->isVisible()) {
                 ControllerDetails::instance()->refresh();
-            else // not visible -> delete it...
+            } else { // not visible -> delete it...
                 ControllerDetails::instance()->destroyInstance();
+            }
         }
 
-        if (ListClientsDialog::instance(false) != 0) {
-            if (ListClientsDialog::instance()->isVisible())
+        if(ListClientsDialog::instance(false) != 0) {
+            if(ListClientsDialog::instance()->isVisible()) {
                 ListClientsDialog::instance()->refresh();
-            else // not visible -> delete it...
+            } else { // not visible -> delete it...
                 ListClientsDialog::instance()->destroyInstance();
+            }
         }
 
         if(realdata.bookingsTime.isValid()) {
-            if (BookedAtcDialog::instance(false) != 0) {
-                if (BookedAtcDialog::instance()->isVisible())
+            if(BookedAtcDialog::instance(false) != 0) {
+                if(BookedAtcDialog::instance()->isVisible()) {
                     BookedAtcDialog::instance()->refresh();
-                else // not visible -> delete it...
+                } else { // not visible -> delete it...
                     BookedAtcDialog::instance()->destroyInstance();
+                }
             }
         }
 
         refreshFriends();
 
-        if (Settings::shootScreenshots())
+        if(Settings::shootScreenshots()) {
             shootScreenshot();
+        }
     }
     _timerWhazzup.stop();
-    if(Settings::downloadPeriodically())
+    if(Settings::downloadPeriodically()) {
         _timerWhazzup.start(Settings::downloadInterval() * 60 * 1000 * 4);
+    }
 
     qDebug() << "Window::whazzupDownloaded() -- finished";
 }
 
 void Window::refreshFriends() {
     // update friends list
-    FriendsVisitor *visitor = new FriendsVisitor();
+    FriendsVisitor* visitor = new FriendsVisitor();
     Whazzup::instance()->whazzupData().accept(visitor);
     _modelFriends.setSearchResults(visitor->result());
     delete visitor;
@@ -348,7 +379,7 @@ void Window::openPlanFlight() {
 
 void Window::openBookedAtc() {
     BookedAtcDialog::instance(true, this)->show();
-    if (actionPredict->isChecked()) {
+    if(actionPredict->isChecked()) {
         BookedAtcDialog::instance()->setDateTime(dateTimePredict->dateTime().toUTC());
     }
     BookedAtcDialog::instance()->raise();
@@ -375,11 +406,12 @@ void Window::on_searchEdit_textChanged(const QString& text) {
 }
 
 void Window::performSearch() {
-    if(searchEdit->text().length() < 1)
+    if(searchEdit->text().length() < 1) {
         return;
+    }
 
     _timerSearch.stop();
-    SearchVisitor *visitor = new SearchVisitor(searchEdit->text());
+    SearchVisitor* visitor = new SearchVisitor(searchEdit->text());
     NavData::instance()->accept(visitor);
     Whazzup::instance()->whazzupData().accept(visitor);
 
@@ -389,34 +421,52 @@ void Window::performSearch() {
     searchResult->reset();
 }
 
-void Window::closeEvent(QCloseEvent *event) {
+void Window::closeEvent(QCloseEvent* event) {
     // save window statii
     Settings::saveState(saveState());
     Settings::saveGeometry(saveGeometry()); // added this 'cause maximized wasn't saved
     Settings::saveSize(size()); // readded as Mac OS had problems with geometry only
     Settings::savePosition(pos());
     Settings::saveMaximized(isMaximized());
-    if (Settings::rememberMapPositionOnClose())
+    if(Settings::rememberMapPositionOnClose()) {
         mapScreen->glWidget->rememberPosition(9);
+    }
 
     event->accept();
 }
 
 void Window::on_actionHideAllWindows_triggered() {
-    if (PilotDetails::instance(false) != 0) PilotDetails::instance()->close();
-    if (ControllerDetails::instance(false) != 0) ControllerDetails::instance()->close();
-    if (AirportDetails::instance(false) != 0) AirportDetails::instance()->close();
-    if (PreferencesDialog::instance(false) != 0) PreferencesDialog::instance()->close();
-    if (PlanFlightDialog::instance(false) != 0) PlanFlightDialog::instance()->close();
-    if (BookedAtcDialog::instance(false) != 0) BookedAtcDialog::instance()->close();
-    if (ListClientsDialog::instance(false) != 0) ListClientsDialog::instance()->close();
+    if(PilotDetails::instance(false) != 0) {
+        PilotDetails::instance()->close();
+    }
+    if(ControllerDetails::instance(false) != 0) {
+        ControllerDetails::instance()->close();
+    }
+    if(AirportDetails::instance(false) != 0) {
+        AirportDetails::instance()->close();
+    }
+    if(PreferencesDialog::instance(false) != 0) {
+        PreferencesDialog::instance()->close();
+    }
+    if(PlanFlightDialog::instance(false) != 0) {
+        PlanFlightDialog::instance()->close();
+    }
+    if(BookedAtcDialog::instance(false) != 0) {
+        BookedAtcDialog::instance()->close();
+    }
+    if(ListClientsDialog::instance(false) != 0) {
+        ListClientsDialog::instance()->close();
+    }
 
-    if(searchDock->isFloating())
+    if(searchDock->isFloating()) {
         searchDock->hide();
-    if(metarDock->isFloating())
+    }
+    if(metarDock->isFloating()) {
         metarDock->hide();
-    if(friendsDock->isFloating())
+    }
+    if(friendsDock->isFloating()) {
         friendsDock->hide();
+    }
 
     mapScreen->glWidget->clientSelection->close();
 }
@@ -436,11 +486,12 @@ void Window::on_btnRefreshMetar_clicked() {
 }
 
 void Window::updateMetars() {
-    if(metarEdit->text().length() < 1)
+    if(metarEdit->text().length() < 1) {
         return;
+    }
 
     _timerMetar.stop();
-    MetarSearchVisitor *visitor = new MetarSearchVisitor(metarEdit->text());
+    MetarSearchVisitor* visitor = new MetarSearchVisitor(metarEdit->text());
     NavData::instance()->accept(visitor); // search airports only
 
     _metarModel.setAirports(visitor->airports());
@@ -469,29 +520,31 @@ void Window::friendsDockMoved(Qt::DockWidgetArea area) {
     updateTitlebarAfterMove(area, friendsDock);
 }
 
-void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget *dock) {
+void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget* dock) {
     switch(area) {
-    case Qt::LeftDockWidgetArea:
-    case Qt::RightDockWidgetArea:
-        // set horizontal title bar
-        dock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
-        break;
-    case Qt::TopDockWidgetArea:
-    case Qt::BottomDockWidgetArea:
-        // set vertical title bar
-        dock->setFeatures(searchDock->features() | QDockWidget::DockWidgetVerticalTitleBar);
-        break;
-    default: {}
+        case Qt::LeftDockWidgetArea:
+        case Qt::RightDockWidgetArea:
+            // set horizontal title bar
+            dock->setFeatures(QDockWidget::DockWidgetClosable | QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+            break;
+        case Qt::TopDockWidgetArea:
+        case Qt::BottomDockWidgetArea:
+            // set vertical title bar
+            dock->setFeatures(searchDock->features() | QDockWidget::DockWidgetVerticalTitleBar);
+            break;
+        default: {}
     }
 }
 
 void Window::downloadWatchdogTriggered() {
     _timerWhazzup.stop();
     Whazzup::instance()->setStatusLocation(Settings::statusLocation());
-    GuiMessages::errorUserAttention("Failed to download network data for a while. "
-                                    "Maybe a Whazzup location went offline. "
-                                    "I try to get the Network Status again.",
-                                    "Whazzup-download failed.");
+    GuiMessages::errorUserAttention(
+        "Failed to download network data for a while. "
+        "Maybe a Whazzup location went offline. "
+        "I try to get the Network Status again.",
+        "Whazzup-download failed."
+    );
 }
 
 void Window::setEnableBookedAtc(bool enable) {
@@ -507,10 +560,10 @@ void Window::performWarp() {
     if(cbUseDownloaded->isChecked() && warpToTime < realWhazzupTime) {
         qDebug() << "Window::performWarp() Looking for downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
-        for (int i = downloaded.size() - 1; i > -1; i--) {
+        for(int i = downloaded.size() - 1; i > -1; i--) {
             if((downloaded[i].first <= warpToTime && realWhazzupTime < downloaded[i].first) || (i == 0)) {
                 // only if different
-                if (downloaded[i].first != realWhazzupTime) {
+                if(downloaded[i].first != realWhazzupTime) {
                     // disconnect to inhibit update because will be updated later
                     disconnect(Whazzup::instance(), &Whazzup::newData, mapScreen->glWidget, &GLWidget::newWhazzupData);
                     disconnect(Whazzup::instance(), &Whazzup::newData, this, &Window::processWhazzup);
@@ -553,7 +606,7 @@ void Window::on_tbDisablePredict_clicked() {
 void Window::on_actionPredict_toggled(bool enabled) {
     if(enabled) {
         _dateTimePredict_old = QDateTime::currentDateTimeUtc()
-                .addSecs(- QDateTime::currentDateTimeUtc().time().second()); // remove seconds
+            .addSecs(-QDateTime::currentDateTimeUtc().time().second()); // remove seconds
         dateTimePredict->setDateTime(_dateTimePredict_old);
         framePredict->show();
     } else {
@@ -584,17 +637,17 @@ void Window::runPredict() {
     _timerRunPredict.stop();
     QDateTime to;
 
-    if (dsRunPredictStep->value() == 0) { // real time selected
+    if(dsRunPredictStep->value() == 0) { // real time selected
         to = QDateTime::currentDateTimeUtc();
     } else {
-        to = Whazzup::instance()->predictedTime.addSecs(static_cast<int>(dsRunPredictStep->value()*60));
+        to = Whazzup::instance()->predictedTime.addSecs(static_cast<int>(dsRunPredictStep->value() * 60));
     }
 
     // when only using downloaded Whazzups, select the next available
     if(cbOnlyUseDownloaded->isChecked()) {
         qDebug() << "Window::runPredict() restricting Warp target to downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
-        for (int i = 0; i < downloaded.size(); i++) {
+        for(int i = 0; i < downloaded.size(); i++) {
             if((downloaded[i].first >= to) || (i == downloaded.size() - 1)) {
                 to = downloaded[i].first;
                 break;
@@ -622,57 +675,89 @@ void Window::dateTimePredict_dateTimeChanged(QDateTime dateTime) {
     _timerEditPredict.stop();
 
     // make year change if M 12+ or 0-
-    if ((_dateTimePredict_old.date().month() == 12)
-        && (dateTime.date().month() == 1))
+    if(
+        (_dateTimePredict_old.date().month() == 12)
+        && (dateTime.date().month() == 1)
+    )
+    {
         dateTime = dateTime.addYears(1);
-    if ((_dateTimePredict_old.date().month() == 1)
-        && (dateTime.date().month() == 12))
+    }
+    if(
+        (_dateTimePredict_old.date().month() == 1)
+        && (dateTime.date().month() == 12)
+    )
+    {
         dateTime = dateTime.addYears(-1);
+    }
 
     // make month change if d lastday+ or 0-
-    if ((_dateTimePredict_old.date().day() == _dateTimePredict_old.date().daysInMonth())
-        && (dateTime.date().day() == 1)) {
+    if(
+        (_dateTimePredict_old.date().day() == _dateTimePredict_old.date().daysInMonth())
+        && (dateTime.date().day() == 1)
+    )
+    {
         dateTime = dateTime.addMonths(1);
     }
-    if ((_dateTimePredict_old.date().day() == 1)
-        && (dateTime.date().day() == dateTime.date().daysInMonth())) {
+    if(
+        (_dateTimePredict_old.date().day() == 1)
+        && (dateTime.date().day() == dateTime.date().daysInMonth())
+    )
+    {
         dateTime = dateTime.addMonths(-1);
-        dateTime = dateTime.addDays( // compensate for month lengths
-                dateTime.date().daysInMonth()
-                - _dateTimePredict_old.date().daysInMonth());
+        dateTime = dateTime.addDays(
+            // compensate for month lengths
+            dateTime.date().daysInMonth()
+            - _dateTimePredict_old.date().daysInMonth()
+        );
     }
 
     // make day change if h 23+ or 00-
-    if ((_dateTimePredict_old.time().hour() == 23)
-        && (dateTime.time().hour() == 0))
+    if(
+        (_dateTimePredict_old.time().hour() == 23)
+        && (dateTime.time().hour() == 0)
+    )
+    {
         dateTime = dateTime.addDays(1);
-    if ((_dateTimePredict_old.time().hour() == 0)
-        && (dateTime.time().hour() == 23))
+    }
+    if(
+        (_dateTimePredict_old.time().hour() == 0)
+        && (dateTime.time().hour() == 23)
+    )
+    {
         dateTime = dateTime.addDays(-1);
+    }
 
     // make hour change if m 59+ or 0-
-    if ((_dateTimePredict_old.time().minute() == 59)
-        && (dateTime.time().minute() == 0))
+    if(
+        (_dateTimePredict_old.time().minute() == 59)
+        && (dateTime.time().minute() == 0)
+    )
+    {
         dateTime = dateTime.addSecs(60 * 60);
-    if ((_dateTimePredict_old.time().minute() == 0)
-        && (dateTime.time().minute() == 59))
+    }
+    if(
+        (_dateTimePredict_old.time().minute() == 0)
+        && (dateTime.time().minute() == 59)
+    )
+    {
         dateTime = dateTime.addSecs(-60 * 60);
+    }
 
     // when only using downloaded Whazzups, select the next available
     if(cbOnlyUseDownloaded->isChecked()) {
         qDebug() << "Window::dateTimePredict_dateTimeChanged()"
                  << "restricting Warp target to downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded =
-                Whazzup::instance()->downloadedWhazzups();
-        if (dateTime > _dateTimePredict_old) { // selecting a later date
-            for (int i = 0; i < downloaded.size(); i++) {
+            Whazzup::instance()->downloadedWhazzups();
+        if(dateTime > _dateTimePredict_old) { // selecting a later date
+            for(int i = 0; i < downloaded.size(); i++) {
                 if((downloaded[i].first >= dateTime) || (i == downloaded.size() - 1)) {
                     dateTime = downloaded[i].first;
                     break;
                 }
             }
         } else { // selecting an earlier date
-            for (int i = downloaded.size() - 1; i > -1; i--) {
+            for(int i = downloaded.size() - 1; i > -1; i--) {
                 if((downloaded[i].first <= dateTime) || (i == 0)) {
                     dateTime = downloaded[i].first;
                     break;
@@ -683,8 +768,9 @@ void Window::dateTimePredict_dateTimeChanged(QDateTime dateTime) {
 
     _dateTimePredict_old = dateTime;
 
-    if(dateTime.isValid() && (dateTime != dateTimePredict->dateTime()))
+    if(dateTime.isValid() && (dateTime != dateTimePredict->dateTime())) {
         dateTimePredict->setDateTime(dateTime);
+    }
 
     connect(dateTimePredict, &QDateTimeEdit::dateTimeChanged, this, &Window::dateTimePredict_dateTimeChanged);
     _timerEditPredict.start(1000);
@@ -723,20 +809,26 @@ void Window::on_actionRecallMapPosition2_triggered() {
 }
 
 void Window::on_actionRememberMapPosition9_triggered() {
-    if (Settings::rememberMapPositionOnClose()) {
-        if (QMessageBox::question(this, "Startup position will be overridden on close",
-                              "You have just set the startup map position. "
-                              "Anyhow this will be overridden on close because "
-                              "you have set 'remember startup map position on close' "
-                              "in preferences.\n\n"
-                              "Do you want to disable 'remember startup map position "
-                              "on close' now?",
-                              QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)
-                == QMessageBox::Yes) {
+    if(Settings::rememberMapPositionOnClose()) {
+        if(
+            QMessageBox::question(
+                this, "Startup position will be overridden on close",
+                "You have just set the startup map position. "
+                "Anyhow this will be overridden on close because "
+                "you have set 'remember startup map position on close' "
+                "in preferences.\n\n"
+                "Do you want to disable 'remember startup map position "
+                "on close' now?",
+                QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes
+            )
+            == QMessageBox::Yes
+        )
+        {
             Settings::setRememberMapPositionOnClose(false);
-            if (PreferencesDialog::instance(false) != 0)
-                    PreferencesDialog::instance()->
-                            cbRememberMapPositionOnClose->setChecked(false);
+            if(PreferencesDialog::instance(false) != 0) {
+                PreferencesDialog::instance()->
+                cbRememberMapPositionOnClose->setChecked(false);
+            }
         }
     }
     mapScreen->glWidget->rememberPosition(9);
@@ -806,40 +898,52 @@ void Window::on_actionZoomReset_triggered() {
 
 void Window::shootScreenshot() {
     QString filename = Settings::dataDirectory(
-            QString("screenshots/%1_%2")
-            .arg(Settings::downloadNetwork())
-            .arg(Whazzup::instance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss")));
+        QString("screenshots/%1_%2")
+        .arg(Settings::downloadNetwork())
+        .arg(Whazzup::instance()->whazzupData().whazzupTime.toString("yyyyMMdd-HHmmss"))
+    );
 
-    if (Settings::screenshotMethod() == 0)
-        qApp->screens().first()->grabWindow(mapScreen->glWidget->winId()).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                                    Settings::screenshotFormat().toLatin1());
-    else if (Settings::screenshotMethod() == 1)
-        mapScreen->glWidget->renderPixmap().save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                      Settings::screenshotFormat().toLatin1(), true);
-    else if (Settings::screenshotMethod() == 2)
-        mapScreen->glWidget->grabFrameBuffer(true).save(QString("%1.%2").arg(filename, Settings::screenshotFormat()),
-                                             Settings::screenshotFormat().toLatin1());
+    if(Settings::screenshotMethod() == 0) {
+        qApp->screens().first()->grabWindow(mapScreen->glWidget->winId()).save(
+            QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+            Settings::screenshotFormat().toLatin1()
+        );
+    } else if(Settings::screenshotMethod() == 1) {
+        mapScreen->glWidget->renderPixmap().save(
+            QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+            Settings::screenshotFormat().toLatin1(), true
+        );
+    } else if(Settings::screenshotMethod() == 2) {
+        mapScreen->glWidget->grabFrameBuffer(true).save(
+            QString("%1.%2").arg(filename, Settings::screenshotFormat()),
+            Settings::screenshotFormat().toLatin1()
+        );
+    }
     qDebug() << "Window::shootScreenshot()" << QString("%1.png").arg(filename); //fixme
 }
 
 void Window::actionShowRoutes_triggered(bool checked, bool showStatus) {
     qDebug() << "Window::on_actionShowRoutes_triggered()" << checked;
     Settings::setShowRoutes(checked);
-    if (showStatus) {
+    if(showStatus) {
         GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
     }
-    foreach(Airport *a, NavData::instance()->airports.values()) // synonym to "toggle routes" on all airports
+    foreach(Airport* a, NavData::instance()->airports.values()) { // synonym to "toggle routes" on all airports
         a->showRoutes = checked;
-    if (!checked) { // when disabled, this shall clear all routes
-        foreach (Pilot *p, Whazzup::instance()->whazzupData().allPilots())
+    }
+    if(!checked) { // when disabled, this shall clear all routes
+        foreach(Pilot* p, Whazzup::instance()->whazzupData().allPilots()) {
             p->showDepDestLine = false;
+        }
     }
 
     // adjust the "plot route" tick in dialogs
-    if (AirportDetails::instance(false) != 0)
+    if(AirportDetails::instance(false) != 0) {
         AirportDetails::instance()->refresh();
-    if (PilotDetails::instance(false) != 0)
+    }
+    if(PilotDetails::instance(false) != 0) {
         PilotDetails::instance()->refresh();
+    }
 
     // map update
     mapScreen->glWidget->invalidatePilots();
@@ -854,7 +958,9 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
 void Window::on_actionHighlight_Friends_triggered(bool checked) {
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
-    if (!checked) mapScreen->glWidget->destroyFriendHighlighter();
+    if(!checked) {
+        mapScreen->glWidget->destroyFriendHighlighter();
+    }
     mapScreen->glWidget->update();
 }
 

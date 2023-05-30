@@ -6,10 +6,10 @@
 #include "../BookedAtcDialogModel.h"
 #include "../BookedAtcSortFilter.h"
 
-class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
-        Q_OBJECT
+class BookedAtcDialog: public QDialog, private Ui::BookedAtcDialog {
+    Q_OBJECT
     public:
-        static BookedAtcDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static BookedAtcDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void destroyInstance();
         void refresh();
         void setDateTime(const QDateTime &dateTime);
@@ -18,7 +18,7 @@ class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
         void needBookings();
 
     protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent* event);
 
     private slots:
         void on_dateTimeFilter_dateTimeChanged(QDateTime date);
@@ -28,10 +28,10 @@ class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
         void on_editFilter_textChanged(QString str);
 
     private:
-        BookedAtcDialog(QWidget *parent);
+        BookedAtcDialog(QWidget* parent);
 
-        BookedAtcDialogModel *_bookedAtcModel;
-        BookedAtcSortFilter *_bookedAtcSortModel;
+        BookedAtcDialogModel* _bookedAtcModel;
+        BookedAtcSortFilter* _bookedAtcSortModel;
 
         QDateTime _dateTimeFilter_old;
         QTimer _editFilterTimer;

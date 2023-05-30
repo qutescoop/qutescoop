@@ -12,7 +12,9 @@ class Sector {
         Sector(QStringList fields, unsigned int debugLineNumber);
         ~Sector();
 
-        bool isNull() const { return icao.isNull(); }
+        bool isNull() const {
+            return icao.isNull();
+        }
 
         bool containsPoint(const QPointF &pt) const;
 
@@ -29,7 +31,9 @@ class Sector {
 
         QPair<double, double> getCenter() const;
 
-        const QStringList& controllerSuffixes() const { return m_controllerSuffixes; }
+        const QStringList& controllerSuffixes() const {
+            return m_controllerSuffixes;
+        }
     private:
         QStringList m_controllerSuffixes = QStringList();
         QList<QPolygonF> m_nonWrappedPolygons;

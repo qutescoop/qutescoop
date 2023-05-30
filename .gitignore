@@ -7,8 +7,6 @@
 /.cache
 /.qmake*
 /Makefile
-# (legacy)
-/temp
 
 # runtime (when built in-tree)
 /log.txt
@@ -20,3 +18,4 @@
 # build artifacts
 /QuteScoop
 /DIST-*/
+/temp

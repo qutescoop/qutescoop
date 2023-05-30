@@ -31,8 +31,9 @@ int BookedAtcDialogModel::columnCount(const QModelIndex&) const {
 }
 
 QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid() || (index.row() >= rowCount(index)))
+    if(!index.isValid() || (index.row() >= rowCount(index))) {
         return QVariant();
+    }
 
     if(role == Qt::FontRole) {
         BookedController* c = _controllers[index.row()];

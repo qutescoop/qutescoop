@@ -5,21 +5,18 @@ MapObject::MapObject() :
     lat(0.),
     lon(0.),
     drawLabel(true)
-{
-}
+{}
 
 MapObject::MapObject(QString label, QString toolTip) :
     label(label),
     _toolTip(toolTip)
-{
-}
+{}
 
-MapObject::~MapObject() {
-}
+MapObject::~MapObject() {}
 
 MapObject::MapObject(const MapObject& obj) :
     QObject() {
-    if (this == &obj) {
+    if(this == &obj) {
         return;
     }
 
@@ -30,7 +27,7 @@ MapObject::MapObject(const MapObject& obj) :
 }
 
 MapObject& MapObject::operator=(const MapObject& obj) {
-    if (this == &obj) {
+    if(this == &obj) {
         return *this;
     }
 

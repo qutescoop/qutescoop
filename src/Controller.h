@@ -41,10 +41,10 @@ class Controller: public Client {
         int facilityType, visualRange;
         QDateTime assumeOnlineUntil;
 
-        Sector *sector;
-protected:
+        Sector* sector;
+    protected:
         QString specialAirportWorkarounds(const QString& rawAirport) const;
-private:
+    private:
 };
 
 #endif /*CONTROLLER_H_*/

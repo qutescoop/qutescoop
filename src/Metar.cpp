@@ -6,12 +6,11 @@
 
 #include <QRegExp>
 
-Metar::Metar(const QString& encStr, const QString& airportLabel):
+Metar::Metar(const QString& encStr, const QString& airportLabel) :
     encoded(encStr),
     airportLabel(airportLabel),
     downloaded(QDateTime::currentDateTime())
-{
-}
+{}
 
 bool Metar::isNull() const {
     return encoded.isNull();
@@ -39,9 +38,13 @@ QString Metar::decodeDate(QStringList& tokens) const {
 
     // 012020Z
     int day = date.leftRef(2).toInt();
-    if(day == 1) result += "1st";
-    else if(day == 2) result += "2nd";
-    else result += QString("%1th").arg(day);
+    if(day == 1) {
+        result += "1st";
+    } else if(day == 2) {
+        result += "2nd";
+    } else {
+        result += QString("%1th").arg(day);
+    }
 
     date = date.right(5);
     result += " on " + date.left(2) + date.right(3).toLower();
@@ -84,7 +87,7 @@ QString Metar::decodeWind(QStringList& tokens) const {
     }
 
     // 320V040
-    if (!tokens.isEmpty()) {
+    if(!tokens.isEmpty()) {
         QString varying = tokens.first();
         if(varying.contains(QRegExp("^[0-9]{3}V[0-9]{3}$"))) {
             tokens.removeFirst();
@@ -96,7 +99,9 @@ QString Metar::decodeWind(QStringList& tokens) const {
 }
 
 QString Metar::decodeVisibility(QStringList& tokens) const {
-    if(tokens.isEmpty()) return QString();
+    if(tokens.isEmpty()) {
+        return QString();
+    }
     QString vis = tokens.first();
 
     if(vis == "CAVOK") {
@@ -134,43 +139,56 @@ QString Metar::decodeVisibility(QStringList& tokens) const {
 
     tokens.removeFirst();
 
-    if(i == 9999)
+    if(i == 9999) {
         return "Visibility 10KM or more";
+    }
 
-    if(i < 50)
+    if(i < 50) {
         return "Visibility less than 50m";
+    }
 
-    if(i % 1000 == 0)
+    if(i % 1000 == 0) {
         return QString("Visibility %1KM").arg(i / 1000);
+    }
 
     return QString("Visibility %1m").arg(i);
 }
 
 #define SIG(xy, descr) if(sig.startsWith(xy)) { \
-    if(!QString(descr).isEmpty()) { result += QString(descr) + " "; } \
-    sig.remove(0, QString(xy).length()); }
+        if(!QString(descr).isEmpty()) { result += QString(descr) + " "; } \
+        sig.remove(0, QString(xy).length()); }
 
 #define SIG2(xy, descr) if(sig.startsWith(xy)) { \
-    if(!QString(descr).isEmpty()) { result += QString(descr) + " "; } \
-    sig.remove(0, QString(xy).length()); loop = true; }
+        if(!QString(descr).isEmpty()) { result += QString(descr) + " "; } \
+        sig.remove(0, QString(xy).length()); loop = true; }
 
 QString Metar::decodeSigWX(QStringList& tokens) const {
-    if(tokens.isEmpty()) return QString();
-    QRegExp regex = QRegExp(QString("^(VC)?")                    // Proximity
-                            + "(-|\\+)?"                         // Intensity
-                            + "(MI|PR|BC|DR|BL|SH|TS|FZ)?"       // Descriptor
-                            + "(((DZ|RA|SN|SG|IC|PL|GR|GS|UP)+)|"  // Precipitation
-                            + "(BR|FG|FU|VA|DU|SA|HZ|PY))"       // Obscuration
-                            + "(PO|SQ|FC|SS)?");                 // Other
+    if(tokens.isEmpty()) {
+        return QString();
+    }
+    QRegExp regex = QRegExp(
+        QString("^(VC)?") // Proximity
+        + "(-|\\+)?" // Intensity
+        + "(MI|PR|BC|DR|BL|SH|TS|FZ)?" // Descriptor
+        + "(((DZ|RA|SN|SG|IC|PL|GR|GS|UP)+)|" // Precipitation
+        + "(BR|FG|FU|VA|DU|SA|HZ|PY))" // Obscuration
+        + "(PO|SQ|FC|SS)?"
+    ); // Other
 
     QString sig = tokens.first();
-    if(!sig.contains(regex)) return QString();
+    if(!sig.contains(regex)) {
+        return QString();
+    }
     tokens.removeFirst();
     QString result;
 
     SIG("VC", "Vicinity");
-    if(sig.startsWith("+")) { result += "heavy "; sig.remove(0, 1); }
-    if(sig.startsWith("-")) { result += "light "; sig.remove(0, 1); }
+    if(sig.startsWith("+")) {
+        result += "heavy "; sig.remove(0, 1);
+    }
+    if(sig.startsWith("-")) {
+        result += "light "; sig.remove(0, 1);
+    }
 
     SIG("MI", "Shallow");
     SIG("PR", "Partial");
@@ -210,15 +228,21 @@ QString Metar::decodeSigWX(QStringList& tokens) const {
 }
 
 QString Metar::decodeClouds(QStringList& tokens) const {
-    if(tokens.isEmpty()) return QString();
+    if(tokens.isEmpty()) {
+        return QString();
+    }
     QRegExp regex = QRegExp("^(VV|FEW|SCT|BKN|OVC)([0-9]{3}|///)(CB|TCU)?");
     QString sig = tokens.first();
 
-    if(!sig.contains(regex)) return QString();
+    if(!sig.contains(regex)) {
+        return QString();
+    }
     tokens.removeFirst();
     QString result;
 
-    if(sig.startsWith("VV")) return result;
+    if(sig.startsWith("VV")) {
+        return result;
+    }
 
     SIG("FEW", "Few");
     SIG("SCT", "Scattered");
@@ -238,11 +262,15 @@ QString Metar::decodeClouds(QStringList& tokens) const {
 }
 
 QString Metar::decodeTemp(QStringList& tokens) const {
-    if(tokens.isEmpty()) return QString();
+    if(tokens.isEmpty()) {
+        return QString();
+    }
     QRegExp regex = QRegExp("^(M?[0-9]{2})/(M?[0-9]{2}|//)");
     QString sig = tokens.first();
 
-    if(!sig.contains(regex)) return QString();
+    if(!sig.contains(regex)) {
+        return QString();
+    }
     tokens.removeFirst();
     QString result = "Temperature ";
 
@@ -261,7 +289,9 @@ QString Metar::decodeTemp(QStringList& tokens) const {
 }
 
 QString Metar::decodeQNH(QStringList& tokens) const {
-    if(tokens.isEmpty()) return QString();
+    if(tokens.isEmpty()) {
+        return QString();
+    }
     QString sig = tokens.first();
     if(sig.contains(QRegExp("^Q[0-9]{4}"))) {
         tokens.removeFirst();
@@ -280,7 +310,9 @@ QString Metar::decodeQNH(QStringList& tokens) const {
 }
 
 QString Metar::decodePrediction(QStringList& tokens) const {
-    if(tokens.isEmpty()) return QString();
+    if(tokens.isEmpty()) {
+        return QString();
+    }
     QString sig = tokens.first();
 
     if(sig.contains(QRegExp("^BECMG"))) {
@@ -304,11 +336,12 @@ QString Metar::humanHtml() const {
     QStringList tokens = encoded.split(" ", Qt::SkipEmptyParts);
 
     // LOWW 012020Z 35006KT 320V040 9999 -RA FEW060 SCT070 BKN080 08/05 Q1014 NOSIG
-    Airport *a = NavData::instance()->airports[tokens.first()];
-    if(a == 0)
+    Airport* a = NavData::instance()->airports[tokens.first()];
+    if(a == 0) {
         result = tokens.first();
-    else
+    } else {
         result = a->prettyName();
+    }
 
     tokens.removeFirst();
     result += "<br>";
@@ -318,18 +351,25 @@ QString Metar::humanHtml() const {
 
     while(!tokens.isEmpty()) {
         QString part = decodeWind(tokens);
-        if(!part.isEmpty()) result += part;
+        if(!part.isEmpty()) {
+            result += part;
+        }
 
         part = decodeVisibility(tokens);
-        if(!part.isEmpty()) result += "<br>" + part;
+        if(!part.isEmpty()) {
+            result += "<br>" + part;
+        }
 
         part = "x";
         bool br = false;
         while(!part.isEmpty()) {
             part = decodeSigWX(tokens);
             if(!part.isEmpty()) {
-                if(!br) { result += "<br>"; br = true; }
-                else result += ", ";
+                if(!br) {
+                    result += "<br>"; br = true;
+                } else {
+                    result += ", ";
+                }
                 result += part;
             }
         }
@@ -339,25 +379,33 @@ QString Metar::humanHtml() const {
         while(!part.isEmpty()) {
             part = decodeClouds(tokens);
             if(!part.isEmpty()) {
-                if(!br) { result += "<br>Clouds "; br = true;}
-                else result += ", ";
+                if(!br) {
+                    result += "<br>Clouds "; br = true;
+                } else {
+                    result += ", ";
+                }
                 result += part;
             }
         }
 
         part = decodeTemp(tokens);
-        if(!part.isEmpty()) result += "<br>" + part;
+        if(!part.isEmpty()) {
+            result += "<br>" + part;
+        }
 
         part = decodeQNH(tokens);
-        if(!part.isEmpty()) result += "<br>" + part;
+        if(!part.isEmpty()) {
+            result += "<br>" + part;
+        }
 
         part = decodePrediction(tokens);
         if(part.isEmpty()) {
             if(!tokens.isEmpty()) {
-                if(tokens.first().startsWith("RMK"))
+                if(tokens.first().startsWith("RMK")) {
                     tokens.clear();
-                else
+                } else {
                     tokens.removeFirst();
+                }
             }
         } else {
             result += "<br>" + part + " ";

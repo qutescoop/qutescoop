@@ -11,8 +11,8 @@ void AirportDetailsDeparturesModel::setClients(const QList<Pilot*>& pilots) {
 }
 
 QVariant AirportDetailsDeparturesModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch (section) {
+    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch(section) {
             case 0: return QString("Callsign");
             case 1: return QString("Type");
             case 2: return QString("Name");
@@ -38,23 +38,23 @@ int AirportDetailsDeparturesModel::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role) const {
-    if (!index.isValid() || index.row() >= _pilots.size()) {
+    if(!index.isValid() || index.row() >= _pilots.size()) {
         return QVariant();
     }
 
     Pilot* p = _pilots[index.row()];
 
-    if (role == Qt::FontRole) {
+    if(role == Qt::FontRole) {
         QFont result;
-        if (p->flightStatus() == Pilot::PREFILED) {
+        if(p->flightStatus() == Pilot::PREFILED) {
             result.setItalic(true);
         }
-        if (p->isFriend()) {
+        if(p->isFriend()) {
             result.setBold(true);
         }
         return result;
-    } else if (role == Qt::TextAlignmentRole) {
-        switch (index.column()) {
+    } else if(role == Qt::TextAlignmentRole) {
+        switch(index.column()) {
             case 6:
             case 7:
                 return Qt::AlignRight;
@@ -63,8 +63,8 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
         }
 
         return Qt::AlignLeft;
-    } else if (role == Qt::DisplayRole) {
-        switch (index.column()) {
+    } else if(role == Qt::DisplayRole) {
+        switch(index.column()) {
             case 0:
                 return p->label;
             case 1:
@@ -78,10 +78,9 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
             case 5:
                 return p->waypoints().isEmpty()? QString(): p->waypoints().constFirst();
             case 6:
-                if (p->flightStatus() == Pilot::PREFILED) {
+                if(p->flightStatus() == Pilot::PREFILED) {
                     return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
-                }
-                else {
+                } else {
                     return QString("%1 NM").arg(p->distanceFromDeparture() < 3? 0: (int)p->distanceFromDeparture());
                 }
             case 7:
@@ -89,8 +88,8 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
             case 8:
                 return p->flightStatusShortString();
         }
-    } else if (role == Qt::UserRole) { // used for sorting
-        switch (index.column()) {
+    } else if(role == Qt::UserRole) { // used for sorting
+        switch(index.column()) {
             case 6:
                 return p->flightStatus() == Pilot::PREFILED? -1: p->distanceFromDeparture();
         }

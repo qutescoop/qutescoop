@@ -9,18 +9,21 @@
 #include "dialogs/Window.h"
 
 //singleton instance
-QSettings *settingsInstance = 0;
+QSettings* settingsInstance = 0;
 QSettings* Settings::instance() {
     if(settingsInstance == 0) {
         settingsInstance = new QSettings();
 
         const int requiredSettingsVersion = 3;
         int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
-        if (currentSettingsVersion < requiredSettingsVersion) {
+        if(currentSettingsVersion < requiredSettingsVersion) {
             if(currentSettingsVersion < 1) {
                 qDebug() << "Starting migration 0 -> 1";
-                if((settingsInstance->value("download/network", 0).toInt() == 1)
-                && (settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/")) {
+                if(
+                    (settingsInstance->value("download/network", 0).toInt() == 1)
+                    && (settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/")
+                )
+                {
                     settingsInstance->setValue("download/network", 0);
                     qDebug() << "Found a user defined network, but VATSIM status location. Migrated.";
                 }
@@ -54,9 +57,11 @@ QSettings* Settings::instance() {
             if(currentSettingsVersion < 3) {
                 qDebug() << "Starting migration 2 -> 3";
                 if(settingsInstance->value("download/bookingsLocation").toString() != "http://vatbook.euroutepro.com/servinfo.asp") {
-                    GuiMessages::criticalUserInteraction(QString("You have set the location for bookings to %1.\nThis is different from the old default location. Due to an update in QuteScoop the old format for bookings is no longer supported.\n\nYou will be migrated to the new default VATSIM bookings URL.")
-                       .arg(settingsInstance->value("download/bookingsLocation").toString()),
-                       "Update of bookings format");
+                    GuiMessages::criticalUserInteraction(
+                        QString("You have set the location for bookings to %1.\nThis is different from the old default location. Due to an update in QuteScoop the old format for bookings is no longer supported.\n\nYou will be migrated to the new default VATSIM bookings URL.")
+                        .arg(settingsInstance->value("download/bookingsLocation").toString()),
+                        "Update of bookings format"
+                    );
                 }
                 settingsInstance->setValue("download/bookingsLocation", "https://atc-bookings.vatsim.net/api/booking");
                 currentSettingsVersion = 3;
@@ -78,7 +83,7 @@ QString Settings::fileName()
 void Settings::exportToFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
     QStringList settings_keys = instance()->allKeys();
-    foreach (const QString &key, instance()->allKeys()) {
+    foreach(const QString &key, instance()->allKeys()) {
         settings_file->setValue(key, instance()->value(key));
     }
     delete settings_file;
@@ -86,16 +91,16 @@ void Settings::exportToFile(QString fileName) {
 
 void Settings::importFromFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
-    foreach (const QString &key, settings_file->allKeys()) {
+    foreach(const QString &key, settings_file->allKeys()) {
         instance()->setValue(key, settings_file->value(key));
     }
     delete settings_file;
 }
 
 /**
-  @param composeFilePath path/file (/ is multi-platform, also on Win)
-  @returns fully qualified path to the 'application data directory'.
-**/
+   @param composeFilePath path/file (/ is multi-platform, also on Win)
+   @returns fully qualified path to the 'application data directory'.
+ **/
 QString Settings::dataDirectory(const QString &composeFilePath) {
     return QString("%1/%2")
         .arg(QCoreApplication::applicationDirPath(), composeFilePath);
@@ -196,8 +201,8 @@ void Settings::setDownloadNetwork(int i) {
 
 QString Settings::downloadNetworkName() {
     switch(downloadNetwork()) {
-    case 0: return "VATSIM"; break;
-    case 1: return "User Network"; break;
+        case 0: return "VATSIM"; break;
+        case 1: return "User Network"; break;
     }
     return "Unknown";
 }
@@ -990,27 +995,38 @@ void Settings::setDestLineStrength(double value) {
     instance()->setValue("pilotDisplay/destLineStrength", value);
 }
 
-void Settings::rememberedMapPosition(double *xrot, double *yrot,
-                                     double *zrot, double *zoom, int nr) {
+void Settings::rememberedMapPosition(
+    double* xrot, double* yrot,
+    double* zrot, double* zoom, int nr
+) {
     *xrot = instance()->value(
-                "defaultMapPosition/xrot" + QString("%1").arg(nr), -90.).toDouble();
+        "defaultMapPosition/xrot" + QString("%1").arg(nr), -90.
+    ).toDouble();
     // ignore yRot: no Earth tilting
     Q_UNUSED(yrot);
     *zrot = instance()->value(
-                "defaultMapPosition/zrot" + QString("%1").arg(nr), 0.).toDouble();
+        "defaultMapPosition/zrot" + QString("%1").arg(nr), 0.
+    ).toDouble();
     *zoom = instance()->value(
-                "defaultMapPosition/zoom" + QString("%1").arg(nr), 2.).toDouble();
+        "defaultMapPosition/zoom" + QString("%1").arg(nr), 2.
+    ).toDouble();
 }
-void Settings::setRememberedMapPosition(double xrot, double yrot, double zrot,
-                                        double zoom, int nr) {
+void Settings::setRememberedMapPosition(
+    double xrot, double yrot, double zrot,
+    double zoom, int nr
+) {
     instance()->setValue(
-                "defaultMapPosition/xrot" + QString("%1").arg(nr), xrot);
+        "defaultMapPosition/xrot" + QString("%1").arg(nr), xrot
+    );
     instance()->setValue(
-                "defaultMapPosition/yrot" + QString("%1").arg(nr), yrot);
+        "defaultMapPosition/yrot" + QString("%1").arg(nr), yrot
+    );
     instance()->setValue(
-                "defaultMapPosition/zrot" + QString("%1").arg(nr), zrot);
+        "defaultMapPosition/zrot" + QString("%1").arg(nr), zrot
+    );
     instance()->setValue(
-                "defaultMapPosition/zoom" + QString("%1").arg(nr), zoom);
+        "defaultMapPosition/zoom" + QString("%1").arg(nr), zoom
+    );
 }
 bool Settings::rememberMapPositionOnClose() {
     return instance()->value("defaultMapPosition/rememberMapPositionOnClose", true).toBool();
@@ -1021,9 +1037,11 @@ void Settings::setRememberMapPositionOnClose(bool val) {
 
 // URL for data update checks; not in preferences
 QString Settings::remoteDataRepository() {
-    return instance()->value("data/remoteDataRepository",
-                             "https://raw.githubusercontent.com/qutescoop/qutescoop/master/data/%1")
-            .toString();
+    return instance()->value(
+        "data/remoteDataRepository",
+        "https://raw.githubusercontent.com/qutescoop/qutescoop/master/data/%1"
+    )
+        .toString();
 }
 
 QColor Settings::friendsHighlightColor() {
@@ -1034,7 +1052,7 @@ void Settings::setFriendsHighlightColor(QColor &color) {
 }
 
 double Settings::highlightLineWidth() {
-    return instance()->value("pilotDisplay/highlightLineWidth" , 2.5).toDouble();
+    return instance()->value("pilotDisplay/highlightLineWidth", 2.5).toDouble();
 }
 void Settings::setHighlightLineWidth(double value) {
     instance()->setValue("pilotDisplay/highlightLineWidth", value);
@@ -1053,16 +1071,18 @@ const QStringList Settings::friends() {
 
 void Settings::addFriend(const QString& friendId) {
     QStringList fl = friends();
-    if(!fl.contains(friendId))
+    if(!fl.contains(friendId)) {
         fl.append(friendId);
+    }
     instance()->setValue("friends/friendList", fl);
 }
 
 void Settings::removeFriend(const QString& friendId) {
     QStringList fl = friends();
     int i = fl.indexOf(friendId);
-    if(i >= 0 && i < fl.size())
+    if(i >= 0 && i < fl.size()) {
         fl.removeAt(i);
+    }
     instance()->setValue("friends/friendList", fl);
 }
 
@@ -1075,7 +1095,7 @@ const QString Settings::clientAlias(const QString &userId)
 
 void Settings::setClientAlias(const QString &userId, const QString &alias)
 {
-    if (alias.isEmpty()) {
+    if(alias.isEmpty()) {
         instance()->remove(
             QString("clients/alias_%1").arg(userId)
         );
@@ -1087,20 +1107,20 @@ void Settings::setClientAlias(const QString &userId, const QString &alias)
     }
 
     // should maybe use signals instead
-    if (Window::instance(false) != 0) {
+    if(Window::instance(false) != 0) {
         Window::instance()->friendsList->reset();
         Window::instance()->searchResult->reset();
     }
 
-    if (PilotDetails::instance(false) != 0) {
+    if(PilotDetails::instance(false) != 0) {
         PilotDetails::instance()->refresh();
     }
 
-    if (ControllerDetails::instance(false) != 0) {
+    if(ControllerDetails::instance(false) != 0) {
         ControllerDetails::instance()->refresh();
     }
 
-    if (AirportDetails::instance(false) != 0) {
+    if(AirportDetails::instance(false) != 0) {
         AirportDetails::instance()->refresh();
     }
 }
@@ -1146,7 +1166,7 @@ bool Settings::saveWhazzupData() {
     return instance()->value("download/saveWhazzupData", true).toBool();
 }
 void Settings::setSaveWhazzupData(bool value) {
-    instance()->setValue("download/saveWhazzupData" , value);
+    instance()->setValue("download/saveWhazzupData", value);
 }
 
 

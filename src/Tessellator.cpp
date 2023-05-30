@@ -3,14 +3,14 @@
 #include "helpers.h"
 
 GLdouble vertices[64][6]; // newly created vertices (x,y,z,r,g,b) by combine callback
-int vertexIndex;          // array index for above array incremented inside combine callback
+int vertexIndex; // array index for above array incremented inside combine callback
 
 Tessellator::Tessellator() {
     _tess = gluNewTess();
-    gluTessCallback(_tess, GLU_TESS_BEGIN,	CALLBACK_CAST tessBeginCB);
-    gluTessCallback(_tess, GLU_TESS_END,		CALLBACK_CAST tessEndCB);
-    gluTessCallback(_tess, GLU_TESS_ERROR,	CALLBACK_CAST tessErrorCB);
-    gluTessCallback(_tess, GLU_TESS_VERTEX,	CALLBACK_CAST tessVertexCB);
+    gluTessCallback(_tess, GLU_TESS_BEGIN, CALLBACK_CAST tessBeginCB);
+    gluTessCallback(_tess, GLU_TESS_END, CALLBACK_CAST tessEndCB);
+    gluTessCallback(_tess, GLU_TESS_ERROR, CALLBACK_CAST tessErrorCB);
+    gluTessCallback(_tess, GLU_TESS_VERTEX, CALLBACK_CAST tessVertexCB);
     gluTessCallback(_tess, GLU_TESS_COMBINE, CALLBACK_CAST tessCombineCB);
 }
 
@@ -35,7 +35,7 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
     gluTessBeginPolygon(_tess, 0);
     gluTessBeginContour(_tess);
     for(int i = 0; i < points.size(); i++) {
-        GLdouble *p = new GLdouble[3];
+        GLdouble* p = new GLdouble[3];
         _pointList.append(p);
         p[0] = SXhigh(points[i].first, points[i].second);
         p[1] = SYhigh(points[i].first, points[i].second);
@@ -45,8 +45,9 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
     gluTessEndContour(_tess);
     gluTessEndPolygon(_tess);
 
-    for(int i = 0; i < _pointList.size(); i++)
+    for(int i = 0; i < _pointList.size(); i++) {
         delete _pointList[i];
+    }
     _pointList.clear();
 }
 
@@ -62,8 +63,8 @@ CALLBACK_DECL Tessellator::tessEndCB() {
     glEnd();
 }
 
-CALLBACK_DECL Tessellator::tessVertexCB(const GLvoid *data) {
-    const GLdouble *ptr = (const GLdouble*)data;
+CALLBACK_DECL Tessellator::tessVertexCB(const GLvoid* data) {
+    const GLdouble* ptr = (const GLdouble*)data;
     glVertex3dv(ptr);
 }
 
@@ -78,8 +79,10 @@ CALLBACK_DECL Tessellator::tessVertexCB(const GLvoid *data) {
 // neighborWeight[4]: 4 interpolation weights of 4 neighbor vertices
 // outData: the vertex data to return to tessellator
 ///////////////////////////////////////////////////////////////////////////////
-CALLBACK_DECL Tessellator::tessCombineCB(const GLdouble newVertex[3], const GLdouble *neighborVertex[4],
-                                         const GLfloat neighborWeight[4], GLdouble **outData) {
+CALLBACK_DECL Tessellator::tessCombineCB(
+    const GLdouble newVertex[3], const GLdouble* neighborVertex[4],
+    const GLfloat neighborWeight[4], GLdouble** outData
+) {
     Q_UNUSED(neighborVertex);
     Q_UNUSED(neighborWeight);
 

@@ -9,10 +9,10 @@
 
 #include <QHash>
 
-class SearchVisitor : public MapObjectVisitor {
+class SearchVisitor: public MapObjectVisitor {
     public:
         SearchVisitor(const QString& search);
-        virtual void visit(MapObject *object);
+        virtual void visit(MapObject* object);
         virtual QList<MapObject*> result() const;
         QHash<QString, Airline*> airlines;
     protected:

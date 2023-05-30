@@ -332,7 +332,7 @@ class Settings {
         static QString updateVersionNumber();
         static void setUpdateVersionNumber(const QString& version);
 
-        static void rememberedMapPosition(double *xrot, double *yrot, double *zrot, double *zoom, int nr);
+        static void rememberedMapPosition(double* xrot, double* yrot, double* zrot, double* zoom, int nr);
         static void setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom, int nr);
         static bool rememberMapPositionOnClose();
         static void setRememberMapPositionOnClose(bool val);
@@ -372,8 +372,8 @@ class Settings {
         static void saveMaximized(const bool val);
 
         static QString remoteDataRepository();
-private:
-        static QSettings *instance();
+    private:
+        static QSettings* instance();
 };
 
 #endif /*SETTINGS_H_*/

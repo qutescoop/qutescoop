@@ -7,13 +7,16 @@
 #include "../Whazzup.h"
 
 //singleton instance
-AirportDetails *airportDetails = 0;
-AirportDetails *AirportDetails::instance(bool createIfNoInstance, QWidget *parent) {
-    if(airportDetails == 0)
-        if (createIfNoInstance) {
-            if (parent == 0) parent = Window::instance();
+AirportDetails* airportDetails = 0;
+AirportDetails* AirportDetails::instance(bool createIfNoInstance, QWidget* parent) {
+    if(airportDetails == 0) {
+        if(createIfNoInstance) {
+            if(parent == 0) {
+                parent = Window::instance();
+            }
             airportDetails = new AirportDetails(parent);
         }
+    }
     return airportDetails;
 }
 
@@ -23,9 +26,9 @@ void AirportDetails::destroyInstance() {
     airportDetails = 0;
 }
 
-AirportDetails::AirportDetails(QWidget *parent):
-        ClientDetails(parent),
-        _airport(0) {
+AirportDetails::AirportDetails(QWidget* parent) :
+    ClientDetails(parent),
+    _airport(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
@@ -67,13 +70,19 @@ AirportDetails::AirportDetails(QWidget *parent):
     connect(treeDepartures, &QAbstractItemView::clicked, this, &AirportDetails::departureSelected);
 
     // METAR
-    _metarModel = new MetarModel(qobject_cast<Window *>(this->parent()));
+    _metarModel = new MetarModel(qobject_cast<Window*>(this->parent()));
 
     // Geometry
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if (!preferences.size.isNull()) { resize(preferences.size); }
-    if (!preferences.pos.isNull()) { move(preferences.pos); }
-    if (!preferences.geometry.isNull()) { restoreGeometry(preferences.geometry); }
+    if(!preferences.size.isNull()) {
+        resize(preferences.size);
+    }
+    if(!preferences.pos.isNull()) {
+        move(preferences.pos);
+    }
+    if(!preferences.geometry.isNull()) {
+        restoreGeometry(preferences.geometry);
+    }
 
     refresh();
 }
@@ -88,7 +97,9 @@ void AirportDetails::refresh(Airport* newAirport) {
         }
         _airport = newAirport;
     }
-    if(_airport == 0) return;
+    if(_airport == 0) {
+        return;
+    }
     setMapObject(_airport);
 
     setWindowTitle(_airport->toolTip());
@@ -102,8 +113,10 @@ void AirportDetails::refresh(Airport* newAirport) {
     lblName->setHidden(_airport->name.isEmpty());
     lblNameLabel->setHidden(_airport->name.isEmpty());
 
-    lblCountry->setText(QString("%1 (%2)")
-                        .arg(_airport->countryCode, NavData::instance()->countryCodes[_airport->countryCode]));
+    lblCountry->setText(
+        QString("%1 (%2)")
+        .arg(_airport->countryCode, NavData::instance()->countryCodes[_airport->countryCode])
+    );
     lblCharts->setText(QString("[chartfox.org/%1](https://chartfox.org/%1)").arg(_airport->label));
 
     // fetch METAR
@@ -121,11 +134,15 @@ void AirportDetails::refresh(Airport* newAirport) {
     treeDepartures->header()->resizeSections(QHeaderView::ResizeToContents);
 
     // set titles
-    if (Settings::filterTraffic()) {
-        groupBoxArrivals->setTitle(QString("Arrivals (%1 filtered, %2 total)").
-                                   arg(_airport->numFilteredArrivals).arg(_airport->arrivals.size()));
-        groupBoxDepartures->setTitle(QString("Departures (%1 filtered, %2 total)").
-                                     arg(_airport->numFilteredDepartures).arg(_airport->departures.size()));
+    if(Settings::filterTraffic()) {
+        groupBoxArrivals->setTitle(
+            QString("Arrivals (%1 filtered, %2 total)").
+            arg(_airport->numFilteredArrivals).arg(_airport->arrivals.size())
+        );
+        groupBoxDepartures->setTitle(
+            QString("Departures (%1 filtered, %2 total)").
+            arg(_airport->numFilteredDepartures).arg(_airport->departures.size())
+        );
     } else {
         groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(_airport->arrivals.size()));
         groupBoxDepartures->setTitle(QString("Departures (%1)").arg(_airport->departures.size()));
@@ -135,10 +152,11 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     // non-ATC
     if(cbOtherAtc->isChecked()) {
-        foreach(Controller *c, Whazzup::instance()->whazzupData().controllers) {
+        foreach(Controller* c, Whazzup::instance()->whazzupData().controllers) {
             // add those within visual range or max. 50 NM away
-            if(NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange))
+            if(NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange)) {
                 atcContent.insert(c);
+            }
         }
     }
 
@@ -165,10 +183,10 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 void AirportDetails::togglePlotRoutes(bool checked) {
     if(_airport->showRoutes != checked) {
         _airport->showRoutes = checked;
-        if (Window::instance(false) != 0) {
+        if(Window::instance(false) != 0) {
             Window::instance()->mapScreen->glWidget->invalidatePilots();
         }
-        if (PilotDetails::instance(false) != 0) {
+        if(PilotDetails::instance(false) != 0) {
             PilotDetails::instance()->refresh();
         }
     }
@@ -178,7 +196,7 @@ void AirportDetails::refreshMetar() {
     qDebug() << "AirportDetails::refreshMetar";
     lblMetar->setText("…");
     QList<Airport*> airports;
-    if (_airport != 0) {
+    if(_airport != 0) {
         airports += _airport;
         _metarModel->setAirports(airports);
     }
@@ -187,7 +205,7 @@ void AirportDetails::refreshMetar() {
 void AirportDetails::onGotMetar(const QString &airportLabel, const QString &encoded, const QString &humanHtml)
 {
     qDebug() << "AirportDetails::onGotMetar" << airportLabel << encoded;
-    if (_airport->label == airportLabel) {
+    if(_airport->label == airportLabel) {
         lblMetar->setText(encoded);
         lblMetar->setToolTip(humanHtml);
     }
@@ -196,14 +214,15 @@ void AirportDetails::onGotMetar(const QString &airportLabel, const QString &enco
 QSet<Controller*> AirportDetails::checkSectors() const {
     QSet<Controller*> result;
 
-    foreach(Controller *c, Whazzup::instance()->whazzupData().controllersWithSectors()) {
-        if(c->sector->containsPoint(QPointF(_airport->lat, _airport->lon)))
+    foreach(Controller* c, Whazzup::instance()->whazzupData().controllersWithSectors()) {
+        if(c->sector->containsPoint(QPointF(_airport->lat, _airport->lon))) {
             result.insert(c);
+        }
     }
     return result;
 }
 
-void AirportDetails::closeEvent(QCloseEvent *event) {
+void AirportDetails::closeEvent(QCloseEvent* event) {
     Settings::setDialogPreferences(
         m_preferencesName,
         Settings::DialogPreferences {

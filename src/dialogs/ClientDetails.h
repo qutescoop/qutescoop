@@ -8,8 +8,8 @@
 class Client;
 class MapObject;
 
-class ClientDetails : public QDialog {
-        Q_OBJECT
+class ClientDetails: public QDialog {
+    Q_OBJECT
 
     public slots:
         void showOnMap() const;

@@ -4,7 +4,7 @@
 #include <QtCore>
 
 class Ping: public QObject {
-        Q_OBJECT
+    Q_OBJECT
     public:
         void startPing(QString server);
     signals:
@@ -12,7 +12,7 @@ class Ping: public QObject {
     private slots:
         void pingReadyRead();
     private:
-        QProcess *_pingProcess;
+        QProcess* _pingProcess;
         QString _server;
 };
 

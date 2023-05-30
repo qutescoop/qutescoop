@@ -18,17 +18,23 @@
 
 #include <QPoint>
 
-class GLWidget : public QGLWidget {
-        Q_OBJECT
+class GLWidget: public QGLWidget {
+    Q_OBJECT
     public:
-        GLWidget(QGLFormat format, QWidget *parent = 0);
+        GLWidget(QGLFormat format, QWidget* parent = 0);
         ~GLWidget();
 
         QPair<double, double> currentPosition() const;
-        ClientSelectionWidget *clientSelection;
-        void invalidatePilots() { m_isPilotsDirty = true; update(); }
-        void invalidateAirports() { m_isAirportsDirty = true; update(); }
-        void invalidateControllers() { m_isControllersDirty = true; update(); }
+        ClientSelectionWidget* clientSelection;
+        void invalidatePilots() {
+            m_isPilotsDirty = true; update();
+        }
+        void invalidateAirports() {
+            m_isAirportsDirty = true; update();
+        }
+        void invalidateControllers() {
+            m_isControllersDirty = true; update();
+        }
         void setStaticSectors(QList<Sector*>);
         void savePosition();
     public slots:
@@ -54,20 +60,20 @@ class GLWidget : public QGLWidget {
         virtual void resizeGL(int width, int height) override;
 
         // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
-        QList<MapObject *> objectsAt(int x, int y, double radius = 0) const;
+        QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
 
-        void mouseDoubleClickEvent(QMouseEvent *event) override;
-        void mousePressEvent(QMouseEvent *event) override;
-        void mouseReleaseEvent(QMouseEvent *event) override;
-        void mouseMoveEvent(QMouseEvent *event) override;
+        void mouseDoubleClickEvent(QMouseEvent* event) override;
+        void mousePressEvent(QMouseEvent* event) override;
+        void mouseReleaseEvent(QMouseEvent* event) override;
+        void mouseMoveEvent(QMouseEvent* event) override;
         void wheelEvent(QWheelEvent* event) override;
-        bool event(QEvent *event) override;
+        bool event(QEvent* event) override;
     private:
         void resetZoom();
-        void handleRotation(QMouseEvent *event);
+        void handleRotation(QMouseEvent* event);
         bool isOnGlobe(int x, int y) const;
         bool mouse2latlon(int x, int y, double &lat, double &lon) const;
-        bool isPointVisible(double lat, double lon, int *px = 0, int *py = 0) const;
+        bool isPointVisible(double lat, double lon, int* px = 0, int* py = 0) const;
 
         void drawSelectionRectangle();
         void drawCoordinateAxii() const;
@@ -82,12 +88,18 @@ class GLWidget : public QGLWidget {
         void createHoveredControllersLists(QSet<Controller*> controllers);
 
         void renderLabels();
-        void renderLabels(const QList<MapObject*>& objects, const QFont& font,
-                          const double zoomTreshold, QColor color, QColor bgColor = QColor());
-        void renderLabelsSimple(const QList<MapObject*>& objects, const QFont& font,
-                                const double zoomTreshold, QColor color, QColor bgColor = QColor());
-        void renderLabelsComplex(const QList<MapObject*>& objects, const QFont& font,
-                                 const double zoomTreshold, QColor color, QColor bgColor = QColor());
+        void renderLabels(
+        const QList<MapObject*>& objects, const QFont& font,
+        const double zoomTreshold, QColor color, QColor bgColor = QColor()
+        );
+        void renderLabelsSimple(
+        const QList<MapObject*>& objects, const QFont& font,
+        const double zoomTreshold, QColor color, QColor bgColor = QColor()
+        );
+        void renderLabelsComplex(
+        const QList<MapObject*>& objects, const QFont& font,
+        const double zoomTreshold, QColor color, QColor bgColor = QColor()
+        );
 
         void parseTexture();
         void createLights();
@@ -96,10 +108,10 @@ class GLWidget : public QGLWidget {
 
         class FontRectangle {
             public:
-                FontRectangle(QRectF rectangle, MapObject *mapObject):
+                FontRectangle(QRectF rectangle, MapObject* mapObject) :
                     rect(rectangle), object(mapObject) {}
                 QRectF rect;
-                MapObject *object;
+                MapObject* object;
         };
         bool shouldDrawLabel(const QRectF &rect);
 
@@ -108,20 +120,20 @@ class GLWidget : public QGLWidget {
         QPoint _lastPos, _mouseDownPos;
         bool _mapMoving, _mapZooming, _mapRectSelecting, _lightsGenerated;
         bool m_isPilotsDirty = true, m_isAirportsDirty = true, m_isControllersDirty = true, m_isStaticSectorsDirty = true;
-        GLUquadricObj *_earthQuad;
+        GLUquadricObj* _earthQuad;
         GLuint _earthTex,
-        _earthList, _coastlinesList, _countriesList, _gridlinesList,
-        _pilotsList, _activeAirportsList, _inactiveAirportsList,
-        _fixesList, _usedWaypointsList, _plannedRouteList,
-        _sectorPolygonsList, _sectorPolygonBorderLinesList, _congestionsList,
-        _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
-        _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
+            _earthList, _coastlinesList, _countriesList, _gridlinesList,
+            _pilotsList, _activeAirportsList, _inactiveAirportsList,
+            _fixesList, _usedWaypointsList, _plannedRouteList,
+            _sectorPolygonsList, _sectorPolygonBorderLinesList, _congestionsList,
+            _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
+            _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
         QSet<Controller*> _hoveredControllers;
         double _pilotLabelZoomTreshold, _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
             _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
             _xRot, _yRot, _zRot, _zoom, _aspectRatio;
-        QTimer *_highlighter;
-        QList< QPair<double , double> > m_friendPositions;
+        QTimer* _highlighter;
+        QList< QPair<double, double> > m_friendPositions;
 };
 
 #endif /*GLWIDGET_H_*/

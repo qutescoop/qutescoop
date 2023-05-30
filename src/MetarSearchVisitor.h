@@ -3,14 +3,14 @@
 
 #include "SearchVisitor.h"
 
-class MetarSearchVisitor : public SearchVisitor {
+class MetarSearchVisitor: public SearchVisitor {
     public:
-        MetarSearchVisitor(const QString& search): SearchVisitor(search) {}
-        virtual void visit(MapObject *object);
+        MetarSearchVisitor(const QString& search) : SearchVisitor(search) {}
+        virtual void visit(MapObject* object);
         QList<Airport*> airports() const;
 
         virtual QList<MapObject*> result() const;
-private:
+    private:
         QHash<QString, Airport*> _airportMap;
 };
 

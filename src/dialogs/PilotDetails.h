@@ -6,14 +6,14 @@
 #include "ClientDetails.h"
 #include "../Pilot.h"
 
-class PilotDetails : public ClientDetails, private Ui::PilotDetails {
-        Q_OBJECT
+class PilotDetails: public ClientDetails, private Ui::PilotDetails {
+    Q_OBJECT
     public:
-        static PilotDetails* instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static PilotDetails* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void destroyInstance();
-        virtual void refresh(Pilot *pilot = 0);
+        virtual void refresh(Pilot* pilot = 0);
     protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent* event);
     private slots:
         void on_cbPlotRoute_clicked(bool checked);
         void on_buttonAlt_clicked();
@@ -25,8 +25,8 @@ class PilotDetails : public ClientDetails, private Ui::PilotDetails {
         void on_pbAlias_clicked();
 
     private:
-        PilotDetails(QWidget *parent);
-        Pilot *_pilot;
+        PilotDetails(QWidget* parent);
+        Pilot* _pilot;
 
         constexpr static char m_preferencesName[] = "pilotDetails";
 };

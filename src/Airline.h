@@ -4,26 +4,24 @@
 #include <QtCore>
 
 class Airline {
-public:
-    Airline(const QString& code, const QString& name, const QString& callsign, const QString& country) :
-        code(code),
-        name(name),
-        callsign(callsign),
-        country(country){
-    }
+    public:
+        Airline(const QString& code, const QString& name, const QString& callsign, const QString& country) :
+            code(code),
+            name(name),
+            callsign(callsign),
+            country(country){}
 
-    QString label() const {
-        return QString("%1 \"%2\"").arg(code, callsign);
-    }
+        QString label() const {
+            return QString("%1 \"%2\"").arg(code, callsign);
+        }
 
-    QString toolTip() const {
-        return QString("%1 \"%2\", %3, %4").arg(code, callsign, name, country);
-    }
+        QString toolTip() const {
+            return QString("%1 \"%2\", %3, %4").arg(code, callsign, name, country);
+        }
 
-    virtual ~Airline() {
-    }
+        virtual ~Airline() {}
 
-    QString code, name, callsign, country;
+        QString code, name, callsign, country;
 };
 
 #endif /* AIRLINE_H_ */

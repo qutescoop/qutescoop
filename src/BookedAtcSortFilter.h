@@ -3,10 +3,10 @@
 
 #include <QtCore>
 
-class BookedAtcSortFilter : public QSortFilterProxyModel {
+class BookedAtcSortFilter: public QSortFilterProxyModel {
 
     public:
-        BookedAtcSortFilter(QObject *parent = 0) : QSortFilterProxyModel(parent) {}
+        BookedAtcSortFilter(QObject* parent = 0) : QSortFilterProxyModel(parent) {}
         void setDateTimeRange(QDateTime& dtfrom, QDateTime& dtto);
 
     protected:

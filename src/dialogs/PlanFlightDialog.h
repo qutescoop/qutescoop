@@ -7,11 +7,11 @@
 
 #include <QtNetwork>
 
-class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
-        Q_OBJECT
+class PlanFlightDialog: public QDialog, public Ui::PlanFlightDialog {
+    Q_OBJECT
 
     public:
-        static PlanFlightDialog *instance(bool createIfNoInstance = true, QWidget *parent = 0);
+        static PlanFlightDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void plotPlannedRoute() const;
         Route* selectedRoute;
 
@@ -19,7 +19,7 @@ class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
         void fpDownloaded();
 
     protected:
-        void closeEvent(QCloseEvent *event);
+        void closeEvent(QCloseEvent* event);
 
     private slots:
         void on_bDestDetails_clicked();
@@ -34,16 +34,16 @@ class PlanFlightDialog : public QDialog, public Ui::PlanFlightDialog {
         void routeSelected(const QModelIndex& index);
 
     private:
-        PlanFlightDialog(QWidget *parent);
+        PlanFlightDialog(QWidget* parent);
 
         void requestGenerated();
         void requestVroute();
 
-        QNetworkReply *_replyVroute;
+        QNetworkReply* _replyVroute;
         QList<Route*> _routes;
 
         PlanFlightRoutesModel _routesModel;
-        QSortFilterProxyModel *_routesSortModel;
+        QSortFilterProxyModel* _routesSortModel;
 
         constexpr static char m_preferencesName[] = "planFlightDialog";
 };

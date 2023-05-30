@@ -7,13 +7,13 @@
 #include "../SearchResultModel.h"
 #include "../MetarModel.h"
 
-class Window : public QMainWindow, public Ui::Window {
-        Q_OBJECT
+class Window: public QMainWindow, public Ui::Window {
+    Q_OBJECT
     public:
         static Window* instance(bool createIfNoInstance = true);
         void setEnableBookedAtc(bool enable);
         void shootScreenshot();
-        MapScreen *mapScreen;
+        MapScreen* mapScreen;
     public slots:
         void refreshFriends();
         void processWhazzup(bool isNew = true);
@@ -78,20 +78,20 @@ class Window : public QMainWindow, public Ui::Window {
         void friendClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();
     protected:
-        virtual void closeEvent(QCloseEvent *event);
+        virtual void closeEvent(QCloseEvent* event);
     private:
         // singleton
-        Window(QWidget *parent = 0);
+        Window(QWidget* parent = 0);
         ~Window();
-        void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget *dock);
+        void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget* dock);
 
         SearchResultModel _modelSearchResult, _modelFriends;
         QTimer _timerSearch, _timerMetar, _timerEditPredict, _timerRunPredict, _timerWhazzup;
-        QSortFilterProxyModel *_sortmodelMetar, *_sortmodelFriends;
+        QSortFilterProxyModel* _sortmodelMetar, * _sortmodelFriends;
         MetarModel _metarModel;
         QDateTime _dateTimePredict_old;
-        QLabel *_lblStatus;
-        QProgressBar *_progressBar;
+        QLabel* _lblStatus;
+        QProgressBar* _progressBar;
 };
 
 #endif /*WINDOW_H_*/

@@ -7,20 +7,21 @@
 
 #include <QJsonObject>
 
-Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
+Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup) :
     Client(json, whazzup),
     sector(0)
 {
     frequency = json["frequency"].toString();
     facilityType = json["facility"].toInt();
-    if(label.right(4) == "_FSS") facilityType = 7; // workaround as VATSIM reports 1 for _FSS
-
+    if(label.right(4) == "_FSS") {
+        facilityType = 7; // workaround as VATSIM reports 1 for _FSS
+    }
     visualRange = json["visual_range"].toInt();
 
     atisMessage = "";
-    if (json.contains("text_atis") && json["text_atis"].isArray()) {
+    if(json.contains("text_atis") && json["text_atis"].isArray()) {
         QJsonArray atis = json["text_atis"].toArray();
-        for (int i = 0; i < atis.size(); ++i) {
+        for(int i = 0; i < atis.size(); ++i) {
             atisMessage += atis[i].toString() + "\n";
         }
     }
@@ -32,13 +33,13 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
 
     // do some magic for Controller Info like "online until"...
     QRegExp rxOnlineUntil = QRegExp(
-          "(open|close|online|offline|till|until)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?",
-          Qt::CaseInsensitive
+        "(open|close|online|offline|till|until)(\\W*\\w*\\W*){0,4}\\b(\\d{1,2}):?(\\d{2})\\W?(z|utc)?",
+        Qt::CaseInsensitive
     );
-    if (rxOnlineUntil.indexIn(atisMessage) > 0) {
-        QTime found = QTime::fromString(rxOnlineUntil.cap(3)+rxOnlineUntil.cap(4), "HHmm");
+    if(rxOnlineUntil.indexIn(atisMessage) > 0) {
+        QTime found = QTime::fromString(rxOnlineUntil.cap(3) + rxOnlineUntil.cap(4), "HHmm");
         if(found.isValid()) {
-            if (qAbs(found.secsTo(whazzup->whazzupTime.time())) > 60*60 * 12) {
+            if(qAbs(found.secsTo(whazzup->whazzupTime.time())) > 60 * 60 * 12) {
                 // e.g. now its 2200z, and he says "online until 0030z", allow for up to 12 hours
                 assumeOnlineUntil = QDateTime(whazzup->whazzupTime.date().addDays(1), found, Qt::UTC);
             } else {
@@ -49,26 +50,26 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
 
     QString icao = controllerSectorName();
     // Look for a sector name prefix matching the login
-    if (!icao.isEmpty()) {
+    if(!icao.isEmpty()) {
         do {
-            foreach (auto _sector, NavData::instance()->sectors.values(icao)) {
-                if (_sector->controllerSuffixes().isEmpty()) {
+            foreach(auto _sector, NavData::instance()->sectors.values(icao)) {
+                if(_sector->controllerSuffixes().isEmpty()) {
                     sector = _sector;
                     break;
                 }
 
                 foreach(auto suffix, _sector->controllerSuffixes()) {
-                    if (label.endsWith(suffix)) {
+                    if(label.endsWith(suffix)) {
                         sector = _sector;
                         break;
                     }
                 }
             }
 
-            if (sector != 0) {
+            if(sector != 0) {
                 // We determine lat/lon from the sector
                 QPair<double, double> center = this->sector->getCenter();
-                if (center.first > -180.) {
+                if(center.first > -180.) {
                     lat = center.first;
                     lon = center.second;
                 }
@@ -76,9 +77,9 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
                 break;
             }
             icao.chop(1);
-        } while (icao.length() >= 2);
+        } while(icao.length() >= 2);
 
-        if (sector == 0) {
+        if(sector == 0) {
             QString msg("Unknown sector/FIR " + controllerSectorName() + "Please provide sector information if you can");
             qInfo() << msg;
             QTextStream(stdout) << "INFO: " << msg << Qt::endl;
@@ -86,7 +87,7 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
     } else {
         // We try to get lat/lng from covered airports
         auto _airports = airports();
-        if (_airports.size() > 0) {
+        if(_airports.size() > 0) {
             lat = _airports[0]->lat;
             lon = _airports[0]->lon;
         }
@@ -94,7 +95,7 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup):
 }
 
 QString Controller::facilityString() const {
-    switch (facilityType) {
+    switch(facilityType) {
         case 0: return "OBS";
         case 1: return "Staff";
         case 2: return "DEL";
@@ -108,19 +109,21 @@ QString Controller::facilityString() const {
 }
 
 QStringList Controller::atcLabelTokens() const {
-  if(!isATC())
-      return QStringList();
+    if(!isATC()) {
+        return QStringList();
+    }
 
-  return label.split('_', Qt::SkipEmptyParts);
+    return label.split('_', Qt::SkipEmptyParts);
 }
 
-QString Controller::controllerSectorName() const{
+QString Controller::controllerSectorName() const {
     auto _atcLabelTokens = atcLabelTokens();
 
     if(
-       !_atcLabelTokens.empty()
-       && (_atcLabelTokens.last().startsWith("CTR") || _atcLabelTokens.last().startsWith("FSS"))
-    ) {
+        !_atcLabelTokens.empty()
+        && (_atcLabelTokens.last().startsWith("CTR") || _atcLabelTokens.last().startsWith("FSS"))
+    )
+    {
         _atcLabelTokens.removeLast();
         return _atcLabelTokens.join("_");
     }
@@ -129,45 +132,45 @@ QString Controller::controllerSectorName() const{
 
 bool Controller::isCtrFss() const
 {
-  return label.endsWith("_CTR") || label.endsWith("FSS");
+    return label.endsWith("_CTR") || label.endsWith("FSS");
 }
 
 bool Controller::isAppDep() const
 {
-  return label.endsWith("_APP") || label.endsWith("DEP");
+    return label.endsWith("_APP") || label.endsWith("DEP");
 }
 
 bool Controller::isTwr() const
 {
-  return label.endsWith("_TWR");
+    return label.endsWith("_TWR");
 }
 
 bool Controller::isGnd() const
 {
-  return label.endsWith("_GND");
+    return label.endsWith("_GND");
 }
 
 bool Controller::isDel() const
 {
-  return label.endsWith("_DEL");
+    return label.endsWith("_DEL");
 }
 
 bool Controller::isAtis() const
 {
-  return label.endsWith("_ATIS");
+    return label.endsWith("_ATIS");
 }
 
 QList <Airport*> Controller::airports() const {
     auto airports = QList<Airport*>();
     auto _atcLabelTokens = atcLabelTokens();
-    if (_atcLabelTokens.empty()) {
+    if(_atcLabelTokens.empty()) {
         return airports;
     }
     auto prefix = _atcLabelTokens.constFirst();
 
     // ordinary / normal match EDDS_STG_APP -> EDDS
     auto a = NavData::instance()->airports.value(prefix, 0);
-    if (a != 0) {
+    if(a != 0) {
         airports.append(a);
     }
 
@@ -180,7 +183,7 @@ QList <Airport*> Controller::airports() const {
     // IAH_TWR -> IAH
     if(airports.isEmpty() && prefix.length() == 3) {
         auto a = NavData::instance()->airports.value("K" + prefix, 0);
-        if (a != 0) {
+        if(a != 0) {
             airports.append(a);
         }
     }
@@ -189,7 +192,7 @@ QList <Airport*> Controller::airports() const {
 }
 
 void Controller::showDetailsDialog() {
-    ControllerDetails *infoDialog = ControllerDetails::instance();
+    ControllerDetails* infoDialog = ControllerDetails::instance();
     infoDialog->refresh(this);
     infoDialog->show();
     infoDialog->raise();
@@ -218,24 +221,28 @@ QString Controller::rank() const {
 
 QString Controller::toolTip() const { // LOVV_CTR [Vienna] (134.350, Alias | Name, C1)
     QString result = label;
-    if (sector != 0)
+    if(sector != 0) {
         result += " [" + sector->name + "]";
+    }
     result += " (";
-    if(!isObserver() && !frequency.isEmpty())
+    if(!isObserver() && !frequency.isEmpty()) {
         result += frequency + ", ";
+    }
     result += realName();
-    if(!rank().isEmpty())
+    if(!rank().isEmpty()) {
         result += ", " + rank();
+    }
     result += ")";
     return result;
 }
 
 QString Controller::toolTipShort() const // LOVV_CTR [Vienna]
 {
-  QString result = label;
-  if (sector != 0)
-      result += " [" + sector->name + "]";
-  return result;
+    QString result = label;
+    if(sector != 0) {
+        result += " [" + sector->name + "]";
+    }
+    return result;
 }
 
 QString Controller::mapLabel() const { // LOVV
@@ -255,10 +262,10 @@ bool Controller::matches(const QRegExp& regex) const {
 }
 
 bool Controller::isObserver() const {
-  return facilityType == 0;
+    return facilityType == 0;
 }
 
 bool Controller::isATC() const {
-  // 199.998 gets transmitted on VATSIM for a controller without prim freq
-  return facilityType > 0 && frequency != "199.998";
+    // 199.998 gets transmitted on VATSIM for a controller without prim freq
+    return facilityType > 0 && frequency != "199.998";
 }
