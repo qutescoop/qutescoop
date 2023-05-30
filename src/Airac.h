@@ -5,9 +5,9 @@
 #ifndef AIRAC_H_
 #define AIRAC_H_
 
-#include "Waypoint.h"
-#include "NavAid.h"
 #include "Airway.h"
+#include "NavAid.h"
+#include "Waypoint.h"
 
 class Airac : public QObject {
         Q_OBJECT

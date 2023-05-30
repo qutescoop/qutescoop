@@ -4,13 +4,13 @@
 
 #include "ListClientsDialog.h"
 
-#include "ListClientsDialogModel.h"
-#include "Settings.h"
-#include "Controller.h"
-#include "Pilot.h"
-#include "Whazzup.h"
 #include "Window.h"
-#include "Ping.h"
+#include "../Controller.h"
+#include "../ListClientsDialogModel.h"
+#include "../Pilot.h"
+#include "../Ping.h"
+#include "../Settings.h"
+#include "../Whazzup.h"
 
 // singleton instance
 ListClientsDialog *listClientsDialogInstance = 0;

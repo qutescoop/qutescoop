@@ -10,12 +10,9 @@
 
 #include <QJsonObject>
 
-class WhazzupData;
-class Sector;
-
 /*
  * @todo:
- * This is not a "Client" in the sense of a VATSIM client. This is rather a Dto to initialize
+ * This is not a "Client" in the sense of a VATSIM client. This is rather a DTO to initialize
  * actual "Controller"s from.
  */
 class BookedController: public Client {

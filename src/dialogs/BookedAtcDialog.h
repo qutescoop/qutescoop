@@ -2,13 +2,13 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#ifndef BOOKEDATCDIALOG_H
-#define BOOKEDATCDIALOG_H
+#ifndef BOOKEDATCDIALOG_H_
+#define BOOKEDATCDIALOG_H_
 
 #include "ui_BookedAtcDialog.h"
 
-#include "BookedAtcDialogModel.h"
-#include "BookedAtcSortFilter.h"
+#include "../BookedAtcDialogModel.h"
+#include "../BookedAtcSortFilter.h"
 
 class BookedAtcDialog : public QDialog, private Ui::BookedAtcDialog {
         Q_OBJECT

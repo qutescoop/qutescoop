@@ -11,8 +11,8 @@
 #define GUIMESSAGE_H
 
 #include <QLabel>
-#include <QProgressBar>
 #include <QtCore>
+#include <QProgressBar>
 
 class GuiMessages : public QObject {
         Q_OBJECT

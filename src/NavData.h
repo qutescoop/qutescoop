@@ -5,9 +5,9 @@
 #ifndef NAVDATA_H_
 #define NAVDATA_H_
 
-#include "Sector.h"
-#include "SearchVisitor.h"
 #include "Airline.h"
+#include "SearchVisitor.h"
+#include "Sector.h"
 
 struct ControllerAirportsMapping {
     QString prefix;

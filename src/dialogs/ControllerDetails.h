@@ -8,7 +8,7 @@
 #include "ui_ControllerDetails.h"
 
 #include "ClientDetails.h"
-#include "Controller.h"
+#include "../Controller.h"
 
 class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
         Q_OBJECT

@@ -5,8 +5,8 @@
 #include "Metar.h"
 
 #include "Airport.h"
-#include "Settings.h"
 #include "NavData.h"
+#include "Settings.h"
 
 #include <QRegExp>
 

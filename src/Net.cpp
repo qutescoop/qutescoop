@@ -1,6 +1,6 @@
 #include "Net.h"
-#include "Settings.h"
 
+#include "Settings.h"
 
 //Single instance
 Net *netInstance = 0;

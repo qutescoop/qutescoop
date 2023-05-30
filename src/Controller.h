@@ -6,8 +6,8 @@
 #define CONTROLLER_H_
 
 #include "Client.h"
-#include "WhazzupData.h"
 #include "Sector.h"
+#include "WhazzupData.h"
 
 #include <QJsonObject>
 

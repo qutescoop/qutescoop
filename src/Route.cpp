@@ -2,10 +2,11 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "Airport.h"
 #include "Route.h"
-#include "NavData.h"
+
 #include "Airac.h"
+#include "Airport.h"
+#include "NavData.h"
 
 Route::Route() {
 }

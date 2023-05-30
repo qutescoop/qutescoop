@@ -4,13 +4,14 @@
 
 #include "PlanFlightDialog.h"
 
-#include <QtXml/QDomDocument>
-#include "Settings.h"
-#include "Route.h"
 #include "Window.h"
-#include "NavData.h"
-#include "Net.h"
-#include "helpers.h"
+#include "../helpers.h"
+#include "../NavData.h"
+#include "../Net.h"
+#include "../Route.h"
+#include "../Settings.h"
+
+#include <QtXml/QDomDocument>
 
 //singleton instance
 PlanFlightDialog *planFlightDialogInstance = 0;

@@ -2,8 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#ifndef PLATFORM_H_
+#define PLATFORM_H_
 
 #include <QString>
 

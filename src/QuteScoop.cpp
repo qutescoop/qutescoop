@@ -2,13 +2,13 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
+#include "Launcher.h"
 #include "Platform.h"
 #include "Settings.h"
-#include "Launcher.h"
 
-#include <QtCore>
 #include <QApplication>
 #include <QMessageBox>
+#include <QtCore>
 
 /* logging */
 QScopedPointer<QFile>   m_logFile;

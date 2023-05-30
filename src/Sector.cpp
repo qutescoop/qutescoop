@@ -4,9 +4,9 @@
 
 #include "Sector.h"
 
+#include "helpers.h"
 #include "Settings.h"
 #include "Tessellator.h"
-#include "helpers.h"
 
 Sector::Sector(QStringList fields, unsigned int _debugLineNumber) :
   _polygon(0),

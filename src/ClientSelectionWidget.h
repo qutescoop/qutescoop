@@ -7,8 +7,8 @@
 
 #include "MapObject.h"
 
+#include <QFocusEvent>
 #include <QListWidget>
-#include <QtGui>
 
 class ClientSelectionWidget : public QListWidget {
         Q_OBJECT

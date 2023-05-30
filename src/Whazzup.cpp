@@ -4,11 +4,11 @@
 
 #include "Whazzup.h"
 
-#include "Settings.h"
-#include "Net.h"
-#include "GuiMessage.h"
 #include "Client.h"
-#include "Window.h"
+#include "GuiMessage.h"
+#include "Net.h"
+#include "Settings.h"
+#include "dialogs/Window.h"
 
 Whazzup *whazzupInstance = 0;
 

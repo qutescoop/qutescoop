@@ -2,12 +2,11 @@
  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#ifndef LAUNCHER_H
-#define LAUNCHER_H
+#ifndef LAUNCHER_H_
+#define LAUNCHER_H_
 
 #include <QLabel>
 #include <QProgressBar>
-#include <QWidget>
 #include <QtGui>
 #include <QtNetwork>
 

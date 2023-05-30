@@ -5,8 +5,8 @@
 #include "SectorReader.h"
 
 #include "FileReader.h"
-#include "Settings.h"
 #include "helpers.h"
+#include "Settings.h"
 
 void SectorReader::loadSectors(QMultiMap<QString, Sector *> &sectors) {
     sectors.clear();

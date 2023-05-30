@@ -2,13 +2,14 @@
 *  This file is part of QuteScoop. See README for license
 **************************************************************************/
 
-#include "Airport.h"
 #include "WhazzupData.h"
-#include "Sector.h"
-#include "Pilot.h"
-#include "Controller.h"
+
+#include "Airport.h"
 #include "BookedController.h"
+#include "Controller.h"
 #include "NavData.h"
+#include "Pilot.h"
+#include "Sector.h"
 #include "Settings.h"
 
 WhazzupData::WhazzupData() :

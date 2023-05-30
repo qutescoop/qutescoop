@@ -2,15 +2,15 @@
  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "Launcher.h"
-#include "JobList.h"
-#include "Net.h"
 #include "Airac.h"
 #include "GuiMessage.h"
-#include "Window.h"
-#include "Whazzup.h"
-#include "Settings.h"
+#include "JobList.h"
+#include "Launcher.h"
 #include "NavData.h"
+#include "Net.h"
+#include "Settings.h"
+#include "Whazzup.h"
+#include "dialogs/Window.h"
 
 // singleton instance
 Launcher *launcherInstance = 0;

@@ -5,9 +5,9 @@
 #ifndef METARMODEL_H_
 #define METARMODEL_H_
 
-#include <QtNetwork>
-
 #include "Airport.h"
+
+#include <QtNetwork>
 
 class MetarModel: public QAbstractListModel {
         Q_OBJECT

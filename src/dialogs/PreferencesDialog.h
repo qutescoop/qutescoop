@@ -7,7 +7,6 @@
 
 #include "ui_PreferencesDialog.h"
 
-
 class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         Q_OBJECT
     public:

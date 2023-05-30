@@ -2,8 +2,9 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "NavData.h"
 #include "Waypoint.h"
+
+#include "NavData.h"
 
 Waypoint::Waypoint(const QStringList& stringList) {
     if(stringList.size() != 6){

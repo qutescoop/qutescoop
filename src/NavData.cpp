@@ -4,14 +4,13 @@
 
 #include "NavData.h"
 
-#include <QRegExp>
-
 #include "Airport.h"
 #include "FileReader.h"
-#include "SectorReader.h"
 #include "helpers.h"
+#include "SectorReader.h"
 #include "Settings.h"
 
+#include <QRegExp>
 
 NavData *navDataInstance = 0;
 NavData *NavData::instance(bool createIfNoInstance) {

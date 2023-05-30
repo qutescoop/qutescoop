@@ -1,6 +1,7 @@
 /**************************************************************************
 *  This file is part of QuteScoop. See README for license
 **************************************************************************/
+
 #include "LineReader.h"
 
 #include <QStringList>

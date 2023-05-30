@@ -4,8 +4,8 @@
 
 #include "Client.h"
 
-#include "Whazzup.h"
 #include "Settings.h"
+#include "Whazzup.h"
 
 #include <QInputDialog>
 

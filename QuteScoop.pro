@@ -132,15 +132,15 @@ win32 {
 
 # Input
 FORMS = \
-    src/PilotDetails.ui \
-    src/ControllerDetails.ui \
-    src/AirportDetails.ui \
-    src/PreferencesDialog.ui \
-    src/PlanFlightDialog.ui \
-    src/BookedAtcDialog.ui \
-    src/ListClientsDialog.ui\
+    src/dialogs/PilotDetails.ui \
+    src/dialogs/ControllerDetails.ui \
+    src/dialogs/AirportDetails.ui \
+    src/dialogs/PreferencesDialog.ui \
+    src/dialogs/PlanFlightDialog.ui \
+    src/dialogs/BookedAtcDialog.ui \
+    src/dialogs/ListClientsDialog.ui\
     src/dialogs/StaticSectorsDialog.ui \
-    src/Window.ui
+    src/dialogs/Window.ui
 HEADERS += \
     src/helpers.h \
     src/WhazzupData.h \
@@ -165,31 +165,31 @@ HEADERS += \
     src/Airway.h \
     src/Airport.h \
     src/Airac.h \
-    src/Window.h \
+    src/dialogs/Window.h \
     src/SearchVisitor.h \
     src/SearchResultModel.h \
-    src/PreferencesDialog.h \
-    src/PlanFlightDialog.h \
-    src/PilotDetails.h \
+    src/dialogs/PreferencesDialog.h \
+    src/dialogs/PlanFlightDialog.h \
+    src/dialogs/PilotDetails.h \
     src/MetarSearchVisitor.h \
     src/MetarModel.h \
     src/MapObjectVisitor.h \
     src/GLWidget.h \
     src/FriendsVisitor.h \
-    src/ControllerDetails.h \
+    src/dialogs/ControllerDetails.h \
     src/ClientSelectionWidget.h \
-    src/ClientDetails.h \
+    src/dialogs/ClientDetails.h \
     src/BookedAtcDialogModel.h \
-    src/BookedAtcDialog.h \
+    src/dialogs/BookedAtcDialog.h \
     src/AirportDetailsDeparturesModel.h \
     src/AirportDetailsAtcModel.h \
     src/AirportDetailsArrivalsModel.h \
-    src/AirportDetails.h \
+    src/dialogs/AirportDetails.h \
     src/Route.h \
     src/PlanFlightRoutesModel.h \
     src/BookedAtcSortFilter.h \
     src/ListClientsDialogModel.h \
-    src/ListClientsDialog.h \
+    src/dialogs/ListClientsDialog.h \
     src/Ping.h \
     src/GuiMessage.h \
     src/Launcher.h \
@@ -220,30 +220,30 @@ SOURCES += src/WhazzupData.cpp \
     src/Airway.cpp \
     src/Airport.cpp \
     src/Airac.cpp \
-    src/Window.cpp \
+    src/dialogs/Window.cpp \
     src/SearchVisitor.cpp \
     src/SearchResultModel.cpp \
-    src/PreferencesDialog.cpp \
-    src/PlanFlightDialog.cpp \
-    src/PilotDetails.cpp \
+    src/dialogs/PreferencesDialog.cpp \
+    src/dialogs/PlanFlightDialog.cpp \
+    src/dialogs/PilotDetails.cpp \
     src/MetarSearchVisitor.cpp \
     src/MetarModel.cpp \
     src/GLWidget.cpp \
     src/FriendsVisitor.cpp \
-    src/ControllerDetails.cpp \
+    src/dialogs/ControllerDetails.cpp \
     src/ClientSelectionWidget.cpp \
-    src/ClientDetails.cpp \
+    src/dialogs/ClientDetails.cpp \
     src/BookedAtcDialogModel.cpp \
-    src/BookedAtcDialog.cpp \
+    src/dialogs/BookedAtcDialog.cpp \
     src/AirportDetailsDeparturesModel.cpp \
     src/AirportDetailsAtcModel.cpp \
     src/AirportDetailsArrivalsModel.cpp \
-    src/AirportDetails.cpp \
+    src/dialogs/AirportDetails.cpp \
     src/Route.cpp \
     src/PlanFlightRoutesModel.cpp \
     src/BookedAtcSortFilter.cpp \
     src/ListClientsDialogModel.cpp \
-    src/ListClientsDialog.cpp \
+    src/dialogs/ListClientsDialog.cpp \
     src/Ping.cpp \
     src/GuiMessage.cpp \
     src/Launcher.cpp \

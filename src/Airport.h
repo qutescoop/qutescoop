@@ -5,10 +5,10 @@
 #ifndef AIRPORT_H_
 #define AIRPORT_H_
 
-#include "MapObject.h"
 #include "Controller.h"
-#include "Pilot.h"
+#include "MapObject.h"
 #include "Metar.h"
+#include "Pilot.h"
 
 class Pilot;
 

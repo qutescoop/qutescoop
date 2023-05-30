@@ -5,11 +5,10 @@
 #ifndef FRIENDSVISITOR_H_
 #define FRIENDSVISITOR_H_
 
-#include <QStringList>
-#include <QList>
-
 #include "MapObjectVisitor.h"
 #include "MapObject.h"
+
+#include <QStringList>
 
 class FriendsVisitor : public MapObjectVisitor {
     public:

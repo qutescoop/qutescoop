@@ -3,7 +3,6 @@
  **************************************************************************/
 
 #include "JobList.h"
-#include <QDebug>
 
 JobList::JobList(QObject *parent) :
     QObject(parent) {

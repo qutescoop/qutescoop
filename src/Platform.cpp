@@ -22,6 +22,18 @@ QString Platform::compiler() {
 #ifdef Q_CC_CLANG
     compiler += "C++ front-end for the LLVM compiler";
 #endif
+    // https://stackoverflow.com/questions/2324658/how-to-determine-the-version-of-the-c-standard-used-by-the-compiler
+
+#if defined(_MSVC_LANG)
+    #define cpluspluslevel _MSVC_LANG
+#elif defined(__cplusplus)
+    #define cpluspluslevel __cplusplus
+#else
+    #define cpluspluslevel 0
+#endif
+
+    compiler += QString(", C++ %1").arg(cpluspluslevel);
+
     return compiler;
 }
 
