@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #include "Launcher.h"
 #include "Platform.h"
 #include "Settings.h"

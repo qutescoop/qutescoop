@@ -1,7 +1,3 @@
-/**************************************************************************
-*  This file is part of QuteScoop. See README for license
-**************************************************************************/
-
 #ifndef BOOKEDCONTROLLER_H_
 #define BOOKEDCONTROLLER_H_
 

@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef BOOKEDATCDIALOG_H_
 #define BOOKEDATCDIALOG_H_
 

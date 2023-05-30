@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef WHAZZUPDATA_H_
 #define WHAZZUPDATA_H_
 

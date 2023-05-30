@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef TESSELLATOR_H_
 #define TESSELLATOR_H_
 

@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef SEARCHRESULTMODEL_H_
 #define SEARCHRESULTMODEL_H_
 

@@ -1,12 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
-/** The GUI message system.
-  Background idea is to provide a simple API to any class that wants to show
-  messages, statii and progresses to the user.
-**/
-
 #ifndef GUIMESSAGE_H
 #define GUIMESSAGE_H
 

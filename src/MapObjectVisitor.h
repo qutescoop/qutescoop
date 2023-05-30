@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef MAPOBJECTVISITOR_H_
 #define MAPOBJECTVISITOR_H_
 

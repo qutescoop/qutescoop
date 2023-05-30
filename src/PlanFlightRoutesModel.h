@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef PLANFLIGHTSROUTEMODEL_H_
 #define PLANFLIGHTSROUTEMODEL_H_
 

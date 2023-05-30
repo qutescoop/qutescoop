@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #include "BookedAtcSortFilter.h"
 
 bool BookedAtcSortFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const

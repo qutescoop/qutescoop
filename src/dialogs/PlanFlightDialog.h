@@ -1,7 +1,3 @@
-/**************************************************************************
- *  This file is part of QuteScoop. See README for license
- **************************************************************************/
-
 #ifndef PLANFLIGHTDIALOG_H_
 #define PLANFLIGHTDIALOG_H_
 
