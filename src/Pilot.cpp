@@ -4,12 +4,12 @@
 
 #include "Pilot.h"
 
-#include "PilotDetails.h"
+#include "Airac.h"
 #include "Airport.h"
+#include "helpers.h"
 #include "NavData.h"
 #include "Settings.h"
-#include "Airac.h"
-#include "helpers.h"
+#include "dialogs/PilotDetails.h"
 
 #include <QJsonObject>
 

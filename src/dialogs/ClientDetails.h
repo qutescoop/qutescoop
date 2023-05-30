@@ -5,7 +5,7 @@
 #ifndef CLIENTDETAILS_H_
 #define CLIENTDETAILS_H_
 
-#include "MapObject.h"
+#include "../MapObject.h"
 
 #include <QDialog>
 

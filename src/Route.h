@@ -2,8 +2,8 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#ifndef ROUTE_H
-#define ROUTE_H
+#ifndef ROUTE_H_
+#define ROUTE_H_
 
 #include "Waypoint.h"
 

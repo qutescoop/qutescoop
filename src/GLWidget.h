@@ -5,6 +5,11 @@
 #ifndef GLWIDGET_H_
 #define GLWIDGET_H_
 
+#include "ClientSelectionWidget.h"
+#include "Controller.h"
+#include "MapObject.h"
+#include "Sector.h"
+
 #include <qglobal.h>
 #ifdef Q_OS_WIN
     #include <windows.h>
@@ -16,10 +21,6 @@
 #endif
 
 #include <QPoint>
-#include "MapObject.h"
-#include "Sector.h"
-#include "ClientSelectionWidget.h"
-#include "Controller.h"
 
 class GLWidget : public QGLWidget {
         Q_OBJECT

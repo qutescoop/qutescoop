@@ -7,9 +7,9 @@
 
 #include "ui_Window.h"
 
-#include "MapScreen.h"
-#include "SearchResultModel.h"
-#include "MetarModel.h"
+#include "../MapScreen.h"
+#include "../SearchResultModel.h"
+#include "../MetarModel.h"
 
 class Window : public QMainWindow, public Ui::Window {
         Q_OBJECT

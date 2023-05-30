@@ -3,6 +3,7 @@
  **************************************************************************/
 
 #include "Airport.h"
+
 #include "MetarSearchVisitor.h"
 
 void MetarSearchVisitor::visit(MapObject *object) {

@@ -6,10 +6,10 @@
 
 #include "Airport.h"
 #include "FileReader.h"
-#include "Waypoint.h"
+#include "GuiMessage.h"
 #include "NavData.h"
 #include "Settings.h"
-#include "GuiMessage.h"
+#include "Waypoint.h"
 
 Airac *airacInstance = 0;
 Airac *Airac::instance(bool createIfNoInstance) {

@@ -5,8 +5,8 @@
 #include "PilotDetails.h"
 
 #include "Window.h"
-#include "Whazzup.h"
-#include "Settings.h"
+#include "../Settings.h"
+#include "../Whazzup.h"
 
 //singleton instance
 PilotDetails *pilotDetails = 0;

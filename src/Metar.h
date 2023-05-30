@@ -5,8 +5,8 @@
 #ifndef METAR_H_
 #define METAR_H_
 
-#include <QString>
 #include <QDateTime>
+#include <QString>
 
 class Metar {
     public:

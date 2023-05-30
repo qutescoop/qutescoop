@@ -5,9 +5,9 @@
 #include "Airport.h"
 
 #include "helpers.h"
-#include "AirportDetails.h"
-#include "Settings.h"
 #include "NavData.h"
+#include "Settings.h"
+#include "dialogs/AirportDetails.h"
 
 Airport::Airport(const QStringList& list, unsigned int debugLineNumber) :
         _appDisplayList(0),

@@ -5,8 +5,9 @@
 #ifndef MAPOBJECTVISITOR_H_
 #define MAPOBJECTVISITOR_H_
 
-#include <QList>
 #include "MapObject.h"
+
+#include <QList>
 
 class MapObjectVisitor {
     public:

@@ -4,24 +4,24 @@
 
 #include "Window.h"
 
-#include "GLWidget.h"
-#include "PilotDetails.h"
-#include "ControllerDetails.h"
 #include "AirportDetails.h"
-#include "PreferencesDialog.h"
-#include "PlanFlightDialog.h"
 #include "BookedAtcDialog.h"
+#include "ControllerDetails.h"
 #include "ListClientsDialog.h"
-#include "Whazzup.h"
-#include "Settings.h"
-#include "SearchVisitor.h"
-#include "MetarSearchVisitor.h"
-#include "NavData.h"
-#include "FriendsVisitor.h"
-#include "GuiMessage.h"
-#include "dialogs/StaticSectorsDialog.h"
-#include "Platform.h"
-#include "MetarDelegate.h"
+#include "PilotDetails.h"
+#include "PlanFlightDialog.h"
+#include "PreferencesDialog.h"
+#include "StaticSectorsDialog.h"
+#include "../FriendsVisitor.h"
+#include "../GLWidget.h"
+#include "../GuiMessage.h"
+#include "../MetarDelegate.h"
+#include "../MetarSearchVisitor.h"
+#include "../NavData.h"
+#include "../Platform.h"
+#include "../Settings.h"
+#include "../SearchVisitor.h"
+#include "../Whazzup.h"
 
 #include <QModelIndex>
 
@@ -85,7 +85,7 @@ Window::Window(QWidget *parent) :
         actionShowRoutes,
         &QAction::toggled,
         this,
-        [=]( const bool &newValue ) {
+        [this](const bool &newValue) {
             actionShowRoutes_triggered(newValue);
         }
     );

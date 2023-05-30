@@ -1,4 +1,5 @@
 #include "MetarDelegate.h"
+
 #include <QApplication>
 
 void MetarDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const

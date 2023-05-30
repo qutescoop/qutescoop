@@ -3,8 +3,9 @@
  **************************************************************************/
 
 #include "PreferencesDialog.h"
-#include "Settings.h"
+
 #include "Window.h"
+#include "../Settings.h"
 
 //singleton instance
 PreferencesDialog *preferencesDialogInstance = 0;

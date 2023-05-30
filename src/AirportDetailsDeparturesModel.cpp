@@ -3,6 +3,7 @@
 **************************************************************************/
 
 #include "AirportDetailsDeparturesModel.h"
+
 #include "Airport.h"
 
 #include <QFont>

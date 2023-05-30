@@ -5,8 +5,8 @@
 #include "ControllerDetails.h"
 
 #include "Window.h"
-#include "Settings.h"
-#include "Whazzup.h"
+#include "../Settings.h"
+#include "../Whazzup.h"
 
 //singleton instance
 ControllerDetails *controllerDetails = 0;

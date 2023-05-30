@@ -2,12 +2,12 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#ifndef LISTCLIENTSDIALOG_H
-#define LISTCLIENTSDIALOG_H
+#ifndef LISTCLIENTSDIALOG_H_
+#define LISTCLIENTSDIALOG_H_
 
 #include "ui_ListClientsDialog.h"
 
-#include "ListClientsDialogModel.h"
+#include "../ListClientsDialogModel.h"
 
 class ListClientsDialog : public QDialog, private Ui::ListClientsDialog {
         Q_OBJECT

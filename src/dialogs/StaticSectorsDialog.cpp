@@ -1,11 +1,13 @@
 /**************************************************************************
 *  This file is part of QuteScoop. See README for license
 **************************************************************************/
+
+#include "StaticSectorsDialog.h"
+
+#include "Window.h"
 #include "../MapScreen.h"
 #include "../NavData.h"
-#include "StaticSectorsDialog.h"
 #include "../Settings.h"
-#include "../Window.h"
 
 //singleton instance
 StaticSectorsDialog* staticSectorsDialogInstance = 0;

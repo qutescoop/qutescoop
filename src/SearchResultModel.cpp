@@ -2,8 +2,9 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#include "Pilot.h"
 #include "SearchResultModel.h"
+
+#include "Pilot.h"
 
 #include <QFont>
 

@@ -8,11 +8,11 @@
 #include "ui_AirportDetails.h"
 
 #include "ClientDetails.h"
-#include "Airport.h"
-#include "MetarModel.h"
-#include "AirportDetailsAtcModel.h"
-#include "AirportDetailsArrivalsModel.h"
-#include "AirportDetailsDeparturesModel.h"
+#include "../Airport.h"
+#include "../MetarModel.h"
+#include "../AirportDetailsAtcModel.h"
+#include "../AirportDetailsArrivalsModel.h"
+#include "../AirportDetailsDeparturesModel.h"
 
 class AirportDetails : public ClientDetails, private Ui::AirportDetails {
         Q_OBJECT

@@ -4,19 +4,19 @@
 
 #include "GLWidget.h"
 
-#include "helpers.h"
-#include "LineReader.h"
-#include "Pilot.h"
+#include "Airac.h"
 #include "Controller.h"
-#include "Whazzup.h"
-#include "NavData.h"
+#include "dialogs/AirportDetails.h"
+#include "dialogs/PlanFlightDialog.h"
+#include "dialogs/PilotDetails.h"
+#include "helpers.h"
 #include "GuiMessage.h"
+#include "LineReader.h"
+#include "NavData.h"
+#include "Pilot.h"
 #include "Settings.h"
 #include "Waypoint.h"
-#include "PlanFlightDialog.h"
-#include "AirportDetails.h"
-#include "PilotDetails.h"
-#include "Airac.h"
+#include "Whazzup.h"
 
 //#include <GL/glext.h>   // Multitexturing - not platform-independant
 #include <algorithm>
@@ -357,6 +357,7 @@ void GLWidget::createPilotsList() {
     }
 
     // planned route from Flightplan Dialog (does not really belong to pilots lists, but is convenient here)
+    // @todo
     if(PlanFlightDialog::instance(false) != 0)
         PlanFlightDialog::instance()->plotPlannedRoute();
 

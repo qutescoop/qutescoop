@@ -32,6 +32,7 @@
     #define CALLBACK_CAST (GLvoid (*) ())
     #define CALLBACK_DECL void CALLBACK
 #endif
+
 class Tessellator {
     public:
         Tessellator();

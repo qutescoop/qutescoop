@@ -4,10 +4,10 @@
 
 #include "Controller.h"
 
+#include "Airport.h"
 #include "Client.h"
-#include "ControllerDetails.h"
 #include "NavData.h"
-#include "src/Airport.h"
+#include "dialogs/ControllerDetails.h"
 
 #include <QJsonObject>
 

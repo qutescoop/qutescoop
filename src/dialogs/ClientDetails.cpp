@@ -4,9 +4,9 @@
 
 #include "ClientDetails.h"
 
-#include "Settings.h"
-#include "Client.h"
 #include "Window.h"
+#include "../Client.h"
+#include "../Settings.h"
 
 ClientDetails::ClientDetails(QWidget *parent):
         QDialog(parent) {

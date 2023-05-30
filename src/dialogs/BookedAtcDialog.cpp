@@ -4,11 +4,11 @@
 
 #include "BookedAtcDialog.h"
 
-#include "BookedAtcDialogModel.h"
-#include "BookedAtcSortFilter.h"
-#include "Whazzup.h"
 #include "Window.h"
-#include "Settings.h"
+#include "../BookedAtcDialogModel.h"
+#include "../BookedAtcSortFilter.h"
+#include "../Settings.h"
+#include "../Whazzup.h"
 
 // singleton instance
 BookedAtcDialog *bookedAtcDialogInstance = 0;

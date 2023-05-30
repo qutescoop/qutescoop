@@ -4,13 +4,13 @@
 
 #include "Settings.h"
 
-#include "Whazzup.h"
-#include "Window.h"
-#include "PilotDetails.h"
-#include "GuiMessage.h"
-#include "ControllerDetails.h"
-#include "AirportDetails.h"
 #include "Client.h"
+#include "GuiMessage.h"
+#include "Whazzup.h"
+#include "dialogs/AirportDetails.h"
+#include "dialogs/ControllerDetails.h"
+#include "dialogs/PilotDetails.h"
+#include "dialogs/Window.h"
 
 //singleton instance
 QSettings *settingsInstance = 0;

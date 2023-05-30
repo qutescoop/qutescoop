@@ -3,12 +3,9 @@
  **************************************************************************/
 
 #include "GuiMessage.h"
+
 #include <QApplication>
 #include <QMessageBox>
-
-////////////////////////////////////////////////////////////////////////
-// GuiMessageProxy (singleton)
-////////////////////////////////////////////////////////////////////////
 
 GuiMessages *guiMessagesInstance = 0;
 GuiMessages *GuiMessages::instance(bool createIfNoInstance) {

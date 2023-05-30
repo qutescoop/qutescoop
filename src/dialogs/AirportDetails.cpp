@@ -4,11 +4,11 @@
 
 #include "AirportDetails.h"
 
-#include "NavData.h"
-#include "Window.h"
 #include "PilotDetails.h"
-#include "Settings.h"
-#include "Whazzup.h"
+#include "Window.h"
+#include "../NavData.h"
+#include "../Settings.h"
+#include "../Whazzup.h"
 
 //singleton instance
 AirportDetails *airportDetails = 0;

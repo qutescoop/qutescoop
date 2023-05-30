@@ -2,12 +2,12 @@
  *  This file is part of QuteScoop. See README for license
  **************************************************************************/
 
-#ifndef PLANFLIGHTDIALOG_H
-#define PLANFLIGHTDIALOG_H
+#ifndef PLANFLIGHTDIALOG_H_
+#define PLANFLIGHTDIALOG_H_
 
 #include "ui_PlanFlightDialog.h"
 
-#include "PlanFlightRoutesModel.h"
+#include "../PlanFlightRoutesModel.h"
 
 #include <QtNetwork>
 

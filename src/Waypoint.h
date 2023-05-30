@@ -5,8 +5,9 @@
 #ifndef WAYPOINT_H_
 #define WAYPOINT_H_
 
-#include <QStringList>
 #include "MapObject.h"
+
+#include <QStringList>
 
 class Waypoint: public MapObject {
     public:
