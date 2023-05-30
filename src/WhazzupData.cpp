@@ -343,9 +343,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
     qDebug() << "WhazzupData::updatePilotsFrom()";
     foreach (const QString s, pilots.keys()) { // remove pilots that are no longer there
         if (!data.pilots.contains(s)) {
-            foreach (const Pilot* p, pilots.values(s)) { // there might be several...
-                delete p;
-            }
+            delete pilots.value(s);
             pilots.remove(s);
         }
     }
@@ -368,9 +366,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
 
     foreach (const QString s, bookedPilots.keys()) { // remove pilots that are no longer there
         if (!data.bookedPilots.contains(s)) {
-            foreach (const Pilot* p, bookedPilots.values(s)) { // there might be several...
-                delete p;
-            }
+            delete bookedPilots.value(s);
             bookedPilots.remove(s);
         }
     }
