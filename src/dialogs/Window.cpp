@@ -41,7 +41,12 @@ Window::Window(QWidget* parent) :
     setupUi(this);
 
     setAttribute(Qt::WA_AlwaysShowToolTips, true);
-    setWindowTitle(QString("QuteScoop %1").arg(Platform::version()));
+    setWindowTitle(
+        QString("QuteScoop %1%2").arg(
+            Platform::version(),
+            Platform::compileMode() == "debug"? " [debug]": ""
+        )
+    );
 
     // apply styleSheet
     if(!Settings::stylesheet().isEmpty()) {
@@ -214,10 +219,10 @@ void Window::toggleFullscreen() {
 void Window::about() {
     QMessageBox::about(
         this,
-        tr("About QuteScoop"),
-        tr(
+        "About QuteScoop",
+        QString(
             R"html(
-<h3>QuteScoop</h3>
+<h3>QuteScoop <small style="font-weight: normal">%1</small></h3>
 
 <p>
     QuteScoop is free (libre) software.
@@ -239,8 +244,8 @@ void Window::about() {
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 </p>
-)html"
-        )
+            )html")
+        .arg(Platform::version())
     );
 }
 
