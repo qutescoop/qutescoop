@@ -96,7 +96,7 @@ void NavData::loadControllerAirportsMapping(const QString &filePath)
         _cam.suffixes = _fields[1].split(" ", Qt::SkipEmptyParts);
         foreach(const auto _airportIcao, _fields[2].split(" ", Qt::SkipEmptyParts)) {
             if(airports.contains(_airportIcao)) {
-                _cam.airports.append(airports.value(_airportIcao));
+                _cam.airports.insert(airports.value(_airportIcao));
             } else {
                 auto msg = QString("While processing line '%1' from %2: Airport '%3' not found.")
                     .arg(_line, filePath, _airportIcao);
@@ -205,16 +205,18 @@ Airport* NavData::airportAt(double lat, double lon, double maxDist) const {
     return 0;
 }
 
-QList<Airport*> NavData::additionalMatchedAirportsForController(QString prefix, QString suffix) const
+QSet<Airport*> NavData::additionalMatchedAirportsForController(QString prefix, QString suffix) const
 {
-    QList<Airport*> ret;
+    QSet<Airport*> ret;
     foreach(auto _cam, m_controllerAirportsMapping) {
         if(
             _cam.prefix == prefix
             && (_cam.suffixes.isEmpty() || _cam.suffixes.contains(suffix))
         )
         {
-            ret.append(_cam.airports);
+            foreach(auto* _a, _cam.airports) {
+                ret.insert(_a);
+            }
         }
     }
 

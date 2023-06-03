@@ -74,11 +74,9 @@ void ControllerDetails::refresh(Controller* newController) {
     }
     lblCallsign->setVisible(_controller->sector != 0);
 
-    QString frequencyHtml;
-    if(!_controller->isObserver() && _controller->frequency.length() != 0) {
-        frequencyHtml = QString("<h1><pre>%1</pre></h1>").arg(_controller->frequency);
-    }
-    lblFrequency->setText(frequencyHtml);
+    auto isActive = !_controller->isObserver() && _controller->frequency.length() != 0;
+    lblFreqLabel->setVisible(isActive);
+    lblFrequency->setText(isActive? QString("<h1><pre>%1</pre></h1>").arg(_controller->frequency): "");
 
     // airports
     foreach(auto _w, gridAirports->findChildren<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
@@ -91,7 +89,7 @@ void ControllerDetails::refresh(Controller* newController) {
     gridAirports->setLayout(gridAirportsLayout);
 
     int i = 0;
-    foreach(auto* _a, _controller->airports()) {
+    foreach(auto* _a, _controller->airportsSorted()) {
         if(_a == 0) {
             continue;
         }

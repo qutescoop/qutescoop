@@ -88,8 +88,9 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup) :
         // We try to get lat/lng from covered airports
         auto _airports = airports();
         if(_airports.size() > 0) {
-            lat = _airports[0]->lat;
-            lon = _airports[0]->lon;
+            auto _a = *_airports.constBegin();
+            lat = _a->lat;
+            lon = _a->lon;
         }
     }
 }
@@ -160,8 +161,8 @@ bool Controller::isAtis() const
     return label.endsWith("_ATIS");
 }
 
-QList <Airport*> Controller::airports() const {
-    auto airports = QList<Airport*>();
+QSet <Airport*> Controller::airports() const {
+    auto airports = QSet<Airport*>();
     auto _atcLabelTokens = atcLabelTokens();
     if(_atcLabelTokens.empty()) {
         return airports;
@@ -171,12 +172,23 @@ QList <Airport*> Controller::airports() const {
     // ordinary / normal match EDDS_STG_APP -> EDDS
     auto a = NavData::instance()->airports.value(prefix, 0);
     if(a != 0) {
-        airports.append(a);
+        airports.insert(a);
     }
 
     auto suffix = _atcLabelTokens.constLast();
     // use matches from controllerAirportsMapping.dat
-    airports.append(NavData::instance()->additionalMatchedAirportsForController(prefix, suffix));
+    auto _airports = NavData::instance()->additionalMatchedAirportsForController(prefix, suffix);
+    foreach(auto* _a, _airports) {
+        airports.insert(_a);
+    }
+
+//    if(sector != 0) {
+//        foreach(auto* a, NavData::instance()->airports) {
+//            if(sector->containsPoint(QPointF(a->lat, a->lon))) {
+//                airports.insert(a);
+//            }
+//        }
+//    }
 
     // if we have not had any match yet and since some
     // VATSIMmers still don't think ICAO codes are cool
@@ -184,11 +196,25 @@ QList <Airport*> Controller::airports() const {
     if(airports.isEmpty() && prefix.length() == 3) {
         auto a = NavData::instance()->airports.value("K" + prefix, 0);
         if(a != 0) {
-            airports.append(a);
+            airports.insert(a);
         }
     }
 
     return airports;
+}
+
+QList <Airport*> Controller::airportsSorted() const {
+    auto _airports = airports().values();
+    // sort by congestion
+    std::sort(
+        _airports.begin(),
+        _airports.end(),
+        [ = ](const Airport* a, const Airport* b)->bool {
+            return a->congestion() > b->congestion();
+        }
+    );
+
+    return _airports;
 }
 
 void Controller::showDetailsDialog() {
@@ -267,5 +293,5 @@ bool Controller::isObserver() const {
 
 bool Controller::isATC() const {
     // 199.998 gets transmitted on VATSIM for a controller without prim freq
-    return facilityType > 0 && frequency != "199.998";
+    return facilityType > 0 && !frequency.isEmpty() && frequency != "199.998";
 }

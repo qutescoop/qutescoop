@@ -35,7 +35,9 @@ class Airport: public MapObject {
 
         void addArrival(Pilot* client);
         void addDeparture(Pilot* client);
-        int numFilteredArrivals, numFilteredDepartures;
+        uint numFilteredArrivals, numFilteredDepartures;
+
+        uint congestion() const;
 
         //void addCenter(Controller *client);
         void addApproach(Controller* client);

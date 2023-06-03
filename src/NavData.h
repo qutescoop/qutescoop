@@ -8,7 +8,7 @@
 struct ControllerAirportsMapping {
     QString prefix;
     QStringList suffixes;
-    QList<Airport*> airports;
+    QSet<Airport*> airports;
 };
 
 enum LatLngPrecission {
@@ -50,7 +50,7 @@ class NavData: public QObject {
 
         Airport* airportAt(double lat, double lon, double maxDist) const;
 
-        QList<Airport*> additionalMatchedAirportsForController(QString prefix, QString suffix) const;
+        QSet<Airport*> additionalMatchedAirportsForController(QString prefix, QString suffix) const;
 
         void updateData(const WhazzupData& whazzupData);
         void accept(SearchVisitor* visitor);
