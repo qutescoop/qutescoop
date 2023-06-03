@@ -14,7 +14,7 @@
    <string>Booked ATC</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -104,7 +104,7 @@
         <string>warp to</string>
        </property>
        <property name="icon">
-        <iconset resource="Resources.qrc">
+        <iconset>
          <normaloff>:/icons/images/timewarp16.png</normaloff>:/icons/images/timewarp16.png</iconset>
        </property>
        <property name="toolButtonStyle">
@@ -193,9 +193,7 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>

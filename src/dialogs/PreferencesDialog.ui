@@ -14,7 +14,7 @@
    <string>Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -3130,9 +3130,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>buttonResetEarthSpace</tabstop>
   <tabstop>pbReinitOpenGl</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>cbDownloadPeriodically</sender>
