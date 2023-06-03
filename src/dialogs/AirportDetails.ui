@@ -14,7 +14,7 @@
    <string>Dialog</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset>
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -429,9 +429,7 @@ ATC</string>
   <tabstop>treeArrivals</tabstop>
   <tabstop>btnShowOnMap</tabstop>
  </tabstops>
- <resources>
-  <include location="Resources.qrc"/>
- </resources>
+ <resources/>
  <connections>
   <connection>
    <sender>btnShowOnMap</sender>

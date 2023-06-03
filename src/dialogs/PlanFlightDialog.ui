@@ -14,7 +14,7 @@
    <string>Routes</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset resource="../Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -67,22 +67,6 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="QToolButton" name="bDepDetails">
-          <property name="toolTip">
-           <string>Open airport dialog (EDDS)</string>
-          </property>
-          <property name="text">
-           <string>EDDS 3/1</string>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextBesideIcon</enum>
-          </property>
-          <property name="arrowType">
-           <enum>Qt::RightArrow</enum>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="1">
          <widget class="QLineEdit" name="edDest">
           <property name="maxLength">
@@ -93,22 +77,6 @@
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
-         <widget class="QToolButton" name="bDestDetails">
-          <property name="toolTip">
-           <string>Open airport dialog (EDDS)</string>
-          </property>
-          <property name="text">
-           <string>EDDS 3/1</string>
-          </property>
-          <property name="toolButtonStyle">
-           <enum>Qt::ToolButtonTextBesideIcon</enum>
-          </property>
-          <property name="arrowType">
-           <enum>Qt::RightArrow</enum>
-          </property>
-         </widget>
-        </item>
         <item row="2" column="0">
          <widget class="QLabel" name="lblDest">
           <property name="text">
@@ -116,6 +84,26 @@
           </property>
           <property name="buddy">
            <cstring>edDest</cstring>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QPushButton" name="bDestDetails">
+          <property name="toolTip">
+           <string>Open airport dialog (EDDS)</string>
+          </property>
+          <property name="text">
+           <string>EDDS 3/1</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QPushButton" name="bDepDetails">
+          <property name="toolTip">
+           <string>Open airport dialog (EDDS)</string>
+          </property>
+          <property name="text">
+           <string>EDDS 3/1</string>
           </property>
          </widget>
         </item>
@@ -167,7 +155,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap resource="Resources.qrc">:/icons/qutescoop.png</pixmap>
+           <pixmap resource="../Resources.qrc">:/icons/qutescoop.png</pixmap>
           </property>
           <property name="alignment">
            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -180,7 +168,7 @@
         <item row="5" column="0">
          <widget class="QLabel" name="pixVroute">
           <property name="pixmap">
-           <pixmap resource="Resources.qrc">:/routeproviders/images/vroute.png</pixmap>
+           <pixmap resource="../Resources.qrc">:/routeproviders/images/vroute.png</pixmap>
           </property>
          </widget>
         </item>
@@ -472,7 +460,7 @@
   <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources>
-  <include location="Resources.qrc"/>
+  <include location="../Resources.qrc"/>
  </resources>
  <connections>
   <connection>

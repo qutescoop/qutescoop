@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowIcon">
-   <iconset resource="Resources.qrc">
+   <iconset resource="../Resources.qrc">
     <normaloff>:/icons/qutescoop.png</normaloff>:/icons/qutescoop.png</iconset>
   </property>
   <property name="sizeGripEnabled">
@@ -208,7 +208,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="Resources.qrc"/>
+  <include location="../Resources.qrc"/>
  </resources>
  <connections>
   <connection>
