@@ -84,7 +84,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QLabel" name="label">
+         <widget class="QLabel" name="lblFreqLabel">
           <property name="text">
            <string>freq</string>
           </property>

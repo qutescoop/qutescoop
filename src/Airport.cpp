@@ -76,6 +76,11 @@ void Airport::addDeparture(Pilot* client) {
     active = true;
 }
 
+uint Airport::congestion() const
+{
+    return numFilteredArrivals + numFilteredDepartures;
+}
+
 const GLuint& Airport::appDisplayList() {
     if(_appDisplayList != 0) {
         return _appDisplayList;

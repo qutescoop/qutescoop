@@ -2010,6 +2010,11 @@ void GLWidget::newWhazzupData(bool isNew) {
         // update airports
         NavData::instance()->updateData(Whazzup::instance()->whazzupData());
 
+        // invalidate controllers
+        foreach(auto c, Whazzup::instance()->whazzupData().controllers) {
+//            c->invalidateAirports();
+        }
+
         invalidatePilots();
         invalidateControllers();
         invalidateAirports();
