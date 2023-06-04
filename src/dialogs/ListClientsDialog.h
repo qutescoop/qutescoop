@@ -5,7 +5,8 @@
 
 #include "../ListClientsDialogModel.h"
 
-class ListClientsDialog: public QDialog, private Ui::ListClientsDialog {
+class ListClientsDialog
+    : public QDialog, private Ui::ListClientsDialog {
     Q_OBJECT
     public:
         static ListClientsDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);

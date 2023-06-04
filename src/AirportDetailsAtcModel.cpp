@@ -7,8 +7,8 @@ void AirportDetailsAtcModel::setClients(const QList<Controller*>& controllers) {
 }
 
 QVariant AirportDetailsAtcModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch(section) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
             case 0: return QString("Callsign");
             case 1: return QString("Freq");
             case 2: return QString("Facility");
@@ -31,32 +31,31 @@ int AirportDetailsAtcModel::columnCount(const QModelIndex&) const {
 }
 
 QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid() || index.row() >= _controllers.size()) {
+    if (!index.isValid() || index.row() >= _controllers.size()) {
         return QVariant();
     }
 
     Controller* c = _controllers[index.row()];
 
-    if(role == Qt::FontRole) {
-        if(c->isFriend()) {
+    if (role == Qt::FontRole) {
+        if (c->isFriend()) {
             QFont result;
             result.setBold(true);
             return result;
         }
         return QFont();
-    } else if(role == Qt::TextAlignmentRole) {
-        switch(index.column()) {
-            case 6:
-            case 7:
-                return Qt::AlignRight;
+    } else if (role == Qt::TextAlignmentRole) {
+        switch (index.column()) {
             case 5:
                 return Qt::AlignHCenter;
+            case 6:
+                return Qt::AlignRight;
         }
 
         return Qt::AlignLeft;
-    } else if(role == Qt::DisplayRole) {
-        switch(index.column()) {
-            case 0: return c->label; break;
+    } else if (role == Qt::DisplayRole) {
+        switch (index.column()) {
+            case 0: return c->callsign; break;
             case 1: return c->frequency.toDouble() > 199? QVariant(): c->frequency; break; //sort out
             // observers
             // without
@@ -74,5 +73,7 @@ QVariant AirportDetailsAtcModel::data(const QModelIndex &index, int role) const 
 }
 
 void AirportDetailsAtcModel::modelSelected(const QModelIndex& index) const {
-    _controllers[index.row()]->showDetailsDialog();
+    if (_controllers[index.row()]->hasPrimaryAction()) {
+        _controllers[index.row()]->primaryAction();
+    }
 }

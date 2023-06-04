@@ -7,7 +7,8 @@
 
 #include <QtNetwork>
 
-class PlanFlightDialog: public QDialog, public Ui::PlanFlightDialog {
+class PlanFlightDialog
+    : public QDialog, public Ui::PlanFlightDialog {
     Q_OBJECT
 
     public:

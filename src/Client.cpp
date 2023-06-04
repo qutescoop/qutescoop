@@ -5,26 +5,50 @@
 
 #include <QInputDialog>
 
-Client::Client(const QJsonObject& json, const WhazzupData*) :
-    server("")
-{
-    label = json["callsign"].toString();
+const QRegularExpression Client::livestreamRegExp = QRegularExpression(
+    "("
+    "(twitch)(\\.tv)?"
+    "|(youtu\\.?be)(\\.com)?"
+    "|(owncast)(\\.online)?"
+    ")"
+    "\\W([^ |\\n]+)",
+    QRegularExpression::MultilineOption | QRegularExpression::CaseInsensitiveOption
+);
+
+QString Client::livestreamString(const QString& str) {
+    auto matchIterator = livestreamRegExp.globalMatch(str);
+
+    // take last match. Helps with "live on twitch now: twitch/user"
+    while (matchIterator.hasNext()) {
+        auto match = matchIterator.next();
+        if (!matchIterator.hasNext()) {
+            QString network(match.captured(2) + match.captured(4) + match.captured(6));
+            return network.toLower() + "/" + match.capturedRef(8);
+        }
+    }
+
+    return "";
+}
+
+Client::Client(const QJsonObject& json, const WhazzupData*)
+    : server("") {
+    callsign = json["callsign"].toString();
+    Q_ASSERT(!callsign.isNull());
+
     userId = QString::number(json["cid"].toInt());
-    m_name = json["name"].toString();
-    lat = json["latitude"].toDouble();
-    lon = json["longitude"].toDouble();
     server = json["server"].toString();
     rating = json["rating"].toInt();
     timeConnected = QDateTime::fromString(json["logon_time"].toString(), Qt::ISODate);
 
-    if(m_name.contains(QRegExp("\\b[A-Z]{4}$"))) {
-        homeBase = m_name.right(4);
-        m_name = m_name.left(m_name.length() - 4).trimmed();
+    m_nameOrCid = json["name"].toString();
+    if (m_nameOrCid.contains(QRegExp("\\b[A-Z]{4}$"))) {
+        homeBase = m_nameOrCid.right(4);
+        m_nameOrCid = m_nameOrCid.chopped(4).trimmed();
     }
 }
 
 QString Client::onlineTime() const {
-    if(!timeConnected.isValid()) {
+    if (!timeConnected.isValid()) {
         return QString("not connected");
     }
 
@@ -38,13 +62,13 @@ QString Client::onlineTime() const {
 QString Client::displayName(bool withLink) const {
     QString result = realName();
 
-    if(!rank().isEmpty()) {
+    if (!rank().isEmpty()) {
         result += " (" + rank() + ")";
     }
 
-    if(withLink && hasValidID()) {
+    if (withLink && hasValidID()) {
         QString link = Whazzup::instance()->userUrl(userId);
-        if(link.isEmpty()) {
+        if (link.isEmpty()) {
             return result;
         }
         result = QString("<a href='%1'>%2</a>").arg(link, result.toHtmlEscaped());
@@ -54,48 +78,43 @@ QString Client::displayName(bool withLink) const {
 }
 
 QString Client::detailInformation() const {
-    if(!homeBase.isEmpty()) {
+    if (!homeBase.isEmpty()) {
         return "(" + homeBase + ")";
     }
-    return QString();
+    return "";
 }
 
-bool Client::showAliasDialog(QWidget* parent) const
-{
+bool Client::showAliasDialog(QWidget* parent) const {
     bool ok;
     QString alias = QInputDialog::getText(
         parent,
         QString("Edit alias"),
-        QString("Set the alias for %1 [empty to unset]:").arg(name()),
+        QString("Set the alias for %1 [empty to unset]:").arg(nameOrCid()),
         QLineEdit::Normal,
         Settings::clientAlias(userId),
         &ok
     );
-    if(ok) {
+    if (ok) {
         Settings::setClientAlias(userId, alias);
     }
     return ok;
 }
 
-bool Client::matches(const QRegExp& regex) const {
-    if(m_name.contains(regex)) {
-        return true;
-    }
-    if(userId.contains(regex)) {
-        return true;
-    }
-    return MapObject::matches(regex);
+bool Client::isValidID(const QString id) {
+    return !id.isEmpty() && id.toInt() >= 800000;
 }
 
-QString Client::toolTip() const {
-    QString result = label + " (" + realName();
+bool Client::matches(const QRegExp& regex) const {
+    return m_nameOrCid.contains(regex)
+        || userId.contains(regex);
+}
 
-    if(!rank().isEmpty()) {
-        result += ", " + rank();
-    }
+QString Client::rank() const {
+    return "";
+}
 
-    result += ")";
-    return result;
+QString Client::livestreamString() const {
+    return "";
 }
 
 bool Client::isFriend() const {
@@ -104,15 +123,32 @@ bool Client::isFriend() const {
 
 const QString Client::realName() const {
     auto& _alias = Settings::clientAlias(userId);
-    if(!_alias.isEmpty()) {
-        return _alias + " | " + m_name;
+    if (!_alias.isEmpty()) {
+        return _alias + " | " + m_nameOrCid;
     }
-    return m_name;
+    return m_nameOrCid;
 }
 
-const QString Client::name() const
-{
-    return m_name;
+const QString Client::nameOrCid() const {
+    return m_nameOrCid;
+}
+
+const QString Client::aliasOrName() const {
+    auto _alisOrNameOrCid = aliasOrNameOrCid();
+
+    if (isValidID(_alisOrNameOrCid)) {
+        return "";
+    }
+
+    return _alisOrNameOrCid;
+}
+
+const QString Client::aliasOrNameOrCid() const {
+    auto& _alias = Settings::clientAlias(userId);
+    if (!_alias.isEmpty()) {
+        return _alias;
+    }
+    return m_nameOrCid;
 }
 
 bool Client::hasValidID() const {

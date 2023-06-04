@@ -5,11 +5,11 @@
 
 class Airline {
     public:
-        Airline(const QString& code, const QString& name, const QString& callsign, const QString& country) :
-            code(code),
-            name(name),
-            callsign(callsign),
-            country(country){}
+        Airline(const QString& code, const QString& name, const QString& callsign, const QString& country)
+            : code(code),
+              name(name),
+              callsign(callsign),
+              country(country) {}
 
         QString label() const {
             return QString("%1 \"%2\"").arg(code, callsign);

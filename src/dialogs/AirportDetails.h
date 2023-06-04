@@ -10,7 +10,8 @@
 #include "../AirportDetailsArrivalsModel.h"
 #include "../AirportDetailsDeparturesModel.h"
 
-class AirportDetails: public ClientDetails, private Ui::AirportDetails {
+class AirportDetails
+    : public ClientDetails, private Ui::AirportDetails {
     Q_OBJECT
     public:
         static AirportDetails* instance(bool createIfNoInstance = true, QWidget* parent = 0);

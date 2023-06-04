@@ -33,13 +33,6 @@ class Settings {
         static void savePosition(const QPoint& pos);
         static QPoint savedPosition();
 
-        static bool shootScreenshots();
-        static void setShootScreenshots(bool value);
-        static int screenshotMethod();
-        static void setScreenshotMethod(int value);
-        static QString screenshotFormat();
-        static void setScreenshotFormat(const QString &value);
-
         static int downloadInterval();
         static void setDownloadInterval(int value);
         static bool downloadOnStartup();
@@ -102,32 +95,44 @@ class Settings {
         static bool useNavdata();
         static void setUseNavdata(bool value);
 
-        static bool showAllWaypoints();
-        static void setShowAllWaypoints(bool value);
-
         static int metarDownloadInterval();
         static void setMetarDownloadInterval(int minutes);
 
         static bool showCTR();
         static void setShowCTR(bool value);
+
         static bool showAPP();
         static void setShowAPP(bool value);
+
         static bool showTWR();
         static void setShowTWR(bool value);
+
         static bool showGND();
         static void setShowGND(bool value);
+
         static bool showRouteFix();
         static void setShowRouteFix(bool value);
+
         static bool showPilotsLabels();
         static void setShowPilotsLabels(bool value);
+
         static bool highlightFriends();
         static void setHighlightFriends(bool value);
+
+        // Display/OpenGL
+
+        static bool showFps();
+        static void setShowFps(bool value);
+
         static bool glStippleLines();
         static void setGlStippleLines(bool value);
+
         static bool glBlending();
         static void setGlBlending(bool value);
+
         static bool glLighting();
         static void setEnableLighting(bool value);
+
         static int glLights();
         static void setGlLights(int value);
 
@@ -182,14 +187,23 @@ class Settings {
         static double countryLineStrength();
         static void setCountryLineStrength(double strength);
 
+        // Display/hover
+        static QColor labelHoveredBgColor();
+        static void setLabelHoveredBgColor(const QColor& color);
+
+        static QColor labelHoveredBgDarkColor();
+        static void setLabelHoveredBgDarkColor(const QColor& color);
+
+        static bool showToolTips();
+        static void setShowToolTips(const bool value);
+
+        // sectors
+
         static QColor firBorderLineColor();
         static void setFirBorderLineColor(const QColor& color);
 
         static double firBorderLineStrength();
         static void setFirBorderLineStrength(double strength);
-
-        static QColor firFontColor();
-        static void setFirFontColor(const QColor& color);
 
         static QColor firFillColor();
         static void setFirFillColor(const QColor& color);
@@ -203,20 +217,62 @@ class Settings {
         static QColor firHighlightedFillColor();
         static void setFirHighlightedFillColor(const QColor& color);
 
+        static QColor firFontColor();
+        static void setFirFontColor(const QColor& color);
+
         static QFont firFont();
         static void setFirFont(const QFont& font);
 
+        static QColor firFontSecondaryColor();
+        static void setFirFontSecondaryColor(const QColor& color);
+
+        static QFont firFontSecondary();
+        static void setFirFontSecondary(const QFont& font);
+
+        static QString firPrimaryContent();
+        static void setFirPrimaryContent(const QString& value);
+
+        static QString firPrimaryContentHovered();
+        static void setFirPrimaryContentHovered(const QString& value);
+
+        static QString firSecondaryContent();
+        static void setFirSecondaryContent(const QString& value);
+
+        static QString firSecondaryContentHovered();
+        static void setFirSecondaryContentHovered(const QString& value);
+
+
+        // airports
+
+        static QFont airportFont();
+        static void setAirportFont(const QFont& font);
+
         static QColor airportFontColor();
         static void setAirportFontColor(const QColor& color);
+
+        static QFont airportFontSecondary();
+        static void setAirportFontSecondary(const QFont& font);
+
+        static QColor airportFontSecondaryColor();
+        static void setAirportFontSecondaryColor(const QColor& color);
+
+        static QString airportPrimaryContent();
+        static void setAirportPrimaryContent(const QString& value);
+
+        static QString airportPrimaryContentHovered();
+        static void setAirportPrimaryContentHovered(const QString& value);
+
+        static QString airportSecondaryContent();
+        static void setAirportSecondaryContent(const QString& value);
+
+        static QString airportSecondaryContentHovered();
+        static void setAirportSecondaryContentHovered(const QString& value);
 
         static QColor airportDotColor();
         static void setAirportDotColor(const QColor& color);
 
         static double airportDotSize();
         static void setAirportDotSize(double value);
-
-        static QFont airportFont();
-        static void setAirportFont(const QFont& font);
 
         static bool showInactiveAirports();
         static void setShowInactiveAirports(const bool& value);
@@ -232,6 +288,12 @@ class Settings {
 
         static QFont inactiveAirportFont();
         static void setInactiveAirportFont(const QFont& font);
+
+        static QColor twrBorderLineColor();
+        static void setTwrBorderLineColor(const QColor& color);
+
+        static double twrBorderLineWidth();
+        static void setTwrBorderLineStrength(double value);
 
         static QColor appBorderLineColor();
         static void setAppBorderLineColor(const QColor& color);
@@ -260,11 +322,38 @@ class Settings {
         static QColor gndFillColor();
         static void setGndFillColor(const QColor& color);
 
+        static QColor delBorderLineColor();
+        static void setDelBorderLineColor(const QColor& color);
+
+        static double delBorderLineWidth();
+        static void setDelBorderLineStrength(double value);
+
+        static QColor delFillColor();
+        static void setDelFillColor(const QColor& color);
+
         static QColor pilotFontColor();
         static void setPilotFontColor(const QColor& color);
 
         static QFont pilotFont();
         static void setPilotFont(const QFont& font);
+
+        static QColor pilotFontSecondaryColor();
+        static void setPilotFontSecondaryColor(const QColor& color);
+
+        static QFont pilotFontSecondary();
+        static void setPilotFontSecondary(const QFont& font);
+
+        static QString pilotPrimaryContent();
+        static void setPilotPrimaryContent(const QString& value);
+
+        static QString pilotPrimaryContentHovered();
+        static void setPilotPrimaryContentHovered(const QString& value);
+
+        static QString pilotSecondaryContent();
+        static void setPilotSecondaryContent(const QString& value);
+
+        static QString pilotSecondaryContentHovered();
+        static void setPilotSecondaryContentHovered(const QString& value);
 
         static QColor pilotDotColor();
         static void setPilotDotColor(const QColor& color);
@@ -293,8 +382,23 @@ class Settings {
         static bool showRoutes();
         static void setShowRoutes(bool value);
 
+        static bool onlyShowImmediateRoutePart();
+        static void setOnlyShowImmediateRoutePart(bool value);
+
         static QColor depLineColor();
         static void setDepLineColor(const QColor& color);
+
+        static int destImmediateDurationMin();
+        static void setDestImmediateDurationMin(int value);
+
+        static QColor destImmediateLineColor();
+        static void setDestImmediateLineColor(const QColor& color);
+
+        static double destImmediateLineStrength();
+        static void setDestImmediateLineStrength(double value);
+
+        static double destLineStrength();
+        static void setDestLineStrength(double value);
 
         static QColor destLineColor();
         static void setDestLineColor(const QColor& color);
@@ -305,8 +409,6 @@ class Settings {
         static double depLineStrength();
         static void setDepLineStrength(double value);
 
-        static double destLineStrength();
-        static void setDestLineStrength(double value);
 
         static bool depLineDashed();
         static void setDepLineDashed(bool value);
@@ -317,6 +419,21 @@ class Settings {
         static QColor friendsHighlightColor();
         static void setFriendsHighlightColor(QColor& color);
 
+        static QColor friendsPilotDotColor();
+        static void setFriendsPilotDotColor(QColor& color);
+
+        static QColor friendsAirportDotColor();
+        static void setFriendsAirportDotColor(QColor& color);
+
+        static QColor friendsPilotLabelRectColor();
+        static void setFriendsPilotLabelRectColor(QColor& color);
+
+        static QColor friendsAirportLabelRectColor();
+        static void setFriendsAirportLabelRectColor(QColor& color);
+
+        static QColor friendsSectorLabelRectColor();
+        static void setFriendsSectorLabelRectColor(QColor& color);
+
         static double highlightLineWidth();
         static void setHighlightLineWidth(double value);
 
@@ -326,12 +443,6 @@ class Settings {
         static bool checkForUpdates();
         static void setCheckForUpdates(bool value);
 
-        static bool sendVersionInformation();
-        static void setSendVersionInformation(bool value);
-
-        static QString updateVersionNumber();
-        static void setUpdateVersionNumber(const QString& version);
-
         static void rememberedMapPosition(double* xrot, double* yrot, double* zrot, double* zoom, int nr);
         static void setRememberedMapPosition(double xrot, double yrot, double zrot, double zoom, int nr);
         static bool rememberMapPositionOnClose();
@@ -339,9 +450,6 @@ class Settings {
 
         static int maxLabels();
         static void setMaxLabels(int maxLabels);
-
-        static bool simpleLabels();
-        static void setSimpleLabels(bool value);
 
         static const QStringList friends();
         static void addFriend(const QString& friendId);
@@ -374,6 +482,7 @@ class Settings {
         static QString remoteDataRepository();
     private:
         static QSettings* instance();
+        static void migrate(QSettings*);
 };
 
 #endif /*SETTINGS_H_*/

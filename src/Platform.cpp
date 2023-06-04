@@ -33,8 +33,7 @@ QString Platform::compiler() {
     return compiler;
 }
 
-QString Platform::compileMode()
-{
+QString Platform::compileMode() {
 #ifdef QT_NO_DEBUG
     return "release";
 #endif
@@ -43,8 +42,12 @@ QString Platform::compileMode()
 #endif
 }
 
-QString Platform::version()
-{
+QString Platform::version() {
     // @see QuteScoop.pro
-    return QString(GIT_DESCRIBE);
+    auto describe = QString(GIT_DESCRIBE);
+    auto branch = QString(GIT_BRANCH);
+    if (branch == "master" || branch == "main" || branch.startsWith("release/")) {
+        return describe;
+    }
+    return describe + "-" + GIT_BRANCH;
 }

@@ -7,7 +7,7 @@
 
 class MapObjectVisitor {
     public:
-        virtual ~MapObjectVisitor() {}
+        virtual ~MapObjectVisitor();
 
         virtual void visit(MapObject* object) = 0;
         virtual QList<MapObject*> result() const = 0;

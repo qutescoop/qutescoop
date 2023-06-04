@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Applies changes to files!
 #
 # @see .github/workflows/build.yaml for used crustify version

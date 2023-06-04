@@ -3,7 +3,8 @@
 
 #include <QtCore>
 
-class MapObject: public QObject {
+class MapObject
+    : public QObject {
     Q_OBJECT
     public:
         MapObject();
@@ -12,27 +13,23 @@ class MapObject: public QObject {
         MapObject& operator=(const MapObject& obj);
         virtual ~MapObject();
 
-        bool isNull() const {
-            return label.isNull();
-        }
+        // @todo: move into TextSearchable interface
+        virtual bool matches(const QRegExp& regex) const;
 
-        virtual bool matches(const QRegExp& regex) const {
-            return label.contains(regex);
-        }
-        virtual QString mapLabel() const {
-            return label;
-        }
-        virtual QString toolTip() const {
-            return _toolTip;
-        }
-
-        virtual void showDetailsDialog() {}
+        virtual QString mapLabel() const;
+        virtual QString mapLabelHovered() const;
+        virtual QStringList mapLabelSecondaryLines() const;
+        virtual QStringList mapLabelSecondaryLinesHovered() const;
+        virtual QString toolTip() const;
+        virtual bool hasPrimaryAction() const;
+        virtual void primaryAction();
 
         double lat, lon;
-        QString label;
         bool drawLabel;
     protected:
-        QString _toolTip;
+        // @todo just meant for non-derived objects that we currently use for airlines in the search for example
+        QString m_label;
+        QString m_toolTip;
 };
 
 #endif /*MAPOBJECT_H_*/

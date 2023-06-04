@@ -6,9 +6,9 @@
 //singleton instance
 PreferencesDialog* preferencesDialogInstance = 0;
 PreferencesDialog* PreferencesDialog::instance(bool createIfNoInstance, QWidget* parent) {
-    if(preferencesDialogInstance == 0) {
-        if(createIfNoInstance) {
-            if(parent == 0) {
+    if (preferencesDialogInstance == 0) {
+        if (createIfNoInstance) {
+            if (parent == 0) {
                 parent = Window::instance();
             }
             preferencesDialogInstance = new PreferencesDialog(parent);
@@ -17,26 +17,20 @@ PreferencesDialog* PreferencesDialog::instance(bool createIfNoInstance, QWidget*
     return preferencesDialogInstance;
 }
 
-PreferencesDialog::PreferencesDialog(QWidget* parent) :
-    QDialog(parent),
-    _settingsLoaded(false) {
+PreferencesDialog::PreferencesDialog(QWidget* parent)
+    : QDialog(parent),
+      _settingsLoaded(false) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
-    foreach(const QByteArray &fmt, QImageWriter::supportedImageFormats()) {
-        if(cbScreenshotFormat->findText(fmt.toLower()) == -1) {
-            cbScreenshotFormat->addItem(fmt.toLower());
-        }
-    }
-
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if(!preferences.size.isNull()) {
+    if (!preferences.size.isNull()) {
         resize(preferences.size);
     }
-    if(!preferences.pos.isNull()) {
+    if (!preferences.pos.isNull()) {
         move(preferences.pos);
     }
-    if(!preferences.geometry.isNull()) {
+    if (!preferences.geometry.isNull()) {
         restoreGeometry(preferences.geometry);
     }
 
@@ -56,15 +50,6 @@ void PreferencesDialog::loadSettings() {
     lbluserDefinedLocation->setEnabled(Settings::downloadNetwork() == 1);
     cbSaveWhazzupData->setChecked(Settings::saveWhazzupData());
 
-    // screenshots
-    cbShootScreenshots->setChecked(Settings::shootScreenshots());
-    cbScreenshotMethod->setCurrentIndex(Settings::screenshotMethod());
-    cbScreenshotFormat->setCurrentIndex(
-        cbScreenshotFormat->findText(
-            Settings::screenshotFormat()
-        )
-    );
-
     gbDownloadBookings->setChecked(
         Settings::downloadBookings()
     ); // must be after cbNetwork
@@ -73,7 +58,6 @@ void PreferencesDialog::loadSettings() {
     sbBookingsInterval->setValue(Settings::bookingsInterval());
 
     sbMaxTextLabels->setValue(Settings::maxLabels());
-    cbSimpleLabels->setChecked(Settings::simpleLabels());
 
     groupBoxProxy->setChecked(Settings::useProxy());
     editProxyServer->setText(Settings::proxyServer());
@@ -82,20 +66,25 @@ void PreferencesDialog::loadSettings() {
     editProxyPassword->setText(Settings::proxyPassword());
 
     // directories
-    lblScreenshotsDirectory->setText(Settings::dataDirectory("screenshots/"));
     lblDownloadedDirectory->setText(Settings::dataDirectory("downloaded/"));
-
 
     // XPlane-Navdata
     editNavdir->setText(Settings::navdataDirectory());
     editNavdir->setEnabled(Settings::useNavdata());
     browseNavdirButton->setEnabled(Settings::useNavdata());
     cbUseNavDatabase->setChecked(Settings::useNavdata());
-    cbShowFixes->setChecked(Settings::showAllWaypoints());
 
     // Display
     cbRememberMapPositionOnClose->setChecked(Settings::rememberMapPositionOnClose());
     spinBoxTimeline->setValue(Settings::timelineSeconds());
+
+    color = Settings::labelHoveredBgColor();
+    pbLabelHoveredBgColor->setText(color.name());
+    pbLabelHoveredBgColor->setPalette(QPalette(color));
+
+    color = Settings::labelHoveredBgDarkColor();
+    pbLabelHoveredBgDarkColor->setText(color.name());
+    pbLabelHoveredBgDarkColor->setPalette(QPalette(color));
 
     // OpenGL
     glTextures->setChecked(Settings::glTextures());
@@ -103,7 +92,7 @@ void PreferencesDialog::loadSettings() {
     // textures
     QDir texDir = QDir(Settings::dataDirectory("textures/"));
     QStringList nameFilters;
-    foreach(const QByteArray fmt, QImageReader::supportedImageFormats()) {
+    foreach (const QByteArray fmt, QImageReader::supportedImageFormats()) {
         nameFilters.append("*." + fmt);
     }
     texDir.setNameFilters(nameFilters);
@@ -183,6 +172,17 @@ void PreferencesDialog::loadSettings() {
     pbFirFontColor->setPalette(QPalette(color));
     pbFirFont->setFont(Settings::firFont());
 
+    color = Settings::firFontSecondaryColor();
+    pbFirFontSecondaryColor->setText(color.name());
+    pbFirFontSecondaryColor->setPalette(QPalette(color));
+    pbFirFontSecondary->setFont(Settings::firFontSecondary());
+
+    lineEditFirPrimaryContent->setText(Settings::firPrimaryContent());
+    lineEditFirPrimaryContentHovered->setText(Settings::firPrimaryContentHovered());
+
+    plainTextEditFirSecondaryContent->setPlainText(Settings::firSecondaryContent());
+    plainTextEditFirSecondaryContentHovered->setPlainText(Settings::firSecondaryContentHovered());
+
     color = Settings::firHighlightedBorderLineColor();
     pbFirHighlightedBorderLineColor->setText(color.name());
     pbFirHighlightedBorderLineColor->setPalette(QPalette(color));
@@ -216,6 +216,17 @@ void PreferencesDialog::loadSettings() {
     pbAirportFontColor->setPalette(QPalette(color));
     pbAirportFont->setFont(Settings::airportFont());
 
+    color = Settings::airportFontSecondaryColor();
+    pbAirportFontSecondaryColor->setText(color.name());
+    pbAirportFontSecondaryColor->setPalette(QPalette(color));
+    pbAirportFontSecondary->setFont(Settings::airportFontSecondary());
+
+    lineEditAirportPrimaryContent->setText(Settings::airportPrimaryContent());
+    lineEditAirportPrimaryContentHovered->setText(Settings::airportPrimaryContentHovered());
+
+    plainTextEditAirportSecondaryContent->setPlainText(Settings::airportSecondaryContent());
+    plainTextEditAirportSecondaryContentHovered->setPlainText(Settings::airportSecondaryContentHovered());
+
     color = Settings::appBorderLineColor();
     pbAppBorderLineColor->setText(color.name());
     pbAppBorderLineColor->setPalette(QPalette(color));
@@ -228,6 +239,11 @@ void PreferencesDialog::loadSettings() {
     color = Settings::appMarginColor();
     pbAppColorMargin->setText(color.name());
     pbAppColorMargin->setPalette(QPalette(color));
+
+    color = Settings::twrBorderLineColor();
+    pbTwrBorderLineColor->setText(color.name());
+    pbTwrBorderLineColor->setPalette(QPalette(color));
+    sbTwrBorderLineStrength->setValue(Settings::twrBorderLineWidth());
 
     color = Settings::twrCenterColor();
     pbTwrColorCenter->setText(color.name());
@@ -246,6 +262,15 @@ void PreferencesDialog::loadSettings() {
     pbGndFillColor->setText(color.name());
     pbGndFillColor->setPalette(QPalette(color));
 
+    color = Settings::delBorderLineColor();
+    pbDelBorderLineColor->setText(color.name());
+    pbDelBorderLineColor->setPalette(QPalette(color));
+    sbDelBorderLineStrength->setValue(Settings::delBorderLineWidth());
+
+    color = Settings::delFillColor();
+    pbDelFillColor->setText(color.name());
+    pbDelFillColor->setPalette(QPalette(color));
+
     color = Settings::airportDotColor();
     pbAirportDotColor->setText(color.name());
     pbAirportDotColor->setPalette(QPalette(color));
@@ -262,6 +287,17 @@ void PreferencesDialog::loadSettings() {
     pbPilotFontColor->setPalette(QPalette(color));
     pbPilotFont->setFont(Settings::pilotFont());
 
+    color = Settings::pilotFontSecondaryColor();
+    pbPilotFontSecondaryColor->setText(color.name());
+    pbPilotFontSecondaryColor->setPalette(QPalette(color));
+    pbPilotFontSecondary->setFont(Settings::pilotFontSecondary());
+
+    lineEditPilotPrimaryContent->setText(Settings::pilotPrimaryContent());
+    lineEditPilotPrimaryContentHovered->setText(Settings::pilotPrimaryContentHovered());
+
+    plainTextEditPilotSecondaryContent->setPlainText(Settings::pilotSecondaryContent());
+    plainTextEditPilotSecondaryContentHovered->setPlainText(Settings::pilotSecondaryContentHovered());
+
     color = Settings::pilotDotColor();
     pbPilotDotColor->setText(color.name());
     pbPilotDotColor->setPalette(QPalette(color));
@@ -277,6 +313,12 @@ void PreferencesDialog::loadSettings() {
     pbDepLineColor->setPalette(QPalette(color));
     sbDepLineStrength->setValue(Settings::depLineStrength());
     cbDepLineDashed->setChecked(Settings::depLineDashed());
+
+    color = Settings::destImmediateLineColor();
+    pbDestImmediateLineColor->setText(color.name());
+    pbDestImmediateLineColor->setPalette(QPalette(color));
+    sbDestImmediateDuration->setValue(Settings::destImmediateDurationMin());
+    sbDestImmediateLineStrength->setValue(Settings::destImmediateLineStrength());
 
     color = Settings::destLineColor();
     pbDestLineColor->setText(color.name());
@@ -296,7 +338,6 @@ void PreferencesDialog::loadSettings() {
 
     // updates + feedback
     cbCheckForUpdates->setChecked(Settings::checkForUpdates());
-    cbSendVersionInfo->setChecked(Settings::sendVersionInformation());
 
     // zooming
     sbZoomFactor->setValue(Settings::zoomFactor());
@@ -317,8 +358,8 @@ void PreferencesDialog::loadSettings() {
 // memory seems to be handled fine and released directly after painting. It
 // expands to +40MB though while loading.
 void PreferencesDialog::lazyloadTextureIcons() {
-    for(int i = 0; i < glTextureEarth->count(); i++) {
-        if(glTextureEarth->itemIcon(i).isNull()) {
+    for (int i = 0; i < glTextureEarth->count(); i++) {
+        if (glTextureEarth->itemIcon(i).isNull()) {
             qDebug() << "PreferencesDialog::lazyloadTextureIcons()" <<
                 Settings::dataDirectory(
                 QString("textures/%1").arg(glTextureEarth->itemText(i))
@@ -346,96 +387,89 @@ void PreferencesDialog::lazyloadTextureIcons() {
 
 // airport traffic settings
 void PreferencesDialog::on_cbFilterTraffic_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setFilterTraffic(state);
 }
 
 void PreferencesDialog::on_spFilterDistance_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setFilterDistance(value);
 }
 
 void PreferencesDialog::on_spFilterArriving_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setFilterArriving(value);
 }
 
 void PreferencesDialog::on_sbCongestionMinimum_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setAirportCongestionMinimum(value);
 }
 
 void PreferencesDialog::on_sbMaxTextLabels_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setMaxLabels(value);
 }
 
 void PreferencesDialog::on_spinBoxDownloadInterval_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDownloadInterval(value);
 }
 
 void PreferencesDialog::on_cbDownloadPeriodically_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDownloadPeriodically(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbUseNavDatabase_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setUseNavdata(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbResetConfiguration_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setResetOnNextStart(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbCheckForUpdates_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setCheckForUpdates(state == Qt::Checked);
 }
 
-void PreferencesDialog::on_cbSendVersionInfo_stateChanged(int state) {
-    if(!_settingsLoaded) {
-        return;
-    }
-    Settings::setSendVersionInformation(state == Qt::Checked);
-}
-
 void PreferencesDialog::on_cbDownloadOnStartup_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDownloadOnStartup(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDownloadNetwork(index);
 
-    switch(index) {
+    switch (index) {
         case 0: // VATSIM
             gbDownloadBookings->setChecked(true);
             break;
@@ -449,7 +483,7 @@ void PreferencesDialog::on_cbNetwork_currentIndexChanged(int index) {
 }
 
 void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setUserDownloadLocation(editUserDefinedLocation->text());
@@ -457,70 +491,70 @@ void PreferencesDialog::on_editUserDefinedLocation_editingFinished() {
 }
 
 void PreferencesDialog::on_cbSaveWhazzupData_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setSaveWhazzupData(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_groupBoxProxy_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setUseProxy(checked);
 }
 
 void PreferencesDialog::on_editProxyServer_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setProxyServer(editProxyServer->text());
 }
 
 void PreferencesDialog::on_editProxyPort_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setProxyPort(editProxyPort->text().toInt());
 }
 
 void PreferencesDialog::on_editProxyUser_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setProxyUser(editProxyUser->text());
 }
 
 void PreferencesDialog::on_editProxyPassword_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setProxyPassword(editProxyPassword->text());
 }
 
 void PreferencesDialog::on_spinBoxTimeline_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setTimelineSeconds(value);
 }
 
 void PreferencesDialog::on_cbLineSmoothing_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDisplaySmoothLines(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_cbDotSmoothing_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDisplaySmoothDots(state == Qt::Checked);
 }
 
 void PreferencesDialog::on_editNavdir_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setNavdataDirectory(editNavdir->text());
@@ -534,7 +568,7 @@ void PreferencesDialog::on_browseNavdirButton_clicked() {
     dialog->setFileMode(QFileDialog::Directory);
     dialog->setOption(QFileDialog::ShowDirsOnly);
     int result = dialog->exec();
-    if(result == QDialog::Rejected) {
+    if (result == QDialog::Rejected) {
         delete dialog;
         return;
     }
@@ -551,7 +585,7 @@ void PreferencesDialog::on_pbBackgroundColor_clicked() {
         Settings::backgroundColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbBackgroundColor->setText(color.name());
         pbBackgroundColor->setPalette(QPalette(color));
         Settings::setBackgroundColor(color);
@@ -563,7 +597,7 @@ void PreferencesDialog::on_pbGlobeColor_clicked() {
         Settings::globeColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbGlobeColor->setText(color.name());
         pbGlobeColor->setPalette(QPalette(color));
         Settings::setGlobeColor(color);
@@ -575,7 +609,7 @@ void PreferencesDialog::on_pbGridLineColor_clicked() {
         Settings::gridLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbGridLineColor->setText(color.name());
         pbGridLineColor->setPalette(QPalette(color));
         Settings::setGridLineColor(color);
@@ -583,7 +617,7 @@ void PreferencesDialog::on_pbGridLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbGridLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGridLineStrength(value);
@@ -594,7 +628,7 @@ void PreferencesDialog::on_pbCountryLineColor_clicked() {
         Settings::countryLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbCountryLineColor->setText(color.name());
         pbCountryLineColor->setPalette(QPalette(color));
         Settings::setCountryLineColor(color);
@@ -602,7 +636,7 @@ void PreferencesDialog::on_pbCountryLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbCountryLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setCountryLineStrength(value);
@@ -613,7 +647,7 @@ void PreferencesDialog::on_pbCoastLineColor_clicked() {
         Settings::coastLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbCoastLineColor->setText(color.name());
         pbCoastLineColor->setPalette(QPalette(color));
         Settings::setCoastLineColor(color);
@@ -621,23 +655,10 @@ void PreferencesDialog::on_pbCoastLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbCoastLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setCoastLineStrength(value);
-}
-
-void PreferencesDialog::on_buttonResetEarthSpace_clicked() {
-    QSettings settings;
-    settings.beginGroup("earthSpace");
-    settings.remove("");
-    settings.endGroup();
-
-    settings.beginGroup("gl");
-    settings.remove("");
-    settings.endGroup();
-
-    loadSettings();
 }
 
 void PreferencesDialog::on_pbFirBorderLineColor_clicked() {
@@ -645,7 +666,7 @@ void PreferencesDialog::on_pbFirBorderLineColor_clicked() {
         Settings::firBorderLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbFirBorderLineColor->setText(color.name());
         pbFirBorderLineColor->setPalette(QPalette(color));
         Settings::setFirBorderLineColor(color);
@@ -653,7 +674,7 @@ void PreferencesDialog::on_pbFirBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbFirBorderLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setFirBorderLineStrength(value);
@@ -664,7 +685,7 @@ void PreferencesDialog::on_pbFirFontColor_clicked() {
         Settings::firFontColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbFirFontColor->setText(color.name());
         pbFirFontColor->setPalette(QPalette(color));
         Settings::setFirFontColor(color);
@@ -674,7 +695,7 @@ void PreferencesDialog::on_pbFirFontColor_clicked() {
 void PreferencesDialog::on_pbFirFont_clicked() {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, Settings::firFont(), this);
-    if(ok) {
+    if (ok) {
         pbFirFont->setFont(font);
         Settings::setFirFont(font);
     }
@@ -685,7 +706,7 @@ void PreferencesDialog::on_pbFirFillColor_clicked() {
         Settings::firFillColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbFirFillColor->setText(color.name());
         pbFirFillColor->setPalette(QPalette(color));
         Settings::setFirFillColor(color);
@@ -697,7 +718,7 @@ void PreferencesDialog::on_pbFirHighlightedBorderLineColor_clicked() {
         Settings::firHighlightedBorderLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbFirHighlightedBorderLineColor->setText(color.name());
         pbFirHighlightedBorderLineColor->setPalette(QPalette(color));
         Settings::setFirHighlightedBorderLineColor(color);
@@ -705,7 +726,7 @@ void PreferencesDialog::on_pbFirHighlightedBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbFirHighlightedBorderLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setFirHighlightedBorderLineStrength(value);
@@ -716,19 +737,11 @@ void PreferencesDialog::on_pbFirHighlightedFillColor_clicked() {
         Settings::firHighlightedFillColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbFirHighlightedFillColor->setText(color.name());
         pbFirHighlightedFillColor->setPalette(QPalette(color));
         Settings::setFirHighlightedFillColor(color);
     }
-}
-
-void PreferencesDialog::on_buttonResetFir_clicked() {
-    QSettings settings;
-    settings.beginGroup("firDisplay");
-    settings.remove("");
-    settings.endGroup();
-    loadSettings();
 }
 
 void PreferencesDialog::on_pbAirportFontColor_clicked() {
@@ -736,7 +749,7 @@ void PreferencesDialog::on_pbAirportFontColor_clicked() {
         Settings::airportFontColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbAirportFontColor->setText(color.name());
         pbAirportFontColor->setPalette(QPalette(color));
         Settings::setAirportFontColor(color);
@@ -746,7 +759,7 @@ void PreferencesDialog::on_pbAirportFontColor_clicked() {
 void PreferencesDialog::on_pbAirportFont_clicked() {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, Settings::airportFont(), this);
-    if(ok) {
+    if (ok) {
         pbAirportFont->setFont(font);
         Settings::setAirportFont(font);
     }
@@ -757,7 +770,7 @@ void PreferencesDialog::on_pbAppBorderLineColor_clicked() {
         Settings::appBorderLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbAppBorderLineColor->setText(color.name());
         pbAppBorderLineColor->setPalette(QPalette(color));
         Settings::setAppBorderLineColor(color);
@@ -765,7 +778,7 @@ void PreferencesDialog::on_pbAppBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbAppBorderLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setAppBorderLineStrength(value);
@@ -776,7 +789,7 @@ void PreferencesDialog::on_pbAppColorCenter_clicked() {
         Settings::appCenterColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbAppColorCenter->setText(color.name());
         pbAppColorCenter->setPalette(QPalette(color));
         Settings::setAppCenterColor(color);
@@ -788,7 +801,7 @@ void PreferencesDialog::on_pbAppColorMargin_clicked() {
         Settings::appMarginColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbAppColorMargin->setText(color.name());
         pbAppColorMargin->setPalette(QPalette(color));
         Settings::setAppMarginColor(color);
@@ -800,7 +813,7 @@ void PreferencesDialog::on_pbTwrColorCenter_clicked() {
         Settings::twrCenterColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbTwrColorCenter->setText(color.name());
         pbTwrColorCenter->setPalette(QPalette(color));
         Settings::setTwrCenterColor(color);
@@ -812,7 +825,7 @@ void PreferencesDialog::on_pbTwrColorMargin_clicked() {
         Settings::twrMarginColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbTwrColorMargin->setText(color.name());
         pbTwrColorMargin->setPalette(QPalette(color));
         Settings::setTwrMarginColor(color);
@@ -824,7 +837,7 @@ void PreferencesDialog::on_pbGndBorderLineColor_clicked() {
         Settings::gndBorderLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbGndBorderLineColor->setText(color.name());
         pbGndBorderLineColor->setPalette(QPalette(color));
         Settings::setGndBorderLineColor(color);
@@ -832,7 +845,7 @@ void PreferencesDialog::on_pbGndBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbGndBorderLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGndBorderLineStrength(value);
@@ -843,7 +856,7 @@ void PreferencesDialog::on_pbGndFillColor_clicked() {
         Settings::gndFillColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbGndFillColor->setText(color.name());
         pbGndFillColor->setPalette(QPalette(color));
         Settings::setGndFillColor(color);
@@ -855,7 +868,7 @@ void PreferencesDialog::on_pbAirportDotColor_clicked() {
         Settings::airportDotColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbAirportDotColor->setText(color.name());
         pbAirportDotColor->setPalette(QPalette(color));
         Settings::setAirportDotColor(color);
@@ -863,7 +876,7 @@ void PreferencesDialog::on_pbAirportDotColor_clicked() {
 }
 
 void PreferencesDialog::on_sbAirportDotSize_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setAirportDotSize(value);
@@ -874,7 +887,7 @@ void PreferencesDialog::on_pbPilotFontColor_clicked() {
         Settings::pilotFontColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbPilotFontColor->setText(color.name());
         pbPilotFontColor->setPalette(QPalette(color));
         Settings::setPilotFontColor(color);
@@ -884,7 +897,7 @@ void PreferencesDialog::on_pbPilotFontColor_clicked() {
 void PreferencesDialog::on_pbPilotFont_clicked() {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, Settings::pilotFont(), this);
-    if(ok) {
+    if (ok) {
         pbPilotFont->setFont(font);
         Settings::setPilotFont(font);
     }
@@ -895,7 +908,7 @@ void PreferencesDialog::on_pbPilotDotColor_clicked() {
         Settings::pilotDotColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbPilotDotColor->setText(color.name());
         pbPilotDotColor->setPalette(QPalette(color));
         Settings::setPilotDotColor(color);
@@ -903,7 +916,7 @@ void PreferencesDialog::on_pbPilotDotColor_clicked() {
 }
 
 void PreferencesDialog::on_sbPilotDotSize_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setPilotDotSize(value);
@@ -914,7 +927,7 @@ void PreferencesDialog::on_pbTimeLineColor_clicked() {
         Settings::leaderLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbTimeLineColor->setText(color.name());
         pbTimeLineColor->setPalette(QPalette(color));
         Settings::setLeaderLineColor(color);
@@ -922,7 +935,7 @@ void PreferencesDialog::on_pbTimeLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbTimeLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setTimeLineStrength(value);
@@ -933,14 +946,14 @@ void PreferencesDialog::on_pbDepLineColor_clicked() {
         Settings::depLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbDepLineColor->setText(color.name());
         pbDepLineColor->setPalette(QPalette(color));
         Settings::setDepLineColor(color);
     }
 }
 void PreferencesDialog::on_sbDepLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDepLineStrength(value);
@@ -950,34 +963,34 @@ void PreferencesDialog::on_pbDestLineColor_clicked() {
         Settings::destLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbDestLineColor->setText(color.name());
         pbDestLineColor->setPalette(QPalette(color));
         Settings::setDestLineColor(color);
     }
 }
 void PreferencesDialog::on_sbDestLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDestLineStrength(value);
 }
 void PreferencesDialog::on_cbDepLineDashed_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDepLineDashed(checked);
 }
 
 void PreferencesDialog::on_cbDestLineDashed_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDestLineDashed(checked);
 }
 
 void PreferencesDialog::on_waypointsDotSize_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setWaypointsDotSize(value);
@@ -987,7 +1000,7 @@ void PreferencesDialog::on_waypointsDotColor_clicked() {
         Settings::waypointsDotColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         waypointsDotColor->setText(color.name());
         waypointsDotColor->setPalette(QPalette(color));
         Settings::setWaypointsDotColor(color);
@@ -998,7 +1011,7 @@ void PreferencesDialog::on_waypointsFontColor_clicked() {
         Settings::waypointsFontColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         waypointsFontColor->setText(color.name());
         waypointsFontColor->setPalette(QPalette(color));
         Settings::setWaypointsFontColor(color);
@@ -1007,25 +1020,10 @@ void PreferencesDialog::on_waypointsFontColor_clicked() {
 void PreferencesDialog::on_waypointsFont_clicked() {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, Settings::waypointsFont(), this);
-    if(ok) {
+    if (ok) {
         waypointsFont->setFont(font);
         Settings::setWaypointsFont(font);
     }
-}
-
-void PreferencesDialog::on_buttonResetPilot_clicked() {
-    QSettings settings;
-    settings.beginGroup("pilotDisplay");
-    settings.remove("");
-    settings.endGroup();
-    loadSettings();
-}
-
-void PreferencesDialog::on_cbShowFixes_toggled(bool checked) {
-    if(!_settingsLoaded) {
-        return;
-    }
-    Settings::setShowAllWaypoints(checked);
 }
 
 void PreferencesDialog::on_pbInactAirportFontColor_clicked() {
@@ -1033,7 +1031,7 @@ void PreferencesDialog::on_pbInactAirportFontColor_clicked() {
         Settings::inactiveAirportFontColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbInactAirportFontColor->setText(color.name());
         pbInactAirportFontColor->setPalette(QPalette(color));
         Settings::setInactiveAirportFontColor(color);
@@ -1043,7 +1041,7 @@ void PreferencesDialog::on_pbInactAirportFontColor_clicked() {
 void PreferencesDialog::on_pbInactAirportFont_clicked() {
     bool ok;
     QFont font = QFontDialog::getFont(&ok, Settings::inactiveAirportFont(), this);
-    if(ok) {
+    if (ok) {
         pbInactAirportFont->setFont(font);
         Settings::setInactiveAirportFont(font);
     }
@@ -1054,7 +1052,7 @@ void PreferencesDialog::on_pbInactAirportDotColor_clicked() {
         Settings::inactiveAirportDotColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbInactAirportDotColor->setText(color.name());
         pbInactAirportDotColor->setPalette(QPalette(color));
         Settings::setInactiveAirportDotColor(color);
@@ -1062,7 +1060,7 @@ void PreferencesDialog::on_pbInactAirportDotColor_clicked() {
 }
 
 void PreferencesDialog::on_sbInactAirportDotSize_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setInactiveAirportDotSize(value);
@@ -1077,7 +1075,7 @@ void PreferencesDialog::on_pbCongestionBorderLineColor_clicked() {
         Settings::airportCongestionBorderLineColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbCongestionBorderLineColor->setText(color.name());
         pbCongestionBorderLineColor->setPalette(QPalette(color));
         Settings::setAirportCongestionBorderLineColor(color);
@@ -1085,48 +1083,35 @@ void PreferencesDialog::on_pbCongestionBorderLineColor_clicked() {
 }
 
 void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setAirportCongestionBorderLineStrength(value);
 }
 
-void PreferencesDialog::on_buttonResetAirportTraffic_clicked() {
-    QSettings settings;
-    settings.beginGroup("airportDisplay");
-    settings.remove("");
-    settings.endGroup();
-
-    settings.beginGroup("airportTraffic");
-    settings.remove("");
-    settings.endGroup();
-
-    loadSettings();
-}
-
 void PreferencesDialog::on_cbBlend_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGlBlending(checked);
 }
 
 void PreferencesDialog::on_editBookingsLocation_editingFinished() {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setBookingsLocation(editBookingsLocation->text());
 }
 
 void PreferencesDialog::on_cbBookingsPeriodically_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setBookingsPeriodically(checked);
 }
 
 void PreferencesDialog::on_sbBookingsInterval_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setBookingsInterval(value);
@@ -1143,14 +1128,14 @@ void PreferencesDialog::on_pbWheelCalibrate_clicked() {
 }
 
 void PreferencesDialog::on_sbZoomFactor_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setZoomFactor(value);
 }
 
 void PreferencesDialog::on_gbDownloadBookings_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setDownloadBookings(checked);
@@ -1164,7 +1149,7 @@ void PreferencesDialog::on_pbImportFromFile_clicked() {
         this, "Import from File",
         QApplication::applicationDirPath(), "Settings Files (*.ini);; All Files (*.*)"
     );
-    if(!fileName.isEmpty()) {
+    if (!fileName.isEmpty()) {
         Settings::importFromFile(fileName);
         QMessageBox::information(
             this, "Settings loaded. Restart required.",
@@ -1181,17 +1166,10 @@ void PreferencesDialog::on_pbExportToFile_clicked() {
         this, "Export to File",
         QApplication::applicationDirPath(), "Settings Files (*.ini);; All Files (*.*)"
     );
-    if(!fileName.isEmpty()) {
+    if (!fileName.isEmpty()) {
         Settings::exportToFile(fileName);
         QMessageBox::information(this, "Success", "Settings exported.");
     }
-}
-
-void PreferencesDialog::on_cbShootScreenshots_toggled(bool checked) {
-    if(!_settingsLoaded) {
-        return;
-    }
-    Settings::setShootScreenshots(checked);
 }
 
 void PreferencesDialog::on_pbStylesheetUpdate_clicked() {
@@ -1200,14 +1178,13 @@ void PreferencesDialog::on_pbStylesheetUpdate_clicked() {
 }
 
 void PreferencesDialog::on_pbStylesheetExample1_clicked() {
-    if(
+    if (
         QMessageBox::question(
             this, "Overwrite stylesheet?", "Are you sure?",
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No
         )
         == QMessageBox::Yes
-    )
-    {
+    ) {
         tedStylesheet->setPlainText(QLatin1String("\
 QCheckBox::indicator:hover, QDateTimeEdit, QSpinBox, QComboBox, QAbstractItemView, QLineEdit, QSpinBox, QDoubleSpinBox, QTabWidget::pane, QGroupBox {\n\
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,\n\
@@ -1230,14 +1207,13 @@ background: QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #eee, stop: 1 #f
 }
 
 void PreferencesDialog::on_pbStylesheetExample2_clicked() {
-    if(
+    if (
         QMessageBox::question(
             this, "Overwrite stylesheet?", "Are you sure?",
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No
         )
         == QMessageBox::Yes
-    )
-    {
+    ) {
         tedStylesheet->setPlainText(QLatin1String("\
 QDialog, QMainWindow {\n\
   background: QLinearGradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #bef, stop: 1 #eff);\n\
@@ -1267,7 +1243,7 @@ QLabel {\n\
 }
 
 void PreferencesDialog::on_cbLighting_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setEnableLighting(checked);
@@ -1278,7 +1254,7 @@ void PreferencesDialog::on_pbSunLightColor_clicked() {
         Settings::sunLightColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbSunLightColor->setText(color.name());
         pbSunLightColor->setPalette(QPalette(color));
         Settings::setSunLightColor(color);
@@ -1290,7 +1266,7 @@ void PreferencesDialog::on_pbSpecularLightColor_clicked() {
         Settings::specularColor(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
-    if(color.isValid()) {
+    if (color.isValid()) {
         pbSpecularLightColor->setText(color.name());
         pbSpecularLightColor->setPalette(QPalette(color));
         Settings::setSpecularColor(color);
@@ -1299,11 +1275,11 @@ void PreferencesDialog::on_pbSpecularLightColor_clicked() {
 }
 
 void PreferencesDialog::on_glLights_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGlLights(value);
-    if(value == 1) {
+    if (value == 1) {
         glLightsSpread->setEnabled(false);
     } else {
         glLightsSpread->setEnabled(true);
@@ -1311,87 +1287,70 @@ void PreferencesDialog::on_glLights_valueChanged(int value) {
 }
 
 void PreferencesDialog::on_glEarthShininess_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setEarthShininess(value);
 }
 
 void PreferencesDialog::on_glLightsSpread_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGlLightsSpread(value);
 }
 
 void PreferencesDialog::on_pbReinitOpenGl_clicked() {
-    if(Window::instance(false) != 0) {
+    if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->initializeGL();
         Window::instance()->mapScreen->glWidget->update();
     }
 }
 
 void PreferencesDialog::on_sbEarthGridEach_valueChanged(int value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setEarthGridEach(value);
 }
 
 void PreferencesDialog::on_applyAirports_clicked() {
-    if(Window::instance(false) != 0) {
+    if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->invalidateAirports();
-        Window::instance()->mapScreen->glWidget->invalidateControllers();
+        Window::instance()->mapScreen->glWidget->update();
     }
-
 }
 
 void PreferencesDialog::on_applyPilots_clicked() {
-    qDebug() << "PreferencesDialog::on_applyPilots_clicked()";
-    if(Window::instance(false) != 0) {
+    if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->invalidatePilots();
-        Window::instance()->mapScreen->glWidget->invalidateControllers();
+        Window::instance()->mapScreen->glWidget->update();
     }
-    qDebug() << "PreferencesDialog::on_applyPilots_clicked() -- finished";
 }
 
 void PreferencesDialog::on_glStippleLines_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGlStippleLines(checked);
 }
 
 void PreferencesDialog::on_glTextures_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGlTextures(checked);
 }
 
 void PreferencesDialog::on_glTextureEarth_currentIndexChanged(QString tex) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setGlTextureEarth(tex);
 }
 
-void PreferencesDialog::on_cbScreenshotMethod_currentIndexChanged(int index) {
-    if(!_settingsLoaded) {
-        return;
-    }
-    Settings::setScreenshotMethod(index);
-}
-
-void PreferencesDialog::on_cbScreenshotFormat_currentIndexChanged(QString value) {
-    if(!_settingsLoaded) {
-        return;
-    }
-    Settings::setScreenshotFormat(value);
-}
-
 void PreferencesDialog::on_useSelectionRectangle_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setUseSelctionRectangle(checked);
@@ -1410,14 +1369,14 @@ void PreferencesDialog::closeEvent(QCloseEvent* event) {
 }
 
 void PreferencesDialog::on_sb_highlightFriendsLineWidth_valueChanged(double value) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setHighlightLineWidth(value);
 }
 
 void PreferencesDialog::on_cb_Animation_stateChanged(int state) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setUseHighlightAnimation(state == Qt::Checked);
@@ -1429,23 +1388,272 @@ void PreferencesDialog::on_pb_highlightFriendsColor_clicked() {
         "Select color", QColorDialog::ShowAlphaChannel
     );
 
-    if(color.isValid()) {
+    if (color.isValid()) {
         pb_highlightFriendsColor->setText(color.name());
         pb_highlightFriendsColor->setPalette(QPalette(color));
         Settings::setFriendsHighlightColor(color);
     }
 }
 
-void PreferencesDialog::on_cbSimpleLabels_toggled(bool checked) {
-    if(!_settingsLoaded) {
-        return;
-    }
-    Settings::setSimpleLabels(checked);
-}
-
 void PreferencesDialog::on_cbRememberMapPositionOnClose_toggled(bool checked) {
-    if(!_settingsLoaded) {
+    if (!_settingsLoaded) {
         return;
     }
     Settings::setRememberMapPositionOnClose(checked);
+}
+
+void PreferencesDialog::on_pbPilotFontSecondaryColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::pilotFontSecondaryColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbPilotFontSecondaryColor->setText(color.name());
+        pbPilotFontSecondaryColor->setPalette(QPalette(color));
+        Settings::setPilotFontSecondaryColor(color);
+    }
+}
+
+
+void PreferencesDialog::on_pbPilotFontSecondary_clicked() {
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, Settings::pilotFontSecondary(), this);
+    if (ok) {
+        pbPilotFontSecondary->setFont(font);
+        Settings::setPilotFontSecondary(font);
+    }
+}
+
+
+
+void PreferencesDialog::on_plainTextEditPilotSecondaryContent_textChanged() {
+    Settings::setPilotSecondaryContent(plainTextEditPilotSecondaryContent->toPlainText());
+}
+
+
+void PreferencesDialog::on_plainTextEditPilotSecondaryContentHovered_textChanged() {
+    Settings::setPilotSecondaryContentHovered(plainTextEditPilotSecondaryContentHovered->toPlainText());
+}
+
+
+void PreferencesDialog::on_lineEditPilotPrimaryContent_editingFinished() {
+    Settings::setPilotPrimaryContent(lineEditPilotPrimaryContent->text());
+}
+
+
+void PreferencesDialog::on_lineEditPilotPrimaryContentHovered_editingFinished() {
+    Settings::setPilotPrimaryContentHovered(lineEditPilotPrimaryContentHovered->text());
+}
+
+
+void PreferencesDialog::on_applyAirports_2_clicked() {
+    on_applyAirports_clicked();
+}
+
+
+void PreferencesDialog::on_lineEditAirportPrimaryContent_editingFinished() {
+    Settings::setAirportPrimaryContent(lineEditAirportPrimaryContent->text());
+}
+
+
+void PreferencesDialog::on_lineEditAirportPrimaryContentHovered_editingFinished() {
+    Settings::setAirportPrimaryContentHovered(lineEditAirportPrimaryContentHovered->text());
+}
+
+
+void PreferencesDialog::on_pbAirportFontSecondaryColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::airportFontSecondaryColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbAirportFontSecondaryColor->setText(color.name());
+        pbAirportFontSecondaryColor->setPalette(QPalette(color));
+        Settings::setAirportFontSecondaryColor(color);
+    }
+}
+
+void PreferencesDialog::on_pbAirportFontSecondary_clicked() {
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, Settings::airportFontSecondary(), this);
+    if (ok) {
+        pbAirportFontSecondary->setFont(font);
+        Settings::setAirportFontSecondary(font);
+    }
+}
+
+void PreferencesDialog::on_plainTextEditAirportSecondaryContentHovered_textChanged() {
+    Settings::setAirportSecondaryContentHovered(plainTextEditAirportSecondaryContentHovered->toPlainText());
+}
+
+
+void PreferencesDialog::on_plainTextEditAirportSecondaryContent_textChanged() {
+    Settings::setAirportSecondaryContent(plainTextEditAirportSecondaryContent->toPlainText());
+}
+
+void PreferencesDialog::on_pbLabelHoveredBgColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::labelHoveredBgColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbLabelHoveredBgColor->setText(color.name());
+        pbLabelHoveredBgColor->setPalette(QPalette(color));
+        Settings::setLabelHoveredBgColor(color);
+    }
+}
+
+void PreferencesDialog::on_applyLabelHover_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance()->mapScreen->glWidget->update();
+    }
+}
+
+void PreferencesDialog::on_pbLabelHoveredBgDarkColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::labelHoveredBgDarkColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbLabelHoveredBgDarkColor->setText(color.name());
+        pbLabelHoveredBgDarkColor->setPalette(QPalette(color));
+        Settings::setLabelHoveredBgDarkColor(color);
+    }
+}
+
+void PreferencesDialog::on_pbFirApply_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance()->mapScreen->glWidget->invalidateControllers();
+        Window::instance()->mapScreen->glWidget->update();
+    }
+}
+
+
+void PreferencesDialog::on_lineEditFirPrimaryContent_editingFinished() {
+    Settings::setFirPrimaryContent(lineEditFirPrimaryContent->text());
+}
+
+
+void PreferencesDialog::on_lineEditFirPrimaryContentHovered_editingFinished() {
+    Settings::setFirPrimaryContentHovered(lineEditFirPrimaryContentHovered->text());
+}
+
+void PreferencesDialog::on_plainTextEditFirSecondaryContent_textChanged() {
+    Settings::setFirSecondaryContent(plainTextEditFirSecondaryContent->toPlainText());
+}
+
+void PreferencesDialog::on_plainTextEditFirSecondaryContentHovered_textChanged() {
+    Settings::setFirSecondaryContentHovered(plainTextEditFirSecondaryContentHovered->toPlainText());
+}
+
+
+void PreferencesDialog::on_pbFirFontSecondaryColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::firFontSecondaryColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbFirFontSecondaryColor->setText(color.name());
+        pbFirFontSecondaryColor->setPalette(QPalette(color));
+        Settings::setFirFontSecondaryColor(color);
+    }
+}
+
+
+void PreferencesDialog::on_pbFirFontSecondary_clicked() {
+    bool ok;
+    QFont font = QFontDialog::getFont(&ok, Settings::firFontSecondary(), this);
+    if (ok) {
+        pbFirFontSecondary->setFont(font);
+        Settings::setFirFontSecondary(font);
+    }
+}
+
+void PreferencesDialog::on_pbDelBorderLineColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::delBorderLineColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbDelBorderLineColor->setText(color.name());
+        pbDelBorderLineColor->setPalette(QPalette(color));
+        Settings::setDelBorderLineColor(color);
+    }
+}
+
+
+void PreferencesDialog::on_pbDelFillColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::delFillColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbDelFillColor->setText(color.name());
+        pbDelFillColor->setPalette(QPalette(color));
+        Settings::setDelFillColor(color);
+    }
+}
+
+void PreferencesDialog::on_sbDelBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setDelBorderLineStrength(value);
+}
+
+
+void PreferencesDialog::on_pbTwrBorderLineColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::twrBorderLineColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbTwrBorderLineColor->setText(color.name());
+        pbTwrBorderLineColor->setPalette(QPalette(color));
+        Settings::setTwrBorderLineColor(color);
+    }
+}
+
+void PreferencesDialog::on_sbTwrBorderLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setTwrBorderLineStrength(value);
+}
+
+
+void PreferencesDialog::on_pbDestImmediateLineColor_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::destImmediateLineColor(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbDestImmediateLineColor->setText(color.name());
+        pbDestImmediateLineColor->setPalette(QPalette(color));
+        Settings::setDestImmediateLineColor(color);
+    }
+
+}
+
+
+void PreferencesDialog::on_sbDestImmediateLineStrength_valueChanged(double value) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setDestImmediateLineStrength(value);
+}
+
+void PreferencesDialog::on_sbDestImmediateDuration_valueChanged(int value) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setDestImmediateDurationMin(value);
+}
+
+
+void PreferencesDialog::on_applyPilotsRoute_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance()->mapScreen->glWidget->invalidatePilots();
+        Window::instance()->mapScreen->glWidget->update();
+    }
 }

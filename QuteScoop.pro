@@ -47,14 +47,14 @@ macx: {
 
 QT *= core gui network opengl xml
 # in debug mode, we output to current directory
-CONFIG(debug,release|debug) { 
+CONFIG(debug,release|debug) {
     !build_pass:message("DEBUG")
     DEBUGRELEASE = "debug"
     DESTDIR = ./
 }
 
 # in release mode, we include a 'make install' target and output to ./DIST-$PLATFORM
-CONFIG(release,release|debug) { 
+CONFIG(release,release|debug) {
     !build_pass:message("RELEASE")
     DEBUGRELEASE = "release"
     DESTDIR = ./DIST-$${PLATFORM}
@@ -86,8 +86,6 @@ CONFIG(release,release|debug) {
     dataFiles.files += ./data/airlines.dat
     downloadedFiles.path = $$DESTDIR/downloaded
     downloadedFiles.files += ./downloaded/_notes.txt
-    screenshotsFiles.path = $$DESTDIR/screenshots
-    screenshotsFiles.files += ./screenshots/_notes.txt
     texturesFiles.path = $$DESTDIR/textures
     texturesFiles.files += ./textures/_notes.txt
     texturesFiles.files += ./textures/1024px-continents.png
@@ -112,7 +110,6 @@ CONFIG(release,release|debug) {
     INSTALLS *= rootFiles \
         dataFiles \
         downloadedFiles \
-        screenshotsFiles \
         texturesFiles
 }
 
@@ -214,6 +211,7 @@ SOURCES += src/WhazzupData.cpp \
     src/NavAid.cpp \
     src/Metar.cpp \
     src/MapObject.cpp \
+    src/MapObjectVisitor.cpp \
     src/MapScreen.cpp\
     src/LineReader.cpp \
     src/SectorReader.cpp \

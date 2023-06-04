@@ -1,6 +1,5 @@
 #include "Settings.h"
 
-#include "Client.h"
 #include "GuiMessage.h"
 #include "Whazzup.h"
 #include "dialogs/AirportDetails.h"
@@ -11,33 +10,46 @@
 //singleton instance
 QSettings* settingsInstance = 0;
 QSettings* Settings::instance() {
-    if(settingsInstance == 0) {
+    if (settingsInstance == 0) {
         settingsInstance = new QSettings();
+        migrate(settingsInstance);
+    }
 
-        const int requiredSettingsVersion = 3;
-        int currentSettingsVersion = settingsInstance->value("settings/version", 0).toInt();
-        if(currentSettingsVersion < requiredSettingsVersion) {
-            if(currentSettingsVersion < 1) {
-                qDebug() << "Starting migration 0 -> 1";
-                if(
-                    (settingsInstance->value("download/network", 0).toInt() == 1)
-                    && (settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/")
-                )
-                {
+    return settingsInstance;
+}
+
+void Settings::migrate(QSettings* settingsInstance) {
+    struct Migration {
+        int version; // settings version this migrates to
+        const char* name;
+        std::function<void()> run;
+    };
+
+    const std::vector<Migration> migrations {
+        {
+            1,
+            "Whazzup status",
+            [settingsInstance]() {
+                if (
+                    settingsInstance->value("download/network", 0).toInt() == 1
+                    && settingsInstance->value("download/statusLocation", "").toString() == "http://status.vatsim.net/"
+                ) {
                     settingsInstance->setValue("download/network", 0);
                     qDebug() << "Found a user defined network, but VATSIM status location. Migrated.";
                 }
                 settingsInstance->remove("download/statusLocation");
-                currentSettingsVersion = 1;
             }
-            if(currentSettingsVersion < 2) {
-                qDebug() << "Starting migration 1 -> 2";
+        },
+        {
+            2,
+            "Invalid aliases",
+            [settingsInstance]() {
                 settingsInstance->beginGroup("clients");
                 QStringList keys = settingsInstance->childKeys();
-                foreach(auto key, keys) {
-                    if(key.startsWith("alias_")) {
+                foreach (const auto key, keys) {
+                    if (key.startsWith("alias_")) {
                         QString id = key.mid(6);
-                        if(!Client::isValidID(id)) {
+                        if (!Client::isValidID(id)) {
                             settingsInstance->remove(key);
                             qDebug() << "Found an alias for (invalid) client " << id << " and removed it. For more information see https://github.com/qutescoop/qutescoop/issues/130";
                         }
@@ -45,18 +57,21 @@ QSettings* Settings::instance() {
                 }
                 settingsInstance->endGroup();
                 QStringList friendList = settingsInstance->value("friends/friendList", QStringList()).toStringList();
-                foreach(auto friendID, friendList) {
-                    if(!Client::isValidID(friendID)) {
+                foreach (const auto friendID, friendList) {
+                    if (!Client::isValidID(friendID)) {
                         friendList.removeAt(friendList.indexOf(friendID));
                         qDebug() << "Found a friend list entry for (invalid) client " << friendID << " and removed it. For more information see https://github.com/qutescoop/qutescoop/issues/130";
                     }
                 }
                 settingsInstance->setValue("friends/friendList", friendList);
-                currentSettingsVersion = 2;
             }
-            if(currentSettingsVersion < 3) {
-                qDebug() << "Starting migration 2 -> 3";
-                if(settingsInstance->value("download/bookingsLocation").toString() != "http://vatbook.euroutepro.com/servinfo.asp") {
+        },
+        {
+            3,
+            "Bookings URL",
+            [settingsInstance]() {
+                const auto loc = settingsInstance->value("download/bookingsLocation").toString();
+                if (!loc.isEmpty() && loc != "http://vatbook.euroutepro.com/servinfo.asp") {
                     GuiMessages::criticalUserInteraction(
                         QString("You have set the location for bookings to %1.\nThis is different from the old default location. Due to an update in QuteScoop the old format for bookings is no longer supported.\n\nYou will be migrated to the new default VATSIM bookings URL.")
                         .arg(settingsInstance->value("download/bookingsLocation").toString()),
@@ -64,26 +79,71 @@ QSettings* Settings::instance() {
                     );
                 }
                 settingsInstance->setValue("download/bookingsLocation", "https://atc-bookings.vatsim.net/api/booking");
-                currentSettingsVersion = 3;
             }
-            settingsInstance->setValue("settings/version", currentSettingsVersion);
+        },
+        {
+            4,
+            "Removing typos in setting keys",
+            [settingsInstance]() {
+                const QList<QPair<QString, QString> > fromTos = {
+                    { "airportDisplay/dotSizer", "airportDisplay/dotSize" },
+                    { "airportDisplay/inactiveDotSizer", "airportDisplay/inactiveDotSize" },
+                    { "pilotDisplay/waypointsDotSizer", "pilotDisplay/waypointsDotSize" },
+                };
+
+                foreach (const auto fromTo, fromTos) {
+                    if (settingsInstance->contains(fromTo.first)) {
+                        settingsInstance->setValue(
+                            fromTo.second,
+                            instance()->value(fromTo.first).value<double>()
+                        );
+                        qDebug() << "replaced" << fromTo.first << "with" << fromTo.second;
+                        settingsInstance->remove(fromTo.first);
+                    }
+                }
+            }
+        },
+        {
+            5,
+            "Remove obsolete settings",
+            [settingsInstance]() {
+                QList<QString> obsoleteSettings = {
+                    "database/showAllWaypoints",
+                    "screenshots/shootScreenshots",
+                    "screenshots/method",
+                    "screenshots/format",
+                    "download/sendVersionInfo",
+                    "download/updateVersionNumber",
+                    "display/showALLSectors"
+                };
+
+                foreach (const auto setting, obsoleteSettings) {
+                    settingsInstance->remove(setting);
+                }
+            }
+        }
+    };
+
+    foreach (const auto &migration, migrations) {
+        if (settingsInstance->value("settings/version", 0).toInt() < migration.version) {
+            qDebug() << QString("Settings::migrate() Migrating to settings version v%1: %2...").arg(migration.version).arg(migration.name);
+            migration.run();
+            settingsInstance->setValue("settings/version", migration.version);
         }
     }
-    return settingsInstance;
 }
 
 /**
  * path to .ini or Windows registry path (\HKEY_CURRENT_USER\Software\QuteScoop\QuteScoop)
  */
-QString Settings::fileName()
-{
+QString Settings::fileName() {
     return instance()->fileName();
 }
 
 void Settings::exportToFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
     QStringList settings_keys = instance()->allKeys();
-    foreach(const QString &key, instance()->allKeys()) {
+    foreach (const QString &key, instance()->allKeys()) {
         settings_file->setValue(key, instance()->value(key));
     }
     delete settings_file;
@@ -91,48 +151,26 @@ void Settings::exportToFile(QString fileName) {
 
 void Settings::importFromFile(QString fileName) {
     QSettings* settings_file = new QSettings(fileName, QSettings::IniFormat);
-    foreach(const QString &key, settings_file->allKeys()) {
+    foreach (const QString &key, settings_file->allKeys()) {
         instance()->setValue(key, settings_file->value(key));
     }
     delete settings_file;
 }
 
 /**
-   @param composeFilePath path/file (/ is multi-platform, also on Win)
-   @returns fully qualified path to the 'application data directory'.
+ * @param composeFilePath path/file (/ is multi-platform, also on Win)
+ * @returns fully qualified path to the 'application data directory'.
  **/
 QString Settings::dataDirectory(const QString &composeFilePath) {
     return QString("%1/%2")
         .arg(QCoreApplication::applicationDirPath(), composeFilePath);
 }
 
-const QColor Settings::lightTextColor()
-{
+const QColor Settings::lightTextColor() {
     auto _default = QGuiApplication::palette().text().color();
     _default.setAlphaF(.5);
 
     return instance()->value("display/lightTextColor", _default).value<QColor>();
-}
-
-bool Settings::shootScreenshots() {
-    return instance()->value("screenshots/shootScreenshots", false).toBool();
-}
-void Settings::setShootScreenshots(bool value) {
-    instance()->setValue("screenshots/shootScreenshots", value);
-}
-
-int Settings::screenshotMethod() {
-    return instance()->value("screenshots/method", 0).toInt();
-}
-void Settings::setScreenshotMethod(int value) {
-    instance()->setValue("screenshots/method", value);
-}
-
-QString Settings::screenshotFormat() {
-    return instance()->value("screenshots/format", "png").toString();
-}
-void Settings::setScreenshotFormat(const QString &value) {
-    instance()->setValue("screenshots/format", value);
 }
 
 int Settings::downloadInterval() {
@@ -200,7 +238,7 @@ void Settings::setDownloadNetwork(int i) {
 }
 
 QString Settings::downloadNetworkName() {
-    switch(downloadNetwork()) {
+    switch (downloadNetwork()) {
         case 0: return "VATSIM"; break;
         case 1: return "User Network"; break;
     }
@@ -223,24 +261,8 @@ void Settings::setCheckForUpdates(bool value) {
     instance()->setValue("download/checkForUpdates", value);
 }
 
-bool Settings::sendVersionInformation() {
-    return instance()->value("download/sendVersionInfo", true).toBool();
-}
-
-void Settings::setSendVersionInformation(bool value) {
-    instance()->setValue("download/sendVersionInfo", value);
-}
-
-QString Settings::updateVersionNumber() {
-    return instance()->value("download/updateVersionNumber", "-1").toString();
-}
-
-void Settings::setUpdateVersionNumber(const QString& version) {
-    instance()->setValue("download/updateVersionNumber", version);
-}
-
 QString Settings::statusLocation() {
-    switch(downloadNetwork()) {
+    switch (downloadNetwork()) {
         case 0: // VATSIM
             return "https://status.vatsim.net/status.json";
         case 1: // user defined
@@ -305,14 +327,6 @@ void Settings::setUseNavdata(bool value) {
     instance()->setValue("database/use", value);
 }
 
-bool Settings::showAllWaypoints() {
-    return instance()->value("database/showAllWaypoints", false).toBool();
-}
-
-void Settings::setShowAllWaypoints(bool value) {
-    instance()->setValue("database/showAllWaypoints", value);
-}
-
 int Settings::metarDownloadInterval() {
     return instance()->value("display/metarInterval", 1).toInt();
 }
@@ -365,7 +379,7 @@ void Settings::setShowPilotsLabels(bool value) {
 }
 
 bool Settings::showInactiveAirports() {
-    return instance()->value("display/showInactive", false).toBool(); // time-intensive function
+    return instance()->value("display/showInactive", true).toBool();
 }
 void Settings::setShowInactiveAirports(const bool& value) {
     instance()->setValue("display/showInactive", value);
@@ -379,12 +393,11 @@ void Settings::setHighlightFriends(bool value) {
 }
 
 // OpenGL
-void Settings::setSimpleLabels(bool value) {
-    instance()->setValue("gl/simpleLabels", value);
+bool Settings::showFps() {
+    return instance()->value("gl/showFps", false).toBool();
 }
-
-bool Settings::simpleLabels() {
-    return instance()->value("gl/simpleLabels", false).toBool();
+void Settings::setShowFps(bool value) {
+    instance()->setValue("gl/showFps", value);
 }
 
 bool Settings::displaySmoothLines() {
@@ -412,7 +425,7 @@ void Settings::setDisplaySmoothDots(bool value) {
 }
 
 int Settings::maxLabels() {
-    return instance()->value("gl/maxLabels", 9999).toInt();
+    return instance()->value("gl/maxLabels", 130).toInt();
 }
 
 void Settings::setMaxLabels(int maxLabels) {
@@ -461,14 +474,14 @@ void Settings::setGlTextures(bool value) {
     instance()->setValue("gl/earthTexture", value);
 }
 QString Settings::glTextureEarth() {
-    return instance()->value("gl/textureEarth", "2048px.png").toString();
+    return instance()->value("gl/textureEarth", "4096px.png").toString();
 }
 void Settings::setGlTextureEarth(QString value) {
     instance()->setValue("gl/textureEarth", value);
 }
 
 QColor Settings::sunLightColor() {
-    return instance()->value("gl/sunLightColor", QColor::fromRgb(255, 255, 255)).value<QColor>();
+    return instance()->value("gl/sunLightColor", QColor::fromRgb(70, 44, 0)).value<QColor>();
 }
 
 void Settings::setSunLightColor(const QColor& color) {
@@ -557,6 +570,30 @@ void Settings::setCountryLineStrength(double strength) {
     instance()->setValue("earthSpace/countryLineStrength", strength);
 }
 
+QColor Settings::labelHoveredBgColor() {
+    return instance()->value("labelHover/labelHoveredBgColor", QColor::fromRgb(255, 255, 255, 190)).value<QColor>();
+}
+
+void Settings::setLabelHoveredBgColor(const QColor &color) {
+    instance()->setValue("labelHover/labelHoveredBgColor", color);
+}
+
+QColor Settings::labelHoveredBgDarkColor() {
+    return instance()->value("labelHover/labelHoveredBgDarkColor", QColor::fromRgb(0, 0, 0, 190)).value<QColor>();
+}
+
+void Settings::setLabelHoveredBgDarkColor(const QColor &color) {
+    instance()->setValue("labelHover/labelHoveredBgDarkColor", color);
+}
+
+bool Settings::showToolTips() {
+    return instance()->value("mapUi/showTooltips", false).toBool();
+}
+
+void Settings::setShowToolTips(const bool v) {
+    instance()->setValue("mapUi/showTooltips", v);
+}
+
 QColor Settings::coastLineColor() {
     return instance()->value("earthSpace/coastLineColor", QColor::fromRgb(102, 85, 67, 200)).value<QColor>();
 }
@@ -598,25 +635,50 @@ void Settings::setFirFontColor(const QColor& color) {
     instance()->setValue("firDisplay/fontColor", color);
 }
 
+QFont Settings::firFont() {
+    QFont defaultFont;
+    defaultFont.setPointSize(13);
+    QFont result = instance()->value("firDisplay/font", defaultFont).value<QFont>();
+    result.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
+    return result;
+}
+
+void Settings::setFirFont(const QFont& font) {
+    instance()->setValue("firDisplay/font", font);
+}
+
+QColor Settings::firFontSecondaryColor() {
+    return instance()->value("firDisplay/fontSecondaryColor", firFontColor()).value<QColor>();
+}
+
+void Settings::setFirFontSecondaryColor(const QColor& color) {
+    instance()->setValue("firDisplay/fontSecondaryColor", color);
+}
+
+QFont Settings::firFontSecondary() {
+    QFont defaultFont = firFont();
+    if (defaultFont.pointSize() > -1) {
+        defaultFont.setPointSize(defaultFont.pointSize() - 1);
+    } else {
+        defaultFont.setPixelSize(defaultFont.pixelSize() - 1);
+    }
+
+    QFont result = instance()->value("firDisplay/fontSecondary", defaultFont).value<QFont>();
+    result.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
+    return result;
+}
+
+void Settings::setFirFontSecondary(const QFont& font) {
+    instance()->setValue("firDisplay/fontSecondary", font);
+}
+
+
 QColor Settings::firFillColor() {
     return instance()->value("firDisplay/fillColor", QColor::fromRgb(42, 163, 214, 42)).value<QColor>();
 }
 
 void Settings::setFirFillColor(const QColor& color) {
     instance()->setValue("firDisplay/fillColor", color);
-}
-
-QFont Settings::firFont() {
-    QFont defaultFont;
-    defaultFont.setBold(true);
-    defaultFont.setPixelSize(11);
-    QFont result = instance()->value("firDisplay/font", defaultFont).value<QFont>();
-    result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
-    return result;
-}
-
-void Settings::setFirFont(const QFont& font) {
-    instance()->setValue("firDisplay/font", font);
 }
 
 QColor Settings::firHighlightedBorderLineColor() {
@@ -643,36 +705,45 @@ void Settings::setFirHighlightedFillColor(const QColor& color) {
     instance()->setValue("firDisplay/fillColorHighlighted", color);
 }
 
+QString Settings::firPrimaryContent() {
+    return instance()->value("firDisplay/primaryContent", "{sectorOrLogin}").toString();
+}
+
+void Settings::setFirPrimaryContent(const QString &value) {
+    instance()->setValue("firDisplay/primaryContent", value);
+}
+
+QString Settings::firPrimaryContentHovered() {
+    return instance()->value("firDisplay/primaryContentHovered", "{sectorOrLogin}").toString();
+}
+
+void Settings::setFirPrimaryContentHovered(const QString &value) {
+    instance()->setValue("firDisplay/primaryContentHovered", value);
+}
+
+QString Settings::firSecondaryContent() {
+    return instance()->value("firDisplay/secondaryContent", "{livestream}").toString();
+}
+
+void Settings::setFirSecondaryContent(const QString &value) {
+    instance()->setValue("firDisplay/secondaryContent", value);
+}
+
+QString Settings::firSecondaryContentHovered() {
+    return instance()->value("firDisplay/secondaryContentHovered", "{frequency}\n{cpdlc}\n{livestream}").toString();
+}
+
+void Settings::setFirSecondaryContentHovered(const QString &value) {
+    instance()->setValue("firDisplay/secondaryContentHovered", value);
+}
+
+
 //airport
-QColor Settings::airportFontColor() {
-    return instance()->value("airportDisplay/fontColor", QColor::fromRgb(255, 255, 127)).value<QColor>();
-}
-
-void Settings::setAirportFontColor(const QColor& color) {
-    instance()->setValue("airportDisplay/fontColor", color);
-}
-
-QColor Settings::airportDotColor() {
-    return instance()->value("airportDisplay/dotColor", QColor::fromRgb(85, 170, 255)).value<QColor>();
-}
-
-void Settings::setAirportDotColor(const QColor& color) {
-    instance()->setValue("airportDisplay/dotColor", color);
-}
-
-double Settings::airportDotSize() {
-    return instance()->value("airportDisplay/dotSizer", 4).toDouble();
-}
-
-void Settings::setAirportDotSize(double value) {
-    instance()->setValue("airportDisplay/dotSizer", value);
-}
-
 QFont Settings::airportFont() {
     QFont defaultResult;
-    defaultResult.setPixelSize(9);
+    defaultResult.setPointSize(9);
     QFont result = instance()->value("airportDisplay/font", defaultResult).value<QFont>();
-    result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
+    result.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
     return result;
 }
 
@@ -680,37 +751,129 @@ void Settings::setAirportFont(const QFont& font) {
     instance()->setValue("airportDisplay/font", font);
 }
 
+QColor Settings::airportFontColor() {
+    return instance()->value("airportDisplay/fontColor", QColor::fromRgb(255, 255, 127, 200)).value<QColor>();
+}
+
+void Settings::setAirportFontColor(const QColor& color) {
+    instance()->setValue("airportDisplay/fontColor", color);
+}
+
+QFont Settings::airportFontSecondary() {
+    QFont defaultResult;
+    defaultResult.setPointSize(8);
+    QFont result = instance()->value("airportDisplay/fontSecondary", defaultResult).value<QFont>();
+    result.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
+    return result;
+}
+
+void Settings::setAirportFontSecondary(const QFont& font) {
+    instance()->setValue("airportDisplay/fontSecondary", font);
+}
+
+QColor Settings::airportFontSecondaryColor() {
+    return instance()->value("airportDisplay/fontSecondaryColor", QColor::fromRgb(255, 255, 127, 180)).value<QColor>();
+}
+
+void Settings::setAirportFontSecondaryColor(const QColor& color) {
+    instance()->setValue("airportDisplay/fontSecondaryColor", color);
+}
+
+QString Settings::airportPrimaryContent() {
+    return instance()->value("airportDisplay/primaryContent", "{code} {traffic}").toString();
+}
+
+void Settings::setAirportPrimaryContent(const QString &value) {
+    instance()->setValue("airportDisplay/primaryContent", value);
+}
+
+QString Settings::airportPrimaryContentHovered() {
+    return instance()->value("airportDisplay/primaryContentHovered", "{code} {traffic}").toString();
+}
+
+void Settings::setAirportPrimaryContentHovered(const QString &value) {
+    instance()->setValue("airportDisplay/primaryContentHovered", value);
+}
+
+QString Settings::airportSecondaryContent() {
+    return instance()->value("airportDisplay/secondaryContent", "{controllers} {pdc}\n{livestream}").toString();
+}
+
+void Settings::setAirportSecondaryContent(const QString &value) {
+    instance()->setValue("airportDisplay/secondaryContent", value);
+}
+
+QString Settings::airportSecondaryContentHovered() {
+    return instance()->value("airportDisplay/secondaryContentHovered", "{prettyName}\n{pdc}\n{frequencies}\n{livestream}").toString();
+}
+
+void Settings::setAirportSecondaryContentHovered(const QString &value) {
+    instance()->setValue("airportDisplay/secondaryContentHovered", value);
+}
+
+QColor Settings::airportDotColor() {
+    return instance()->value("airportDisplay/dotColor", QColor::fromRgb(85, 170, 255, 150)).value<QColor>();
+}
+
+void Settings::setAirportDotColor(const QColor& color) {
+    instance()->setValue("airportDisplay/dotColor", color);
+}
+
+double Settings::airportDotSize() {
+    return instance()->value("airportDisplay/dotSize", 4).toDouble();
+}
+
+void Settings::setAirportDotSize(double value) {
+    instance()->setValue("airportDisplay/dotSize", value);
+}
+
 QColor Settings::inactiveAirportFontColor() {
-    return instance()->value("airportDisplay/inactiveFontColor", QColor::fromRgbF(0.4, 0.4, 0.4, 1)).value<QColor>();
+    return instance()->value("airportDisplay/inactiveFontColor", QColor::fromRgb(255, 255, 127, 100)).value<QColor>();
 }
 void Settings::setInactiveAirportFontColor(const QColor& color) {
     instance()->setValue("airportDisplay/inactiveFontColor", color);
 }
 
 QColor Settings::inactiveAirportDotColor() {
-    return instance()->value("airportDisplay/inactiveDotColor", QColor::fromRgbF(0.5, 0.5, 0.5, 1)).value<QColor>();
+    return instance()->value("airportDisplay/inactiveDotColor", QColor::fromRgb(85, 170, 255, 50)).value<QColor>();
 }
 void Settings::setInactiveAirportDotColor(const QColor& color) {
     instance()->setValue("airportDisplay/inactiveDotColor", color);
 }
 
 double Settings::inactiveAirportDotSize() {
-    return instance()->value("airportDisplay/inactiveDotSizer", 2).toDouble();
+    return instance()->value("airportDisplay/inactiveDotSize", 2).toDouble();
 }
 void Settings::setInactiveAirportDotSize(double value) {
-    instance()->setValue("airportDisplay/inactiveDotSizer", value);
+    instance()->setValue("airportDisplay/inactiveDotSize", value);
 }
 
 QFont Settings::inactiveAirportFont() {
     QFont defaultResult;
-    defaultResult.setPixelSize(8);
+    defaultResult.setPointSize(8);
     QFont result = instance()->value("airportDisplay/inactiveFont", defaultResult).value<QFont>();
-    result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
+    result.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
     return result;
 }
 
 void Settings::setInactiveAirportFont(const QFont& font) {
     instance()->setValue("airportDisplay/inactiveFont", font);
+}
+
+QColor Settings::twrBorderLineColor() {
+    return instance()->value("airportDisplay/twrBorderLineColor", appBorderLineColor()).value<QColor>();
+}
+
+void Settings::setTwrBorderLineColor(const QColor& color) {
+    instance()->setValue("airportDisplay/twrBorderLineColor", color);
+}
+
+double Settings::twrBorderLineWidth() {
+    return instance()->value("airportDisplay/twrBorderLineStrength", appBorderLineWidth()).toDouble();
+}
+
+void Settings::setTwrBorderLineStrength(double value) {
+    instance()->setValue("airportDisplay/twrBorderLineStrength", value);
 }
 
 QColor Settings::appBorderLineColor() {
@@ -785,6 +948,32 @@ void Settings::setGndFillColor(const QColor& color) {
     instance()->setValue("airportDisplay/gndFillColor", color);
 }
 
+
+QColor Settings::delBorderLineColor() {
+    return instance()->value("airportDisplay/delBorderLineColor", gndBorderLineColor()).value<QColor>();
+}
+
+void Settings::setDelBorderLineColor(const QColor& color) {
+    instance()->setValue("airportDisplay/delBorderLineColor", color);
+}
+
+double Settings::delBorderLineWidth() {
+    return instance()->value("airportDisplay/delBorderLineStrength", gndBorderLineWidth()).toDouble();
+}
+
+void Settings::setDelBorderLineStrength(double value) {
+    instance()->setValue("airportDisplay/delBorderLineStrength", value);
+}
+
+QColor Settings::delFillColor() {
+    return instance()->value("airportDisplay/delFillColor", gndFillColor()).value<QColor>();
+}
+
+void Settings::setDelFillColor(const QColor& color) {
+    instance()->setValue("airportDisplay/delFillColor", color);
+}
+
+
 // Airport traffic
 bool Settings::filterTraffic() {
     return instance()->value("airportTraffic/filterTraffic", true).toBool();
@@ -853,12 +1042,62 @@ void Settings::setPilotFontColor(const QColor& color) {
 
 QFont Settings::pilotFont() {
     QFont defaultFont;
-    defaultFont.setPixelSize(9);
+    defaultFont.setPointSize(8);
     return instance()->value("pilotDisplay/font", defaultFont).value<QFont>();
 }
 
 void Settings::setPilotFont(const QFont& font) {
     instance()->setValue("pilotDisplay/font", font);
+}
+
+QColor Settings::pilotFontSecondaryColor() {
+    return instance()->value("pilotDisplay/fontSecondaryColor", QColor::fromRgb(170, 255, 255, 180)).value<QColor>();
+}
+
+void Settings::setPilotFontSecondaryColor(const QColor &color) {
+    instance()->setValue("pilotDisplay/fontSecondaryColor", color);
+}
+
+QFont Settings::pilotFontSecondary() {
+    QFont defaultFont;
+    defaultFont.setPointSize(7);
+    return instance()->value("pilotDisplay/fontSecondary", defaultFont).value<QFont>();
+}
+
+void Settings::setPilotFontSecondary(const QFont &font) {
+    instance()->setValue("pilotDisplay/fontSecondary", font);
+}
+
+QString Settings::pilotPrimaryContent() {
+    return instance()->value("pilotDisplay/primaryContent", "{login} {rulesIfNotIfr}").toString();
+}
+
+void Settings::setPilotPrimaryContent(const QString &value) {
+    instance()->setValue("pilotDisplay/primaryContent", value);
+}
+
+QString Settings::pilotPrimaryContentHovered() {
+    return instance()->value("pilotDisplay/primaryContentHovered", "{login} {rulesIfNotIfr}").toString();
+}
+
+void Settings::setPilotPrimaryContentHovered(const QString &value) {
+    instance()->setValue("pilotDisplay/primaryContentHovered", value);
+}
+
+QString Settings::pilotSecondaryContent() {
+    return instance()->value("pilotDisplay/secondaryContent", "{rating}\n{livestream}").toString();
+}
+
+void Settings::setPilotSecondaryContent(const QString &value) {
+    instance()->setValue("pilotDisplay/secondaryContent", value);
+}
+
+QString Settings::pilotSecondaryContentHovered() {
+    return instance()->value("pilotDisplay/secondaryContentHovered", "{FL} {GS10} {type}\n{dest}\n{livestream}").toString();
+}
+
+void Settings::setPilotSecondaryContentHovered(const QString &value) {
+    instance()->setValue("pilotDisplay/secondaryContentHovered", value);
 }
 
 QColor Settings::pilotDotColor() {
@@ -922,17 +1161,17 @@ void Settings::setWaypointsDotColor(const QColor& color) {
 }
 
 double Settings::waypointsDotSize() {
-    return instance()->value("pilotDisplay/waypointsDotSizer", 2.).toDouble();
+    return instance()->value("pilotDisplay/waypointsDotSize", 2.).toDouble();
 }
 void Settings::setWaypointsDotSize(double value) {
-    instance()->setValue("pilotDisplay/waypointsDotSizer", value);
+    instance()->setValue("pilotDisplay/waypointsDotSize", value);
 }
 
 QFont Settings::waypointsFont() {
     QFont defaultResult;
-    defaultResult.setPixelSize(8);
+    defaultResult.setPointSize(8);
     QFont result = instance()->value("pilotDisplay/waypointsFont", defaultResult).value<QFont>();
-    result.setStyleHint( QFont::SansSerif, QFont::PreferAntialias );
+    result.setStyleHint(QFont::SansSerif, QFont::PreferAntialias);
     return result;
 }
 void Settings::setWaypointsFont(const QFont& font) {
@@ -947,6 +1186,14 @@ void Settings::setShowRoutes(bool value) {
     instance()->setValue("display/showRoutes", value);
 }
 
+bool Settings::onlyShowImmediateRoutePart() {
+    return instance()->value("display/onlyShowImmediateRoutePart", false).toBool();
+}
+void Settings::setOnlyShowImmediateRoutePart(bool value) {
+    instance()->setValue("display/onlyShowImmediateRoutePart", value);
+}
+
+
 QColor Settings::depLineColor() {
     return instance()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 100)).value<QColor>();
 }
@@ -955,8 +1202,32 @@ void Settings::setDepLineColor(const QColor& color) {
     instance()->setValue("pilotDisplay/depLineColor", color);
 }
 
+int Settings::destImmediateDurationMin() {
+    return instance()->value("pilotDisplay/destImmediateDurationMin", 30).toInt();
+}
+void Settings::setDestImmediateDurationMin(int value) {
+    instance()->setValue("pilotDisplay/destImmediateDurationMin", value);
+}
+
+QColor Settings::destImmediateLineColor() {
+    return instance()->value("pilotDisplay/destImmediateLineColor", QColor::fromRgb(255, 170, 0, 30)).value<QColor>();
+}
+
+void Settings::setDestImmediateLineColor(const QColor& color) {
+    instance()->setValue("pilotDisplay/destImmediateLineColor", color);
+}
+
+double Settings::destImmediateLineStrength() {
+    return instance()->value("pilotDisplay/destImmediateLineStrength", destLineStrength() * 3.).toDouble();
+}
+
+void Settings::setDestImmediateLineStrength(double value) {
+    instance()->setValue("pilotDisplay/destImmediateLineStrength", value);
+}
+
+
 QColor Settings::destLineColor() {
-    return instance()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0, 100)).value<QColor>();
+    return instance()->value("pilotDisplay/destLineColor", QColor::fromRgb(255, 170, 0, 30)).value<QColor>();
 }
 
 void Settings::setDestLineColor(const QColor& color) {
@@ -980,7 +1251,7 @@ bool Settings::destLineDashed() {
 }
 
 double Settings::depLineStrength() {
-    return instance()->value("pilotDisplay/depLineStrength", 0.8).toDouble();
+    return instance()->value("pilotDisplay/depLineStrength", 0.).toDouble();
 }
 
 void Settings::setDepLineStrength(double value) {
@@ -988,7 +1259,7 @@ void Settings::setDepLineStrength(double value) {
 }
 
 double Settings::destLineStrength() {
-    return instance()->value("pilotDisplay/destLineStrength", 1.5).toDouble();
+    return instance()->value("pilotDisplay/destLineStrength", .8).toDouble();
 }
 
 void Settings::setDestLineStrength(double value) {
@@ -996,14 +1267,16 @@ void Settings::setDestLineStrength(double value) {
 }
 
 void Settings::rememberedMapPosition(
-    double* xrot, double* yrot,
-    double* zrot, double* zoom, int nr
+    double* xrot,
+    double*, // unused yrot
+    double* zrot,
+    double* zoom,
+    int nr
 ) {
     *xrot = instance()->value(
         "defaultMapPosition/xrot" + QString("%1").arg(nr), -90.
     ).toDouble();
     // ignore yRot: no Earth tilting
-    Q_UNUSED(yrot);
     *zrot = instance()->value(
         "defaultMapPosition/zrot" + QString("%1").arg(nr), 0.
     ).toDouble();
@@ -1012,8 +1285,11 @@ void Settings::rememberedMapPosition(
     ).toDouble();
 }
 void Settings::setRememberedMapPosition(
-    double xrot, double yrot, double zrot,
-    double zoom, int nr
+    double xrot,
+    double yrot,
+    double zrot,
+    double zoom,
+    int nr
 ) {
     instance()->setValue(
         "defaultMapPosition/xrot" + QString("%1").arg(nr), xrot
@@ -1051,6 +1327,30 @@ void Settings::setFriendsHighlightColor(QColor &color) {
     instance()->setValue("pilotDisplay/highlightColor", color);
 }
 
+QColor Settings::friendsPilotDotColor() {
+    return instance()->value("friends/pilotDotColor", friendsHighlightColor()).value<QColor>();
+}
+
+QColor Settings::friendsAirportDotColor() {
+    return instance()->value("friends/airportDotColor", friendsHighlightColor()).value<QColor>();
+
+}
+
+QColor Settings::friendsPilotLabelRectColor() {
+    return instance()->value("friends/pilotLabelRectColor", friendsHighlightColor()).value<QColor>();
+
+}
+
+QColor Settings::friendsAirportLabelRectColor() {
+    return instance()->value("friends/airportLabelRectColor", friendsHighlightColor()).value<QColor>();
+
+}
+
+QColor Settings::friendsSectorLabelRectColor() {
+    return instance()->value("friends/sectorLabelRectColor", friendsHighlightColor()).value<QColor>();
+
+}
+
 double Settings::highlightLineWidth() {
     return instance()->value("pilotDisplay/highlightLineWidth", 2.5).toDouble();
 }
@@ -1071,7 +1371,7 @@ const QStringList Settings::friends() {
 
 void Settings::addFriend(const QString& friendId) {
     QStringList fl = friends();
-    if(!fl.contains(friendId)) {
+    if (!fl.contains(friendId)) {
         fl.append(friendId);
     }
     instance()->setValue("friends/friendList", fl);
@@ -1080,22 +1380,20 @@ void Settings::addFriend(const QString& friendId) {
 void Settings::removeFriend(const QString& friendId) {
     QStringList fl = friends();
     int i = fl.indexOf(friendId);
-    if(i >= 0 && i < fl.size()) {
+    if (i >= 0 && i < fl.size()) {
         fl.removeAt(i);
     }
     instance()->setValue("friends/friendList", fl);
 }
 
-const QString Settings::clientAlias(const QString &userId)
-{
+const QString Settings::clientAlias(const QString &userId) {
     return instance()->value(
         QString("clients/alias_%1").arg(userId)
     ).toString();
 }
 
-void Settings::setClientAlias(const QString &userId, const QString &alias)
-{
-    if(alias.isEmpty()) {
+void Settings::setClientAlias(const QString &userId, const QString &alias) {
+    if (alias.isEmpty()) {
         instance()->remove(
             QString("clients/alias_%1").arg(userId)
         );
@@ -1107,20 +1405,30 @@ void Settings::setClientAlias(const QString &userId, const QString &alias)
     }
 
     // should maybe use signals instead
-    if(Window::instance(false) != 0) {
-        Window::instance()->friendsList->reset();
-        Window::instance()->searchResult->reset();
+    auto wnd = Window::instance(false);
+    if (wnd != 0) {
+        if (wnd->friendsList != 0) {
+            wnd->friendsList->reset();
+        }
+        if (wnd->searchResult != 0) {
+            wnd->searchResult->reset();
+        }
+        if (wnd->mapScreen != 0) {
+            if (wnd->mapScreen->glWidget != 0) {
+                wnd->mapScreen->glWidget->update();
+            }
+        }
     }
 
-    if(PilotDetails::instance(false) != 0) {
+    if (PilotDetails::instance(false) != 0) {
         PilotDetails::instance()->refresh();
     }
 
-    if(ControllerDetails::instance(false) != 0) {
+    if (ControllerDetails::instance(false) != 0) {
         ControllerDetails::instance()->refresh();
     }
 
-    if(AirportDetails::instance(false) != 0) {
+    if (AirportDetails::instance(false) != 0) {
         AirportDetails::instance()->refresh();
     }
 }
@@ -1173,8 +1481,7 @@ void Settings::setSaveWhazzupData(bool value) {
 //////////////////////////////////////
 // windowmanagment
 /////////////////////////////////////
-void Settings::setDialogPreferences(const QString &name, const DialogPreferences &dialogPreferences)
-{
+void Settings::setDialogPreferences(const QString &name, const DialogPreferences &dialogPreferences) {
     instance()->setValue("windowmanagment/" + name + "Size", dialogPreferences.size);
     instance()->setValue("windowmanagment/" + name + "Pos", dialogPreferences.pos);
     instance()->setValue("windowmanagment/" + name + "Geo", dialogPreferences.geometry);
@@ -1182,7 +1489,7 @@ void Settings::setDialogPreferences(const QString &name, const DialogPreferences
 
 Settings::DialogPreferences Settings::dialogPreferences(const QString &name) {
     return DialogPreferences {
-        .size =  instance()->value("windowmanagment/" + name + "Size").toSize(),
+        .size = instance()->value("windowmanagment/" + name + "Size").toSize(),
         .pos = instance()->value("windowmanagment/" + name + "Pos").toPoint(),
         .geometry = instance()->value("windowmanagment/" + name + "Geo").toByteArray()
     };

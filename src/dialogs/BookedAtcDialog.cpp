@@ -9,9 +9,9 @@
 // singleton instance
 BookedAtcDialog* bookedAtcDialogInstance = 0;
 BookedAtcDialog* BookedAtcDialog::instance(bool createIfNoInstance, QWidget* parent) {
-    if(bookedAtcDialogInstance == 0) {
-        if(createIfNoInstance) {
-            if(parent == 0) {
+    if (bookedAtcDialogInstance == 0) {
+        if (createIfNoInstance) {
+            if (parent == 0) {
                 parent = Window::instance();
             }
             bookedAtcDialogInstance = new BookedAtcDialog(parent);
@@ -27,8 +27,8 @@ void BookedAtcDialog::destroyInstance() {
 }
 
 
-BookedAtcDialog::BookedAtcDialog(QWidget* parent) :
-    QDialog(parent) {
+BookedAtcDialog::BookedAtcDialog(QWidget* parent)
+    : QDialog(parent) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
@@ -55,13 +55,13 @@ BookedAtcDialog::BookedAtcDialog(QWidget* parent) :
     connect(this, &BookedAtcDialog::needBookings, Whazzup::instance(), &Whazzup::downloadBookings);
 
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if(!preferences.size.isNull()) {
+    if (!preferences.size.isNull()) {
         resize(preferences.size);
     }
-    if(!preferences.pos.isNull()) {
+    if (!preferences.pos.isNull()) {
         move(preferences.pos);
     }
-    if(!preferences.geometry.isNull()) {
+    if (!preferences.geometry.isNull()) {
         restoreGeometry(preferences.geometry);
     }
 
@@ -71,11 +71,10 @@ BookedAtcDialog::BookedAtcDialog(QWidget* parent) :
 void BookedAtcDialog::refresh() {
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    if(
+    if (
         Settings::downloadBookings()
         && !Whazzup::instance()->realWhazzupData().bookingsTime.isValid()
-    )
-    {
+    ) {
         emit needBookings();
     }
 
@@ -98,8 +97,7 @@ void BookedAtcDialog::refresh() {
     qDebug() << "BookedAtcDialog/refresh() -- finished";
 }
 
-void BookedAtcDialog::setDateTime(const QDateTime &dateTime)
-{
+void BookedAtcDialog::setDateTime(const QDateTime &dateTime) {
     dateTimeFilter->setDateTime(dateTime);
 }
 
@@ -109,34 +107,30 @@ void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
     _editFilterTimer.stop();
 
     // make year change if M 12+ or 0-
-    if(
+    if (
         (_dateTimeFilter_old.date().month() == 12)
         && (dateTime.date().month() == 1)
-    )
-    {
+    ) {
         dateTime = dateTime.addYears(1);
     }
-    if(
+    if (
         (_dateTimeFilter_old.date().month() == 1)
         && (dateTime.date().month() == 12)
-    )
-    {
+    ) {
         dateTime = dateTime.addYears(-1);
     }
 
     // make month change if d lastday+ or 0-
-    if(
+    if (
         (_dateTimeFilter_old.date().day() == _dateTimeFilter_old.date().daysInMonth())
         && (dateTime.date().day() == 1)
-    )
-    {
+    ) {
         dateTime = dateTime.addMonths(1);
     }
-    if(
+    if (
         (_dateTimeFilter_old.date().day() == 1)
         && (dateTime.date().day() == dateTime.date().daysInMonth())
-    )
-    {
+    ) {
         dateTime = dateTime.addMonths(-1);
         dateTime = dateTime.addDays(
             // compensate for month lengths
@@ -146,44 +140,39 @@ void BookedAtcDialog::on_dateTimeFilter_dateTimeChanged(QDateTime dateTime) {
     }
 
     // make day change if h 23+ or 00-
-    if(
+    if (
         (_dateTimeFilter_old.time().hour() == 23)
         && (dateTime.time().hour() == 0)
-    )
-    {
+    ) {
         dateTime = dateTime.addDays(1);
     }
-    if(
+    if (
         (_dateTimeFilter_old.time().hour() == 0)
         && (dateTime.time().hour() == 23)
-    )
-    {
+    ) {
         dateTime = dateTime.addDays(-1);
     }
 
     // make hour change if m 59+ or 0-
-    if(
+    if (
         (_dateTimeFilter_old.time().minute() == 59)
         && (dateTime.time().minute() == 0)
-    )
-    {
+    ) {
         dateTime = dateTime.addSecs(60 * 60);
     }
-    if(
+    if (
         (_dateTimeFilter_old.time().minute() == 0)
         && (dateTime.time().minute() == 59)
-    )
-    {
+    ) {
         dateTime = dateTime.addSecs(-60 * 60);
     }
 
     _dateTimeFilter_old = dateTime;
 
-    if(
+    if (
         dateTime.isValid()
         && (dateTime != dateTimeFilter->dateTime())
-    )
-    {
+    ) {
         dateTimeFilter->setDateTime(dateTime);
     }
 
@@ -210,13 +199,13 @@ void BookedAtcDialog::performSearch() {
     QStringList tokens = editFilter->text()
         .replace(QRegExp("\\*"), ".*")
         .split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
-    if(tokens.size() == 1) {
+    if (tokens.size() == 1) {
         regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
-    } else if(tokens.size() == 0) {
+    } else if (tokens.size() == 0) {
         regex = QRegExp("");
     } else {
         QString regExpStr = "^(" + tokens.first();
-        for(int i = 1; i < tokens.size(); i++) {
+        for (int i = 1; i < tokens.size(); i++) {
             regExpStr += "|" + tokens[i];
         }
         regExpStr += ".*)";

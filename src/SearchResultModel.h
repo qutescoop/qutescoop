@@ -3,7 +3,8 @@
 
 #include "MapObject.h"
 
-class SearchResultModel: public QAbstractListModel {
+class SearchResultModel
+    : public QAbstractListModel {
     Q_OBJECT
 
     public:
@@ -14,8 +15,9 @@ class SearchResultModel: public QAbstractListModel {
 
         virtual QVariant data(const QModelIndex &index, int role) const override;
         virtual QVariant headerData(
-        int section, Qt::Orientation orientation,
-        int role = Qt::DisplayRole
+            int section,
+            Qt::Orientation orientation,
+            int role = Qt::DisplayRole
         ) const override;
     public slots:
         void setSearchResults(const QList<MapObject*>& searchResult);

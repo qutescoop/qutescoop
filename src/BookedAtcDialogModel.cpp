@@ -12,8 +12,8 @@ void BookedAtcDialogModel::setClients(const QList<BookedController*> &controller
 }
 
 QVariant BookedAtcDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {
-    if(orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        switch(section) {
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
+        switch (section) {
             case 0: return QString("Callsign");
             case 1: return QString("Facility");
             case 2: return QString("Name");
@@ -31,19 +31,19 @@ int BookedAtcDialogModel::columnCount(const QModelIndex&) const {
 }
 
 QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
-    if(!index.isValid() || (index.row() >= rowCount(index))) {
+    if (!index.isValid() || (index.row() >= rowCount(index))) {
         return QVariant();
     }
 
-    if(role == Qt::FontRole) {
+    if (role == Qt::FontRole) {
         BookedController* c = _controllers[index.row()];
         QFont result;
         result.setBold(c->isFriend());
         return result;
-    } else if(role == Qt::DisplayRole) {
+    } else if (role == Qt::DisplayRole) {
         BookedController* c = _controllers[index.row()];
-        switch(index.column()) {
-            case 0: return c->label;
+        switch (index.column()) {
+            case 0: return c->callsign;
             case 1: return c->facilityString();
             case 2: return c->realName();
             case 3: return c->starts().toString("MM/dd (ddd)");
@@ -51,10 +51,10 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 5: return c->ends().time().toString("HHmm'z'");
             case 6: return c->bookingInfoStr;
         }
-    } else if(role == Qt::EditRole) { // we are faking "EditRole" to access raw data and for sorting
+    } else if (role == Qt::EditRole) { // we are faking "EditRole" to access raw data and for sorting
         BookedController* c = _controllers[index.row()];
-        switch(index.column()) {
-            case 0: return c->label;
+        switch (index.column()) {
+            case 0: return c->callsign;
             case 1: return c->facilityString();
             case 2: return c->realName();
             case 3: return c->starts();

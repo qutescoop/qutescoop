@@ -3,7 +3,8 @@
 
 #include "ui_StaticSectorsDialog.h"
 
-class StaticSectorsDialog: public QDialog, public Ui::StaticSectorsDialog {
+class StaticSectorsDialog
+    : public QDialog, public Ui::StaticSectorsDialog {
     Q_OBJECT
     public:
         static StaticSectorsDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);
@@ -13,6 +14,7 @@ class StaticSectorsDialog: public QDialog, public Ui::StaticSectorsDialog {
         void btnSelectAllTriggered();
         void btnSelectNoneTriggered();
         void itemChanged();
+        void itemDoubleClicked(QListWidgetItem* item);
 
     private:
         StaticSectorsDialog(QWidget* parent = 0);

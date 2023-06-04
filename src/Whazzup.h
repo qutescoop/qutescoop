@@ -5,14 +5,15 @@
 
 #include <QNetworkReply>
 
-class Whazzup: public QObject {
+class Whazzup
+    : public QObject {
     Q_OBJECT
     public:
         static Whazzup* instance();
 
         const WhazzupData& whazzupData() {
-            return (predictedTime.isValid()?
-                _predictedData: _data);
+            return predictedTime.isValid()?
+                _predictedData: _data;
         } // we fake it when predicting a certain time
         const WhazzupData& realWhazzupData() {
             return _data;

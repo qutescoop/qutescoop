@@ -6,15 +6,15 @@
 
 #include <QStringList>
 
-class FriendsVisitor: public MapObjectVisitor {
+class FriendsVisitor
+    : public MapObjectVisitor {
     public:
         FriendsVisitor();
-        virtual void visit(MapObject* object);
-        virtual QList<MapObject*> result() const;
 
+        virtual void visit(MapObject* object) override;
+        virtual QList<MapObject*> result() const override;
     private:
-        QStringList _friendList;
-        QList<MapObject*> _friends;
+        QList<MapObject*> m_friends;
 };
 
 #endif /*FRIENDSVISITOR_H_*/

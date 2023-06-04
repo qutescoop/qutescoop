@@ -7,9 +7,9 @@
 //singleton instance
 ControllerDetails* controllerDetails = 0;
 ControllerDetails* ControllerDetails::instance(bool createIfNoInstance, QWidget* parent) {
-    if(controllerDetails == 0) {
-        if(createIfNoInstance) {
-            if(parent == 0) {
+    if (controllerDetails == 0) {
+        if (createIfNoInstance) {
+            if (parent == 0) {
                 parent = Window::instance();
             }
             controllerDetails = new ControllerDetails(parent);
@@ -24,33 +24,33 @@ void ControllerDetails::destroyInstance() {
     controllerDetails = 0;
 }
 
-ControllerDetails::ControllerDetails(QWidget* parent) :
-    ClientDetails(parent),
-    _controller(0) {
+ControllerDetails::ControllerDetails(QWidget* parent)
+    : ClientDetails(parent),
+      _controller(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
     connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if(!preferences.size.isNull()) {
+    if (!preferences.size.isNull()) {
         resize(preferences.size);
     }
-    if(!preferences.pos.isNull()) {
+    if (!preferences.pos.isNull()) {
         move(preferences.pos);
     }
-    if(!preferences.geometry.isNull()) {
+    if (!preferences.geometry.isNull()) {
         restoreGeometry(preferences.geometry);
     }
 }
 
 void ControllerDetails::refresh(Controller* newController) {
-    if(newController != 0) {
+    if (newController != 0) {
         _controller = newController;
     } else {
         _controller = Whazzup::instance()->whazzupData().controllers[callsign];
     }
-    if(_controller == 0) {
+    if (_controller == 0) {
         close();
         return;
     }
@@ -61,7 +61,7 @@ void ControllerDetails::refresh(Controller* newController) {
     QString controllerInfo = QString("<strong>%1</strong>").arg(_controller->displayName(true));
 
     QString details = _controller->detailInformation();
-    if(!details.isEmpty()) {
+    if (!details.isEmpty()) {
         controllerInfo += details.toHtmlEscaped();
     }
 
@@ -69,7 +69,7 @@ void ControllerDetails::refresh(Controller* newController) {
 
     lblOnline->setText(QString("On %1 for %2").arg(_controller->server, _controller->onlineTime()));
 
-    if(_controller->sector != 0) {
+    if (_controller->sector != 0) {
         lblCallsign->setText(_controller->sector->name.toHtmlEscaped());
     }
     lblCallsign->setVisible(_controller->sector != 0);
@@ -79,7 +79,7 @@ void ControllerDetails::refresh(Controller* newController) {
     lblFrequency->setText(isActive? QString("<h1><pre>%1</pre></h1>").arg(_controller->frequency): "");
 
     // airports
-    foreach(auto _w, gridAirports->findChildren<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
+    foreach (const auto _w, gridAirports->findChildren<QWidget*>(QString(), Qt::FindDirectChildrenOnly)) {
         _w->disconnect();
         _w->deleteLater();
     }
@@ -89,25 +89,28 @@ void ControllerDetails::refresh(Controller* newController) {
     gridAirports->setLayout(gridAirportsLayout);
 
     int i = 0;
-    foreach(auto* _a, _controller->airportsSorted()) {
-        if(_a == 0) {
+    foreach (const auto _a, _controller->airportsSorted()) {
+        if (_a == 0) {
             continue;
         }
 
         auto* _airportPb = new QPushButton(gridAirports);
-        _airportPb->setText(_a->toolTip());
+        _airportPb->setText(_a->shortLabel());
+        _airportPb->setToolTip(_a->toolTip());
         auto _font = _airportPb->font();
-        _font.setBold(true);
+        _font.setBold(_a->congestion() != 0);
         _airportPb->setFont(_font);
         connect(
             _airportPb,
             &QPushButton::clicked,
             this,
-            [ = ](bool) {
-                _a->showDetailsDialog();
+            [=](bool) {
+                if (_a->hasPrimaryAction()) {
+                    _a->primaryAction();
+                }
             }
         );
-        gridAirportsLayout->addWidget(_airportPb, floor(i / 2), i % 2);
+        gridAirportsLayout->addWidget(_airportPb, floor(i / 4), i % 4);
         i++;
     }
     gridAirportsLayout->update();
@@ -116,26 +119,24 @@ void ControllerDetails::refresh(Controller* newController) {
     QString atis = QString("<code style='margin: 50px; padding: 50px'>%1</code>").arg(
         QString(_controller->atisMessage.toHtmlEscaped()).replace("\n", "<br>")
     );
-    if(_controller->assumeOnlineUntil.isValid()) {
+    if (_controller->assumeOnlineUntil.isValid()) {
         atis += QString("<p><i>QuteScoop assumes from this information that this controller will be online until %1z</i></p>")
             .arg(_controller->assumeOnlineUntil.toString("HHmm"));
     }
     lblAtis->setText(atis);
 
-    gbInfo->setTitle(_controller->label.endsWith("_ATIS")? "ATIS": "Controller info");
+    gbInfo->setTitle(_controller->callsign.endsWith("_ATIS")? "ATIS": "Controller info");
 
-    if(_controller->isFriend()) {
+    // friends
+    if (_controller->isFriend()) {
         buttonAddFriend->setText("remove &friend");
     } else {
         buttonAddFriend->setText("add &friend");
     }
+    buttonAddFriend->setEnabled(_controller->hasValidID() && !_controller->isAtis());
+    pbAlias->setEnabled(_controller->hasValidID());
 
-    // check if we know UserId
-    bool invalidID = !(_controller->hasValidID());
-    buttonAddFriend->setDisabled(invalidID);
-    pbAlias->setDisabled(invalidID);
-
-    // enable if we know position
+    // show on map
     buttonShowOnMap->setDisabled(qFuzzyIsNull(_controller->lat) && qFuzzyIsNull(_controller->lon));
 }
 
@@ -156,9 +157,8 @@ void ControllerDetails::closeEvent(QCloseEvent* event) {
     event->accept();
 }
 
-void ControllerDetails::on_pbAlias_clicked()
-{
-    if(_controller->showAliasDialog(this)) {
+void ControllerDetails::on_pbAlias_clicked() {
+    if (_controller->showAliasDialog(this)) {
         refresh();
     }
 }

@@ -5,8 +5,8 @@
 
 class SectorReader {
     public:
-        SectorReader() {}
-        ~SectorReader() {}
+        SectorReader();
+        ~SectorReader();
 
         void loadSectors(QMultiMap<QString, Sector*>& sectors);
     private:

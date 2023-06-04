@@ -34,7 +34,7 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
 
     gluTessBeginPolygon(_tess, 0);
     gluTessBeginContour(_tess);
-    for(int i = 0; i < points.size(); i++) {
+    for (int i = 0; i < points.size(); i++) {
         GLdouble* p = new GLdouble[3];
         _pointList.append(p);
         p[0] = SXhigh(points[i].first, points[i].second);
@@ -45,14 +45,14 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
     gluTessEndContour(_tess);
     gluTessEndPolygon(_tess);
 
-    for(int i = 0; i < _pointList.size(); i++) {
+    for (int i = 0; i < _pointList.size(); i++) {
         delete _pointList[i];
     }
     _pointList.clear();
 }
 
 CALLBACK_DECL Tessellator::tessErrorCB(GLenum errorCode) {
-    QString str((char*)gluErrorString(errorCode));
+    qCritical() << "Tessellator::tessErrorCB()" << (char*) gluErrorString(errorCode);
 }
 
 CALLBACK_DECL Tessellator::tessBeginCB(GLenum which) {
@@ -64,7 +64,7 @@ CALLBACK_DECL Tessellator::tessEndCB() {
 }
 
 CALLBACK_DECL Tessellator::tessVertexCB(const GLvoid* data) {
-    const GLdouble* ptr = (const GLdouble*)data;
+    const GLdouble* ptr = (const GLdouble*) data;
     glVertex3dv(ptr);
 }
 
@@ -80,12 +80,11 @@ CALLBACK_DECL Tessellator::tessVertexCB(const GLvoid* data) {
 // outData: the vertex data to return to tessellator
 ///////////////////////////////////////////////////////////////////////////////
 CALLBACK_DECL Tessellator::tessCombineCB(
-    const GLdouble newVertex[3], const GLdouble* neighborVertex[4],
-    const GLfloat neighborWeight[4], GLdouble** outData
+    const GLdouble newVertex[3],
+    const GLdouble*[4],
+    const GLfloat [4],
+    GLdouble** outData
 ) {
-    Q_UNUSED(neighborVertex);
-    Q_UNUSED(neighborWeight);
-
     // copy new intersect vertex to local array
     // Because newVertex is temporal and cannot be hold by tessellator until next
     // vertex callback called, it must be copied to the safe place in the app.

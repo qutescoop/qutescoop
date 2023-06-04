@@ -6,23 +6,23 @@
 
 class Sector {
     public:
-        Sector() :
-            icao(), name(), id(), m_controllerSuffixes(QStringList()), _polygon(0), _borderline(0)
-        {}
-        Sector(QStringList fields, unsigned int debugLineNumber);
+        Sector();
+        Sector(const QStringList &fields, const int debugControllerLineNumber, const int debugSectorLineNumber = -1);
         ~Sector();
 
-        bool isNull() const {
-            return icao.isNull();
-        }
+        bool isNull() const;
 
         bool containsPoint(const QPointF &pt) const;
 
         const QList<QPolygonF> &nonWrappedPolygons() const;
+
         const QList<QPair<double, double> > &points() const;
         void setPoints(const QList<QPair<double, double> >&);
-        QString icao, name, id;
-        unsigned int debugControllerLineNumber, debugSectorLineNumber;
+
+        int debugControllerLineNumber();
+
+        int debugSectorLineNumber();
+        void setDebugSectorLineNumber(int newDebugSectorLineNumber);
 
         GLuint glPolygon();
         GLuint glBorderLine();
@@ -31,14 +31,15 @@ class Sector {
 
         QPair<double, double> getCenter() const;
 
-        const QStringList& controllerSuffixes() const {
-            return m_controllerSuffixes;
-        }
+        const QStringList& controllerSuffixes() const;
+        QString icao, name, id;
+
     private:
+        int _debugControllerLineNumber = -1, _debugSectorLineNumber = -1;
         QStringList m_controllerSuffixes = QStringList();
         QList<QPolygonF> m_nonWrappedPolygons;
         QList<QPair<double, double> > m_points;
-        GLuint _polygon, _borderline, _polygonHighlighted, _borderlineHighlighted;
+        GLuint _polygon = 0, _borderline = 0, _polygonHighlighted = 0, _borderlineHighlighted = 0;
 };
 
 #endif /*SECTOR_H_*/

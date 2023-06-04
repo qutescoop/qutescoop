@@ -6,7 +6,8 @@
 #include "../BookedAtcDialogModel.h"
 #include "../BookedAtcSortFilter.h"
 
-class BookedAtcDialog: public QDialog, private Ui::BookedAtcDialog {
+class BookedAtcDialog
+    : public QDialog, private Ui::BookedAtcDialog {
     Q_OBJECT
     public:
         static BookedAtcDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);

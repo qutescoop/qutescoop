@@ -7,9 +7,9 @@
 //singleton instance
 PilotDetails* pilotDetails = 0;
 PilotDetails* PilotDetails::instance(bool createIfNoInstance, QWidget* parent) {
-    if(pilotDetails == 0) {
-        if(createIfNoInstance) {
-            if(parent == 0) {
+    if (pilotDetails == 0) {
+        if (createIfNoInstance) {
+            if (parent == 0) {
                 parent = Window::instance();
             }
             pilotDetails = new PilotDetails(parent);
@@ -24,33 +24,33 @@ void PilotDetails::destroyInstance() {
     pilotDetails = 0;
 }
 
-PilotDetails::PilotDetails(QWidget* parent) :
-    ClientDetails(parent),
-    _pilot(0) {
+PilotDetails::PilotDetails(QWidget* parent)
+    : ClientDetails(parent),
+      _pilot(0) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
     connect(buttonShowOnMap, &QAbstractButton::clicked, this, &ClientDetails::showOnMap);
 
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if(!preferences.size.isNull()) {
+    if (!preferences.size.isNull()) {
         resize(preferences.size);
     }
-    if(!preferences.pos.isNull()) {
+    if (!preferences.pos.isNull()) {
         move(preferences.pos);
     }
-    if(!preferences.geometry.isNull()) {
+    if (!preferences.geometry.isNull()) {
         restoreGeometry(preferences.geometry);
     }
 }
 
 void PilotDetails::refresh(Pilot* pilot) {
-    if(pilot != 0) {
+    if (pilot != 0) {
         _pilot = pilot;
     } else {
         _pilot = Whazzup::instance()->whazzupData().findPilot(callsign);
     }
-    if(_pilot == 0) {
+    if (_pilot == 0) {
         hide();
         return;
     }
@@ -65,7 +65,7 @@ void PilotDetails::refresh(Pilot* pilot) {
             _pilot->detailInformation().isEmpty()? "": ", " + _pilot->detailInformation()
         )
     );
-    if(_pilot->server.isEmpty()) {
+    if (_pilot->server.isEmpty()) {
         lblConnected->setText(QString("<i>not connected</i>"));
     } else {
         lblConnected->setText(QString("on %1 for %2").arg(_pilot->server, _pilot->onlineTime()));
@@ -81,7 +81,7 @@ void PilotDetails::refresh(Pilot* pilot) {
         QString("Opens performance data in web browser.<br>Raw data: %1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa)
     );
 
-    if(_pilot->airline != 0) {
+    if (_pilot->airline != 0) {
         lblAirline->setText(_pilot->airline->label());
         lblAirline->setToolTip(_pilot->airline->toolTip());
     } else {
@@ -99,8 +99,8 @@ void PilotDetails::refresh(Pilot* pilot) {
 
     lblGroundspeed->setText(QString("%1 kt").arg(_pilot->groundspeed));
 
-    if(_pilot->transponderAssigned != "0000" && _pilot->transponderAssigned != "") {
-        if(_pilot->transponderAssigned != _pilot->transponder) {
+    if (_pilot->transponderAssigned != "0000" && _pilot->transponderAssigned != "") {
+        if (_pilot->transponderAssigned != _pilot->transponder) {
             lblSquawk->setText(QString("%1 !").arg(_pilot->transponder, _pilot->transponderAssigned));
             lblSquawk->setToolTip(QString("ATC assigned: %1").arg(_pilot->transponderAssigned));
         } else {
@@ -126,11 +126,11 @@ void PilotDetails::refresh(Pilot* pilot) {
     );
 
     buttonFrom->setEnabled(_pilot->depAirport() != 0);
-    buttonFrom->setText(   _pilot->depAirport() != 0? _pilot->depAirport()->toolTip(): _pilot->planDep);
+    buttonFrom->setText(_pilot->depAirport() != 0? _pilot->depAirport()->toolTip(): _pilot->planDep);
     buttonDest->setEnabled(_pilot->destAirport() != 0);
-    buttonDest->setText(   _pilot->destAirport() != 0? _pilot->destAirport()->toolTip(): _pilot->planDest);
-    buttonAlt->setEnabled( _pilot->altAirport() != 0);
-    buttonAlt->setText(   _pilot->altAirport() != 0? _pilot->altAirport()->toolTip(): _pilot->planAltAirport);
+    buttonDest->setText(_pilot->destAirport() != 0? _pilot->destAirport()->toolTip(): _pilot->planDest);
+    buttonAlt->setEnabled(_pilot->altAirport() != 0);
+    buttonAlt->setText(_pilot->altAirport() != 0? _pilot->altAirport()->toolTip(): _pilot->planAltAirport);
 
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));
@@ -172,24 +172,30 @@ void PilotDetails::refresh(Pilot* pilot) {
 
     // plotted?
     bool plottedAirports = false;
-    if(_pilot->depAirport() != 0) {
+    if (_pilot->depAirport() != 0) {
         plottedAirports |= _pilot->depAirport()->showRoutes;
     }
-    if(_pilot->destAirport() != 0) {
+    if (_pilot->destAirport() != 0) {
         plottedAirports |= _pilot->destAirport()->showRoutes;
     }
 
-    if(!plottedAirports && !_pilot->showDepDestLine) {
+    if (!plottedAirports && !_pilot->showDepDestLine) {
         cbPlotRoute->setCheckState(Qt::Unchecked);
     }
-    if(plottedAirports && !_pilot->showDepDestLine) {
+    if (plottedAirports && !_pilot->showDepDestLine) {
         cbPlotRoute->setCheckState(Qt::PartiallyChecked);
     }
-    if(_pilot->showDepDestLine) {
+    if (_pilot->showDepDestLine) {
         cbPlotRoute->setCheckState(Qt::Checked);
     }
-    if(_pilot->showDepDestLine || plottedAirports) {
-        lblPlotStatus->setText(QString("<span style='color: " + Settings::lightTextColor().name(QColor::HexArgb) + "'>waypoints (calculated): <small><code>%1</code></small></span>").arg(_pilot->routeWaypointsStr()));
+    if (_pilot->showDepDestLine || plottedAirports) {
+        lblPlotStatus->setText(
+            QString(
+                "<span style='color: "
+                + Settings::lightTextColor().name(QColor::HexArgb)
+                + "'>waypoints (calculated): <small><code>%1</code></small></span>"
+            ).arg(_pilot->routeWaypointsString())
+        );
     }
     lblPlotStatus->setVisible(_pilot->showDepDestLine || plottedAirports);
 
@@ -198,20 +204,20 @@ void PilotDetails::refresh(Pilot* pilot) {
 }
 
 void PilotDetails::on_buttonDest_clicked() {
-    if(_pilot->destAirport() != 0) {
-        _pilot->destAirport()->showDetailsDialog();
+    if (_pilot->destAirport() != 0 && _pilot->destAirport()->hasPrimaryAction()) {
+        _pilot->destAirport()->primaryAction();
     }
 }
 
 void PilotDetails::on_buttonAlt_clicked() {
-    if(_pilot->altAirport() != 0) {
-        _pilot->altAirport()->showDetailsDialog();
+    if (_pilot->altAirport() != 0 && _pilot->altAirport()->hasPrimaryAction()) {
+        _pilot->altAirport()->primaryAction();
     }
 }
 
 void PilotDetails::on_buttonFrom_clicked() {
-    if(_pilot->depAirport() != 0) {
-        _pilot->depAirport()->showDetailsDialog();
+    if (_pilot->depAirport() != 0 && _pilot->depAirport()->hasPrimaryAction()) {
+        _pilot->depAirport()->primaryAction();
     }
 }
 
@@ -222,9 +228,9 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 
 void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
     qDebug() << "PilotDetails::on_cbPlotRoute_clicked()" << checked;
-    if(_pilot->showDepDestLine != checked) {
+    if (_pilot->showDepDestLine != checked) {
         _pilot->showDepDestLine = checked;
-        if(Window::instance(false) != 0) {
+        if (Window::instance(false) != 0) {
             Window::instance()->mapScreen->glWidget->invalidatePilots();
         }
         refresh();
@@ -244,9 +250,8 @@ void PilotDetails::closeEvent(QCloseEvent* event) {
     event->accept();
 }
 
-void PilotDetails::on_pbAlias_clicked()
-{
-    if(_pilot->showAliasDialog(this)) {
+void PilotDetails::on_pbAlias_clicked() {
+    if (_pilot->showAliasDialog(this)) {
         refresh();
     }
 }

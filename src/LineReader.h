@@ -3,9 +3,11 @@
 
 #include "FileReader.h"
 
-class LineReader: public FileReader {
+class LineReader
+    : public FileReader {
     public:
-        LineReader(const QString& filename) : FileReader(filename) {}
+        LineReader(const QString& filename)
+            : FileReader(filename) {}
         const QList<QPair<double, double> >& readLine();
     private:
         QList<QPair<double, double> > _currentLine;

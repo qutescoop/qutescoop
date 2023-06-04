@@ -1,19 +1,21 @@
+#include "Airac.h"
 #include "Launcher.h"
+#include "NavData.h"
 #include "Platform.h"
 #include "Settings.h"
+#include "src/Airport.h"
 
 #include <QApplication>
 #include <QMessageBox>
 #include <QtCore>
 
 /* logging */
-QScopedPointer<QFile>   m_logFile;
+QScopedPointer<QFile> m_logFile;
 
-void messageHandler(QtMsgType type, const QMessageLogContext& context, const QString& msg) {
-    Q_UNUSED(context);
+void messageHandler(QtMsgType type, const QMessageLogContext&, const QString& msg) {
     QTextStream out(m_logFile.data());
     out << QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
-    switch(type) {
+    switch (type) {
         case QtInfoMsg:     out << " [INF] "; break;
         case QtDebugMsg:    out << " [DBG] "; break;
         case QtWarningMsg:  out << " [WRN] "; break;
@@ -42,13 +44,15 @@ int main(int argc, char* argv[]) {
     QApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
 
     // Open log.txt
-    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << '\n';
-    QTextStream(stdout) << "Using settings from " << Settings::fileName() << '\n';
     m_logFile.reset(new QFile(Settings::dataDirectory("log.txt")));
     m_logFile.data()->open(QFile::WriteOnly | QFile::Text);
 
     // catch all messages
     qInstallMessageHandler(messageHandler);
+
+    // stdout
+    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << '\n';
+    QTextStream(stdout) << "Using settings from " << Settings::fileName() << '\n';
 
     // some initial debug logging
     qDebug().noquote() << "QuteScoop" << Platform::version();
@@ -63,6 +67,67 @@ int main(int argc, char* argv[]) {
     app.addLibraryPath(QString("%1/imageformats").arg(app.applicationDirPath()));
     qDebug() << "Library paths:" << app.libraryPaths();
     qDebug() << "Supported image formats:" << QImageReader::supportedImageFormats();
+
+    // command line parameters
+    QCommandLineParser parser;
+    parser.addHelpOption();
+
+    QCommandLineOption routeOption(
+        { "r", "route" },
+        "resolve route",
+        "<dep> <route> <dest>"
+
+    );
+    parser.addOptions({ routeOption });
+    parser.process(app);
+    if (parser.isSet(routeOption)) { // resolves a route
+        if (parser.positionalArguments().size() < 1) {
+            QTextStream(stdout) << "ERROR: need at least 2 arguments" << Qt::endl;
+            return 1;
+        }
+
+        auto navData = NavData::instance();
+        navData->load();
+        auto airac = Airac::instance();
+        airac->load();
+
+        const auto depString = parser.value(routeOption);
+        QStringList route = parser.positionalArguments();
+        route.prepend(depString);
+        QTextStream(stdout) << "\n# Flightplan route:\n" << route.join(" ") << Qt::endl;
+
+        const auto dep = NavData::instance()->airports[depString];
+        if (dep == 0) {
+            QTextStream(stdout) << "ERROR: departure aerodrome not found in database" << Qt::endl;
+            return 1;
+        }
+
+        const auto waypoints = Airac::instance()->resolveFlightplan(route, dep->lat, dep->lon);
+
+        QTextStream(stdout) << "\n# Waypoints:" << Qt::endl;
+        foreach (const auto &w, waypoints) {
+            QTextStream(stdout) << w->id
+                                << "\n"
+                                << "\t" << "location: "
+                                << QString("%1 (%2)").arg(NavData::toEurocontrol(w->lat, w->lon), QString("%1/%2").arg(w->lat).arg(w->lon))
+                                << Qt::endl
+            ;
+            QStringList airways;
+            foreach (const auto &awyList, airac->airways) {
+                foreach (const auto &a, awyList) {
+                    if (a->waypoints().contains(w)) {
+                        airways << a->name;
+                    }
+                }
+            }
+            if (!airways.isEmpty()) {
+                QTextStream(stdout) << "\tairways: " << airways.join(", ") << Qt::endl;
+            }
+
+        }
+
+        return 0;
+    }
 
     // show Launcher
     Launcher::instance()->fireUp();

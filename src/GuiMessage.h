@@ -5,7 +5,8 @@
 #include <QtCore>
 #include <QProgressBar>
 
-class GuiMessages: public QObject {
+class GuiMessages
+    : public QObject {
     Q_OBJECT
     public:
         static GuiMessages* instance(bool createIfNoInstance = true);
@@ -28,7 +29,7 @@ class GuiMessages: public QObject {
         static void criticalUserInteraction(const QString &msg, const QString &titleAndId);
         /** program needs to close **/
         static void fatalUserInteraction(const QString &msg, const QString &titleAndId);
-        /** set progress message (highly recommended, shown in the label) **/
+        /** set progress message **/
         static void progress(const QString &id, const QString &msg);
         /** update progress value **/
         static void progress(const QString &id, int value, int maximum = -1);
@@ -54,21 +55,24 @@ class GuiMessages: public QObject {
                     CriticalUserInteraction = 1, FatalUserInteraction = 0
                 };
                 GuiMessage() : // needed for _METATYPE
-                    id(""), msg(""), type(Uninitialized), progressValue(-1),
-                    progressMaximum(-1), showMs(-1), shownSince(QDateTime()) {}
+                               id(""), msg(""), type(Uninitialized), progressValue(-1),
+                               progressMaximum(-1), showMs(-1), shownSince(QDateTime()) {}
                 GuiMessage(
-                const QString &id, const Type &type, const QString &msg,
-                int progressValue = -1, int progressMaximum = -1
-                ) :
-                    id(id), msg(msg), type(type), progressValue(progressValue),
-                    progressMaximum(progressMaximum), showMs(-1), shownSince(QDateTime()) {}
+                    const QString &id,
+                    const Type &type,
+                    const QString &msg,
+                    int progressValue = -1,
+                    int progressMaximum = -1
+                )
+                    : id(id), msg(msg), type(type), progressValue(progressValue),
+                      progressMaximum(progressMaximum), showMs(-1), shownSince(QDateTime()) {}
 
                 bool operator==(const GuiMessage* gm) const {
                     return id == gm->id && msg == gm->msg && type == gm->type
                         && progressValue == gm->progressValue && progressMaximum == gm->progressMaximum
                         && showMs == gm->showMs && shownSince == gm->shownSince;
                 }
-                ~GuiMessage() {} // needed for _METATYPE
+                ~GuiMessage(); // needed for _METATYPE
 
                 QString id, msg;
                 Type type;
@@ -86,13 +90,13 @@ class GuiMessages: public QObject {
         void update();
     private:
         GuiMessages();
-        ~GuiMessages() {
-            delete _currentStatusMessage; delete _currentProgressMessage;
-        }
+        virtual ~GuiMessages();
 
         void setStatusMessage(
-        GuiMessage* gm, bool bold = false, bool italic = false,
-        bool instantRepaint = true
+            GuiMessage* gm,
+            bool bold = false,
+            bool italic = false,
+            bool instantRepaint = true
         );
         void setProgress(GuiMessage* gm, bool instantRepaint = true);
 

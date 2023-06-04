@@ -92,7 +92,7 @@
          <item>
           <widget class="QCheckBox" name="cbUseDownloaded">
            <property name="toolTip">
-            <string>Use Whazzups from &quot;/downloaded&quot; directory (&quot;Preferences/Save Whazzups&quot;). This allows accurate replay of past timespans. Use together with &quot;Preferences/Save Screenshots&quot; if you like...</string>
+            <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Use Whazzups from &amp;quot;/downloaded&amp;quot; directory (&amp;quot;Preferences/Save Whazzups&amp;quot;). This allows accurate replay of past timespans.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
            </property>
            <property name="text">
             <string>use downloaded
@@ -432,6 +432,7 @@ Whazzups (replay)</string>
     <addaction name="separator"/>
     <addaction name="actionShowInactiveAirports"/>
     <addaction name="actionShowRoutes"/>
+    <addaction name="actionShowImmediateRoutes"/>
     <addaction name="actionShowWaypoints"/>
     <addaction name="separator"/>
     <addaction name="actionOpenStaticSectorsDialog"/>
@@ -778,7 +779,7 @@ Whazzups (replay)</string>
      <normaloff>:/icons/images/fullscreen16.png</normaloff>:/icons/images/fullscreen16.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Toggle fullscreen</string>
+    <string>Toggle &amp;fullscreen</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F11</string>
@@ -890,7 +891,7 @@ Whazzups (replay)</string>
     <string>Display &amp;inactive airports</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+F6</string>
+    <string>Shift+F4</string>
    </property>
   </action>
   <action name="actionPredict">
@@ -1108,10 +1109,6 @@ Whazzups (replay)</string>
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="icon">
-    <iconset resource="../Resources.qrc">
-     <normaloff>:/icons/images/arrowup16.png</normaloff>:/icons/images/arrowup16.png</iconset>
-   </property>
    <property name="text">
     <string>Display route &amp;waypoints</string>
    </property>
@@ -1148,6 +1145,9 @@ Whazzups (replay)</string>
    <property name="toolTip">
     <string>For viewing QuteScoop's data</string>
    </property>
+   <property name="shortcut">
+    <string>F10</string>
+   </property>
   </action>
   <action name="actionRememberMapPosition9">
    <property name="text">
@@ -1163,6 +1163,21 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Alt+9</string>
+   </property>
+  </action>
+  <action name="actionShowImmediateRoutes">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="../Resources.qrc">
+     <normaloff>:/icons/images/routesImmediate16.png</normaloff>:/icons/images/routesImmediate16.png</iconset>
+   </property>
+   <property name="text">
+    <string>Only show short-&amp;term route parts</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F6</string>
    </property>
   </action>
  </widget>

@@ -3,7 +3,8 @@
 
 #include "GLWidget.h"
 
-class MapScreen: public QWidget {
+class MapScreen
+    : public QWidget {
     Q_OBJECT
 
     public:
