@@ -4,7 +4,8 @@
 #include <QtCore>
 #include <QtNetwork>
 
-class Net: public QNetworkAccessManager {
+class Net
+    : public QNetworkAccessManager {
     Q_OBJECT
     public:
         static Net* instance(bool createIfNoInstance = true);

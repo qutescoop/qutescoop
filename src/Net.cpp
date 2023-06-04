@@ -5,14 +5,15 @@
 //Single instance
 Net* netInstance = 0;
 Net* Net::instance(bool createIfNoInstance) {
-    if((netInstance == 0) && createIfNoInstance) {
+    if ((netInstance == 0) && createIfNoInstance) {
         netInstance = new Net();
     }
     return netInstance;
 }
 
-Net::Net() : QNetworkAccessManager() {
-    if(Settings::useProxy()) {
+Net::Net()
+    : QNetworkAccessManager() {
+    if (Settings::useProxy()) {
         setProxy(
             QNetworkProxy(
                 QNetworkProxy::DefaultProxy, Settings::proxyServer(),

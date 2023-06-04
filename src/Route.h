@@ -3,7 +3,8 @@
 
 #include "Waypoint.h"
 
-class Route: public QObject {
+class Route
+    : public QObject {
     Q_OBJECT
     public:
         Route();

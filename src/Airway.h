@@ -8,9 +8,7 @@ class Airway {
         Airway(const QString& name);
         virtual ~Airway() {}
 
-        QList<Waypoint*> waypoints() const {
-            return _waypoints;
-        };
+        QList<Waypoint*> waypoints() const;
         QList<Waypoint*> expand(const QString& startId, const QString& endId) const;
         Waypoint* closestPointTo(double lat, double lon) const;
         void addSegment(Waypoint* from, Waypoint* to);

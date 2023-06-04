@@ -10,8 +10,6 @@
 
 # runtime (when built in-tree)
 /log.txt
-/screenshots/
-!/screenshots/_notes.txt
 /downloaded/
 !/downloaded/_notes.txt
 

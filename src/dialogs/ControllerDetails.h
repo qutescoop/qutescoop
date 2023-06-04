@@ -6,7 +6,8 @@
 #include "ClientDetails.h"
 #include "../Controller.h"
 
-class ControllerDetails: public ClientDetails, private Ui::ControllerDetails {
+class ControllerDetails
+    : public ClientDetails, private Ui::ControllerDetails {
     Q_OBJECT
     public:
         static ControllerDetails* instance(bool createIfNoInstance = true, QWidget* parent = 0);

@@ -8,31 +8,32 @@
 //singleton instance
 StaticSectorsDialog* staticSectorsDialogInstance = 0;
 StaticSectorsDialog* StaticSectorsDialog::instance(bool createIfNoInstance, QWidget* parent) {
-    if(staticSectorsDialogInstance == 0 && createIfNoInstance) {
+    if (staticSectorsDialogInstance == 0 && createIfNoInstance) {
         staticSectorsDialogInstance = new StaticSectorsDialog(parent);
     }
     return staticSectorsDialogInstance;
 }
 
-StaticSectorsDialog::StaticSectorsDialog(QWidget* parent) :
-    QDialog(parent) {
+StaticSectorsDialog::StaticSectorsDialog(QWidget* parent)
+    : QDialog(parent) {
     setupUi(this);
 
     setModal(false);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if(!preferences.size.isNull()) {
+    if (!preferences.size.isNull()) {
         resize(preferences.size);
     }
-    if(!preferences.pos.isNull()) {
+    if (!preferences.pos.isNull()) {
         move(preferences.pos);
     }
-    if(!preferences.geometry.isNull()) {
+    if (!preferences.geometry.isNull()) {
         restoreGeometry(preferences.geometry);
     }
 
     connect(listWidgetSectors, &QListWidget::itemChanged, this, &StaticSectorsDialog::itemChanged);
+    connect(listWidgetSectors, &QListWidget::itemDoubleClicked, this, &StaticSectorsDialog::itemDoubleClicked);
     connect(btnSelectAll, &QPushButton::clicked, this, &StaticSectorsDialog::btnSelectAllTriggered);
     connect(btnSelectNone, &QPushButton::clicked, this, &StaticSectorsDialog::btnSelectNoneTriggered);
 
@@ -41,7 +42,7 @@ StaticSectorsDialog::StaticSectorsDialog(QWidget* parent) :
 
 void StaticSectorsDialog::loadSectorList() {
     qDebug() << "StaticSectorsDialog::loadSectorList -- started";
-    foreach(auto sector, NavData::instance()->sectors.values()) {
+    foreach (const auto sector, NavData::instance()->sectors.values()) {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(
             QString("%1 %2 (ID %3, %4)").arg(
@@ -74,8 +75,8 @@ void StaticSectorsDialog::loadSectorList() {
                 sector->name
             )
             .arg(sector->points().size())
-            .arg(sector->debugControllerLineNumber)
-            .arg(sector->debugSectorLineNumber)
+            .arg(sector->debugControllerLineNumber())
+            .arg(sector->debugSectorLineNumber())
         );
         item->setFlags(item->flags() | Qt::ItemIsUserCheckable);
         item->setCheckState(Qt::Unchecked);
@@ -106,16 +107,14 @@ void StaticSectorsDialog::closeEvent(QCloseEvent* event) {
     staticSectorsDialogInstance = 0;
 }
 
-void StaticSectorsDialog::btnSelectAllTriggered()
-{
-    foreach(auto item, listWidgetSectors->findItems("", Qt::MatchStartsWith)) {
+void StaticSectorsDialog::btnSelectAllTriggered() {
+    foreach (const auto item, listWidgetSectors->findItems("", Qt::MatchStartsWith)) {
         item->setCheckState(Qt::Checked);
     }
 }
 
-void StaticSectorsDialog::btnSelectNoneTriggered()
-{
-    foreach(auto item, listWidgetSectors->findItems("", Qt::MatchStartsWith)) {
+void StaticSectorsDialog::btnSelectNoneTriggered() {
+    foreach (const auto item, listWidgetSectors->findItems("", Qt::MatchStartsWith)) {
         item->setCheckState(Qt::Unchecked);
     }
 }
@@ -123,14 +122,22 @@ void StaticSectorsDialog::btnSelectNoneTriggered()
 void StaticSectorsDialog::itemChanged() {
     QList<Sector*> renderSectors;
 
-    foreach(auto item, listWidgetSectors->findItems("", Qt::MatchStartsWith)) {
-        if(item->checkState() == Qt::Checked) {
+    foreach (const auto item, listWidgetSectors->findItems("", Qt::MatchStartsWith)) {
+        if (item->checkState() == Qt::Checked) {
             auto sector = static_cast<Sector*>(item->data(Qt::UserRole).value<void*>());
-            if(sector != 0) {
+            if (sector != 0) {
                 renderSectors.append(sector);
             }
         }
     }
 
     Window::instance()->mapScreen->glWidget->setStaticSectors(renderSectors);
+}
+
+void StaticSectorsDialog::itemDoubleClicked(QListWidgetItem* item) {
+    item->setCheckState(
+        item->checkState() == Qt::Checked
+            ? Qt::Unchecked
+            : Qt::Checked
+    );
 }

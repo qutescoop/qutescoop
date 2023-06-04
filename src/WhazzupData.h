@@ -15,22 +15,18 @@ class WhazzupData {
         WhazzupData();
         WhazzupData(QByteArray* bytes, WhazzupType type);
         WhazzupData(const QDateTime predictTime, const WhazzupData &data); // predict whazzup data
-        ~WhazzupData();
-        // copy constructor and assignment operator
         WhazzupData(const WhazzupData &data);
+        ~WhazzupData();
+
         WhazzupData &operator=(const WhazzupData &data);
 
-        bool isNull() const {
-            return (whazzupTime.isNull() && bookingsTime.isNull());
-        }
+        bool isNull() const;
         void updateFrom(const WhazzupData &data);
 
         QSet<Controller*> controllersWithSectors() const;
         QHash<QString, Pilot*> pilots, bookedPilots;
         QHash<QString, Controller*> controllers;
-        QList<Pilot*> allPilots() const {
-            return bookedPilots.values() + pilots.values();
-        }
+        QList<Pilot*> allPilots() const;
         QList<BookedController*> bookedControllers;
 
         QList<QPair<double, double> > friendsLatLon() const;
@@ -38,12 +34,11 @@ class WhazzupData {
         Pilot* findPilot(const QString& callsign) const;
 
         QList<QStringList> servers;
+        QHash<int, QString> ratings;
+        QHash<int, QString> pilotRatings;
+        QHash<int, QString> militaryRatings;
 
         QDateTime updateEarliest, whazzupTime, bookingsTime, predictionBasedOnTime, predictionBasedOnBookingsTime;
-
-        bool isVatsim() const {
-            return true;
-        }
 
         void accept(MapObjectVisitor* visitor) const;
     private:

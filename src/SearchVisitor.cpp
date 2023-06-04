@@ -6,13 +6,13 @@ SearchVisitor::SearchVisitor(const QString& searchStr) {
         .replace(QRegExp("\\*"), ".*")
         .split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
 
-    if(tokens.size() == 1) {
+    if (tokens.size() == 1) {
         _regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
         return;
     }
 
     QString regExpStr = "^(" + tokens.first();
-    for(int i = 1; i < tokens.size(); i++) {
+    for (int i = 1; i < tokens.size(); i++) {
         regExpStr += "|" + tokens[i];
     }
     regExpStr += ".*)";
@@ -20,7 +20,7 @@ SearchVisitor::SearchVisitor(const QString& searchStr) {
 }
 
 void SearchVisitor::visit(MapObject* object) {
-    if(!object->matches(_regex)) {
+    if (!object->matches(_regex)) {
         return;
     }
 
@@ -31,8 +31,8 @@ QList<MapObject*> SearchVisitor::result() const {
     QList<MapObject*> result(_resultFromVisitors);
 
     // airlines - this is not using the visitor model
-    foreach(const Airline* _airline, airlines) {
-        if(_airline->code.contains(_regex) || _airline->name.contains(_regex) || _airline->callsign.contains(_regex)) {
+    foreach (const Airline* _airline, airlines) {
+        if (_airline->code.contains(_regex) || _airline->name.contains(_regex) || _airline->callsign.contains(_regex)) {
             // we make it into a MapObject, because that fits the results here well
             MapObject* object = new MapObject(
                 _airline->label(),
@@ -43,7 +43,9 @@ QList<MapObject*> SearchVisitor::result() const {
     }
 
     std::sort(
-        result.begin(), result.end(), [](const MapObject* a, const MapObject* b) {
+        result.begin(),
+        result.end(),
+        [](const MapObject* a, const MapObject* b) {
             return a->toolTip() < b->mapLabel();
         }
     );

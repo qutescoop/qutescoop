@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Checks for errors.
 # Exit code is set.
 #

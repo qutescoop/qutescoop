@@ -1,9 +1,9 @@
-This is where all downloaded data will be saved. These can be used in Time Warp
+This is where all downloaded whazzup will be saved. These can be used in Time Warp
 mode to accurately replay a given timespan.
 
 File name: <Network ID>_<date>-<time>.(whazzup|bookings)
 Network ID:
-    0: IVAO, 1:VATSIM, 2:User defined
+    0: VATSIM, 2:User defined
 
 You can safely delete all files in this folder (but not the folder itself)
 without any problems for QuteScoop.

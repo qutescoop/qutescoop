@@ -3,10 +3,9 @@
 
 #include "Waypoint.h"
 
-class NavAid: public Waypoint {
+class NavAid
+    : public Waypoint {
     public:
-        NavAid(const QStringList& stringList);
-
         enum Type {
             NDB = 2,
             VOR = 3,
@@ -23,11 +22,15 @@ class NavAid: public Waypoint {
             GBAS_THR = 16
         };
         static QString typeStr(Type _type);
-        virtual QString toolTip() const;
-        int type() {
-            return _type;
-        }
 
+        NavAid(const QStringList& stringList);
+
+        virtual QString toolTip() const override;
+        virtual QString mapLabelHovered() const override;
+        virtual QStringList mapLabelSecondaryLinesHovered() const override;
+        virtual int type() override;
+
+        QString freqString() const;
     private:
         Type _type;
         int _freq;

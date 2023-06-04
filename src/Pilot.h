@@ -3,16 +3,20 @@
 
 #include "Airline.h"
 #include "Client.h"
+#include "MapObject.h"
 #include "Waypoint.h"
 
 #include <QJsonDocument>
 
 class Airport;
 
-class Pilot: public Client {
+class Pilot
+    : public MapObject, public Client {
+    Q_OBJECT
     public:
         static const int taxiTimeOutbound = 240;
         static int altToFl(int alt_ft, int qnh_mb);
+        static const QHash<QString, std::function<QString(Pilot*)> > placeholders;
 
         enum FlightStatus {
             BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING,
@@ -20,13 +24,19 @@ class Pilot: public Client {
         };
 
         Pilot(const QJsonObject& json, const WhazzupData* whazzup);
+        virtual ~Pilot();
 
-        virtual QString toolTip() const;
-        virtual QString rank() const;
-        virtual void showDetailsDialog();
-        virtual QString mapLabel() const {
-            return QString("%1 %2").arg(label, shortAlt());
-        }
+        virtual QString toolTip() const override;
+        virtual QString rank() const override;
+        virtual QString mapLabel() const override;
+        virtual QString mapLabelHovered() const override;
+        virtual QStringList mapLabelSecondaryLines() const override;
+        virtual QStringList mapLabelSecondaryLinesHovered() const override;
+        virtual QString livestreamString() const override;
+        virtual bool hasPrimaryAction() const override;
+        virtual void primaryAction() override;
+
+        void showDetailsDialog();
 
         FlightStatus flightStatus() const;
         QString flightStatusString() const;
@@ -44,16 +54,16 @@ class Pilot: public Client {
         //QDateTime fixedEta; // ETA, written after creation as a workaround for Prediction (Warp) Mode
         QTime eet() const; // Estimated Enroute Time as remaining time to destination
         QDateTime etaPlan() const; // Estimated Time of Arrival as flightplanned
-        QString delayStr() const;
+        QString delayString() const;
         int planTasInt() const; // defuck TAS for Mach numbers
         int defuckPlanAlt(QString alt) const; // returns an altitude from various flightplan strings
         QString humanAlt() const; // altitude as string, prefixed with FL if applicable
-        QString shortAlt() const; // altitude prefixed with F
+        QString flOrEmpty() const; // altitude prefixed with F
         QPair<double, double> positionInFuture(int seconds) const;
         int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
         bool showDepLine() const,
         showDestLine() const;
-        QString routeWaypointsStr();
+        QString routeWaypointsString();
         QList<Waypoint*> routeWaypoints();
         QList<Waypoint*> routeWaypointsWithDepDest();
         void checkStatus(); // adjust label visibility from flight status
@@ -68,6 +78,7 @@ class Pilot: public Client {
         int altitude, groundspeed, planEnroute_hrs, planEnroute_mins,
             planFuel_hrs, planFuel_mins,
             qnh_mb;
+        int pilotRating = -99, militaryRating = -99;
         double trueHeading, qnh_inHg;
         bool showDepDestLine;
         QDateTime whazzupTime; // need some local reference to that

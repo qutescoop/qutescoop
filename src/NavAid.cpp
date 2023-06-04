@@ -1,41 +1,41 @@
 #include "NavAid.h"
 
 NavAid::NavAid(const QStringList&stringList) {
-    if(stringList.size() < 12) {
+    if (stringList.size() < 12) {
         qCritical() << "NavAid(): could not parse " << stringList << " as Navaid. Expected more than 12 fields.";
         return;
     }
 
     bool ok;
 
-    _type = (Type)stringList[0].toInt(&ok);
-    if(!ok) {
+    _type = (Type) stringList[0].toInt(&ok);
+    if (!ok) {
         qCritical() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList << 0;
         return;
     }
     lat = stringList[1].toDouble(&ok);
-    if(!ok) {
+    if (!ok) {
         qCritical() << "NavAid::NavAid() unable to parse lat (double):" << stringList << 1;
         return;
     }
     lon = stringList[2].toDouble(&ok);
-    if(!ok) {
+    if (!ok) {
         qCritical() << "NavAid::NavAid() unable to parse lon (double):" << stringList << 2;
         return;
     }
 
     _freq = stringList[4].toInt(&ok);
-    if(!ok) {
+    if (!ok) {
         qCritical() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
         return;
     }
 
-    label = stringList[7];
+    id = stringList[7];
 
     regionCode = stringList[9];
 
     _name = "";
-    for(int i = 10; i < stringList.size(); i++) {
+    for (int i = 10; i < stringList.size(); i++) {
         _name += stringList[i] + (i > 9? " ": "");
     }
     _name = _name.trimmed();
@@ -62,21 +62,42 @@ QString NavAid::typeStr(Type type) {
 }
 
 QString NavAid::toolTip() const {
-    QString ret = Waypoint::toolTip();
-    ret.append(" (" + _name + ")");
+    QString ret = id + " (" + _name + ")";
 
-    if(_type == NDB) {
+    if (_type == NDB) {
         ret.append(QString(" %1 kHz").arg(_freq));
-    } else if(_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS) {
+    } else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS) {
         ret.append(QString(" %1 MHz").arg(_freq / 100., 0, 'f', 2));
-    } else if(_freq != 0) {
+    } else if (_freq != 0) {
         ret.append(QString(" %1?").arg(_freq));
     }
-    if((_type == ILS_LOC || _type == LOC) && _hdg != 0) {
+    if ((_type == ILS_LOC || _type == LOC) && _hdg != 0) {
         ret.append(QString(" %1").arg((double) _hdg, 0, 'f', 0));
     }
-    if(!NavAid::typeStr(_type).isEmpty()) {
-        ret.append(QString(" [%1]").arg(NavAid::typeStr(_type)));
+    if (!NavAid::typeStr(_type).isEmpty()) {
+        ret.append(QString(" [%1]").arg(typeStr(_type)));
     }
     return ret;
+}
+
+QString NavAid::mapLabelHovered() const {
+    return (id + " " + typeStr(_type)).trimmed();
+}
+
+QStringList NavAid::mapLabelSecondaryLinesHovered() const {
+    return { freqString() }; // + "\n" + airwaysString()).trimmed().split("\n");
+}
+
+QString NavAid::freqString() const {
+    if (_type == NDB) {
+        return QString("%1 kHz").arg(_freq);
+    } else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS) {
+        return QString("%1 MHz").arg(_freq / 100., 0, 'f', 2);
+    }
+
+    return "";
+}
+
+int NavAid::type() {
+    return _type;
 }

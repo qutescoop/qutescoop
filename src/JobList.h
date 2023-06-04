@@ -4,10 +4,11 @@
 #include <QObject>
 
 /**
-   A list of jobs, connected through SIGNALs and SLOTs. Will emit finished()
-   when all jobs were executed
+ * A list of jobs, connected through SIGNALs and SLOTs. Will emit finished()
+ * when all jobs were executed
  **/
-class JobList: public QObject {
+class JobList
+    : public QObject {
     Q_OBJECT
     public:
         explicit JobList(QObject* parent = 0);
@@ -25,8 +26,10 @@ class JobList: public QObject {
         void start();
     private slots:
         void finish();
+        void advanceProgress();
     private:
-        QList<Job> jobs;
+        QList<Job> m_jobs;
+        int m_progress = 0;
 };
 
 #endif // JOBLIST_H

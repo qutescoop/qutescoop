@@ -1,7 +1,7 @@
 #include "ClientSelectionWidget.h"
 
-ClientSelectionWidget::ClientSelectionWidget(QWidget* parent) :
-    QListWidget(parent) {
+ClientSelectionWidget::ClientSelectionWidget(QWidget* parent)
+    : QListWidget(parent) {
     setWindowFlags(Qt::FramelessWindowHint);
     setFocusPolicy(Qt::StrongFocus);
     setFrameStyle(QFrame::NoFrame);
@@ -12,10 +12,12 @@ ClientSelectionWidget::ClientSelectionWidget(QWidget* parent) :
     connect(this, &QListWidget::itemActivated, this, &ClientSelectionWidget::dialogForItem);
 }
 
+ClientSelectionWidget::~ClientSelectionWidget() {}
+
 void ClientSelectionWidget::setObjects(QList<MapObject*> objects) {
     clearObjects();
     _displayClients = objects;
-    for(int i = 0; i < objects.size(); i++) {
+    for (int i = 0; i < objects.size(); i++) {
         addItem(objects[i]->toolTip());
     }
     setCurrentRow(0);
@@ -31,9 +33,11 @@ void ClientSelectionWidget::clearObjects() {
 }
 
 void ClientSelectionWidget::dialogForItem(QListWidgetItem* item) {
-    foreach(MapObject* m, _displayClients) {
-        if(item->text() == m->toolTip()) {
-            m->showDetailsDialog();
+    foreach (MapObject* m, _displayClients) {
+        if (item->text() == m->toolTip()) {
+            if (m->hasPrimaryAction()) {
+                m->primaryAction();
+            }
             close();
             return;
         }
@@ -41,7 +45,7 @@ void ClientSelectionWidget::dialogForItem(QListWidgetItem* item) {
 }
 
 void ClientSelectionWidget::focusOutEvent(QFocusEvent* event) {
-    if(event->reason() != Qt::MouseFocusReason) {
+    if (event->reason() != Qt::MouseFocusReason) {
         close();
     }
 }

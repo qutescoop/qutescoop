@@ -11,8 +11,8 @@
 // singleton instance
 ListClientsDialog* listClientsDialogInstance = 0;
 ListClientsDialog* ListClientsDialog::instance(bool createIfNoInstance, QWidget* parent) {
-    if(listClientsDialogInstance == 0 && createIfNoInstance) {
-        if(parent == 0) {
+    if (listClientsDialogInstance == 0 && createIfNoInstance) {
+        if (parent == 0) {
             parent = Window::instance();
         }
         listClientsDialogInstance = new ListClientsDialog(parent);
@@ -26,8 +26,8 @@ void ListClientsDialog::destroyInstance() {
     listClientsDialogInstance = 0;
 }
 
-ListClientsDialog::ListClientsDialog(QWidget* parent) :
-    QDialog(parent) {
+ListClientsDialog::ListClientsDialog(QWidget* parent)
+    : QDialog(parent) {
     setupUi(this);
     setWindowFlags(windowFlags() ^= Qt::WindowContextHelpButtonHint);
 
@@ -67,13 +67,13 @@ ListClientsDialog::ListClientsDialog(QWidget* parent) :
     QTimer::singleShot(100, this, SLOT(refresh())); // delayed insertion of clients to open the window now
 
     auto preferences = Settings::dialogPreferences(m_preferencesName);
-    if(!preferences.size.isNull()) {
+    if (!preferences.size.isNull()) {
         resize(preferences.size);
     }
-    if(!preferences.pos.isNull()) {
+    if (!preferences.pos.isNull()) {
         move(preferences.pos);
     }
-    if(!preferences.geometry.isNull()) {
+    if (!preferences.geometry.isNull()) {
         restoreGeometry(preferences.geometry);
     }
 }
@@ -85,15 +85,15 @@ void ListClientsDialog::refresh() {
     // Clients
     QHash<QString, int> serversConnected;
     QList<Client*> clients;
-    foreach(Pilot* p, data.pilots) {
+    foreach (Pilot* p, data.pilots) {
         clients << dynamic_cast<Client*> (p);
-        if(p != 0) {
+        if (p != 0) {
             serversConnected[p->server] = serversConnected.value(p->server, 0) + 1; // count clients
         }
     }
-    foreach(Controller* c, data.controllers) {
+    foreach (Controller* c, data.controllers) {
         clients << dynamic_cast<Client*> (c);
-        if(c != 0) {
+        if (c != 0) {
             serversConnected[c->server] = serversConnected.value(c->server, 0) + 1; // count clients
         }
     }
@@ -102,9 +102,9 @@ void ListClientsDialog::refresh() {
     // Servers
     serversTable->clearContents();
     serversTable->setRowCount(data.servers.size());
-    for(int row = 0; row < data.servers.size(); row++) {
-        for(int col = 0; col < serversTable->columnCount(); col++) {
-            switch(col) {
+    for (int row = 0; row < data.servers.size(); row++) {
+        for (int col = 0; col < serversTable->columnCount(); col++) {
+            switch (col) {
                 case 0: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][0]));
                     break; // ident
                 case 1: serversTable->setItem(row, col, new QTableWidgetItem(data.servers[row][1]));
@@ -170,13 +170,13 @@ void ListClientsDialog::performSearch() {
     QStringList tokens = editFilter->text()
         .replace(QRegExp("\\*"), ".*")
         .split(QRegExp("[ \\,]+"), Qt::SkipEmptyParts);
-    if(tokens.size() == 1) {
+    if (tokens.size() == 1) {
         regex = QRegExp("^" + tokens.first() + ".*", Qt::CaseInsensitive);
-    } else if(tokens.size() == 0) {
+    } else if (tokens.size() == 0) {
         regex = QRegExp("");
     } else {
         QString regExpStr = "^(" + tokens.first();
-        for(int i = 1; i < tokens.size(); i++) {
+        for (int i = 1; i < tokens.size(); i++) {
             regExpStr += "|" + tokens[i];
         }
         regExpStr += ".*)";
@@ -198,18 +198,18 @@ void ListClientsDialog::modelSelected(const QModelIndex& index) {
 
 void ListClientsDialog::pingReceived(QString server, int ms) {
     // Servers
-    for(int row = 0; row < serversTable->rowCount(); row++) {
-        if(serversTable->item(row, 1)->data(Qt::DisplayRole) == QVariant(server)) {
-            for(int col = 2; col < 5; col++) {
-                if(serversTable->item(row, col)->data(Qt::DisplayRole).isNull()) { // has no data
+    for (int row = 0; row < serversTable->rowCount(); row++) {
+        if (serversTable->item(row, 1)->data(Qt::DisplayRole) == QVariant(server)) {
+            for (int col = 2; col < 5; col++) {
+                if (serversTable->item(row, col)->data(Qt::DisplayRole).isNull()) { // has no data
                     serversTable->item(row, col)->setBackground(QBrush(mapPingToColor(ms)));
                     serversTable->item(row, col)->setData(Qt::DisplayRole, (ms == -1? QVariant("n/a"): QVariant(ms)));
 
                     pingNextFromStack();
 
                     int addForAverage = 0;
-                    for(int pingCol = 2; pingCol <= col; pingCol++) {
-                        if(serversTable->item(row, pingCol)->data(Qt::DisplayRole).toInt() == 0) {
+                    for (int pingCol = 2; pingCol <= col; pingCol++) {
+                        if (serversTable->item(row, pingCol)->data(Qt::DisplayRole).toInt() == 0) {
                             serversTable->item(row, 5)->setBackground(QBrush(mapPingToColor(-1)));
                             serversTable->item(row, 5)->setData(Qt::DisplayRole, QVariant("n/a"));
                             break;
@@ -228,9 +228,9 @@ void ListClientsDialog::pingReceived(QString server, int ms) {
 }
 
 void ListClientsDialog::on_pbPingServers_clicked() {
-    for(int row = 0; row < serversTable->rowCount(); row++) {
+    for (int row = 0; row < serversTable->rowCount(); row++) {
         // reset Ping columns
-        for(int col = 2; col < 6; col++) {
+        for (int col = 2; col < 6; col++) {
             serversTable->item(row, col)->setData(Qt::DisplayRole, QVariant());
             serversTable->item(row, col)->setBackground(QBrush());
         }
@@ -242,7 +242,7 @@ void ListClientsDialog::on_pbPingServers_clicked() {
 }
 
 void ListClientsDialog::pingNextFromStack() {
-    if(!_pingStack.empty()) {
+    if (!_pingStack.empty()) {
         Ping* ping = new Ping();
         connect(ping, &Ping::havePing, this, &ListClientsDialog::pingReceived);
         ping->startPing(_pingStack.pop());
@@ -253,7 +253,7 @@ QColor ListClientsDialog::mapPingToColor(int ms) {
 #define BEST 50 // ping in ms we consider best
 #define WORST 250
 
-    if(ms == -1) { // "n/a"
+    if (ms == -1) { // "n/a"
         return QColor(255, 0, 0, 70);
     }
 

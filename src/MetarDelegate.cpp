@@ -2,9 +2,8 @@
 
 #include <QApplication>
 
-void MetarDelegate::paint(QPainter* painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    if(!index.data().isValid()) {
+void MetarDelegate::paint(QPainter* painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    if (!index.data().isValid()) {
         return;
     }
 
@@ -43,9 +42,8 @@ void MetarDelegate::paint(QPainter* painter, const QStyleOptionViewItem &option,
     painter->restore();
 }
 
-QSize MetarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
-{
-    if(!index.data().isValid()) {
+QSize MetarDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
+    if (!index.data().isValid()) {
         return QSize(0, 0);
     }
 

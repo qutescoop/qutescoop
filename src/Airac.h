@@ -5,7 +5,8 @@
 #include "NavAid.h"
 #include "Waypoint.h"
 
-class Airac: public QObject {
+class Airac
+    : public QObject {
     Q_OBJECT
     public:
         static Airac* instance(bool createIfNoInstance = true);

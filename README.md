@@ -4,12 +4,27 @@ QuteScoop is a status indicator for the online flight simulation community VATSI
 
 ![QuteScoop window](docs/images/window2.jpg)
 
-![APP controllers covering multiple airfields](docs/images/terminalControllersMultipleAirports.png)
+![Show relevant route parts](docs/images/relevantRouteParts.jpg)
+
+![APP controllers covering multiple airfields](docs/images/controllerMultipleAirports.jpg)
+
+![Airport label](docs/images/airportLabelHovered.jpg)
+![Sector label](docs/images/sectorLabelHovered.jpg)
+![Pilot label](docs/images/pilotLabel.jpg)
+![Pilot label](docs/images/pilotLabel2.jpg)
+![Navaid label](docs/images/navaidLabel.jpg)
+
+![Bookings dialog](docs/images/bookings.webp)
+
+![Airport details dialog](docs/images/airport.webp)
+
+![Plot routes](docs/images/plotRoute.jpg)
+
 
 [More screenshots](https://github.com/qutescoop/qutescoop/tree/master/docs/images)
 
-Its unique "Time Warp" feature lets you see booked controllers in the future or the traffic situation in the past.
-It can be used to produce videos [like this](https://www.youtube.com/watch?v=oiutpbNhVn4).
+Its unique "Time Warp" feature lets you see booked controllers and the traffic
+situation in the past or future on the map.
 
 
 ## Resources

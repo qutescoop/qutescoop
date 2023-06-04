@@ -4,15 +4,46 @@
 #include <math.h>
 #include <QList>
 #include <QPair>
+#include <QColor>
+#include <QPalette>
 
 // typedefs: needed to get the QPair template running inside foreach's
 typedef QPair<double, double> DoublePair;
 
 class Helpers {
     public:
+        static QStringList linesFilteredTrimmed(const QString &str) {
+            QStringList ret;
+
+            foreach (const auto line, str.split("\n")) {
+                const auto lineTrimmed = line.trimmed();
+                if (!lineTrimmed.isEmpty()) {
+                    ret << lineTrimmed;
+                }
+            }
+
+            return ret;
+        }
+
+        static QColor highLightColor(const QColor& c) {
+            QColor _c;
+            if (c.lightnessF() * c.alphaF() > .6) {
+                _c = c.darker(110);
+            } else {
+                _c = c.lighter(110);
+            }
+            _c.setAlpha(fmin(255, _c.alpha() * 1.3));
+            return _c;
+        }
+
+        static QColor shadowColorForBg(const QColor& c) {
+            QPalette palette(c);
+            return c.lightnessF() > .5? palette.dark().color(): palette.light().color();
+        }
+
         // modulo, but always positive, not like fmod()
         static float inline modPositive(float x, float y) {
-            if(qFuzzyIsNull(y)) {
+            if (qFuzzyIsNull(y)) {
                 return x;
             }
             return x - y * floor(x / y);
@@ -31,7 +62,7 @@ class Helpers {
          */
         static void adjustPoint(const DoublePair &a, DoublePair &b) {
             const double diff = a.second - b.second;
-            if(std::abs(diff) > 180) {
+            if (std::abs(diff) > 180) {
                 b.second += ((diff > 0) - (diff < 0)) * 360;
             }
         }
@@ -42,7 +73,7 @@ class Helpers {
         static DoublePair polygonCenter(const QList<DoublePair> points) {
             // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 
-            if(points.size() == 0) {
+            if (points.size() == 0) {
                 return DoublePair(-360., -360.);
             }
 
@@ -54,10 +85,10 @@ class Helpers {
             DoublePair previous = points[0];
 
             const int count = points.size();
-            for(int i = 0; i < count; ++i) {
+            for (int i = 0; i < count; ++i) {
                 DoublePair current = points[i];
                 DoublePair next = points[(i + 1) % count];
-                if(i > 0) {
+                if (i > 0) {
                     adjustPoint(previous, current);
                 }
                 adjustPoint(current, next);

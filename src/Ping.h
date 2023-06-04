@@ -3,7 +3,8 @@
 
 #include <QtCore>
 
-class Ping: public QObject {
+class Ping
+    : public QObject {
     Q_OBJECT
     public:
         void startPing(QString server);

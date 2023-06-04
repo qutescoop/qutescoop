@@ -2,6 +2,7 @@
 #define CONTROLLER_H_
 
 #include "Client.h"
+#include "MapObject.h"
 #include "Sector.h"
 #include "WhazzupData.h"
 
@@ -9,25 +10,39 @@
 
 class Airport;
 
-class Controller: public Client {
+class Controller
+    : public MapObject, public Client {
+    Q_OBJECT
     public:
+        static const QHash<QString, std::function<QString(Controller*)> > placeholders;
+        static const QRegularExpression cpdlcRegExp;
+
         Controller(const QJsonObject& json, const WhazzupData* whazzup);
+        virtual ~Controller();
 
-        virtual void showDetailsDialog();
+        virtual QString rank() const override;
+        virtual bool isFriend() const override;
+        virtual QString toolTip() const override;
+        virtual QString mapLabel() const override;
+        virtual QString mapLabelHovered() const override;
+        virtual QStringList mapLabelSecondaryLines() const override;
+        virtual QStringList mapLabelSecondaryLinesHovered() const override;
+        virtual QString livestreamString() const override;
+        virtual bool matches(const QRegExp& regex) const override;
+        virtual bool hasPrimaryAction() const override;
+        virtual void primaryAction() override;
 
-        QString facilityString() const;
-        QString toolTip() const;
+        void showDetailsDialog();
+
         QString toolTipShort() const;
-        QString mapLabel() const;
-        bool matches(const QRegExp& regex) const;
 
         bool isObserver() const;
         bool isATC() const;
-        QString rank() const;
 
         QStringList atcLabelTokens() const;
-
         QString controllerSectorName() const;
+
+        QString facilityString() const;
         bool isCtrFss() const;
         bool isAppDep() const;
         bool isTwr() const;
@@ -37,6 +52,8 @@ class Controller: public Client {
 
         QSet<Airport*> airports() const;
         QList<Airport*> airportsSorted() const;
+
+        const QString cpdlcString() const;
 
         QString frequency, atisMessage, atisCode;
         int facilityType, visualRange;

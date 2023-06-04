@@ -6,12 +6,13 @@
 #include "ClientDetails.h"
 #include "../Pilot.h"
 
-class PilotDetails: public ClientDetails, private Ui::PilotDetails {
+class PilotDetails
+    : public ClientDetails, private Ui::PilotDetails {
     Q_OBJECT
     public:
         static PilotDetails* instance(bool createIfNoInstance = true, QWidget* parent = 0);
         void destroyInstance();
-        virtual void refresh(Pilot* pilot = 0);
+        void refresh(Pilot* pilot = 0);
     protected:
         void closeEvent(QCloseEvent* event);
     private slots:

@@ -3,34 +3,28 @@
 
 #include "Route.h"
 
-class PlanFlightRoutesModel: public QAbstractTableModel {
+class PlanFlightRoutesModel
+    : public QAbstractTableModel {
     Q_OBJECT
 
     public:
-        PlanFlightRoutesModel(QObject* parent = 0) : QAbstractTableModel(parent)
-        {}
+        PlanFlightRoutesModel(QObject* parent = 0);
 
-        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const {
-            Q_UNUSED(parent);
-            return _routes.count();
-        }
-        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const {
-            Q_UNUSED(parent);
-            return 8;
-        }
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
         virtual QVariant headerData(
-        int section, Qt::Orientation orientation,
-        int role = Qt::DisplayRole
-        ) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+            int section,
+            Qt::Orientation orientation,
+            int role = Qt::DisplayRole
+        ) const override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     public slots:
         void setClients(const QList<Route*>& routes);
-    //    void modelSelected(const QModelIndex& index);
 
     private:
         QList<Route*> _routes;

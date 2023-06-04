@@ -7,12 +7,12 @@
 #include "../SearchResultModel.h"
 #include "../MetarModel.h"
 
-class Window: public QMainWindow, public Ui::Window {
+class Window
+    : public QMainWindow, public Ui::Window {
     Q_OBJECT
     public:
         static Window* instance(bool createIfNoInstance = true);
         void setEnableBookedAtc(bool enable);
-        void shootScreenshot();
         MapScreen* mapScreen;
     public slots:
         void refreshFriends();
@@ -22,6 +22,7 @@ class Window: public QMainWindow, public Ui::Window {
         void restored();
     private slots:
         void actionShowRoutes_triggered(bool checked, bool showStatus = true);
+        void actionShowImmediateRoutes_triggered(bool checked, bool showStatus = true);
         void on_actionShowWaypoints_triggered(bool checked);
         void on_actionHighlight_Friends_triggered(bool checked);
         void on_pb_highlightFriends_toggled(bool checked);
@@ -78,7 +79,7 @@ class Window: public QMainWindow, public Ui::Window {
         void friendClicked(const QModelIndex& index);
         void downloadWatchdogTriggered();
     protected:
-        virtual void closeEvent(QCloseEvent* event);
+        virtual void closeEvent(QCloseEvent* event) override;
     private:
         // singleton
         Window(QWidget* parent = 0);

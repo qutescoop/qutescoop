@@ -3,7 +3,8 @@
 
 #include "ui_PreferencesDialog.h"
 
-class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
+class PreferencesDialog
+    : public QDialog, public Ui::PreferencesDialog {
     Q_OBJECT
     public:
         static PreferencesDialog* instance(bool createIfNoInstance = true, QWidget* parent = 0);
@@ -19,15 +20,12 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_pbImportFromFile_clicked();
 
         // UI slots:
-        void on_cbShootScreenshots_toggled(bool checked);
-        void on_cbScreenshotFormat_currentIndexChanged(QString value);
-        void on_cbScreenshotMethod_currentIndexChanged(int index);
         void on_glTextures_toggled(bool checked);
-        void on_glTextureEarth_currentIndexChanged(QString );
+        void on_glTextureEarth_currentIndexChanged(QString);
         void on_glStippleLines_toggled(bool checked);
         void on_glEarthShininess_valueChanged(int value);
         void on_glLights_valueChanged(int value);
-        void on_sbEarthGridEach_valueChanged(int );
+        void on_sbEarthGridEach_valueChanged(int);
         void on_cbBlend_toggled(bool checked);
         void on_glLightsSpread_valueChanged(int value);
         void on_pbSpecularLightColor_clicked();
@@ -37,7 +35,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_pbStylesheetUpdate_clicked();
         void on_pbStylesheetExample2_clicked();
         void on_pbStylesheetExample1_clicked();
-        void on_cbShowFixes_toggled(bool checked);
         void on_spinBoxDownloadInterval_valueChanged(int value);
         void on_cbDownloadPeriodically_stateChanged(int state);
         void on_cbDownloadOnStartup_stateChanged(int state);
@@ -48,16 +45,15 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_sbBookingsInterval_valueChanged(int value);
         void on_cbBookingsPeriodically_toggled(bool checked);
         void on_cbSaveWhazzupData_stateChanged(int state);
-        void on_groupBoxProxy_toggled(bool );
+        void on_groupBoxProxy_toggled(bool);
         void on_editProxyServer_editingFinished();
         void on_editProxyPort_editingFinished();
         void on_editProxyUser_editingFinished();
         void on_editProxyPassword_editingFinished();
-        void on_buttonResetAirportTraffic_clicked();
         void on_cbFilterTraffic_stateChanged(int state);
         void on_spFilterDistance_valueChanged(int value);
         void on_spFilterArriving_valueChanged(double value);
-        void on_sbCongestionMinimum_valueChanged(int );
+        void on_sbCongestionMinimum_valueChanged(int);
         void on_sbCongestionBorderLineStrength_valueChanged(double value);
         void on_pbCongestionBorderLineColor_clicked();
         void on_cbShowCongestion_clicked(bool checked);
@@ -67,7 +63,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_editNavdir_editingFinished();
         void on_browseNavdirButton_clicked();
         void on_cbUseNavDatabase_stateChanged(int state);
-        void on_buttonResetEarthSpace_clicked();
         void on_pbBackgroundColor_clicked();
         void on_pbGlobeColor_clicked();
         void on_pbGridLineColor_clicked();
@@ -76,7 +71,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_sbCoastLineStrength_valueChanged(double value);
         void on_pbCountryLineColor_clicked();
         void on_sbCountryLineStrength_valueChanged(double value);
-        void on_buttonResetFir_clicked();
         void on_pbFirBorderLineColor_clicked();
         void on_sbFirBorderLineStrength_valueChanged(double value);
         void on_pbFirFontColor_clicked();
@@ -103,7 +97,6 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_pbInactAirportFont_clicked();
         void on_pbInactAirportFontColor_clicked();
         void on_applyAirports_clicked();
-        void on_buttonResetPilot_clicked();
         void on_applyPilots_clicked();
         void on_pbPilotFontColor_clicked();
         void on_pbPilotFont_clicked();
@@ -121,17 +114,47 @@ class PreferencesDialog: public QDialog, public Ui::PreferencesDialog {
         void on_waypointsFont_clicked();
         void on_waypointsFontColor_clicked();
         void on_waypointsDotColor_clicked();
-        void on_waypointsDotSize_valueChanged(double );
+        void on_waypointsDotSize_valueChanged(double);
         void on_cbCheckForUpdates_stateChanged(int state);
-        void on_cbSendVersionInfo_stateChanged(int state);
         void on_pbWheelCalibrate_clicked();
-        void on_sbZoomFactor_valueChanged(double );
+        void on_sbZoomFactor_valueChanged(double);
         void on_cb_Animation_stateChanged(int state);
         void on_sb_highlightFriendsLineWidth_valueChanged(double value);
         void on_pb_highlightFriendsColor_clicked();
         void on_useSelectionRectangle_toggled(bool checked);
-        void on_cbSimpleLabels_toggled(bool checked);
         void on_cbRememberMapPositionOnClose_toggled(bool checked);
+        void on_pbPilotFontSecondaryColor_clicked();
+        void on_pbPilotFontSecondary_clicked();
+        void on_plainTextEditPilotSecondaryContent_textChanged();
+        void on_plainTextEditPilotSecondaryContentHovered_textChanged();
+        void on_lineEditPilotPrimaryContent_editingFinished();
+        void on_lineEditPilotPrimaryContentHovered_editingFinished();
+        void on_applyAirports_2_clicked();
+        void on_lineEditAirportPrimaryContent_editingFinished();
+        void on_lineEditAirportPrimaryContentHovered_editingFinished();
+        void on_pbAirportFontSecondaryColor_clicked();
+        void on_pbAirportFontSecondary_clicked();
+        void on_plainTextEditAirportSecondaryContentHovered_textChanged();
+        void on_plainTextEditAirportSecondaryContent_textChanged();
+        void on_pbLabelHoveredBgColor_clicked();
+        void on_applyLabelHover_clicked();
+        void on_pbLabelHoveredBgDarkColor_clicked();
+        void on_pbFirApply_clicked();
+        void on_lineEditFirPrimaryContent_editingFinished();
+        void on_lineEditFirPrimaryContentHovered_editingFinished();
+        void on_plainTextEditFirSecondaryContent_textChanged();
+        void on_plainTextEditFirSecondaryContentHovered_textChanged();
+        void on_pbFirFontSecondaryColor_clicked();
+        void on_pbFirFontSecondary_clicked();
+        void on_pbDelBorderLineColor_clicked();
+        void on_pbDelFillColor_clicked();
+        void on_sbDelBorderLineStrength_valueChanged(double arg1);
+        void on_pbTwrBorderLineColor_clicked();
+        void on_sbTwrBorderLineStrength_valueChanged(double arg1);
+        void on_pbDestImmediateLineColor_clicked();
+        void on_sbDestImmediateLineStrength_valueChanged(double arg1);
+        void on_sbDestImmediateDuration_valueChanged(int arg1);
+        void on_applyPilotsRoute_clicked();
 
     private:
         PreferencesDialog(QWidget* parent);

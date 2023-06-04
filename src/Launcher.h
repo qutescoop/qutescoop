@@ -6,7 +6,8 @@
 #include <QtGui>
 #include <QtNetwork>
 
-class Launcher: public QWidget {
+class Launcher
+    : public QWidget {
     Q_OBJECT
     public:
         static Launcher* instance(bool createIfNoInstance = true);
@@ -24,7 +25,7 @@ class Launcher: public QWidget {
         void loadNavdata();
     private:
         Launcher(QWidget* parent = 0);
-        ~Launcher();
+        virtual ~Launcher();
         QPixmap _map;
         QLabel* _image, * _text;
         QProgressBar* _progress;

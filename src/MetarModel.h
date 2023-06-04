@@ -5,20 +5,22 @@
 
 #include <QtNetwork>
 
-class MetarModel: public QAbstractListModel {
+class MetarModel
+    : public QAbstractListModel {
     Q_OBJECT
 
     public:
         MetarModel(QObject* parent = 0);
 
-        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+        virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
         virtual QVariant headerData(
-        int section, Qt::Orientation orientation,
-        int role = Qt::DisplayRole
-        ) const;
+            int section,
+            Qt::Orientation orientation,
+            int role = Qt::DisplayRole
+        ) const override;
 
     signals:
         void gotMetar(const QString &icao, const QString &encoded, const QString &decoded);

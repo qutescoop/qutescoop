@@ -1,45 +1,58 @@
+#include "GuiMessage.h"
 #include "JobList.h"
 
-JobList::JobList(QObject* parent) :
-    QObject(parent) {}
+JobList::JobList(QObject* parent)
+    : QObject(parent) {}
 
 void JobList::append(JobList::Job job) {
-    jobs.append(job);
+    m_jobs.append(job);
 }
 
 void JobList::start() {
-    // qDebug() << "JobList::start()";
-    for(int i = 0; i < jobs.size(); i++) {
-        if(i + 1 < jobs.size()) {
-            // qDebug() << "JobList::start() connecting" << jobs[i].obj << jobs[i].finishSignal
-            //         << ">>" << jobs[i + 1].obj << jobs[i + 1].start;
-            jobs[i + 1].obj->connect(
-                jobs[i].obj, jobs[i].finishSignal,
-                jobs[i + 1].start
+    for (int i = 0; i < m_jobs.size(); i++) {
+        connect(
+            m_jobs[i].obj,
+            m_jobs[i].finishSignal,
+            this,
+            SLOT(advanceProgress())
+        );
+
+        if (i + 1 < m_jobs.size()) {
+            m_jobs[i + 1].obj->connect(
+                m_jobs[i].obj,
+                m_jobs[i].finishSignal,
+                m_jobs[i + 1].start
             );
         } else {
-            // qDebug() << "JobList::start() connecting" << jobs[i].obj << jobs[i].finishSignal
-            //         << ">>" << this << SLOT(finish());
             connect(
-                jobs[i].obj, jobs[i].finishSignal,
+                m_jobs[i].obj,
+                m_jobs[i].finishSignal,
+                this,
                 SLOT(finish())
             );
         }
     }
-    if(jobs.isEmpty()) {
+    if (m_jobs.isEmpty()) {
         connect(this, &JobList::started, this, &JobList::finish);
     } else {
-        jobs[0].obj->connect(this, SIGNAL(started()), jobs[0].start);
-        //jobs[0].obj->metaObject()->invokeMethod(jobs[0].obj, jobs[0].start);
+        m_jobs[0].obj->connect(this, SIGNAL(started()), m_jobs[0].start);
     }
-    // qDebug() << "JobList::start() -- finished. Jobs are started.";
+
+    GuiMessages::progress("joblist", m_progress, 100);
     emit started();
 }
 
+void JobList::advanceProgress() {
+    if (m_jobs.isEmpty()) {
+        return;
+    }
+    m_progress += 100. / m_jobs.size();
+    GuiMessages::progress("joblist", m_progress, 100);
+}
+
 void JobList::finish() {
-    // qDebug() << "JobList::finish() emitting finished()";
     emit finished();
 }
 
-JobList::Job::Job(QObject* obj, const char* start, const char* finishSignal) :
-    obj(obj), start(start), finishSignal(finishSignal) {}
+JobList::Job::Job(QObject* obj, const char* start, const char* finishSignal)
+    : obj(obj), start(start), finishSignal(finishSignal) {}

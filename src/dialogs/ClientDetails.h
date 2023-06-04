@@ -8,7 +8,8 @@
 class Client;
 class MapObject;
 
-class ClientDetails: public QDialog {
+class ClientDetails
+    : public QDialog {
     Q_OBJECT
 
     public slots:

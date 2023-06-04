@@ -18,7 +18,8 @@
 
 #include <QPoint>
 
-class GLWidget: public QGLWidget {
+class GLWidget
+    : public QGLWidget {
     Q_OBJECT
     public:
         GLWidget(QGLFormat format, QWidget* parent = 0);
@@ -26,17 +27,16 @@ class GLWidget: public QGLWidget {
 
         QPair<double, double> currentPosition() const;
         ClientSelectionWidget* clientSelection;
-        void invalidatePilots() {
-            m_isPilotsDirty = true; update();
-        }
-        void invalidateAirports() {
-            m_isAirportsDirty = true; update();
-        }
-        void invalidateControllers() {
-            m_isControllersDirty = true; update();
-        }
+        void invalidatePilots();
+        void invalidateAirports();
+        void invalidateControllers();
         void setStaticSectors(QList<Sector*>);
         void savePosition();
+
+        struct FontRectangle {
+            QRectF rect = QRectF();
+            MapObject* object = 0;
+        };
     public slots:
         virtual void initializeGL() override;
         void newWhazzupData(bool isNew); // could be solved more elegantly, but it gets called for
@@ -48,7 +48,7 @@ class GLWidget: public QGLWidget {
         void zoomTo(double _zoom);
 
         void rememberPosition(int nr);
-        void restorePosition(int nr);
+        void restorePosition(int nr, bool isSilent = false);
 
         void showInactiveAirports(bool value);
 
@@ -58,9 +58,7 @@ class GLWidget: public QGLWidget {
     protected:
         virtual void paintGL() override;
         virtual void resizeGL(int width, int height) override;
-
-        // Return a list of all clients at given lat/lon, within radius miles, distance-ordered
-        QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
+        QSet<MapObject*> objectsAt(int x, int y, double radius = 0) const;
 
         void mouseDoubleClickEvent(QMouseEvent* event) override;
         void mousePressEvent(QMouseEvent* event) override;
@@ -71,12 +69,12 @@ class GLWidget: public QGLWidget {
     private:
         void resetZoom();
         void handleRotation(QMouseEvent* event);
-        bool isOnGlobe(int x, int y) const;
-        bool mouse2latlon(int x, int y, double &lat, double &lon) const;
-        bool isPointVisible(double lat, double lon, int* px = 0, int* py = 0) const;
+        bool local2latLon(int x, int y, double &lat, double &lon) const;
+        bool latLon2local(double lat, double lon, int* px = 0, int* py = 0) const;
 
         void drawSelectionRectangle();
         void drawCoordinateAxii() const;
+        void drawCoordinateAxiiCurrentMatrix() const;
 
         const QPair<double, double> sunZenith(const QDateTime &dt) const;
 
@@ -87,53 +85,74 @@ class GLWidget: public QGLWidget {
         void createStaticSectorLists();
         void createHoveredControllersLists(QSet<Controller*> controllers);
 
-        void renderLabels();
-        void renderLabels(
-        const QList<MapObject*>& objects, const QFont& font,
-        const double zoomTreshold, QColor color, QColor bgColor = QColor()
-        );
-        void renderLabelsSimple(
-        const QList<MapObject*>& objects, const QFont& font,
-        const double zoomTreshold, QColor color, QColor bgColor = QColor()
-        );
-        void renderLabelsComplex(
-        const QList<MapObject*>& objects, const QFont& font,
-        const double zoomTreshold, QColor color, QColor bgColor = QColor()
-        );
-
         void parseTexture();
         void createLights();
 
         void createFriendHighlighter();
 
-        class FontRectangle {
-            public:
-                FontRectangle(QRectF rectangle, MapObject* mapObject) :
-                    rect(rectangle), object(mapObject) {}
-                QRectF rect;
-                MapObject* object;
-        };
-        bool shouldDrawLabel(const QRectF &rect);
-
         QList<Sector*> m_staticSectors;
-        QSet<FontRectangle*> _fontRectangles, _allFontRectangles;
+        QSet<FontRectangle> m_fontRectangles;
         QPoint _lastPos, _mouseDownPos;
         bool _mapMoving, _mapZooming, _mapRectSelecting, _lightsGenerated;
-        bool m_isPilotsDirty = true, m_isAirportsDirty = true, m_isControllersDirty = true, m_isStaticSectorsDirty = true;
+        bool m_isPilotsListDirty = true, m_isAirportsListDirty = true, m_isControllerListsDirty = true, m_isStaticSectorListsDirty = true,
+            m_isAirportsMapObjectsDirty = true, m_isControllerMapObjectsDirty = true, m_isPilotMapObjectsDirty = true, m_isUsedWaypointMapObjectsDirty = true;
         GLUquadricObj* _earthQuad;
-        GLuint _earthTex,
+        GLuint _earthTex, _immediateRouteTex,
             _earthList, _coastlinesList, _countriesList, _gridlinesList,
             _pilotsList, _activeAirportsList, _inactiveAirportsList,
-            _fixesList, _usedWaypointsList, _plannedRouteList,
+            _usedWaypointsList, _plannedRouteList,
             _sectorPolygonsList, _sectorPolygonBorderLinesList, _congestionsList,
             _staticSectorPolygonsList, _staticSectorPolygonBorderLinesList,
             _hoveredSectorPolygonsList, _hoveredSectorPolygonBorderLinesList;
-        QSet<Controller*> _hoveredControllers;
+        QSet<Controller*> m_hoveredControllers;
         double _pilotLabelZoomTreshold, _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
-            _controllerLabelZoomTreshold, _allWaypointsLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
+            _controllerLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
             _xRot, _yRot, _zRot, _zoom, _aspectRatio;
         QTimer* _highlighter;
         QList< QPair<double, double> > m_friendPositions;
+        QSet<MapObject*> m_hoveredObjects;
+        QList<MapObject*> m_activeAirportMapObjects, m_inactiveAirportMapObjects, m_controllerMapObjects, m_pilotMapObjects,
+            m_usedWaypointMapObjects;
+
+        void renderLabels();
+        void renderLabels(
+            const QList<MapObject*>& objects,
+            const double zoomTreshold,
+            const QFont& font,
+            const QColor color,
+            const QFont& secondaryFont = QFont(),
+            const QColor secondaryColor = QColor(),
+            const bool isFastBail = false,
+            const int tryNOtherPositions = 3,
+            const bool isHoverRenderPass = false
+        );
+        bool shouldDrawLabel(const QRectF &rect);
+        struct RenderLabelsCommand {
+            QList<MapObject*> objects;
+            double zoomTreshold;
+            QFont font;
+            QColor color;
+            QFont secondaryFont;
+            QColor secondaryColor;
+            bool ignoreForStablePositions;
+            int tryOtherPositions;
+        };
+        QList<RenderLabelsCommand> m_prioritizedLabels;
+
+        void drawTestTextures();
+        void drawBillboardScreenSize(GLfloat lat, GLfloat lon, const QSize& size);
+        void drawBillboardWorldSize(GLfloat lat, GLfloat lon, const QSizeF& size);
+        inline void drawBillboard(GLfloat lat, GLfloat lon, GLfloat halfWidth, GLfloat halfHeight, GLfloat alpha = 1.);
+        void orthoMatrix(GLfloat lat, GLfloat lon);
 };
 
-#endif /*GLWIDGET_H_*/
+inline bool operator==(const GLWidget::FontRectangle &e1, const GLWidget::FontRectangle &e2) {
+    return e1.object == e2.object
+        && e1.rect == e2.rect;
+}
+
+inline uint qHash(const GLWidget::FontRectangle &key, uint seed) {
+    return qHash(key.object, seed);
+}
+
+#endif
