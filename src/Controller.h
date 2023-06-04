@@ -44,6 +44,7 @@ class Controller
 
         QString facilityString() const;
         QString typeString() const;
+
         bool isCtrFss() const;
         bool isAppDep() const;
         bool isTwr() const;

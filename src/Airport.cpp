@@ -137,8 +137,8 @@ void Airport::resetWhazzupStatus() {
     arrivals.clear();
     departures.clear();
 
-    numFilteredArrivals = 0;
-    numFilteredDepartures = 0;
+    nMaybeFilteredArrivals = 0;
+    nMaybeFilteredDepartures = 0;
 }
 
 void Airport::addArrival(Pilot* client) {
@@ -152,7 +152,7 @@ void Airport::addDeparture(Pilot* client) {
 }
 
 uint Airport::congestion() const {
-    return numFilteredArrivals + numFilteredDepartures;
+    return nMaybeFilteredArrivals + nMaybeFilteredDepartures;
 }
 
 void Airport::addController(Controller* c) {
@@ -315,8 +315,8 @@ const QString Airport::trafficFilteredString() const {
     }
 
     return QString("%1/%2").arg(
-        numFilteredArrivals? QString::number(numFilteredArrivals): "-",
-        numFilteredDepartures? QString::number(numFilteredDepartures): "-"
+        nMaybeFilteredArrivals > 0? QString::number(nMaybeFilteredArrivals): "-",
+        nMaybeFilteredDepartures > 0? QString::number(nMaybeFilteredDepartures): "-"
     );
 }
 

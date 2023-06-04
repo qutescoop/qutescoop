@@ -298,7 +298,8 @@ void GLWidget::createPilotsList() {
 
             QList<DoublePair> points; // these are the points that really get drawn
 
-            if (p->showDepLine() && !qFuzzyIsNull(Settings::depLineStrength())) { // Dep -> plane
+            // Dep -> plane
+            if (p->showDepLine() && !qFuzzyIsNull(Settings::depLineStrength()) && !Settings::onlyShowImmediateRoutePart()) {
                 for (int i = 0; i < next; i++) {
                     if (!m_usedWaypointMapObjects.contains(waypoints[i])) {
                         m_usedWaypointMapObjects.append(waypoints[i]);
@@ -324,7 +325,8 @@ void GLWidget::createPilotsList() {
 
             points.append(DoublePair(p->lat, p->lon));
 
-            if (p->showDestLine() && next < waypoints.size()) { // plane -> Dest
+            // plane -> Dest
+            if (p->showDestLine() && next < waypoints.size()) {
                 // immediate
                 auto destImmediateNm = p->groundspeed * (Settings::destImmediateDurationMin() / 60.);
 
@@ -525,32 +527,95 @@ void GLWidget::createAirportsList() {
     }
     glNewList(_congestionsList, GL_COMPILE);
     if (Settings::showAirportCongestion()) {
-        qglColor(Settings::airportCongestionBorderLineColor());
-        glLineWidth(Settings::airportCongestionBorderLineStrength());
-        for (int i = 0; i < airportList.size(); i++) {
-            if (airportList[i] == 0) {
+        glPushAttrib(GL_ENABLE_BIT);
+        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        glEnable(GL_TEXTURE_1D);
+        glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
+        foreach (const Airport* a, airportList) {
+            Q_ASSERT(a != 0);
+            if (!a->active) {
                 continue;
             }
-            if (!airportList[i]->active) {
+            int congestion = a->congestion();
+            if (congestion < Settings::airportCongestionMovementsMin()) {
                 continue;
             }
-            int congestion = airportList[i]->congestion();
-            if (congestion < Settings::airportCongestionMinimum()) {
+            const GLdouble circle_distort = qCos(a->lat * Pi180);
+            if (qFuzzyIsNull(circle_distort)) {
                 continue;
             }
-            GLdouble circle_distort = qCos(airportList[i]->lat * Pi180);
+
+            const float fraction = qMin<float>(
+                1.,
+                Helpers::fraction(
+                    Settings::airportCongestionMovementsMin(),
+                    Settings::airportCongestionMovementsMax(),
+                    a->congestion()
+                )
+            );
+            const GLfloat distanceNm = Helpers::lerp(
+                Settings::airportCongestionRadiusMin(),
+                Settings::airportCongestionRadiusMax(),
+                fraction
+            );
             QList<QPair<double, double> > points;
             for (int h = 0; h <= 360; h += 6) {
-                double x = airportList[i]->lat + Nm2Deg(congestion * 5) * circle_distort * qCos(h * Pi180);
-                double y = airportList[i]->lon + Nm2Deg(congestion * 5) * qSin(h * Pi180);
+                double x = a->lat + Nm2Deg(distanceNm) * qCos(h * Pi180);
+                double y = a->lon + Nm2Deg(distanceNm) / circle_distort * qSin(h * Pi180);
                 points.append(QPair<double, double>(x, y));
             }
-            glBegin(GL_LINE_LOOP);
-            for (int h = 0; h < points.size(); h++) {
-                VERTEX(points[h].first, points[h].second);
+            qglColor(
+                Helpers::mixColor(
+                    Settings::airportCongestionColorMin(),
+                    Settings::airportCongestionColorMax(),
+                    fraction
+                )
+            );
+            if (Settings::showAirportCongestionGlow()) {
+                glBegin(GL_TRIANGLE_FAN);
+                glTexCoord1f(0.);
+                VERTEX(a->lat, a->lon);
+                for (int h = 0; h < points.size(); h++) {
+                    glTexCoord1f(1.);
+                    VERTEX(points[h].first, points[h].second);
+                }
+                glEnd();
             }
-            glEnd();
+            if (Settings::showAirportCongestionRing()) {
+                glLineWidth(
+                    Helpers::lerp(
+                        Settings::airportCongestionBorderLineStrengthMin(),
+                        Settings::airportCongestionBorderLineStrengthMax(),
+                        fraction
+                    )
+                );
+                glBegin(GL_LINE_LOOP);
+                for (int h = 0; h < points.size(); h++) {
+                    glTexCoord1f(0.);
+                    VERTEX(points[h].first, points[h].second);
+                }
+                glEnd();
+
+                // or as a Torus:
+                if (false) {
+                    glBegin(GL_TRIANGLE_STRIP);
+                    for (int h = 0; h <= 360; h += 6) {
+                        glTexCoord1f(-1.);
+                        VERTEX(
+                            a->lat + Nm2Deg(distanceNm) * qCos(h * Pi180),
+                            a->lon + Nm2Deg(distanceNm) / circle_distort * qSin(h * Pi180)
+                        );
+                        glTexCoord1f(1.);
+                        VERTEX(
+                            a->lat + Nm2Deg(distanceNm * 2) * qCos(h * Pi180),
+                            a->lon + Nm2Deg(distanceNm * 2) / circle_distort * qSin(h * Pi180)
+                        );
+                    }
+                    glEnd();
+                }
+            }
         }
+        glPopAttrib();
     }
     glEndList();
     qDebug() << "-- finished";
@@ -695,7 +760,7 @@ void GLWidget::createStaticLists() {
     if (_immediateRouteTex == 0) {
         glGenTextures(1, &_immediateRouteTex);
         glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
-        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         const char components = 4;
@@ -1125,6 +1190,11 @@ void GLWidget::paintGL() {
     glCallList(_coastlinesList);
     glCallList(_countriesList);
     glCallList(_gridlinesList);
+
+    if (Settings::showAirportCongestion()) {
+        glCallList(_congestionsList);
+    }
+
     if (Settings::showUsedWaypoints() && _zoom < _usedWaypointsLabelZoomThreshold * .1) {
         glCallList(_usedWaypointsList);
     }
@@ -1178,10 +1248,6 @@ void GLWidget::paintGL() {
         }
     }
 
-
-    if (Settings::showAirportCongestion()) {
-        glCallList(_congestionsList);
-    }
     glCallList(_activeAirportsList);
     if (Settings::showInactiveAirports() && (_zoom < _inactiveAirportLabelZoomTreshold * .7)) {
         glCallList(_inactiveAirportsList);

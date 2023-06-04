@@ -41,6 +41,15 @@ class Helpers {
             return c.lightnessF() > .5? palette.dark().color(): palette.light().color();
         }
 
+        static QColor mixColor (const QColor& c1, const QColor& c2, float fraction) {
+            return QColor(
+                Helpers::lerp(c1.red(), c2.red(), fraction),
+                Helpers::lerp(c1.green(), c2.green(), fraction),
+                Helpers::lerp(c1.blue(), c2.blue(), fraction),
+                Helpers::lerp(c1.alpha(), c2.alpha(), fraction)
+            );
+        };
+
         // modulo, but always positive, not like fmod()
         static float inline modPositive(float x, float y) {
             if (qFuzzyIsNull(y)) {
@@ -51,6 +60,13 @@ class Helpers {
 
         static float inline lerp(float v0, float v1, float t) {
             return v0 + t * (v1 - v0);
+        }
+
+        static float fraction(float min, float max, float v) {
+            if (max == min) {
+                return 1.;
+            }
+            return (v - min) / (max - min);
         }
 
         /* At 180 the longitude wraps around to -180

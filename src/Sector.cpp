@@ -8,7 +8,8 @@ Sector::Sector() {}
 
 Sector::Sector(const QStringList &fields, const int debugControllerLineNumber, const int debugSectorLineNumber)
     : _debugControllerLineNumber(debugControllerLineNumber),
-      _debugSectorLineNumber(debugSectorLineNumber) {
+      _debugSectorLineNumber(debugSectorLineNumber),
+      _polygon(0), _borderline(0), _polygonHighlighted(0), _borderlineHighlighted(0) {
     // LSAZ:Zurich::::189[:CTR]
     if (fields.size() != 6 && fields.size() != 7) {
         QMessageLogger("firlist.dat", debugControllerLineNumber, QT_MESSAGELOG_FUNC).critical()
@@ -162,6 +163,7 @@ GLuint Sector::glBorderLine() {
 }
 
 GLuint Sector::glPolygonHighlighted() {
+    // we have crashes exactly at that NEXT line. - added a constructor initialization
     if (_polygonHighlighted == 0) {
         _polygonHighlighted = glGenLists(1);
         glNewList(_polygonHighlighted, GL_COMPILE);

@@ -75,12 +75,26 @@ class Settings {
 
         static bool showAirportCongestion();
         static void setAirportCongestion(bool v);
-        static int airportCongestionMinimum();
-        static void setAirportCongestionMinimum(int v);
-        static QColor airportCongestionBorderLineColor();
-        static void setAirportCongestionBorderLineColor(const QColor& color);
-        static double airportCongestionBorderLineStrength();
-        static void setAirportCongestionBorderLineStrength(double value);
+        static bool showAirportCongestionRing();
+        static void setAirportCongestionRing(bool v);
+        static bool showAirportCongestionGlow();
+        static void setAirportCongestionGlow(bool v);
+        static int airportCongestionMovementsMin();
+        static void setAirportCongestionMovementsMin(int v);
+        static int airportCongestionRadiusMin();
+        static void setAirportCongestionRadiusMin(int v);
+        static QColor airportCongestionColorMin();
+        static void setAirportCongestionColorMin(const QColor& color);
+        static double airportCongestionBorderLineStrengthMin();
+        static void setAirportCongestionBorderLineStrengthMin(double value);
+        static int airportCongestionMovementsMax();
+        static void setAirportCongestionMovementsMax(int v);
+        static int airportCongestionRadiusMax();
+        static void setAirportCongestionRadiusMax(int v);
+        static QColor airportCongestionColorMax();
+        static void setAirportCongestionColorMax(const QColor& color);
+        static double airportCongestionBorderLineStrengthMax();
+        static void setAirportCongestionBorderLineStrengthMax(double value);
 
         static int timelineSeconds();
         static void setTimelineSeconds(int value);

@@ -20,7 +20,6 @@ QuteScoop is a status indicator for the online flight simulation community VATSI
 
 ![Plot routes](docs/images/plotRoute.jpg)
 
-
 [More screenshots](https://github.com/qutescoop/qutescoop/tree/master/docs/images)
 
 Its unique "Time Warp" feature lets you see booked controllers and the traffic

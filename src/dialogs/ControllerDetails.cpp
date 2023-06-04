@@ -127,7 +127,6 @@ void ControllerDetails::refresh(Controller* newController) {
 
     gbInfo->setTitle(_controller->callsign.endsWith("_ATIS")? "ATIS": "Controller info");
 
-    // friends
     if (_controller->isFriend()) {
         buttonAddFriend->setText("remove &friend");
     } else {
