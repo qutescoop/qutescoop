@@ -131,7 +131,29 @@ void Settings::migrate(QSettings* settingsInstance) {
                     settingsInstance->value("download/interval", 1).value<int>() * 60
                 );
             }
-        }
+        },
+        {
+            7,
+            "Adding more congestion options",
+            [settingsInstance]() {
+                // QColor
+                QList<QPair<QString, QString> > fromTos = {
+                    { "airportTraffic/borderLineColor", "airportTraffic/congestionColorMin" },
+                    { "airportTraffic/minimumMovements", "airportTraffic/congestionMovementsMin" },
+                    { "airportTraffic/borderLineStrength", "airportTraffic/borderLineStrengthMin" },
+                };
+                foreach (const auto fromTo, fromTos) {
+                    if (settingsInstance->contains(fromTo.first)) {
+                        settingsInstance->setValue(
+                            fromTo.second,
+                            settingsInstance->value(fromTo.first)
+                        );
+                        qDebug() << "replaced" << fromTo.first << "with" << fromTo.second;
+                        settingsInstance->remove(fromTo.first);
+                    }
+                }
+            }
+        },
     };
 
     foreach (const auto &migration, migrations) {
@@ -1017,28 +1039,82 @@ void Settings::setAirportCongestion(bool value) {
     instance()->setValue("airportTraffic/showCongestion", value);
 }
 
-int Settings::airportCongestionMinimum() {
-    return instance()->value("airportTraffic/minimumMovements", 8).toInt();
+bool Settings::showAirportCongestionRing() {
+    return instance()->value("airportTraffic/showCongestionRing", false).toBool();
+}
+void Settings::setAirportCongestionRing(bool value) {
+    instance()->setValue("airportTraffic/showCongestionRing", value);
 }
 
-void Settings::setAirportCongestionMinimum(int value) {
-    instance()->setValue("airportTraffic/minimumMovements", value);
+bool Settings::showAirportCongestionGlow() {
+    return instance()->value("airportTraffic/showCongestionGlow", true).toBool();
+}
+void Settings::setAirportCongestionGlow(bool value) {
+    instance()->setValue("airportTraffic/showCongestionGlow", value);
 }
 
-QColor Settings::airportCongestionBorderLineColor() {
-    return instance()->value("airportTraffic/borderLineColor", QColor::fromRgb(255, 0, 127, 103)).value<QColor>();
+int Settings::airportCongestionMovementsMin() {
+    return instance()->value("airportTraffic/congestionMovementsMin", 10).toInt();
 }
 
-void Settings::setAirportCongestionBorderLineColor(const QColor& color) {
-    instance()->setValue("airportTraffic/borderLineColor", color);
+void Settings::setAirportCongestionMovementsMin(int value) {
+    instance()->setValue("airportTraffic/congestionMovementsMin", value);
 }
 
-double Settings::airportCongestionBorderLineStrength() {
-    return instance()->value("airportTraffic/borderLineStrength", 2).toDouble();
+int Settings::airportCongestionRadiusMin() {
+    return instance()->value("airportTraffic/congestionRadiusMin", 20).toInt();
 }
 
-void Settings::setAirportCongestionBorderLineStrength(double value) {
-    instance()->setValue("airportTraffic/borderLineStrength", value);
+void Settings::setAirportCongestionRadiusMin(int value) {
+    instance()->setValue("airportTraffic/congestionRadiusMin", value);
+}
+
+QColor Settings::airportCongestionColorMin() {
+    return instance()->value("airportTraffic/congestionColorMin", QColor::fromRgb(0, 255, 127, 40)).value<QColor>();
+}
+
+void Settings::setAirportCongestionColorMin(const QColor& color) {
+    instance()->setValue("airportTraffic/congestionColorMin", color);
+}
+
+double Settings::airportCongestionBorderLineStrengthMin() {
+    return instance()->value("airportTraffic/borderLineStrengthMin", 2).toDouble();
+}
+
+void Settings::setAirportCongestionBorderLineStrengthMin(double value) {
+    instance()->setValue("airportTraffic/borderLineStrengthMin", value);
+}
+
+int Settings::airportCongestionMovementsMax() {
+    return instance()->value("airportTraffic/congestionMovementsMax", 60).toInt();
+}
+
+void Settings::setAirportCongestionMovementsMax(int value) {
+    instance()->setValue("airportTraffic/congestionMovementsMax", value);
+}
+
+int Settings::airportCongestionRadiusMax() {
+    return instance()->value("airportTraffic/congestionRadiusMax", 100).toInt();
+}
+
+void Settings::setAirportCongestionRadiusMax(int value) {
+    instance()->setValue("airportTraffic/congestionRadiusMax", value);
+}
+
+QColor Settings::airportCongestionColorMax() {
+    return instance()->value("airportTraffic/congestionColorMax", QColor::fromRgb(85, 0, 127, 80)).value<QColor>();
+}
+
+void Settings::setAirportCongestionColorMax(const QColor& color) {
+    instance()->setValue("airportTraffic/congestionColorMax", color);
+}
+
+double Settings::airportCongestionBorderLineStrengthMax() {
+    return instance()->value("airportTraffic/borderLineStrengthMax", 6).toDouble();
+}
+
+void Settings::setAirportCongestionBorderLineStrengthMax(double value) {
+    instance()->setValue("airportTraffic/borderLineStrengthMax", value);
 }
 
 

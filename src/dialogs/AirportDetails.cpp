@@ -172,11 +172,11 @@ void AirportDetails::refresh(Airport* newAirport) {
     if (Settings::filterTraffic()) {
         groupBoxArrivals->setTitle(
             QString("Arrivals (%1 filtered, %2 total)").
-            arg(_airport->numFilteredArrivals).arg(_airport->arrivals.size())
+            arg(_airport->nMaybeFilteredArrivals).arg(_airport->arrivals.size())
         );
         groupBoxDepartures->setTitle(
             QString("Departures (%1 filtered, %2 total)").
-            arg(_airport->numFilteredDepartures).arg(_airport->departures.size())
+            arg(_airport->nMaybeFilteredDepartures).arg(_airport->departures.size())
         );
     } else {
         groupBoxArrivals->setTitle(QString("Arrivals (%1)").arg(_airport->arrivals.size()));

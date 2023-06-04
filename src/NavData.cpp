@@ -228,16 +228,17 @@ void NavData::updateData(const WhazzupData& whazzupData) {
         if (dep != 0) {
             dep->addDeparture(p);
             newActiveAirportsSet.insert(dep);
-            if (Settings::filterTraffic()) { // Airport traffic filtered
-                if (p->distanceFromDeparture() < Settings::filterDistance()) {
-                    dep->numFilteredDepartures++;
-                }
+            if (
+                !Settings::filterTraffic()
+                || (p->distanceFromDeparture() < Settings::filterDistance())
+            ) {
+                dep->nMaybeFilteredDepartures++;
             }
         } else if (p->flightStatus() == Pilot::BUSH) { // no flightplan yet?
             Airport* a = airportAt(p->lat, p->lon, 3.);
             if (a != 0) {
                 a->addDeparture(p);
-                a->numFilteredDepartures++;
+                a->nMaybeFilteredDepartures++;
                 newActiveAirportsSet.insert(a);
             }
         }
@@ -245,12 +246,15 @@ void NavData::updateData(const WhazzupData& whazzupData) {
         if (dest != 0) {
             dest->addArrival(p);
             newActiveAirportsSet.insert(dest);
-            if (Settings::filterTraffic()) { // Airport traffic filtered
-                if (
+            if (
+                !Settings::filterTraffic()
+                || (
                     (p->distanceToDestination() < Settings::filterDistance())
                     || (p->eet().hour() + p->eet().minute() / 60. < Settings::filterArriving())
-                ) {
-                    dest->numFilteredArrivals++;
+                )
+            ) {
+                if (p->flightStatus() != Pilot::FlightStatus::BLOCKED && p->flightStatus() != Pilot::FlightStatus::GROUND_ARR) {
+                    dest->nMaybeFilteredArrivals++;
                 }
             }
         }

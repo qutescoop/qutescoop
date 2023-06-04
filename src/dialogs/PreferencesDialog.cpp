@@ -34,6 +34,8 @@ PreferencesDialog::PreferencesDialog(QWidget* parent)
         restoreGeometry(preferences.geometry);
     }
 
+    tabs->setCurrentIndex(0);
+
     loadSettings();
 }
 
@@ -196,14 +198,22 @@ void PreferencesDialog::loadSettings() {
     cbFilterTraffic->setChecked(Settings::filterTraffic());
     spFilterDistance->setValue(Settings::filterDistance());
     spFilterArriving->setValue(Settings::filterArriving());
+
     cbShowCongestion->setChecked(Settings::showAirportCongestion());
-    sbCongestionBorderLineStrength->setValue(
-        Settings::airportCongestionBorderLineStrength()
-    );
-    color = Settings::airportCongestionBorderLineColor();
-    pbCongestionBorderLineColor->setText(color.name());
-    pbCongestionBorderLineColor->setPalette(QPalette(color));
-    sbCongestionMinimum->setValue(Settings::airportCongestionMinimum());
+    btnCongestionShowRing->setChecked(Settings::showAirportCongestionRing());
+    btnCongestionShowGlow->setChecked(Settings::showAirportCongestionGlow());
+    sbCongestionMovementsMin->setValue(Settings::airportCongestionMovementsMin());
+    sbCongestionRadiusMin->setValue(Settings::airportCongestionRadiusMin());
+    color = Settings::airportCongestionColorMin();
+    pbCongestionColorMin->setText(color.name());
+    pbCongestionColorMin->setPalette(QPalette(color));
+    sbCongestionBorderLineStrengthMin->setValue(Settings::airportCongestionBorderLineStrengthMin());
+    sbCongestionMovementsMax->setValue(Settings::airportCongestionMovementsMax());
+    sbCongestionRadiusMax->setValue(Settings::airportCongestionRadiusMax());
+    color = Settings::airportCongestionColorMax();
+    pbCongestionColorMax->setText(color.name());
+    pbCongestionColorMax->setPalette(QPalette(color));
+    sbCongestionBorderLineStrengthMax->setValue(Settings::airportCongestionBorderLineStrengthMax());
 
     // airport settings
     color = Settings::inactiveAirportFontColor();
@@ -407,11 +417,18 @@ void PreferencesDialog::on_spFilterArriving_valueChanged(double value) {
     Settings::setFilterArriving(value);
 }
 
-void PreferencesDialog::on_sbCongestionMinimum_valueChanged(int value) {
+void PreferencesDialog::on_sbCongestionMovementsMin_valueChanged(int value) {
     if (!_settingsLoaded) {
         return;
     }
-    Settings::setAirportCongestionMinimum(value);
+    Settings::setAirportCongestionMovementsMin(value);
+}
+
+void PreferencesDialog::on_sbCongestionMovementsMax_valueChanged(int value) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setAirportCongestionMovementsMax(value);
 }
 
 void PreferencesDialog::on_sbMaxTextLabels_valueChanged(int value) {
@@ -1070,23 +1087,42 @@ void PreferencesDialog::on_cbShowCongestion_clicked(bool checked) {
     Settings::setAirportCongestion(checked);
 }
 
-void PreferencesDialog::on_pbCongestionBorderLineColor_clicked() {
+void PreferencesDialog::on_pbCongestionColorMin_clicked() {
     QColor color = QColorDialog::getColor(
-        Settings::airportCongestionBorderLineColor(), this,
+        Settings::airportCongestionColorMin(), this,
         "Select color", QColorDialog::ShowAlphaChannel
     );
     if (color.isValid()) {
-        pbCongestionBorderLineColor->setText(color.name());
-        pbCongestionBorderLineColor->setPalette(QPalette(color));
-        Settings::setAirportCongestionBorderLineColor(color);
+        pbCongestionColorMin->setText(color.name());
+        pbCongestionColorMin->setPalette(QPalette(color));
+        Settings::setAirportCongestionColorMin(color);
     }
 }
 
-void PreferencesDialog::on_sbCongestionBorderLineStrength_valueChanged(double value) {
+void PreferencesDialog::on_pbCongestionColorMax_clicked() {
+    QColor color = QColorDialog::getColor(
+        Settings::airportCongestionColorMax(), this,
+        "Select color", QColorDialog::ShowAlphaChannel
+    );
+    if (color.isValid()) {
+        pbCongestionColorMax->setText(color.name());
+        pbCongestionColorMax->setPalette(QPalette(color));
+        Settings::setAirportCongestionColorMax(color);
+    }
+}
+
+void PreferencesDialog::on_sbCongestionBorderLineStrengthMin_valueChanged(double value) {
     if (!_settingsLoaded) {
         return;
     }
-    Settings::setAirportCongestionBorderLineStrength(value);
+    Settings::setAirportCongestionBorderLineStrengthMin(value);
+}
+
+void PreferencesDialog::on_sbCongestionBorderLineStrengthMax_valueChanged(double value) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setAirportCongestionBorderLineStrengthMax(value);
 }
 
 void PreferencesDialog::on_cbBlend_toggled(bool checked) {
@@ -1656,4 +1692,27 @@ void PreferencesDialog::on_applyPilotsRoute_clicked() {
         Window::instance()->mapScreen->glWidget->invalidatePilots();
         Window::instance()->mapScreen->glWidget->update();
     }
+}
+
+void PreferencesDialog::on_sbCongestionRadiusMin_valueChanged(int v) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setAirportCongestionRadiusMin(v);
+}
+
+void PreferencesDialog::on_sbCongestionRadiusMax_valueChanged(int v) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setAirportCongestionRadiusMax(v);
+}
+
+
+void PreferencesDialog::on_btnCongestionShowRing_toggled(bool checked) {
+    Settings::setAirportCongestionRing(checked);
+}
+
+void PreferencesDialog::on_btnCongestionShowGlow_toggled(bool checked) {
+    Settings::setAirportCongestionGlow(checked);
 }

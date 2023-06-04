@@ -64,7 +64,7 @@ class Airport
 
         void addArrival(Pilot* client);
         void addDeparture(Pilot* client);
-        uint numFilteredArrivals, numFilteredDepartures;
+        uint nMaybeFilteredArrivals, nMaybeFilteredDepartures;
 
         uint congestion() const;
 

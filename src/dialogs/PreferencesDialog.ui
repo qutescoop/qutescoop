@@ -2430,11 +2430,71 @@ at this aerodrome
        <item>
         <widget class="QGroupBox" name="groupBoxAirportTraffic">
          <property name="title">
-          <string>Traffic visualization</string>
+          <string>Traffic numbers</string>
          </property>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_32">
+          <item row="0" column="0">
            <layout class="QGridLayout" name="gridLayout_APtraffic">
+            <item row="1" column="5">
+             <widget class="QLabel" name="label_168">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>Changes require a network update to take effect.</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="cbFilterTraffic">
+              <property name="toolTip">
+               <string>This applies to the numbers shown beneath an airport on the map.</string>
+              </property>
+              <property name="text">
+               <string>count only planes </string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="1" column="3">
+             <widget class="QDoubleSpinBox" name="spFilterArriving">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="toolTip">
+               <string>This depends on the calculated ETA for each plane.</string>
+              </property>
+              <property name="prefix">
+               <string>&lt; </string>
+              </property>
+              <property name="suffix">
+               <string> hours</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+              <property name="value">
+               <double>1.000000000000000</double>
+              </property>
+             </widget>
+            </item>
             <item row="1" column="1">
              <widget class="QSpinBox" name="spFilterDistance">
               <property name="enabled">
@@ -2471,192 +2531,248 @@ or arriving in </string>
               </property>
              </widget>
             </item>
-            <item row="1" column="3">
-             <widget class="QDoubleSpinBox" name="spFilterArriving">
-              <property name="enabled">
-               <bool>false</bool>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_19">
+         <property name="title">
+          <string>Traffic visualization</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_31">
+          <item row="4" column="1">
+           <widget class="QSpinBox" name="sbCongestionMovementsMin">
+            <property name="suffix">
+             <string> movements</string>
+            </property>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0">
+           <widget class="QLabel" name="label_164">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;maximum size&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="7">
+           <widget class="QDoubleSpinBox" name="sbCongestionBorderLineStrengthMin">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High values might be restricted by your graphics hardware.&lt;/p&gt;&lt;p&gt;(GL_ALIASED_LINE_WIDTH_RANGE , GL_SMOOTH_LINE_WIDTH_RANGE)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="suffix">
+             <string> px</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="3">
+           <widget class="QSpinBox" name="sbCongestionRadiusMin">
+            <property name="suffix">
+             <string> NM</string>
+            </property>
+            <property name="maximum">
+             <number>999</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="0">
+           <widget class="QLabel" name="label_163">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;minimum&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QCheckBox" name="cbShowCongestion">
+            <property name="toolTip">
+             <string>Those 'congestion rings' shall give you a visual hint about the traffic an airports receives at the moment.</string>
+            </property>
+            <property name="text">
+             <string>show visualization</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="5">
+           <widget class="QPushButton" name="pbCongestionColorMin">
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>#c142ff</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="4" rowspan="2">
+           <widget class="QLabel" name="label_166">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;color&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="6" rowspan="2">
+           <widget class="QLabel" name="label_167">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;ring&lt;br/&gt;width&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" colspan="2">
+           <layout class="QHBoxLayout" name="horizontalLayout_17">
+            <item>
+             <widget class="QCheckBox" name="btnCongestionShowRing">
+              <property name="text">
+               <string>Show Ring</string>
               </property>
-              <property name="toolTip">
-               <string>This depends on the calculated ETA for each plane.</string>
+              <property name="checkable">
+               <bool>true</bool>
               </property>
-              <property name="prefix">
-               <string>&lt; </string>
-              </property>
-              <property name="suffix">
-               <string> hours</string>
-              </property>
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="singleStep">
-               <double>0.100000000000000</double>
-              </property>
-              <property name="value">
-               <double>1.000000000000000</double>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
-            <item row="1" column="4">
-             <spacer name="horizontalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="cbFilterTraffic">
-              <property name="toolTip">
-               <string>This applies to the numbers shown beneath an airport on the map.</string>
-              </property>
+            <item>
+             <widget class="QCheckBox" name="btnCongestionShowGlow">
               <property name="text">
-               <string>count only planes </string>
+               <string>Show Glow</string>
+              </property>
+              <property name="checkable">
+               <bool>true</bool>
+              </property>
+              <property name="checked">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_2">
-            <property name="horizontalSpacing">
-             <number>6</number>
+          <item row="6" column="0" colspan="8">
+           <widget class="QLabel" name="label_59">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
             </property>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="cbShowCongestion">
-              <property name="toolTip">
-               <string>Those 'congestion rings' shall give you a visual hint about the traffic an airports receives at the moment.</string>
-              </property>
-              <property name="text">
-               <string>show congestion ring for
-airports with at least</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1">
-             <widget class="QSpinBox" name="sbCongestionMinimum">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="toolTip">
-               <string>Taking into account the 'counting' above. That may mean: draw a congestion ring only if more than 5 planes are arriving in the next hour.</string>
-              </property>
-              <property name="suffix">
-               <string> movements</string>
-              </property>
-              <property name="minimum">
-               <number>1</number>
-              </property>
-              <property name="value">
-               <number>5</number>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="3">
-             <spacer name="horizontalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="1" column="2">
-             <widget class="QLabel" name="label_57">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>(applies the filter above)</string>
-              </property>
-              <property name="buddy">
-               <cstring>sbCongestionMinimum</cstring>
-              </property>
-             </widget>
-            </item>
-           </layout>
+            <property name="text">
+             <string>Visualization will be shown above minimum movements. Radius, color and ring width will grow until maximum movements.</string>
+            </property>
+           </widget>
           </item>
-          <item>
-           <layout class="QGridLayout" name="gridLayout_4">
-            <property name="horizontalSpacing">
-             <number>6</number>
+          <item row="5" column="1">
+           <widget class="QSpinBox" name="sbCongestionMovementsMax">
+            <property name="suffix">
+             <string> movements</string>
             </property>
-            <item row="0" column="1">
-             <widget class="QLabel" name="label_59">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>congestion ring</string>
-              </property>
-              <property name="buddy">
-               <cstring>pbCongestionBorderLineColor</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="2">
-             <widget class="QPushButton" name="pbCongestionBorderLineColor">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="toolTip">
-               <string>Color of the congestion ring.</string>
-              </property>
-              <property name="autoFillBackground">
-               <bool>true</bool>
-              </property>
-              <property name="text">
-               <string>#c142ff</string>
-              </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="3">
-             <widget class="QDoubleSpinBox" name="sbCongestionBorderLineStrength">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="toolTip">
-               <string>Line Strength of the congestion ring.</string>
-              </property>
-              <property name="suffix">
-               <string> px</string>
-              </property>
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <double>10.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>0.100000000000000</double>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
+            <property name="minimum">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <number>999</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="2" rowspan="2">
+           <widget class="QLabel" name="label_165">
+            <property name="text">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;radius&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="1">
+           <widget class="QLabel" name="label_57">
+            <property name="text">
+             <string>(applies the filter above)</string>
+            </property>
+            <property name="buddy">
+             <cstring>sbCongestionMovementsMin</cstring>
+            </property>
+           </widget>
+          </item>
+          <item row="4" column="8">
+           <spacer name="horizontalSpacer_3">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item row="5" column="3">
+           <widget class="QSpinBox" name="sbCongestionRadiusMax">
+            <property name="suffix">
+             <string> NM</string>
+            </property>
+            <property name="maximum">
+             <number>999</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="5">
+           <widget class="QPushButton" name="pbCongestionColorMax">
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="text">
+             <string>#c142ff</string>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="7">
+           <widget class="QDoubleSpinBox" name="sbCongestionBorderLineStrengthMax">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;High values might be restricted by your graphics hardware.(GL_ALIASED_LINE_WIDTH_RANGE , GL_SMOOTH_LINE_WIDTH_RANGE)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="suffix">
+             <string> px</string>
+            </property>
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <double>999.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -4801,7 +4917,7 @@ only if in friends list</string>
      <y>152</y>
     </hint>
     <hint type="destinationlabel">
-     <x>230</x>
+     <x>217</x>
      <y>154</y>
     </hint>
    </hints>
@@ -5289,16 +5405,16 @@ only if in friends list</string>
   <connection>
    <sender>cbShowCongestion</sender>
    <signal>toggled(bool)</signal>
-   <receiver>sbCongestionMinimum</receiver>
+   <receiver>sbCongestionMovementsMin</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>125</x>
-     <y>144</y>
+     <x>148</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
-     <x>233</x>
-     <y>148</y>
+     <x>301</x>
+     <y>244</y>
     </hint>
    </hints>
   </connection>
@@ -5309,60 +5425,300 @@ only if in friends list</string>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>64</x>
-     <y>152</y>
+     <x>87</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
-     <x>364</x>
-     <y>149</y>
+     <x>301</x>
+     <y>212</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>cbShowCongestion</sender>
    <signal>toggled(bool)</signal>
-   <receiver>label_59</receiver>
+   <receiver>pbCongestionColorMin</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>92</x>
-     <y>141</y>
+     <x>89</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
-     <x>783</x>
-     <y>190</y>
+     <x>559</x>
+     <y>243</y>
     </hint>
    </hints>
   </connection>
   <connection>
    <sender>cbShowCongestion</sender>
    <signal>toggled(bool)</signal>
-   <receiver>pbCongestionBorderLineColor</receiver>
+   <receiver>sbCongestionBorderLineStrengthMin</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>66</x>
-     <y>157</y>
+     <x>63</x>
+     <y>188</y>
     </hint>
     <hint type="destinationlabel">
-     <x>883</x>
+     <x>686</x>
+     <y>244</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_163</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>52</x>
+     <y>187</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>140</x>
+     <y>238</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_164</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>180</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>105</x>
+     <y>261</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionMovementsMax</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>231</x>
+     <y>275</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_165</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>54</x>
+     <y>184</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>334</x>
+     <y>250</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionRadiusMin</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>58</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>385</x>
+     <y>243</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionRadiusMax</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>178</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>384</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_166</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>43</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>473</x>
+     <y>249</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>pbCongestionColorMax</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>159</x>
+     <y>188</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>515</x>
+     <y>259</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_167</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>44</x>
      <y>182</y>
     </hint>
+    <hint type="destinationlabel">
+     <x>603</x>
+     <y>251</y>
+    </hint>
    </hints>
   </connection>
   <connection>
    <sender>cbShowCongestion</sender>
    <signal>toggled(bool)</signal>
-   <receiver>sbCongestionBorderLineStrength</receiver>
+   <receiver>sbCongestionBorderLineStrengthMax</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>40</x>
-     <y>139</y>
+     <x>56</x>
+     <y>186</y>
     </hint>
     <hint type="destinationlabel">
-     <x>960</x>
-     <y>185</y>
+     <x>635</x>
+     <y>255</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>btnCongestionShowRing</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>42</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>205</x>
+     <y>183</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>cbShowCongestion</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>btnCongestionShowGlow</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>55</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>296</x>
+     <y>176</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCongestionShowRing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_167</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>205</x>
+     <y>172</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>590</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCongestionShowRing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionBorderLineStrengthMax</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>228</x>
+     <y>180</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>668</x>
+     <y>266</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCongestionShowRing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_167</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>201</x>
+     <y>182</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>574</x>
+     <y>260</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>btnCongestionShowRing</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>sbCongestionBorderLineStrengthMin</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>218</x>
+     <y>170</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>648</x>
+     <y>238</y>
     </hint>
    </hints>
   </connection>
