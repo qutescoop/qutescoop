@@ -2,7 +2,7 @@
 GIT_HASH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --short HEAD)\\\""
 DEFINES += GIT_HASH=$$GIT_HASH
 
-GIT_BRANCH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --abbrev-ref HEAD)\\\""
+GIT_BRANCH="\\\"$$system(echo ${GITHUB_HEAD_REF:-$(git -C \""$$_PRO_FILE_PWD_"\" branch --show-current)})\\\""
 DEFINES += GIT_BRANCH=$$GIT_BRANCH
 
 ## this produces v2.3.0 / v2.3.0-6-g29966c2 / v2.3.0-6-g29966c2-dirty
@@ -10,7 +10,7 @@ DEFINES += GIT_BRANCH=$$GIT_BRANCH
 GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclude '*-*-*' --dirty --always)\\\""
 
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
-message(compiling version $$GIT_DESCRIBE)
+message("compiling version $$GIT_DESCRIBE, branch $$GIT_BRANCH")
 
 # C++20
 CONFIG += c++2a
