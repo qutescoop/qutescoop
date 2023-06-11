@@ -2,7 +2,12 @@
 GIT_HASH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" rev-parse --short HEAD)\\\""
 DEFINES += GIT_HASH=$$GIT_HASH
 
-GIT_BRANCH="\\\"$$system(echo ${GITHUB_HEAD_REF:-$(git -C \""$$_PRO_FILE_PWD_"\" branch --show-current)})\\\""
+GITHUB_HEAD_REF=$$(GITHUB_HEAD_REF)
+isEmpty(GITHUB_HEAD_REF) {
+	GIT_BRANCH="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" branch --show-current)\\\""
+} else {
+	GIT_BRANCH="\\\"$$(GITHUB_HEAD_REF)\\\""
+}
 DEFINES += GIT_BRANCH=$$GIT_BRANCH
 
 ## this produces v2.3.0 / v2.3.0-6-g29966c2 / v2.3.0-6-g29966c2-dirty
@@ -10,7 +15,7 @@ DEFINES += GIT_BRANCH=$$GIT_BRANCH
 GIT_DESCRIBE="\\\"$$system(git -C \""$$_PRO_FILE_PWD_"\" describe --tags --exclude '*-*-*' --dirty --always)\\\""
 
 DEFINES += GIT_DESCRIBE=$$GIT_DESCRIBE
-message("compiling version $$GIT_DESCRIBE, branch $$GIT_BRANCH")
+!build_pass:message("compiling version $$GIT_DESCRIBE, branch $$GIT_BRANCH")
 
 # C++20
 CONFIG += c++2a
@@ -36,9 +41,9 @@ macx: {
 }
 
 # Qt paths
-message(Qt lib: $$[QT_INSTALL_LIBS])
-message(Qt bin: $$[QT_INSTALL_BINS])
-message(Qt plugins: $$[QT_INSTALL_PLUGINS])
+!build_pass:message(Qt lib: $$[QT_INSTALL_LIBS])
+!build_pass:message(Qt bin: $$[QT_INSTALL_BINS])
+!build_pass:message(Qt plugins: $$[QT_INSTALL_PLUGINS])
 
 QT *= core gui network opengl xml
 # in debug mode, we output to current directory
