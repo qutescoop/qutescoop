@@ -1,15 +1,15 @@
-#ifndef LISTCLIENTSDIALOGMODEL_H_
-#define LISTCLIENTSDIALOGMODEL_H_
+#ifndef AIRPORTDETAILSDEPARTURESMODEL_H_
+#define AIRPORTDETAILSDEPARTURESMODEL_H_
 
-#include "Client.h"
+#include "../Pilot.h"
 
-class ListClientsDialogModel
+class AirportDetailsDeparturesModel
     : public QAbstractTableModel {
     Q_OBJECT
 
     public:
-        ListClientsDialogModel(QObject* parent = 0)
-            : QAbstractTableModel(parent), _clients(QList<Client*>()) {}
+        AirportDetailsDeparturesModel(QObject* parent = 0)
+            : QAbstractTableModel(parent) {}
 
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -22,11 +22,11 @@ class ListClientsDialogModel
         ) const override;
 
     public slots:
-        void setClients(const QList<Client*>& clients);
-        void modelSelected(const QModelIndex& index);
+        void setClients(const QList<Pilot*>& pilots);
+        void modelSelected(const QModelIndex& index) const;
 
     private:
-        QList<Client*> _clients;
+        QList<Pilot*> _pilots;
 };
 
-#endif /*LISTCLIENTSDIALOGMODEL_H_*/
+#endif /*AIRPORTDETAILSDEPARTURESMODEL_H_*/

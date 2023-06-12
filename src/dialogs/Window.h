@@ -4,8 +4,8 @@
 #include "ui_Window.h"
 
 #include "../MapScreen.h"
-#include "../SearchResultModel.h"
-#include "../MetarModel.h"
+#include "../models/SearchResultModel.h"
+#include "../models/MetarModel.h"
 
 class Window
     : public QMainWindow, public Ui::Window {

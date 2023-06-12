@@ -1,8 +1,8 @@
 #include "BookedAtcDialog.h"
 
 #include "Window.h"
-#include "../BookedAtcDialogModel.h"
-#include "../BookedAtcSortFilter.h"
+#include "../models/BookedAtcDialogModel.h"
+#include "../models/filters/BookedAtcSortFilter.h"
 #include "../Settings.h"
 #include "../Whazzup.h"
 

@@ -1,7 +1,7 @@
 #ifndef METARMODEL_H_
 #define METARMODEL_H_
 
-#include "Airport.h"
+#include "../Airport.h"
 
 #include <QtNetwork>
 

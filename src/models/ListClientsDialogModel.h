@@ -1,14 +1,15 @@
-#ifndef SEARCHRESULTMODEL_H_
-#define SEARCHRESULTMODEL_H_
+#ifndef LISTCLIENTSDIALOGMODEL_H_
+#define LISTCLIENTSDIALOGMODEL_H_
 
-#include "MapObject.h"
+#include "../Client.h"
 
-class SearchResultModel
-    : public QAbstractListModel {
+class ListClientsDialogModel
+    : public QAbstractTableModel {
     Q_OBJECT
 
     public:
-        SearchResultModel(QObject* parent = 0);
+        ListClientsDialogModel(QObject* parent = 0)
+            : QAbstractTableModel(parent), _clients(QList<Client*>()) {}
 
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -19,12 +20,13 @@ class SearchResultModel
             Qt::Orientation orientation,
             int role = Qt::DisplayRole
         ) const override;
+
     public slots:
-        void setSearchResults(const QList<MapObject*>& searchResult);
-        void modelClicked(const QModelIndex& index);
+        void setClients(const QList<Client*>& clients);
+        void modelSelected(const QModelIndex& index);
 
     private:
-        QList<MapObject*> _content;
+        QList<Client*> _clients;
 };
 
-#endif /*SEARCHRESULTMODEL_H_*/
+#endif /*LISTCLIENTSDIALOGMODEL_H_*/

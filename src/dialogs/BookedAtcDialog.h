@@ -3,8 +3,8 @@
 
 #include "ui_BookedAtcDialog.h"
 
-#include "../BookedAtcDialogModel.h"
-#include "../BookedAtcSortFilter.h"
+#include "../models/BookedAtcDialogModel.h"
+#include "../models/filters/BookedAtcSortFilter.h"
 
 class BookedAtcDialog
     : public QDialog, private Ui::BookedAtcDialog {

@@ -1,14 +1,16 @@
-#ifndef AIRPORTDETAILSATCMODEL_H_
-#define AIRPORTDETAILSATCMODEL_H_
+#ifndef BOOKEDATCDIALOGMODEL_H_
+#define BOOKEDATCDIALOGMODEL_H_
 
-#include "Controller.h"
+#include "../BookedController.h"
 
-class AirportDetailsAtcModel
+#include <QAbstractTableModel>
+
+class BookedAtcDialogModel
     : public QAbstractTableModel {
     Q_OBJECT
 
     public:
-        AirportDetailsAtcModel(QObject* parent = 0)
+        BookedAtcDialogModel(QObject* parent = 0)
             : QAbstractTableModel(parent) {}
 
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -22,11 +24,10 @@ class AirportDetailsAtcModel
         ) const override;
 
     public slots:
-        void setClients(const QList<Controller*>& controllers);
-        void modelSelected(const QModelIndex& index) const;
+        void setClients(const QList<BookedController*>& controllers);
 
     private:
-        QList<Controller*> _controllers;
+        QList<BookedController*> _controllers;
 };
 
-#endif /*CLIENTLISTMODEL_H_*/
+#endif /*BOOKEDATCDIALOGMODEL_H_*/

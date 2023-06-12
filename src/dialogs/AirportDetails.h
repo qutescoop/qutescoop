@@ -5,10 +5,10 @@
 
 #include "ClientDetails.h"
 #include "../Airport.h"
-#include "../MetarModel.h"
-#include "../AirportDetailsAtcModel.h"
-#include "../AirportDetailsArrivalsModel.h"
-#include "../AirportDetailsDeparturesModel.h"
+#include "../models/MetarModel.h"
+#include "../models/AirportDetailsAtcModel.h"
+#include "../models/AirportDetailsArrivalsModel.h"
+#include "../models/AirportDetailsDeparturesModel.h"
 
 class AirportDetails
     : public ClientDetails, private Ui::AirportDetails {

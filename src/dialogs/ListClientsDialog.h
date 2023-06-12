@@ -3,7 +3,7 @@
 
 #include "ui_ListClientsDialog.h"
 
-#include "../ListClientsDialogModel.h"
+#include "../models/ListClientsDialogModel.h"
 
 class ListClientsDialog
     : public QDialog, private Ui::ListClientsDialog {

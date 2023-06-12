@@ -479,6 +479,9 @@ class Settings {
         static bool maximized();
         static void saveMaximized(const bool val);
 
+        static Qt::SortOrder airportDialogAtcSortOrder();
+        static void setAirportDialogAtcSortOrder(Qt::SortOrder);
+
         static QString remoteDataRepository();
     private:
         static QSettings* instance();
