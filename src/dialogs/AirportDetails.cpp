@@ -41,9 +41,44 @@ AirportDetails::AirportDetails(QWidget* parent)
     _atcSortModel = new QSortFilterProxyModel;
     _atcSortModel->setDynamicSortFilter(true);
     _atcSortModel->setSourceModel(&_atcModel);
+    _atcSortModel->setSortRole(Qt::UserRole);
     treeAtc->setModel(_atcSortModel);
-    treeAtc->sortByColumn(0, Qt::AscendingOrder);
+    connect(
+        // prevent sorting on other columns
+        treeAtc->header(),
+        &QHeaderView::sortIndicatorChanged,
+        this,
+        [this](int logicalIndex, Qt::SortOrder) {
+            if (logicalIndex != 0) {
+                treeAtc->header()->setSortIndicator(
+                    0,
+                    _atcSortModel->sortOrder()
+                );
+            }
+        }
+    );
+    treeAtc->header()->setSortIndicator(0, Settings::airportDialogAtcSortOrder());
     treeAtc->header()->setSectionResizeMode(QHeaderView::Interactive);
+
+    // keep track of the expanded state of items (API is bad)
+    connect(
+        treeAtc,
+        &QTreeView::expanded,
+        this,
+        [this](const QModelIndex &index) {
+            _atcModel.writeExpandedState(_atcSortModel->mapToSource(index), true);
+        }
+    );
+    connect(
+        treeAtc,
+        &QTreeView::collapsed,
+        this,
+        [this](const QModelIndex &index) {
+            _atcModel.writeExpandedState(_atcSortModel->mapToSource(index), false);
+            // give more space
+            treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
+        }
+    );
 
     connect(treeAtc, &QAbstractItemView::clicked, this, &AirportDetails::atcSelected);
 
@@ -150,19 +185,20 @@ void AirportDetails::refresh(Airport* newAirport) {
 
     QSet<Controller*> atcContent = _airport->allControllers() + checkSectors();
 
-    // non-ATC
     if (cbOtherAtc->isChecked()) {
         foreach (Controller* c, Whazzup::instance()->whazzupData().controllers) {
-            // add those within visual range or max. 50 NM away
-            if (NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(50, c->visualRange)) {
+            // add those within visual range or max. 20 NM away
+            if (NavData::distance(_airport->lat, _airport->lon, c->lat, c->lon) < qMax(20, c->visualRange)) {
                 atcContent.insert(c);
             }
         }
     }
 
+    // ATC
     _atcModel.setClients(atcContent.values());
     _atcSortModel->invalidate();
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
+    treeAtc->expandAll();
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
     cbPlotRoutes->setChecked(_airport->showRoutes);
@@ -230,6 +266,7 @@ void AirportDetails::closeEvent(QCloseEvent* event) {
             .geometry = saveGeometry()
         }
     );
+    Settings::setAirportDialogAtcSortOrder(_atcSortModel->sortOrder());
     event->accept();
 }
 

@@ -169,28 +169,29 @@ HEADERS += \
     src/Airac.h \
     src/dialogs/Window.h \
     src/SearchVisitor.h \
-    src/SearchResultModel.h \
+    src/models/SearchResultModel.h \
     src/dialogs/PreferencesDialog.h \
     src/dialogs/PlanFlightDialog.h \
     src/dialogs/PilotDetails.h \
     src/MetarSearchVisitor.h \
-    src/MetarModel.h \
+    src/models/MetarModel.h \
     src/MapObjectVisitor.h \
     src/GLWidget.h \
     src/FriendsVisitor.h \
     src/dialogs/ControllerDetails.h \
     src/ClientSelectionWidget.h \
     src/dialogs/ClientDetails.h \
-    src/BookedAtcDialogModel.h \
+    src/models/BookedAtcDialogModel.h \
     src/dialogs/BookedAtcDialog.h \
-    src/AirportDetailsDeparturesModel.h \
-    src/AirportDetailsAtcModel.h \
-    src/AirportDetailsArrivalsModel.h \
+    src/models/AirportDetailsDeparturesModel.h \
+    src/models/AirportDetailsAtcModel.h \
+    src/models/items/AirportDetailsAtcModelItem.h \
+    src/models/AirportDetailsArrivalsModel.h \
     src/dialogs/AirportDetails.h \
     src/Route.h \
-    src/PlanFlightRoutesModel.h \
-    src/BookedAtcSortFilter.h \
-    src/ListClientsDialogModel.h \
+    src/models/PlanFlightRoutesModel.h \
+    src/models/filters/BookedAtcSortFilter.h \
+    src/models/ListClientsDialogModel.h \
     src/dialogs/ListClientsDialog.h \
     src/Ping.h \
     src/GuiMessage.h \
@@ -225,27 +226,28 @@ SOURCES += src/WhazzupData.cpp \
     src/Airac.cpp \
     src/dialogs/Window.cpp \
     src/SearchVisitor.cpp \
-    src/SearchResultModel.cpp \
+    src/models/SearchResultModel.cpp \
     src/dialogs/PreferencesDialog.cpp \
     src/dialogs/PlanFlightDialog.cpp \
     src/dialogs/PilotDetails.cpp \
     src/MetarSearchVisitor.cpp \
-    src/MetarModel.cpp \
+    src/models/MetarModel.cpp \
     src/GLWidget.cpp \
     src/FriendsVisitor.cpp \
     src/dialogs/ControllerDetails.cpp \
     src/ClientSelectionWidget.cpp \
     src/dialogs/ClientDetails.cpp \
-    src/BookedAtcDialogModel.cpp \
+    src/models/BookedAtcDialogModel.cpp \
     src/dialogs/BookedAtcDialog.cpp \
-    src/AirportDetailsDeparturesModel.cpp \
-    src/AirportDetailsAtcModel.cpp \
-    src/AirportDetailsArrivalsModel.cpp \
+    src/models/AirportDetailsDeparturesModel.cpp \
+    src/models/AirportDetailsAtcModel.cpp \
+    src/models/items/AirportDetailsAtcModelItem.cpp \
+    src/models/AirportDetailsArrivalsModel.cpp \
     src/dialogs/AirportDetails.cpp \
     src/Route.cpp \
-    src/PlanFlightRoutesModel.cpp \
-    src/BookedAtcSortFilter.cpp \
-    src/ListClientsDialogModel.cpp \
+    src/models/PlanFlightRoutesModel.cpp \
+    src/models/filters/BookedAtcSortFilter.cpp \
+    src/models/ListClientsDialogModel.cpp \
     src/dialogs/ListClientsDialog.cpp \
     src/Ping.cpp \
     src/GuiMessage.cpp \

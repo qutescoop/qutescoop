@@ -1,14 +1,14 @@
-#ifndef AIRPORTDETAILSDEPARTURESMODEL_H_
-#define AIRPORTDETAILSDEPARTURESMODEL_H_
+#ifndef AIRPORTDETAILSARRIVALSMODEL_H_
+#define AIRPORTDETAILSARRIVALSMODEL_H_
 
-#include "Pilot.h"
+#include "../Pilot.h"
 
-class AirportDetailsDeparturesModel
+class AirportDetailsArrivalsModel
     : public QAbstractTableModel {
     Q_OBJECT
 
     public:
-        AirportDetailsDeparturesModel(QObject* parent = 0)
+        AirportDetailsArrivalsModel(QObject* parent = 0)
             : QAbstractTableModel(parent) {}
 
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -29,4 +29,4 @@ class AirportDetailsDeparturesModel
         QList<Pilot*> _pilots;
 };
 
-#endif /*AIRPORTDETAILSDEPARTURESMODEL_H_*/
+#endif /*AIRPORTDETAILSARRIVALSMODEL_H_*/

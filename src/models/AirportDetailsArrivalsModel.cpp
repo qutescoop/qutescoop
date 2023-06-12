@@ -1,6 +1,6 @@
 #include "AirportDetailsArrivalsModel.h"
 
-#include "Airport.h"
+#include "../Airport.h"
 
 #include <QFont>
 
@@ -59,6 +59,7 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 8:
             case 9:
                 return Qt::AlignRight;
+            case 4:
             case 10:
                 return Qt::AlignHCenter;
         }

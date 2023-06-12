@@ -1,15 +1,14 @@
-#ifndef AIRPORTDETAILSARRIVALSMODEL_H_
-#define AIRPORTDETAILSARRIVALSMODEL_H_
+#ifndef SEARCHRESULTMODEL_H_
+#define SEARCHRESULTMODEL_H_
 
-#include "Pilot.h"
+#include "../MapObject.h"
 
-class AirportDetailsArrivalsModel
-    : public QAbstractTableModel {
+class SearchResultModel
+    : public QAbstractListModel {
     Q_OBJECT
 
     public:
-        AirportDetailsArrivalsModel(QObject* parent = 0)
-            : QAbstractTableModel(parent) {}
+        SearchResultModel(QObject* parent = 0);
 
         virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -20,13 +19,12 @@ class AirportDetailsArrivalsModel
             Qt::Orientation orientation,
             int role = Qt::DisplayRole
         ) const override;
-
     public slots:
-        void setClients(const QList<Pilot*>& pilots);
-        void modelSelected(const QModelIndex& index) const;
+        void setSearchResults(const QList<MapObject*>& searchResult);
+        void modelClicked(const QModelIndex& index);
 
     private:
-        QList<Pilot*> _pilots;
+        QList<MapObject*> _content;
 };
 
-#endif /*AIRPORTDETAILSARRIVALSMODEL_H_*/
+#endif /*SEARCHRESULTMODEL_H_*/

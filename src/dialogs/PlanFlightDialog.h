@@ -3,7 +3,7 @@
 
 #include "ui_PlanFlightDialog.h"
 
-#include "../PlanFlightRoutesModel.h"
+#include "../models/PlanFlightRoutesModel.h"
 
 #include <QtNetwork>
 

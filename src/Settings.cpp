@@ -1523,6 +1523,14 @@ void Settings::saveMaximized(const bool val) {
     instance()->setValue("mainWindowState/maximized", val);
 }
 
+Qt::SortOrder Settings::airportDialogAtcSortOrder() {
+    return Qt::SortOrder(instance()->value("airportDialog/atcSortOrder", Qt::AscendingOrder).toInt());
+}
+
+void Settings::setAirportDialogAtcSortOrder(Qt::SortOrder v) {
+    instance()->setValue("airportDialog/atcSortOrder", int(v));
+}
+
 void Settings::saveGeometry(const QByteArray& state) {
     instance()->setValue("mainWindowState/geometry", state);
 }

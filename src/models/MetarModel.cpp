@@ -1,8 +1,8 @@
 #include "MetarModel.h"
 
-#include "Net.h"
-#include "Whazzup.h"
-#include "dialogs/Window.h"
+#include "../Net.h"
+#include "../Whazzup.h"
+#include "../dialogs/Window.h"
 
 #define MAX_METARS 60
 

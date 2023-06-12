@@ -1,6 +1,6 @@
 #include "SearchResultModel.h"
 
-#include "Pilot.h"
+#include "../Pilot.h"
 
 #include <QFont>
 

@@ -1,7 +1,7 @@
 #ifndef PLANFLIGHTSROUTEMODEL_H_
 #define PLANFLIGHTSROUTEMODEL_H_
 
-#include "Route.h"
+#include "../Route.h"
 
 class PlanFlightRoutesModel
     : public QAbstractTableModel {

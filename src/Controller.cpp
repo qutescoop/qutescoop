@@ -168,6 +168,10 @@ QString Controller::facilityString() const {
     return QString();
 }
 
+QString Controller::typeString() const {
+    return atcLabelTokens().last();
+}
+
 QStringList Controller::atcLabelTokens() const {
     if (!isATC()) {
         return QStringList();

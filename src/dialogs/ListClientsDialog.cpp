@@ -2,7 +2,7 @@
 
 #include "Window.h"
 #include "../Controller.h"
-#include "../ListClientsDialogModel.h"
+#include "../models/ListClientsDialogModel.h"
 #include "../Pilot.h"
 #include "../Ping.h"
 #include "../Settings.h"
