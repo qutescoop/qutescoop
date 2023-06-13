@@ -95,7 +95,7 @@ void Settings::migrate(QSettings* settingsInstance) {
                     if (settingsInstance->contains(fromTo.first)) {
                         settingsInstance->setValue(
                             fromTo.second,
-                            instance()->value(fromTo.first).value<double>()
+                            settingsInstance->value(fromTo.first).value<double>()
                         );
                         qDebug() << "replaced" << fromTo.first << "with" << fromTo.second;
                         settingsInstance->remove(fromTo.first);
@@ -120,6 +120,16 @@ void Settings::migrate(QSettings* settingsInstance) {
                 foreach (const auto setting, obsoleteSettings) {
                     settingsInstance->remove(setting);
                 }
+            }
+        },
+        {
+            6,
+            "Whazzup download interval is now seconds",
+            [settingsInstance]() {
+                settingsInstance->setValue(
+                    "download/interval",
+                    settingsInstance->value("download/interval", 1).value<int>() * 60
+                );
             }
         }
     };
@@ -174,13 +184,14 @@ const QColor Settings::lightTextColor() {
 }
 
 int Settings::downloadInterval() {
-    return instance()->value("download/interval", 2).toInt();
+    return instance()->value("download/interval", 60).toInt();
 }
 void Settings::setDownloadInterval(int value) {
     instance()->setValue("download/interval", value);
 }
 
 bool Settings::downloadOnStartup() {
+    // policy: see https://github.com/vatsimnetwork/developer-info/wiki/Data-Feeds-Live-Data
     return instance()->value("download/downloadOnStartup", true).toBool();
 }
 

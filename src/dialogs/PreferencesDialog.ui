@@ -134,10 +134,16 @@ location</string>
             <item>
              <widget class="QSpinBox" name="spinBoxDownloadInterval">
               <property name="suffix">
-               <string> min</string>
+               <string>s</string>
               </property>
               <property name="minimum">
-               <number>1</number>
+               <number>15</number>
+              </property>
+              <property name="maximum">
+               <number>300</number>
+              </property>
+              <property name="singleStep">
+               <number>15</number>
               </property>
              </widget>
             </item>

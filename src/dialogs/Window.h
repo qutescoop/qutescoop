@@ -87,7 +87,7 @@ class Window
         void updateTitlebarAfterMove(Qt::DockWidgetArea, QDockWidget* dock);
 
         SearchResultModel _modelSearchResult, _modelFriends;
-        QTimer _timerSearch, _timerMetar, _timerEditPredict, _timerRunPredict, _timerWhazzup;
+        QTimer _timerSearch, _timerMetar, _timerEditPredict, _timerRunPredict, _timerWatchdog;
         QSortFilterProxyModel* _sortmodelMetar, * _sortmodelFriends;
         MetarModel _metarModel;
         QDateTime _dateTimePredict_old;
