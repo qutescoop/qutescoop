@@ -249,7 +249,7 @@ const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const
 // Methods preparing displayLists
 //
 void GLWidget::createPilotsList() {
-    qDebug() << "GLWidget::createPilotsList()";
+    qDebug();
 
     if (_pilotsList == 0) {
         _pilotsList = glGenLists(1);
@@ -460,11 +460,11 @@ void GLWidget::createPilotsList() {
         glEndList();
     }
 
-    qDebug() << "GLWidget::createPilotsList() -- finished";
+    qDebug() << "-- finished";
 }
 
 void GLWidget::createAirportsList() {
-    qDebug() << "GLWidget::createAirportsList() ";
+    qDebug();
     if (_activeAirportsList == 0) {
         _activeAirportsList = glGenLists(1);
     }
@@ -553,11 +553,11 @@ void GLWidget::createAirportsList() {
         }
     }
     glEndList();
-    qDebug() << "GLWidget::createAirportsList() -- finished";
+    qDebug() << "-- finished";
 }
 
 void GLWidget::createControllerLists() {
-    qDebug() << "GLWidget::createControllersLists() ";
+    qDebug();
 
     // FIR polygons
     if (_sectorPolygonsList == 0) {
@@ -602,7 +602,7 @@ void GLWidget::createControllerLists() {
         }
         glEndList();
     }
-    qDebug() << "GLWidget::createControllersLists() -- finished";
+    qDebug() << "-- finished";
 }
 
 
@@ -683,9 +683,8 @@ void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
 
 void GLWidget::createStaticLists() {
     // earth
-    qDebug() << "GLWidget::createStaticLists() earth";
-    _earthQuad = gluNewQuadric();
     qDebug() << "Generating quadric texture coordinates";
+    _earthQuad = gluNewQuadric();
     gluQuadricTexture(_earthQuad, GL_TRUE); // prepare texture coordinates
     gluQuadricDrawStyle(_earthQuad, GLU_FILL); // FILL, LINE, SILHOUETTE or POINT
     gluQuadricNormals(_earthQuad, GLU_SMOOTH); // NONE, FLAT or SMOOTH
@@ -741,7 +740,7 @@ void GLWidget::createStaticLists() {
     glEndList();
 
     // grid
-    qDebug() << "GLWidget::createStaticLists() gridLines";
+    qDebug() << "gridLines";
     _gridlinesList = glGenLists(1);
     glNewList(_gridlinesList, GL_COMPILE);
     if (!qFuzzyIsNull(Settings::gridLineStrength())) {
@@ -770,7 +769,7 @@ void GLWidget::createStaticLists() {
     glEndList();
 
     // coastlines
-    qDebug() << "GLWidget::createStaticLists() coastLines";
+    qDebug() << "coastLines";
     _coastlinesList = glGenLists(1);
     glNewList(_coastlinesList, GL_COMPILE);
     if (!qFuzzyIsNull(Settings::coastLineStrength())) {
@@ -790,7 +789,7 @@ void GLWidget::createStaticLists() {
     glEndList();
 
     // countries
-    qDebug() << "GLWidget::createStaticLists() countries";
+    qDebug() << "countries";
     _countriesList = glGenLists(1);
     glNewList(_countriesList, GL_COMPILE);
     if (!qFuzzyIsNull(Settings::countryLineStrength())) {
@@ -861,7 +860,6 @@ void GLWidget::createStaticSectorLists() {
  * Call drawCoordinateAxii() inside paintGL() to see where the axii are.
  **/
 void GLWidget::initializeGL() {
-    qDebug() << "GLWidget::initializeGL()";
     qDebug() << "OpenGL support: " << context()->format().hasOpenGL()
              << "; 1.1:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_1)
              << "; 1.2:" << format().openGLVersionFlags().testFlag(QGLFormat::OpenGL_Version_1_2)
@@ -1037,7 +1035,7 @@ void GLWidget::initializeGL() {
     }
 
     createStaticLists();
-    qDebug() << "GLWidget::initializeGL() -- finished";
+    qDebug() << "-- finished";
 }
 
 /**
@@ -1417,7 +1415,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event) {
 }
 
 void GLWidget::rightClick(const QPoint& pos) {
-    qDebug() << "GLWidget::rightClick()";
     auto objects = objectsAt(pos.x(), pos.y());
     int countRelevant = 0;
     Pilot* pilot = 0;
@@ -1462,7 +1459,6 @@ void GLWidget::rightClick(const QPoint& pos) {
         }
         invalidatePilots();
     }
-    qDebug() << "GLWidget::rightClick() -- finished";
 }
 
 void GLWidget::mouseDoubleClickEvent(QMouseEvent* event) {
@@ -1538,7 +1534,7 @@ void GLWidget::renderLabels() {
 
     // sector controller labels
     if (m_isControllerMapObjectsDirty) {
-        qDebug() << "GLWidget::renderLabels building controllerMapObjects";
+        qDebug() << "building controllerMapObjects";
         m_controllerMapObjects.clear();
 
         foreach (Controller* c, Whazzup::instance()->whazzupData().controllers) {
@@ -1567,7 +1563,7 @@ void GLWidget::renderLabels() {
 
     // airport labels
     if (m_isAirportsMapObjectsDirty) {
-        qDebug() << "GLWidget::renderLabels building airportMapObjects";
+        qDebug() << "building airportMapObjects";
 
         m_activeAirportMapObjects.clear();
         const QList<Airport*> activeAirportsSorted = NavData::instance()->activeAirports.values();
@@ -1591,7 +1587,7 @@ void GLWidget::renderLabels() {
 
     // pilot labels
     if (m_isPilotMapObjectsDirty) {
-        qDebug() << "GLWidget::renderLabels building pilotMapObjects";
+        qDebug() << "building pilotMapObjects";
         m_pilotMapObjects.clear();
 
         const QList<Pilot*> pilots = Whazzup::instance()->whazzupData().allPilots();
@@ -2353,7 +2349,7 @@ void GLWidget::drawCoordinateAxiiCurrentMatrix() const {
 /////////////////////////
 
 void GLWidget::newWhazzupData(bool isNew) {
-    qDebug() << "GLWidget::newWhazzupData() isNew =" << isNew;
+    qDebug() << "isNew =" << isNew;
     if (isNew) {
         // update airports
         NavData::instance()->updateData(Whazzup::instance()->whazzupData());
@@ -2365,7 +2361,7 @@ void GLWidget::newWhazzupData(bool isNew) {
         invalidateAirports();
         m_friendPositions = Whazzup::instance()->whazzupData().friendsLatLon();
     }
-    qDebug() << "GLWidget::newWhazzupData -- finished";
+    qDebug() << "-- finished";
 }
 
 void GLWidget::createFriendHighlighter() {
@@ -2393,14 +2389,14 @@ void GLWidget::destroyFriendHighlighter() {
 //////////////////////////////////
 
 void GLWidget::parseTexture() {
-    qDebug() << "GLWidget::parseTexture()";
+    qDebug();
     GuiMessages::progress("textures", "Preparing textures...");
 
     QImage earthTexIm;
 
     if (Settings::glTextures()) {
         QString earthTexFile = Settings::dataDirectory(QString("textures/%1").arg(Settings::glTextureEarth()));
-        qDebug() << "GLWidget::parseTexture() loading earth texture";
+        qDebug() << "loading earth texture";
         GuiMessages::progress("textures", "Preparing textures: loading earth...");
         earthTexIm.load(earthTexFile);
     }
@@ -2437,7 +2433,7 @@ void GLWidget::parseTexture() {
         }
     }
 
-    qDebug() << "GLWidget::parseTexture() finished";
+    qDebug() << "-- finished";
     update();
     GuiMessages::remove("textures");
 }

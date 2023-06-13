@@ -17,7 +17,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
     : servers(QList<QStringList>()),
       updateEarliest(QDateTime()), whazzupTime(QDateTime()),
       bookingsTime(QDateTime()) {
-    qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
+    qDebug() << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
     _dataType = type;
     int reloadInSec = Settings::downloadInterval();
     QJsonDocument data = QJsonDocument::fromJson(*bytes);
@@ -98,7 +98,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
                 auto o = rating.toObject();
                 ratings.insert(o["id"].toInt(), o["short"].toString());
             }
-            qDebug() << "WhazzupData::WhazzupData(buffer) ratings:" << ratings;
+            qDebug() << "ratings:" << ratings;
         }
 
         if (json.contains("pilot_ratings") && json["pilot_ratings"].isArray()) {
@@ -106,7 +106,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
                 auto o = rating.toObject();
                 pilotRatings.insert(o["id"].toInt(), o["short_name"].toString());
             }
-            qDebug() << "WhazzupData::WhazzupData(buffer) pilotRatings:" << pilotRatings;
+            qDebug() << "pilotRatings:" << pilotRatings;
         }
 
         if (json.contains("military_ratings") && json["military_ratings"].isArray()) {
@@ -114,7 +114,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
                 auto o = rating.toObject();
                 militaryRatings.insert(o["id"].toInt(), o["short_name"].toString());
             }
-            qDebug() << "WhazzupData::WhazzupData(buffer) militaryRatings:" << militaryRatings;
+            qDebug() << "militaryRatings:" << militaryRatings;
         }
     } else if (type == ATCBOOKINGS) {
         QJsonArray json = data.array();
@@ -132,7 +132,7 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
     if (whazzupTime.isValid() && reloadInSec > 0) {
         updateEarliest = whazzupTime.addSecs(reloadInSec).toUTC();
     }
-    qDebug() << "WhazzupData::WhazzupData(buffer) -- finished";
+    qDebug() << "-- finished";
 }
 
 // faking WhazzupData based on valid data and a predictTime
@@ -141,7 +141,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
       updateEarliest(QDateTime()), whazzupTime(QDateTime()),
       bookingsTime(QDateTime()), predictionBasedOnTime(QDateTime()),
       predictionBasedOnBookingsTime(QDateTime()) {
-    qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
+    qDebug() << predictTime;
 
     whazzupTime = predictTime;
     predictionBasedOnTime = QDateTime(data.whazzupTime);
@@ -182,7 +182,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
             controllers[bc->callsign] = new Controller(controllerObject, this);
         }
     }
-    qDebug() << "WhazzupData::WhazzupData(predictTime) added" << controllers.size() << "bookedControllers as fake controllers";
+    qDebug() << "added" << controllers.size() << "bookedControllers as fake controllers";
 
     // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked
     foreach (const Controller* c, data.controllers) {
@@ -282,7 +282,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
 
         pilots[np->callsign] = np;
     }
-    qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";
+    qDebug() << "-- finished";
 }
 
 WhazzupData::WhazzupData(const WhazzupData &data) {
@@ -321,7 +321,7 @@ bool WhazzupData::isNull() const {
 }
 
 void WhazzupData::assignFrom(const WhazzupData &data) {
-    qDebug() << "WhazzupData::assignFrom()";
+    qDebug();
     if (this == &data) {
         return;
     }
@@ -367,11 +367,11 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
         bookingsTime = QDateTime(data.bookingsTime);
         predictionBasedOnBookingsTime = QDateTime(data.predictionBasedOnBookingsTime);
     }
-    qDebug() << "WhazzupData::assignFrom() -- finished";
+    qDebug() << "-- finished";
 }
 
 void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
-    qDebug() << "WhazzupData::updatePilotsFrom()";
+    qDebug();
     foreach (const QString s, pilots.keys()) { // remove pilots that are no longer there
         if (!data.pilots.contains(s)) {
             delete pilots.value(s);
@@ -409,11 +409,11 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
             *bookedPilots[s] = *data.bookedPilots[s];
         }
     }
-    qDebug() << "WhazzupData::updatePilotsFrom() -- finished";
+    qDebug() << "-- finished";
 }
 
 void WhazzupData::updateControllersFrom(const WhazzupData &data) {
-    qDebug() << "WhazzupData::updateControllersFrom()";
+    qDebug();
     foreach (const QString s, controllers.keys()) {
         if (!data.controllers.contains(s)) {
             // remove controllers that are no longer there
@@ -430,20 +430,20 @@ void WhazzupData::updateControllersFrom(const WhazzupData &data) {
             *controllers[s] = *data.controllers[s];
         }
     }
-    qDebug() << "WhazzupData::updateControllersFrom() -- finished";
+    qDebug() << "-- finished";
 }
 
 void WhazzupData::updateBookedControllersFrom(const WhazzupData &data) {
-    qDebug() << "WhazzupData::updateBookedControllersFrom()" << data.bookedControllers.size() << "bookedControllers";
+    qDebug() << data.bookedControllers.size() << "bookedControllers";
     bookedControllers.clear();
     foreach (const BookedController* bc, data.bookedControllers) {
         bookedControllers.append(new BookedController(*bc));
     }
-    qDebug() << "WhazzupData::updateBookedControllersFrom() -- finished";
+    qDebug() << "-- finished";
 }
 
 void WhazzupData::updateFrom(const WhazzupData &data) {
-    qDebug() << "WhazzupData::updateFrom()";
+    qDebug();
     if (this == &data) {
         return;
     }
@@ -476,7 +476,7 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
         bookingsTime = data.bookingsTime;
         predictionBasedOnBookingsTime = data.predictionBasedOnBookingsTime;
     }
-    qDebug() << "WhazzupData::updateFrom() -- finished";
+    qDebug() << "-- finished";
 }
 
 QSet<Controller*> WhazzupData::controllersWithSectors() const {
@@ -495,7 +495,6 @@ QList<Pilot*> WhazzupData::allPilots() const {
 }
 
 QList<QPair<double, double> > WhazzupData::friendsLatLon() const {
-    qDebug() << "WhazzupData::friendsLatLon()";
     QStringList friends = Settings::friends();
     QList<QPair<double, double> > result;
     foreach (Controller* c, controllers.values()) {

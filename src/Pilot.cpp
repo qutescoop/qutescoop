@@ -702,7 +702,6 @@ void Pilot::primaryAction() {
 }
 
 QList<Waypoint*> Pilot::routeWaypoints() {
-    //qDebug() << "Pilot::routeWaypoints()" << label;
     if (
         (planDep == routeWaypointsPlanDepCache) // we might have cached the route already
         && (planDest == routeWaypointsPlanDestCache)
@@ -727,7 +726,6 @@ QList<Waypoint*> Pilot::routeWaypoints() {
         routeWaypointsCache = QList<Waypoint*>();
     }
 
-    //qDebug() << "Pilot::routeWaypoints() -- finished" << label;
     return routeWaypointsCache;
 }
 

@@ -12,17 +12,32 @@
 /* logging */
 QScopedPointer<QFile> m_logFile;
 
-void messageHandler(QtMsgType type, const QMessageLogContext&, const QString& msg) {
-    QTextStream out(m_logFile.data());
-    out << QDateTime::currentDateTimeUtc().toString(Qt::ISODateWithMs);
-    switch (type) {
-        case QtInfoMsg:     out << " [INF] "; break;
-        case QtDebugMsg:    out << " [DBG] "; break;
-        case QtWarningMsg:  out << " [WRN] "; break;
-        case QtCriticalMsg: out << " [CRT] "; break;
-        case QtFatalMsg:    out << " [FTL] "; break;
+void messageHandler(QtMsgType type, const QMessageLogContext& a, const QString& msg) {
+    const QMap<QtMsgType, QString> typeStrings {
+        { QtInfoMsg, "INFO" },
+        { QtDebugMsg, "DBG" },
+        { QtWarningMsg, "WARN" },
+        { QtCriticalMsg, "CRIT" },
+        { QtFatalMsg, "FATAL" },
+    };
+
+    const QString function(a.function);
+    const auto line = QString("[%1] %2 +%5 %4 %3").arg(
+        typeStrings.value(type),
+        QFileInfo(a.file).fileName(),
+        msg,
+        function
+    ).arg(a.line);
+
+    QTextStream stdoutStream(stdout);
+
+    // useful for ad-hoc stdout debugging with all the nice QDebug type conversions, too
+    if (type == QtCriticalMsg || type == QtFatalMsg) {
+        stdoutStream << line << Qt::endl;
     }
-    out << msg << '\n';
+
+    QTextStream out(m_logFile.data());
+    out << QDateTime::currentDateTimeUtc().toString("HH:mm:ss.zzz[Z]") << " " << line << Qt::endl;
     out.flush();
 }
 
@@ -131,6 +146,8 @@ int main(int argc, char* argv[]) {
 
     // show Launcher
     Launcher::instance()->fireUp();
+
+    QMessageLogger("ile.constData()", 43, 0).debug() << "lkiij";
 
     // start event loop
     int ret = app.exec();

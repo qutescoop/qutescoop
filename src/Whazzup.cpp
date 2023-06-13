@@ -52,7 +52,7 @@ void Whazzup::setStatusLocation(const QString& statusLocation) {
 }
 
 void Whazzup::processStatus() {
-    qDebug() << "Whazzup::processStatus()";
+    qDebug();
     disconnect(_replyStatus, &QNetworkReply::finished, this, &Whazzup::processStatus);
 
     // status.vatsim.net uses redirection
@@ -60,7 +60,7 @@ void Whazzup::processStatus() {
         QNetworkRequest::RedirectionTargetAttribute
     ).toUrl();
     if (!urlRedirect.isEmpty() && urlRedirect != _replyStatus->url()) {
-        qDebug() << "Whazzup::processStatus() redirected to" << urlRedirect;
+        qDebug() << "redirected to" << urlRedirect;
         // send new request
         if (_replyStatus != 0) {
             delete _replyStatus;
@@ -118,9 +118,9 @@ void Whazzup::processStatus() {
     _lastDownloadTime = QTime();
 
     GuiMessages::remove("statusdownload");
-    qDebug() << "Whazzup::statusDownloaded() data.v3[]:" << _json3Urls;
-    qDebug() << "Whazzup::statusDownloaded() metar.0:" << _metar0Url;
-    qDebug() << "Whazzup::statusDownloaded() user.0:" << _user0Url;
+    qDebug() << "data.v3[]:" << _json3Urls;
+    qDebug() << "metar.0:" << _metar0Url;
+    qDebug() << "user.0:" << _user0Url;
 
     if (_json3Urls.size() == 0) {
         GuiMessages::warning("No Whazzup-URLs found. Try again later.");
@@ -130,7 +130,7 @@ void Whazzup::processStatus() {
 }
 
 void Whazzup::fromFile(QString filename) {
-    qDebug() << "Whazzup::fromFile()" << filename;
+    qDebug() << filename;
     GuiMessages::progress("whazzupDownload", "Loading Whazzup from file...");
 
     if (_replyWhazzup != 0) {
@@ -217,7 +217,7 @@ void Whazzup::processWhazzup() {
 
         if (newWhazzupData.whazzupTime != _data.whazzupTime) {
             _data.updateFrom(newWhazzupData);
-            qDebug() << "Whazzup::whazzupDownloaded() Whazzup updated from timestamp" << _data.whazzupTime;
+            qDebug() << "Whazzup updated from timestamp" << _data.whazzupTime;
             emit newData(true);
 
             if (Settings::saveWhazzupData()) {
@@ -228,11 +228,11 @@ void Whazzup::processWhazzup() {
                         .arg(_data.whazzupTime.toString("yyyyMMdd-HHmmss"))
                 ));
                 if (!out.exists() && out.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                    qDebug() << "Whazzup::processWhazzup writing Whazzup to" << out.fileName();
+                    qDebug() << "Writing Whazzup to" << out.fileName();
                     out.write(bytes->constData());
                     out.close();
                 } else {
-                    qWarning() << "Whazzup::processWhazzup: Could not write Whazzup to disk" << out.fileName();
+                    qWarning() << "Could not write Whazzup to disk" << out.fileName();
                 }
             }
         } else {
@@ -250,7 +250,7 @@ void Whazzup::processWhazzup() {
             && (Settings::downloadInterval() < serverNextUpdateInSec)
         ) {
             _downloadTimer->start(serverNextUpdateInSec);
-            qDebug() << "Whazzup::whazzupDownloaded() correcting next update, will update in"
+            qDebug() << "correcting next update, will update in"
                      << serverNextUpdateInSec << "s to respect the server's minimum interval";
         } else {
             _downloadTimer->start(Settings::downloadInterval() * 1000);
@@ -287,11 +287,11 @@ void Whazzup::bookingsProgress(qint64 prog, qint64 tot) {
 }
 
 void Whazzup::processBookings() {
-    qDebug() << "Whazzup::processBookings()";
+    qDebug();
     GuiMessages::remove("bookingsDownload");
     disconnect(_replyBookings, &QNetworkReply::finished, this, &Whazzup::processBookings);
     disconnect(_replyBookings, &QNetworkReply::downloadProgress, this, &Whazzup::bookingsProgress);
-    qDebug() << "Whazzup::processBookings() deleting buffer";
+    qDebug() << "deleting buffer";
     if (_replyBookings == 0) {
         GuiMessages::criticalUserInteraction(
             "Buffer unavailable.",
@@ -317,15 +317,15 @@ void Whazzup::processBookings() {
     QByteArray* bytes = new QByteArray(_replyBookings->readAll());
     WhazzupData newBookingsData(bytes, WhazzupData::ATCBOOKINGS);
     if (!newBookingsData.isNull()) {
-        qDebug() << "Whazzup::processBookings() step 2";
+        qDebug() << "step 2";
         if (newBookingsData.bookingsTime.secsTo(QDateTime::currentDateTimeUtc()) > 60 * 60 * 3) {
             GuiMessages::warning("Bookings data more than 3 hours old.");
         }
 
         if (newBookingsData.bookingsTime != _data.bookingsTime) {
-            qDebug() << "Whazzup::processBookings() will call updateFrom()";
+            qDebug() << "will call updateFrom()";
             _data.updateFrom(newBookingsData);
-            qDebug() << "Whazzup::processBookings() Bookings updated from timestamp"
+            qDebug() << "Bookings updated from timestamp"
                      << _data.bookingsTime;
 
             QFile out(Settings::dataDirectory(
@@ -334,11 +334,11 @@ void Whazzup::processBookings() {
                     .arg(_data.bookingsTime.toString("yyyyMMdd-HHmmss"))
             ));
             if (!out.exists() && out.open(QIODevice::WriteOnly | QIODevice::Text)) {
-                qDebug() << "Whazzup::processBookings writing bookings to" << out.fileName();
+                qDebug() << "writing bookings to" << out.fileName();
                 out.write(bytes->constData());
                 out.close();
             } else {
-                qWarning() << "Whazzup::processBookings: Could not write Bookings to disk"
+                qWarning() << "Could not write Bookings to disk"
                            << out.fileName();
             }
 
@@ -353,7 +353,7 @@ void Whazzup::processBookings() {
         }
     }
     GuiMessages::remove("bookingsProcess");
-    qDebug() << "Whazzup::processBookings() -- finished";
+    qDebug() << "-- finished";
 }
 
 
@@ -373,7 +373,7 @@ QString Whazzup::metarUrl(const QString& id) const {
 
 void Whazzup::setPredictedTime(QDateTime predictedTime) {
     if (this->predictedTime != predictedTime) {
-        qDebug() << "Whazzup::setPredictedTime() predictedTime=" << predictedTime
+        qDebug() << "predictedTime=" << predictedTime
                  << "data.whazzupTime=" << _data.whazzupTime;
         GuiMessages::progress("warpProcess", "Calculating Warp...");
         this->predictedTime = predictedTime;
@@ -381,7 +381,7 @@ void Whazzup::setPredictedTime(QDateTime predictedTime) {
             emit needBookings();
         }
         if (predictedTime == _data.whazzupTime) {
-            qDebug() << "Whazzup::setPredictedTime() predictedTime == data.whazzupTime"
+            qDebug() << "predictedTime == data.whazzupTime"
                      << "(no need to predict, we have it already :) )";
             _predictedData = _data;
         } else {

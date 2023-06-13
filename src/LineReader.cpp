@@ -22,12 +22,12 @@ const QList<QPair<double, double> >& LineReader::readLine() {
         bool ok = true;
         double lat = list[0].toDouble(&ok);
         if (!ok) {
-            qWarning() << "LineReader::readLine() unable to read lat (double):" << list;
+            qWarning() << "unable to read lat (double):" << list;
             continue;
         }
         double lon = list[1].toDouble(&ok);
         if (!ok) {
-            qWarning() << "LineReader::readLine() unable to read lon (double):" << list;
+            qWarning() << "unable to read lon (double):" << list;
             continue;
         }
 

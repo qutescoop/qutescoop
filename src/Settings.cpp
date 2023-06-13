@@ -136,7 +136,7 @@ void Settings::migrate(QSettings* settingsInstance) {
 
     foreach (const auto &migration, migrations) {
         if (settingsInstance->value("settings/version", 0).toInt() < migration.version) {
-            qDebug() << QString("Settings::migrate() Migrating to settings version v%1: %2...").arg(migration.version).arg(migration.name);
+            qCritical() << QString("Migrating to settings version v%1: %2...").arg(migration.version).arg(migration.name);
             migration.run();
             settingsInstance->setValue("settings/version", migration.version);
         }

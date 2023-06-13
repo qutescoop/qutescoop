@@ -38,7 +38,7 @@ Airac::~Airac() {
 }
 
 void Airac::load() {
-    qDebug() << "Airac::load()" << Settings::navdataDirectory();
+    qDebug() << Settings::navdataDirectory();
     GuiMessages::status("Loading navigation database...", "airacload");
     if (Settings::useNavdata()) {
         readFixes(Settings::navdataDirectory());
@@ -61,7 +61,6 @@ void Airac::load() {
 
     GuiMessages::remove("airacload");
     emit loaded();
-    qDebug() << "Airac::load() -- finished";
 }
 
 void Airac::readFixes(const QString& directory) {
@@ -167,8 +166,10 @@ void Airac::readAirways(const QString& directory) {
     }
 
     bool ok;
+    unsigned int count = 0;
     int segments = 0;
     while (!fr.atEnd()) {
+        ++count;
         QString line = fr.nextLine().trimmed();
         // file format:
         // EXOLU VA 11 TAXUN VA 11 N 2  75 460 B342-N519-W14
@@ -185,7 +186,8 @@ void Airac::readAirways(const QString& directory) {
 
         QStringList list = line.split(' ', Qt::SkipEmptyParts);
         if (list.size() != 11) {
-            qCritical() << "Airac::readAirways() not exactly 11 fields:" << list;
+            QMessageLogger(file.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << "not exactly 11 fields:" << list;
             continue;
         }
 
@@ -193,12 +195,14 @@ void Airac::readAirways(const QString& directory) {
         QString regionCode = list[1];
         int fixType = list[2].toInt(&ok);
         if (!ok) {
-            qCritical() << "Airac::readAirways() unable to parse fix type (int):" << list;
+            QMessageLogger(file.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << "unable to parse fix type (int):" << list;
             continue;
         }
         Waypoint* start = waypoint(id, regionCode, fixType);
         if (start == 0) {
-            qCritical() << "Airac::readAirways() unable to find start waypoint:" << QStringList{ id, regionCode, QString::number(fixType) } << list;
+            QMessageLogger(file.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << "unable to find start waypoint:" << QStringList{ id, regionCode, QString::number(fixType) } << list;
             continue;
         }
 
@@ -206,12 +210,14 @@ void Airac::readAirways(const QString& directory) {
         regionCode = list[4];
         fixType = list[5].toInt(&ok);
         if (!ok) {
-            qCritical() << "Airac::readAirways() unable to parse fix type (int):" << list;
+            QMessageLogger(file.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << "unable to parse fix type (int):" << list;
             continue;
         }
         Waypoint* end = waypoint(id, regionCode, fixType);
         if (end == 0) {
-            qCritical() << "Airac::readAirways() unable to find end waypoint:" << QStringList{ id, regionCode, QString::number(fixType) } << list;
+            QMessageLogger(file.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << "unable to find start waypoint:" << QStringList{ id, regionCode, QString::number(fixType) } << list;
             continue;
         }
 
@@ -419,7 +425,6 @@ void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, const QString& name) 
  * Unknown fixes and/or airways will be ignored.
  **/
 QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon) {
-    //qDebug() << "Airac::resolveFlightPlan()" << plan;
     QList<Waypoint*> result;
     Waypoint* currPoint = 0;
     Airway* awy = 0;

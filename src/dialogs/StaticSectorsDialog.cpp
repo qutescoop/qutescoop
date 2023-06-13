@@ -41,7 +41,7 @@ StaticSectorsDialog::StaticSectorsDialog(QWidget* parent)
 }
 
 void StaticSectorsDialog::loadSectorList() {
-    qDebug() << "StaticSectorsDialog::loadSectorList -- started";
+    qDebug();
     foreach (const auto sector, NavData::instance()->sectors.values()) {
         QListWidgetItem* item = new QListWidgetItem();
         item->setText(
@@ -86,7 +86,7 @@ void StaticSectorsDialog::loadSectorList() {
         listWidgetSectors->addItem(item);
     }
     listWidgetSectors->sortItems();
-    qDebug() << "StaticSectorsDialog::loadSectorList -- finsished";
+    qDebug() << "-- finsished";
 }
 
 void StaticSectorsDialog::closeEvent(QCloseEvent* event) {

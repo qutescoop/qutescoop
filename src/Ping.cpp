@@ -26,6 +26,6 @@ void Ping::startPing(QString server) {
 #ifdef Q_OS_MAC
     pingArgs << "-c1" << server;
 #endif
-    qDebug() << "Ping::startPing() executing" << "ping" << pingArgs;
+    qDebug() << "executing" << "ping" << pingArgs;
     _pingProcess->start("ping", pingArgs);
 }

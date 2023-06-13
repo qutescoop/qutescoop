@@ -139,7 +139,6 @@ void PlanFlightDialog::requestVroute() {
 }
 
 void PlanFlightDialog::vrouteDownloaded() {
-    qDebug() << "PlanFlightDialog::vrouteDownloaded()";
     disconnect(_replyVroute, &QNetworkReply::finished, this, &PlanFlightDialog::vrouteDownloaded);
     _replyVroute->deleteLater();
 
@@ -320,13 +319,11 @@ void PlanFlightDialog::plotPlannedRoute() const {
 }
 
 void PlanFlightDialog::on_cbPlot_toggled(bool checked) {
-    qDebug() << "PlanFlightDialog::on_cbPlot_toggled()" << checked;
     if (Window::instance(false) != 0) {
         Window::instance()->mapScreen->glWidget->invalidatePilots();
     }
     lblPlotStatus->setVisible(checked);
     linePlotStatus->setVisible(checked);
-    qDebug() << "PlanFlightDialog::on_cbPlot_toggled() -- finished";
 }
 
 void PlanFlightDialog::on_pbCopyToClipboard_clicked() {

@@ -66,17 +66,16 @@ void NavData::loadAirports(const QString& filename) {
     }
 
     if (countMissingCountry != 0) {
-        auto msg = QString("%1 airports are missing a country code. Please help by adding them in data/airports.dat.")
-            .arg(countMissingCountry);
-        qWarning() << "NavData::loadAirports()" << msg;
-        QTextStream(stdout) << "WARNING: " << msg << Qt::endl;
+        qWarning() << countMissingCountry << "airports are missing a country code. Please help by adding them in data/airports.dat.";
     }
 }
 
 void NavData::loadControllerAirportsMapping(const QString &filePath) {
     m_controllerAirportsMapping.clear();
     FileReader fr(filePath);
+    unsigned int count = 0;
     while (!fr.atEnd()) {
+        ++count;
         QString _line = fr.nextLine().trimmed();
 
         if (_line.isEmpty() || _line.startsWith(";")) {
@@ -85,10 +84,8 @@ void NavData::loadControllerAirportsMapping(const QString &filePath) {
 
         QStringList _fields = _line.split(':');
         if (_fields.size() != 3) {
-            auto msg = QString("Could not load line '%1' (%2 fields) from %3")
-                .arg(_line).arg(_fields.count()).arg(filePath);
-            qCritical() << "NavData::loadControllerAirportsMapping()" << msg;
-            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+            QMessageLogger(filePath.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << _line << ": Expected 3 fields";
             exit(EXIT_FAILURE);
         }
 
@@ -99,10 +96,8 @@ void NavData::loadControllerAirportsMapping(const QString &filePath) {
             if (airports.contains(_airportIcao)) {
                 _cam.airports.insert(airports.value(_airportIcao));
             } else {
-                auto msg = QString("While processing line '%1' from %2: Airport '%3' not found.")
-                    .arg(_line, filePath, _airportIcao);
-                qCritical() << "NavData::loadControllerAirportsMapping()" << msg;
-                QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                QMessageLogger(filePath.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                    << _line << ": Airport" << _airportIcao << "not found in airports.dat";
                 exit(EXIT_FAILURE);
             }
         }
@@ -114,7 +109,9 @@ void NavData::loadControllerAirportsMapping(const QString &filePath) {
 void NavData::loadCountryCodes(const QString& filePath) {
     countryCodes.clear();
     FileReader fr(filePath);
+    unsigned int count = 0;
     while (!fr.atEnd()) {
+        ++count;
         QString _line = fr.nextLine().trimmed();
 
         if (_line.isEmpty() || _line.startsWith(";")) {
@@ -123,10 +120,8 @@ void NavData::loadCountryCodes(const QString& filePath) {
 
         QStringList _fields = _line.split(':');
         if (_fields.size() != 2) {
-            auto msg = QString("Could not load line '%1' (%2 fields) from %3")
-                .arg(_line).arg(_fields.count()).arg(filePath);
-            qCritical() << "NavData::loadCountryCodes()" << msg;
-            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+            QMessageLogger(filePath.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << _line << ": Expected 2 fields";
             exit(EXIT_FAILURE);
         }
         countryCodes[_fields.first()] = _fields.last();
@@ -143,10 +138,6 @@ void NavData::loadAirlineCodes(const QString &filePath) {
         delete _a;
     }
     airlines.clear();
-    if (filePath.isEmpty()) {
-        qWarning() << "NavData::loadAirlineCodes() -- bad filename";
-        return;
-    }
 
     auto count = 0;
     FileReader fr(filePath);
@@ -159,10 +150,8 @@ void NavData::loadAirlineCodes(const QString &filePath) {
 
         QStringList _fields = _line.split(0x09); // 0x09 code for Tabulator
         if (_fields.count() != 4) {
-            auto msg = QString("Could not load line '%1' (%2 fields) from %3")
-                .arg(_line).arg(_fields.count()).arg(filePath);
-            qCritical() << "NavData::loadAirlineCodes()" << msg;
-            QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+            QMessageLogger(filePath.toLocal8Bit(), count, QT_MESSAGELOG_FUNC).critical()
+                << _line << ": Expected 4 fields";
             exit(EXIT_FAILURE);
         }
 
@@ -223,7 +212,7 @@ QSet<Airport*> NavData::additionalMatchedAirportsForController(QString prefix, Q
 }
 
 void NavData::updateData(const WhazzupData& whazzupData) {
-    qDebug() << "NavData::updateData() on" << airports.size() << "airports";
+    qDebug() << "on" << airports.size() << "airports";
     foreach (Airport* a, activeAirports.values()) {
         a->resetWhazzupStatus();
     }
@@ -279,7 +268,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
         activeAirports.insert(a->congestion(), a);
     }
 
-    qDebug() << "NavData::updateData() -- finished";
+    qDebug() << "-- finished";
 }
 
 void NavData::accept(SearchVisitor* visitor) {

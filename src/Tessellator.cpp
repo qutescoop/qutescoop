@@ -52,7 +52,7 @@ void Tessellator::tessellate(const QList<QPair<double, double> >& points) {
 }
 
 CALLBACK_DECL Tessellator::tessErrorCB(GLenum errorCode) {
-    qCritical() << "Tessellator::tessErrorCB()" << (char*) gluErrorString(errorCode);
+    qCritical() << (char*) gluErrorString(errorCode);
 }
 
 CALLBACK_DECL Tessellator::tessBeginCB(GLenum which) {

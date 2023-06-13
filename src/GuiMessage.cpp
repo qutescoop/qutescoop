@@ -81,14 +81,12 @@ void GuiMessages::remove(const QString &id) {
 ///////////////////////////////////////////////////////////////////////////
 // METHODS TO SET ACTIVE OUTPUT WIDGETS
 void GuiMessages::addStatusLabel(QLabel* label, bool hideIfNothingToDisplay) {
-    //qDebug() << "GuiMessages::addStatusLabel()" << label->objectName();
     // we want to be notified before this QLabel is getting invalid
     connect(label, &QObject::destroyed, this, &GuiMessages::labelDestroyed);
     _labels.insert(label, hideIfNothingToDisplay);
     update();
 }
 void GuiMessages::removeStatusLabel(QLabel* label) {
-    //qDebug() << "GuiMessages::removeStatusLabel()" << label->objectName();
     if (_labels[label]) {
         label->hide();
     }
@@ -97,37 +95,30 @@ void GuiMessages::removeStatusLabel(QLabel* label) {
 void GuiMessages::labelDestroyed(QObject* obj) {
     if (static_cast<QLabel*>(obj) != 0) {
         if (_labels.remove(static_cast<QLabel*>(obj)) == 0) {
-            qWarning() << "GuiMessages::labelDestroyed() object not found";
+            qWarning() << "object not found";
         }
-        // else
-        //    qDebug() << "GuiMessages::labelDestroyed() removed object";
     } else {
-        qWarning() << "GuiMessages::labelDestroyed() invalid object cast";
+        qWarning() << "invalid object cast";
     }
 }
 
 void GuiMessages::addProgressBar(QProgressBar* progressBar, bool hideIfNothingToDisplay) {
-    //qDebug() << "GuiMessages::addProgressBar()" << progressBar->objectName();
     // we want to be notified before this QProgressBar is getting invalid
     connect(progressBar, &QObject::destroyed, this, &GuiMessages::progressBarDestroyed);
     _bars.insert(progressBar, hideIfNothingToDisplay);
     update();
 }
 void GuiMessages::removeProgressBar(QProgressBar* progressBar) {
-    //qDebug() << "GuiMessages::removeProgressBar()" << progressBar->objectName();
     if (_bars[progressBar]) {
         progressBar->hide();
     }
     _bars.remove(progressBar);
 }
 void GuiMessages::progressBarDestroyed(QObject* obj) {
-    // qDebug() << obj;
     if (static_cast<QProgressBar*>(obj) != 0) {
         if (_bars.remove(static_cast<QProgressBar*>(obj)) == 0) {
             qWarning() << "GuiMessages::progressBarDestroyed() object not found";
         }
-        // else
-        //    qDebug() << "GuiMessages::progressBarDestroyed() removed object";
     } else {
         qWarning() << "GuiMessages::progressBarDestroyed() invalid object cast";
     }
@@ -136,7 +127,6 @@ void GuiMessages::progressBarDestroyed(QObject* obj) {
 ///////////////////////////////////////////////////////////////////////////
 // INTERNALLY USED CLASS AND METHODS (called by static methods)
 void GuiMessages::updateMessage(GuiMessage* gm) {
-    //qDebug() << "GuiMessages::updateMessage()" << guiMessage;
     GuiMessage* existing = messageById(gm->id, gm->type);
     if (existing != 0) {
         if (!gm->msg.isEmpty()) {
@@ -154,15 +144,12 @@ void GuiMessages::updateMessage(GuiMessage* gm) {
         if (gm->shownSince.isValid()) {
             existing->shownSince = gm->shownSince;
         }
-        // qDebug() << " updated existing message:" << existing;
     } else {
-        // qDebug() << "GuiMessage()::updateMessage() new" << gm;
         _messages.insert(gm->type, gm);
     }
     update();
 }
 void GuiMessages::removeMessageById(const QString &id) {
-    // qDebug() << "GuiMessages::removeMessage() id=" << id;
     foreach (int key, _messages.keys()) {
         foreach (GuiMessage* gm, _messages.values(key)) {
             if (gm->id == id) {
@@ -172,8 +159,6 @@ void GuiMessages::removeMessageById(const QString &id) {
                 if (_currentProgressMessage == gm) {
                     setProgress(new GuiMessage());
                 }
-                // qDebug() << "GuiMessage()::removeMessageById() removed"
-                //         << gm;
                 _messages.remove(key, gm);
             }
         }
@@ -184,7 +169,6 @@ void GuiMessages::removeMessageById(const QString &id) {
 ///////////////////////////////////////////////////////////////////////////
 // PRIVATE METHODS
 void GuiMessages::setStatusMessage(GuiMessage* gm, bool, bool, bool instantRepaint) {
-    //qDebug() << "GuiMessages::setStatusMessage()" << gm;
     foreach (QLabel* l, _labels.keys()) {
         l->setText(gm->msg);
         if (_labels[l]) { // bool indicating hideIfNothingToDisplay
@@ -202,7 +186,6 @@ void GuiMessages::setStatusMessage(GuiMessage* gm, bool, bool, bool instantRepai
     }
 }
 void GuiMessages::setProgress(GuiMessage* gm, bool instantRepaint) {
-    //qDebug() << "GuiMessages::setProgress()" << gm;
     foreach (QProgressBar* pb, _bars.keys()) {
         if (gm->progressMaximum != -1) {
             pb->setMaximum(gm->progressMaximum);
@@ -222,11 +205,8 @@ void GuiMessages::setProgress(GuiMessage* gm, bool instantRepaint) {
 }
 
 void GuiMessages::update() {
-    //qDebug() << "GuiMessages::update() now=" << QDateTime::currentDateTimeUtc().toString(Qt::ISODate);
     foreach (int key, _messages.keys()) {
         foreach (GuiMessage* gm, _messages.values(key)) {
-            //qDebug() << " " << gm;
-
             if (
                 gm->showMs != -1 && gm->shownSince.isValid() // shown long enough
                 && gm->shownSince.addMSecs(gm->showMs)
@@ -286,7 +266,6 @@ void GuiMessages::update() {
             }
         }
     }
-    //qDebug() << "GuiMessages::update() --finished";
 }
 
 GuiMessages::GuiMessage* GuiMessages::messageById(const QString &id, const GuiMessage::Type &type) {

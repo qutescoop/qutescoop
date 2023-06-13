@@ -50,7 +50,7 @@ Window::Window(QWidget* parent)
 
     // apply styleSheet
     if (!Settings::stylesheet().isEmpty()) {
-        qDebug() << "Window::() applying styleSheet:" << Settings::stylesheet();
+        qDebug() << "applying styleSheet:" << Settings::stylesheet();
         setStyleSheet(Settings::stylesheet());
     }
 
@@ -189,13 +189,13 @@ Window::Window(QWidget* parent)
     GuiMessages::instance()->addStatusLabel(_lblStatus, false);
 
     GuiMessages::remove("mainwindow");
-    qDebug() << "Window::() --finished";
+    qDebug() << "--finished";
 }
 
 Window::~Window() {}
 
 void Window::restore() {
-    qDebug() << "Window::restore() restoring window state, geometry and position";
+    qDebug() << "restoring window state, geometry and position";
 
     if (!Settings::savedSize().isNull()) {
         resize(Settings::savedSize());
@@ -263,7 +263,7 @@ void Window::about() {
 }
 
 void Window::processWhazzup(bool isNew) {
-    qDebug() << "Window::whazzupDownloaded() isNew =" << isNew;
+    qDebug() << "isNew =" << isNew;
     const WhazzupData &realdata = Whazzup::instance()->realWhazzupData();
     const WhazzupData &data = Whazzup::instance()->whazzupData();
 
@@ -364,7 +364,7 @@ void Window::processWhazzup(bool isNew) {
         _timerWatchdog.start(Settings::downloadInterval() * 1000 * 4);
     }
 
-    qDebug() << "Window::whazzupDownloaded() -- finished";
+    qDebug() << "-- finished";
 }
 
 void Window::refreshFriends() {
@@ -574,9 +574,9 @@ void Window::performWarp() {
 
     QDateTime warpToTime = dateTimePredict->dateTime();
     auto realWhazzupTime = Whazzup::instance()->realWhazzupData().whazzupTime;
-    qDebug() << "Window::performWarp() warpToTime=" << warpToTime << " realWhazzupTime=" << realWhazzupTime;
+    qDebug() << "warpToTime=" << warpToTime << " realWhazzupTime=" << realWhazzupTime;
     if (cbUseDownloaded->isChecked() && warpToTime < realWhazzupTime) {
-        qDebug() << "Window::performWarp() Looking for downloaded Whazzups";
+        qDebug() << "Looking for downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
         for (int i = downloaded.size() - 1; i > -1; i--) {
             if ((downloaded[i].first <= warpToTime && realWhazzupTime < downloaded[i].first) || (i == 0)) {
@@ -599,7 +599,7 @@ void Window::performWarp() {
 }
 
 void Window::on_cbUseDownloaded_toggled(bool checked) {
-    qDebug() << "Window::cbUseDownloaded_toggled()" << checked;
+    qDebug() << "checked=" << checked;
     if (!checked) {
         // I currently don't understand why we had this
         //        QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
@@ -616,8 +616,7 @@ void Window::on_cbOnlyUseDownloaded_toggled(bool checked) {
 }
 
 void Window::on_tbDisablePredict_clicked() {
-    qDebug() << "Window::tbDisablePredict_clicked()";
-    //this->on_actionPredict_toggled(false); // we do this by toggling the menu item
+    qDebug();
     actionPredict->setChecked(false);
 }
 
@@ -663,7 +662,7 @@ void Window::runPredict() {
 
     // when only using downloaded Whazzups, select the next available
     if (cbOnlyUseDownloaded->isChecked()) {
-        qDebug() << "Window::runPredict() restricting Warp target to downloaded Whazzups";
+        qDebug() << "restricting Warp target to downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded = Whazzup::instance()->downloadedWhazzups();
         for (int i = 0; i < downloaded.size(); i++) {
             if ((downloaded[i].first >= to) || (i == downloaded.size() - 1)) {
@@ -755,8 +754,7 @@ void Window::dateTimePredict_dateTimeChanged(QDateTime dateTime) {
 
     // when only using downloaded Whazzups, select the next available
     if (cbOnlyUseDownloaded->isChecked()) {
-        qDebug() << "Window::dateTimePredict_dateTimeChanged()"
-                 << "restricting Warp target to downloaded Whazzups";
+        qDebug() << "restricting Warp target to downloaded Whazzups";
         QList<QPair<QDateTime, QString> > downloaded =
             Whazzup::instance()->downloadedWhazzups();
         if (dateTime > _dateTimePredict_old) { // selecting a later date
@@ -904,7 +902,6 @@ void Window::on_actionZoomReset_triggered() {
 }
 
 void Window::actionShowRoutes_triggered(bool checked, bool showStatus) {
-    qDebug() << "Window::on_actionShowRoutes_triggered()" << checked;
     Settings::setShowRoutes(checked);
     if (showStatus) {
         GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
@@ -927,18 +924,15 @@ void Window::actionShowRoutes_triggered(bool checked, bool showStatus) {
     }
 
     mapScreen->glWidget->invalidatePilots();
-    qDebug() << "Window::on_actionShowRoutes_triggered() -- finished";
 }
 
 void Window::actionShowImmediateRoutes_triggered(bool checked, bool showStatus) {
-    qDebug() << "Window::on_actionShowImmediateRoutes_triggered()" << checked;
     Settings::setOnlyShowImmediateRoutePart(checked);
     if (showStatus) {
         GuiMessages::message(QString("toggled short-term routes [%1]").arg(checked? "on": "off"), "routeToggle");
     }
 
     mapScreen->glWidget->invalidatePilots();
-    qDebug() << "Window::on_actionShowImmediateRoutes_triggered() -- finished";
 }
 
 void Window::showInactiveAirports(bool checked) {
