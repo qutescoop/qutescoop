@@ -223,7 +223,6 @@ QSet<Airport*> NavData::additionalMatchedAirportsForController(QString prefix, Q
 }
 
 void NavData::updateData(const WhazzupData& whazzupData) {
-    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "NavData::updateData() on" << airports.size() << "airports";
     foreach (Airport* a, activeAirports.values()) {
         a->resetWhazzupStatus();
@@ -281,7 +280,6 @@ void NavData::updateData(const WhazzupData& whazzupData) {
     }
 
     qDebug() << "NavData::updateData() -- finished";
-    qApp->restoreOverrideCursor();
 }
 
 void NavData::accept(SearchVisitor* visitor) {

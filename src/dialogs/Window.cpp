@@ -146,7 +146,7 @@ Window::Window(QWidget* parent)
     connect(&_timerMetar, &QTimer::timeout, this, &Window::updateMetars);
 
     // Whazzup download timer
-    connect(&_timerWhazzup, &QTimer::timeout, this, &Window::downloadWatchdogTriggered);
+    connect(&_timerWatchdog, &QTimer::timeout, this, &Window::downloadWatchdogTriggered);
 
     // dock layout
     connect(
@@ -267,15 +267,15 @@ void Window::processWhazzup(bool isNew) {
     const WhazzupData &realdata = Whazzup::instance()->realWhazzupData();
     const WhazzupData &data = Whazzup::instance()->whazzupData();
 
-    QString msg = QString(tr("%1%2 - %3: %4 clients"))
+    QString msg = QString(tr("%1%2 – %3: %4 clients"))
         .arg(
         Settings::downloadNetworkName(),
         Whazzup::instance()->predictedTime.isValid()? " - <b>W A R P E D</b>  to": ""
         )
         .arg(
         data.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-            ? QString("today %1").arg(data.whazzupTime.time().toString("HHmm'z'"))
-            : data.whazzupTime.toString("ddd MM/dd HHmm'z'")
+            ? QString("today %1").arg(data.whazzupTime.time().toString("HH:mm:ss'z'"))
+            : data.whazzupTime.toString("ddd MM/dd HH:mm:ss'z'")
         )
         .arg(data.pilots.size() + data.controllers.size());
     GuiMessages::status(msg, "status");
@@ -283,15 +283,15 @@ void Window::processWhazzup(bool isNew) {
     msg = QString("Whazzup %1, bookings %2 updated")
         .arg(
         realdata.whazzupTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-                ? QString("today %1").arg(realdata.whazzupTime.time().toString("HHmm'z'"))
+                ? QString("today %1").arg(realdata.whazzupTime.time().toString("HH:mm:ss'z'"))
                 : (realdata.whazzupTime.isValid()
-                   ? realdata.whazzupTime.toString("ddd MM/dd HHmm'z'")
+                   ? realdata.whazzupTime.toString("ddd MM/dd HH:mm:ss'z'")
                    : "never"
         ),
         realdata.bookingsTime.date() == QDateTime::currentDateTimeUtc().date() // is today?
-                ? QString("today %1").arg(realdata.bookingsTime.time().toString("HHmm'z'"))
+                ? QString("today %1").arg(realdata.bookingsTime.time().toString("HH:mm:ss'z'"))
                 : (realdata.bookingsTime.isValid()
-                   ? realdata.bookingsTime.toString("ddd MM/dd HHmm'z'")
+                   ? realdata.bookingsTime.toString("ddd MM/dd HH:mm:ss'z'")
                    : "never"
                 )
         );
@@ -359,9 +359,9 @@ void Window::processWhazzup(bool isNew) {
 
         refreshFriends();
     }
-    _timerWhazzup.stop();
+    _timerWatchdog.stop();
     if (Settings::downloadPeriodically()) {
-        _timerWhazzup.start(Settings::downloadInterval() * 60 * 1000 * 4);
+        _timerWatchdog.start(Settings::downloadInterval() * 1000 * 4);
     }
 
     qDebug() << "Window::whazzupDownloaded() -- finished";
@@ -555,7 +555,7 @@ void Window::updateTitlebarAfterMove(Qt::DockWidgetArea area, QDockWidget* dock)
 }
 
 void Window::downloadWatchdogTriggered() {
-    _timerWhazzup.stop();
+    _timerWatchdog.stop();
     Whazzup::instance()->setStatusLocation(Settings::statusLocation());
     GuiMessages::errorUserAttention(
         "Failed to download network data for a while. "

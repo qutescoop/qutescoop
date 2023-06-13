@@ -18,9 +18,8 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
       updateEarliest(QDateTime()), whazzupTime(QDateTime()),
       bookingsTime(QDateTime()) {
     qDebug() << "WhazzupData::WhazzupData(buffer)" << type << "[NONE, WHAZZUP, ATCBOOKINGS, UNIFIED]";
-    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     _dataType = type;
-    int reloadInMin = Settings::downloadInterval();
+    int reloadInSec = Settings::downloadInterval();
     QJsonDocument data = QJsonDocument::fromJson(*bytes);
     if (data.isNull()) {
         qDebug() << "Couldn't parse JSON";
@@ -130,10 +129,9 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
         updateEarliest = QDateTime::currentDateTime().addSecs(15);
     }
     // set the earliest time the server will have new data
-    if (whazzupTime.isValid() && reloadInMin > 0) {
-        updateEarliest = whazzupTime.addSecs(reloadInMin * 60).toUTC();
+    if (whazzupTime.isValid() && reloadInSec > 0) {
+        updateEarliest = whazzupTime.addSecs(reloadInSec).toUTC();
     }
-    qApp->restoreOverrideCursor();
     qDebug() << "WhazzupData::WhazzupData(buffer) -- finished";
 }
 
@@ -143,7 +141,6 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
       updateEarliest(QDateTime()), whazzupTime(QDateTime()),
       bookingsTime(QDateTime()), predictionBasedOnTime(QDateTime()),
       predictionBasedOnBookingsTime(QDateTime()) {
-    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
     qDebug() << "WhazzupData::WhazzupData(predictTime)" << predictTime;
 
     whazzupTime = predictTime;
@@ -190,7 +187,7 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
     // let controllers be in until he states in his Controller Info also if only found in Whazzup, not booked
     foreach (const Controller* c, data.controllers) {
         // standard for online controllers: 4 min
-        QDateTime showUntil = predictionBasedOnTime.addSecs(Settings::downloadInterval() * 4 * 60);
+        QDateTime showUntil = predictionBasedOnTime.addSecs(4 * 60);
         if (c->assumeOnlineUntil.isValid()) {
             // only if before stated leave-time
             if (predictionBasedOnTime.secsTo(c->assumeOnlineUntil) >= 0) {
@@ -285,7 +282,6 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
 
         pilots[np->callsign] = np;
     }
-    qApp->restoreOverrideCursor();
     qDebug() << "WhazzupData::WhazzupData(predictTime) -- finished";
 }
 

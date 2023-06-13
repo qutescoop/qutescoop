@@ -149,13 +149,14 @@ void Whazzup::downloadJson3() {
     _downloadTimer->stop();
     QTime now = QTime::currentTime();
 
-    if (!_lastDownloadTime.isNull() && _lastDownloadTime.secsTo(now) < 30) {
+    const int minIntervalSec = 15;
+    if (!_lastDownloadTime.isNull() && _lastDownloadTime.secsTo(now) < minIntervalSec) {
         GuiMessages::message(
-            QString("Whazzup checked %1s (less than 30s) ago. Download scheduled.")
-            .arg(_lastDownloadTime.secsTo(now))
+            QString("Whazzup checked %1s (less than %2s) ago. Download scheduled.")
+            .arg(_lastDownloadTime.secsTo(now)).arg(minIntervalSec)
         );
-        _downloadTimer->start((30 - _lastDownloadTime.secsTo(now)) * 1000);
-        return; // don't allow download intervals < 30s
+        _downloadTimer->start((minIntervalSec - _lastDownloadTime.secsTo(now)) * 1000);
+        return;
     }
     _lastDownloadTime = now;
 
@@ -246,17 +247,13 @@ void Whazzup::processWhazzup() {
         const int serverNextUpdateInSec = QDateTime::currentDateTimeUtc().secsTo(_data.updateEarliest);
         if (
             _data.updateEarliest.isValid()
-            && (Settings::downloadInterval() * 60 < serverNextUpdateInSec)
+            && (Settings::downloadInterval() < serverNextUpdateInSec)
         ) {
-            _downloadTimer->start(serverNextUpdateInSec * 1000 + 60000); // 1min after later than reported
-                                                                         // from server
-                                                                         // - seems to report 0000z when
-                                                                         // actually
-                                                                         // updates at 0000:59z
+            _downloadTimer->start(serverNextUpdateInSec);
             qDebug() << "Whazzup::whazzupDownloaded() correcting next update, will update in"
                      << serverNextUpdateInSec << "s to respect the server's minimum interval";
         } else {
-            _downloadTimer->start(Settings::downloadInterval() * 60 * 1000);
+            _downloadTimer->start(Settings::downloadInterval() * 1000);
         }
     }
 
