@@ -2035,6 +2035,29 @@ bool GLWidget::shouldDrawLabel(const QRectF &rect) {
     return true;
 }
 
+QList<GLWidget::FontRectangle> GLWidget::fontRectanglesPrioritized() const {
+    auto priorityFor = [](const FontRectangle& fr) ->char {
+            if (qobject_cast<Airport*>(fr.object) != nullptr) {
+                return 30;
+            }
+            if (qobject_cast<Controller*>(fr.object) != nullptr) {
+                return 20;
+            }
+            if (qobject_cast<Pilot*>(fr.object) != nullptr) {
+                return 10;
+            }
+            return 0;
+        }
+    ;
+
+    QMultiMap<char, GLWidget::FontRectangle> sorted;
+    foreach (const auto &fr, m_fontRectangles) {
+        sorted.insert(priorityFor(fr), fr);
+    }
+
+    return sorted.values();
+}
+
 void GLWidget::drawTestTextures() {
     static QTimer* testTimer;
     static float i = 0.;
@@ -2115,12 +2138,11 @@ void GLWidget::orthoMatrix(GLfloat lat, GLfloat lon) {
     glTranslatef(0, 0, 1);
 }
 
-QSet<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
-    QSet<MapObject*> result;
-    foreach (const auto &fr, m_fontRectangles) { // scan text labels
-        // increase hit area
+QList<MapObject*> GLWidget::objectsAt(int x, int y, double radiusSimple) const {
+    QList<MapObject*> result;
+    foreach (const auto &fr, fontRectanglesPrioritized()) { // scan text labels
         if (fr.rect.adjusted(-10, -10, 10, 10).contains(x, y)) {
-            result.insert(fr.object);
+            result.append(fr.object);
         }
     }
 
@@ -2129,7 +2151,7 @@ QSet<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
         return result;
     }
 
-    double radiusDegQuad = Nm2Deg((qFuzzyIsNull(radius)? 30. * _zoom: radius));
+    double radiusDegQuad = Nm2Deg((qFuzzyIsNull(radiusSimple)? 30. * _zoom: radiusSimple));
     radiusDegQuad *= radiusDegQuad;
 
     foreach (Airport* a, NavData::instance()->airports.values()) {
@@ -2137,7 +2159,9 @@ QSet<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
             double x = a->lat - lat;
             double y = a->lon - lon;
             if (x * x + y * y < radiusDegQuad) {
-                result.insert(a);
+                if (!result.contains(a)) {
+                    result.append(a);
+                }
             }
         }
     }
@@ -2170,7 +2194,9 @@ QSet<MapObject*> GLWidget::objectsAt(int x, int y, double radius) const {
         double x = p->lat - lat;
         double y = p->lon - lon;
         if (x * x + y * y < radiusDegQuad) {
-            result.insert(p);
+            if (!result.contains(p)) {
+                result.append(p);
+            }
         }
     }
 

@@ -58,7 +58,7 @@ class GLWidget
     protected:
         virtual void paintGL() override;
         virtual void resizeGL(int width, int height) override;
-        QSet<MapObject*> objectsAt(int x, int y, double radius = 0) const;
+        QList<MapObject*> objectsAt(int x, int y, double radius = 0) const;
 
         void mouseDoubleClickEvent(QMouseEvent* event) override;
         void mousePressEvent(QMouseEvent* event) override;
@@ -91,7 +91,6 @@ class GLWidget
         void createFriendHighlighter();
 
         QList<Sector*> m_staticSectors;
-        QSet<FontRectangle> m_fontRectangles;
         QPoint _lastPos, _mouseDownPos;
         bool _mapMoving, _mapZooming, _mapRectSelecting, _lightsGenerated;
         bool m_isPilotsListDirty = true, m_isAirportsListDirty = true, m_isControllerListsDirty = true, m_isStaticSectorListsDirty = true,
@@ -110,7 +109,7 @@ class GLWidget
             _xRot, _yRot, _zRot, _zoom, _aspectRatio;
         QTimer* _highlighter;
         QList< QPair<double, double> > m_friendPositions;
-        QSet<MapObject*> m_hoveredObjects;
+        QList<MapObject*> m_hoveredObjects;
         QList<MapObject*> m_activeAirportMapObjects, m_inactiveAirportMapObjects, m_controllerMapObjects, m_pilotMapObjects,
             m_usedWaypointMapObjects;
 
@@ -138,6 +137,8 @@ class GLWidget
             int tryOtherPositions;
         };
         QList<RenderLabelsCommand> m_prioritizedLabels;
+        QList<FontRectangle>fontRectanglesPrioritized() const;
+        QSet<FontRectangle> m_fontRectangles;
 
         void drawTestTextures();
         void drawBillboardScreenSize(GLfloat lat, GLfloat lon, const QSize& size);
