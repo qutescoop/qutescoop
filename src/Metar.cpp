@@ -26,7 +26,7 @@ bool Metar::doesNotExist() const {
 bool Metar::needsRefresh() const {
     const int ageSec = downloaded.secsTo(QDateTime::currentDateTime());
     const bool ret = isNull() || ageSec > Settings::metarDownloadInterval() * 60;
-    qDebug() << "Metar::needsRefresh()" << airportLabel << QString("age: %1").arg(ageSec) << "=>" << ret;
+    qDebug() << airportLabel << QString("age: %1").arg(ageSec) << "=>" << ret;
     return ret;
 }
 
@@ -132,7 +132,7 @@ QString Metar::decodeVisibility(QStringList& tokens) const {
     bool ok;
     int i = vis.toInt(&ok);
     if (!ok) {
-        qWarning() << "Metar::decodeVisibility() unable to parse vis (int):" << vis;
+        qWarning() << "unable to parse vis (int):" << vis;
         return QString();
     }
 

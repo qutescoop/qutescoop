@@ -227,7 +227,6 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 }
 
 void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
-    qDebug() << "PilotDetails::on_cbPlotRoute_clicked()" << checked;
     if (_pilot->showDepDestLine != checked) {
         _pilot->showDepDestLine = checked;
         if (Window::instance(false) != 0) {
@@ -235,7 +234,6 @@ void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
         }
         refresh();
     }
-    qDebug() << "PilotDetails::on_cbPlotRoute_clicked() -- finished";
 }
 
 void PilotDetails::closeEvent(QCloseEvent* event) {

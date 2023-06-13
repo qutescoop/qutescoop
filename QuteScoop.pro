@@ -23,6 +23,7 @@ CONFIG += c++2a
 TEMPLATE = app
 CONFIG *= qt
 
+DEFINES += QT_MESSAGELOGCONTEXT
 CONFIG *= warn_on
 TARGET = QuteScoop
 

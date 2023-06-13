@@ -229,7 +229,7 @@ void AirportDetails::togglePlotRoutes(bool checked) {
 }
 
 void AirportDetails::refreshMetar() {
-    qDebug() << "AirportDetails::refreshMetar";
+    qDebug() << _airport;
     lblMetar->setText("…");
     QList<Airport*> airports;
     if (_airport != 0) {
@@ -239,7 +239,7 @@ void AirportDetails::refreshMetar() {
 }
 
 void AirportDetails::onGotMetar(const QString &airportId, const QString &encoded, const QString &humanHtml) {
-    qDebug() << "AirportDetails::onGotMetar" << airportId << encoded;
+    qDebug() << _airport << airportId << encoded;
     if (_airport->id == airportId) {
         lblMetar->setText(encoded);
         lblMetar->setToolTip(humanHtml);

@@ -11,13 +11,8 @@ Sector::Sector(const QStringList &fields, const int debugControllerLineNumber, c
       _debugSectorLineNumber(debugSectorLineNumber) {
     // LSAZ:Zurich::::189[:CTR]
     if (fields.size() != 6 && fields.size() != 7) {
-        auto msg = QString("While processing line #%1 '%2' from %3: Expected 6-7 fields, got %5")
-            .arg(_debugControllerLineNumber)
-            .arg(fields.join(':'))
-            .arg("data/firlist.dat")
-            .arg(fields.count());
-        qCritical() << "NavData::loadCountryCodes()" << msg;
-        QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+        QMessageLogger("firlist.dat", debugControllerLineNumber, QT_MESSAGELOG_FUNC).critical()
+            << fields << ": Expected 6-7 fields";
         exit(EXIT_FAILURE);
     }
 

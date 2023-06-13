@@ -55,14 +55,14 @@ MapScreen::MapScreen(QWidget* parent)
     fmt.setSampleBuffers(sampleBuffers);
 
 
-    qDebug() << "MapScreen::MapScreen() creating GLWidget";
+    qDebug() << "creating GLWidget";
     glWidget = new GLWidget(fmt, this);
     QGridLayout* layout = new QGridLayout;
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setMargin(0);
     layout->addWidget(glWidget);
     setLayout(layout);
-    qDebug() << "MapScreen::MapScreen() creating GLWidget --finished";
+    qDebug() << "creating GLWidget --finished";
 }
 
 void MapScreen::resizeEvent(QResizeEvent*) {

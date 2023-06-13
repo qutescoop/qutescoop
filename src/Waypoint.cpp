@@ -3,28 +3,31 @@
 #include "Airac.h"
 #include "NavData.h"
 
-Waypoint::Waypoint(const QStringList& stringList)
+Waypoint::Waypoint(const QStringList& fields)
     : MapObject() {
-    if (stringList.size() != 6) {
-        qCritical() << "Waypoint(): could not parse " << stringList << " as Waypoint. Expected 6 fields.";
+    if (fields.size() != 6) {
+        QMessageLogger("earth_fix.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << fields << ": Expected 6 fields";
         return;
     }
 
     bool ok;
 
-    lat = stringList[0].toDouble(&ok);
+    lat = fields[0].toDouble(&ok);
     if (!ok) {
-        qCritical() << "Waypoint::Waypoint() unable to parse lat:" << stringList;
+        QMessageLogger("earth_fix.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << fields << ": unable to parse lat";
         return;
     }
-    lon = stringList[1].toDouble(&ok);
+    lon = fields[1].toDouble(&ok);
     if (!ok) {
-        qCritical() << "Waypoint::Waypoint() unable to parse lon:" << stringList;
+        QMessageLogger("earth_fix.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << fields << ": unable to parse lon";
         return;
     }
-    id = stringList[2];
+    id = fields[2];
 
-    regionCode = stringList[4];
+    regionCode = fields[4];
 }
 
 Waypoint::Waypoint(const QString& id, const double lat, const double lon)

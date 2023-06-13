@@ -130,7 +130,7 @@ void MetarModel::downloadMetarFor(Airport* airport) {
 
     QUrl url(location);
 
-    qDebug() << "MetarModel::downloadMetarFor()" << airport->id << url;
+    qDebug() << airport->id << url;
 
     _downloadQueue.insert(url, airport);
     downloadNextFromQueue();
@@ -138,14 +138,14 @@ void MetarModel::downloadMetarFor(Airport* airport) {
 }
 
 void MetarModel::downloadNextFromQueue() {
-    qDebug() << "MetarModel::downloadNextFromQueue() queue.count=" << _downloadQueue.count();
+    qDebug() << "queue.count=" << _downloadQueue.count();
 
     if (_downloadQueue.isEmpty()) {
         return;
     }
 
     if (_metarReply != 0 && !_metarReply->isFinished()) {
-        qDebug() << "MetarModel::downloadNextFromQueue() _metarReply still running";
+        qDebug() << "_metarReply still running";
         return; // we will be called via downloaded() later
     }
 
@@ -154,7 +154,7 @@ void MetarModel::downloadNextFromQueue() {
 }
 
 void MetarModel::metarReplyFinished() {
-    qDebug() << "MetarModel::downloaded()" << _metarReply->url();
+    qDebug() << _metarReply->url();
     disconnect(_metarReply, &QNetworkReply::finished, this, &MetarModel::metarReplyFinished);
 
     if (_metarReply->error() == QNetworkReply::NoError) {
@@ -181,7 +181,7 @@ void MetarModel::gotMetarFor(Airport* airport) {
         if (!_metarList.contains(airport)) {
             _metarList.append(airport);
         }
-        qDebug() << "MetarModel::gotMetarFor()" << airport->id << ":" << airport->metar.encoded;
+        qDebug() << airport->id << ":" << airport->metar.encoded;
         emit gotMetar(airport->id, airport->metar.encoded, airport->metar.humanHtml());
         endResetModel();
     }

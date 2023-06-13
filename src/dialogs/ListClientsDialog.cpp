@@ -164,7 +164,7 @@ void ListClientsDialog::performSearch() {
     _editFilterTimer.stop();
     qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
 
-    qDebug() << "ListClientsDialog::performSearch()";
+    qDebug();
     QRegExp regex;
     // @todo this tries to cater for both ways (wildcards and regexp) but it does a bad job at that.
     QStringList tokens = editFilter->text()
@@ -189,7 +189,7 @@ void ListClientsDialog::performSearch() {
     // General
     boxResults->setTitle(QString("Results (%1)").arg(_clientsProxyModel->rowCount()));
     qApp->restoreOverrideCursor();
-    qDebug() << "ListClientsDialog::performSearch() -- finished";
+    qDebug() << "-- finished";
 }
 
 void ListClientsDialog::modelSelected(const QModelIndex& index) {

@@ -4,11 +4,11 @@
 #include "../NavData.h"
 
 void ListClientsDialogModel::setClients(const QList<Client*>& clients) {
-    qDebug() << "ListClientsDialogModel::setClients()";
+    qDebug();
     beginResetModel();
     _clients = clients;
     endResetModel();
-    qDebug() << "ListClientsDialogModel::setClients() -- finished";
+    qDebug() << "-- finished";
 }
 
 QVariant ListClientsDialogModel::headerData(int section, enum Qt::Orientation orientation, int role) const {

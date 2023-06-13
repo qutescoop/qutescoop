@@ -63,13 +63,8 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
         if (line.startsWith("DISPLAY_LIST_")) {
             if (!workingSectorId.isEmpty()) { // we are at the end of a section
                 if (pointList.size() < 3) {
-                    auto msg = QString("While processing lines #%1-%2 from %3: Sector %4 doesn't contain enough points (%5, expected 3+)")
-                        .arg(debugLineWorkingSectorStart)
-                        .arg(count)
-                        .arg(filePath, workingSectorId)
-                        .arg(pointList.size());
-                    qCritical() << "SectorReader::loadSectordisplay()" << msg;
-                    QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                    QMessageLogger(filePath, debugLineWorkingSectorStart, QT_MESSAGELOG_FUNC).critical()
+                        << "Sector" << workingSectorId << "doesn't contain enough points (" << pointList.size() << ", expected 3+)";
                     exit(EXIT_FAILURE);
                 }
 
@@ -81,11 +76,8 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
                 }
 
                 if (sectorsWithMatchingId.size() == 0) {
-                    auto msg = QString("While processing line #%1 '%2' from %3: Sector ID %4 is not used in firlist.dat.")
-                        .arg(count)
-                        .arg(line, filePath)
-                        .arg(workingSectorId);
-                    qInfo() << "SectorReader::loadSectordisplay()" << msg;
+                    QMessageLogger(filePath, count, QT_MESSAGELOG_FUNC).info()
+                        << line << "Sector ID" << workingSectorId << "is not used in firlist.dat.";
 
                     // add this pseudo sector to be able to show it in StaticSectorsDialog
                     auto* s = new Sector(
@@ -125,12 +117,8 @@ void SectorReader::loadSectordisplay(QMultiMap<QString, Sector*>& sectors) {
             double lat = latLng[0].toDouble();
             double lon = Helpers::modPositive(latLng[1].toDouble() + 180., 360.) - 180.;
             if (lat > 90. || lat < -90. || lon > 180. || lon < -180. || (qFuzzyIsNull(lat) && qFuzzyIsNull(lon))) {
-                auto msg = QString("While processing line #%1 '%2' from %3: Sector id=%4 has invalid point %5:%6")
-                    .arg(count)
-                    .arg(line, filePath)
-                    .arg(workingSectorId).arg(lat).arg(lon);
-                qCritical() << "SectorReader::loadSectordisplay()" << msg;
-                QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+                QMessageLogger(filePath, count, QT_MESSAGELOG_FUNC).critical()
+                    << line << ": Sector id" << workingSectorId << "has invalid point" << lat << lon;
                 exit(EXIT_FAILURE);
             }
 

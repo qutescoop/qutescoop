@@ -88,10 +88,8 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber)
     resetWhazzupStatus();
 
     if (list.size() != 6) {
-        auto msg = QString("While processing line #%1 '%2' from data/airports.dat: Found %3 fields, expected exactly 6.")
-            .arg(debugLineNumber).arg(list.join(':')).arg(list.size());
-        qCritical() << "Airport::Airport()" << msg;
-        QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+        QMessageLogger("airports.dat", debugLineNumber, QT_MESSAGELOG_FUNC).critical()
+            << "While processing line" << list.join(':') << ": Found" << list.size() << "fields, expected exactly 6.";
         exit(EXIT_FAILURE);
     }
 
@@ -101,11 +99,8 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber)
     countryCode = list[3];
 
     if (countryCode != "" && NavData::instance()->countryCodes.value(countryCode, "") == "") {
-        auto msg = QString("While processing line #%1 from data/airports.dat: Could not find country '%2' for airport %3 (%4, %5) in data/countryCodes.dat.")
-            .arg(debugLineNumber)
-            .arg(countryCode, id, name, city);
-        qCritical() << "Airport::Airport()" << msg;
-        QTextStream(stdout) << "CRITICAL: " << msg << Qt::endl;
+        QMessageLogger("airports.dat", debugLineNumber, QT_MESSAGELOG_FUNC).critical()
+            << "While processing line" << list.join(':') << ": Could not find country" << countryCode;
         exit(EXIT_FAILURE);
     }
 

@@ -2,7 +2,8 @@
 
 NavAid::NavAid(const QStringList&stringList) {
     if (stringList.size() < 12) {
-        qCritical() << "NavAid(): could not parse " << stringList << " as Navaid. Expected more than 12 fields.";
+        QMessageLogger("earth_nav.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << "could not parse" << stringList << "as Navaid. Expected more than 12 fields.";
         return;
     }
 
@@ -10,23 +11,27 @@ NavAid::NavAid(const QStringList&stringList) {
 
     _type = (Type) stringList[0].toInt(&ok);
     if (!ok) {
-        qCritical() << "NavAid::NavAid() unable to parse waypointtype (int):" << stringList << 0;
+        QMessageLogger("earth_nav.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << "unable to parse waypointtype (int):" << stringList;
         return;
     }
     lat = stringList[1].toDouble(&ok);
     if (!ok) {
-        qCritical() << "NavAid::NavAid() unable to parse lat (double):" << stringList << 1;
+        QMessageLogger("earth_nav.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << "unable to parse lat (double):" << stringList;
         return;
     }
     lon = stringList[2].toDouble(&ok);
     if (!ok) {
-        qCritical() << "NavAid::NavAid() unable to parse lon (double):" << stringList << 2;
+        QMessageLogger("earth_nav.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << "unable to parse lon (double):" << stringList;
         return;
     }
 
     _freq = stringList[4].toInt(&ok);
     if (!ok) {
-        qCritical() << "NavAid::NavAid() unable to parse frequency (int):" << stringList << 4;
+        QMessageLogger("earth_nav.dat", 0, QT_MESSAGELOG_FUNC).critical()
+            << "unable to parse freq (int):" << stringList;
         return;
     }
 
