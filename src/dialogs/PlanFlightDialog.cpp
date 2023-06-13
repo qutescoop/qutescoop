@@ -52,8 +52,6 @@ PlanFlightDialog::PlanFlightDialog(QWidget* parent)
     treeRoutes->sortByColumn(0, Qt::AscendingOrder);
     connect(treeRoutes, &QAbstractItemView::clicked, this, &PlanFlightDialog::routeSelected);
 
-    pbVatsimPrefile->setVisible(Settings::downloadNetwork() == 1); // only for VATSIM
-
     lblPlotStatus->setText(QString(""));
     linePlotStatus->setVisible(false);
     gbResults->setTitle("Results");
@@ -340,8 +338,13 @@ void PlanFlightDialog::on_pbCopyToClipboard_clicked() {
 void PlanFlightDialog::on_pbVatsimPrefile_clicked() {
     if (selectedRoute != 0) {
         QUrl url = QUrl(
-            QString("http://www.vatsim.net/fp/?1=I&5=%1&9=%2&8=%3&voice=/V/")
-            .arg(selectedRoute->dep, selectedRoute->dest, selectedRoute->route)
+            QString("https://my.vatsim.net/pilots/flightplan?departure=%1&arrival=%2&route=%3&rmk=%4")
+            .arg(
+                QUrl::toPercentEncoding(selectedRoute->dep),
+                QUrl::toPercentEncoding(selectedRoute->dest),
+                QUrl::toPercentEncoding(selectedRoute->route),
+                QUrl::toPercentEncoding("TCAS Simbrief lol no")
+            )
             , QUrl::TolerantMode
         );
         if (url.isValid()) {
