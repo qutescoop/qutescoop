@@ -2342,11 +2342,6 @@ void GLWidget::newWhazzupData(bool isNew) {
     qDebug() << "GLWidget::newWhazzupData -- finished";
 }
 
-void GLWidget::showInactiveAirports(bool value) {
-    Settings::setShowInactiveAirports(value);
-    newWhazzupData(true);
-}
-
 void GLWidget::createFriendHighlighter() {
     _highlighter = new QTimer(this);
     _highlighter->setInterval(100);

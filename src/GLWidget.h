@@ -50,8 +50,6 @@ class GLWidget
         void rememberPosition(int nr);
         void restorePosition(int nr, bool isSilent = false);
 
-        void showInactiveAirports(bool value);
-
         void destroyFriendHighlighter();
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);

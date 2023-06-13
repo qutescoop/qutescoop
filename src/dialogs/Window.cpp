@@ -78,7 +78,7 @@ Window::Window(QWidget* parent)
     connect(actionListClients, &QAction::triggered, this, &Window::openListClients);
     connect(actionOpenStaticSectorsDialog, &QAction::triggered, this, &Window::openStaticSectorsDialog);
     actionShowInactiveAirports->setChecked(Settings::showInactiveAirports());
-    connect(actionShowInactiveAirports, &QAction::toggled, mapScreen->glWidget, &GLWidget::showInactiveAirports);
+    connect(actionShowInactiveAirports, &QAction::toggled, this, &Window::showInactiveAirports);
     pb_highlightFriends->setChecked(Settings::highlightFriends());
     actionHighlight_Friends->setChecked(Settings::highlightFriends());
     setEnableBookedAtc(Settings::downloadBookings());
@@ -941,7 +941,20 @@ void Window::actionShowImmediateRoutes_triggered(bool checked, bool showStatus) 
     qDebug() << "Window::on_actionShowImmediateRoutes_triggered() -- finished";
 }
 
+void Window::showInactiveAirports(bool checked) {
+    GuiMessages::message(
+        QString("toggled inactive airports [%1]").arg(checked? "on": "off"),
+        "toggleInactiveAirports"
+    );
+    Settings::setShowInactiveAirports(checked);
+    mapScreen->glWidget->invalidateAirports();
+}
+
 void Window::on_actionShowWaypoints_triggered(bool checked) {
+    GuiMessages::message(
+        QString("toggled active waypoints [%1]").arg(checked? "on": "off"),
+        "toggleWaypoints"
+    );
     Settings::setShowUsedWaypoints(checked);
     mapScreen->glWidget->invalidatePilots();
 }
@@ -956,6 +969,10 @@ void Window::on_actionHighlight_Friends_triggered(bool checked) {
 }
 
 void Window::on_pb_highlightFriends_toggled(bool checked) {
+    GuiMessages::message(
+        QString("toggled highlight friends [%1]").arg(checked? "on": "off"),
+        "toggleHighlightFriends"
+    );
     actionHighlight_Friends->setChecked(checked);
     on_actionHighlight_Friends_triggered(checked);
 }
