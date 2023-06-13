@@ -139,7 +139,10 @@ void Airac::readNavaids(const QString& directory) {
         }
 
         // we ignore all the rest (for now)
-        if (nav->type() == NavAid::Type::NDB || nav->type() == NavAid::Type::VOR) {
+        if (
+            nav->type() == NavAid::Type::NDB || nav->type() == NavAid::Type::VOR
+            || nav->type() == NavAid::Type::DME // yes, some airways actually use that
+        ) {
             navaids[nav->id].insert(nav);
         }
     }
@@ -195,7 +198,7 @@ void Airac::readAirways(const QString& directory) {
         }
         Waypoint* start = waypoint(id, regionCode, fixType);
         if (start == 0) {
-            qCritical() << "Airac::readAirways() unable to find start waypoint:" << list;
+            qCritical() << "Airac::readAirways() unable to find start waypoint:" << QStringList{ id, regionCode, QString::number(fixType) } << list;
             continue;
         }
 
@@ -208,7 +211,7 @@ void Airac::readAirways(const QString& directory) {
         }
         Waypoint* end = waypoint(id, regionCode, fixType);
         if (end == 0) {
-            qCritical() << "Airac::readAirways() unable to find end waypoint:" << list;
+            qCritical() << "Airac::readAirways() unable to find end waypoint:" << QStringList{ id, regionCode, QString::number(fixType) } << list;
             continue;
         }
 
@@ -233,21 +236,20 @@ void Airac::readAirways(const QString& directory) {
 }
 
 Waypoint* Airac::waypoint(const QString &id, const QString &regionCode, const int &type) const {
-    Waypoint* result = 0;
     if (type == 11) {
-        foreach (Waypoint* w, fixes[id]) {
+        foreach (Waypoint* w, fixes.value(id)) {
             if (w->regionCode == regionCode) {
                 return w;
             }
         }
     } else {
-        foreach (NavAid* n, navaids[id]) {
+        foreach (NavAid* n, navaids.value(id)) {
             if (n->regionCode == regionCode) {
                 return n;
             }
         }
     }
-    return result;
+    return nullptr;
 }
 
 /**
