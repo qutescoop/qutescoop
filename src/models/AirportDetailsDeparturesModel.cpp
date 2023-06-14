@@ -77,8 +77,9 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
             case 5:
                 return p->waypoints().isEmpty()? "": p->waypoints().constFirst();
             case 6:
-                if (p->flightStatus() == Pilot::PREFILED) {
-                    return "ETD " + p->planDeptime.mid(0, p->planDeptime.length() - 2) + ":" + p->planDeptime.right(2);
+                if (p->flightStatus() == Pilot::PREFILED || p->flightStatus() == Pilot::BOARDING || p->flightStatus() == Pilot::GROUND_DEP) {
+                    return "PTD " + p->etd().toString("HH:mm"); // p->planDeptime.mid(0, p->planDeptime.length() - 2) +
+                                                                // ":" + p->planDeptime.right(2);
                 } else {
                     return QString("%1 NM").arg(p->distanceFromDeparture() < 3? 0: (int) p->distanceFromDeparture());
                 }
@@ -89,8 +90,18 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
         }
     } else if (role == Qt::UserRole) { // used for sorting
         switch (index.column()) {
-            case 6:
-                return p->flightStatus() == Pilot::PREFILED? -1: p->distanceFromDeparture();
+            case 6: {
+                if (p->flightStatus() == Pilot::BUSH) {
+                    return "0";
+                }
+                if (p->flightStatus() == Pilot::PREFILED || p->flightStatus() == Pilot::BOARDING) {
+                    return "1" + p->etd().toString("dd HHmm");
+                }
+                if (p->flightStatus() == Pilot::GROUND_DEP) {
+                    return "2" + p->etd().toString("dd HHmm");;
+                }
+                return QString("3%1").arg(p->distanceFromDeparture(), 10, 'f', 1, '0');
+            }
         }
 
         return data(index, Qt::DisplayRole);
