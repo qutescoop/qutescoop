@@ -10,6 +10,8 @@ class Airac
     Q_OBJECT
     public:
         static Airac* instance(bool createIfNoInstance = true);
+        static QString effectiveCycle(const QDate& date = QDate::currentDate());
+
         // this is the longest legitimate route part that we can't resolve (yet) (PACOT entry-exit)
         constexpr static const double ifrMaxWaypointInterval = 5500.;
         constexpr static const double nonIfrMaxWaypointInterval = 300.;
