@@ -17,6 +17,22 @@ Airac* Airac::instance(bool createIfNoInstance) {
     return airacInstance;
 }
 
+QString Airac::effectiveCycle(const QDate &date) {
+    auto effectiveDate = QDate(2016, 1, 7);
+    int year = 0, release = 0;
+    do {
+        if (effectiveDate.year() != year) {
+            year = effectiveDate.year();
+            release = 0;
+        }
+        release++;
+
+        effectiveDate = effectiveDate.addDays(28);
+    } while (effectiveDate < date);
+
+    return QString::number(year).right(2) + QString::number(release).rightJustified(2, '0');
+}
+
 Airac::Airac() {}
 
 Airac::~Airac() {

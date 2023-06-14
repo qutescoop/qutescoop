@@ -1,11 +1,12 @@
 #include "PlanFlightDialog.h"
 
-#include "Window.h"
-#include "../helpers.h"
-#include "../NavData.h"
-#include "../Net.h"
-#include "../Route.h"
-#include "../Settings.h"
+#include "src/dialogs/Window.h"
+#include "src/helpers.h"
+#include "src/NavData.h"
+#include "src/Net.h"
+#include "src/Route.h"
+#include "src/Settings.h"
+#include "src/Airac.h"
 
 #include <QtXml/QDomDocument>
 
@@ -41,7 +42,7 @@ PlanFlightDialog::PlanFlightDialog(QWidget* parent)
     }
 
     bDepDetails->hide(); bDestDetails->hide();
-    edCycle->setText(QDate::currentDate().toString("yyMM"));
+    edCycle->setText(Airac::effectiveCycle());
 
     _routesSortModel = new QSortFilterProxyModel(this);
     _routesSortModel->setDynamicSortFilter(true);
