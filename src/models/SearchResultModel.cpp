@@ -68,8 +68,12 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
         return QVariant();
     }
 
+    if (m_isSearching) {
+        return "…";
+    }
+
     if (_content.isEmpty()) {
-        return QString("No Results");
+        return "No Results";
     }
 
     return QString("%1 Result%2").arg(_content.size()).arg(_content.size() == 1? "": "s");
