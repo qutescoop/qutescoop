@@ -80,6 +80,7 @@ PCT:APP DEP:KBWI KIAD KDCA KRIC KCHO
 ; https://laartcc.org/article/understand-socal-airspace
 SCT:APP DEP:KLAX KSAN KPSP KBUR KVNY KLGB KONT KSNA KSDM KAVX
 MSK::UUWW
+UKBV:APP DEP:UKBB UKKM UKKK
 
 ; Australia - https://vatpac.org/controllers/position :
 AD::YPAD
