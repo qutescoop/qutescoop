@@ -23,7 +23,7 @@ void Route::calculateWaypointsAndDistance() {
     }
 
     QStringList list = route.split(' ', Qt::SkipEmptyParts);
-    waypoints = Airac::instance()->resolveFlightplan(list, depAirport->lat, depAirport->lon);
+    waypoints = Airac::instance()->resolveFlightplan(list, depAirport->lat, depAirport->lon, Airac::ifrMaxWaypointInterval);
 
     Waypoint* depWp = new Waypoint(depAirport->id, depAirport->lat, depAirport->lon);
     waypoints.prepend(depWp);

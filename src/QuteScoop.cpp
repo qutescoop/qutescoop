@@ -117,7 +117,7 @@ int main(int argc, char* argv[]) {
             return 1;
         }
 
-        const auto waypoints = Airac::instance()->resolveFlightplan(route, dep->lat, dep->lon);
+        const auto waypoints = Airac::instance()->resolveFlightplan(route, dep->lat, dep->lon, Airac::ifrMaxWaypointInterval);
 
         QTextStream(stdout) << "\n# Waypoints:" << Qt::endl;
         foreach (const auto &w, waypoints) {
