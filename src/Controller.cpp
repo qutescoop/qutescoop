@@ -69,6 +69,7 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup)
     : MapObject(), Client(json, whazzup),
       sector(0) {
     frequency = json["frequency"].toString();
+    Q_ASSERT(!frequency.isNull());
     facilityType = json["facility"].toInt();
     if (callsign.right(4) == "_FSS") {
         facilityType = 7; // workaround as VATSIM reports 1 for _FSS
@@ -85,7 +86,7 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup)
 
     atisCode = "";
     if (json.contains("atis_code")) {
-        atisCode = json["atis_code"].toString();
+        atisCode = json["atis_code"].isNull()? "": json["atis_code"].toString();
     }
 
     // do some magic for Controller Info like "online until"...
@@ -169,7 +170,11 @@ QString Controller::facilityString() const {
 }
 
 QString Controller::typeString() const {
-    return atcLabelTokens().last();
+    const auto labelTokens = atcLabelTokens();
+    if (labelTokens.isEmpty()) {
+        return "";
+    }
+    return labelTokens.constLast();
 }
 
 QStringList Controller::atcLabelTokens() const {
@@ -402,5 +407,6 @@ bool Controller::isObserver() const {
 
 bool Controller::isATC() const {
     // 199.998 gets transmitted on VATSIM for a controller without prim freq
+    Q_ASSERT(!frequency.isNull());
     return facilityType > 0 && !frequency.isEmpty() && frequency != "199.998";
 }

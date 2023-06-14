@@ -33,7 +33,7 @@ ListClientsDialog::ListClientsDialog(QWidget* parent)
 
     // clients
     _clientsModel = new ListClientsDialogModel;
-    _clientsProxyModel = new QSortFilterProxyModel;
+    _clientsProxyModel = new QSortFilterProxyModel(this);
     _clientsProxyModel->setDynamicSortFilter(true);
     _clientsProxyModel->setSourceModel(_clientsModel);
     treeListClients->setUniformRowHeights(true);

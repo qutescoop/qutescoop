@@ -32,9 +32,14 @@ class AirportDetailsAtcModel
 
         void setClients(QList<Controller*> controllers);
         void modelSelected(const QModelIndex& index) const;
-        void writeExpandedState(const QModelIndex& index, bool isExpanded) const;
+        void writeExpandedState(const QModelIndex& index, bool isExpanded);
 
+        bool isExpanded(AirportDetailsAtcModelItem*) const;
+
+        QMap<QString, QVariant> m_atcExpandedByType;
     private:
+        const QStringList typesSorted { "FSS", "CTR", "DEP", "APP", "TWR", "GND", "DEL", "ATIS", "OBS" };
+
         AirportDetailsAtcModelItem* rootItem;
 };
 

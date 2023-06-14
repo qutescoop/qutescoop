@@ -1626,6 +1626,14 @@ void Settings::setAirportDialogAtcSortOrder(Qt::SortOrder v) {
     instance()->setValue("airportDialog/atcSortOrder", int(v));
 }
 
+QMap<QString, QVariant> Settings::airportDialogAtcExpandedByType() {
+    return instance()->value("airportDialog/atcExpandedByType", {}).toMap();
+}
+
+void Settings::setAirportDialogAtcExpandedByType(const QMap<QString, QVariant>& v) {
+    instance()->setValue("airportDialog/atcExpandedByType", v);
+}
+
 void Settings::saveGeometry(const QByteArray& state) {
     instance()->setValue("mainWindowState/geometry", state);
 }
