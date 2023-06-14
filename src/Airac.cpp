@@ -153,12 +153,20 @@ void Airac::readNavaids(const QString& directory) {
             continue;
         }
 
-        // we ignore all the rest (for now)
+        // we only add those useful to us (for now)
         if (
             nav->type() == NavAid::Type::NDB || nav->type() == NavAid::Type::VOR
             || nav->type() == NavAid::Type::DME // yes, some airways actually use that
         ) {
             navaids[nav->id].insert(nav);
+        } else if (nav->type() == NavAid::Type::DME_NO_FREQ) {
+            // upgrade VOR to VOR/DME - this assumes the DME_NO_FREQ line is always after the main VOR
+            foreach (auto* _n, navaids.value(nav->id)) {
+                if (_n->regionCode != nav->regionCode) {
+                    continue;
+                }
+                _n->upgradeToVorDme();
+            }
         }
     }
     qDebug() << "Read navaids from" << (directory + "/earth_nav.dat")
