@@ -19,9 +19,11 @@ class NavAid
             DME = 13,
             FAP_GBAS = 14,
             GBAS_GND = 15,
-            GBAS_THR = 16
+            GBAS_THR = 16,
+            CUSTOM_VORDME = 99,
         };
         static QString typeStr(Type _type);
+        static const QHash<Type, QString> typeStrings;
 
         NavAid(const QStringList& stringList);
 
@@ -29,6 +31,8 @@ class NavAid
         virtual QString mapLabelHovered() const override;
         virtual QStringList mapLabelSecondaryLinesHovered() const override;
         virtual int type() override;
+
+        void upgradeToVorDme();
 
         QString freqString() const;
     private:

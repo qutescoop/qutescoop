@@ -1,5 +1,22 @@
 #include "NavAid.h"
 
+const QHash<NavAid::Type, QString> NavAid::typeStrings = {
+    { NDB, "NDB" },
+    { VOR, "VOR" },
+    { ILS_LOC, "ILS" },
+    { LOC, "LOC" },
+    { GS, "GS" },
+    { OM, "OM" },
+    { MM, "OM" },
+    { IM, "IM" },
+    { DME_NO_FREQ, "DME (no freq)" },
+    { DME, "DME" },
+    { FAP_GBAS, "FAP alignment point" },
+    { GBAS_GND, "GBAS Ground station" },
+    { GBAS_THR, "GBAS Threshold point" },
+    { CUSTOM_VORDME, "VOR/DME" }
+};
+
 NavAid::NavAid(const QStringList&stringList) {
     if (stringList.size() < 12) {
         QMessageLogger("earth_nav.dat", 0, QT_MESSAGELOG_FUNC).critical()
@@ -47,23 +64,7 @@ NavAid::NavAid(const QStringList&stringList) {
 }
 
 QString NavAid::typeStr(Type type) {
-    QHash<Type, QString> hash;
-    hash.reserve(10);
-    hash.insert(NDB, "NDB");
-    hash.insert(VOR, "VOR");
-    hash.insert(DME, "DME");
-    hash.insert(ILS_LOC, "ILS");
-    hash.insert(LOC, "LOC");
-    hash.insert(GS, "GS");
-    hash.insert(OM, "OM");
-    hash.insert(MM, "OM");
-    hash.insert(IM, "IM");
-    hash.insert(DME_NO_FREQ, "DME (no freq)");
-    hash.insert(DME, "DME");
-    hash.insert(FAP_GBAS, "FAP alignment point");
-    hash.insert(GBAS_GND, "GBAS Ground station");
-    hash.insert(GBAS_THR, "GBAS Threshold point");
-    return hash.value(type, QString());
+    return typeStrings.value(type, QString());
 }
 
 QString NavAid::toolTip() const {
@@ -71,7 +72,11 @@ QString NavAid::toolTip() const {
 
     if (_type == NDB) {
         ret.append(QString(" %1 kHz").arg(_freq));
-    } else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS) {
+    } else if (
+        _type == VOR || _type == DME || _type == DME_NO_FREQ
+        || _type == ILS_LOC || _type == LOC || _type == GS
+        || _type == CUSTOM_VORDME
+    ) {
         ret.append(QString(" %1 MHz").arg(_freq / 100., 0, 'f', 2));
     } else if (_freq != 0) {
         ret.append(QString(" %1?").arg(_freq));
@@ -96,7 +101,11 @@ QStringList NavAid::mapLabelSecondaryLinesHovered() const {
 QString NavAid::freqString() const {
     if (_type == NDB) {
         return QString("%1 kHz").arg(_freq);
-    } else if (_type == VOR || _type == DME || _type == DME_NO_FREQ || _type == ILS_LOC || _type == LOC || _type == GS) {
+    } else if (
+        _type == VOR || _type == DME || _type == DME_NO_FREQ
+        || _type == ILS_LOC || _type == LOC || _type == GS
+        || _type == CUSTOM_VORDME
+    ) {
         return QString("%1 MHz").arg(_freq / 100., 0, 'f', 2);
     }
 
@@ -105,4 +114,10 @@ QString NavAid::freqString() const {
 
 int NavAid::type() {
     return _type;
+}
+
+void NavAid::upgradeToVorDme() {
+    if (_type == VOR) {
+        _type = CUSTOM_VORDME;
+    }
 }
