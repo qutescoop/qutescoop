@@ -63,20 +63,22 @@ const QHash<QString, std::function<QString(Airport*)> > Airport::placeholders {
     },
     {
         "{pdc}", [](Airport* o)->QString {
-            return o->pdcString();
+            return o->pdcString("PDC/");
+        }
+    },
+    {
+        "{pdc-}", [](Airport* o)->QString {
+            return o->pdcString("@", false);
         }
     },
     {
         "{livestream}", [](Airport* o)->QString {
-            QStringList ret;
-            foreach (const auto c, o->allControllers()) {
-                const auto str = c->livestreamString();
-                if (!str.isEmpty()) {
-                    ret << str;
-                }
-            }
-
-            return ret.join(" ");
+            return o->livestreamString();
+        }
+    },
+    {
+        "{livestream-}", [](Airport* o)->QString {
+            return o->livestreamString(true);
         }
     },
 };
@@ -415,15 +417,26 @@ const QString Airport::frequencyString() const {
     return ret.join("\n");
 }
 
-const QString Airport::pdcString() const {
+const QString Airport::pdcString(const QString &prepend, bool alwaysWithIdentifier) const {
+    QStringList matches;
+
     foreach (const auto* c, allControllers()) {
         auto match = pdcRegExp.match(c->atisMessage);
         if (match.hasMatch()) {
-            return "PDC/" + match.capturedRef(1);
+            auto logon = match.captured(1);
+            if (id == logon) {
+                // found perfect match
+                if (!alwaysWithIdentifier) {
+                    return prepend;
+                }
+            }
+            if (!matches.contains(logon)) {
+                matches << logon;
+            }
         }
     }
 
-    return "";
+    return matches.isEmpty()? "": prepend + matches.join(",");
 }
 
 const GLuint& Airport::gndDisplayList() {
@@ -607,6 +620,18 @@ QStringList Airport::mapLabelSecondaryLinesHovered() const {
     }
 
     return Helpers::linesFilteredTrimmed(str);
+}
+
+QString Airport::livestreamString(bool shortened) const {
+    QStringList ret;
+    foreach (const auto c, allControllers()) {
+        const auto str = c->livestreamString(shortened);
+        if (!str.isEmpty()) {
+            ret << str;
+        }
+    }
+
+    return ret.join(" ");
 }
 
 const QString Airport::shortLabel() const {

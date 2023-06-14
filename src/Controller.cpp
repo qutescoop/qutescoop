@@ -55,12 +55,22 @@ const QHash<QString, std::function<QString(Controller*)> > Controller::placehold
     },
     {
         "{cpdlc}", [](Controller* o)->QString {
-            return o->cpdlcString();
+            return o->cpdlcString("CPDLC/");
+        }
+    },
+    {
+        "{cpdlc-}", [](Controller* o)->QString {
+            return o->cpdlcString("@", false);
         }
     },
     {
         "{livestream}", [](Controller* o)->QString {
             return o->livestreamString();
+        }
+    },
+    {
+        "{livestream-}", [](Controller* o)->QString {
+            return o->livestreamString(true);
         }
     },
 };
@@ -198,8 +208,8 @@ QString Controller::controllerSectorName() const {
     return QString();
 }
 
-QString Controller::livestreamString() const {
-    return Client::livestreamString(atisMessage);
+QString Controller::livestreamString(bool shortened) const {
+    return Client::livestreamString(atisMessage, shortened);
 }
 
 bool Controller::isCtrFss() const {
@@ -284,10 +294,16 @@ QList <Airport*> Controller::airportsSorted() const {
     return _airports;
 }
 
-const QString Controller::cpdlcString() const {
+const QString Controller::cpdlcString(const QString& prepend, bool alwaysWithIdentifier) const {
     auto match = cpdlcRegExp.match(atisMessage);
     if (match.hasMatch()) {
-        return "CPDLC/" + match.capturedRef(1);
+        if (match.hasMatch()) {
+            auto logon = match.capturedRef(1);
+            if (!alwaysWithIdentifier && callsign.startsWith(logon)) {
+                return prepend;
+            }
+            return prepend + logon;
+        }
     }
 
     return "";

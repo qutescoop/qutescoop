@@ -27,7 +27,7 @@ class Controller
         virtual QString mapLabelHovered() const override;
         virtual QStringList mapLabelSecondaryLines() const override;
         virtual QStringList mapLabelSecondaryLinesHovered() const override;
-        virtual QString livestreamString() const override;
+        virtual QString livestreamString(bool shortened = false) const override;
         virtual bool matches(const QRegExp& regex) const override;
         virtual bool hasPrimaryAction() const override;
         virtual void primaryAction() override;
@@ -55,7 +55,7 @@ class Controller
         QSet<Airport*> airports(bool withAdditionalMatches = true) const;
         QList<Airport*> airportsSorted() const;
 
-        const QString cpdlcString() const;
+        const QString cpdlcString(const QString& prepend = "", bool alwaysWithIdentifier = true) const;
 
         QString frequency, atisMessage, atisCode;
         int facilityType, visualRange;
