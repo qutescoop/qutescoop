@@ -1894,6 +1894,7 @@ void GLWidget::renderLabels(
         // pilots, controllers
         Client* cl = dynamic_cast <Client*> (o);
         if (cl != 0) {
+            // Pilots and Controllers
             isFriend = cl->isFriend();
         } else {
             // airports (having a controller that is in the friends list)
@@ -1901,8 +1902,11 @@ void GLWidget::renderLabels(
             if (a != 0) {
                 foreach (const auto c, a->allControllers()) {
                     if (c->isFriend()) {
-                        isFriend = true;
-                        break;
+                        // only if that is the primary airport
+                        if (c->airports(false).contains(a)) {
+                            isFriend = true;
+                            break;
+                        }
                     }
                 }
             }
