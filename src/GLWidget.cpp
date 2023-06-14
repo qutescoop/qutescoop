@@ -289,7 +289,12 @@ void GLWidget::createPilotsList() {
                 continue;
             }
 
-            if (!p->showDepLine() && !p->showDestLine()) {
+            const bool isHovered = m_hoveredObjects.contains(p)
+                || m_hoveredObjects.contains(p->depAirport())
+                || m_hoveredObjects.contains(p->destAirport())
+            ;
+
+            if (!isHovered && !p->showDepLine() && !p->showDestLine()) {
                 continue;
             }
 
@@ -299,7 +304,12 @@ void GLWidget::createPilotsList() {
             QList<DoublePair> points; // these are the points that really get drawn
 
             // Dep -> plane
-            if (p->showDepLine() && !qFuzzyIsNull(Settings::depLineStrength()) && !Settings::onlyShowImmediateRoutePart()) {
+            if (
+                (
+                    isHovered || (p->showDepLine() && !Settings::onlyShowImmediateRoutePart())
+                )
+                && !qFuzzyIsNull(Settings::depLineStrength())
+            ) {
                 for (int i = 0; i < next; i++) {
                     if (!m_usedWaypointMapObjects.contains(waypoints[i])) {
                         m_usedWaypointMapObjects.append(waypoints[i]);
@@ -326,7 +336,7 @@ void GLWidget::createPilotsList() {
             points.append(DoublePair(p->lat, p->lon));
 
             // plane -> Dest
-            if (p->showDestLine() && next < waypoints.size()) {
+            if ((isHovered || p->showDestLine()) && next < waypoints.size()) {
                 // immediate
                 auto destImmediateNm = p->groundspeed * (Settings::destImmediateDurationMin() / 60.);
 
@@ -361,7 +371,7 @@ void GLWidget::createPilotsList() {
                     }
 
                     glPushAttrib(GL_ENABLE_BIT);
-                    if (Settings::onlyShowImmediateRoutePart()) {
+                    if (!isHovered && Settings::onlyShowImmediateRoutePart()) {
                         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                         glEnable(GL_TEXTURE_1D);
                         glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
@@ -375,7 +385,7 @@ void GLWidget::createPilotsList() {
                 }
 
                 // rest
-                if (!qFuzzyIsNull(Settings::destLineStrength()) && !Settings::onlyShowImmediateRoutePart()) {
+                if ((isHovered || !Settings::onlyShowImmediateRoutePart()) && !qFuzzyIsNull(Settings::destLineStrength())) {
                     while (points.size() > 1) {
                         points.takeFirst();
                     }
@@ -1347,6 +1357,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
                 break;
             }
         }
+        invalidatePilots(); // for hovered objects' routes
         setCursor(hasPrimaryFunction? Qt::PointingHandCursor: Qt::ArrowCursor);
         update();
     }
