@@ -482,6 +482,9 @@ class Settings {
         static Qt::SortOrder airportDialogAtcSortOrder();
         static void setAirportDialogAtcSortOrder(Qt::SortOrder);
 
+        static QMap<QString, QVariant> airportDialogAtcExpandedByType();
+        static void setAirportDialogAtcExpandedByType(const QMap<QString, QVariant>&);
+
         static QString remoteDataRepository();
     private:
         static QSettings* instance();

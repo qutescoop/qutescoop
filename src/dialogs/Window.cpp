@@ -119,7 +119,7 @@ Window::Window(QWidget* parent)
     searchResult->sortByColumn(0, Qt::AscendingOrder);
 
     // METAR widget
-    _sortmodelMetar = new QSortFilterProxyModel;
+    _sortmodelMetar = new QSortFilterProxyModel(this);
     _sortmodelMetar->setDynamicSortFilter(true);
     _sortmodelMetar->setSourceModel(&_metarModel);
 
@@ -133,7 +133,7 @@ Window::Window(QWidget* parent)
     metarList->sortByColumn(0, Qt::AscendingOrder);
 
     // friends widget
-    _sortmodelFriends = new QSortFilterProxyModel;
+    _sortmodelFriends = new QSortFilterProxyModel(this);
     _sortmodelFriends->setDynamicSortFilter(true);
     _sortmodelFriends->setSourceModel(&_modelFriends);
     friendsList->setModel(_sortmodelFriends);

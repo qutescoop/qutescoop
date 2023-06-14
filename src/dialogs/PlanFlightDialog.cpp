@@ -43,7 +43,7 @@ PlanFlightDialog::PlanFlightDialog(QWidget* parent)
     bDepDetails->hide(); bDestDetails->hide();
     edCycle->setText(QDate::currentDate().toString("yyMM"));
 
-    _routesSortModel = new QSortFilterProxyModel;
+    _routesSortModel = new QSortFilterProxyModel(this);
     _routesSortModel->setDynamicSortFilter(true);
     _routesSortModel->setSourceModel(&_routesModel);
 

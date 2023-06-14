@@ -33,7 +33,7 @@ class AirportDetails
     private:
         AirportDetails(QWidget* parent);
 
-        AirportDetailsAtcModel _atcModel;
+        AirportDetailsAtcModel* _atcModel;
         AirportDetailsArrivalsModel _arrivalsModel;
         AirportDetailsDeparturesModel _departuresModel;
         Airport* _airport;

@@ -38,9 +38,10 @@ AirportDetails::AirportDetails(QWidget* parent)
     connect(cbOtherAtc, &QCheckBox::clicked, this, &AirportDetails::toggleShowOtherAtc);
 
     // ATC list
-    _atcSortModel = new QSortFilterProxyModel;
+    _atcModel = new AirportDetailsAtcModel(this);
+    _atcSortModel = new QSortFilterProxyModel(this);
     _atcSortModel->setDynamicSortFilter(true);
-    _atcSortModel->setSourceModel(&_atcModel);
+    _atcSortModel->setSourceModel(_atcModel);
     _atcSortModel->setSortRole(Qt::UserRole);
     treeAtc->setModel(_atcSortModel);
     connect(
@@ -66,7 +67,8 @@ AirportDetails::AirportDetails(QWidget* parent)
         &QTreeView::expanded,
         this,
         [this](const QModelIndex &index) {
-            _atcModel.writeExpandedState(_atcSortModel->mapToSource(index), true);
+            _atcModel->writeExpandedState(_atcSortModel->mapToSource(index), true);
+            treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
         }
     );
     connect(
@@ -74,16 +76,14 @@ AirportDetails::AirportDetails(QWidget* parent)
         &QTreeView::collapsed,
         this,
         [this](const QModelIndex &index) {
-            _atcModel.writeExpandedState(_atcSortModel->mapToSource(index), false);
-            // give more space
+            _atcModel->writeExpandedState(_atcSortModel->mapToSource(index), false);
             treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
         }
     );
-
     connect(treeAtc, &QAbstractItemView::clicked, this, &AirportDetails::atcSelected);
 
     // arrivals
-    _arrivalsSortModel = new QSortFilterProxyModel;
+    _arrivalsSortModel = new QSortFilterProxyModel(this);
     _arrivalsSortModel->setDynamicSortFilter(true);
     _arrivalsSortModel->setSourceModel(&_arrivalsModel);
     _arrivalsSortModel->setSortRole(Qt::UserRole);
@@ -94,7 +94,7 @@ AirportDetails::AirportDetails(QWidget* parent)
     connect(treeArrivals, &QAbstractItemView::clicked, this, &AirportDetails::arrivalSelected);
 
     // departures
-    _departuresSortModel = new QSortFilterProxyModel;
+    _departuresSortModel = new QSortFilterProxyModel(this);
     _departuresSortModel->setDynamicSortFilter(true);
     _departuresSortModel->setSourceModel(&_departuresModel);
     _departuresSortModel->setSortRole(Qt::UserRole);
@@ -195,17 +195,34 @@ void AirportDetails::refresh(Airport* newAirport) {
     }
 
     // ATC
-    _atcModel.setClients(atcContent.values());
+    _atcModel->setClients(atcContent.values());
     _atcSortModel->invalidate();
+    for (int i = 0; i < _atcSortModel->rowCount(); i++) {
+        auto index = _atcSortModel->index(i, 0);
+
+        if (!index.isValid()) {
+            continue;
+        }
+        auto* item = static_cast<AirportDetailsAtcModelItem*>(_atcSortModel->mapToSource(index).internalPointer());
+        if (item->m_controller == nullptr) {
+            continue;
+        }
+
+        if (_atcModel->isExpanded(item)) {
+            treeAtc->expand(index);
+        } else {
+            treeAtc->collapse(index);
+        }
+    }
+
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
-    treeAtc->expandAll();
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
     cbPlotRoutes->setChecked(_airport->showRoutes);
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {
-    _atcModel.modelSelected(_atcSortModel->mapToSource(index));
+    _atcModel->modelSelected(_atcSortModel->mapToSource(index));
 }
 
 void AirportDetails::arrivalSelected(const QModelIndex& index) {
