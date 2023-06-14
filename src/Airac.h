@@ -10,6 +10,10 @@ class Airac
     Q_OBJECT
     public:
         static Airac* instance(bool createIfNoInstance = true);
+        // this is the longest legitimate route part that we can't resolve (yet) (PACOT entry-exit)
+        constexpr static const double ifrMaxWaypointInterval = 5500.;
+        constexpr static const double nonIfrMaxWaypointInterval = 300.;
+
         virtual ~Airac();
 
         Waypoint* waypoint(const QString &id, const QString &regionCode, const int &type) const;
@@ -18,7 +22,7 @@ class Airac
         Airway* airway(const QString& name);
         Airway* airwayNearby(const QString& name, double lat, double lon) const;
 
-        QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon);
+        QList<Waypoint*> resolveFlightplan(QStringList plan, double lat, double lon, double maxDist);
 
         QSet<Waypoint*> allPoints;
         QHash<QString, QSet<Waypoint*> > fixes;

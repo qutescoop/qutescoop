@@ -424,7 +424,7 @@ void Airac::addAirwaySegment(Waypoint* from, Waypoint* to, const QString& name) 
  *
  * Unknown fixes and/or airways will be ignored.
  **/
-QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon) {
+QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double lon, double maxDist) {
     QList<Waypoint*> result;
     Waypoint* currPoint = 0;
     Airway* awy = 0;
@@ -439,8 +439,8 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
             wantAirway = false;
             // have airway - next should be a waypoint
             QString endId = fpTokenToWaypoint(plan.first());
-            // 5500NM is the longest legitimate route part (PACOT entry-exit) that we can't resolve
-            Waypoint* wp = waypointNearby(endId, lat, lon, 5500.);
+
+            Waypoint* wp = waypointNearby(endId, lat, lon, maxDist);
             if (wp != 0) {
                 if (currPoint != 0) {
                     auto _expand = awy->expand(currPoint->id, wp->id);
@@ -462,7 +462,7 @@ QList<Waypoint*> Airac::resolveFlightplan(QStringList plan, double lat, double l
                 }
             }
 
-            Waypoint* wp = waypointNearby(id, lat, lon, 5500.);
+            Waypoint* wp = waypointNearby(id, lat, lon, maxDist);
             if (wp != 0) {
                 result.append(wp);
                 currPoint = wp;

@@ -719,13 +719,17 @@ QList<Waypoint*> Pilot::routeWaypoints() {
     routeWaypointsPlanDestCache = planDest;
     routeWaypointsPlanRouteCache = planRoute;
 
+    const double maxDist = planFlighttype == "I"
+                               ? Airac::ifrMaxWaypointInterval
+                               : Airac::nonIfrMaxWaypointInterval;
+
     if (depAirport() != 0) {
         routeWaypointsCache = Airac::instance()->resolveFlightplan(
-            waypoints(), depAirport()->lat, depAirport()->lon
+            waypoints(), depAirport()->lat, depAirport()->lon, maxDist
         );
     } else if (!qFuzzyIsNull(lat) || !qFuzzyIsNull(lon)) {
         routeWaypointsCache = Airac::instance()->resolveFlightplan(
-            waypoints(), lat, lon
+            waypoints(), lat, lon, maxDist
         );
     } else {
         routeWaypointsCache = QList<Waypoint*>();
