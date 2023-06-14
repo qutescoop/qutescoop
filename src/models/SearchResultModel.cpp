@@ -22,11 +22,17 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 
     if (role == Qt::DisplayRole) {
         MapObject* o = _content[index.row()];
+        if (o == 0) {
+            return QVariant();
+        }
         switch (index.column()) {
             case 0: return o->toolTip(); break;
         }
     } else if (role == Qt::ToolTipRole) {
         MapObject* o = _content[index.row()];
+        if (o == 0) {
+            return QVariant();
+        }
         switch (index.column()) {
             case 0: return o->toolTip(); break;
         }
@@ -35,6 +41,9 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
         // prefiled italic
         if (dynamic_cast<Pilot*>(_content[index.row()])) {
             Pilot* p = dynamic_cast<Pilot*>(_content[index.row()]);
+            if (p == 0) {
+                return QVariant();
+            }
             if (p->flightStatus() == Pilot::PREFILED) {
                 result.setItalic(true);
             }
