@@ -202,6 +202,9 @@ class Settings {
         static void setCountryLineStrength(double strength);
 
         // Display/hover
+        static bool labelAlwaysBackdropped();
+        static void setLabelAlwaysBackdropped(const bool v);
+
         static QColor labelHoveredBgColor();
         static void setLabelHoveredBgColor(const QColor& color);
 

@@ -80,6 +80,9 @@ void PreferencesDialog::loadSettings() {
     cbRememberMapPositionOnClose->setChecked(Settings::rememberMapPositionOnClose());
     spinBoxTimeline->setValue(Settings::timelineSeconds());
 
+    // Display -> labels
+    cbLabelAlwaysBackdrop->setChecked(Settings::labelAlwaysBackdropped());
+
     color = Settings::labelHoveredBgColor();
     pbLabelHoveredBgColor->setText(color.name());
     pbLabelHoveredBgColor->setPalette(QPalette(color));
@@ -1084,6 +1087,9 @@ void PreferencesDialog::on_sbInactAirportDotSize_valueChanged(double value) {
 }
 
 void PreferencesDialog::on_cbShowCongestion_clicked(bool checked) {
+    if (!_settingsLoaded) {
+        return;
+    }
     Settings::setAirportCongestion(checked);
 }
 
@@ -1564,11 +1570,9 @@ void PreferencesDialog::on_pbFirApply_clicked() {
     }
 }
 
-
 void PreferencesDialog::on_lineEditFirPrimaryContent_editingFinished() {
     Settings::setFirPrimaryContent(lineEditFirPrimaryContent->text());
 }
-
 
 void PreferencesDialog::on_lineEditFirPrimaryContentHovered_editingFinished() {
     Settings::setFirPrimaryContentHovered(lineEditFirPrimaryContentHovered->text());
@@ -1582,7 +1586,6 @@ void PreferencesDialog::on_plainTextEditFirSecondaryContentHovered_textChanged()
     Settings::setFirSecondaryContentHovered(plainTextEditFirSecondaryContentHovered->toPlainText());
 }
 
-
 void PreferencesDialog::on_pbFirFontSecondaryColor_clicked() {
     QColor color = QColorDialog::getColor(
         Settings::firFontSecondaryColor(), this,
@@ -1594,7 +1597,6 @@ void PreferencesDialog::on_pbFirFontSecondaryColor_clicked() {
         Settings::setFirFontSecondaryColor(color);
     }
 }
-
 
 void PreferencesDialog::on_pbFirFontSecondary_clicked() {
     bool ok;
@@ -1617,7 +1619,6 @@ void PreferencesDialog::on_pbDelBorderLineColor_clicked() {
     }
 }
 
-
 void PreferencesDialog::on_pbDelFillColor_clicked() {
     QColor color = QColorDialog::getColor(
         Settings::delFillColor(), this,
@@ -1636,7 +1637,6 @@ void PreferencesDialog::on_sbDelBorderLineStrength_valueChanged(double value) {
     }
     Settings::setDelBorderLineStrength(value);
 }
-
 
 void PreferencesDialog::on_pbTwrBorderLineColor_clicked() {
     QColor color = QColorDialog::getColor(
@@ -1657,7 +1657,6 @@ void PreferencesDialog::on_sbTwrBorderLineStrength_valueChanged(double value) {
     Settings::setTwrBorderLineStrength(value);
 }
 
-
 void PreferencesDialog::on_pbDestImmediateLineColor_clicked() {
     QColor color = QColorDialog::getColor(
         Settings::destImmediateLineColor(), this,
@@ -1668,9 +1667,7 @@ void PreferencesDialog::on_pbDestImmediateLineColor_clicked() {
         pbDestImmediateLineColor->setPalette(QPalette(color));
         Settings::setDestImmediateLineColor(color);
     }
-
 }
-
 
 void PreferencesDialog::on_sbDestImmediateLineStrength_valueChanged(double value) {
     if (!_settingsLoaded) {
@@ -1685,7 +1682,6 @@ void PreferencesDialog::on_sbDestImmediateDuration_valueChanged(int value) {
     }
     Settings::setDestImmediateDurationMin(value);
 }
-
 
 void PreferencesDialog::on_applyPilotsRoute_clicked() {
     if (Window::instance(false) != 0) {
@@ -1715,4 +1711,11 @@ void PreferencesDialog::on_btnCongestionShowRing_toggled(bool checked) {
 
 void PreferencesDialog::on_btnCongestionShowGlow_toggled(bool checked) {
     Settings::setAirportCongestionGlow(checked);
+}
+
+void PreferencesDialog::on_cbLabelAlwaysBackdrop_toggled(bool checked) {
+    if (!_settingsLoaded) {
+        return;
+    }
+    Settings::setLabelAlwaysBackdropped(checked);
 }

@@ -162,6 +162,7 @@ class PreferencesDialog
         void on_sbDestImmediateLineStrength_valueChanged(double arg1);
         void on_sbDestImmediateDuration_valueChanged(int arg1);
         void on_applyPilotsRoute_clicked();
+        void on_cbLabelAlwaysBackdrop_toggled(bool checked);
 
     private:
         PreferencesDialog(QWidget* parent);

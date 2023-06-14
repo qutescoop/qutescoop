@@ -1105,7 +1105,7 @@ The texture is affected by the colour chosen for the Globe.</string>
                <item row="3" column="1">
                 <widget class="QSlider" name="glLights">
                  <property name="toolTip">
-                  <string>To get a bigger dusk/dawn field, we use more light sources, all a bit distributed. With each tick you are adding one light source. Higher values might decrease performance.</string>
+                  <string>To get a bigger dusk/dawn field, we use more light sources, all a bit distributed. With each tick you are adding one light source.</string>
                  </property>
                  <property name="minimum">
                   <number>1</number>
@@ -1244,7 +1244,7 @@ The texture is affected by the colour chosen for the Globe.</string>
        <item>
         <widget class="QGroupBox" name="groupBox_13">
          <property name="title">
-          <string>Hovered label background</string>
+          <string>Label backdrop</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_22">
           <item row="3" column="0" colspan="5">
@@ -1339,6 +1339,16 @@ The texture is affected by the colour chosen for the Globe.</string>
             </property>
            </widget>
           </item>
+          <item row="0" column="0" colspan="5">
+           <widget class="QCheckBox" name="cbLabelAlwaysBackdrop">
+            <property name="toolTip">
+             <string>This helps on color schemes with little contrast to the label colors.</string>
+            </property>
+            <property name="text">
+             <string>Always show backdrop (not only while hovering)</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -1370,12 +1380,6 @@ The texture is affected by the colour chosen for the Globe.</string>
             <string>Primary label (first line)</string>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">
-            <property name="leftMargin">
-             <number>2</number>
-            </property>
-            <property name="rightMargin">
-             <number>0</number>
-            </property>
             <item row="2" column="1" colspan="5">
              <widget class="QLineEdit" name="lineEditAirportPrimaryContent">
               <property name="text">
