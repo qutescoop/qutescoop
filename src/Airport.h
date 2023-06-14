@@ -45,6 +45,8 @@ class Airport
 
         void showDetailsDialog();
 
+        QString livestreamString(bool shortened = false) const;
+
         const QString shortLabel() const;
         const QString longLabel() const;
         const QString prettyName() const;
@@ -54,7 +56,7 @@ class Airport
         const QString controllersString() const;
         const QString atisCodeString() const;
         const QString frequencyString() const;
-        const QString pdcString() const;
+        const QString pdcString(const QString& prepend = "", bool alwaysWithIdentifier = true) const;
 
         void resetWhazzupStatus();
 

@@ -85,6 +85,11 @@ const QHash<QString, std::function<QString(Pilot*)> > Pilot::placeholders {
             return o->livestreamString();
         }
     },
+    {
+        "{livestream-}", [](Pilot* o)->QString {
+            return o->livestreamString(true);
+        }
+    },
 };
 
 int Pilot::altToFl(int alt_ft, int qnh_mb) {
@@ -689,8 +694,8 @@ bool Pilot::showDestLine() const {
     return false;
 }
 
-QString Pilot::livestreamString() const {
-    return Client::livestreamString(planRemarks);
+QString Pilot::livestreamString(bool shortened) const {
+    return Client::livestreamString(planRemarks, shortened);
 }
 
 bool Pilot::hasPrimaryAction() const {

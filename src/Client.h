@@ -8,13 +8,13 @@
 class Client {
     public:
         static const QRegularExpression livestreamRegExp;
-        static QString livestreamString(const QString& str);
+        static QString livestreamString(const QString& str, bool shortened = false);
 
         Client(const QJsonObject& json, const WhazzupData* whazzup);
 
         virtual bool matches(const QRegExp& regex) const;
         virtual QString rank() const;
-        virtual QString livestreamString() const;
+        virtual QString livestreamString(bool shortened = false) const;
         virtual bool isFriend() const;
         virtual const QString realName() const;
         virtual const QString nameOrCid() const;

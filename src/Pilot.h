@@ -32,7 +32,7 @@ class Pilot
         virtual QString mapLabelHovered() const override;
         virtual QStringList mapLabelSecondaryLines() const override;
         virtual QStringList mapLabelSecondaryLinesHovered() const override;
-        virtual QString livestreamString() const override;
+        virtual QString livestreamString(bool shortened = false) const override;
         virtual bool hasPrimaryAction() const override;
         virtual void primaryAction() override;
 
