@@ -600,7 +600,8 @@ QString Pilot::flOrEmpty() const {
 }
 
 QStringList Pilot::waypoints() const {
-    return planRoute.toUpper().split(
+    // @todo put this into a RouteResolver
+    auto parts = planRoute.toUpper().split(
         QRegExp(
             "[\\s\\-+.,/]|"
             "\\b(?:[MNAFSMK]\\d{3,4}){2,}\\b|"
@@ -609,6 +610,20 @@ QStringList Pilot::waypoints() const {
         ),
         Qt::SkipEmptyParts
     ); // split and throw away DCT + /N450F230 etc.
+
+    if (!parts.isEmpty()) {
+        if (parts.constFirst() == planDep) {
+            parts.removeFirst();
+        }
+    }
+
+    if (!parts.isEmpty()) {
+        if (parts.constLast() == planDest) {
+            parts.removeLast();
+        }
+    }
+
+    return parts;
 }
 
 QPair<double, double> Pilot::positionInFuture(int seconds) const {
