@@ -1798,8 +1798,8 @@ void GLWidget::renderLabels() {
             renderLabelCommand.color,
             renderLabelCommand.secondaryFont,
             renderLabelCommand.secondaryColor,
-            renderLabelCommand.ignoreForStablePositions,
-            renderLabelCommand.tryOtherPositions,
+            renderLabelCommand.isFastBail,
+            renderLabelCommand.tryNOtherPositions,
             true
         );
     }
@@ -1815,7 +1815,7 @@ void GLWidget::renderLabels(
     const QColor _secondaryColor,
     const bool isFastBail, // performance optimization: bail on first MapObject that's not drawn - this will not work if
     // stable positions are desired
-    const int tryNOtherPositions,
+    const unsigned short tryNOtherPositions,
     const bool isHoverRenderPass
 ) {
     if (_zoom > zoomTreshold || _color.alpha() == 0) {
@@ -1920,7 +1920,7 @@ void GLWidget::renderLabels(
         rect.moveTo(drawX, drawY);
 
         if (useRect.object == 0) {
-            QList<QRectF> rects { // possible positions, with preferred ones first
+            const QVector<QRectF> rects { // possible positions, with preferred ones first
                 // above
                 rect,
                 // right, below, left
@@ -1938,7 +1938,7 @@ void GLWidget::renderLabels(
                 rect.translated(-rect.width() - distanceFromPos, rect.height() / 2 + distanceFromPos),
             };
 
-            for (int i = 0; i <= tryNOtherPositions && i < rects.size(); i++) {
+            for (unsigned short i = 0; i <= tryNOtherPositions && i < rects.count(); i++) {
                 if (shouldDrawLabel(rects[i])) {
                     useRect.rect = rects[i];
                     useRect.object = o;
@@ -1974,7 +1974,7 @@ void GLWidget::renderLabels(
             }
         }
 
-        if (isHovered || isFriend) {
+        if (Settings::labelAlwaysBackdropped() || isHovered || isFriend) {
             // draw backdrop
             QList<QPair<double, double> > rectPointsLatLon{ { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
             const auto xMargin = 4;
@@ -1999,10 +1999,11 @@ void GLWidget::renderLabels(
                     rectPointsLatLon[3].first, rectPointsLatLon[3].second
                 )
             ) {
-                if (isHovered) {
+                if (Settings::labelAlwaysBackdropped() || isHovered) {
                     auto bgColor = thisColor.lightnessF() < .5? Settings::labelHoveredBgColor(): Settings::labelHoveredBgDarkColor();
-                    // we don't fade hovered texts an more
-                    // bgColor.setAlphaF(qMax(0., qMin(bgColor.alphaF(), (zoomTreshold - _zoom) / zoomTreshold * 1.5)));
+                    if (!isHovered) {
+                        bgColor.setAlphaF(qMax(0., qMin(bgColor.alphaF(), (zoomTreshold - _zoom) / zoomTreshold * 1.5)));
+                    }
 
                     qglColor(bgColor);
                     glBegin(GL_POLYGON);
@@ -2012,24 +2013,26 @@ void GLWidget::renderLabels(
                     glEnd();
 
                     // draw text shadow
-                    const auto shadowColor = Helpers::shadowColorForBg(bgColor);
-                    qglColor(shadowColor);
-                    renderText(
-                        useRect.rect.left() + (useRect.rect.width() - firstLineRect.width()) / 2 + 1,
-                        useRect.rect.top() + firstLineRect.top() + firstLineOffset + 1,
-                        firstLine,
-                        font
-                    );
-
-                    const auto shadowSecondaryColor = Helpers::shadowColorForBg(bgColor);
-                    qglColor(shadowSecondaryColor);
-                    for (int iLine = 0; iLine < secondaryLines.size(); iLine++) {
+                    if (isHovered) {
+                        const auto shadowColor = Helpers::shadowColorForBg(bgColor);
+                        qglColor(shadowColor);
                         renderText(
-                            useRect.rect.left() + (useRect.rect.width() - secondaryRects[iLine].width()) / 2 + 1,
-                            useRect.rect.top() + secondaryRects[iLine].top() + secondaryLinesOffset + 1,
-                            secondaryLines[iLine],
-                            secondaryFont
+                            useRect.rect.left() + (useRect.rect.width() - firstLineRect.width()) / 2 + 1,
+                            useRect.rect.top() + firstLineRect.top() + firstLineOffset + 1,
+                            firstLine,
+                            font
                         );
+
+                        const auto shadowSecondaryColor = Helpers::shadowColorForBg(bgColor);
+                        qglColor(shadowSecondaryColor);
+                        for (int iLine = 0; iLine < secondaryLines.size(); iLine++) {
+                            renderText(
+                                useRect.rect.left() + (useRect.rect.width() - secondaryRects[iLine].width()) / 2 + 1,
+                                useRect.rect.top() + secondaryRects[iLine].top() + secondaryLinesOffset + 1,
+                                secondaryLines[iLine],
+                                secondaryFont
+                            );
+                        }
                     }
                 }
 

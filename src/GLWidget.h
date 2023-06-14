@@ -120,7 +120,7 @@ class GLWidget
             const QFont& secondaryFont = QFont(),
             const QColor secondaryColor = QColor(),
             const bool isFastBail = false,
-            const int tryNOtherPositions = 3,
+            const unsigned short tryNOtherPositions = 3,
             const bool isHoverRenderPass = false
         );
         bool shouldDrawLabel(const QRectF &rect);
@@ -131,8 +131,8 @@ class GLWidget
             QColor color;
             QFont secondaryFont;
             QColor secondaryColor;
-            bool ignoreForStablePositions;
-            int tryOtherPositions;
+            bool isFastBail;
+            unsigned short tryNOtherPositions;
         };
         QList<RenderLabelsCommand> m_prioritizedLabels;
         QList<FontRectangle>fontRectanglesPrioritized() const;

@@ -603,6 +603,14 @@ void Settings::setCountryLineStrength(double strength) {
     instance()->setValue("earthSpace/countryLineStrength", strength);
 }
 
+bool Settings::labelAlwaysBackdropped() {
+    return instance()->value("labels/alwaysShowBackdrop", false).toBool();
+}
+
+void Settings::setLabelAlwaysBackdropped(const bool v) {
+    instance()->setValue("labels/alwaysShowBackdrop", v);
+}
+
 QColor Settings::labelHoveredBgColor() {
     return instance()->value("labelHover/labelHoveredBgColor", QColor::fromRgb(255, 255, 255, 190)).value<QColor>();
 }
