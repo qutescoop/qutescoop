@@ -19,6 +19,8 @@ class SearchResultModel
             Qt::Orientation orientation,
             int role = Qt::DisplayRole
         ) const override;
+
+        bool m_isSearching = false;
     public slots:
         void setSearchResults(const QList<MapObject*>& searchResult);
         void modelClicked(const QModelIndex& index);

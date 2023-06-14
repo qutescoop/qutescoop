@@ -424,16 +424,19 @@ void Window::performSearch() {
     }
     _timerSearch.stop();
 
-    qApp->setOverrideCursor(QCursor(Qt::WaitCursor));
+    _modelSearchResult.m_isSearching = true;
+    searchResult->reset();
+    searchResult->repaint();
+    qApp->processEvents();
+
     SearchVisitor* visitor = new SearchVisitor(searchEdit->text());
     NavData::instance()->accept(visitor);
     Whazzup::instance()->whazzupData().accept(visitor);
-
     _modelSearchResult.setSearchResults(visitor->result());
     delete visitor;
 
+    _modelSearchResult.m_isSearching = false;
     searchResult->reset();
-    qApp->restoreOverrideCursor();
 }
 
 void Window::closeEvent(QCloseEvent* event) {
