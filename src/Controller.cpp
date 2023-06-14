@@ -226,7 +226,7 @@ bool Controller::isAtis() const {
     return callsign.endsWith("_ATIS");
 }
 
-QSet <Airport*> Controller::airports() const {
+QSet <Airport*> Controller::airports(bool withAdditionalMatches) const {
     auto airports = QSet<Airport*>();
     auto _atcLabelTokens = atcLabelTokens();
     if (_atcLabelTokens.empty()) {
@@ -240,11 +240,13 @@ QSet <Airport*> Controller::airports() const {
         airports.insert(a);
     }
 
-    auto suffix = _atcLabelTokens.constLast();
-    // use matches from controllerAirportsMapping.dat
-    auto _airports = NavData::instance()->additionalMatchedAirportsForController(prefix, suffix);
-    foreach (const auto& _a, _airports) {
-        airports.insert(_a);
+    if (withAdditionalMatches) {
+        auto suffix = _atcLabelTokens.constLast();
+        // use matches from controllerAirportsMapping.dat
+        auto _airports = NavData::instance()->additionalMatchedAirportsForController(prefix, suffix);
+        foreach (const auto& _a, _airports) {
+            airports.insert(_a);
+        }
     }
 
 //    if(sector != 0) {

@@ -52,7 +52,7 @@ class Controller
         bool isDel() const;
         bool isAtis() const;
 
-        QSet<Airport*> airports() const;
+        QSet<Airport*> airports(bool withAdditionalMatches = true) const;
         QList<Airport*> airportsSorted() const;
 
         const QString cpdlcString() const;
