@@ -126,7 +126,7 @@ bool Client::isFriend() const {
 
 const QString Client::realName() const {
     auto& _alias = Settings::clientAlias(userId);
-    if (!_alias.isEmpty()) {
+    if (!_alias.isEmpty() && _alias != m_nameOrCid) {
         return _alias + " | " + m_nameOrCid;
     }
     return m_nameOrCid;

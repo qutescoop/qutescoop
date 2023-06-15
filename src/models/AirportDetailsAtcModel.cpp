@@ -231,10 +231,22 @@ void AirportDetailsAtcModel::writeExpandedState(const QModelIndex &index, bool i
         return;
     }
     auto* item = static_cast<AirportDetailsAtcModelItem*>(index.internalPointer());
+    if (item == nullptr) {
+        return;
+    }
+
+    if (item->m_childItems.isEmpty()) {
+        return;
+    }
+
     m_atcExpandedByType.insert(item->m_controller->typeString(), isExpanded);
     Settings::setAirportDialogAtcExpandedByType(m_atcExpandedByType);
 }
 
 bool AirportDetailsAtcModel::isExpanded(AirportDetailsAtcModelItem* item) const {
+    if (item->m_parentItem && item->m_parentItem != rootItem) {
+        return isExpanded(item->m_parentItem);
+    }
+
     return item->m_childItems.isEmpty() || m_atcExpandedByType.value(item->m_controller->typeString(), false).toBool();
 }
