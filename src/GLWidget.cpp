@@ -772,14 +772,14 @@ void GLWidget::createStaticLists() {
         glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         const char components = 4;
-        GLubyte buf[32 * components];
+        GLubyte buf[64 * components];
         for (size_t i = 0; i < sizeof(buf); i += components) {
             GLfloat fraction = i / (GLfloat) (sizeof(buf) - components);
-            GLfloat result = qCos(fraction * M_PI / 2.); // ease out sine
+            GLfloat result = qCos(fraction * M_PI / 2.); // ease in sine
             const GLubyte grey = 255 * result;
-            buf[i + 0] = 255; // rand() % 255; // for testing with a rainbow
+            buf[i + 0] = 255; // rand() % 255; // for testing with rainbow
             buf[i + 1] = 255; // rand() % 255;
             buf[i + 2] = 255; // rand() % 255;
             buf[i + 3] = grey;
@@ -1349,18 +1349,18 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
                 }
             }
         }
-        m_hoveredObjects = newHoveredObjects;
-        bool hasPrimaryFunction = false;
-        foreach (const auto &o, m_hoveredObjects) {
-            if (o->hasPrimaryAction()) {
-                hasPrimaryFunction = true;
-                break;
-            }
-        }
         invalidatePilots(); // for hovered objects' routes
-        setCursor(hasPrimaryFunction? Qt::PointingHandCursor: Qt::ArrowCursor);
         update();
     }
+    m_hoveredObjects = newHoveredObjects;
+    bool hasPrimaryFunction = false;
+    foreach (const auto &o, m_hoveredObjects) {
+        if (o->hasPrimaryAction()) {
+            hasPrimaryFunction = true;
+            break;
+        }
+    }
+    setCursor(hasPrimaryFunction? Qt::PointingHandCursor: Qt::ArrowCursor);
 
     if (
         event->buttons().testFlag(Qt::RightButton) // check before left button if useSelectionRectangle=off
