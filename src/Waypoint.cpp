@@ -44,7 +44,9 @@ QString Waypoint::mapLabel() const {
 }
 
 QStringList Waypoint::mapLabelSecondaryLinesHovered() const {
-    return {}; //airwaysString().split("\n");
+    return {
+        // airwaysString().split("\n")
+    };
 }
 
 QString Waypoint::toolTip() const {

@@ -95,7 +95,12 @@ QString NavAid::mapLabelHovered() const {
 }
 
 QStringList NavAid::mapLabelSecondaryLinesHovered() const {
-    return { freqString() }; // + "\n" + airwaysString()).trimmed().split("\n");
+    QStringList ret = Waypoint::mapLabelSecondaryLinesHovered();
+    if (_name != id) {
+        ret << _name;
+    }
+    ret << freqString();
+    return ret;
 }
 
 QString NavAid::freqString() const {
