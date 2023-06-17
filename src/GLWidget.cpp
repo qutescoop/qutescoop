@@ -1569,6 +1569,11 @@ void GLWidget::wheelEvent(QWheelEvent* event) {
     zoomIn((double) event->angleDelta().y() / Settings::wheelMax());
 }
 
+void GLWidget::leaveEvent(QEvent* event) {
+    QWidget::leaveEvent(event);
+    setCursor(Qt::ArrowCursor);
+}
+
 bool GLWidget::event(QEvent* event) {
     // we are experimenting to not use tooltips by default currently
     if (Settings::showToolTips() && event->type() == QEvent::ToolTip) {

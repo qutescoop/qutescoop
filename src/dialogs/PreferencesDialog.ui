@@ -2719,7 +2719,7 @@ or arriving in </string>
             <item>
              <widget class="QCheckBox" name="btnCongestionShowRing">
               <property name="text">
-               <string>Show Ring</string>
+               <string>show ring</string>
               </property>
               <property name="checkable">
                <bool>true</bool>
@@ -2732,7 +2732,7 @@ or arriving in </string>
             <item>
              <widget class="QCheckBox" name="btnCongestionShowGlow">
               <property name="text">
-               <string>Show Glow</string>
+               <string>show glow</string>
               </property>
               <property name="checkable">
                <bool>true</bool>

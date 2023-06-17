@@ -63,6 +63,7 @@ class GLWidget
         void mouseReleaseEvent(QMouseEvent* event) override;
         void mouseMoveEvent(QMouseEvent* event) override;
         void wheelEvent(QWheelEvent* event) override;
+        void leaveEvent(QEvent* event) override;
         bool event(QEvent* event) override;
     private:
         void resetZoom();
