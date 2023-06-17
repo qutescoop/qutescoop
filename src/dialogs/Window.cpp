@@ -909,21 +909,24 @@ void Window::actionShowRoutes_triggered(bool checked, bool showStatus) {
     if (showStatus) {
         GuiMessages::message(QString("toggled routes [%1]").arg(checked? "on": "off"), "routeToggle");
     }
-    foreach (Airport* a, NavData::instance()->airports.values()) { // synonym to "toggle routes" on all airports
-        a->showRoutes = checked;
-    }
-    if (!checked) { // when disabled, this shall clear all routes
-        foreach (Pilot* p, Whazzup::instance()->whazzupData().allPilots()) {
-            p->showDepDestLine = false;
-        }
-    }
 
-    // adjust the "plot route" tick in dialogs
-    if (AirportDetails::instance(false) != 0) {
-        AirportDetails::instance()->refresh();
-    }
-    if (PilotDetails::instance(false) != 0) {
-        PilotDetails::instance()->refresh();
+    actionShowImmediateRoutes->setEnabled(checked);
+
+    if (!checked) {
+        foreach (Airport* a, NavData::instance()->airports.values()) {
+            a->showRoutes = checked;
+        }
+        foreach (Pilot* p, Whazzup::instance()->whazzupData().allPilots()) {
+            p->showRoute = checked;
+        }
+
+        // adjust the "plot route" tick in dialogs
+        if (AirportDetails::instance(false) != 0) {
+            AirportDetails::instance()->refresh();
+        }
+        if (PilotDetails::instance(false) != 0) {
+            PilotDetails::instance()->refresh();
+        }
     }
 
     mapScreen->glWidget->invalidatePilots();

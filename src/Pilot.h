@@ -61,8 +61,6 @@ class Pilot
         QString flOrEmpty() const; // altitude prefixed with F
         QPair<double, double> positionInFuture(int seconds) const;
         int nextPointOnRoute(const QList<Waypoint*> &waypoints) const;
-        bool showDepLine() const,
-        showDestLine() const;
         QString routeWaypointsString();
         QList<Waypoint*> routeWaypoints();
         QList<Waypoint*> routeWaypointsWithDepDest();
@@ -80,7 +78,7 @@ class Pilot
             qnh_mb;
         int pilotRating = -99, militaryRating = -99;
         double trueHeading, qnh_inHg;
-        bool showDepDestLine;
+        bool showRoute = false;
         QDateTime whazzupTime; // need some local reference to that
         QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
         Airline* airline;

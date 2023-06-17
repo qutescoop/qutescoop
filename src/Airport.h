@@ -79,7 +79,7 @@ class Airport
 
         Metar metar;
         QString id, name, city, countryCode;
-        bool showRoutes;
+        bool showRoutes = false;
         bool active;
     private:
         GLuint _appDisplayList, _twrDisplayList, _gndDisplayList, _delDisplayList;

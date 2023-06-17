@@ -175,7 +175,6 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup)
         dayOfFlight = whazzupTime.date().addDays(-1); // started the day before
 
     }
-    showDepDestLine = Settings::showRoutes();
 
     checkStatus();
 }
@@ -675,38 +674,6 @@ int Pilot::nextPointOnRoute(const QList<Waypoint*> &waypoints) const { // next p
         }
     }
     return qMin(nextPoint, waypoints.size());
-}
-
-bool Pilot::showDepLine() const {
-    if (qFuzzyIsNull(Settings::depLineStrength())) {
-        return false;
-    }
-
-    if (showDepDestLine) {
-        return true;
-    }
-
-    if (depAirport() != 0) {
-        return depAirport()->showRoutes;
-    }
-
-    return false;
-}
-
-bool Pilot::showDestLine() const {
-    if (qFuzzyIsNull(Settings::destLineStrength()) && qFuzzyIsNull(Settings::destImmediateLineStrength())) {
-        return false;
-    }
-
-    if (showDepDestLine) {
-        return true;
-    }
-
-    if (destAirport() != 0) {
-        return destAirport()->showRoutes;
-    }
-
-    return false;
 }
 
 QString Pilot::livestreamString(bool shortened) const {
