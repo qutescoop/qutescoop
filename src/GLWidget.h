@@ -82,7 +82,7 @@ class GLWidget
         void createControllerLists();
         void createStaticLists();
         void createStaticSectorLists();
-        void createHoveredControllersLists(QSet<Controller*> controllers);
+        void createHoveredControllersLists(const QSet<Controller*>& controllers);
 
         void parseTexture();
         void createLights();

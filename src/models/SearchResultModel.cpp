@@ -20,7 +20,7 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
         return QVariant();
     }
 
-    if (role == Qt::DisplayRole) {
+    if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
         MapObject* o = _content[index.row()];
         if (o == 0) {
             return QVariant();
@@ -28,34 +28,25 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
         switch (index.column()) {
             case 0: return o->toolTip(); break;
         }
-    } else if (role == Qt::ToolTipRole) {
-        MapObject* o = _content[index.row()];
-        if (o == 0) {
-            return QVariant();
-        }
-        switch (index.column()) {
-            case 0: return o->toolTip(); break;
-        }
-    } else if (role == Qt::FontRole) {
+
+        return QVariant();
+    }
+
+    if (role == Qt::FontRole) {
         QFont result;
+        MapObject* o = _content[index.row()];
+        if (o == 0) {
+            return result;
+        }
         // prefiled italic
-        if (dynamic_cast<Pilot*>(_content[index.row()])) {
-            Pilot* p = dynamic_cast<Pilot*>(_content[index.row()]);
-            if (p == 0) {
-                return QVariant();
-            }
-            if (p->flightStatus() == Pilot::PREFILED) {
-                result.setItalic(true);
-            }
+        Pilot* p = dynamic_cast<Pilot*>(o);
+        if (p != 0 && p->flightStatus() == Pilot::PREFILED) {
+            result.setItalic(true);
         }
 
         // friends bold
-        Client* c = dynamic_cast<Client*>(_content[index.row()]);
-        if (c == 0) {
-            return QVariant();
-        }
-
-        if (c->isFriend()) {
+        Client* c = dynamic_cast<Client*>(o);
+        if (c != 0 && c->isFriend()) {
             result.setBold(true);
         }
         return result;
