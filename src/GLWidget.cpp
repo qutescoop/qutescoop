@@ -1349,6 +1349,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
                 }
             }
         }
+
         invalidatePilots(); // for hovered objects' routes
         update();
     }
@@ -1381,8 +1382,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
     if (local2latLon(currentPos.x(), currentPos.y(), lat, lon)) {
         QSet<Controller*> _newHoveredControllers;
         foreach (Controller* c, Whazzup::instance()->whazzupData().controllers.values()) {
-            if (c->sector != 0 && c->sector->containsPoint(QPointF(lat, lon))) {
-                _newHoveredControllers.insert(c);
+            if (c->sector != nullptr && c->sector->containsPoint(QPointF(lat, lon))) {
+                // we take the label now for sectors
+                //_newHoveredControllers.insert(c);
             } else { // APP, TWR, GND, DEL
                 int maxDist_nm = -1;
                 if (c->isAppDep()) {
@@ -1401,8 +1403,18 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
                 }
             }
         }
+        // copy from hovered map labels
+        foreach (const auto &o, m_hoveredObjects) {
+            auto* c = dynamic_cast<Controller*>(o);
+            if (c != 0 && c->sector != nullptr) {
+                _newHoveredControllers.insert(c);
+            }
+        }
+
         if (_newHoveredControllers != m_hoveredControllers) {
             m_hoveredControllers = _newHoveredControllers;
+
+            invalidateControllers();
             update();
         }
     }
