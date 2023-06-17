@@ -1201,10 +1201,6 @@ void GLWidget::paintGL() {
     glCallList(_countriesList);
     glCallList(_gridlinesList);
 
-    if (Settings::showAirportCongestion()) {
-        glCallList(_congestionsList);
-    }
-
     if (Settings::showUsedWaypoints() && _zoom < _usedWaypointsLabelZoomThreshold * .1) {
         glCallList(_usedWaypointsList);
     }
@@ -1213,6 +1209,10 @@ void GLWidget::paintGL() {
     if (Settings::showCTR()) {
         glCallList(_sectorPolygonsList);
         glCallList(_sectorPolygonBorderLinesList);
+    }
+
+    if (Settings::showAirportCongestion()) {
+        glCallList(_congestionsList);
     }
 
     // render hovered sectors
