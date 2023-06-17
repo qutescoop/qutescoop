@@ -108,8 +108,6 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber)
 
     lat = list[4].toDouble();
     lon = list[5].toDouble();
-
-    showRoutes = Settings::showRoutes();
 }
 
 Airport::~Airport() {

@@ -294,7 +294,20 @@ void GLWidget::createPilotsList() {
                 || m_hoveredObjects.contains(p->destAirport())
             ;
 
-            if (!isHovered && !p->showDepLine() && !p->showDestLine()) {
+            const bool isShowRouteDepAirport = p->depAirport() != 0 && p->depAirport()->showRoutes;
+            const bool isShowRouteDestAirport = p->destAirport() != 0 && p->destAirport()->showRoutes;
+            const bool isShowRouteAirport = isShowRouteDepAirport || isShowRouteDestAirport;
+
+            const bool isShowOverride = isHovered || isShowRouteAirport || p->showRoute;
+            const bool isShowOnlyImmediate = !isShowOverride && Settings::showRoutes() && Settings::onlyShowImmediateRoutePart();
+
+            const bool isShowDepToPlaneRoute = (isShowOverride || Settings::showRoutes()) && !isShowOnlyImmediate && !qFuzzyIsNull(Settings::depLineStrength());
+            const bool isShowPlaneToImmediateRoute = (isShowOverride || Settings::showRoutes()) && !qFuzzyIsNull(Settings::destImmediateLineStrength());
+            const bool isShowImmediateToDestRoute = (isShowOverride || Settings::showRoutes()) && !isShowOnlyImmediate && !qFuzzyIsNull(Settings::destLineStrength());
+
+            const bool isShowPlaneDestRoute = isShowPlaneToImmediateRoute || isShowImmediateToDestRoute;
+
+            if (!isShowDepToPlaneRoute && !isShowPlaneDestRoute) {
                 continue;
             }
 
@@ -304,12 +317,7 @@ void GLWidget::createPilotsList() {
             QList<DoublePair> points; // these are the points that really get drawn
 
             // Dep -> plane
-            if (
-                (
-                    isHovered || (p->showDepLine() && !Settings::onlyShowImmediateRoutePart())
-                )
-                && !qFuzzyIsNull(Settings::depLineStrength())
-            ) {
+            if (isShowDepToPlaneRoute) {
                 for (int i = 0; i < next; i++) {
                     if (!m_usedWaypointMapObjects.contains(waypoints[i])) {
                         m_usedWaypointMapObjects.append(waypoints[i]);
@@ -336,78 +344,81 @@ void GLWidget::createPilotsList() {
             points.append(DoublePair(p->lat, p->lon));
 
             // plane -> Dest
-            if ((isHovered || p->showDestLine()) && next < waypoints.size()) {
-                // immediate
-                auto destImmediateNm = p->groundspeed * (Settings::destImmediateDurationMin() / 60.);
+            if (next >= waypoints.size() || !isShowPlaneDestRoute) {
+                continue;
+            }
+            // immediate
+            auto destImmediateNm = p->groundspeed * (Settings::destImmediateDurationMin() / 60.);
 
-                auto lastPoint = DoublePair(p->lat, p->lon);
-                double distanceFromPlane = 0;
-                int i = next;
-                if (!qFuzzyIsNull(Settings::destImmediateLineStrength())) {
-                    for (; i < waypoints.size(); i++) {
-                        double distance = NavData::distance(lastPoint.first, lastPoint.second, waypoints[i]->lat, waypoints[i]->lon);
-                        if (distanceFromPlane + distance < destImmediateNm) {
-                            if (!m_usedWaypointMapObjects.contains(waypoints[i])) {
-                                m_usedWaypointMapObjects.append(waypoints[i]);
-                            }
-                            const auto _p = DoublePair(waypoints[i]->lat, waypoints[i]->lon);
-                            if (!points.contains(_p)) { // very cautious for duplicates here
-                                points.append(_p);
-                            }
-                            distanceFromPlane += distance;
-                            lastPoint = DoublePair(waypoints[i]->lat, waypoints[i]->lon);
-                            continue;
-                        }
-
-                        if (!points.contains(lastPoint)) {
-                            points.append(lastPoint);
-                        }
-                        const float neededFraction = (destImmediateNm - distanceFromPlane) / qMax(distance, 1.);
-                        const auto absoluteLast = NavData::greatCircleFraction(lastPoint.first, lastPoint.second, waypoints[i]->lat, waypoints[i]->lon, neededFraction);
-                        if (!points.contains(absoluteLast)) {
-                            points.append(absoluteLast);
-                        }
-                        break;
-                    }
-
-                    glPushAttrib(GL_ENABLE_BIT);
-                    if (!isHovered && Settings::onlyShowImmediateRoutePart()) {
-                        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                        glEnable(GL_TEXTURE_1D);
-                        glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
-                    }
-                    qglColor(Settings::destImmediateLineColor());
-                    glLineWidth(Settings::destImmediateLineStrength());
-                    glBegin(GL_LINE_STRIP);
-                    NavData::plotGreatCirclePoints(points);
-                    glEnd();
-                    glPopAttrib();
-                }
-
-                // rest
-                if ((isHovered || !Settings::onlyShowImmediateRoutePart()) && !qFuzzyIsNull(Settings::destLineStrength())) {
-                    while (points.size() > 1) {
-                        points.takeFirst();
-                    }
-                    for (; i < waypoints.size(); i++) {
+            auto lastPoint = DoublePair(p->lat, p->lon);
+            double distanceFromPlane = 0;
+            int i = next;
+            if (isShowPlaneToImmediateRoute) {
+                for (; i < waypoints.size(); i++) {
+                    double distance = NavData::distance(lastPoint.first, lastPoint.second, waypoints[i]->lat, waypoints[i]->lon);
+                    if (distanceFromPlane + distance < destImmediateNm) {
                         if (!m_usedWaypointMapObjects.contains(waypoints[i])) {
                             m_usedWaypointMapObjects.append(waypoints[i]);
                         }
-                        points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
+                        const auto _p = DoublePair(waypoints[i]->lat, waypoints[i]->lon);
+                        if (!points.contains(_p)) { // very cautious for duplicates here
+                            points.append(_p);
+                        }
+                        distanceFromPlane += distance;
+                        lastPoint = DoublePair(waypoints[i]->lat, waypoints[i]->lon);
+                        continue;
                     }
-                    qglColor(Settings::destLineColor());
-                    if (Settings::destLineDashed()) {
-                        glLineStipple(3, 0xAAAA);
-                    }
-                    glLineWidth(Settings::destLineStrength());
-                    glBegin(GL_LINE_STRIP);
-                    NavData::plotGreatCirclePoints(points);
-                    glEnd();
 
-                    if (Settings::destLineDashed()) {
-                        glLineStipple(1, 0xFFFF);
+                    if (!points.contains(lastPoint)) {
+                        points.append(lastPoint);
                     }
+                    const float neededFraction = (destImmediateNm - distanceFromPlane) / qMax(distance, 1.);
+                    const auto absoluteLast = NavData::greatCircleFraction(lastPoint.first, lastPoint.second, waypoints[i]->lat, waypoints[i]->lon, neededFraction);
+                    if (!points.contains(absoluteLast)) {
+                        points.append(absoluteLast);
+                    }
+                    break;
                 }
+
+                glPushAttrib(GL_ENABLE_BIT);
+                if (!isShowImmediateToDestRoute) {
+                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                    glEnable(GL_TEXTURE_1D);
+                    glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
+                }
+                qglColor(Settings::destImmediateLineColor());
+                glLineWidth(Settings::destImmediateLineStrength());
+                glBegin(GL_LINE_STRIP);
+                NavData::plotGreatCirclePoints(points);
+                glEnd();
+                glPopAttrib();
+            }
+
+            // rest
+            if (!isShowImmediateToDestRoute) {
+                continue;
+            }
+
+            while (points.size() > 1) {
+                points.takeFirst();
+            }
+            for (; i < waypoints.size(); i++) {
+                if (!m_usedWaypointMapObjects.contains(waypoints[i])) {
+                    m_usedWaypointMapObjects.append(waypoints[i]);
+                }
+                points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
+            }
+            qglColor(Settings::destLineColor());
+            if (Settings::destLineDashed()) {
+                glLineStipple(3, 0xAAAA);
+            }
+            glLineWidth(Settings::destLineStrength());
+            glBegin(GL_LINE_STRIP);
+            NavData::plotGreatCirclePoints(points);
+            glEnd();
+
+            if (Settings::destLineDashed()) {
+                glLineStipple(1, 0xFFFF);
             }
         }
         m_isUsedWaypointMapObjectsDirty = false;
@@ -1539,10 +1550,10 @@ void GLWidget::rightClick(const QPoint& pos) {
     } else if (pilot != 0) {
         // display flight path for pilot
         GuiMessages::message(
-            QString("toggled route for %1 [%2]").arg(pilot->callsign, pilot->showDepDestLine? "off": "on"),
+            QString("toggled route for %1 [%2]").arg(pilot->callsign, pilot->showRoute? "off": "on"),
             "routeTogglePilot"
         );
-        pilot->showDepDestLine = !pilot->showDepDestLine;
+        pilot->showRoute = !pilot->showRoute;
         if (PilotDetails::instance(false) != 0) {
             PilotDetails::instance()->refresh();
         }

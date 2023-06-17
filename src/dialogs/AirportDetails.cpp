@@ -218,7 +218,17 @@ void AirportDetails::refresh(Airport* newAirport) {
     groupBoxAtc->setTitle(QString("ATC (%1)").arg(atcContent.size()));
     treeAtc->header()->resizeSections(QHeaderView::ResizeToContents);
 
-    cbPlotRoutes->setChecked(_airport->showRoutes);
+    bool isShowRouteExternal = Settings::showRoutes();
+
+    if (!isShowRouteExternal && !_airport->showRoutes) {
+        cbPlotRoutes->setCheckState(Qt::Unchecked);
+    }
+    if (isShowRouteExternal && !_airport->showRoutes) {
+        cbPlotRoutes->setCheckState(Qt::PartiallyChecked);
+    }
+    if (_airport->showRoutes) {
+        cbPlotRoutes->setCheckState(Qt::Checked);
+    }
 }
 
 void AirportDetails::atcSelected(const QModelIndex& index) {
@@ -234,15 +244,14 @@ void AirportDetails::departureSelected(const QModelIndex& index) {
 }
 
 void AirportDetails::togglePlotRoutes(bool checked) {
-    if (_airport->showRoutes != checked) {
-        _airport->showRoutes = checked;
-        if (Window::instance(false) != 0) {
-            Window::instance()->mapScreen->glWidget->invalidatePilots();
-        }
-        if (PilotDetails::instance(false) != 0) {
-            PilotDetails::instance()->refresh();
-        }
+    _airport->showRoutes = checked;
+    if (Window::instance(false) != 0) {
+        Window::instance()->mapScreen->glWidget->invalidatePilots();
     }
+    if (PilotDetails::instance(false) != 0) {
+        PilotDetails::instance()->refresh();
+    }
+    refresh();
 }
 
 void AirportDetails::refreshMetar() {

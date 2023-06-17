@@ -384,7 +384,7 @@ void WhazzupData::updatePilotsFrom(const WhazzupData &data) {
             Pilot* p = new Pilot(*data.pilots[s]);
             pilots[s] = p;
         } else { // existing pilots: data saved in the object needs to be transferred
-            data.pilots[s]->showDepDestLine = pilots[s]->showDepDestLine;
+            data.pilots[s]->showRoute = pilots[s]->showRoute;
             data.pilots[s]->routeWaypointsCache = pilots[s]->routeWaypointsCache;
             data.pilots[s]->routeWaypointsPlanDepCache = pilots[s]->routeWaypointsPlanDepCache;
             data.pilots[s]->routeWaypointsPlanDestCache = pilots[s]->routeWaypointsPlanDestCache;

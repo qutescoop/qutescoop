@@ -170,25 +170,22 @@ void PilotDetails::refresh(Pilot* pilot) {
     // check if we know position
     buttonShowOnMap->setDisabled(qFuzzyIsNull(_pilot->lon) && qFuzzyIsNull(_pilot->lat));
 
-    // plotted?
-    bool plottedAirports = false;
-    if (_pilot->depAirport() != 0) {
-        plottedAirports |= _pilot->depAirport()->showRoutes;
-    }
-    if (_pilot->destAirport() != 0) {
-        plottedAirports |= _pilot->destAirport()->showRoutes;
-    }
+    // routes
+    bool isShowRouteExternal = Settings::showRoutes()
+        || (_pilot->depAirport() != 0 && _pilot->depAirport()->showRoutes)
+        || (_pilot->destAirport() != 0 && _pilot->destAirport()->showRoutes);
 
-    if (!plottedAirports && !_pilot->showDepDestLine) {
+    if (!isShowRouteExternal && !_pilot->showRoute) {
         cbPlotRoute->setCheckState(Qt::Unchecked);
     }
-    if (plottedAirports && !_pilot->showDepDestLine) {
+    if (isShowRouteExternal && !_pilot->showRoute) {
         cbPlotRoute->setCheckState(Qt::PartiallyChecked);
     }
-    if (_pilot->showDepDestLine) {
+    if (_pilot->showRoute) {
         cbPlotRoute->setCheckState(Qt::Checked);
     }
-    if (_pilot->showDepDestLine || plottedAirports) {
+
+    if (_pilot->showRoute || isShowRouteExternal) {
         lblPlotStatus->setText(
             QString(
                 "<span style='color: "
@@ -197,10 +194,7 @@ void PilotDetails::refresh(Pilot* pilot) {
             ).arg(_pilot->routeWaypointsString())
         );
     }
-    lblPlotStatus->setVisible(_pilot->showDepDestLine || plottedAirports);
-
-    // @see https://github.com/qutescoop/qutescoop/issues/124
-    // adjustSize();
+    lblPlotStatus->setVisible(_pilot->showRoute || isShowRouteExternal);
 }
 
 void PilotDetails::on_buttonDest_clicked() {
@@ -227,13 +221,11 @@ void PilotDetails::on_buttonAddFriend_clicked() {
 }
 
 void PilotDetails::on_cbPlotRoute_clicked(bool checked) {
-    if (_pilot->showDepDestLine != checked) {
-        _pilot->showDepDestLine = checked;
-        if (Window::instance(false) != 0) {
-            Window::instance()->mapScreen->glWidget->invalidatePilots();
-        }
-        refresh();
+    _pilot->showRoute = checked;
+    if (Window::instance(false) != 0) {
+        Window::instance()->mapScreen->glWidget->invalidatePilots();
     }
+    refresh();
 }
 
 void PilotDetails::closeEvent(QCloseEvent* event) {
