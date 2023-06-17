@@ -681,7 +681,7 @@ void GLWidget::createControllerLists() {
 }
 
 
-void GLWidget::createHoveredControllersLists(QSet<Controller*> controllers) {
+void GLWidget::createHoveredControllersLists(const QSet<Controller*>& controllers) {
     // make sure all the lists are there to avoid nested glNewList calls
     foreach (Controller* c, controllers) {
         if (c->sector != 0) {

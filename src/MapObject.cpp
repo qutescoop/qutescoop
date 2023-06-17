@@ -4,10 +4,15 @@ MapObject::MapObject()
     : QObject(),
       lat(0.),
       lon(0.),
-      drawLabel(true) {}
+      drawLabel(true),
+      m_label(QString()),
+      m_toolTip(QString()) {}
 
 MapObject::MapObject(QString label, QString toolTip)
     : QObject(),
+      lat(0.),
+      lon(0.),
+      drawLabel(true),
       m_label(label),
       m_toolTip(toolTip) {}
 
@@ -20,6 +25,7 @@ MapObject::MapObject(const MapObject& obj)
     lat = obj.lat;
     lon = obj.lon;
     m_label = obj.m_label;
+    m_toolTip = obj.m_toolTip;
     drawLabel = obj.drawLabel;
 }
 
