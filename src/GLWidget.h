@@ -95,7 +95,7 @@ class GLWidget
         bool m_isPilotsListDirty = true, m_isAirportsListDirty = true, m_isControllerListsDirty = true, m_isStaticSectorListsDirty = true,
             m_isAirportsMapObjectsDirty = true, m_isControllerMapObjectsDirty = true, m_isPilotMapObjectsDirty = true, m_isUsedWaypointMapObjectsDirty = true;
         GLUquadricObj* _earthQuad;
-        GLuint _earthTex, _immediateRouteTex,
+        GLuint _earthTex, _fadeOutTex,
             _earthList, _coastlinesList, _countriesList, _gridlinesList,
             _pilotsList, _activeAirportsList, _inactiveAirportsList,
             _usedWaypointsList, _plannedRouteList,

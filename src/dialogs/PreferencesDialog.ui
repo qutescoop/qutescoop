@@ -1462,8 +1462,7 @@ TWR: 133.375</string>
               <item row="0" column="0">
                <widget class="QLabel" name="label_105">
                 <property name="text">
-                 <string>font
-(active)</string>
+                 <string>font</string>
                 </property>
                 <property name="buddy">
                  <cstring>pbPilotFontColor</cstring>

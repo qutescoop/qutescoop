@@ -20,7 +20,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget* parent)
     : QGLWidget(fmt, parent),
       _mapMoving(false), _mapZooming(false), _mapRectSelecting(false),
       _lightsGenerated(false),
-      _earthTex(0), _immediateRouteTex(0),
+      _earthTex(0), _fadeOutTex(0),
       _earthList(0), _coastlinesList(0), _countriesList(0), _gridlinesList(0),
       _pilotsList(0), _activeAirportsList(0), _inactiveAirportsList(0),
       _usedWaypointsList(0), _sectorPolygonsList(0), _sectorPolygonBorderLinesList(0),
@@ -58,8 +58,8 @@ GLWidget::~GLWidget() {
         deleteTexture(_earthTex);
         //glDeleteTextures(1, &earthTex); // handled Qt'ish by deleteTexture
     }
-    if (_immediateRouteTex != 0) {
-        deleteTexture(_immediateRouteTex);
+    if (_fadeOutTex != 0) {
+        deleteTexture(_fadeOutTex);
     }
 
     gluDeleteQuadric(_earthQuad);
@@ -384,7 +384,7 @@ void GLWidget::createPilotsList() {
                 if (!isShowImmediateToDestRoute) {
                     glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
                     glEnable(GL_TEXTURE_1D);
-                    glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
+                    glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
                 }
                 qglColor(Settings::destImmediateLineColor());
                 glLineWidth(Settings::destImmediateLineStrength());
@@ -551,7 +551,7 @@ void GLWidget::createAirportsList() {
         glPushAttrib(GL_ENABLE_BIT);
         glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         glEnable(GL_TEXTURE_1D);
-        glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
+        glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
         foreach (const Airport* a, airportList) {
             Q_ASSERT(a != 0);
             if (!a->active) {
@@ -778,9 +778,9 @@ void GLWidget::createStaticLists() {
 
     parseTexture();
 
-    if (_immediateRouteTex == 0) {
-        glGenTextures(1, &_immediateRouteTex);
-        glBindTexture(GL_TEXTURE_1D, _immediateRouteTex);
+    if (_fadeOutTex == 0) {
+        glGenTextures(1, &_fadeOutTex);
+        glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -788,7 +788,7 @@ void GLWidget::createStaticLists() {
         GLubyte buf[64 * components];
         for (size_t i = 0; i < sizeof(buf); i += components) {
             GLfloat fraction = i / (GLfloat) (sizeof(buf) - components);
-            GLfloat result = qCos(fraction * M_PI / 2.); // ease in sine
+            GLfloat result = qPow(qCos(fraction * M_PI / 2.), 1.5); // ease in sine + slightly ease out
             const GLubyte grey = 255 * result;
             buf[i + 0] = 255; // rand() % 255; // for testing with rainbow
             buf[i + 1] = 255; // rand() % 255;
@@ -1809,8 +1809,8 @@ void GLWidget::renderLabels() {
             _inactiveAirportLabelZoomTreshold,
             Settings::inactiveAirportFont(),
             Settings::inactiveAirportFontColor(),
-            Settings::inactiveAirportFont(),
-            Settings::inactiveAirportFontColor()
+            Settings::airportFontSecondary(),
+            Settings::airportFontSecondaryColor()
         );
     }
 
