@@ -259,11 +259,10 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     const double distRemaining = totalDist - distDone;
 
     // arriving?
-    const bool arriving = distRemaining < 50;
+    const bool arriving = distRemaining < 50 && distRemaining < distDone;
 
     // departing?
-    const bool departing = distDone < 50;
-
+    const bool departing = distDone < 50 && distRemaining > distDone;
 
     // BOARDING: !flying, speed = 0, departing
     // GROUND_DEP: !flying, speed > 0, departing
