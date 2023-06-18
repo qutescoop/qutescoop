@@ -33,10 +33,6 @@ Window* Window::instance(bool createIfNoInstance) {
 
 Window::Window(QWidget* parent)
     : QMainWindow(parent) {
-    if (Settings::resetOnNextStart()) {
-        QSettings().clear();
-    }
-
     GuiMessages::progress("mainwindow", "Setting up main window...");
     setupUi(this);
 

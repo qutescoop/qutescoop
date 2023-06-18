@@ -12,6 +12,10 @@ QSettings* settingsInstance = 0;
 QSettings* Settings::instance() {
     if (settingsInstance == 0) {
         settingsInstance = new QSettings();
+        if (Settings::resetOnNextStart()) {
+            settingsInstance->clear();
+            Settings::setResetOnNextStart(false);
+        }
         migrate(settingsInstance);
     }
 
@@ -514,7 +518,7 @@ void Settings::setGlTextureEarth(QString value) {
 }
 
 QColor Settings::sunLightColor() {
-    return instance()->value("gl/sunLightColor", QColor::fromRgb(70, 44, 0)).value<QColor>();
+    return instance()->value("gl/sunLightColor", QColor::fromRgb(70, 70, 70)).value<QColor>();
 }
 
 void Settings::setSunLightColor(const QColor& color) {
@@ -564,7 +568,7 @@ void Settings::setBackgroundColor(const QColor& color) {
 }
 
 QColor Settings::globeColor() {
-    return instance()->value("earthSpace/globeColor", QColor::fromRgb(255, 255, 255)).value<QColor>();
+    return instance()->value("earthSpace/globeColor", QColor::fromRgb(100, 100, 100)).value<QColor>();
 }
 
 void Settings::setGlobeColor(const QColor& color) {
@@ -715,7 +719,7 @@ void Settings::setFirFontSecondary(const QFont& font) {
 
 
 QColor Settings::firFillColor() {
-    return instance()->value("firDisplay/fillColor", QColor::fromRgb(42, 163, 214, 42)).value<QColor>();
+    return instance()->value("firDisplay/fillColor", QColor::fromRgb(42, 163, 214, 22)).value<QColor>();
 }
 
 void Settings::setFirFillColor(const QColor& color) {
@@ -763,7 +767,7 @@ void Settings::setFirPrimaryContentHovered(const QString &value) {
 }
 
 QString Settings::firSecondaryContent() {
-    return instance()->value("firDisplay/secondaryContent", "{livestream}").toString();
+    return instance()->value("firDisplay/secondaryContent", "{cpdlc-}\n{livestream}").toString();
 }
 
 void Settings::setFirSecondaryContent(const QString &value) {
@@ -813,7 +817,7 @@ void Settings::setAirportFontSecondary(const QFont& font) {
 }
 
 QColor Settings::airportFontSecondaryColor() {
-    return instance()->value("airportDisplay/fontSecondaryColor", QColor::fromRgb(255, 255, 127, 180)).value<QColor>();
+    return instance()->value("airportDisplay/fontSecondaryColor", QColor::fromRgb(255, 255, 255, 180)).value<QColor>();
 }
 
 void Settings::setAirportFontSecondaryColor(const QColor& color) {
@@ -837,7 +841,7 @@ void Settings::setAirportPrimaryContentHovered(const QString &value) {
 }
 
 QString Settings::airportSecondaryContent() {
-    return instance()->value("airportDisplay/secondaryContent", "{controllers} {pdc}\n{livestream}").toString();
+    return instance()->value("airportDisplay/secondaryContent", "{pdc-}\n{livestream}").toString();
 }
 
 void Settings::setAirportSecondaryContent(const QString &value) {
@@ -918,7 +922,7 @@ void Settings::setTwrBorderLineStrength(double value) {
 }
 
 QColor Settings::appBorderLineColor() {
-    return instance()->value("airportDisplay/appBorderLineColor", QColor::fromRgb(42, 163, 214, 120)).value<QColor>();
+    return instance()->value("airportDisplay/appBorderLineColor", QColor::fromRgb(42, 163, 214, 80)).value<QColor>();
 }
 
 void Settings::setAppBorderLineColor(const QColor& color) {
@@ -926,7 +930,7 @@ void Settings::setAppBorderLineColor(const QColor& color) {
 }
 
 double Settings::appBorderLineWidth() {
-    return instance()->value("airportDisplay/appBorderLineStrength", 1.5).toDouble();
+    return instance()->value("airportDisplay/appBorderLineStrength", 1.).toDouble();
 }
 
 void Settings::setAppBorderLineStrength(double value) {
@@ -942,7 +946,7 @@ void Settings::setAppCenterColor(const QColor& color) {
 }
 
 QColor Settings::appMarginColor() {
-    return instance()->value("airportDisplay/appMarginColor", QColor::fromRgb(34, 85, 99, 128)).value<QColor>();
+    return instance()->value("airportDisplay/appMarginColor", QColor::fromRgb(34, 85, 99, 88)).value<QColor>();
 }
 
 void Settings::setAppMarginColor(const QColor& color) {
@@ -958,7 +962,7 @@ void Settings::setTwrCenterColor(const QColor& color) {
 }
 
 QColor Settings::twrMarginColor() {
-    return instance()->value("airportDisplay/twrMarginColor", QColor::fromRgb(34, 85, 99, 200)).value<QColor>();
+    return instance()->value("airportDisplay/twrMarginColor", QColor::fromRgb(144, 8, 255, 30)).value<QColor>();
 }
 
 void Settings::setTwrMarginColor(const QColor& color) {
@@ -1078,7 +1082,7 @@ void Settings::setAirportCongestionRadiusMin(int value) {
 }
 
 QColor Settings::airportCongestionColorMin() {
-    return instance()->value("airportTraffic/congestionColorMin", QColor::fromRgb(0, 255, 127, 40)).value<QColor>();
+    return instance()->value("airportTraffic/congestionColorMin", QColor::fromRgb(20, 100, 170, 60)).value<QColor>();
 }
 
 void Settings::setAirportCongestionColorMin(const QColor& color) {
@@ -1110,7 +1114,7 @@ void Settings::setAirportCongestionRadiusMax(int value) {
 }
 
 QColor Settings::airportCongestionColorMax() {
-    return instance()->value("airportTraffic/congestionColorMax", QColor::fromRgb(85, 0, 127, 80)).value<QColor>();
+    return instance()->value("airportTraffic/congestionColorMax", QColor::fromRgb(20, 100, 170, 160)).value<QColor>();
 }
 
 void Settings::setAirportCongestionColorMax(const QColor& color) {
@@ -1290,12 +1294,29 @@ void Settings::setOnlyShowImmediateRoutePart(bool value) {
 
 
 QColor Settings::depLineColor() {
-    return instance()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 100)).value<QColor>();
+    return instance()->value("pilotDisplay/depLineColor", QColor::fromRgb(170, 255, 127, 40)).value<QColor>();
 }
 
 void Settings::setDepLineColor(const QColor& color) {
     instance()->setValue("pilotDisplay/depLineColor", color);
 }
+
+double Settings::depLineStrength() {
+    return instance()->value("pilotDisplay/depLineStrength", .8).toDouble();
+}
+
+void Settings::setDepLineStrength(double value) {
+    instance()->setValue("pilotDisplay/depLineStrength", value);
+}
+
+bool Settings::depLineDashed() {
+    return instance()->value("pilotDisplay/depLineDashed", true).toBool();
+}
+
+void Settings::setDepLineDashed(bool value) {
+    instance()->setValue("pilotDisplay/depLineDashed", value);
+}
+
 
 int Settings::destImmediateDurationMin() {
     return instance()->value("pilotDisplay/destImmediateDurationMin", 30).toInt();
@@ -1329,28 +1350,12 @@ void Settings::setDestLineColor(const QColor& color) {
     instance()->setValue("pilotDisplay/destLineColor", color);
 }
 
-bool Settings::depLineDashed() {
-    return instance()->value("pilotDisplay/depLineDashed", true).toBool();
-}
-
-void Settings::setDepLineDashed(bool value) {
-    instance()->setValue("pilotDisplay/depLineDashed", value);
-}
-
 void Settings::setDestLineDashed(bool value) {
     instance()->setValue("pilotDisplay/destLineDashed", value);
 }
 
 bool Settings::destLineDashed() {
     return instance()->value("pilotDisplay/destLineDashed", false).toBool();
-}
-
-double Settings::depLineStrength() {
-    return instance()->value("pilotDisplay/depLineStrength", 0.).toDouble();
-}
-
-void Settings::setDepLineStrength(double value) {
-    instance()->setValue("pilotDisplay/depLineStrength", value);
 }
 
 double Settings::destLineStrength() {

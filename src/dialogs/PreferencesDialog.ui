@@ -1507,7 +1507,7 @@ TWR: 133.375</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
+              <y>-97</y>
               <width>469</width>
               <height>715</height>
              </rect>
@@ -1582,7 +1582,7 @@ currently connected</string>
                    <item row="12" column="3">
                     <widget class="QLabel" name="label_119">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;PDC/EDDB&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;PDC@EDDB&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
@@ -1760,7 +1760,7 @@ already)</string>
                    <item row="13" column="2">
                     <widget class="QLabel" name="label_170">
                      <property name="text">
-                      <string>@ + {pdc}, but only if
+                      <string>@ + logon, but only if
 different from airport code</string>
                      </property>
                     </widget>
@@ -4550,9 +4550,9 @@ CPDLC/EDGP</string>
                <item row="9" column="1">
                 <widget class="QLabel" name="label_173">
                  <property name="text">
-                  <string>@ + {cpdlc}, but only
-if different than
-controller login</string>
+                  <string>only @ + logon, but
+only if different
+than controller login</string>
                  </property>
                 </widget>
                </item>
@@ -4569,7 +4569,7 @@ controller login</string>
                <item row="8" column="2">
                 <widget class="QLabel" name="label_138">
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;CPDLC/EDWA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;CPDLC@EDWA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                 </widget>
                </item>

@@ -63,7 +63,7 @@ const QHash<QString, std::function<QString(Airport*)> > Airport::placeholders {
     },
     {
         "{pdc}", [](Airport* o)->QString {
-            return o->pdcString("PDC/");
+            return o->pdcString("PDC@");
         }
     },
     {
