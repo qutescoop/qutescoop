@@ -405,6 +405,12 @@ class Settings {
         static QColor depLineColor();
         static void setDepLineColor(const QColor& color);
 
+        static double depLineStrength();
+        static void setDepLineStrength(double value);
+
+        static bool depLineDashed();
+        static void setDepLineDashed(bool value);
+
         static int destImmediateDurationMin();
         static void setDestImmediateDurationMin(int value);
 
@@ -420,18 +426,11 @@ class Settings {
         static QColor destLineColor();
         static void setDestLineColor(const QColor& color);
 
-        static double timeLineStrength();
-        static void setTimeLineStrength(double value);
-
-        static double depLineStrength();
-        static void setDepLineStrength(double value);
-
-
-        static bool depLineDashed();
-        static void setDepLineDashed(bool value);
-
         static bool destLineDashed();
         static void setDestLineDashed(bool value);
+
+        static double timeLineStrength();
+        static void setTimeLineStrength(double value);
 
         static QColor friendsHighlightColor();
         static void setFriendsHighlightColor(QColor& color);
