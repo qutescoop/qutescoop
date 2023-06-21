@@ -15,7 +15,7 @@ const QRegularExpression Client::livestreamRegExp = QRegularExpression(
     QRegularExpression::MultilineOption | QRegularExpression::CaseInsensitiveOption
 );
 
-QString Client::livestreamString(const QString& str, bool shortened) {
+QString Client::livestreamString(const QString& str) {
     auto matchIterator = livestreamRegExp.globalMatch(str);
 
     // take last match. Helps with "live on twitch now: twitch/user"
@@ -23,9 +23,6 @@ QString Client::livestreamString(const QString& str, bool shortened) {
         auto match = matchIterator.next();
         if (!matchIterator.hasNext()) {
             QString network(match.captured(2) + match.captured(4) + match.captured(6));
-            if (shortened) {
-                return "~";
-            }
             return network.toLower() + "/" + match.capturedRef(8);
         }
     }
@@ -34,7 +31,7 @@ QString Client::livestreamString(const QString& str, bool shortened) {
 }
 
 Client::Client(const QJsonObject& json, const WhazzupData*)
-    : server("") {
+    : callsign(""), userId(""), homeBase(""), server(""), rating(-99) {
     callsign = json["callsign"].toString();
     Q_ASSERT(!callsign.isNull());
 
@@ -116,7 +113,7 @@ QString Client::rank() const {
     return "";
 }
 
-QString Client::livestreamString(bool) const {
+QString Client::livestreamString() const {
     return "";
 }
 

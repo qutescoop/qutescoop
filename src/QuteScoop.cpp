@@ -138,7 +138,6 @@ int main(int argc, char* argv[]) {
             if (!airways.isEmpty()) {
                 QTextStream(stdout) << "\tairways: " << airways.join(", ") << Qt::endl;
             }
-
         }
 
         return 0;
@@ -147,10 +146,6 @@ int main(int argc, char* argv[]) {
     // show Launcher
     Launcher::instance()->fireUp();
 
-    QMessageLogger("ile.constData()", 43, 0).debug() << "lkiij";
-
     // start event loop
-    int ret = app.exec();
-
-    return ret;
+    return app.exec();
 }

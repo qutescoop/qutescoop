@@ -5,6 +5,7 @@
 #include "MapObject.h"
 #include "Sector.h"
 #include "WhazzupData.h"
+#include "src/mustache/contexts/ControllerContext.h"
 
 #include <QJsonObject>
 
@@ -14,7 +15,6 @@ class Controller
     : public MapObject, public Client {
     Q_OBJECT
     public:
-        static const QHash<QString, std::function<QString(Controller*)> > placeholders;
         static const QRegularExpression cpdlcRegExp;
 
         Controller(const QJsonObject& json, const WhazzupData* whazzup);
@@ -27,7 +27,7 @@ class Controller
         virtual QString mapLabelHovered() const override;
         virtual QStringList mapLabelSecondaryLines() const override;
         virtual QStringList mapLabelSecondaryLinesHovered() const override;
-        virtual QString livestreamString(bool shortened = false) const override;
+        virtual QString livestreamString() const override;
         virtual bool matches(const QRegExp& regex) const override;
         virtual bool hasPrimaryAction() const override;
         virtual void primaryAction() override;
@@ -62,9 +62,6 @@ class Controller
         QDateTime assumeOnlineUntil;
 
         Sector* sector;
-    protected:
-        QString specialAirportWorkarounds(const QString& rawAirport) const;
-    private:
 };
 
 #endif /*CONTROLLER_H_*/

@@ -7,77 +7,21 @@
 #include "Whazzup.h"
 #include "dialogs/ControllerDetails.h"
 #include "helpers.h"
+#include "src/mustache/Renderer.h"
 
 #include <QJsonObject>
 
 const QRegularExpression Controller::cpdlcRegExp = QRegularExpression(
-    "CPDLC.{0,25}\\W([A-Z]{3}[A-Z0-9])(\\W|$)", QRegularExpression::MultilineOption | QRegularExpression::InvertedGreedinessOption
+    "\\b([A-Z]{3}[A-Z0-9])\\b.{0,5}CPDLC|CPDLC.{0,25}\\b([A-Z]{3}[A-Z0-9])\\b",
+    QRegularExpression::MultilineOption | QRegularExpression::InvertedGreedinessOption
 );
-
-const QHash<QString, std::function<QString(Controller*)> > Controller::placeholders {
-    {
-        "{sectorOrLogin}", [](Controller* o)->QString {
-            if (o->sector != 0) {
-                return o->controllerSectorName();
-            }
-
-            return o->callsign;
-        }
-    },
-    {
-        "{sector}", [](Controller* o)->QString {
-            if (o->sector != 0) {
-                return o->sector->name;
-            }
-
-            return "";
-        }
-    },
-    {
-        "{name}", [](Controller* o)->QString {
-            return o->aliasOrName();
-        }
-    },
-    {
-        "{nameIfFriend}", [](Controller* o)->QString {
-            return o->isFriend()? o->aliasOrName(): "";
-        }
-    },
-    {
-        "{rating}", [](Controller* o)->QString {
-            return o->rank();
-        }
-    },
-    {
-        "{frequency}", [](Controller* o)->QString {
-            return o->frequency.length() > 1? o->frequency: "";
-        }
-    },
-    {
-        "{cpdlc}", [](Controller* o)->QString {
-            return o->cpdlcString("CPDLC/");
-        }
-    },
-    {
-        "{cpdlc-}", [](Controller* o)->QString {
-            return o->cpdlcString("@", false);
-        }
-    },
-    {
-        "{livestream}", [](Controller* o)->QString {
-            return o->livestreamString();
-        }
-    },
-    {
-        "{livestream-}", [](Controller* o)->QString {
-            return o->livestreamString(true);
-        }
-    },
-};
 
 Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup)
     : MapObject(), Client(json, whazzup),
-      sector(0) {
+      frequency(""),
+      atisMessage(""), atisCode(""), facilityType(0),
+      visualRange(0), sector(0) {
+
     frequency = json["frequency"].toString();
     Q_ASSERT(!frequency.isNull());
     facilityType = json["facility"].toInt();
@@ -163,7 +107,9 @@ Controller::Controller(const QJsonObject& json, const WhazzupData* whazzup)
     }
 }
 
-Controller::~Controller() {}
+Controller::~Controller() {
+    MustacheQs::Renderer::teardownContext(this);
+}
 
 QString Controller::facilityString() const {
     switch (facilityType) {
@@ -208,8 +154,8 @@ QString Controller::controllerSectorName() const {
     return QString();
 }
 
-QString Controller::livestreamString(bool shortened) const {
-    return Client::livestreamString(atisMessage, shortened);
+QString Controller::livestreamString() const {
+    return Client::livestreamString(atisMessage);
 }
 
 bool Controller::isCtrFss() const {
@@ -295,15 +241,17 @@ QList <Airport*> Controller::airportsSorted() const {
 }
 
 const QString Controller::cpdlcString(const QString& prepend, bool alwaysWithIdentifier) const {
-    auto match = cpdlcRegExp.match(atisMessage);
+    if (atisMessage.isEmpty()) {
+        return "";
+    }
+    auto match = Controller::cpdlcRegExp.match(atisMessage);
     if (match.hasMatch()) {
-        if (match.hasMatch()) {
-            auto logon = match.capturedRef(1);
-            if (!alwaysWithIdentifier && callsign.startsWith(logon)) {
-                return prepend;
-            }
-            return prepend + logon;
+        auto logon = match.capturedRef(match.lastCapturedIndex());
+        if (!alwaysWithIdentifier && callsign.startsWith(logon)) {
+            // found perfect match
+            return prepend;
         }
+        return prepend + logon;
     }
 
     return "";
@@ -356,51 +304,27 @@ QString Controller::toolTipShort() const // LOVV_CTR [Vienna]
 }
 
 QString Controller::mapLabel() const {
-    auto str = Settings::firPrimaryContent();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Controller*) this));
-        }
-    }
-
-    return str.trimmed();
+    auto tmpl = Settings::firPrimaryContent();
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 QString Controller::mapLabelHovered() const {
-    auto str = Settings::firPrimaryContentHovered();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Controller*) this));
-        }
-    }
-
-    return str.trimmed();
+    auto tmpl = Settings::firPrimaryContentHovered();
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 QStringList Controller::mapLabelSecondaryLines() const {
-    auto str = Settings::firSecondaryContent();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Controller*) this));
-        }
-    }
-
-    return Helpers::linesFilteredTrimmed(str);
+    auto tmpl = Settings::firSecondaryContent();
+    return Helpers::linesFilteredTrimmed(
+        MustacheQs::Renderer::render(tmpl, (QObject*) this)
+    );
 }
 
 QStringList Controller::mapLabelSecondaryLinesHovered() const {
-    auto str = Settings::firSecondaryContentHovered();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Controller*) this));
-        }
-    }
-
-    return Helpers::linesFilteredTrimmed(str);
+    auto tmpl = Settings::firSecondaryContentHovered();
+    return Helpers::linesFilteredTrimmed(
+        MustacheQs::Renderer::render(tmpl, (QObject*) this)
+    );
 }
 
 bool Controller::matches(const QRegExp& regex) const {
@@ -426,5 +350,6 @@ bool Controller::isObserver() const {
 bool Controller::isATC() const {
     // 199.998 gets transmitted on VATSIM for a controller without prim freq
     Q_ASSERT(!frequency.isNull());
+
     return facilityType > 0 && !frequency.isEmpty() && frequency != "199.998";
 }

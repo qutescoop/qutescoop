@@ -5,6 +5,7 @@
 #include "Client.h"
 #include "MapObject.h"
 #include "Waypoint.h"
+#include "src/mustache/contexts/PilotContext.h"
 
 #include <QJsonDocument>
 
@@ -16,7 +17,6 @@ class Pilot
     public:
         static const int taxiTimeOutbound = 240;
         static int altToFl(int alt_ft, int qnh_mb);
-        static const QHash<QString, std::function<QString(Pilot*)> > placeholders;
 
         enum FlightStatus {
             BOARDING, GROUND_DEP, DEPARTING, EN_ROUTE, ARRIVING,
@@ -32,7 +32,7 @@ class Pilot
         virtual QString mapLabelHovered() const override;
         virtual QStringList mapLabelSecondaryLines() const override;
         virtual QStringList mapLabelSecondaryLinesHovered() const override;
-        virtual QString livestreamString(bool shortened = false) const override;
+        virtual QString livestreamString() const override;
         virtual bool hasPrimaryAction() const override;
         virtual void primaryAction() override;
 
@@ -82,7 +82,6 @@ class Pilot
         QDateTime whazzupTime; // need some local reference to that
         QList<Waypoint*> routeWaypointsCache; // caching calculated routeWaypoints
         Airline* airline;
-    private:
 };
 
 #endif /*PILOT_H_*/

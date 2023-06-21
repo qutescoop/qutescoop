@@ -5,20 +5,7 @@
 #include "MapObject.h"
 #include "Metar.h"
 #include "Pilot.h"
-
-// that was to use the QJSEngine for the labels. But basically it was way too slow for us.
-//class AirportApi: public QObject {
-//    Q_OBJECT
-//    public:
-//        AirportApi(Airport* _a);
-//        virtual ~AirportApi();
-//        Q_PROPERTY(QString traffic READ _traffic CONSTANT);
-//        Q_PROPERTY(QString controllers READ _controllers CONSTANT);
-//    private:
-//        QString _traffic();
-//        QString _controllers();
-//        Airport* m_airport;
-//};
+#include "src/mustache/contexts/AirportContext.h"
 
 class Airport
     : public MapObject {
@@ -28,7 +15,6 @@ class Airport
         const static int symbologyTwrRadius_nm = 16;
         const static int symbologyGndRadius_nm = 13;
         const static int symbologyDelRadius_nm = 10;
-        static const QHash<QString, std::function<QString(Airport*)> > placeholders;
         static const QRegularExpression pdcRegExp;
 
         Airport(const QStringList &list, unsigned int debugLineNumber = 0);
@@ -45,14 +31,11 @@ class Airport
 
         void showDetailsDialog();
 
-        QString livestreamString(bool shortened = false) const;
+        QString livestreamString() const;
 
         const QString shortLabel() const;
-        const QString longLabel() const;
         const QString prettyName() const;
         const QString trafficString() const;
-        const QString trafficFilteredString() const;
-        const QString trafficUnfilteredString() const;
         const QString controllersString() const;
         const QString atisCodeString() const;
         const QString frequencyString() const;
@@ -72,19 +55,20 @@ class Airport
 
         void addController(Controller* c);
 
-        const GLuint &appDisplayList();
-        const GLuint &twrDisplayList();
-        const GLuint &gndDisplayList();
-        const GLuint &delDisplayList();
+        const GLuint& appDisplayList();
+        const GLuint& twrDisplayList();
+        const GLuint& gndDisplayList();
+        const GLuint& delDisplayList();
 
         Metar metar;
         QString id, name, city, countryCode;
         bool showRoutes = false;
         bool active;
     private:
-        GLuint _appDisplayList, _twrDisplayList, _gndDisplayList, _delDisplayList;
         void appGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const;
         void twrGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const;
+
+        GLuint _appDisplayList, _twrDisplayList, _gndDisplayList, _delDisplayList;
 };
 
-#endif /*AIRPORT_H_*/
+#endif
