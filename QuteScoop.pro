@@ -201,7 +201,12 @@ HEADERS += \
     src/Net.h \
     src/JobList.h \
     src/MetarDelegate.h \
-    src/Platform.h
+    src/Platform.h \
+    src/mustache/Renderer.h \
+    src/mustache/contexts/AirportContext.h \
+    src/mustache/contexts/ControllerContext.h \
+    src/mustache/contexts/PilotContext.h \
+    src/mustache/external/qt-mustache/mustache.h
 SOURCES += src/WhazzupData.cpp \
     src/Whazzup.cpp \
     src/Waypoint.cpp \
@@ -257,7 +262,12 @@ SOURCES += src/WhazzupData.cpp \
     src/Net.cpp \
     src/JobList.cpp \
     src/MetarDelegate.cpp \
-    src/Platform.cpp
+    src/Platform.cpp \
+    src/mustache/Renderer.cpp \
+    src/mustache/contexts/AirportContext.cpp \
+    src/mustache/contexts/ControllerContext.cpp \
+    src/mustache/contexts/PilotContext.cpp \
+    src/mustache/external/qt-mustache/mustache.cpp
 RESOURCES += src/Resources.qrc
 
 # Report DESTDIR to user

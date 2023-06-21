@@ -767,7 +767,7 @@ void Settings::setFirPrimaryContentHovered(const QString &value) {
 }
 
 QString Settings::firSecondaryContent() {
-    return instance()->value("firDisplay/secondaryContent", "{cpdlc-}\n{livestream}").toString();
+    return instance()->value("firDisplay/secondaryContent", "{#cpdlc}@{cpdlc}{/cpdlc}{#livestream}📺{/livestream}").toString();
 }
 
 void Settings::setFirSecondaryContent(const QString &value) {
@@ -775,7 +775,7 @@ void Settings::setFirSecondaryContent(const QString &value) {
 }
 
 QString Settings::firSecondaryContentHovered() {
-    return instance()->value("firDisplay/secondaryContentHovered", "{frequency}\n{cpdlc}\n{livestream}").toString();
+    return instance()->value("firDisplay/secondaryContentHovered", "{#cpdlc}CPDLC@{cpdlc}{/cpdlc}\n{sector} {frequency}\n{name} {rating}\n{livestream}").toString();
 }
 
 void Settings::setFirSecondaryContentHovered(const QString &value) {
@@ -825,7 +825,7 @@ void Settings::setAirportFontSecondaryColor(const QColor& color) {
 }
 
 QString Settings::airportPrimaryContent() {
-    return instance()->value("airportDisplay/primaryContent", "{code} {traffic}").toString();
+    return instance()->value("airportDisplay/primaryContent", "{code}{#pdc}@{/pdc} {> trafficArrows} {#livestream}📺{/livestream}").toString();
 }
 
 void Settings::setAirportPrimaryContent(const QString &value) {
@@ -833,7 +833,7 @@ void Settings::setAirportPrimaryContent(const QString &value) {
 }
 
 QString Settings::airportPrimaryContentHovered() {
-    return instance()->value("airportDisplay/primaryContentHovered", "{code} {traffic}").toString();
+    return instance()->value("airportDisplay/primaryContentHovered", "{code}{#pdc}@{/pdc} {> trafficArrows} {#livestream}📺{/livestream}").toString();
 }
 
 void Settings::setAirportPrimaryContentHovered(const QString &value) {
@@ -841,7 +841,7 @@ void Settings::setAirportPrimaryContentHovered(const QString &value) {
 }
 
 QString Settings::airportSecondaryContent() {
-    return instance()->value("airportDisplay/secondaryContent", "{pdc-}\n{livestream}").toString();
+    return instance()->value("airportDisplay/secondaryContent", "").toString();
 }
 
 void Settings::setAirportSecondaryContent(const QString &value) {
@@ -849,7 +849,7 @@ void Settings::setAirportSecondaryContent(const QString &value) {
 }
 
 QString Settings::airportSecondaryContentHovered() {
-    return instance()->value("airportDisplay/secondaryContentHovered", "{prettyName}\n{pdc}\n{frequencies}\n{livestream}").toString();
+    return instance()->value("airportDisplay/secondaryContentHovered", "{prettyName}\n{#pdc}PDC@{pdc}{/pdc}\n{frequencies}\n{livestream}").toString();
 }
 
 void Settings::setAirportSecondaryContentHovered(const QString &value) {
@@ -1184,7 +1184,7 @@ void Settings::setPilotPrimaryContentHovered(const QString &value) {
 }
 
 QString Settings::pilotSecondaryContent() {
-    return instance()->value("pilotDisplay/secondaryContent", "{rating}\n{livestream}").toString();
+    return instance()->value("pilotDisplay/secondaryContent", "{rating} {#livestream}📺{/livestream}").toString();
 }
 
 void Settings::setPilotSecondaryContent(const QString &value) {

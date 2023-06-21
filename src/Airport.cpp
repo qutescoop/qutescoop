@@ -4,89 +4,15 @@
 #include "NavData.h"
 #include "Settings.h"
 #include "dialogs/AirportDetails.h"
+#include "src/mustache/Renderer.h"
 
 const QRegularExpression Airport::pdcRegExp = QRegularExpression(
     "PDC.{0,20}\\W([A-Z]{4})(\\W|$)", QRegularExpression::MultilineOption | QRegularExpression::InvertedGreedinessOption
 );
 
-const QHash<QString, std::function<QString(Airport*)> > Airport::placeholders {
-    {
-        "{code}", [](Airport* o)->QString {
-            return o->id;
-        }
-    },
-    {
-        "{traffic}", [](Airport* o)->QString {
-            return o->trafficString();
-        }
-    },
-    {
-        "{trafficUnfiltered}", [](Airport* o)->QString {
-            const auto ret = o->trafficUnfilteredString();
-            return ret.isEmpty()? "": "#" + o->trafficUnfilteredString();
-        }
-    },
-    {
-        "{controllers}", [](Airport* o)->QString {
-            return o->controllersString();
-        }
-    },
-    {
-        "{atis}", [](Airport* o)->QString {
-            return o->atisCodeString();
-        }
-    },
-    {
-        "{country}", [](Airport* o)->QString {
-            return o->countryCode;
-        }
-    },
-    {
-        "{prettyName}", [](Airport* o)->QString {
-            return o->prettyName();
-        }
-    },
-    {
-        "{name}", [](Airport* o)->QString {
-            return o->name;
-        }
-    },
-    {
-        "{city}", [](Airport* o)->QString {
-            return o->city;
-        }
-    },
-    {
-        "{frequencies}", [](Airport* o)->QString {
-            return o->frequencyString();
-        }
-    },
-    {
-        "{pdc}", [](Airport* o)->QString {
-            return o->pdcString("PDC@");
-        }
-    },
-    {
-        "{pdc-}", [](Airport* o)->QString {
-            return o->pdcString("@", false);
-        }
-    },
-    {
-        "{livestream}", [](Airport* o)->QString {
-            return o->livestreamString();
-        }
-    },
-    {
-        "{livestream-}", [](Airport* o)->QString {
-            return o->livestreamString(true);
-        }
-    },
-};
-
 Airport::Airport(const QStringList& list, unsigned int debugLineNumber)
     : MapObject(),
-      _appDisplayList(0),
-      _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
+      _appDisplayList(0), _twrDisplayList(0), _gndDisplayList(0), _delDisplayList(0) {
     resetWhazzupStatus();
 
     if (list.size() != 6) {
@@ -111,6 +37,8 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber)
 }
 
 Airport::~Airport() {
+    MustacheQs::Renderer::teardownContext(this);
+
     if (_appDisplayList != 0) {
         glDeleteLists(_appDisplayList, 1);
     }
@@ -302,33 +230,12 @@ void Airport::twrGl(const QColor &middleColor, const QColor &marginColor, const 
 }
 
 const QString Airport::trafficString() const {
+    auto tmpl = "{#allArrs}{allArrs}{/allArrs}{^allArrs}-{/allArrs}/{#allDeps}{allDeps}{/allDeps}{^allDeps}-{/allDeps}";
+
     if (Settings::filterTraffic()) {
-        return trafficFilteredString();
-    } else {
-        return trafficUnfilteredString();
+        tmpl = "{#arrs}{arrs}{/arrs}{^arrs}-{/arrs}/{#deps}{deps}{/deps}{^deps}-{/deps}";
     }
-}
-
-const QString Airport::trafficFilteredString() const {
-    if (!active || congestion() == 0) {
-        return "";
-    }
-
-    return QString("%1/%2").arg(
-        nMaybeFilteredArrivals > 0? QString::number(nMaybeFilteredArrivals): "-",
-        nMaybeFilteredDepartures > 0? QString::number(nMaybeFilteredDepartures): "-"
-    );
-}
-
-const QString Airport::trafficUnfilteredString() const {
-    if (!active || congestion() == 0) {
-        return "";
-    }
-
-    return QString("%1/%2").arg(
-        arrivals.isEmpty()? "-": QString::number(arrivals.size()),
-        departures.isEmpty()? "-": QString::number(departures.size())
-    );
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 const QString Airport::controllersString() const {
@@ -423,8 +330,8 @@ const QString Airport::pdcString(const QString &prepend, bool alwaysWithIdentifi
         if (match.hasMatch()) {
             auto logon = match.captured(1);
             if (id == logon) {
-                // found perfect match
                 if (!alwaysWithIdentifier) {
+                    // found perfect match
                     return prepend;
                 }
             }
@@ -573,57 +480,33 @@ const QString Airport::prettyName() const {
 }
 
 QString Airport::mapLabel() const {
-    auto str = Settings::airportPrimaryContent();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Airport*) this));
-        }
-    }
-
-    return str.trimmed();
+    auto tmpl = Settings::airportPrimaryContent();
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 QString Airport::mapLabelHovered() const {
-    auto str = Settings::airportPrimaryContentHovered();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Airport*) this));
-        }
-    }
-
-    return str.trimmed();
+    auto tmpl = Settings::airportPrimaryContentHovered();
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 QStringList Airport::mapLabelSecondaryLines() const {
-    auto str = Settings::airportSecondaryContent();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Airport*) this));
-        }
-    }
-
-    return Helpers::linesFilteredTrimmed(str);
+    auto tmpl = Settings::airportSecondaryContent();
+    return Helpers::linesFilteredTrimmed(
+        MustacheQs::Renderer::render(tmpl, (QObject*) this)
+    );
 }
 
 QStringList Airport::mapLabelSecondaryLinesHovered() const {
-    auto str = Settings::airportSecondaryContentHovered();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Airport*) this));
-        }
-    }
-
-    return Helpers::linesFilteredTrimmed(str);
+    auto tmpl = Settings::airportSecondaryContentHovered();
+    return Helpers::linesFilteredTrimmed(
+        MustacheQs::Renderer::render(tmpl, (QObject*) this)
+    );
 }
 
-QString Airport::livestreamString(bool shortened) const {
+QString Airport::livestreamString() const {
     QStringList ret;
     foreach (const auto c, allControllers()) {
-        const auto str = c->livestreamString(shortened);
+        const auto str = c->livestreamString();
         if (!str.isEmpty()) {
             ret << str;
         }
@@ -636,15 +519,6 @@ const QString Airport::shortLabel() const {
     auto _trafficString = trafficString();
     return QString("%1%2").arg(
         id,
-        _trafficString.isEmpty()? "": " " + trafficString()
-    );
-}
-
-const QString Airport::longLabel() const {
-    auto _trafficString = trafficString();
-    return QString("%1 (%2)%3").arg(
-        id,
-        prettyName(),
         _trafficString.isEmpty()? "": " " + trafficString()
     );
 }

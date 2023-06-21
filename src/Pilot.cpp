@@ -8,89 +8,9 @@
 #include "Settings.h"
 #include "Whazzup.h"
 #include "dialogs/PilotDetails.h"
+#include "src/mustache/Renderer.h"
 
 #include <QJsonObject>
-
-const QHash<QString, std::function<QString(Pilot*)> > Pilot::placeholders {
-    {
-        "{login}", [](Pilot* o)->QString {
-            return o->callsign;
-        }
-    },
-    {
-        "{name}", [](Pilot* o)->QString {
-            return o->aliasOrName();
-        }
-    },
-    {
-        "{nameIfFriend}", [](Pilot* o)->QString {
-            return o->isFriend()? o->aliasOrName(): "";
-        }
-    },
-    {
-        "{rating}", [](Pilot* o)->QString {
-            return o->rank();
-        }
-    },
-    {
-        "{dep}", [](Pilot* o)->QString {
-            return o->planDep;
-        }
-    },
-    {
-        "{dest}", [](Pilot* o)->QString {
-            return o->planDest;
-        }
-    },
-    {
-        "{FL}", [](Pilot* o)->QString {
-            return o->flOrEmpty();
-        }
-    },
-    {
-        "{GS}", [](Pilot* o)->QString {
-            auto _gs = o->groundspeed;
-            if (_gs == 0) {
-                return "";
-            }
-            return QString("N%1").arg(o->groundspeed);
-        }
-    },
-    {
-        "{GS10}", [](Pilot* o)->QString {
-            auto _gs = o->groundspeed;
-            if (_gs == 0) {
-                return "";
-            }
-            return QString("N%1").arg(round(o->groundspeed / 10.));
-        }
-    },
-    {
-        "{rules}", [](Pilot* o)->QString {
-            return o->planFlighttype;
-        }
-    },
-    {
-        "{rulesIfNotIfr}", [](Pilot* o)->QString {
-            return o->planFlighttype != "I"? o->planFlighttype: "";
-        }
-    },
-    {
-        "{type}", [](Pilot* o)->QString {
-            return o->aircraftType();
-        }
-    },
-    {
-        "{livestream}", [](Pilot* o)->QString {
-            return o->livestreamString();
-        }
-    },
-    {
-        "{livestream-}", [](Pilot* o)->QString {
-            return o->livestreamString(true);
-        }
-    },
-};
 
 int Pilot::altToFl(int alt_ft, int qnh_mb) {
     float diff = qnh_mb - 1013.25;
@@ -179,7 +99,9 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup)
     checkStatus();
 }
 
-Pilot::~Pilot() {}
+Pilot::~Pilot() {
+    MustacheQs::Renderer::teardownContext(this);
+}
 
 void Pilot::showDetailsDialog() {
     PilotDetails* infoDialog = PilotDetails::instance();
@@ -191,51 +113,27 @@ void Pilot::showDetailsDialog() {
 }
 
 QString Pilot::mapLabel() const {
-    auto str = Settings::pilotPrimaryContent();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Pilot*) this));
-        }
-    }
-
-    return str.trimmed();
+    auto tmpl = Settings::pilotPrimaryContent();
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 QString Pilot::mapLabelHovered() const {
-    auto str = Settings::pilotPrimaryContentHovered();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Pilot*) this));
-        }
-    }
-
-    return str.trimmed();
+    auto tmpl = Settings::pilotPrimaryContentHovered();
+    return MustacheQs::Renderer::render(tmpl, (QObject*) this);
 }
 
 QStringList Pilot::mapLabelSecondaryLines() const {
-    auto str = Settings::pilotSecondaryContent();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Pilot*) this));
-        }
-    }
-
-    return Helpers::linesFilteredTrimmed(str);
+    auto tmpl = Settings::pilotSecondaryContent();
+    return Helpers::linesFilteredTrimmed(
+        MustacheQs::Renderer::render(tmpl, (QObject*) this)
+    );
 }
 
 QStringList Pilot::mapLabelSecondaryLinesHovered() const {
-    auto str = Settings::pilotSecondaryContentHovered();
-
-    for (auto i = placeholders.cbegin(), end = placeholders.cend(); i != end; ++i) {
-        if (str.contains(i.key())) {
-            str.replace(i.key(), i.value()((Pilot*) this));
-        }
-    }
-
-    return Helpers::linesFilteredTrimmed(str);
+    auto tmpl = Settings::pilotSecondaryContentHovered();
+    return Helpers::linesFilteredTrimmed(
+        MustacheQs::Renderer::render(tmpl, (QObject*) this)
+    );
 }
 
 
@@ -675,8 +573,8 @@ int Pilot::nextPointOnRoute(const QList<Waypoint*> &waypoints) const { // next p
     return qMin(nextPoint, waypoints.size());
 }
 
-QString Pilot::livestreamString(bool shortened) const {
-    return Client::livestreamString(planRemarks, shortened);
+QString Pilot::livestreamString() const {
+    return Client::livestreamString(planRemarks);
 }
 
 bool Pilot::hasPrimaryAction() const {
