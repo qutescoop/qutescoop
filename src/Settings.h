@@ -214,6 +214,9 @@ class Settings {
         static bool showToolTips();
         static void setShowToolTips(const bool value);
 
+        static int hoverDebounceMs();
+        static void setHoverDebounceMs(int value);
+
         // sectors
 
         static QColor firBorderLineColor();
@@ -453,8 +456,8 @@ class Settings {
         static double highlightLineWidth();
         static void setHighlightLineWidth(double value);
 
-        static bool useHighlightAnimation();
-        static void setUseHighlightAnimation(bool value);
+        static bool animateFriendsHighlight();
+        static void setAnimateFriendsHighlight(bool value);
 
         static bool checkForUpdates();
         static void setCheckForUpdates(bool value);

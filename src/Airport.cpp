@@ -311,7 +311,7 @@ const QString Airport::frequencyString() const {
             if (frequencies.contains(c->frequency)) {
                 continue;
             }
-            controllers << ((c->frequency.length() > 1? c->frequency: c->aliasOrName()) + (suffix.isEmpty()? "": "_" + suffix));
+            controllers << ((c->frequency.length() > 1? c->frequency: "") + (suffix.isEmpty()? "": "_" + suffix));
             frequencies.insert(c->frequency);
         }
         if (!controllers.empty()) {

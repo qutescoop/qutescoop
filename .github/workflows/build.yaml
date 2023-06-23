@@ -29,8 +29,8 @@ jobs:
         run: |
           export PATH="$PATH:$(readlink -f temp/uncrustify-*/build/)"
           uncrustify --version
-          bin/uncrustify-check.sh \
-            || ( bin/uncrustify-fix.sh; git diff --exit-code )
+          bin/check-lint.sh \
+            || ( bin/fix-lint.sh; git diff --exit-code )
 
   facts:
     outputs:

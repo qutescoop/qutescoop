@@ -958,10 +958,7 @@ void Window::on_actionShowWaypoints_triggered(bool checked) {
 void Window::on_actionHighlight_Friends_triggered(bool checked) {
     Settings::setHighlightFriends(checked);
     pb_highlightFriends->setChecked(checked);
-    if (!checked) {
-        mapScreen->glWidget->destroyFriendHighlighter();
-    }
-    mapScreen->glWidget->update();
+    mapScreen->glWidget->configureUpdateTimer();
 }
 
 void Window::on_pb_highlightFriends_toggled(bool checked) {
