@@ -91,7 +91,7 @@ class GLWidget
 
         QList<Sector*> m_staticSectors;
         QPoint _lastPos, _mouseDownPos;
-        bool _mapMoving, _mapZooming, _mapRectSelecting, _lightsGenerated;
+        bool m_isMapMoving, m_isMapZooming, m_isMapRectSelecting, _lightsGenerated;
         bool m_isPilotsListDirty = true, m_isAirportsListDirty = true, m_isControllerListsDirty = true, m_isStaticSectorListsDirty = true,
             m_isAirportsMapObjectsDirty = true, m_isControllerMapObjectsDirty = true, m_isPilotMapObjectsDirty = true, m_isUsedWaypointMapObjectsDirty = true;
         GLUquadricObj* _earthQuad;
