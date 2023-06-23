@@ -18,7 +18,7 @@
 
 GLWidget::GLWidget(QGLFormat fmt, QWidget* parent)
     : QGLWidget(fmt, parent),
-      _mapMoving(false), _mapZooming(false), _mapRectSelecting(false),
+      m_isMapMoving(false), m_isMapZooming(false), m_isMapRectSelecting(false),
       _lightsGenerated(false),
       _earthTex(0), _fadeOutTex(0),
       _earthList(0), _coastlinesList(0), _countriesList(0), _gridlinesList(0),
@@ -1315,7 +1315,7 @@ void GLWidget::paintGL() {
     renderLabels();
 
     // selection rectangle
-    if (_mapRectSelecting) {
+    if (m_isMapRectSelecting) {
         drawSelectionRectangle();
     }
 
@@ -1347,7 +1347,26 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
     // Nvidia mouse coordinates workaround (https://github.com/qutescoop/qutescoop/issues/46)
     QPoint currentPos = mapFromGlobal(QCursor::pos());
 
-    auto newHoveredObjects = objectsAt(currentPos.x(), currentPos.y());
+    if (
+        event->buttons().testFlag(Qt::RightButton) // check before left button if useSelectionRectangle=off
+        || (!Settings::useSelectionRectangle() && event->buttons().testFlag(Qt::LeftButton))
+    ) { // rotate
+        m_isMapMoving = true;
+        handleRotation(event);
+    } else if (event->buttons().testFlag(Qt::MiddleButton)) { // zoom
+        m_isMapZooming = true;
+        zoomIn((currentPos.x() - _lastPos.x() - currentPos.y() + _lastPos.y()) / 100. * Settings::zoomFactor());
+        _lastPos = currentPos;
+    } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
+        m_isMapRectSelecting = true;
+        update();
+    }
+
+    QList<MapObject*> newHoveredObjects;
+    if (!m_isMapMoving && !m_isMapZooming && !m_isMapRectSelecting) {
+        newHoveredObjects = objectsAt(currentPos.x(), currentPos.y());
+    }
+
     if (newHoveredObjects != m_hoveredObjects) {
         // remove from fontRectangles when not hovered an more
         foreach (const auto &o, m_hoveredObjects) {
@@ -1373,21 +1392,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
         }
     }
     setCursor(hasPrimaryFunction? Qt::PointingHandCursor: Qt::ArrowCursor);
-
-    if (
-        event->buttons().testFlag(Qt::RightButton) // check before left button if useSelectionRectangle=off
-        || (!Settings::useSelectionRectangle() && event->buttons().testFlag(Qt::LeftButton))
-    ) { // rotate
-        _mapMoving = true;
-        handleRotation(event);
-    } else if (event->buttons().testFlag(Qt::MiddleButton)) { // zoom
-        _mapZooming = true;
-        zoomIn((currentPos.x() - _lastPos.x() - currentPos.y() + _lastPos.y()) / 100. * Settings::zoomFactor());
-        _lastPos = currentPos;
-    } else if (event->buttons().testFlag(Qt::LeftButton)) { // selection rectangle
-        _mapRectSelecting = true;
-        update();
-    }
 
     double lat, lon;
     if (local2latLon(currentPos.x(), currentPos.y(), lat, lon)) {
@@ -1436,13 +1440,13 @@ void GLWidget::mousePressEvent(QMouseEvent*) {
     QPoint currentPos = mapFromGlobal(QCursor::pos());
 
     QToolTip::hideText();
-    if (_mapMoving || _mapZooming || _mapRectSelecting) {
-        _mapMoving = false;
-        _mapZooming = false;
-        _mapRectSelecting = false;
+    if (m_isMapMoving || m_isMapZooming || m_isMapRectSelecting) {
+        m_isMapMoving = false;
+        m_isMapZooming = false;
+        m_isMapRectSelecting = false;
         update();
     }
-    if (!_mapRectSelecting) {
+    if (!m_isMapRectSelecting) {
         _lastPos = _mouseDownPos = currentPos;
     }
 }
@@ -1452,12 +1456,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event) {
     QPoint currentPos = mapFromGlobal(QCursor::pos());
 
     QToolTip::hideText();
-    if (_mapMoving) {
-        _mapMoving = false;
-    } else if (_mapZooming) {
-        _mapZooming = false;
-    } else if (_mapRectSelecting) {
-        _mapRectSelecting = false;
+    if (m_isMapMoving) {
+        m_isMapMoving = false;
+    } else if (m_isMapZooming) {
+        m_isMapZooming = false;
+    } else if (m_isMapRectSelecting) {
+        m_isMapRectSelecting = false;
         if (currentPos != _mouseDownPos) {
             // moved more than 40px?
             if (
@@ -1865,7 +1869,8 @@ void GLWidget::renderLabels(
     QFontMetricsF fontMetricsSecondary(secondaryFont, this);
 
     foreach (MapObject* o, objects) {
-        const bool isHovered = m_hoveredObjects.contains(o);
+        const bool isHovered = m_hoveredObjects.contains(o)
+            && !m_isMapMoving && !m_isMapRectSelecting && !m_isMapZooming;
 
         // fade out
         auto color(_color);
