@@ -47,11 +47,10 @@ class GLWidget
         void rightClick(const QPoint& pos);
         void zoomIn(double factor);
         void zoomTo(double _zoom);
-
         void rememberPosition(int nr);
         void restorePosition(int nr, bool isSilent = false);
-
-        void destroyFriendHighlighter();
+        void configureHoverDebounce();
+        void configureUpdateTimer();
     signals:
         void mapClicked(int x, int y, QPoint absolutePos);
     protected:
@@ -89,8 +88,6 @@ class GLWidget
         void parseTexture();
         void createLights();
 
-        void createFriendHighlighter();
-
         QList<Sector*> m_staticSectors;
         QPoint _lastPos, _mouseDownPos;
         bool m_isMapMoving, m_isMapZooming, m_isMapRectSelecting, _lightsGenerated;
@@ -108,7 +105,8 @@ class GLWidget
         double _pilotLabelZoomTreshold, _activeAirportLabelZoomTreshold, _inactiveAirportLabelZoomTreshold,
             _controllerLabelZoomTreshold, _usedWaypointsLabelZoomThreshold,
             _xRot, _yRot, _zRot, _zoom, _aspectRatio;
-        QTimer* _highlighter;
+        QTimer* m_updateTimer;
+        QTimer* m_hoverDebounceTimer;
         QList< QPair<double, double> > m_friendPositions;
         QList<MapObject*> m_hoveredObjects, m_newHoveredObjects;
         QMultiHash<QPair<int, int>, MapObject*> m_inactiveAirportMapObjectsByLatLng;
@@ -147,6 +145,9 @@ class GLWidget
         void drawBillboardWorldSize(GLfloat lat, GLfloat lon, const QSizeF& size);
         inline void drawBillboard(GLfloat lat, GLfloat lon, GLfloat halfWidth, GLfloat halfHeight, GLfloat alpha = 1.);
         void orthoMatrix(GLfloat lat, GLfloat lon);
+
+    private slots:
+        void updateHoverState();
 };
 
 inline bool operator==(const GLWidget::FontRectangle &e1, const GLWidget::FontRectangle &e2) {

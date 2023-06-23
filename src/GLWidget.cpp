@@ -30,8 +30,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget* parent)
       _activeAirportLabelZoomTreshold(2.), _inactiveAirportLabelZoomTreshold(.12),
       _controllerLabelZoomTreshold(2.5),
       _usedWaypointsLabelZoomThreshold(.7),
-      _xRot(0), _yRot(0), _zRot(0), _zoom(2), _aspectRatio(1),
-      _highlighter(0) {
+      _xRot(0), _yRot(0), _zRot(0), _zoom(2), _aspectRatio(1) {
     setAutoFillBackground(false);
     setMouseTracking(true);
 
@@ -39,6 +38,14 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget* parent)
     restorePosition(9, true);
 
     clientSelection = new ClientSelectionWidget();
+
+    m_updateTimer = new QTimer(this);
+    connect(m_updateTimer, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
+    configureUpdateTimer();
+
+    m_hoverDebounceTimer = new QTimer(this);
+    connect(m_hoverDebounceTimer, &QTimer::timeout, this, &GLWidget::updateHoverState);
+    configureHoverDebounce();
 }
 
 GLWidget::~GLWidget() {
@@ -1321,18 +1328,12 @@ void GLWidget::paintGL() {
 
     // highlight friends
     if (Settings::highlightFriends()) {
-        if (_highlighter == 0) {
-            createFriendHighlighter();
+        double dRange = 0;
+        if (Settings::animateFriendsHighlight()) {
+            dRange = qSin(QTime::currentTime().msec() / 1000. * M_PI);
         }
-        QTime time = QTime::currentTime();
-        double range = (time.second() % 5);
-        range += (time.msec() % 500) / 1000;
 
         double lineWidth = Settings::highlightLineWidth();
-        if (!Settings::useHighlightAnimation()) {
-            range = 0;
-            destroyFriendHighlighter();
-        }
 
         foreach (const auto &_friend, m_friendPositions) {
             if (qFuzzyIsNull(_friend.first) && qFuzzyIsNull(_friend.second)) {
@@ -1344,8 +1345,8 @@ void GLWidget::paintGL() {
             glBegin(GL_LINE_LOOP);
             GLdouble circle_distort = qCos(_friend.first * Pi180);
             for (int i = 0; i <= 360; i += 10) {
-                double x = _friend.first + Nm2Deg((80 - (range * 20))) * circle_distort * qCos(i * Pi180);
-                double y = _friend.second + Nm2Deg((80 - (range * 20))) * qSin(i * Pi180);
+                double x = _friend.first + Nm2Deg((80 - (dRange * 20))) * circle_distort * qCos(i * Pi180);
+                double y = _friend.second + Nm2Deg((80 - (dRange * 20))) * qSin(i * Pi180);
                 VERTEX(x, y);
             }
             glEnd();
@@ -1366,11 +1367,19 @@ void GLWidget::paintGL() {
     // drawCoordinateAxii(); // debug: see axii (x = red, y = green, z = blue)
 
     if (Settings::showFps()) {
-        static bool frameToggle = false;
-        frameToggle = !frameToggle;
-        const float fps = 1000. / (QDateTime::currentMSecsSinceEpoch() - started);
+        static bool _frameToggle = false;
+        _frameToggle = !_frameToggle;
+        const float _ms = QDateTime::currentMSecsSinceEpoch() - started;
+        const float _fps = 1000. / (QDateTime::currentMSecsSinceEpoch() - started);
         qglColor(Settings::firFontColor());
-        renderText(0, height() - 2, QString("%1 fps %2").arg(fps, 0, 'f', 0).arg(frameToggle? '*': ' '), Settings::firFont());
+        renderText(
+            0,
+            height() - 2,
+            QString("%1 fps (%2 ms) %3").arg(_fps, 0, 'f', 0)
+            .arg(_ms, 0, 'i', 0)
+            .arg(_frameToggle? '*': ' '),
+            Settings::firFont()
+        );
     }
     glFlush(); // http://www.opengl.org/sdk/docs/man/xhtml/glFlush.xml
 }
@@ -1403,30 +1412,39 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
         update();
     }
 
-    QList<MapObject*> newHoveredObjects;
+    // suppress while doing map actions
     if (!m_isMapMoving && !m_isMapZooming && !m_isMapRectSelecting) {
-        newHoveredObjects = objectsAt(currentPos.x(), currentPos.y());
+        m_newHoveredObjects = objectsAt(currentPos.x(), currentPos.y());
     }
 
-    if (newHoveredObjects != m_hoveredObjects) {
-        // remove from fontRectangles when not hovered an more
-        foreach (const auto &o, m_hoveredObjects) {
-            if (!newHoveredObjects.contains(o)) {
-                foreach (const auto &fr, m_fontRectangles) {
-                    if (fr.object == o) {
-                        m_fontRectangles.remove(fr);
-                        break;
-                    }
+    // deal with mouseLeave immediately
+    auto _tmpHoveredObjects = QList<MapObject*>(m_hoveredObjects);
+    bool _hoveredObjectsDirty = false;
+    foreach (const auto &o, _tmpHoveredObjects) {
+        if (!m_newHoveredObjects.contains(o)) {
+            foreach (const auto &fr, m_fontRectangles) {
+                if (fr.object == o) {
+                    m_fontRectangles.remove(fr);
+                    m_hoveredObjects.removeOne(o);
+                    _hoveredObjectsDirty = true;
+                    break;
                 }
             }
         }
-
+    }
+    if (_hoveredObjectsDirty) {
         invalidatePilots(); // for hovered objects' routes
         update();
     }
-    m_hoveredObjects = newHoveredObjects;
+
+    // deal with everything else later
+    if (m_newHoveredObjects != m_hoveredObjects) {
+        m_hoverDebounceTimer->start(); // restart timer
+    }
+
+    // cursor
     bool hasPrimaryFunction = false;
-    foreach (const auto &o, m_hoveredObjects) {
+    foreach (const auto &o, m_newHoveredObjects) {
         if (o->hasPrimaryAction()) {
             hasPrimaryFunction = true;
             break;
@@ -1434,6 +1452,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
     }
     setCursor(hasPrimaryFunction? Qt::PointingHandCursor: Qt::ArrowCursor);
 
+    // sectors, airport controllers
     double lat, lon;
     if (local2latLon(currentPos.x(), currentPos.y(), lat, lon)) {
         QSet<Controller*> _newHoveredControllers;
@@ -1460,7 +1479,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
             }
         }
         // copy from hovered map labels
-        foreach (const auto &o, m_hoveredObjects) {
+        foreach (const auto &o, m_newHoveredObjects) {
             auto* c = dynamic_cast<Controller*>(o);
             if (c != 0 && c->sector != nullptr) {
                 _newHoveredControllers.insert(c);
@@ -1556,6 +1575,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event) {
     } else if (_mouseDownPos == currentPos && event->button() == Qt::RightButton) {
         rightClick(currentPos);
     }
+
+    mouseMoveEvent(event); // handle inihibited update of hovered objects
     update();
 }
 
@@ -2240,7 +2261,7 @@ void GLWidget::drawTestTextures() {
     static QTimer* testTimer;
     static float i = 0.;
     if (testTimer == 0) {
-        testTimer = new QTimer();
+        testTimer = new QTimer(this);
         connect(
             testTimer, &QTimer::timeout, this, [&] {
                 i = fmod(i + .1, 30.); update();
@@ -2314,6 +2335,32 @@ void GLWidget::orthoMatrix(GLfloat lat, GLfloat lon) {
     glRotatef(-phi / Pi180, 1, 0, 0);
 
     glTranslatef(0, 0, 1);
+}
+
+/////////////////////////
+// Hover and map object actions
+/////////////////////////
+
+void GLWidget::configureHoverDebounce() {
+    m_hoverDebounceTimer->setSingleShot(true);
+    m_hoverDebounceTimer->setInterval(Settings::hoverDebounceMs());
+}
+
+void GLWidget::updateHoverState() {
+    // remove from fontRectangles when not hovered any more
+    foreach (const auto &o, m_hoveredObjects) {
+        if (!m_newHoveredObjects.contains(o)) {
+            foreach (const auto &fr, m_fontRectangles) {
+                if (fr.object == o) {
+                    m_fontRectangles.remove(fr);
+                    break;
+                }
+            }
+        }
+    }
+    m_hoveredObjects = m_newHoveredObjects;
+    invalidatePilots(); // for hovered objects' routes
+    update();
 }
 
 QList<MapObject*> GLWidget::objectsAt(int x, int y, double radiusSimple) const {
@@ -2546,23 +2593,18 @@ void GLWidget::newWhazzupData(bool isNew) {
     qDebug() << "-- finished";
 }
 
-void GLWidget::createFriendHighlighter() {
-    _highlighter = new QTimer(this);
-    _highlighter->setInterval(100);
-    connect(_highlighter, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
-    _highlighter->start();
-}
+void GLWidget::configureUpdateTimer() {
+    const bool isRunFullFps = Settings::highlightFriends() && Settings::animateFriendsHighlight();
 
-void GLWidget::destroyFriendHighlighter() {
-    if (_highlighter == 0) {
-        return;
+    if (isRunFullFps) {
+        m_updateTimer->setInterval(40);
+        if (!m_updateTimer->isActive()) {
+            m_updateTimer->start();
+        }
+    } else {
+        m_updateTimer->stop();
+        update();
     }
-    if (_highlighter->isActive()) {
-        _highlighter->stop();
-    }
-    disconnect(_highlighter, &QTimer::timeout, this, QOverload<>::of(&QWidget::update));
-    delete _highlighter;
-    _highlighter = 0;
 }
 
 

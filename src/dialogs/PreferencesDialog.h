@@ -163,6 +163,8 @@ class PreferencesDialog
         void on_sbDestImmediateDuration_valueChanged(int arg1);
         void on_applyPilotsRoute_clicked();
         void on_cbLabelAlwaysBackdrop_toggled(bool checked);
+        void on_sbHoverDebounce_valueChanged(int arg1);
+        void on_pbApplyHover_clicked();
 
     private:
         PreferencesDialog(QWidget* parent);

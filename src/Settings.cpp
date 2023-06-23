@@ -639,6 +639,13 @@ void Settings::setShowToolTips(const bool v) {
     instance()->setValue("mapUi/showTooltips", v);
 }
 
+int Settings::hoverDebounceMs() {
+    return instance()->value("labelHover/debounceMs", 50).toInt();
+}
+void Settings::setHoverDebounceMs(int value) {
+    instance()->setValue("labelHover/debounceMs", value);
+}
+
 QColor Settings::coastLineColor() {
     return instance()->value("earthSpace/coastLineColor", QColor::fromRgb(102, 85, 67, 200)).value<QColor>();
 }
@@ -1458,10 +1465,10 @@ void Settings::setHighlightLineWidth(double value) {
     instance()->setValue("pilotDisplay/highlightLineWidth", value);
 }
 
-bool Settings::useHighlightAnimation() {
+bool Settings::animateFriendsHighlight() {
     return instance()->value("pilotDisplay/useHighlightAnimation", false).toBool();
 }
-void Settings::setUseHighlightAnimation(bool value) {
+void Settings::setAnimateFriendsHighlight(bool value) {
     instance()->setValue("pilotDisplay/useHighlightAnimation", value);
 }
 

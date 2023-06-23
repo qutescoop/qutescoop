@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1019</width>
-    <height>975</height>
+    <width>1113</width>
+    <height>846</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -681,15 +681,151 @@ li.checked::marker { content: &quot;\2612&quot;; }
       <attribute name="title">
        <string>Display</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_12">
-       <item>
+      <layout class="QGridLayout" name="gridLayout_33">
+       <item row="5" column="0">
+        <spacer>
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="0">
         <widget class="QCheckBox" name="cbRememberMapPositionOnClose">
          <property name="text">
           <string>remember startup map position on close</string>
          </property>
         </widget>
        </item>
-       <item>
+       <item row="3" column="0">
+        <widget class="QGroupBox" name="groupBox_20">
+         <property name="title">
+          <string>Hovering</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="1" column="0" colspan="3">
+           <layout class="QHBoxLayout" name="horizontalLayout_18">
+            <item>
+             <widget class="QLabel" name="label_179">
+              <property name="text">
+               <string>delay hover actions</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QSpinBox" name="sbHoverDebounce">
+              <property name="suffix">
+               <string> ms</string>
+              </property>
+              <property name="prefix">
+               <string>by </string>
+              </property>
+              <property name="maximum">
+               <number>10000</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_21">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="label_180">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="text">
+               <string>The amount of time the mouse has to hover over an object.</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="0" colspan="2">
+           <widget class="QCheckBox" name="checkBox">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="toolTip">
+             <string>currently not configurable</string>
+            </property>
+            <property name="text">
+             <string>hovering shows routes of airports and pilots</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="3">
+           <layout class="QHBoxLayout" name="horizontalLayout_19">
+            <item>
+             <spacer name="horizontalSpacer_22">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pbApplyHover">
+              <property name="text">
+               <string>apply</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QGroupBox" name="groupBox_21">
+         <property name="title">
+          <string>Clicking</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_181">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>Left clicking objects engages the primary function (usually shows the detail dialog).
+Right clicking engages the secondary function (usually toggles route display permanently).</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
         <widget class="QGroupBox" name="groupOpenGL">
          <property name="title">
           <string>OpenGL graphics settings</string>
@@ -1242,13 +1378,81 @@ The texture is affected by the colour chosen for the Globe.</string>
          </layout>
         </widget>
        </item>
-       <item>
+       <item row="2" column="0" colspan="2">
         <widget class="QGroupBox" name="groupBox_13">
          <property name="title">
           <string>Label backdrop</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_22">
-          <item row="3" column="0" colspan="5">
+          <item row="1" column="2">
+           <widget class="QPushButton" name="pbLabelHoveredBgColor">
+            <property name="toolTip">
+             <string>set color-alpha to 0 to disable.</string>
+            </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="2">
+           <widget class="QPushButton" name="pbLabelHoveredBgDarkColor">
+            <property name="toolTip">
+             <string>set color-alpha to 0 to disable.</string>
+            </property>
+            <property name="autoFillBackground">
+             <bool>true</bool>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0" colspan="7">
+           <widget class="QCheckBox" name="cbLabelAlwaysBackdrop">
+            <property name="toolTip">
+             <string>This helps on color schemes with little contrast to the label colors.</string>
+            </property>
+            <property name="text">
+             <string>Always show label backdrop (not only while hovering)</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="6" rowspan="2">
+           <widget class="QLabel" name="label_152">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
+            <property name="text">
+             <string>If a label text is considered dark or light depends on the font color of the first line (primary label).</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_178">
+            <property name="text">
+             <string>for dark label text</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLabel" name="label_115">
+            <property name="text">
+             <string>for bright label text</string>
+            </property>
+           </widget>
+          </item>
+          <item row="5" column="0" colspan="8">
            <layout class="QHBoxLayout" name="horizontalLayout_16">
             <item>
              <spacer name="horizontalSpacer_34">
@@ -1275,7 +1479,7 @@ The texture is affected by the colour chosen for the Globe.</string>
             </item>
            </layout>
           </item>
-          <item row="1" column="4">
+          <item row="1" column="5">
            <spacer name="horizontalSpacer_8">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1288,83 +1492,8 @@ The texture is affected by the colour chosen for the Globe.</string>
             </property>
            </spacer>
           </item>
-          <item row="1" column="2">
-           <widget class="QLabel" name="label_115">
-            <property name="text">
-             <string>for bright label text</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="0">
-           <widget class="QLabel" name="label_114">
-            <property name="text">
-             <string>for dark label text</string>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="1">
-           <widget class="QPushButton" name="pbLabelHoveredBgColor">
-            <property name="toolTip">
-             <string>set color-alpha to 0 to disable.</string>
-            </property>
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="1" column="3">
-           <widget class="QPushButton" name="pbLabelHoveredBgDarkColor">
-            <property name="toolTip">
-             <string>set color-alpha to 0 to disable.</string>
-            </property>
-            <property name="autoFillBackground">
-             <bool>true</bool>
-            </property>
-            <property name="flat">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0" colspan="5">
-           <widget class="QLabel" name="label_152">
-            <property name="font">
-             <font>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text">
-             <string>If a label text is considered dark or light depends on the font color of the first line (primary label).</string>
-            </property>
-           </widget>
-          </item>
-          <item row="0" column="0" colspan="5">
-           <widget class="QCheckBox" name="cbLabelAlwaysBackdrop">
-            <property name="toolTip">
-             <string>This helps on color schemes with little contrast to the label colors.</string>
-            </property>
-            <property name="text">
-             <string>Always show backdrop (not only while hovering)</string>
-            </property>
-           </widget>
-          </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer>
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>
@@ -1469,7 +1598,7 @@ TWR: 133.375</string>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>70</height>
+                  <height>90</height>
                  </size>
                 </property>
                 <property name="lineWrapMode">
@@ -1495,7 +1624,7 @@ TWR: 133.375</string>
              <rect>
               <x>0</x>
               <y>0</y>
-              <width>512</width>
+              <width>516</width>
               <height>772</height>
              </rect>
             </property>
@@ -3097,7 +3226,7 @@ B738 EGLL</string>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>70</height>
+                  <height>90</height>
                  </size>
                 </property>
                 <property name="lineWrapMode">
@@ -3844,6 +3973,11 @@ tens [10kts]</string>
          <layout class="QVBoxLayout" name="verticalLayout_19">
           <item>
            <widget class="QLabel" name="label_15">
+            <property name="font">
+             <font>
+              <italic>true</italic>
+             </font>
+            </property>
             <property name="text">
              <string>Activate route lines by right clicking on a plane or airport or select the checkbox in the pilot/airport detail dialogs.
 Uses the navigation database if available.</string>
@@ -4157,7 +4291,7 @@ CPDLC/EDGP</string>
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
-                  <height>70</height>
+                  <height>90</height>
                  </size>
                 </property>
                 <property name="lineWrapMode">
@@ -4281,13 +4415,14 @@ CPDLC/EDGP</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="1">
-             <widget class="QPushButton" name="pbFirHighlightedBorderLineColor">
-              <property name="autoFillBackground">
-               <bool>true</bool>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_44">
+              <property name="text">
+               <string>border 
+(highlighted)</string>
               </property>
-              <property name="flat">
-               <bool>true</bool>
+              <property name="buddy">
+               <cstring>pbFirBorderLineColor</cstring>
               </property>
              </widget>
             </item>
@@ -4301,37 +4436,16 @@ CPDLC/EDGP</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="3">
-             <spacer name="horizontalSpacer_6">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="0" column="5">
+             <widget class="QPushButton" name="pbFirFillColor">
+              <property name="toolTip">
+               <string>set color-alpha to 0 to deactivate.</string>
               </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
+              <property name="autoFillBackground">
+               <bool>true</bool>
               </property>
-             </spacer>
-            </item>
-            <item row="1" column="4">
-             <widget class="QLabel" name="label_45">
-              <property name="text">
-               <string>fill 
-(highlighted)</string>
-              </property>
-              <property name="buddy">
-               <cstring>pbFirFillColor</cstring>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_14">
-              <property name="text">
-               <string>border</string>
-              </property>
-              <property name="buddy">
-               <cstring>pbFirBorderLineColor</cstring>
+              <property name="flat">
+               <bool>true</bool>
               </property>
              </widget>
             </item>
@@ -4363,16 +4477,62 @@ CPDLC/EDGP</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QLabel" name="label_44">
+            <item row="0" column="7" rowspan="2">
+             <widget class="QLabel" name="label_114">
+              <property name="font">
+               <font>
+                <italic>true</italic>
+               </font>
+              </property>
               <property name="text">
-               <string>border 
+               <string>Changes require a
+restart to take effect.</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="4">
+             <widget class="QLabel" name="label_45">
+              <property name="text">
+               <string>fill 
 (highlighted)</string>
+              </property>
+              <property name="buddy">
+               <cstring>pbFirFillColor</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QPushButton" name="pbFirHighlightedBorderLineColor">
+              <property name="autoFillBackground">
+               <bool>true</bool>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_14">
+              <property name="text">
+               <string>border</string>
               </property>
               <property name="buddy">
                <cstring>pbFirBorderLineColor</cstring>
               </property>
              </widget>
+            </item>
+            <item row="0" column="3">
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item row="0" column="1">
              <widget class="QPushButton" name="pbFirBorderLineColor">
@@ -4412,18 +4572,18 @@ CPDLC/EDGP</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="5">
-             <widget class="QPushButton" name="pbFirFillColor">
-              <property name="toolTip">
-               <string>set color-alpha to 0 to deactivate.</string>
+            <item row="0" column="6">
+             <spacer name="horizontalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
-              <property name="autoFillBackground">
-               <bool>true</bool>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
               </property>
-              <property name="flat">
-               <bool>true</bool>
-              </property>
-             </widget>
+             </spacer>
             </item>
            </layout>
           </widget>

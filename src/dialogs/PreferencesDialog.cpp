@@ -91,6 +91,9 @@ void PreferencesDialog::loadSettings() {
     pbLabelHoveredBgDarkColor->setText(color.name());
     pbLabelHoveredBgDarkColor->setPalette(QPalette(color));
 
+    // Display -> labels
+    sbHoverDebounce->setValue(Settings::hoverDebounceMs());
+
     // OpenGL
     glTextures->setChecked(Settings::glTextures());
 
@@ -360,7 +363,7 @@ void PreferencesDialog::loadSettings() {
     sb_highlightFriendsLineWidth->setValue(Settings::highlightLineWidth());
     pb_highlightFriendsColor->setPalette(QPalette(Settings::friendsHighlightColor()));
     pb_highlightFriendsColor->setText(Settings::friendsHighlightColor().name());
-    cb_Animation->setChecked(Settings::useHighlightAnimation());
+    cb_Animation->setChecked(Settings::animateFriendsHighlight());
 
     // FINISHED
     _settingsLoaded = true;
@@ -1421,7 +1424,10 @@ void PreferencesDialog::on_cb_Animation_stateChanged(int state) {
     if (!_settingsLoaded) {
         return;
     }
-    Settings::setUseHighlightAnimation(state == Qt::Checked);
+    Settings::setAnimateFriendsHighlight(state == Qt::Checked);
+    if (Window::instance(false) != 0) {
+        Window::instance()->mapScreen->glWidget->configureUpdateTimer();
+    }
 }
 
 void PreferencesDialog::on_pb_highlightFriendsColor_clicked() {
@@ -1718,4 +1724,14 @@ void PreferencesDialog::on_cbLabelAlwaysBackdrop_toggled(bool checked) {
         return;
     }
     Settings::setLabelAlwaysBackdropped(checked);
+}
+
+void PreferencesDialog::on_sbHoverDebounce_valueChanged(int v) {
+    Settings::setHoverDebounceMs(v);
+}
+
+void PreferencesDialog::on_pbApplyHover_clicked() {
+    if (Window::instance(false) != 0) {
+        Window::instance(false)->mapScreen->glWidget->configureHoverDebounce();
+    }
 }
