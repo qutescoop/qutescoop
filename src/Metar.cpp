@@ -338,7 +338,7 @@ QString Metar::humanHtml() const {
     }
 
     // LOWW 012020Z 35006KT 320V040 9999 -RA FEW060 SCT070 BKN080 08/05 Q1014 NOSIG
-    Airport* a = NavData::instance()->airports[tokens.first()];
+    Airport* a = NavData::instance()->airports.value(tokens.first());
     if (a == 0) {
         result = tokens.first();
     } else {

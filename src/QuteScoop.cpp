@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
         route.prepend(depString);
         QTextStream(stdout) << "\n# Flightplan route:\n" << route.join(" ") << Qt::endl;
 
-        const auto dep = NavData::instance()->airports[depString];
+        const auto dep = NavData::instance()->airports.value(depString, 0);
         if (dep == 0) {
             QTextStream(stdout) << "ERROR: departure aerodrome not found in database" << Qt::endl;
             return 1;

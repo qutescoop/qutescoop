@@ -1,6 +1,8 @@
 #include "AirportDetailsArrivalsModel.h"
 
-#include "../Airport.h"
+#include "src/Airport.h"
+#include "src/NavData.h"
+#include "src/Settings.h"
 
 #include <QFont>
 
@@ -43,6 +45,22 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
     }
     Pilot* p = _pilots[index.row()];
 
+    if (index.column() == 8) {
+        const bool isFilteredArrival = Settings::filterTraffic() && (
+            (p->distanceToDestination() < Settings::filterDistance())
+            || (p->eet().hour() + p->eet().minute() / 60. < Settings::filterArriving())
+        )
+            && (p->flightStatus() != Pilot::FlightStatus::BLOCKED && p->flightStatus() != Pilot::FlightStatus::GROUND_ARR);
+
+        if (isFilteredArrival) {
+            if (role == Qt::ForegroundRole) {
+                return QGuiApplication::palette().window();
+            } else if (role == Qt::BackgroundRole) {
+                return QGuiApplication::palette().text();
+            }
+        }
+    }
+
     if (role == Qt::FontRole) {
         QFont result;
         if (p->flightStatus() == Pilot::PREFILED) {
@@ -51,8 +69,11 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
         if (p->isFriend()) {
             result.setBold(true);
         }
+
         return result;
-    } else if (role == Qt::TextAlignmentRole) {
+    }
+
+    if (role == Qt::TextAlignmentRole) {
         switch (index.column()) {
             case 6:
             case 7:
@@ -65,7 +86,9 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
         }
 
         return Qt::AlignLeft;
-    } else if (role == Qt::DisplayRole) {
+    }
+
+    if (role == Qt::DisplayRole) {
         switch (index.column()) {
             case 0:
                 return p->callsign;
@@ -82,10 +105,10 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 6:
                 return p->altitude == 0? QString(""): p->humanAlt();
             case 7:
-                if (p->flightStatus() == Pilot::PREFILED) {
-                    return "";
+                if (p->distanceToDestination() < 3) {
+                    return "-";
                 } else {
-                    return QString("%1 NM").arg(p->distanceToDestination() < 3? 0: (int) p->distanceToDestination());
+                    return QString("%1 NM").arg((int) p->distanceToDestination());
                 }
             case 8:
                 if (p->flightStatus() == Pilot::GROUND_ARR || p->flightStatus() == Pilot::BLOCKED) {
@@ -100,10 +123,20 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 10:
                 return p->flightStatusShortString();
         }
-    } else if (role == Qt::UserRole) { // used for sorting
+
+        return QVariant();
+    }
+
+    if (role == Qt::UserRole) { // used for sorting
         switch (index.column()) {
             case 7:
-                return p->flightStatus() == Pilot::PREFILED? -1: p->distanceToDestination();
+                return p->distanceToDestination();
+            case 8:
+                auto eta = p->eta();
+                if (!eta.isValid()) {
+                    return 0;
+                }
+                return eta.toSecsSinceEpoch();
         }
 
         return data(index, Qt::DisplayRole);
