@@ -357,6 +357,14 @@ double Pilot::distanceToDestination() const {
         return 0;
     }
 
+    if (flightStatus() == Pilot::PREFILED) {
+        Airport* dep = depAirport();
+        if (dep == 0) {
+            return 0;
+        }
+        return NavData::distance(dep->lat, dep->lon, dest->lat, dest->lon);
+    }
+
     return NavData::distance(lat, lon, dest->lat, dest->lon);
 }
 

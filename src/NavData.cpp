@@ -62,7 +62,7 @@ void NavData::loadAirports(const QString& filename) {
             continue;
         }
 
-        airports[airport->id] = airport;
+        airports.insert(airport->id, airport);
     }
 
     if (countMissingCountry != 0) {
@@ -224,7 +224,7 @@ void NavData::updateData(const WhazzupData& whazzupData) {
         if (p == 0) {
             continue;
         }
-        Airport* dep = airports.value(p->planDep, 0);
+        Airport* dep = p->depAirport();
         if (dep != 0) {
             dep->addDeparture(p);
             newActiveAirportsSet.insert(dep);
@@ -242,20 +242,21 @@ void NavData::updateData(const WhazzupData& whazzupData) {
                 newActiveAirportsSet.insert(a);
             }
         }
-        Airport* dest = airports.value(p->planDest, 0);
+        Airport* dest = p->destAirport();
         if (dest != 0) {
             dest->addArrival(p);
             newActiveAirportsSet.insert(dest);
             if (
-                !Settings::filterTraffic()
-                || (
-                    (p->distanceToDestination() < Settings::filterDistance())
-                    || (p->eet().hour() + p->eet().minute() / 60. < Settings::filterArriving())
+                (
+                    !Settings::filterTraffic()
+                    || (
+                        (p->distanceToDestination() < Settings::filterDistance())
+                        || (p->eet().hour() + p->eet().minute() / 60. < Settings::filterArriving())
+                    )
                 )
+                && (p->flightStatus() != Pilot::FlightStatus::BLOCKED && p->flightStatus() != Pilot::FlightStatus::GROUND_ARR)
             ) {
-                if (p->flightStatus() != Pilot::FlightStatus::BLOCKED && p->flightStatus() != Pilot::FlightStatus::GROUND_ARR) {
-                    dest->nMaybeFilteredArrivals++;
-                }
+                dest->nMaybeFilteredArrivals++;
             }
         }
     }

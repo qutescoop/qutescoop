@@ -8,17 +8,9 @@ Route::Route() {}
 Route::~Route() {}
 
 void Route::calculateWaypointsAndDistance() {
-    Airport* depAirport;
-    if (NavData::instance()->airports.contains(dep)) {
-        depAirport = NavData::instance()->airports[dep];
-    } else {
-        return;
-    }
-
-    Airport* destAirport;
-    if (NavData::instance()->airports.contains(dest)) {
-        destAirport = NavData::instance()->airports[dest];
-    } else {
+    Airport* depAirport = NavData::instance()->airports.value(dep, 0);
+    Airport* destAirport = NavData::instance()->airports.value(dest, 0);
+    if (depAirport == 0 || destAirport == 0) {
         return;
     }
 

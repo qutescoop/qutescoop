@@ -311,13 +311,13 @@ Waypoint* Airac::waypointNearby(const QString& input, double lat, double lon, do
     if (NavData::instance()->airports.contains(input)) { // trying aerodromes
         double d = NavData::distance(
             lat, lon,
-            NavData::instance()->airports[input]->lat,
-            NavData::instance()->airports[input]->lon
+            NavData::instance()->airports.value(input)->lat,
+            NavData::instance()->airports.value(input)->lon
         );
         if ((d < minDist) && (d < maxDist)) {
             result = new Waypoint(
-                input, NavData::instance()->airports[input]->lat,
-                NavData::instance()->airports[input]->lon
+                input, NavData::instance()->airports.value(input)->lat,
+                NavData::instance()->airports.value(input)->lon
             );
             minDist = d;
         }

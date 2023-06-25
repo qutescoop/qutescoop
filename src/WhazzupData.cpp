@@ -88,6 +88,12 @@ WhazzupData::WhazzupData(QByteArray* bytes, WhazzupType type)
             for (int i = 0; i < prefilesArray.size(); ++i) {
                 QJsonObject prefileObject = prefilesArray[i].toObject();
                 Pilot* p = new Pilot(prefileObject, this);
+                // currently not possible. Logic relies on lat=0, lon=0 for prefiles
+//                auto* a = p->depAirport();
+//                if (a != 0) {
+//                    p->lat = a->lat;
+//                    p->lon = a->lon;
+//                }
                 bookedPilots[p->callsign] = p;
             }
         }

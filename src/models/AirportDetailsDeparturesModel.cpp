@@ -1,6 +1,7 @@
 #include "AirportDetailsDeparturesModel.h"
 
-#include "../Airport.h"
+#include "src/Airport.h"
+#include "src/Settings.h"
 
 #include <QFont>
 
@@ -41,6 +42,19 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
     }
 
     Pilot* p = _pilots[index.row()];
+
+    if (index.column() == 6) {
+        const bool isFilteredDep = Settings::filterTraffic()
+            && p->distanceFromDeparture() < Settings::filterDistance();
+
+        if (isFilteredDep) {
+            if (role == Qt::ForegroundRole) {
+                return QGuiApplication::palette().window();
+            } else if (role == Qt::BackgroundRole) {
+                return QGuiApplication::palette().text();
+            }
+        }
+    }
 
     if (role == Qt::FontRole) {
         QFont result;
