@@ -380,18 +380,37 @@ void GLWidget::createPilotsList() {
                     break;
                 }
 
+                // fade out immediate route part
                 glPushAttrib(GL_ENABLE_BIT);
-                if (!isShowImmediateToDestRoute) {
-                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-                    glEnable(GL_TEXTURE_1D);
-                    glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
-                }
+                glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                glEnable(GL_TEXTURE_1D);
+                glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
                 qglColor(Settings::destImmediateLineColor());
                 glLineWidth(Settings::destImmediateLineStrength());
                 glBegin(GL_LINE_STRIP);
                 NavData::plotGreatCirclePoints(points);
                 glEnd();
                 glPopAttrib();
+
+                if (isShowImmediateToDestRoute) {
+                    // fade in plane -> Dest
+                    glPushAttrib(GL_ENABLE_BIT);
+                    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+                    glEnable(GL_TEXTURE_1D);
+                    glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
+                    qglColor(Settings::destLineColor());
+                    if (Settings::destLineDashed()) {
+                        glLineStipple(3, 0xAAAA);
+                    }
+                    glLineWidth(Settings::destLineStrength());
+                    glBegin(GL_LINE_STRIP);
+                    NavData::plotGreatCirclePoints(points, true);
+                    glEnd();
+                    if (Settings::destLineDashed()) {
+                        glLineStipple(1, 0xFFFF);
+                    }
+                    glPopAttrib();
+                }
             }
 
             // rest
@@ -408,6 +427,7 @@ void GLWidget::createPilotsList() {
                 }
                 points.append(DoublePair(waypoints[i]->lat, waypoints[i]->lon));
             }
+            glPushAttrib(GL_ENABLE_BIT);
             qglColor(Settings::destLineColor());
             if (Settings::destLineDashed()) {
                 glLineStipple(3, 0xAAAA);
@@ -416,10 +436,10 @@ void GLWidget::createPilotsList() {
             glBegin(GL_LINE_STRIP);
             NavData::plotGreatCirclePoints(points);
             glEnd();
-
             if (Settings::destLineDashed()) {
                 glLineStipple(1, 0xFFFF);
             }
+            glPopAttrib();
         }
         m_isUsedWaypointMapObjectsDirty = false;
     }
