@@ -351,7 +351,7 @@ QList<QPair<double, double> > NavData::greatCirclePoints(
  * plot great-circles of lat/lon points on Earth.
  * Adds texture coordinates along the way.
  **/
-void NavData::plotGreatCirclePoints(const QList<QPair<double, double> > &points) {
+void NavData::plotGreatCirclePoints(const QList<QPair<double, double> > &points, bool isReverseTextCoords) {
     if (points.isEmpty()) {
         return;
     }
@@ -366,13 +366,13 @@ void NavData::plotGreatCirclePoints(const QList<QPair<double, double> > &points)
             );
             for (int h = 0; h < subPoints.count(); h++) {
                 GLfloat ratio = (GLfloat) (i - 1) / (points.size() - 1) + ((GLfloat) h / subPoints.count()) / (points.size() - 1);
-                glTexCoord1f(ratio);
+                glTexCoord1f(isReverseTextCoords? 1. - ratio: ratio);
                 VERTEX(subPoints[h].first, subPoints[h].second);
             }
             wpOld = points[i];
         }
     }
-    glTexCoord1f(1.);
+    glTexCoord1f(isReverseTextCoords? 0.: 1.);
     VERTEX(points.last().first, points.last().second); // last points gets ommitted by greatCirclePoints by design
 }
 

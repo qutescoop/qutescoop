@@ -46,7 +46,7 @@ class NavData
             double lon2,
             double intervalNm = 30.
         );
-        static void plotGreatCirclePoints(const QList<QPair<double, double> > &points);
+        static void plotGreatCirclePoints(const QList<QPair<double, double> > &points, bool isReverseTextCoords = false);
 
         virtual ~NavData();
 

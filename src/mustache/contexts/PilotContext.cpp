@@ -23,6 +23,16 @@ namespace MustacheQs::Pilot {
     Context::~Context() {}
 
     QString Context::stringValue(const QString &key) const {
+        if (key == "debug:nextWp") {
+            QList<Waypoint*> waypoints = ((class Pilot*) m_o)->routeWaypointsWithDepDest();
+            int next = m_o->nextPointOnRoute(waypoints);
+            Waypoint* w = waypoints.value(next, nullptr);
+            if (w == nullptr) {
+                return "";
+            }
+            return w->id;
+        }
+
         if (key == "login") {
             return m_o->callsign;
         }
