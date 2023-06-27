@@ -122,10 +122,13 @@ int ListClientsDialogModel::columnCount(const QModelIndex&) const {
 }
 
 void ListClientsDialogModel::modelSelected(const QModelIndex& index) {
-    if (_clients[index.row()] != 0) {
-        MapObject* m = dynamic_cast<MapObject*>(_clients[index.row()]);
-        if (m != 0 && m->hasPrimaryAction()) {
-            m->primaryAction();
-        }
+    Client* c = _clients.value(index.row(), nullptr);
+    if (c == nullptr) {
+        return;
+    }
+
+    MapObject* m = dynamic_cast<MapObject*>(c);
+    if (m != 0 && m->hasPrimaryAction()) {
+        m->primaryAction();
     }
 }

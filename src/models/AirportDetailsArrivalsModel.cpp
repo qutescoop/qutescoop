@@ -1,7 +1,6 @@
 #include "AirportDetailsArrivalsModel.h"
 
 #include "src/Airport.h"
-#include "src/NavData.h"
 #include "src/Settings.h"
 
 #include <QFont>
@@ -43,7 +42,10 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
     if (!index.isValid() || index.row() >= _pilots.size()) {
         return QVariant();
     }
-    Pilot* p = _pilots[index.row()];
+    Pilot* p = _pilots.value(index.row(), nullptr);
+    if (p == nullptr) {
+        return QVariant();
+    }
 
     if (index.column() == 8) {
         const bool isFilteredArrival = Settings::filterTraffic() && (
@@ -146,7 +148,12 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
 }
 
 void AirportDetailsArrivalsModel::modelSelected(const QModelIndex& index) const {
-    if (_pilots[index.row()]->hasPrimaryAction()) {
-        _pilots[index.row()]->primaryAction();
+    Pilot* p = _pilots.value(index.row(), nullptr);
+    if (p == nullptr) {
+        return;
+    }
+
+    if (p->hasPrimaryAction()) {
+        p->primaryAction();
     }
 }

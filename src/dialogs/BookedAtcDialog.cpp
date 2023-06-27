@@ -36,6 +36,7 @@ BookedAtcDialog::BookedAtcDialog(QWidget* parent)
     _bookedAtcSortModel = new BookedAtcSortFilter;
     _bookedAtcSortModel->setDynamicSortFilter(true);
     _bookedAtcSortModel->setSourceModel(_bookedAtcModel);
+    _bookedAtcSortModel->setSortRole(Qt::UserRole);
     treeBookedAtc->setUniformRowHeights(true);
     treeBookedAtc->setModel(_bookedAtcSortModel);
     treeBookedAtc->sortByColumn(0, Qt::AscendingOrder);
