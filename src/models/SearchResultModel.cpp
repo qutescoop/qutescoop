@@ -21,8 +21,8 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
     }
 
     if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-        MapObject* o = _content[index.row()];
-        if (o == 0) {
+        MapObject* o = _content.value(index.row(), nullptr);
+        if (o == nullptr) {
             return QVariant();
         }
         switch (index.column()) {
@@ -34,8 +34,8 @@ QVariant SearchResultModel::data(const QModelIndex &index, int role) const {
 
     if (role == Qt::FontRole) {
         QFont result;
-        MapObject* o = _content[index.row()];
-        if (o == 0) {
+        MapObject* o = _content.value(index.row(), nullptr);
+        if (o == nullptr) {
             return result;
         }
         // prefiled italic
@@ -86,7 +86,12 @@ void SearchResultModel::setSearchResults(const QList<MapObject*> &searchResult) 
 }
 
 void SearchResultModel::modelClicked(const QModelIndex& index) {
-    if (_content[index.row()]->hasPrimaryAction()) {
-        _content[index.row()]->primaryAction();
+    MapObject* o = _content.value(index.row(), nullptr);
+    if (o == nullptr) {
+        return;
+    }
+
+    if (o->hasPrimaryAction()) {
+        o->primaryAction();
     }
 }

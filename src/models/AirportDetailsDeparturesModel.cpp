@@ -41,7 +41,10 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
         return QVariant();
     }
 
-    Pilot* p = _pilots[index.row()];
+    Pilot* p = _pilots.value(index.row(), nullptr);
+    if (p == nullptr) {
+        return QVariant();
+    }
 
     if (index.column() == 6) {
         const bool isFilteredDep = Settings::filterTraffic()
@@ -125,7 +128,12 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
 }
 
 void AirportDetailsDeparturesModel::modelSelected(const QModelIndex& index) const {
-    if (_pilots[index.row()]->hasPrimaryAction()) {
-        _pilots[index.row()]->primaryAction();
+    Pilot* p = _pilots.value(index.row(), nullptr);
+    if (p == nullptr) {
+        return;
+    }
+
+    if (p->hasPrimaryAction()) {
+        p->primaryAction();
     }
 }

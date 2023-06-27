@@ -35,13 +35,18 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
         return QVariant();
     }
 
+    BookedController* c = _controllers.value(index.row(), nullptr);
+    if (c == nullptr) {
+        return QVariant();
+    }
+
     if (role == Qt::FontRole) {
-        BookedController* c = _controllers[index.row()];
         QFont result;
         result.setBold(c->isFriend());
         return result;
-    } else if (role == Qt::DisplayRole) {
-        BookedController* c = _controllers[index.row()];
+    }
+
+    if (role == Qt::DisplayRole) {
         switch (index.column()) {
             case 0: return c->callsign;
             case 1: return c->facilityString();
@@ -51,17 +56,16 @@ QVariant BookedAtcDialogModel::data(const QModelIndex &index, int role) const {
             case 5: return c->ends().time().toString("HHmm'z'");
             case 6: return c->bookingInfoStr;
         }
-    } else if (role == Qt::EditRole) { // we are faking "EditRole" to access raw data and for sorting
-        BookedController* c = _controllers[index.row()];
+        return QVariant();
+    }
+
+    if (role == Qt::UserRole) { // for sorting
         switch (index.column()) {
-            case 0: return c->callsign;
-            case 1: return c->facilityString();
-            case 2: return c->realName();
             case 3: return c->starts();
             case 4: return c->starts();
             case 5: return c->ends();
-            case 6: return c->bookingInfoStr;
         }
+        return data(index, Qt::DisplayRole);
     }
 
     return QVariant();

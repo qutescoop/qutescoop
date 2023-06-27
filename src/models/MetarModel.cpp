@@ -32,7 +32,10 @@ QVariant MetarModel::data(const QModelIndex &index, int role) const {
             return QString("Too many airports match your search (%1)").arg(_airportList.size());
         }
 
-        Airport* a = _metarList[index.row()];
+        Airport* a = _metarList.value(index.row(), nullptr);
+        if (a == nullptr) {
+            return QVariant();
+        }
         switch (index.column()) {
             case 0: return a->metar.encoded; break;
         }
@@ -43,7 +46,10 @@ QVariant MetarModel::data(const QModelIndex &index, int role) const {
             return QString("Too many airports match your search (%1)").arg(_airportList.size());
         }
 
-        Airport* a = _metarList[index.row()];
+        Airport* a = _metarList.value(index.row(), nullptr);
+        if (a == nullptr) {
+            return QVariant();
+        }
         switch (index.column()) {
             case 0: return a->metar.humanHtml(); break;
         }
@@ -88,7 +94,11 @@ void MetarModel::setAirports(const QList<Airport*>& airports) {
 
     // remove all entries from metarList with invalid or dead METARs
     for (int i = _metarList.size() - 1; i >= 0; i--) {
-        if (_metarList[i]->metar.needsRefresh() || _metarList[i]->metar.doesNotExist()) {
+        Airport* a = _metarList.value(i, nullptr);
+        if (a == nullptr) {
+            continue;
+        }
+        if (a->metar.needsRefresh() || a->metar.doesNotExist()) {
             _metarList.removeAt(i);
         }
     }

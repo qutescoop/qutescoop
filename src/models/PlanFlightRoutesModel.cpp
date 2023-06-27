@@ -47,9 +47,12 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
     if (!index.isValid() || index.row() >= _routes.size()) {
         return QVariant();
     }
+    Route* r = _routes.value(index.row(), nullptr);
+    if (r == nullptr) {
+        return QVariant();
+    }
 
     if (role == Qt::DecorationRole) {
-        Route* r = _routes[index.row()];
         switch (index.column()) {
             case 0:
                 return QPixmap(
@@ -59,7 +62,10 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
                 )
                     .scaled(QSize(50, 25), Qt::KeepAspectRatio, Qt::SmoothTransformation);
         }
-    } else if (role == Qt::DisplayRole) {
+        return QVariant();
+    }
+
+    if (role == Qt::DisplayRole) {
         Route* r = _routes[index.row()];
         switch (index.column()) {
             case 1: return r->provider;
@@ -72,17 +78,16 @@ QVariant PlanFlightRoutesModel::data(const QModelIndex &index, int role) const {
                 QDateTime lastChange = QDateTime::fromString(r->lastChange, "yyyyMMddHHmmss");
                 if (lastChange.isValid()) {
                     return lastChange.date();
-                } else {
-                    return r->lastChange;
                 }
+                return r->lastChange;
         }
+        return QVariant();
     }
 
     return QVariant();
 }
 
 bool PlanFlightRoutesModel::setData(const QModelIndex&, const QVariant&, int) {
-    //qDebug() << "setData" << role << value;
     return true;
 }
 
