@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include "MapObject.h"
 #include "Sector.h"
+#include "src/helpers.h"
 
 #include <qglobal.h>
 #ifdef Q_OS_WIN
@@ -25,7 +26,7 @@ class GLWidget
         GLWidget(QGLFormat format, QWidget* parent = 0);
         ~GLWidget();
 
-        QPair<double, double> currentPosition() const;
+        DoublePair currentLatLon() const;
         ClientSelectionWidget* clientSelection;
         void invalidatePilots();
         void invalidateAirports();
@@ -70,6 +71,7 @@ class GLWidget
         void handleRotation(QMouseEvent* event);
         bool local2latLon(int x, int y, double &lat, double &lon) const;
         bool latLon2local(double lat, double lon, int* px = 0, int* py = 0) const;
+        QPair<DoublePair, DoublePair> shownLatLonExtent() const;
 
         void drawSelectionRectangle();
         void drawCoordinateAxii() const;
@@ -108,8 +110,9 @@ class GLWidget
             _xRot, _yRot, _zRot, _zoom, _aspectRatio;
         QTimer* _highlighter;
         QList< QPair<double, double> > m_friendPositions;
-        QList<MapObject*> m_hoveredObjects;
-        QList<MapObject*> m_activeAirportMapObjects, m_inactiveAirportMapObjects, m_controllerMapObjects, m_pilotMapObjects,
+        QList<MapObject*> m_hoveredObjects, m_newHoveredObjects;
+        QMultiHash<QPair<int, int>, MapObject*> m_inactiveAirportMapObjectsByLatLng;
+        QList<MapObject*> m_activeAirportMapObjects, m_controllerMapObjects, m_pilotMapObjects,
             m_usedWaypointMapObjects;
 
         void renderLabels();

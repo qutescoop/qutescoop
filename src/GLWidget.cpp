@@ -4,7 +4,6 @@
 #include "dialogs/AirportDetails.h"
 #include "dialogs/PlanFlightDialog.h"
 #include "dialogs/PilotDetails.h"
-#include "helpers.h"
 #include "GuiMessage.h"
 #include "LineReader.h"
 #include "NavData.h"
@@ -28,7 +27,7 @@ GLWidget::GLWidget(QGLFormat fmt, QWidget* parent)
       _staticSectorPolygonsList(0), _staticSectorPolygonBorderLinesList(0),
       _hoveredSectorPolygonsList(0), _hoveredSectorPolygonBorderLinesList(0),
       _pilotLabelZoomTreshold(1.5),
-      _activeAirportLabelZoomTreshold(2.), _inactiveAirportLabelZoomTreshold(.08),
+      _activeAirportLabelZoomTreshold(2.), _inactiveAirportLabelZoomTreshold(.12),
       _controllerLabelZoomTreshold(2.5),
       _usedWaypointsLabelZoomThreshold(.7),
       _xRot(0), _yRot(0), _zRot(0), _zoom(2), _aspectRatio(1),
@@ -73,16 +72,6 @@ void GLWidget::setMapPosition(double lat, double lon, double newZoom) {
     _zoom = newZoom;
     resetZoom();
     update();
-}
-
-/**
- * current lat/lon
- **/
-QPair<double, double> GLWidget::currentPosition() const {
-    return QPair<double, double>(
-        Helpers::modPositive(-90. - _xRot + 180., 360.) - 180.,
-        Helpers::modPositive(-_zRot + 180., 360.) - 180.
-    );
 }
 
 void GLWidget::invalidatePilots() {
@@ -165,7 +154,7 @@ bool GLWidget::local2latLon(int x, int y, double &lat, double &lon) const {
 }
 
 void GLWidget::scrollBy(int moveByX, int moveByY) {
-    QPair<double, double> cur = currentPosition();
+    QPair<double, double> cur = currentLatLon();
     setMapPosition(
         cur.first - (double) moveByY * _zoom * 6., // 6° on zoom=1
         cur.second + (double) moveByX * _zoom * 6., _zoom
@@ -212,6 +201,40 @@ bool GLWidget::latLon2local(double lat, double lon, int* px, int* py) const {
         return true;
     }
     return false;
+}
+
+/*
+ * approximation
+ */
+QPair<DoublePair, DoublePair> GLWidget::shownLatLonExtent() const {
+    auto _currentLatLon = currentLatLon();
+    double _dLat = 40 * _zoom;
+    double _dLon = Helpers::modPositive(
+        NavData::pointDistanceBearing(
+            _currentLatLon.first,
+            _currentLatLon.second,
+            60. * _dLat * _aspectRatio,
+            90.
+        ).second - _currentLatLon.second,
+        360.
+    );
+    return QPair<DoublePair, DoublePair>(
+        DoublePair(
+            fmod(_currentLatLon.first - _dLat, 180.),
+            fmod(_currentLatLon.second - _dLon, 180.)
+        ),
+        DoublePair(
+            fmod(_currentLatLon.first + _dLat, 180.),
+            fmod(_currentLatLon.second + _dLon, 180.)
+        )
+    );
+}
+
+DoublePair GLWidget::currentLatLon() const {
+    return DoublePair(
+        Helpers::modPositive(-90. - _xRot + 180., 360.) - 180.,
+        Helpers::modPositive(-_zRot + 180., 360.) - 180.
+    );
 }
 
 void GLWidget::rememberPosition(int nr) {
@@ -1287,7 +1310,8 @@ void GLWidget::paintGL() {
     }
 
     glCallList(_activeAirportsList);
-    if (Settings::showInactiveAirports() && (_zoom < _inactiveAirportLabelZoomTreshold * .7)) {
+    if (Settings::showInactiveAirports() && (_zoom < _inactiveAirportLabelZoomTreshold * .2)) {
+        // show inactive airport dot only when zoomed in a lot
         glCallList(_inactiveAirportsList);
     }
 
@@ -1699,16 +1723,40 @@ void GLWidget::renderLabels() {
             }
         }
 
-        m_inactiveAirportMapObjects.clear();
+        m_inactiveAirportMapObjectsByLatLng.clear();
         if (Settings::showInactiveAirports()) {
             foreach (const auto a, NavData::instance()->airports) {
                 if (!a->active) {
-                    m_inactiveAirportMapObjects.append(a);
+                    QPair<int, int> _tile(a->lat, a->lon);
+                    m_inactiveAirportMapObjectsByLatLng.insert(_tile, a);
                 }
             }
         }
 
         m_isAirportsMapObjectsDirty = false;
+    }
+
+    // partition inactive airports (each frame)
+    QList<MapObject*> _inactiveAirportMapObjectsFiltered;
+    if (Settings::showInactiveAirports() && _zoom <= _inactiveAirportLabelZoomTreshold) {
+        auto _extent = shownLatLonExtent();
+        for (int _lat = floor(_extent.first.first); _lat <= ceil(_extent.second.first); _lat++) {
+            for (int _lon = floor(_extent.first.second); _lon <= ceil(_extent.second.second); _lon++) {
+                _inactiveAirportMapObjectsFiltered += m_inactiveAirportMapObjectsByLatLng.values(
+                    QPair<int, int>(_lat, _lon)
+                );
+            }
+        }
+
+        // produce a random, but stable distribution
+        std::sort(
+            _inactiveAirportMapObjectsFiltered.begin(),
+            _inactiveAirportMapObjectsFiltered.end(),
+            [](MapObject* a, MapObject* b) {
+                return QCryptographicHash::hash(((Airport*) a)->id.toLatin1(), QCryptographicHash::Md5)
+                    > QCryptographicHash::hash(((Airport*) b)->id.toLatin1(), QCryptographicHash::Md5);
+            }
+        );
     }
 
     // pilot labels
@@ -1750,7 +1798,7 @@ void GLWidget::renderLabels() {
         + m_activeAirportMapObjects
         + m_pilotMapObjects
         + m_usedWaypointMapObjects
-        + m_inactiveAirportMapObjects // that might hit performance
+        + _inactiveAirportMapObjectsFiltered // that might hit performance
     ;
 
     // update our list of stable positions
@@ -1773,7 +1821,7 @@ void GLWidget::renderLabels() {
         Settings::firFontSecondary(),
         Settings::firFontSecondaryColor(),
         false,
-        99
+        99 // try many secondary positions
     );
 
     // static sectors - render directly, no questions asked
@@ -1823,18 +1871,6 @@ void GLWidget::renderLabels() {
         Settings::pilotFontSecondaryColor()
     );
 
-    // inactive airports
-    if (Settings::showInactiveAirports()) {
-        renderLabels(
-            m_inactiveAirportMapObjects,
-            _inactiveAirportLabelZoomTreshold,
-            Settings::inactiveAirportFont(),
-            Settings::inactiveAirportFontColor(),
-            Settings::airportFontSecondary(),
-            Settings::airportFontSecondaryColor()
-        );
-    }
-
     // waypoints used in shown routes
     if (Settings::showUsedWaypoints()) {
         renderLabels(
@@ -1844,12 +1880,24 @@ void GLWidget::renderLabels() {
             Settings::waypointsFontColor(),
             Settings::waypointsFont(),
             Settings::waypointsFontColor(),
-            false,
+            false, // fast bail
             0 // don't try secondary positions
         );
     }
 
-    // last: draw hovered objects
+    // inactive airports
+    if (Settings::showInactiveAirports()) {
+        renderLabels(
+            _inactiveAirportMapObjectsFiltered,
+            _inactiveAirportLabelZoomTreshold,
+            Settings::inactiveAirportFont(),
+            Settings::inactiveAirportFontColor(),
+            Settings::airportFontSecondary(),
+            Settings::airportFontSecondaryColor()
+        );
+    }
+
+    // last (but always rendered): hovered objects
     foreach (const auto renderLabelCommand, m_prioritizedLabels) {
         renderLabels(
             renderLabelCommand.objects,
@@ -1886,6 +1934,11 @@ void GLWidget::renderLabels(
     QFontMetricsF fontMetricsSecondary(secondaryFont, this);
 
     foreach (MapObject* o, objects) {
+        int x, y;
+        if (!latLon2local(o->lat, o->lon, &x, &y)) {
+            continue;
+        }
+
         const bool isHovered = m_hoveredObjects.contains(o)
             && !m_isMapMoving && !m_isMapRectSelecting && !m_isMapZooming;
 
@@ -1936,11 +1989,6 @@ void GLWidget::renderLabels(
         }
 
         if (!o->drawLabel) {
-            continue;
-        }
-
-        int x, y;
-        if (!latLon2local(o->lat, o->lon, &x, &y)) {
             continue;
         }
 
