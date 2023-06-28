@@ -54,11 +54,11 @@ GLWidget::~GLWidget() {
     glDeleteLists(_hoveredSectorPolygonsList, 1);
     glDeleteLists(_hoveredSectorPolygonBorderLinesList, 1);
 
-    if (_earthTex != 0) {
+    if (glIsTexture(_earthTex) == GL_TRUE) {
         deleteTexture(_earthTex);
         //glDeleteTextures(1, &earthTex); // handled Qt'ish by deleteTexture
     }
-    if (_fadeOutTex != 0) {
+    if (glIsTexture(_fadeOutTex) == GL_TRUE) {
         deleteTexture(_fadeOutTex);
     }
 
@@ -251,7 +251,7 @@ const QPair<double, double> GLWidget::sunZenith(const QDateTime &dateTime) const
 void GLWidget::createPilotsList() {
     qDebug();
 
-    if (_pilotsList == 0) {
+    if (glIsList(_pilotsList) != GL_TRUE) {
         _pilotsList = glGenLists(1);
     }
 
@@ -484,7 +484,7 @@ void GLWidget::createPilotsList() {
     glEndList();
 
     // waypoints used in routes (dots)
-    if (_usedWaypointsList == 0) {
+    if (glIsList(_usedWaypointsList) != GL_TRUE) {
         _usedWaypointsList = glGenLists(1);
     }
 
@@ -508,13 +508,13 @@ void GLWidget::createPilotsList() {
 
 void GLWidget::createAirportsList() {
     qDebug();
-    if (_activeAirportsList == 0) {
+    if (glIsList(_activeAirportsList) != GL_TRUE) {
         _activeAirportsList = glGenLists(1);
     }
     QList<Airport*> airportList = NavData::instance()->airports.values();
 
     // inactive airports
-    if (_inactiveAirportsList == 0) {
+    if (glIsList(_inactiveAirportsList) != GL_TRUE) {
         _inactiveAirportsList = glGenLists(1);
     }
     glNewList(_inactiveAirportsList, GL_COMPILE);
@@ -563,7 +563,7 @@ void GLWidget::createAirportsList() {
     glEndList();
 
     // airport congestion based on filtered traffic
-    if (_congestionsList == 0) {
+    if (glIsList(_congestionsList) != GL_TRUE) {
         _congestionsList = glGenLists(1);
     }
     glNewList(_congestionsList, GL_COMPILE);
@@ -666,7 +666,7 @@ void GLWidget::createControllerLists() {
     qDebug();
 
     // FIR polygons
-    if (_sectorPolygonsList == 0) {
+    if (glIsList(_sectorPolygonsList) != GL_TRUE) {
         _sectorPolygonsList = glGenLists(1);
     }
 
@@ -689,7 +689,7 @@ void GLWidget::createControllerLists() {
     glEndList();
 
     // FIR borders
-    if (_sectorPolygonBorderLinesList == 0) {
+    if (glIsList(_sectorPolygonBorderLinesList) != GL_TRUE) {
         _sectorPolygonBorderLinesList = glGenLists(1);
     }
 
@@ -737,7 +737,7 @@ void GLWidget::createHoveredControllersLists(const QSet<Controller*>& controller
     }
 
     // create a list of lists
-    if (_hoveredSectorPolygonsList == 0) {
+    if (glIsList(_hoveredSectorPolygonsList) != GL_TRUE) {
         _hoveredSectorPolygonsList = glGenLists(1);
     }
     glNewList(_hoveredSectorPolygonsList, GL_COMPILE);
@@ -766,7 +766,7 @@ void GLWidget::createHoveredControllersLists(const QSet<Controller*>& controller
 
 
     // FIR borders
-    if (_hoveredSectorPolygonBorderLinesList == 0) {
+    if (glIsList(_hoveredSectorPolygonBorderLinesList) != GL_TRUE) {
         _hoveredSectorPolygonBorderLinesList = glGenLists(1);
     }
 
@@ -798,7 +798,7 @@ void GLWidget::createStaticLists() {
 
     parseTexture();
 
-    if (_fadeOutTex == 0) {
+    if (glIsTexture(_fadeOutTex) != GL_TRUE) {
         glGenTextures(1, &_fadeOutTex);
         glBindTexture(GL_TEXTURE_1D, _fadeOutTex);
         glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
@@ -917,7 +917,7 @@ void GLWidget::createStaticLists() {
 
 void GLWidget::createStaticSectorLists() {
     //Polygon
-    if (_staticSectorPolygonsList == 0) {
+    if (glIsList(_staticSectorPolygonsList) != GL_TRUE) {
         _staticSectorPolygonsList = glGenLists(1);
     }
 
@@ -939,7 +939,7 @@ void GLWidget::createStaticSectorLists() {
 
 
     // FIR borders
-    if (_staticSectorPolygonBorderLinesList == 0) {
+    if (glIsList(_staticSectorPolygonBorderLinesList) != GL_TRUE) {
         _staticSectorPolygonBorderLinesList = glGenLists(1);
     }
 
@@ -1206,25 +1206,22 @@ void GLWidget::paintGL() {
             }
         }
     }
-    if (Settings::glTextures() && _earthTex != 0 && Settings::glLighting()) {
+    if (Settings::glTextures() && glIsTexture(_earthTex) == GL_TRUE) {
         glEnable(GL_TEXTURE_2D);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND,
-                                                                     // GL_REPLACE
+        if (Settings::glLighting()) {
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE); // GL_MODULATE, GL_DECAL, GL_BLEND,
+                                                                         // GL_REPLACE
+        } else {
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        }
         glBindTexture(GL_TEXTURE_2D, _earthTex);
     }
-    if (Settings::glTextures() && _earthTex != 0 && !Settings::glLighting()) {
-        glEnable(GL_TEXTURE_2D);
-        glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE); // GL_MODULATE, GL_DECAL, GL_BLEND,
-                                                                    // GL_REPLACE
-        glBindTexture(GL_TEXTURE_2D, _earthTex);
-    }
-
 
     glCallList(_earthList);
     if (Settings::glLighting()) {
         glDisable(GL_LIGHTING); // disable lighting after drawing earth...
     }
-    if (Settings::glTextures() && _earthTex != 0) { // disable textures after drawing earth...
+    if (Settings::glTextures() && glIsTexture(_earthTex) == GL_TRUE) { // disable textures after drawing earth...
         glDisable(GL_TEXTURE_2D);
     }
 
