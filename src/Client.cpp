@@ -33,7 +33,9 @@ QString Client::livestreamString(const QString& str) {
 Client::Client(const QJsonObject& json, const WhazzupData*)
     : callsign(""), userId(""), homeBase(""), server(""), rating(-99) {
     callsign = json["callsign"].toString();
-    Q_ASSERT(!callsign.isNull());
+    if (callsign.isNull()) {
+        callsign = "";
+    }
 
     userId = QString::number(json["cid"].toInt());
     server = json["server"].toString();
@@ -41,6 +43,9 @@ Client::Client(const QJsonObject& json, const WhazzupData*)
     timeConnected = QDateTime::fromString(json["logon_time"].toString(), Qt::ISODate);
 
     m_nameOrCid = json["name"].toString();
+    if (m_nameOrCid.isNull()) {
+        m_nameOrCid = "";
+    }
     if (m_nameOrCid.contains(QRegExp("\\b[A-Z]{4}$"))) {
         homeBase = m_nameOrCid.right(4);
         m_nameOrCid = m_nameOrCid.chopped(4).trimmed();

@@ -134,7 +134,7 @@ int Sector::debugSectorLineNumber() {
 }
 
 GLuint Sector::glPolygon() {
-    if (_polygon == 0) {
+    if (glIsList(_polygon) != GL_TRUE) {
         _polygon = glGenLists(1);
         glNewList(_polygon, GL_COMPILE);
         QColor color = Settings::firFillColor();
@@ -146,7 +146,7 @@ GLuint Sector::glPolygon() {
 }
 
 GLuint Sector::glBorderLine() {
-    if (_borderline == 0) {
+    if (glIsList(_borderline) != GL_TRUE) {
         _borderline = glGenLists(1);
         glNewList(_borderline, GL_COMPILE);
         glLineWidth(Settings::firBorderLineStrength());
@@ -163,8 +163,7 @@ GLuint Sector::glBorderLine() {
 }
 
 GLuint Sector::glPolygonHighlighted() {
-    // we have crashes exactly at that NEXT line. - added a constructor initialization
-    if (_polygonHighlighted == 0) {
+    if (glIsList(_polygonHighlighted) != GL_TRUE) {
         _polygonHighlighted = glGenLists(1);
         glNewList(_polygonHighlighted, GL_COMPILE);
         QColor color = Settings::firHighlightedFillColor();
@@ -176,7 +175,7 @@ GLuint Sector::glPolygonHighlighted() {
 }
 
 GLuint Sector::glBorderLineHighlighted() {
-    if (_borderlineHighlighted == 0) {
+    if (glIsList(_borderlineHighlighted) != GL_TRUE) {
         _borderlineHighlighted = glGenLists(1);
         glNewList(_borderlineHighlighted, GL_COMPILE);
         glLineWidth(Settings::firHighlightedBorderLineStrength());

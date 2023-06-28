@@ -89,7 +89,7 @@ class Helpers {
         static DoublePair polygonCenter(const QList<DoublePair> points) {
             // https://en.wikipedia.org/wiki/Centroid#Of_a_polygon
 
-            if (points.size() == 0) {
+            if (points.isEmpty()) {
                 return DoublePair(-360., -360.);
             }
 
