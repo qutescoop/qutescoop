@@ -6,7 +6,6 @@
 
 class Sector {
     public:
-        Sector();
         Sector(const QStringList &fields, const int debugControllerLineNumber, const int debugSectorLineNumber = -1);
         ~Sector();
 

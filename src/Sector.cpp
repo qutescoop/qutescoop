@@ -4,8 +4,6 @@
 #include "Settings.h"
 #include "Tessellator.h"
 
-Sector::Sector() {}
-
 Sector::Sector(const QStringList &fields, const int debugControllerLineNumber, const int debugSectorLineNumber)
     : _debugControllerLineNumber(debugControllerLineNumber),
       _debugSectorLineNumber(debugSectorLineNumber),
@@ -26,16 +24,16 @@ Sector::Sector(const QStringList &fields, const int debugControllerLineNumber, c
 }
 
 Sector::~Sector() {
-    if (_polygon != 0) {
+    if (glIsList(_polygon) == GL_TRUE) {
         glDeleteLists(_polygon, 1);
     }
-    if (_borderline != 0) {
+    if (glIsList(_borderline) == GL_TRUE) {
         glDeleteLists(_borderline, 1);
     }
-    if (_polygonHighlighted != 0) {
+    if (glIsList(_polygonHighlighted) == GL_TRUE) {
         glDeleteLists(_polygonHighlighted, 1);
     }
-    if (_borderlineHighlighted != 0) {
+    if (glIsList(_borderlineHighlighted) == GL_TRUE) {
         glDeleteLists(_borderlineHighlighted, 1);
     }
 }
