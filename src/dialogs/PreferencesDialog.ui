@@ -1623,9 +1623,9 @@ TWR: 133.375</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>0</y>
-              <width>516</width>
-              <height>772</height>
+              <y>-253</y>
+              <width>527</width>
+              <height>877</height>
              </rect>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -1672,30 +1672,33 @@ TWR: 133.375</string>
                    <property name="bottomMargin">
                     <number>0</number>
                    </property>
-                   <item row="4" column="0">
-                    <widget class="QLabel" name="label_102">
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label_169">
                      <property name="text">
-                      <string>{code}</string>
+                      <string>{&gt; traffic}</string>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="9" column="3">
-                    <widget class="QLabel" name="label_100">
+                   <item row="6" column="3">
+                    <widget class="QLabel" name="label_94">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;CA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;13&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="13" column="2">
-                    <widget class="QLabel" name="label_109">
+                   <item row="12" column="2">
+                    <widget class="QLabel" name="label_93">
                      <property name="text">
-                      <string>abreviated list of
-airport frequencies,
-with controller suffixes
-(multiple lines)</string>
+                      <string>aerodrome name
+(and city, but only if city is
+not included in the name
+already)</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
@@ -1705,36 +1708,8 @@ with controller suffixes
                       <string>all arrivals/departures
 (unfiltered)</string>
                      </property>
-                    </widget>
-                   </item>
-                   <item row="5" column="3">
-                    <widget class="QLabel" name="label_80">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="10" column="3">
-                    <widget class="QLabel" name="label_83">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Berlin Brandenburg Intl or&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Adnan Menderes, Izmir&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="10" column="0">
-                    <widget class="QLabel" name="label_101">
-                     <property name="text">
-                      <string>{prettyName}</string>
-                     </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="7" column="3">
-                    <widget class="QLabel" name="label_89">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;D,G,T,A&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
@@ -1748,17 +1723,76 @@ with controller suffixes
                      </property>
                     </widget>
                    </item>
-                   <item row="1" column="0" colspan="4">
-                    <widget class="Line" name="line_5">
-                     <property name="orientation">
-                      <enum>Qt::Horizontal</enum>
+                   <item row="16" column="0">
+                    <widget class="QLabel" name="label_117">
+                     <property name="text">
+                      <string>{pdc}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="16" column="3">
-                    <widget class="QLabel" name="label_161">
+                   <item row="14" column="3">
+                    <widget class="QLabel" name="label_91">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;twitch/username&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Berlin&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="15" column="0">
+                    <widget class="QLabel" name="label_108">
+                     <property name="text">
+                      <string>{frequencies}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label_170">
+                     <property name="text">
+                      <string>{&gt; trafficArrows}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="18" column="2">
+                    <widget class="QLabel" name="label_162">
+                     <property name="text">
+                      <string/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="3">
+                    <widget class="QLabel" name="label_80">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;3&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="7" column="2">
+                    <widget class="QLabel" name="label_85">
+                     <property name="text">
+                      <string>active controllers
+at this aerodrome
+(by type)</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label_102">
+                     <property name="text">
+                      <string>{code}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
@@ -1769,27 +1803,114 @@ with controller suffixes
                      </property>
                     </widget>
                    </item>
-                   <item row="7" column="0">
-                    <widget class="QLabel" name="label_96">
+                   <item row="13" column="2">
+                    <widget class="QLabel" name="label_112">
                      <property name="text">
-                      <string>{controllers}</string>
+                      <string>aerodrome name</string>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="5" column="2">
-                    <widget class="QLabel" name="label_99">
+                   <item row="10" column="3">
+                    <widget class="QLabel" name="label_90">
                      <property name="text">
-                      <string>arrivals / departures
-(applies the traffic 
-visualization filter 
-if selected)</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;ATIS: H or&lt;br/&gt;ATIS_D: J, _A: X or&lt;br/&gt;ATIS: ?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="16" column="0">
+                   <item row="7" column="3">
+                    <widget class="QLabel" name="label_89">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;D,G,T,A&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="3">
+                    <widget class="QLabel" name="label_175">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;5/16 or&lt;br/&gt;-/5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="16" column="3">
+                    <widget class="QLabel" name="label_119">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;EDDB&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="13" column="0">
+                    <widget class="QLabel" name="label_111">
+                     <property name="text">
+                      <string>{name}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="15" column="2">
+                    <widget class="QLabel" name="label_109">
+                     <property name="text">
+                      <string>abreviated list of
+airport frequencies,
+with controller suffixes
+(multiple lines)</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="14" column="0">
+                    <widget class="QLabel" name="label_81">
+                     <property name="text">
+                      <string>{city}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="2">
+                    <widget class="QLabel" name="label_176">
+                     <property name="text">
+                      <string>Short hand for
+{#arrs}{arrs}↘{/arrs}
+{#deps}↗{deps}{/deps}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="12" column="3">
+                    <widget class="QLabel" name="label_83">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Berlin Brandenburg Intl or&lt;/p&gt;&lt;p align=&quot;center&quot;&gt;Adnan Menderes, Izmir&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="15" column="3">
+                    <widget class="QLabel" name="label_110">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;ATIS: 121.975: X&lt;br/&gt;GND: 121.850&lt;br/&gt;TWR: 118.625_N, 119.900_S&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="12" column="0">
+                    <widget class="QLabel" name="label_101">
+                     <property name="text">
+                      <string>{prettyName}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="18" column="0">
                     <widget class="QLabel" name="label_158">
                      <property name="text">
                       <string>{livestream}</string>
@@ -1799,55 +1920,33 @@ if selected)</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="0" column="3">
-                    <widget class="QLabel" name="label_82">
-                     <property name="font">
-                      <font>
-                       <bold>true</bold>
-                      </font>
-                     </property>
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;example output&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="13" column="3">
-                    <widget class="QLabel" name="label_110">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;ATIS: 121.975: X&lt;br/&gt;GND: 121.850&lt;br/&gt;TWR: 118.625_N, 119.900_S&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="8" column="2">
-                    <widget class="QLabel" name="label_88">
-                     <property name="text">
-                      <string>ATIS: letter or ? 
-if ATIS online but 
-letter unknown</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="6" column="3">
-                    <widget class="QLabel" name="label_94">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;13&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
                    <item row="4" column="2">
                     <widget class="QLabel" name="label_84">
                      <property name="text">
                       <string>aerodrome code</string>
                      </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
                     </widget>
                    </item>
-                   <item row="10" column="2">
-                    <widget class="QLabel" name="label_93">
+                   <item row="8" column="2">
+                    <widget class="QLabel" name="label_183">
                      <property name="text">
-                      <string>aerodrome name
-(and city, but only if city is
-not included in the name
-already)</string>
+                      <string>letter D, G, T, A if such a controller is active</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="11" column="3">
+                    <widget class="QLabel" name="label_100">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;CA&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
@@ -1861,38 +1960,38 @@ already)</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="12" column="0">
-                    <widget class="QLabel" name="label_81">
+                   <item row="7" column="0">
+                    <widget class="QLabel" name="label_96">
                      <property name="text">
-                      <string>{city}</string>
+                      <string>{controllers}</string>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="14" column="3">
-                    <widget class="QLabel" name="label_119">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;EDDB&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="11" column="3">
+                   <item row="13" column="3">
                     <widget class="QLabel" name="label_113">
                      <property name="text">
                       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Adnan Menderes&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="16" column="2">
-                    <widget class="QLabel" name="label_162">
+                   <item row="8" column="3">
+                    <widget class="QLabel" name="label_184">
                      <property name="text">
-                      <string/>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;D G T A&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="14" column="2">
+                   <item row="3" column="3">
+                    <widget class="QLabel" name="label_177">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;5↘↗16 or&lt;br/&gt;↗5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="16" column="2">
                     <widget class="QLabel" name="label_118">
                      <property name="text">
                       <string>Hoppie logon of PDC
@@ -1900,63 +1999,24 @@ station. This is a guess
 based on controller 
 infos.</string>
                      </property>
-                    </widget>
-                   </item>
-                   <item row="12" column="3">
-                    <widget class="QLabel" name="label_91">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;Berlin&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="9" column="0">
-                    <widget class="QLabel" name="label_97">
-                     <property name="text">
-                      <string>{country}</string>
-                     </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="8" column="0">
-                    <widget class="QLabel" name="label_87">
-                     <property name="text">
-                      <string>{atis}</string>
-                     </property>
-                     <property name="textInteractionFlags">
-                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                   <item row="1" column="0" colspan="4">
+                    <widget class="Line" name="line_5">
+                     <property name="orientation">
+                      <enum>Qt::Horizontal</enum>
                      </property>
                     </widget>
                    </item>
-                   <item row="11" column="2">
-                    <widget class="QLabel" name="label_112">
+                   <item row="2" column="2">
+                    <widget class="QLabel" name="label_171">
                      <property name="text">
-                      <string>aerodrome name</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="8" column="3">
-                    <widget class="QLabel" name="label_90">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;ATIS: H or&lt;br/&gt;ATIS_D: J, _A: X or&lt;br/&gt;ATIS: ?&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="14" column="0">
-                    <widget class="QLabel" name="label_117">
-                     <property name="text">
-                      <string>{pdc}</string>
-                     </property>
-                     <property name="textInteractionFlags">
-                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="11" column="0">
-                    <widget class="QLabel" name="label_111">
-                     <property name="text">
-                      <string>{name}</string>
+                      <string>Short hand for
+{#arrs}{arrs}{/arrs}{^arrs}-{/arrs}/
+{#deps}{deps}{/deps}{^deps}-{/deps}</string>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -1975,80 +2035,111 @@ infos.</string>
                      </property>
                     </widget>
                    </item>
-                   <item row="13" column="0">
-                    <widget class="QLabel" name="label_108">
+                   <item row="11" column="0">
+                    <widget class="QLabel" name="label_97">
                      <property name="text">
-                      <string>{frequencies}</string>
+                      <string>{country}</string>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="7" column="2">
-                    <widget class="QLabel" name="label_85">
+                   <item row="8" column="0">
+                    <widget class="QLabel" name="label_182">
                      <property name="text">
-                      <string>active controllers
-at this aerodrome
-(by type)</string>
+                      <string>{del}, {gnd}, {twr}, {app}</string>
                      </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="label_169">
-                     <property name="text">
-                      <string>{&gt; traffic}</string>
+                     <property name="wordWrap">
+                      <bool>true</bool>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="3" column="0">
-                    <widget class="QLabel" name="label_170">
+                   <item row="5" column="2">
+                    <widget class="QLabel" name="label_99">
                      <property name="text">
-                      <string>{&gt; trafficArrows}</string>
+                      <string>arrivals / departures
+(applies the traffic 
+visualization filter 
+if selected)</string>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="2">
-                    <widget class="QLabel" name="label_171">
+                   <item row="0" column="3">
+                    <widget class="QLabel" name="label_82">
+                     <property name="font">
+                      <font>
+                       <bold>true</bold>
+                      </font>
+                     </property>
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;example output&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="10" column="0">
+                    <widget class="QLabel" name="label_87">
+                     <property name="text">
+                      <string>{atis}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="10" column="2">
+                    <widget class="QLabel" name="label_88">
+                     <property name="text">
+                      <string>ATIS: letter or ? 
+if ATIS online but 
+letter unknown</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="18" column="3">
+                    <widget class="QLabel" name="label_161">
+                     <property name="text">
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;twitch/username&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="9" column="0">
+                    <widget class="QLabel" name="label_185">
+                     <property name="text">
+                      <string>{&gt; controllerSymbols}</string>
+                     </property>
+                     <property name="textInteractionFlags">
+                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="9" column="2">
+                    <widget class="QLabel" name="label_186">
                      <property name="text">
                       <string>Short hand for
-{#arrs}{arrs}{/arrs}{^arrs}-{/arrs}/
-{#deps}{deps}{/deps}{^deps}-{/deps}</string>
+{#app}📡{/app}{#twr}🛨{/twr}{#gnd}⛕{/gnd}{#del}🗈{/del}</string>
+                     </property>
+                     <property name="wordWrap">
+                      <bool>true</bool>
                      </property>
                      <property name="textInteractionFlags">
                       <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
                      </property>
                     </widget>
                    </item>
-                   <item row="2" column="3">
-                    <widget class="QLabel" name="label_175">
+                   <item row="9" column="3">
+                    <widget class="QLabel" name="label_187">
                      <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;5/16 or&lt;br/&gt;-/5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="2">
-                    <widget class="QLabel" name="label_176">
-                     <property name="text">
-                      <string>Short hand for
-{#arrs}{arrs}↘{/arrs}
-{#deps}↗{deps}{/deps}</string>
-                     </property>
-                     <property name="textInteractionFlags">
-                      <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="3" column="3">
-                    <widget class="QLabel" name="label_177">
-                     <property name="text">
-                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;5↘↗16 or&lt;br/&gt;↗5&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;📡🛨⛕🗈&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                      </property>
                     </widget>
                    </item>

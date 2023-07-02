@@ -274,8 +274,8 @@ QString Renderer::render(const QString& _template, int startPos, int endPos, Con
 
 	while (m_errorPos == -1) {
 		Tag tag = findTag(_template, lastTagEnd, endPos);
-		if (tag.type == Tag::Null) {
-			output += QStringView(_template).mid(lastTagEnd, endPos - lastTagEnd);
+        if (tag.type == Tag::Null) {
+            output += QStringView(_template).mid(lastTagEnd, qMax(0, endPos - lastTagEnd));
 			break;
 		}
 		output += QStringView(_template).mid(lastTagEnd, tag.start - lastTagEnd);
