@@ -95,8 +95,8 @@ QVariant AirportDetailsDeparturesModel::data(const QModelIndex &index, int role)
                 return p->waypoints().isEmpty()? "": p->waypoints().constFirst();
             case 6:
                 if (p->flightStatus() == Pilot::PREFILED || p->flightStatus() == Pilot::BOARDING || p->flightStatus() == Pilot::GROUND_DEP) {
-                    return "PTD " + p->etd().toString("HH:mm"); // p->planDeptime.mid(0, p->planDeptime.length() - 2) +
-                                                                // ":" + p->planDeptime.right(2);
+                    return "SOBT " + p->etd().toString("HH:mm"); // p->planDeptime.mid(0, p->planDeptime.length() - 2) +
+                                                                 // ":" + p->planDeptime.right(2);
                 } else {
                     return QString("%1 NM").arg(p->distanceFromDeparture() < 3? 0: (int) p->distanceFromDeparture());
                 }
