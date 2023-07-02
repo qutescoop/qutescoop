@@ -18,6 +18,9 @@ namespace MustacheQs::Airport {
         if (name == "trafficArrows") {
             return "{#arrs}{arrs}↘{/arrs}{#deps}↗{deps}{/deps}";
         }
+        if (name == "controllerSymbols") {
+            return "{#app}📡{/app}{#twr}🛨{/twr}{#gnd}⛕{/gnd}{#del}🗈{/del}";
+        }
         return QString("[> %1]").arg(name);
     }
 
@@ -43,6 +46,30 @@ namespace MustacheQs::Airport {
         }
         if (key == "allDeps") {
             return QString::number(m_o->departures.count());
+        }
+        if (key == "del") {
+            if (m_o->dels.isEmpty()) {
+                return "";
+            }
+            return "D";
+        }
+        if (key == "gnd") {
+            if (m_o->gnds.isEmpty()) {
+                return "";
+            }
+            return "G";
+        }
+        if (key == "twr") {
+            if (m_o->twrs.isEmpty()) {
+                return "";
+            }
+            return "T";
+        }
+        if (key == "app") {
+            if (m_o->appDeps.isEmpty()) {
+                return "";
+            }
+            return "A";
         }
         if (key == "controllers") {
             return m_o->controllersString();
