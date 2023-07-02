@@ -379,7 +379,7 @@ int Pilot::planTasInt() const { // defuck flightplanned TAS
     return planTAS.toInt();
 }
 
-QDateTime Pilot::etd() const { // Estimated Time of Departure
+QDateTime Pilot::etd() const { // Estimated Time of Departure - but according to the web form SOBT
     QString planDeptimeFixed = planDeptime;
 
     if (planDeptime.length() == 3) {
