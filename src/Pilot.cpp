@@ -141,15 +141,18 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     Airport* dep = depAirport();
     Airport* dst = destAirport();
 
+    if (qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) {
+        return PREFILED;
+    }
+
     // flying?
     const bool flying = groundspeed > 50 || altitude > 9000;
 
     if (dep == 0 || dst == 0) {
         if (flying) {
             return EN_ROUTE;
-        } else {
-            return BUSH;
         }
+        return BUSH;
     }
 
     const double totalDist = NavData::distance(dep->lat, dep->lon, dst->lat, dst->lon);
@@ -188,9 +191,6 @@ Pilot::FlightStatus Pilot::flightStatus() const {
     }
     if (!flying && groundspeed > 0 && arriving) {
         return GROUND_ARR;
-    }
-    if (!flying && qFuzzyIsNull(lat) && qFuzzyIsNull(lon)) { // must be before BLOCKED
-        return PREFILED;
     }
     if (!flying && groundspeed == 0 && arriving) {
         return BLOCKED;
