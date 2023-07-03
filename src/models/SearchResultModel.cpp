@@ -79,7 +79,7 @@ QVariant SearchResultModel::headerData(int section, enum Qt::Orientation orienta
     return QString("%1 Result%2").arg(_content.size()).arg(_content.size() == 1? "": "s");
 }
 
-void SearchResultModel::setSearchResults(const QList<MapObject*> &searchResult) {
+void SearchResultModel::setSearchResults(const QList<MapObject*> searchResult) {
     beginResetModel();
     _content = searchResult;
     endResetModel();

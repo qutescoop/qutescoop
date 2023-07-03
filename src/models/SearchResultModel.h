@@ -22,7 +22,7 @@ class SearchResultModel
 
         bool m_isSearching = false;
     public slots:
-        void setSearchResults(const QList<MapObject*>& searchResult);
+        void setSearchResults(const QList<MapObject*> searchResult);
         void modelClicked(const QModelIndex& index);
 
     private:

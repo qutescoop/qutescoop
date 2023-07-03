@@ -406,7 +406,7 @@ void Window::openListClients() {
 void Window::on_searchEdit_textChanged(const QString& text) {
     if (text.length() < 1) {
         _timerSearch.stop();
-        _modelSearchResult.setSearchResults(QList<MapObject*>());
+        _modelSearchResult.setSearchResults({});
         searchResult->reset();
         return;
     }
