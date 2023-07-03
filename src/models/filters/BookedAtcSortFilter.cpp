@@ -3,8 +3,8 @@
 bool BookedAtcSortFilter::filterAcceptsRow(int source_row, const QModelIndex& source_parent) const {
     if (this->_from.isValid() && this->_to.isValid()) {
         if (sourceModel()->index(source_row, 0, source_parent).isValid()) {
-            QDateTime starts = sourceModel()->index(source_row, 4, source_parent).data(Qt::EditRole).toDateTime().toUTC();
-            QDateTime ends = sourceModel()->index(source_row, 5, source_parent).data(Qt::EditRole).toDateTime().toUTC();
+            QDateTime starts = sourceModel()->index(source_row, 4, source_parent).data(Qt::UserRole).toDateTime().toUTC();
+            QDateTime ends = sourceModel()->index(source_row, 5, source_parent).data(Qt::UserRole).toDateTime().toUTC();
             if (
                 (_to == _from && _from <= ends) // _to == _from means for: ever
                 || (_from <= starts && _to >= starts)
@@ -21,8 +21,8 @@ bool BookedAtcSortFilter::filterAcceptsRow(int source_row, const QModelIndex& so
 }
 
 bool BookedAtcSortFilter::lessThan(const QModelIndex &left, const QModelIndex &right) const {
-    auto leftData = sourceModel()->data(left, Qt::EditRole);
-    auto rightData = sourceModel()->data(right, Qt::EditRole);
+    auto leftData = sourceModel()->data(left, Qt::UserRole);
+    auto rightData = sourceModel()->data(right, Qt::UserRole);
 
     if (leftData.userType() == QMetaType::QDateTime) {
         return leftData.toDateTime() < rightData.toDateTime();
