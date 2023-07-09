@@ -434,6 +434,7 @@ Whazzups (replay)</string>
     <addaction name="actionShowRoutes"/>
     <addaction name="actionShowImmediateRoutes"/>
     <addaction name="actionShowWaypoints"/>
+    <addaction name="actionHideLabels"/>
     <addaction name="separator"/>
     <addaction name="actionOpenStaticSectorsDialog"/>
    </widget>
@@ -718,6 +719,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F1</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
    <property name="autoRepeat">
     <bool>false</bool>
    </property>
@@ -733,6 +737,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F5</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
    <property name="autoRepeat">
     <bool>false</bool>
    </property>
@@ -747,6 +754,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Shift+F1</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -766,6 +776,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F3</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
    <property name="autoRepeat">
     <bool>false</bool>
    </property>
@@ -783,6 +796,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F11</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
    <property name="autoRepeat">
     <bool>false</bool>
@@ -802,6 +818,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F4</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionZoomIn">
    <property name="icon">
@@ -813,6 +832,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl++</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionZoomOut">
@@ -826,6 +848,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Ctrl+-</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition1">
    <property name="text">
@@ -834,6 +859,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Ctrl+1</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionHideAllWindows">
    <property name="text">
@@ -841,6 +869,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionShowFriendsDock">
@@ -854,6 +885,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F2</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionPlanFlight">
    <property name="icon">
@@ -866,6 +900,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F9</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionBookedAtc">
    <property name="icon">
@@ -877,6 +914,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F8</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionShowInactiveAirports">
@@ -892,6 +932,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Shift+F4</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionPredict">
@@ -911,6 +954,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F8</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRecallMapPosition1">
    <property name="text">
@@ -922,6 +968,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+1</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition2">
    <property name="text">
@@ -929,6 +978,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+2</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionRecallMapPosition2">
@@ -938,6 +990,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+2</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition3">
    <property name="text">
@@ -945,6 +1000,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+3</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionRecallMapPosition3">
@@ -954,6 +1012,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+3</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition4">
    <property name="text">
@@ -961,6 +1022,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+4</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionRecallMapPosition4">
@@ -970,6 +1034,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+4</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition5">
    <property name="text">
@@ -977,6 +1044,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+5</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionRememberMapPosition6">
@@ -986,6 +1056,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Ctrl+6</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition7">
    <property name="text">
@@ -993,6 +1066,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+7</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionRecallMapPosition5">
@@ -1002,6 +1078,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+5</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRecallMapPosition6">
    <property name="text">
@@ -1010,6 +1089,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+6</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRecallMapPosition7">
    <property name="text">
@@ -1017,6 +1099,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Alt+7</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionMoveLeft">
@@ -1030,6 +1115,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+Left</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionMoveRight">
    <property name="icon">
@@ -1041,6 +1129,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Alt+Right</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionMoveUp">
@@ -1054,6 +1145,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+Up</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionMoveDown">
    <property name="icon">
@@ -1066,6 +1160,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Alt+Down</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionListClients">
    <property name="text">
@@ -1073,6 +1170,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F5</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionShowRoutes">
@@ -1092,6 +1192,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F6</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionZoomReset">
    <property name="icon">
@@ -1104,6 +1207,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Ctrl+0</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionShowWaypoints">
    <property name="checkable">
@@ -1114,6 +1220,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Shift+F6</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionHighlight_Friends">
@@ -1133,6 +1242,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Ctrl+F2</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionOpenStaticSectorsDialog">
    <property name="icon">
@@ -1148,6 +1260,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>F10</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRememberMapPosition9">
    <property name="text">
@@ -1156,6 +1271,9 @@ Whazzups (replay)</string>
    <property name="shortcut">
     <string>Ctrl+9</string>
    </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
   </action>
   <action name="actionRecallMapPosition9">
    <property name="text">
@@ -1163,6 +1281,9 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Alt+9</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
   <action name="actionShowImmediateRoutes">
@@ -1178,6 +1299,23 @@ Whazzups (replay)</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F6</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
+   </property>
+  </action>
+  <action name="actionHideLabels">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>&amp;Hide labels</string>
+   </property>
+   <property name="shortcut">
+    <string>Shift+F7</string>
+   </property>
+   <property name="shortcutContext">
+    <enum>Qt::ApplicationShortcut</enum>
    </property>
   </action>
  </widget>

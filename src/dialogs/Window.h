@@ -23,6 +23,7 @@ class Window
     private slots:
         void actionShowRoutes_triggered(bool checked, bool showStatus = true);
         void actionShowImmediateRoutes_triggered(bool checked, bool showStatus = true);
+        void actionHideLabels_triggered(bool checked, bool showStatus = true);
         void showInactiveAirports(bool value);
         void on_actionShowWaypoints_triggered(bool checked);
         void on_actionHighlight_Friends_triggered(bool checked);

@@ -646,6 +646,14 @@ void Settings::setHoverDebounceMs(int value) {
     instance()->setValue("labelHover/debounceMs", value);
 }
 
+bool Settings::onlyShowHoveredLabels() {
+    return instance()->value("mapUi/onlyShowHoveredLabels", false).toBool();
+}
+
+void Settings::setOnlyShowHoveredLabels(const bool v) {
+    instance()->setValue("mapUi/onlyShowHoveredLabels", v);
+}
+
 QColor Settings::coastLineColor() {
     return instance()->value("earthSpace/coastLineColor", QColor::fromRgb(102, 85, 67, 200)).value<QColor>();
 }

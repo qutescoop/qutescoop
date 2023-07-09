@@ -1988,6 +1988,10 @@ void GLWidget::renderLabels(
             continue;
         }
 
+        if (Settings::onlyShowHoveredLabels() && !isHoverRenderPass) {
+            continue;
+        }
+
         FontRectangle useRect;
         // look if we have previously drawn that label
         foreach (const auto &fr, m_fontRectangles) {

@@ -102,6 +102,17 @@ Window::Window(QWidget* parent)
     );
     actionShowImmediateRoutes_triggered(Settings::onlyShowImmediateRoutePart(), false);
 
+    actionHideLabels->setChecked(Settings::onlyShowHoveredLabels());
+    connect(
+        actionHideLabels,
+        &QAction::toggled,
+        this,
+        [this](const bool &newValue) {
+            actionHideLabels_triggered(newValue);
+        }
+    );
+    actionHideLabels_triggered(Settings::onlyShowHoveredLabels(), false);
+
     Whazzup* whazzup = Whazzup::instance();
     connect(actionDownload, &QAction::triggered, whazzup, &Whazzup::downloadJson3);
 
@@ -935,6 +946,15 @@ void Window::actionShowImmediateRoutes_triggered(bool checked, bool showStatus) 
     }
 
     mapScreen->glWidget->invalidatePilots();
+}
+
+void Window::actionHideLabels_triggered(bool checked, bool showStatus) {
+    Settings::setOnlyShowHoveredLabels(checked);
+    if (showStatus) {
+        GuiMessages::message(QString("toggled labels [%1]").arg(checked? "hidden": "shown"), "showHoveredLabelsToggle");
+    }
+
+    mapScreen->glWidget->update();
 }
 
 void Window::showInactiveAirports(bool checked) {
