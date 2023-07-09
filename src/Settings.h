@@ -217,6 +217,9 @@ class Settings {
         static int hoverDebounceMs();
         static void setHoverDebounceMs(int value);
 
+        static bool onlyShowHoveredLabels();
+        static void setOnlyShowHoveredLabels(const bool value);
+
         // sectors
 
         static QColor firBorderLineColor();
