@@ -234,7 +234,7 @@ void Settings::setDownloadPeriodically(bool value) {
 }
 
 bool Settings::downloadBookings() {
-    return instance()->value("download/downloadBookings", downloadNetwork() == 1).toBool();
+    return instance()->value("download/downloadBookings", true).toBool();
 }
 
 void Settings::setDownloadBookings(bool value) {
