@@ -1,5 +1,5 @@
 airlines.dat%%330
-airports.dat%%340
+airports.dat%%341
 coastline.dat%%118
 controllerAirportsMapping.dat%%8
 countries.dat%%120
