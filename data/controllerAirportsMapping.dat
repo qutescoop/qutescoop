@@ -73,6 +73,7 @@ SDF:APP DEP:KLOU
 ; Controller logins whose names do NOT refer to an airport in airports.dat:
 ;---------------------------------------------------------------------------------------------
 
+IST:APP DEP:LTFM
 LIMM:APP DEP:LIMC LIML LIME LSZA
 LSFA:APP DEP:LSZR EDNY EDTM
 LIRR:APP DEP:LIRF LIRA LIRU
