@@ -153,9 +153,15 @@ WhazzupData::WhazzupData(const QDateTime predictTime, const WhazzupData &data)
     predictionBasedOnTime = QDateTime(data.whazzupTime);
     predictionBasedOnBookingsTime = QDateTime(data.bookingsTime);
 
-    ratings = data.ratings;
-    pilotRatings = data.pilotRatings;
-    militaryRatings = data.militaryRatings;
+    if (!data.ratings.empty()) {
+        ratings = data.ratings;
+    }
+    if (!data.pilotRatings.empty()) {
+        pilotRatings = data.pilotRatings;
+    }
+    if (!data.militaryRatings.empty()) {
+        militaryRatings = data.militaryRatings;
+    }
 
     _dataType = data._dataType;
     // so now lets fake some controllers
@@ -332,9 +338,15 @@ void WhazzupData::assignFrom(const WhazzupData &data) {
         return;
     }
 
-    ratings = data.ratings;
-    pilotRatings = data.pilotRatings;
-    militaryRatings = data.militaryRatings;
+    if (!data.ratings.empty()) {
+        ratings = data.ratings;
+    }
+    if (!data.pilotRatings.empty()) {
+        pilotRatings = data.pilotRatings;
+    }
+    if (!data.militaryRatings.empty()) {
+        militaryRatings = data.militaryRatings;
+    }
 
     if (data._dataType == WHAZZUP || data._dataType == UNIFIED) {
         if (_dataType == ATCBOOKINGS) {
@@ -458,9 +470,15 @@ void WhazzupData::updateFrom(const WhazzupData &data) {
         return;
     }
 
-    ratings = data.ratings;
-    pilotRatings = data.pilotRatings;
-    militaryRatings = data.militaryRatings;
+    if (!data.ratings.empty()) {
+        ratings = data.ratings;
+    }
+    if (!data.pilotRatings.empty()) {
+        pilotRatings = data.pilotRatings;
+    }
+    if (!data.militaryRatings.empty()) {
+        militaryRatings = data.militaryRatings;
+    }
 
     if (data._dataType == WHAZZUP || data._dataType == UNIFIED) {
         if (_dataType == ATCBOOKINGS) {
