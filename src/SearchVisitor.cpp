@@ -46,7 +46,8 @@ QList<MapObject*> SearchVisitor::result() const {
         result.begin(),
         result.end(),
         [](const MapObject* a, const MapObject* b) {
-            return a->toolTip() < b->mapLabel();
+            // we had a crash here
+            return a->mapLabel() < b->mapLabel();
         }
     );
 
