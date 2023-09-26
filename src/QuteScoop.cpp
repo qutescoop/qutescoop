@@ -66,8 +66,8 @@ int main(int argc, char* argv[]) {
     qInstallMessageHandler(messageHandler);
 
     // stdout
-    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << '\n';
-    QTextStream(stdout) << "Using settings from " << Settings::fileName() << '\n';
+    QTextStream(stdout) << "Log output can be found in " << Settings::dataDirectory("log.txt") << Qt::endl;
+    QTextStream(stdout) << "Using settings from " << Settings::fileName() << Qt::endl;
 
     // some initial debug logging
     qDebug().noquote() << "QuteScoop" << Platform::version();
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
         const auto depString = parser.value(routeOption);
         QStringList route = parser.positionalArguments();
         route.prepend(depString);
-        QTextStream(stdout) << "\n# Flightplan route:\n" << route.join(" ") << Qt::endl;
+        QTextStream(stdout) << "" << Qt::endl << "# Flightplan route:" << Qt::endl << route.join(" ") << Qt::endl;
 
         const auto dep = NavData::instance()->airports.value(depString, 0);
         if (dep == 0) {
@@ -119,12 +119,26 @@ int main(int argc, char* argv[]) {
 
         const auto waypoints = Airac::instance()->resolveFlightplan(route, dep->lat, dep->lon, Airac::ifrMaxWaypointInterval);
 
-        QTextStream(stdout) << "\n# Waypoints:" << Qt::endl;
+        QTextStream(stdout) << "" << Qt::endl << "# Waypoints:" << Qt::endl;
+        Waypoint* _prevW = nullptr;
+        float distAccum = 0;
         foreach (const auto &w, waypoints) {
-            QTextStream(stdout) << w->id
-                                << "\n"
-                                << "\t" << "location: "
-                                << QString("%1 (%2)").arg(NavData::toEurocontrol(w->lat, w->lon), QString("%1/%2").arg(w->lat).arg(w->lon))
+            QString _prevDetails;
+            if (_prevW != nullptr) {
+                float _dist = NavData::distance(w->lat, w->lon, _prevW->lat, _prevW->lon);
+                _prevDetails = QString("→ %1°, %2NM")
+                    .arg(NavData::courseTo(w->lat, w->lon, _prevW->lat, _prevW->lon), 5, 'f', 1, '0')
+                    .arg(_dist, 0, 'f', 1)
+                ;
+                distAccum += _dist;
+            }
+            QTextStream(stdout) << _prevDetails
+                                << Qt::endl
+                                << w->id
+                                << Qt::endl
+                                << QString("   location: %1 (%2)").arg(NavData::toEurocontrol(w->lat, w->lon), QString("%1/%2").arg(w->lat).arg(w->lon))
+                                << Qt::endl
+                                << QString("   accum: %1NM").arg(distAccum, 0, 'f', 1)
                                 << Qt::endl
             ;
             QStringList airways;
@@ -138,6 +152,7 @@ int main(int argc, char* argv[]) {
             if (!airways.isEmpty()) {
                 QTextStream(stdout) << "\tairways: " << airways.join(", ") << Qt::endl;
             }
+            _prevW = w;
         }
 
         return 0;
