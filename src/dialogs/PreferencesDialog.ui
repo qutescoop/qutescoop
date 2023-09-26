@@ -1623,7 +1623,7 @@ TWR: 133.375</string>
             <property name="geometry">
              <rect>
               <x>0</x>
-              <y>-253</y>
+              <y>0</y>
               <width>527</width>
               <height>877</height>
              </rect>
@@ -4975,7 +4975,7 @@ info.</string>
             <item>
              <widget class="QLabel" name="label_41">
               <property name="text">
-               <string>highlight circle</string>
+               <string>highlight color</string>
               </property>
              </widget>
             </item>
@@ -4986,25 +4986,6 @@ info.</string>
               </property>
               <property name="flat">
                <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QDoubleSpinBox" name="sb_highlightFriendsLineWidth">
-              <property name="specialValueText">
-               <string>off</string>
-              </property>
-              <property name="suffix">
-               <string>px</string>
-              </property>
-              <property name="decimals">
-               <number>1</number>
-              </property>
-              <property name="maximum">
-               <double>10.000000000000000</double>
-              </property>
-              <property name="singleStep">
-               <double>0.100000000000000</double>
               </property>
              </widget>
             </item>
@@ -5024,21 +5005,21 @@ info.</string>
            </layout>
           </item>
           <item row="1" column="0">
-           <layout class="QHBoxLayout" name="horizontalLayout_15">
+           <layout class="QGridLayout" name="gridLayout_34">
             <property name="topMargin">
              <number>10</number>
             </property>
             <property name="bottomMargin">
              <number>10</number>
             </property>
-            <item>
+            <item row="1" column="0">
              <widget class="QCheckBox" name="cb_Animation">
               <property name="text">
                <string>animated</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="1" column="2">
              <spacer name="horizontalSpacer_24">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -5050,6 +5031,32 @@ info.</string>
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_188">
+              <property name="text">
+               <string>circle width (when enabled from friends list)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QDoubleSpinBox" name="sb_highlightFriendsLineWidth">
+              <property name="specialValueText">
+               <string>off</string>
+              </property>
+              <property name="suffix">
+               <string>px</string>
+              </property>
+              <property name="decimals">
+               <number>1</number>
+              </property>
+              <property name="maximum">
+               <double>10.000000000000000</double>
+              </property>
+              <property name="singleStep">
+               <double>0.100000000000000</double>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
