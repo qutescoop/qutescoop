@@ -174,6 +174,7 @@ GLuint Sector::glPolygonHighlighted() {
 
 GLuint Sector::glBorderLineHighlighted() {
     if (glIsList(_borderlineHighlighted) != GL_TRUE) {
+        // crashes here?!
         _borderlineHighlighted = glGenLists(1);
         glNewList(_borderlineHighlighted, GL_COMPILE);
         glLineWidth(Settings::firHighlightedBorderLineStrength());
