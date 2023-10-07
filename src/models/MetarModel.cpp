@@ -159,15 +159,18 @@ void MetarModel::downloadNextFromQueue() {
         return; // we will be called via downloaded() later
     }
 
-    _metarReply = Net::g(_downloadQueue.keys().constFirst());
+    _metarReply = Net::g(_downloadQueue.constBegin().key());
+    connect(_metarReply, &QNetworkReply::redirected, this, &MetarModel::metarReplyRedirected);
     connect(_metarReply, &QNetworkReply::finished, this, &MetarModel::metarReplyFinished);
 }
 
 void MetarModel::metarReplyFinished() {
-    qDebug() << _metarReply->url();
     disconnect(_metarReply, &QNetworkReply::finished, this, &MetarModel::metarReplyFinished);
 
-    if (_metarReply->error() == QNetworkReply::NoError) {
+    if (_metarReply->error() != QNetworkReply::NoError) {
+        qWarning() << "error during fetch:" << _metarReply->url();
+    } else {
+        qDebug() << _metarReply->url() << _metarReply->bytesAvailable() << "bytes";
         QString line = _metarReply->readAll().trimmed();
 
         Airport* airport = _downloadQueue.take(_metarReply->url());
@@ -185,7 +188,15 @@ void MetarModel::metarReplyFinished() {
     downloadNextFromQueue();
 }
 
+void MetarModel::metarReplyRedirected(const QUrl &url) {
+    qDebug() << url;
+    QUrl oldUrl = _downloadQueue.constBegin().key();
+    _downloadQueue.insert(url, _downloadQueue.constBegin().value());
+    _downloadQueue.remove(oldUrl);
+}
+
 void MetarModel::gotMetarFor(Airport* airport) {
+    qDebug() << airport->id << _airportList;
     if (_airportList.contains(airport)) {
         beginResetModel();
         if (!_metarList.contains(airport)) {

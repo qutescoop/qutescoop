@@ -32,6 +32,7 @@ class MetarModel
 
     private slots:
         void metarReplyFinished();
+        void metarReplyRedirected(const QUrl&);
         void gotMetarFor(Airport* airport);
 
     private:

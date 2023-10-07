@@ -12,11 +12,11 @@ class Net
         Net();
 
         // convenience functions: Net::g() vs. Net::instance()->get()
-        static QNetworkReply* h(const QNetworkRequest &request);
+        static QNetworkReply* h(QNetworkRequest &request);
         static QNetworkReply* g(const QUrl &url);
-        static QNetworkReply* g(const QNetworkRequest &request);
-        static QNetworkReply* p(const QNetworkRequest &request, QIODevice* data);
-        static QNetworkReply* p(const QNetworkRequest &request, const QByteArray &data);
+        static QNetworkReply* g(QNetworkRequest &request);
+        static QNetworkReply* p(QNetworkRequest &request, QIODevice* data);
+        static QNetworkReply* p(QNetworkRequest &request, const QByteArray &data);
 };
 
 #endif // NET_H
