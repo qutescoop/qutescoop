@@ -2160,7 +2160,7 @@ void GLWidget::renderLabels(
                         qglColor(shadowColor);
                         renderText(
                             useRect.rect.left() + (useRect.rect.width() - firstLineRect.width()) / 2 + 1,
-                            useRect.rect.top() + firstLineRect.top() + firstLineOffset + 1,
+                            useRect.rect.top() + backdropMargin.top() + firstLineRect.top() + firstLineOffset + 1,
                             firstLine,
                             font
                         );
@@ -2170,7 +2170,7 @@ void GLWidget::renderLabels(
                         for (int iLine = 0; iLine < secondaryLines.size(); iLine++) {
                             renderText(
                                 useRect.rect.left() + (useRect.rect.width() - secondaryRects[iLine].width()) / 2 + 1,
-                                useRect.rect.top() + secondaryRects[iLine].top() + secondaryLinesOffset + 1,
+                                useRect.rect.top() + backdropMargin.top() + secondaryRects[iLine].top() + secondaryLinesOffset + 1,
                                 secondaryLines[iLine],
                                 secondaryFont
                             );
