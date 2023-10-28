@@ -1456,28 +1456,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
     double lat, lon;
     if (local2latLon(currentPos.x(), currentPos.y(), lat, lon)) {
         QSet<Controller*> _newHoveredControllers;
-        foreach (Controller* c, Whazzup::instance()->whazzupData().controllers.values()) {
-            if (c->sector != nullptr && c->sector->containsPoint(QPointF(lat, lon))) {
-                // we take the label now for sectors
-                //_newHoveredControllers.insert(c);
-            } else { // APP, TWR, GND, DEL
-                int maxDist_nm = -1;
-                if (c->isAppDep()) {
-                    maxDist_nm = Airport::symbologyAppRadius_nm;
-                } else if (c->isTwr()) {
-                    maxDist_nm = Airport::symbologyTwrRadius_nm;
-                } else if (c->isGnd()) {
-                    maxDist_nm = Airport::symbologyGndRadius_nm;
-                } else if (c->isDel()) {
-                    maxDist_nm = Airport::symbologyDelRadius_nm;
-                }
-                foreach (const auto _a, c->airports()) {
-                    if (NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
-                        _newHoveredControllers.insert(c);
-                    }
-                }
-            }
-        }
         // copy from hovered map labels
         foreach (const auto &o, m_newHoveredObjects) {
             auto* c = dynamic_cast<Controller*>(o);
@@ -1485,6 +1463,32 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
                 _newHoveredControllers.insert(c);
             }
         }
+
+        // add sectors if not currently hovering a label
+        if (_newHoveredControllers.isEmpty()) {
+            foreach (Controller* c, Whazzup::instance()->whazzupData().controllers.values()) {
+                if (c->sector != nullptr && c->sector->containsPoint(QPointF(lat, lon))) {
+                    _newHoveredControllers.insert(c);
+                } else { // APP, TWR, GND, DEL
+                    int maxDist_nm = -1;
+                    if (c->isAppDep()) {
+                        maxDist_nm = Airport::symbologyAppRadius_nm;
+                    } else if (c->isTwr()) {
+                        maxDist_nm = Airport::symbologyTwrRadius_nm;
+                    } else if (c->isGnd()) {
+                        maxDist_nm = Airport::symbologyGndRadius_nm;
+                    } else if (c->isDel()) {
+                        maxDist_nm = Airport::symbologyDelRadius_nm;
+                    }
+                    foreach (const auto _a, c->airports()) {
+                        if (NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
+                            _newHoveredControllers.insert(c);
+                        }
+                    }
+                }
+            }
+        }
+
 
         if (_newHoveredControllers != m_hoveredControllers) {
             m_hoveredControllers = _newHoveredControllers;
