@@ -242,14 +242,16 @@ ENSV:Stavanger::::145
 EPWW:Warsaw::::146
 ESMM:Sweden Malmo::::147
 ESOS:Sweden::::148
-EURE:Eurocontrol East::::524
+EUC-EN:EuroEast North::::5241
+EUC-ES:EuroEast South::::5242
 EURI:Eurocontrol Islands::::5537
-EURM-W:Maastricht West::::5211
-EURM-E:Maastricht East::::5212
+EUC-MW:Maastricht West::::5211
+EUC-ME:Maastricht East::::5212
 EURN:Eurocontrol North::::525
-EURS:Eurocontrol South::::523
-EURW-N:Eurocontrol West North::::5221
-EURW-S:Eurocontrol West South::::5222
+EUC-SW:EuroSouth West::::5231
+EUC-SE:EuroSouth East::::5232
+EUC-WN:Eurocontrol West North::::5221
+EUC-WS:Eurocontrol West South::::5222
 EVRR:Riga::::150
 EYVL:Vilnius::::151
 FACA:Cape Town::::6741
