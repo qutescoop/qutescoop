@@ -464,11 +464,8 @@ NTTT:Tahiti Radio::::290
 NSFA:Faleolo::::291
 NVVV:Port Vila::::2892
 NWWN:Noumea::::5724
-NY:New York::::266
-NY_E:New York Radio::::265
-NY_E_CTR:New York::::266
-ZWY:New York Radio::::265
-NY_FSS:New York Radio::::265
+NY:New York::::266:CTR
+NY:New York Radio::::265:FSS
 NZAA:Auckland Control::::1040
 NZCH-B:Bay Approach::::1039
 NZCH-KI:Christchurch CTL::::1038
