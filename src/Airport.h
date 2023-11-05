@@ -68,7 +68,7 @@ class Airport
         void appGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const;
         void twrGl(const QColor &middleColor, const QColor &marginColor, const QColor &borderColor, const GLfloat &borderLineWidth) const;
 
-        GLuint _appDisplayList, _twrDisplayList, _gndDisplayList, _delDisplayList;
+        GLuint _appDisplayList = 0, _twrDisplayList = 0, _gndDisplayList = 0, _delDisplayList = 0;
 };
 
 #endif

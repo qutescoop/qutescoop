@@ -24,16 +24,16 @@ Sector::Sector(const QStringList &fields, const int debugControllerLineNumber, c
 }
 
 Sector::~Sector() {
-    if (glIsList(_polygon) == GL_TRUE) {
+    if (_polygon != 0 && glIsList(_polygon) == GL_TRUE) {
         glDeleteLists(_polygon, 1);
     }
-    if (glIsList(_borderline) == GL_TRUE) {
+    if (_borderline != 0 && glIsList(_borderline) == GL_TRUE) {
         glDeleteLists(_borderline, 1);
     }
-    if (glIsList(_polygonHighlighted) == GL_TRUE) {
+    if (_polygonHighlighted != 0 && glIsList(_polygonHighlighted) == GL_TRUE) {
         glDeleteLists(_polygonHighlighted, 1);
     }
-    if (glIsList(_borderlineHighlighted) == GL_TRUE) {
+    if (_borderlineHighlighted != 0 && glIsList(_borderlineHighlighted) == GL_TRUE) {
         glDeleteLists(_borderlineHighlighted, 1);
     }
 }
@@ -132,61 +132,73 @@ int Sector::debugSectorLineNumber() {
 }
 
 GLuint Sector::glPolygon() {
-    if (glIsList(_polygon) != GL_TRUE) {
-        _polygon = glGenLists(1);
-        glNewList(_polygon, GL_COMPILE);
-        QColor color = Settings::firFillColor();
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        Tessellator().tessellate(m_points);
-        glEndList();
+    if (_polygon != 0 && glIsList(_polygon) == GL_TRUE) {
+        return _polygon;
     }
+
+    _polygon = glGenLists(1);
+    glNewList(_polygon, GL_COMPILE);
+    QColor color = Settings::firFillColor();
+    glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    Tessellator().tessellate(m_points);
+    glEndList();
+
     return _polygon;
 }
 
 GLuint Sector::glBorderLine() {
-    if (glIsList(_borderline) != GL_TRUE) {
-        _borderline = glGenLists(1);
-        glNewList(_borderline, GL_COMPILE);
-        glLineWidth(Settings::firBorderLineStrength());
-        glBegin(GL_LINE_LOOP);
-        QColor color = Settings::firBorderLineColor();
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        for (int i = 0; i < m_points.size(); i++) {
-            VERTEXhigh(m_points[i].first, m_points[i].second);
-        }
-        glEnd();
-        glEndList();
+    if (_borderline != 0 && glIsList(_borderline) == GL_TRUE) {
+        return _borderline;
     }
+
+    _borderline = glGenLists(1);
+    glNewList(_borderline, GL_COMPILE);
+    glLineWidth(Settings::firBorderLineStrength());
+    glBegin(GL_LINE_LOOP);
+    QColor color = Settings::firBorderLineColor();
+    glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    for (int i = 0; i < m_points.size(); i++) {
+        VERTEXhigh(m_points[i].first, m_points[i].second);
+    }
+    glEnd();
+    glEndList();
+
     return _borderline;
 }
 
 GLuint Sector::glPolygonHighlighted() {
-    if (glIsList(_polygonHighlighted) != GL_TRUE) {
-        _polygonHighlighted = glGenLists(1);
-        glNewList(_polygonHighlighted, GL_COMPILE);
-        QColor color = Settings::firHighlightedFillColor();
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        Tessellator().tessellate(m_points);
-        glEndList();
+    if (_polygonHighlighted != 0 && glIsList(_polygonHighlighted) == GL_TRUE) {
+        return _polygonHighlighted;
     }
+
+    _polygonHighlighted = glGenLists(1);
+    glNewList(_polygonHighlighted, GL_COMPILE);
+    QColor color = Settings::firHighlightedFillColor();
+    glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    Tessellator().tessellate(m_points);
+    glEndList();
+
     return _polygonHighlighted;
 }
 
 GLuint Sector::glBorderLineHighlighted() {
-    if (glIsList(_borderlineHighlighted) != GL_TRUE) {
-        // crashes here?!
-        _borderlineHighlighted = glGenLists(1);
-        glNewList(_borderlineHighlighted, GL_COMPILE);
-        glLineWidth(Settings::firHighlightedBorderLineStrength());
-        glBegin(GL_LINE_LOOP);
-        QColor color = Settings::firHighlightedBorderLineColor();
-        glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-        for (int i = 0; i < m_points.size(); i++) {
-            VERTEXhigh(m_points[i].first, m_points[i].second);
-        }
-        glEnd();
-        glEndList();
+    if (_borderlineHighlighted != 0 && glIsList(_borderlineHighlighted) == GL_TRUE) {
+        return _borderlineHighlighted;
     }
+
+    // crashes here?!
+    _borderlineHighlighted = glGenLists(1);
+    glNewList(_borderlineHighlighted, GL_COMPILE);
+    glLineWidth(Settings::firHighlightedBorderLineStrength());
+    glBegin(GL_LINE_LOOP);
+    QColor color = Settings::firHighlightedBorderLineColor();
+    glColor4f(color.redF(), color.greenF(), color.blueF(), color.alphaF());
+    for (int i = 0; i < m_points.size(); i++) {
+        VERTEXhigh(m_points[i].first, m_points[i].second);
+    }
+    glEnd();
+    glEndList();
+
     return _borderlineHighlighted;
 }
 
