@@ -95,7 +95,7 @@ QVariant AirportDetailsArrivalsModel::data(const QModelIndex &index, int role) c
             case 0:
                 return p->callsign;
             case 1:
-                return p->aircraftType();
+                return p->planAircraftShort;
             case 2:
                 return p->displayName();
             case 3:
