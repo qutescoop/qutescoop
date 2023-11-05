@@ -39,16 +39,16 @@ Airport::Airport(const QStringList& list, unsigned int debugLineNumber)
 Airport::~Airport() {
     MustacheQs::Renderer::teardownContext(this);
 
-    if (glIsList(_appDisplayList) == GL_TRUE) {
+    if (_appDisplayList != 0 && glIsList(_appDisplayList) == GL_TRUE) {
         glDeleteLists(_appDisplayList, 1);
     }
-    if (glIsList(_twrDisplayList) == GL_TRUE) {
+    if (_twrDisplayList != 0 && glIsList(_twrDisplayList) == GL_TRUE) {
         glDeleteLists(_twrDisplayList, 1);
     }
-    if (glIsList(_gndDisplayList) == GL_TRUE) {
+    if (_gndDisplayList != 0 && glIsList(_gndDisplayList) == GL_TRUE) {
         glDeleteLists(_gndDisplayList, 1);
     }
-    if (glIsList(_delDisplayList) == GL_TRUE) {
+    if (_delDisplayList != 0 && glIsList(_delDisplayList) == GL_TRUE) {
         glDeleteLists(_delDisplayList, 1);
     }
 }
@@ -103,7 +103,7 @@ void Airport::addController(Controller* c) {
 }
 
 const GLuint& Airport::appDisplayList() {
-    if (glIsList(_appDisplayList) == GL_TRUE) {
+    if (_appDisplayList != 0 && glIsList(_appDisplayList) == GL_TRUE) {
         return _appDisplayList;
     }
 
@@ -186,7 +186,7 @@ void Airport::appGl(const QColor &middleColor, const QColor &marginColor, const 
 
 
 const GLuint& Airport::twrDisplayList() {
-    if (glIsList(_twrDisplayList) == GL_TRUE) {
+    if (_twrDisplayList != 0 && glIsList(_twrDisplayList) == GL_TRUE) {
         return _twrDisplayList;
     }
 
@@ -345,7 +345,7 @@ const QString Airport::pdcString(const QString &prepend, bool alwaysWithIdentifi
 }
 
 const GLuint& Airport::gndDisplayList() {
-    if (glIsList(_gndDisplayList) == GL_TRUE) {
+    if (_gndDisplayList != 0 && glIsList(_gndDisplayList) == GL_TRUE) {
         return _gndDisplayList;
     }
 
@@ -398,7 +398,7 @@ const GLuint& Airport::gndDisplayList() {
 }
 
 const GLuint& Airport::delDisplayList() {
-    if (glIsList(_delDisplayList) == GL_TRUE) {
+    if (_delDisplayList != 0 && glIsList(_delDisplayList) == GL_TRUE) {
         return _delDisplayList;
     }
 
