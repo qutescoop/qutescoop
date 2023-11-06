@@ -42,7 +42,6 @@ class Pilot
         QString flightStatusString() const;
         QString flightStatusShortString() const;
         QString planFlighttypeString() const;
-        QString aircraftType() const;
         Airport* depAirport() const;
         Airport* destAirport() const;
         Airport* altAirport() const;
@@ -66,7 +65,7 @@ class Pilot
         QList<Waypoint*> routeWaypointsWithDepDest();
         void checkStatus(); // adjust label visibility from flight status
 
-        QString planAircraft, planAircraftFaa, planAircraftFull,
+        QString planAircraftShort, planAircraftFaa, planAircraftFull,
             planTAS, planDep, planAlt, planDest,
             planAltAirport, planRevision, planFlighttype, planDeptime,
             transponder, transponderAssigned, planRemarks, planRoute, planActtime,

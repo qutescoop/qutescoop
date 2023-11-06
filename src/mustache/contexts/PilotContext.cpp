@@ -75,7 +75,7 @@ namespace MustacheQs::Pilot {
             return m_o->planFlighttype != "I"? m_o->planFlighttype: "";
         }
         if (key == "type") {
-            return m_o->aircraftType();
+            return m_o->planAircraftShort;
         }
         if (key == "livestream") {
             return m_o->livestreamString();
