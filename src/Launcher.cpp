@@ -20,7 +20,7 @@ Launcher* Launcher::instance(bool createIfNoInstance) {
 
 Launcher::Launcher(QWidget* parent)
     : QWidget(parent,
-          Qt::FramelessWindowHint | Qt::WindowSystemMenuHint) {
+          Qt::SplashScreen | Qt::FramelessWindowHint | Qt::WindowSystemMenuHint) {
     _map = QPixmap(":/startup/logo").scaled(600, 600);
     resize(_map.width(), _map.height());
     move(
