@@ -91,7 +91,7 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
                     return p->destAirport()->id;
                 }
                 return "";
-            case 9: return p != 0? p->aircraftType(): "";
+            case 9: return p != 0? p->planAircraftShort: "";
             case 10: return p != 0? p->planFlighttypeString(): "";
             case 11:
                 if (p != 0 && p->depAirport() != 0 && p->destAirport() != 0) {
@@ -104,7 +104,7 @@ QVariant ListClientsDialogModel::data(const QModelIndex &index, int role) const 
                     );
                 }
                 return "";
-            case 12: return p != 0? p->planAircraft: "";
+            case 12: return p != 0? p->planAircraftShort: "";
             case 13: return p != 0? p->planRemarks: "";
             case 14: return co != 0? QString(co->atisMessage).replace("\n", " – "): "";
         }

@@ -10,6 +10,7 @@ AFRS:Africa South Control::::5106
 AGGG:Honiara::::195
 ANAU:Nauru::::196
 ANC:Anchorage::::474
+ANK:Ankara::::ANK
 ZAN:Anchorage Oceanic::::474
 ASEA:South East Asia Control::::4435
 ASEA_S:South East Asia Control::::4436
@@ -128,19 +129,20 @@ EDGG_S1G:Langen SIG::::1105
 EDGG_TAU:Langen TAU::::1105
 EDGG_T1U:Langen TAU::::1105
 EDGG:Langen COMPLETE::::1102
-EDMM:Munchen ALL::::1150
-EDMM_A:Muenchen ALB::::1154
-EDMM_E:Muenchen EGG::::1155
-EDMM_B:Muenchen BBG::::1156
-EDMM_G:Muenchen GER::::1160
-EDMM_O:Muenchen GER::::1160
-EDMM_M:Muenchen MEI::::1158
-EDMM_N:Muenchen NDG::::1153
-EDMM_R:Muenchen RDG::::1121
-EDMM_T:Muenchen TEG::::1163
-EDMM_U:Muenchen TRU::::1164
-EDMM_W:Muenchen WLD::::1159
-EDMM_Z:Muenchen ZUG::::1162
+EDMM:Munchen ALL::::EDMM
+EDMM_A:Muenchen ALB::::EDMM-ALB
+EDMM_B:Muenchen BBG::::EDMM-BBG
+EDMM_E:Muenchen EGG::::EDMM-EGG
+EDMM_G:Muenchen GER::::EDMM-GER
+EDMM_H:Muenchen HAL::::EDMM-HAL
+EDMM_O:Muenchen HOF::::EDMM-HOF
+EDMM_M:Muenchen MEI::::EDMM-MEI
+EDMM_N:Muenchen NDG::::EDMM-NDG
+EDMM_R:Muenchen RDG::::EDMM-RDG
+EDMM_T:Muenchen TEG::::EDMM-TEG
+EDMM_U:Muenchen TRU::::EDMM-TRU
+EDMM_W:Muenchen WLD::::EDMM-WLD
+EDMM_Z:Muenchen ZUG::::EDMM-ZUG
 EDUU_D:Rhein DON::::1121
 EDUU_E:Rhein EAST::::1122
 EDUU_F:Rhein FUL::::1123
@@ -241,14 +243,16 @@ ENSV:Stavanger::::145
 EPWW:Warsaw::::146
 ESMM:Sweden Malmo::::147
 ESOS:Sweden::::148
-EURE:Eurocontrol East::::524
+EUC-EN:EuroEast North::::5241
+EUC-ES:EuroEast South::::5242
 EURI:Eurocontrol Islands::::5537
-EURM-W:Maastricht West::::5211
-EURM-E:Maastricht East::::5212
+EUC-MW:Maastricht West::::5211
+EUC-ME:Maastricht East::::5212
 EURN:Eurocontrol North::::525
-EURS:Eurocontrol South::::523
-EURW-N:Eurocontrol West North::::5221
-EURW-S:Eurocontrol West South::::5222
+EUC-SW:EuroSouth West::::5231
+EUC-SE:EuroSouth East::::5232
+EUC-WN:Eurocontrol West North::::5221
+EUC-WS:Eurocontrol West South::::5222
 EVRR:Riga::::150
 EYVL:Vilnius::::151
 FACA:Cape Town::::6741
@@ -282,7 +286,7 @@ FZZA_K:Kinshasa::::4501
 FZZA_L:Kinshasa::::4502
 GCCC:Canarias::::163
 GCCC_L:Canarias::::164
-GCCO_O:Canarias Radio::::165
+GCCO:Canarias Radio::::GCCO
 GLRB:Roberts::::241
 GMAC:Agadir::::242
 GMMM:Casablanca::::242
@@ -461,11 +465,8 @@ NTTT:Tahiti Radio::::290
 NSFA:Faleolo::::291
 NVVV:Port Vila::::2892
 NWWN:Noumea::::5724
-NY:New York::::266
-NY_E:New York Radio::::265
-NY_E_CTR:New York::::266
-ZWY:New York Radio::::265
-NY_FSS:New York Radio::::265
+NY:New York::::266:CTR
+NY:New York Radio::::265:FSS
 NZAA:Auckland Control::::1040
 NZCH-B:Bay Approach::::1039
 NZCH-KI:Christchurch CTL::::1038

@@ -1456,28 +1456,6 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
     double lat, lon;
     if (local2latLon(currentPos.x(), currentPos.y(), lat, lon)) {
         QSet<Controller*> _newHoveredControllers;
-        foreach (Controller* c, Whazzup::instance()->whazzupData().controllers.values()) {
-            if (c->sector != nullptr && c->sector->containsPoint(QPointF(lat, lon))) {
-                // we take the label now for sectors
-                //_newHoveredControllers.insert(c);
-            } else { // APP, TWR, GND, DEL
-                int maxDist_nm = -1;
-                if (c->isAppDep()) {
-                    maxDist_nm = Airport::symbologyAppRadius_nm;
-                } else if (c->isTwr()) {
-                    maxDist_nm = Airport::symbologyTwrRadius_nm;
-                } else if (c->isGnd()) {
-                    maxDist_nm = Airport::symbologyGndRadius_nm;
-                } else if (c->isDel()) {
-                    maxDist_nm = Airport::symbologyDelRadius_nm;
-                }
-                foreach (const auto _a, c->airports()) {
-                    if (NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
-                        _newHoveredControllers.insert(c);
-                    }
-                }
-            }
-        }
         // copy from hovered map labels
         foreach (const auto &o, m_newHoveredObjects) {
             auto* c = dynamic_cast<Controller*>(o);
@@ -1485,6 +1463,32 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event) {
                 _newHoveredControllers.insert(c);
             }
         }
+
+        // add sectors if not currently hovering a label
+        if (_newHoveredControllers.isEmpty()) {
+            foreach (Controller* c, Whazzup::instance()->whazzupData().controllers.values()) {
+                if (c->sector != nullptr && c->sector->containsPoint(QPointF(lat, lon))) {
+                    _newHoveredControllers.insert(c);
+                } else { // APP, TWR, GND, DEL
+                    int maxDist_nm = -1;
+                    if (c->isAppDep()) {
+                        maxDist_nm = Airport::symbologyAppRadius_nm;
+                    } else if (c->isTwr()) {
+                        maxDist_nm = Airport::symbologyTwrRadius_nm;
+                    } else if (c->isGnd()) {
+                        maxDist_nm = Airport::symbologyGndRadius_nm;
+                    } else if (c->isDel()) {
+                        maxDist_nm = Airport::symbologyDelRadius_nm;
+                    }
+                    foreach (const auto _a, c->airports()) {
+                        if (NavData::distance(_a->lat, _a->lon, lat, lon) < maxDist_nm) {
+                            _newHoveredControllers.insert(c);
+                        }
+                    }
+                }
+            }
+        }
+
 
         if (_newHoveredControllers != m_hoveredControllers) {
             m_hoveredControllers = _newHoveredControllers;
@@ -2053,6 +2057,34 @@ void GLWidget::renderLabels(
         int drawX = x - rect.width() / 2; // center horizontally
         rect.moveTo(drawX, drawY);
 
+
+        bool isFriend = false;
+        // pilots, controllers
+        Client* cl = dynamic_cast <Client*> (o);
+        if (cl != 0) {
+            // Pilots and Controllers
+            isFriend = cl->isFriend();
+        } else {
+            // airports (having a controller that is in the friends list)
+            Airport* a = dynamic_cast <Airport*> (o);
+            if (a != 0) {
+                foreach (const auto c, a->allControllers()) {
+                    if (c->isFriend()) {
+                        // only if that is the primary airport
+                        if (c->airports(false).contains(a)) {
+                            isFriend = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        const QMarginsF backdropMargin(4, 5, 5, 5);
+        if (Settings::labelAlwaysBackdropped() || isHovered || isFriend) {
+            rect = rect.marginsAdded(backdropMargin);
+        }
+
         if (useRect.object == 0) {
             const QVector<QRectF> rects { // possible positions, with preferred ones first
                 // above
@@ -2090,50 +2122,26 @@ void GLWidget::renderLabels(
             continue;
         }
 
-        bool isFriend = false;
-        // pilots, controllers
-        Client* cl = dynamic_cast <Client*> (o);
-        if (cl != 0) {
-            // Pilots and Controllers
-            isFriend = cl->isFriend();
-        } else {
-            // airports (having a controller that is in the friends list)
-            Airport* a = dynamic_cast <Airport*> (o);
-            if (a != 0) {
-                foreach (const auto c, a->allControllers()) {
-                    if (c->isFriend()) {
-                        // only if that is the primary airport
-                        if (c->airports(false).contains(a)) {
-                            isFriend = true;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
         if (Settings::labelAlwaysBackdropped() || isHovered || isFriend) {
             // draw backdrop
             QList<QPair<double, double> > rectPointsLatLon{ { 0, 0 }, { 0, 0 }, { 0, 0 }, { 0, 0 } };
-            const auto xMargin = 4;
-            const auto rightMargin = 1;
-            const auto yMargin = 5;
+
 
             if (
                 local2latLon(
-                    useRect.rect.left() - xMargin, useRect.rect.top() - yMargin,
+                    useRect.rect.left(), useRect.rect.top(),
                     rectPointsLatLon[0].first, rectPointsLatLon[0].second
                 )
                 && local2latLon(
-                    useRect.rect.right() + xMargin + rightMargin, useRect.rect.top() - yMargin,
+                    useRect.rect.right(), useRect.rect.top(),
                     rectPointsLatLon[1].first, rectPointsLatLon[1].second
                 )
                 && local2latLon(
-                    useRect.rect.right() + xMargin + rightMargin, useRect.rect.bottom() + yMargin,
+                    useRect.rect.right(), useRect.rect.bottom(),
                     rectPointsLatLon[2].first, rectPointsLatLon[2].second
                 )
                 && local2latLon(
-                    useRect.rect.left() - xMargin, useRect.rect.bottom() + yMargin,
+                    useRect.rect.left(), useRect.rect.bottom(),
                     rectPointsLatLon[3].first, rectPointsLatLon[3].second
                 )
             ) {
@@ -2156,7 +2164,7 @@ void GLWidget::renderLabels(
                         qglColor(shadowColor);
                         renderText(
                             useRect.rect.left() + (useRect.rect.width() - firstLineRect.width()) / 2 + 1,
-                            useRect.rect.top() + firstLineRect.top() + firstLineOffset + 1,
+                            useRect.rect.top() + backdropMargin.top() + firstLineRect.top() + firstLineOffset + 1,
                             firstLine,
                             font
                         );
@@ -2166,7 +2174,7 @@ void GLWidget::renderLabels(
                         for (int iLine = 0; iLine < secondaryLines.size(); iLine++) {
                             renderText(
                                 useRect.rect.left() + (useRect.rect.width() - secondaryRects[iLine].width()) / 2 + 1,
-                                useRect.rect.top() + secondaryRects[iLine].top() + secondaryLinesOffset + 1,
+                                useRect.rect.top() + backdropMargin.top() + secondaryRects[iLine].top() + secondaryLinesOffset + 1,
                                 secondaryLines[iLine],
                                 secondaryFont
                             );
@@ -2211,7 +2219,7 @@ void GLWidget::renderLabels(
         qglColor(thisColor);
         renderText(
             useRect.rect.left() + (useRect.rect.width() - firstLineRect.width()) / 2,
-            useRect.rect.top() + firstLineRect.top() + firstLineOffset,
+            useRect.rect.top() + backdropMargin.top() + firstLineRect.top() + firstLineOffset,
             firstLine,
             font
         );
@@ -2219,7 +2227,7 @@ void GLWidget::renderLabels(
         for (int iLine = 0; iLine < secondaryLines.size(); iLine++) {
             renderText(
                 useRect.rect.left() + (useRect.rect.width() - secondaryRects[iLine].width()) / 2,
-                useRect.rect.top() + secondaryRects[iLine].top() + secondaryLinesOffset,
+                useRect.rect.top() + backdropMargin.top() + secondaryRects[iLine].top() + secondaryLinesOffset,
                 secondaryLines[iLine],
                 secondaryFont
             );

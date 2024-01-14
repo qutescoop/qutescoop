@@ -24,22 +24,28 @@ Net::Net()
     }
 }
 
-QNetworkReply* Net::h(const QNetworkRequest &request) {
+QNetworkReply* Net::h(QNetworkRequest &request) {
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
     return Net::instance()->head(request);
 }
 
 QNetworkReply* Net::g(const QUrl &url) {
-    return Net::instance()->get(QNetworkRequest(url));
-}
-
-QNetworkReply* Net::g(const QNetworkRequest &request) {
+    QNetworkRequest request(url);
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
     return Net::instance()->get(request);
 }
 
-QNetworkReply* Net::p(const QNetworkRequest &request, QIODevice* data) {
+QNetworkReply* Net::g(QNetworkRequest &request) {
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
+    return Net::instance()->get(request);
+}
+
+QNetworkReply* Net::p(QNetworkRequest &request, QIODevice* data) {
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
     return Net::instance()->post(request, data);
 }
 
-QNetworkReply* Net::p(const QNetworkRequest &request, const QByteArray &data) {
+QNetworkReply* Net::p(QNetworkRequest &request, const QByteArray &data) {
+    request.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
     return Net::instance()->post(request, data);
 }

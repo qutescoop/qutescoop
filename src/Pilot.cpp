@@ -44,7 +44,7 @@ Pilot::Pilot(const QJsonObject& json, const WhazzupData* whazzup)
     // 2: The FAA Data, this is what was displayed previously
     // 3: The short Data, consisting only of the aircraft code
     planAircraftFull = flightPlan["aircraft"].toString();
-    planAircraft = flightPlan["aircraft_short"].toString();
+    planAircraftShort = flightPlan["aircraft_short"].toString();
     planAircraftFaa = flightPlan["aircraft_faa"].toString();
 
     planTAS = flightPlan["cruise_tas"].toString();
@@ -290,7 +290,7 @@ QString Pilot::toolTip() const {
     }
     return result += ")"
             + (!planDep.isEmpty() || !planDest.isEmpty()? " " + planDep + "-" + planDest: "")
-            + (altitude > 0 && groundspeed > 0? ", " + humanAlt(): "")
+            + (!planAircraftShort.isEmpty()? ", " + planAircraftShort: "")
     ;
 }
 
@@ -308,26 +308,6 @@ QString Pilot::rank() const {
     }
 
     return ret.join(" ");
-}
-
-QString Pilot::aircraftType() const {
-    QStringList acftSegments = planAircraft.split("/");
-
-    // VATSIM can be a real PITA, really
-    // FAA-style without WTC prefix (e.g. "B737/G")
-    if (acftSegments.size() == 2 && acftSegments[0].length() >= 2) {
-        return acftSegments[0];
-    }
-    // ICAO-style (e.g. "A320/M-SDE2E3FGHIJ1RWXY/LB2")
-    if (acftSegments.size() == 3 && acftSegments[0].length() >= 2) {
-        return acftSegments[0];
-    }
-    // FAA-style with ("H/B763/L") or without equipment suffix ("H/B763")
-    else if (acftSegments.size() >= 2) {
-        return acftSegments[1];
-    }
-
-    return planAircraft;
 }
 
 Airport* Pilot::depAirport() const {

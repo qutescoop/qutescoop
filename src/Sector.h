@@ -38,7 +38,7 @@ class Sector {
         QStringList m_controllerSuffixes = QStringList();
         QList<QPolygonF> m_nonWrappedPolygons;
         QList<QPair<double, double> > m_points;
-        GLuint _polygon, _borderline, _polygonHighlighted, _borderlineHighlighted;
+        GLuint _polygon = 0, _borderline = 0, _polygonHighlighted = 0, _borderlineHighlighted = 0;
 };
 
 #endif /*SECTOR_H_*/

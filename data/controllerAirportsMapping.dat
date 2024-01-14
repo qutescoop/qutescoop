@@ -31,6 +31,8 @@ EDDL:APP DEP:EDLN EDLV
 EDDM:APP DEP:EDMA EDMO
 ; https://knowledgebase.vatsim-germany.org/books/sops-rg-munchen/page/arrival-franken-low
 EDDN:APP DEP:EDQM
+; https://knowledgebase.vatsim-germany.org/books/sops-rg-berlin/page/arrival-thuringen-low
+EDDP:APP DEP:EDDE EDDC
 ; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/pfa-pfalz-eddr-pfa-app
 EDDR:APP DEP:ETAD
 ; https://knowledgebase.vatsim-germany.org/books/edgg-langen-radar/page/reu-reutlingen-edds-reu-app
@@ -71,6 +73,7 @@ SDF:APP DEP:KLOU
 ; Controller logins whose names do NOT refer to an airport in airports.dat:
 ;---------------------------------------------------------------------------------------------
 
+IST:APP DEP:LTFM
 LIMM:APP DEP:LIMC LIML LIME LSZA
 LSFA:APP DEP:LSZR EDNY EDTM
 LIRR:APP DEP:LIRF LIRA LIRU

@@ -75,7 +75,7 @@ void PilotDetails::refresh(Pilot* pilot) {
 
     // Aircraft Information
     lblAircraft->setText(
-        QString("<a href='https://contentzone.eurocontrol.int/aircraftperformance/default.aspx?ICAOFilter=%1'>%1</a>").arg(_pilot->planAircraft.toHtmlEscaped())
+        QString("<a href='https://contentzone.eurocontrol.int/aircraftperformance/default.aspx?ICAOFilter=%1'>%1</a>").arg(_pilot->planAircraftShort.toHtmlEscaped())
     );
     lblAircraft->setToolTip(
         QString("Opens performance data in web browser.<br>Raw data: %1 – FAA: %2").arg(_pilot->planAircraftFull, _pilot->planAircraftFaa)
