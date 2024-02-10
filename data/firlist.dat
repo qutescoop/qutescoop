@@ -10,7 +10,18 @@ AFRS:Africa South Control::::5106
 AGGG:Honiara::::195
 ANAU:Nauru::::196
 ANC:Anchorage::::474
+; https://www.trvacc.net/sector/
 ANK:Ankara::::ANK
+ANK_A:Ankara::::190
+ANK_C:Ankara::::190
+ANK_E:Ankara::::190
+ANK_EN:Ankara::::190
+ANK_ES:Ankara::::190
+ANK_N:Ankara::::190
+ANK_S:Ankara::::190
+ANK_W:Ankara::::191
+ANK_WN:Ankara::::191
+ANK_WS:Ankara::::191
 ZAN:Anchorage Oceanic::::474
 ASEA:South East Asia Control::::4435
 ASEA_S:South East Asia Control::::4436
@@ -398,8 +409,6 @@ LRUB:Black Sea West::::1861
 LSAS:Swiss::::187
 LSAG:Swiss GVA::::1871
 LSAZ:Swiss ZRH::::1872
-LTAA:Ankara::::190
-LTBB:Ankara::::191
 LUUU:Chisinau::::477
 LWSS:Skopje::::192
 LYBA:Beograd::::193
