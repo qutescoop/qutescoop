@@ -1,7 +1,7 @@
 airlines.dat%%334
 airports.dat%%344
 coastline.dat%%118
-controllerAirportsMapping.dat%%9
+controllerAirportsMapping.dat%%10
 countries.dat%%120
 countrycodes.dat%%119
 firdisplay.dat%%340
