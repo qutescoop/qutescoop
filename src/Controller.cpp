@@ -159,6 +159,11 @@ QString Controller::livestreamString() const {
 }
 
 bool Controller::isCtrFss() const {
+    // https://vatsim.net/docs/policy/global-controller-administration-policy
+    // we are ignoring these:
+    // _TMU, _FMP: § 4.5(l) Traffic Flow Position
+    //     A traffic flow position does not provide any control instructions for pilots.
+    // _RDO: § 6.6 Radio Operator positions must be [..] online with an associated controller.
     return callsign.endsWith("_CTR") || callsign.endsWith("_FSS");
 }
 
@@ -171,7 +176,7 @@ bool Controller::isTwr() const {
 }
 
 bool Controller::isGnd() const {
-    return callsign.endsWith("_GND");
+    return callsign.endsWith("_GND") || callsign.endsWith("_RMP");
 }
 
 bool Controller::isDel() const {
