@@ -1964,6 +1964,9 @@ void GLWidget::renderLabels(
             continue;
         }
 
+        Controller* c = dynamic_cast<Controller*>(o);
+        bool isHoveredSector = c != 0 && m_hoveredControllers.contains(c);
+
         const bool isHovered = m_hoveredObjects.contains(o)
             && !m_isMapMoving && !m_isMapRectSelecting && !m_isMapZooming;
 
@@ -2034,8 +2037,12 @@ void GLWidget::renderLabels(
 
         const auto &secondaryLines = isHovered? o->mapLabelSecondaryLinesHovered(): o->mapLabelSecondaryLines();
 
-        auto thisColor = isHovered? Helpers::highLightColor(color): color;
-        auto thisSecondaryColor = isHovered? Helpers::highLightColor(secondaryColor): secondaryColor;
+        auto thisColor = isHovered || isHoveredSector
+            ? Helpers::highLightColor(color)
+            : color;
+        auto thisSecondaryColor = isHovered || isHoveredSector
+            ? Helpers::highLightColor(secondaryColor)
+            : secondaryColor;
 
         QList<QRectF> secondaryRects;
         float secondaryLinesOffset = 0.;
