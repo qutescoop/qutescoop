@@ -12,7 +12,7 @@
 ;
 ; PREFIX and SUFFIX are currently only interpreted as the chunk before/after the first/last _ in the
 ; controller login. So currently it is not possible to map the hypothetical logins SCHWABEN_WEST_APP to EDDS
-; and SCHWABEN_EAST_APP to EDMA.
+; and SCHWABEN_EAST_APP to EDMA (prefix in this example would be SCHWABEN and suffix APP in both cases).
 ; Empty lines and lines starting with ; are ignored.
 
 ;---------------------------------------------------------------------------------------------
@@ -68,6 +68,18 @@ MSP:APP DEP:KSTP KFCM KANE KMIC
 ; https://zfwartcc.net/files/documents
 REG:APP DEP:KADS KAFW KDAL KDFW KDTO KFTW KFWS KGKY KGPM KHQZ KNFW KRBD KTKI
 SDF:APP DEP:KLOU
+
+; China
+ZBAA:APP DEP:ZBAD ZBTJ
+ZGJD:APP DEP:ZGSD ZGSZ
+ZGZJ:APP DEP:ZGBH
+ZHHH:APP DEP:ZHEC
+ZJHK:APP DEP:ZJQH
+ZSAM:APP DEP:ZSQZ
+ZSHC:APP DEP:ZSTX ZSYW
+ZSNJ:APP DEP:ZSLG ZSSH ZSXZ ZSYA ZSYN
+ZSSS:APP DEP:ZSPD ZSWX ZSNT ZSCG ZSNB ZSZS ZSHC ZSYA
+ZUUU:APP DEP:ZUTF
 
 ; Asia
 VHHH:APP DEP:VMMC VHHX
