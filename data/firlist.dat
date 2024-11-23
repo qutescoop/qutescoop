@@ -154,7 +154,8 @@ EDMM_T:Muenchen TEG::::EDMM-TEG
 EDMM_U:Muenchen TRU::::EDMM-TRU
 EDMM_W:Muenchen WLD::::EDMM-WLD
 EDMM_Z:Muenchen ZUG::::EDMM-ZUG
-EDUU_D:Rhein DON::::1121
+EDUU_D:Rhein DON::::EDMM-RDG
+EDUU_DON:Rhein DON::::EDMM-RDG
 EDUU_E:Rhein EAST::::1122
 EDUU_F:Rhein FUL::::1123
 EDUU_L:Rhein ALP::::1125
