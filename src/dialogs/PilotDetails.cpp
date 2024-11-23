@@ -126,11 +126,40 @@ void PilotDetails::refresh(Pilot* pilot) {
     );
 
     buttonFrom->setEnabled(_pilot->depAirport() != 0);
-    buttonFrom->setText(_pilot->depAirport() != 0? _pilot->depAirport()->toolTip(): _pilot->planDep);
+    buttonFrom->setText(
+        _pilot->depAirport() != 0
+            ? _pilot->depAirport()->mapLabel()
+            : _pilot->planDep
+    );
+    buttonFrom->setToolTip(
+        _pilot->depAirport() != 0
+            ? _pilot->depAirport()->toolTip()
+            : ""
+    );
+
     buttonDest->setEnabled(_pilot->destAirport() != 0);
-    buttonDest->setText(_pilot->destAirport() != 0? _pilot->destAirport()->toolTip(): _pilot->planDest);
+    buttonDest->setText(
+        _pilot->destAirport() != 0
+            ? _pilot->destAirport()->mapLabel()
+            : _pilot->planDest
+    );
+    buttonDest->setToolTip(
+        _pilot->destAirport() != 0
+            ? _pilot->destAirport()->toolTip()
+            : ""
+    );
+
     buttonAlt->setEnabled(_pilot->altAirport() != 0);
-    buttonAlt->setText(_pilot->altAirport() != 0? _pilot->altAirport()->toolTip(): _pilot->planAltAirport);
+    buttonAlt->setText(
+        _pilot->altAirport() != 0
+            ? _pilot->altAirport()->mapLabel()
+            : _pilot->planAltAirport
+    );
+    buttonAlt->setToolTip(
+        _pilot->altAirport() != 0
+            ? _pilot->altAirport()->toolTip()
+            : ""
+    );
 
     lblPlanEtd->setText(_pilot->etd().toString("HHmm"));
     lblPlanEta->setText(_pilot->etaPlan().toString("HHmm"));

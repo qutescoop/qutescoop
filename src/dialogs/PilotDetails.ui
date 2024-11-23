@@ -18,6 +18,18 @@
    <bool>true</bool>
   </property>
   <layout class="QVBoxLayout" name="_2">
+   <property name="leftMargin">
+    <number>6</number>
+   </property>
+   <property name="topMargin">
+    <number>6</number>
+   </property>
+   <property name="rightMargin">
+    <number>6</number>
+   </property>
+   <property name="bottomMargin">
+    <number>6</number>
+   </property>
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
@@ -274,84 +286,31 @@ delay: difference between planned and calculated ETA</string>
      <property name="title">
       <string>Flightplan (IFR)</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout" columnstretch="0,1,0,0,0,0">
-      <item row="2" column="4">
-       <widget class="QLabel" name="lblFuel">
+     <layout class="QGridLayout" name="gridLayout" columnstretch="0,0,0,0,0,0,0">
+      <item row="2" column="3">
+       <widget class="QLabel" name="label_18">
         <property name="toolTip">
          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>2:00</string>
+         <string>fuel</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="5">
-       <widget class="QLabel" name="label_7">
+      <item row="0" column="5">
+       <widget class="QLabel" name="label_5">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;f &lt;span style=&quot; font-weight:700;&quot;&gt;a&lt;/span&gt;rrival&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;ff &lt;span style=&quot; font-weight:700;&quot;&gt;b&lt;/span&gt;lock &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
          <string>z</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1" colspan="5">
-       <widget class="QLabel" name="lblRoute">
-        <property name="mouseTracking">
-         <bool>true</bool>
-        </property>
-        <property name="toolTip">
-         <string>filed route</string>
-        </property>
-        <property name="text">
-         <string>&lt;code&gt;KAPPI UW705 BEROK UW653 TULSI KAPPI UW705 BEROK UW653  KAPPI UW705 BEROK UW653  KAPPI UW705 BEROK UW653 TULSI&lt;/code&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="label_9">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;alternate aerodrome / fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>altern</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_4">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;destination aerodrome&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>dest</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="5" column="1" colspan="5">
+      <item row="6" column="2" colspan="4">
        <widget class="QLabel" name="lblPlotStatus">
         <property name="font">
          <font>
@@ -372,130 +331,21 @@ delay: difference between planned and calculated ETA</string>
         </property>
        </widget>
       </item>
-      <item row="5" column="0">
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <item>
-         <spacer name="horizontalSpacer_3">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>0</width>
-            <height>0</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item>
-         <widget class="QCheckBox" name="cbPlotRoute">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plot route on map (requires navigation database). Also accessible via right click on the airplane's label on the map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>&amp;plot
-route</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="buttonAlt">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="toolTip">
-         <string>open alternate aerodrome details dialog</string>
-        </property>
-        <property name="text">
-         <string>LOWS (Salzburg, AT)</string>
-        </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="5">
-       <widget class="QLabel" name="label_11">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>hrs</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="5">
-       <widget class="QLabel" name="label_8">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;planned enroute time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>hrs</string>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>remarks</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QLabel" name="label_5">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;ff &lt;span style=&quot; font-weight:700;&quot;&gt;b&lt;/span&gt;lock &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>z</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="buttonDest">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
+      <item row="0" column="3">
+       <widget class="QLabel" name="label_16">
         <property name="font">
          <font>
           <bold>true</bold>
          </font>
         </property>
         <property name="toolTip">
-         <string>open destination aerodrome details dialog</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;ff &lt;span style=&quot; font-weight:700;&quot;&gt;b&lt;/span&gt;lock &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>LOWI (Innsbruck, AT)</string>
+         <string>SOBT</string>
         </property>
-        <property name="flat">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item row="6" column="1" colspan="5">
-       <widget class="QLabel" name="lblRemarks">
-        <property name="text">
-         <string>&lt;code&gt;PBN/A1B1D1O1S2 NAV/RNVD1E2A1 DOF/220222 REG/DABVM EET/EDUU0013 LOVV0029 LJLA0039 LDZO0044 LQSB0054 LYBA0109 BKPR0117 LWSS0124 LGGG0133 LTBB0212 LGGG0217 LCCC0235 HECC0255 OJAC0325 OEJD0334 OBBB0447 OMAE0508 RMK/TCAS /V/&lt;/code&gt;</string>
-        </property>
-        <property name="wordWrap">
-         <bool>true</bool>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
@@ -517,25 +367,33 @@ route</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
+      <item row="3" column="5">
+       <widget class="QLabel" name="label_8">
         <property name="toolTip">
-         <string>filed &lt;b&gt;t&lt;/b&gt;rue &lt;b&gt;a&lt;/b&gt;ir&lt;b&gt;s&lt;/b&gt;peed / cruise level / &lt;b&gt;p&lt;/b&gt;lanned &lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;e&lt;/b&gt;nroute</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;planned enroute time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>TAS/FL</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         <string>hrs</string>
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="4" column="2" colspan="4">
+       <widget class="QLabel" name="lblRoute">
+        <property name="toolTip">
+         <string>filed route</string>
+        </property>
+        <property name="text">
+         <string>&lt;code&gt;KAPPI UW705 BEROK UW653 TULSI KAPPI UW705 BEROK UW653  KAPPI UW705 BEROK UW653  KAPPI UW705 BEROK UW653 TULSI&lt;/code&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
        <widget class="QPushButton" name="buttonFrom">
         <property name="sizePolicy">
          <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
@@ -559,131 +417,20 @@ route</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="label_6">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>route</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="4">
-       <widget class="QLabel" name="lblPlanEtd">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_9">
         <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;ff &lt;span style=&quot; font-weight:700;&quot;&gt;b&lt;/span&gt;lock &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;alternate aerodrome / fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="text">
-         <string>1035</string>
+         <string>altern</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
         </property>
        </widget>
       </item>
-      <item row="1" column="4">
-       <widget class="QLabel" name="lblPlanEta">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;f &lt;span style=&quot; font-weight:700;&quot;&gt;a&lt;/span&gt;rrival&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>1125</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="4">
-       <widget class="QLabel" name="lblPlanEte">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;planned enroute time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>0:50</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QLabel" name="label_16">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;ff &lt;span style=&quot; font-weight:700;&quot;&gt;b&lt;/span&gt;lock &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>SOBT</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QLabel" name="label_17">
-        <property name="font">
-         <font>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;f &lt;span style=&quot; font-weight:700;&quot;&gt;a&lt;/span&gt;rrival&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>STA</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QLabel" name="label_18">
-        <property name="toolTip">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="text">
-         <string>fuel</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1" colspan="3">
+      <item row="3" column="2" colspan="2">
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QLabel" name="lblPlanTas">
@@ -732,6 +479,245 @@ route</string>
          </widget>
         </item>
        </layout>
+      </item>
+      <item row="2" column="4">
+       <widget class="QLabel" name="lblFuel">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>2:00</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" rowspan="2">
+       <widget class="QLabel" name="label_6">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>route</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_4">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;destination aerodrome&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>dest</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="buttonDest">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>open destination aerodrome details dialog</string>
+        </property>
+        <property name="text">
+         <string>LOWI (Innsbruck, AT)</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QLabel" name="lblPlanEtd">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;ff &lt;span style=&quot; font-weight:700;&quot;&gt;b&lt;/span&gt;lock &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>1035</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="5">
+       <widget class="QLabel" name="label_11">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;fuel endurance&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>hrs</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLabel" name="label_7">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;f &lt;span style=&quot; font-weight:700;&quot;&gt;a&lt;/span&gt;rrival&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>z</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLabel" name="lblPlanEta">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;f &lt;span style=&quot; font-weight:700;&quot;&gt;a&lt;/span&gt;rrival&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>1125</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>remarks</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLabel" name="label_17">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-weight:700;&quot;&gt;S&lt;/span&gt;cheduled &lt;span style=&quot; font-weight:700;&quot;&gt;t&lt;/span&gt;ime &lt;span style=&quot; font-weight:700;&quot;&gt;o&lt;/span&gt;f &lt;span style=&quot; font-weight:700;&quot;&gt;a&lt;/span&gt;rrival&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>STA</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="buttonAlt">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip">
+         <string>open alternate aerodrome details dialog</string>
+        </property>
+        <property name="text">
+         <string>LOWS (Salzburg, AT)</string>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4">
+       <widget class="QLabel" name="lblPlanEte">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;planned enroute time&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>0:50</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="font">
+         <font>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="toolTip">
+         <string>filed &lt;b&gt;t&lt;/b&gt;rue &lt;b&gt;a&lt;/b&gt;ir&lt;b&gt;s&lt;/b&gt;peed / cruise level / &lt;b&gt;p&lt;/b&gt;lanned &lt;b&gt;t&lt;/b&gt;ime &lt;b&gt;e&lt;/b&gt;nroute</string>
+        </property>
+        <property name="text">
+         <string>TAS/FL</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QCheckBox" name="cbPlotRoute">
+        <property name="toolTip">
+         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Plot route on map (requires navigation database). Also accessible via right click on the airplane's label on the map.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="text">
+         <string>&amp;plot
+route</string>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="2" colspan="4">
+       <widget class="QLabel" name="lblRemarks">
+        <property name="text">
+         <string>&lt;code&gt;PBN/A1B1D1O1S2 NAV/RNVD1E2A1 DOF/220222 REG/DABVM EET/EDUU0013 LOVV0029 LJLA0039 LDZO0044 LQSB0054 LYBA0109 BKPR0117 LWSS0124 LGGG0133 LTBB0212 LGGG0217 LCCC0235 HECC0255 OJAC0325 OEJD0334 OBBB0447 OMAE0508 RMK/TCAS /V/&lt;/code&gt;</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
