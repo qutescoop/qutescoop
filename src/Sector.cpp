@@ -136,6 +136,10 @@ GLuint Sector::glPolygon() {
         return _polygon;
     }
 
+    if (glGetError() == GL_INVALID_OPERATION) {
+        qCritical() << "Ooftimama - probably between glBegin and glEnd";
+    }
+
     _polygon = glGenLists(1);
     glNewList(_polygon, GL_COMPILE);
     QColor color = Settings::firFillColor();
@@ -149,6 +153,10 @@ GLuint Sector::glPolygon() {
 GLuint Sector::glBorderLine() {
     if (_borderline != 0 && glIsList(_borderline) == GL_TRUE) {
         return _borderline;
+    }
+
+    if (glGetError() == GL_INVALID_OPERATION) {
+        qCritical() << "Ooftimama - probably between glBegin and glEnd";
     }
 
     _borderline = glGenLists(1);
@@ -171,6 +179,10 @@ GLuint Sector::glPolygonHighlighted() {
         return _polygonHighlighted;
     }
 
+    if (glGetError() == GL_INVALID_OPERATION) {
+        qCritical() << "Ooftimama - probably between glBegin and glEnd";
+    }
+
     _polygonHighlighted = glGenLists(1);
     glNewList(_polygonHighlighted, GL_COMPILE);
     QColor color = Settings::firHighlightedFillColor();
@@ -186,7 +198,10 @@ GLuint Sector::glBorderLineHighlighted() {
         return _borderlineHighlighted;
     }
 
-    // crashes here?!
+    if (glGetError() == GL_INVALID_OPERATION) {
+        qCritical() << "Ooftimama - probably between glBegin and glEnd";
+    }
+
     _borderlineHighlighted = glGenLists(1);
     glNewList(_borderlineHighlighted, GL_COMPILE);
     glLineWidth(Settings::firHighlightedBorderLineStrength());
