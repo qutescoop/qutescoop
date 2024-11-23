@@ -86,6 +86,7 @@ void ControllerDetails::refresh(Controller* newController) {
 
     delete gridAirportsLayout;
     gridAirportsLayout = new QGridLayout(gridAirports);
+    gridAirportsLayout->setMargin(0);
     gridAirports->setLayout(gridAirportsLayout);
 
     int i = 0;
@@ -95,7 +96,7 @@ void ControllerDetails::refresh(Controller* newController) {
         }
 
         auto* _airportPb = new QPushButton(gridAirports);
-        _airportPb->setText(_a->shortLabel());
+        _airportPb->setText(_a->mapLabel());
         _airportPb->setToolTip(_a->toolTip());
         auto _font = _airportPb->font();
         _font.setBold(_a->congestion() != 0);
@@ -110,7 +111,7 @@ void ControllerDetails::refresh(Controller* newController) {
                 }
             }
         );
-        gridAirportsLayout->addWidget(_airportPb, floor(i / 4), i % 4);
+        gridAirportsLayout->addWidget(_airportPb, floor(i / 3), i % 3);
         i++;
     }
     gridAirportsLayout->update();
