@@ -19890,6 +19890,7 @@ MHLC:Goloson Intl:La Ceiba:HN:15.74236393:-86.853302
 MHLM:La Mesa Intl:La Mesa:HN:15.45195866:-87.92415619
 MHNJ:Guanaja:Guanaja:HN:16.44537544:-85.90679169
 MHPL:Puerto Lempira:Puerto Lempira:HN:15.26219463:-83.78119659
+MHPR:Comayagua:Comayagua:HN:14.3825:-87.621111
 MHRO:Roatan:Roatan Island:HN:16.31728363:-86.52229309
 MHSC:Coronel Enrique Soto Cano AB:Comayagua:HN:14.38138866:-87.6202774
 MHTE:Tela:Tela:HN:15.77602482:-87.47576904
@@ -25385,8 +25386,7 @@ SEPC:Patuca:Patuca:EC:-2.75189638:-78.26325989
 SEPS:Amable Calle Gutierrez:Pasaje:EC:-3.3198781:-79.76922607
 SEPV:Reales Tamarindos:Portoviejo:EC:-1.04193544:-80.472435
 SEQE:Quevedo:Quevedo:EC:-0.98935151:-79.4654007
-SEQM:Quito-Mariscal Sucre:Quito:EC:-0.12416667:-78.35444641
-SEQU:Quito:Quito:EC:-0.141:-78.488
+SEQM:Mariscal Sucre:Quito:EC:-0.12416667:-78.35444641
 SERB:Chimborazo:Riobamba:EC:-1.65361106:-78.65694427
 SERO:Santa Rosa:Santa Rosa:EC:-3.43611121:-79.98388672
 SESA:Salinas-General Ulpiano Paez:Salinas:EC:-2.20583344:-80.98472595
