@@ -159,6 +159,7 @@ EDUU_DON:Rhein DON::::EDMM-RDG
 EDUU_E:Rhein EAST::::1122
 EDUU_F:Rhein FUL::::1123
 EDUU_L:Rhein ALP::::1125
+EDUU_MR:Rhein::::1105
 EDUU_N:Rhein NTM+SLN::::1126
 EDUU_O:Rhein OSE+HVL::::1127
 EDUU_H:Rhein HVL::::11271
@@ -178,6 +179,7 @@ EDWW_M:Bremen NRZ::::101
 EDWW_R:Bremen HRZ::::106
 EDWW_S:Bremen EMS::::106
 EDWW_W:Bremen EIDW::::106
+EDYY_B:Maastricht::::1101
 EDYY_C:Maastricht CEL::::1010
 EDYY_CH:Maastricht CELH > F355::::1010
 EDYY_D:Maastricht DEL::::1011
