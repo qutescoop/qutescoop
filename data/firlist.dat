@@ -139,7 +139,7 @@ EDGG_SIG:Langen SIG::::1105
 EDGG_S1G:Langen SIG::::1105
 EDGG_TAU:Langen TAU::::1105
 EDGG_T1U:Langen TAU::::1105
-EDGG:Langen COMPLETE::::1102
+EDGG:Langen COMPLETE::::EDGG
 EDMM:Munchen ALL::::EDMM
 EDMM_A:Muenchen ALB::::EDMM-ALB
 EDMM_B:Muenchen BBG::::EDMM-BBG
@@ -167,7 +167,7 @@ EDUU_OSE:Rhein OSE::::11272
 EDUU_S:Rhein SAL::::1128
 EDUU_T:Rhein TGO::::1129
 EDUU_W:Rhein WUR+FFM::::1130
-EDWW:Bremen::::1000
+EDWW:Bremen::::EDWW
 EDWW_A:Bremen ALR::::106
 EDWW_B:Bremen BOR::::101
 EDWW_D:Bremen DST::::106
@@ -179,6 +179,7 @@ EDWW_M:Bremen NRZ::::101
 EDWW_R:Bremen HRZ::::106
 EDWW_S:Bremen EMS::::106
 EDWW_W:Bremen EIDW::::106
+EDXX:Germany COMPLETE::::EDXX
 EDYY_B:Maastricht::::1101
 EDYY_C:Maastricht CEL::::1010
 EDYY_CH:Maastricht CELH > F355::::1010
